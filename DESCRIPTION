@@ -1,0 +1,19 @@
+Package: OmnipathR
+Type: Package
+Title: Import Omnipath network
+Version: 0.1.0
+Author: Attila Gabor, Denes Turei
+Maintainer: A.Gabor <gabor.attila87@gmail.com>
+Description: Import network from www.omnipathdb.org
+    Use four spaces when indenting paragraphs within the Description.
+License: GPL3
+Encoding: UTF-8
+LazyData: true
+Depends:
+    igraph,
+    graphics,
+    methods
+Imports:
+	plyr,
+	dplyr
+RoxygenNote: 6.1.0

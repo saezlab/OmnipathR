@@ -1,0 +1,32 @@
+#' OmnipathR: interact with the omnipathdb.org
+#'
+#' basic tool to download data from Omnipath webservice (omnipathdb.org).
+#'
+#' @examples
+#' # Download post-translational modifications:
+#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+#'
+#' # Download protein-protein interactions
+#' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
+#'
+#' # Convert to igraph objects:
+#' ptms_g = omnipath_graph(ptms = ptms )
+#' OPI_g = omnipath_graph(interactions = interactions )
+#'
+#' # Print some interactions:
+#' print_interactions(head(ptms))
+#'
+#' # interactions with references:
+#' print_interactions(tail(ptms),writeRefs=T)
+#'
+#' # find interactions between kinase and substrate:
+#' print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",substrate_genesymbol=="MAPK3"))
+#'
+#' # find shortest paths on the directed network between proteins
+#' printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
+#'
+#' # find all shortest paths between proteins
+#' printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
+#' @docType package
+#' @name OmnipathR
+NULL
