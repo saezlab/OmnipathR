@@ -10,5 +10,5 @@
 character vector with the databases
 }
 \description{
-get the names of the databases from omnipath.org/ptms
+get the names of the databases from omnipath.org/interactions
 }

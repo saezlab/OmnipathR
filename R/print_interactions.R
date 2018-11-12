@@ -140,7 +140,7 @@ unique_nodeSeq = function(nodeSeq_list){
 #' @return NULL
 #' @examples
 #' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
-#' OPI_g = omnipath_graph(interactions = interactions )
+#' OPI_g = interaction_graph(interactions = interactions )
 #' printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
 #' printPath_vs(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3")$vpath,OPI_g)
 #'

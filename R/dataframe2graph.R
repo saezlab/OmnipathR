@@ -5,11 +5,10 @@
 #'
 #' @return igraph object
 #' @export
-#' @param interactions data.frame created by import_Omnipath_PTMS
+#' @param interactions data.frame created by \code{\link{import_Omnipath_PTMS}}
 #' @examples
 #' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
-#' ptms_g = omnipath_graph(ptms = ptms )
-
+#' ptms_g = ptms_graph(ptms = ptms )
 ptms_graph <- function(ptms){
 	# This is a gene_name based conversion to igraph, i.e. the vertices are identified
 	# by genenames, and not by uniprot IDs.
@@ -60,11 +59,11 @@ ptms_graph <- function(ptms){
 #'
 #' @return igraph object
 #' @export
-#' @param interactions data.frame created by import_Omnipath_Interactions
+#' @param interactions data.frame created by \code{\link{import_Omnipath_Interactions}}
 #' @examples
 #' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
-#' OPI_g = omnipath_graph(interactions = interactions )
-omnipath_graph <- function(interactions){
+#' OPI_g = interaction_graph(interactions = interactions )
+interaction_graph <- function(interactions){
 	# This is a gene_name based conversion to igraph, i.e. the vertices are identified
 	# by genenames, and not by uniprot IDs.
 	# This might cause issue when a gene name encodes multiple uniprot IDs.

@@ -24,8 +24,8 @@ Download protein-protein interactions:
 `interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))`
 
 Convert to igraph objects:  
-`ptms_g = omnipath_graph(ptms = ptms )`
-`OPI_g = omnipath_graph(interactions = interactions )`
+`ptms_g = ptms_graph(ptms = ptms )`
+`OPI_g = interaction_graph(interactions = interactions )`
 
 Print some interactions:  
 ```{r}

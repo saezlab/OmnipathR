@@ -86,8 +86,9 @@ import_Omnipath_Interactions = function (from_cache_file=NULL,
 
 #' Get interaction databases
 #'
-#' get the names of the databases from omnipath.org/ptms
+#' get the names of the databases from omnipath.org/interactions
 #' @return character vector with the databases
+#'
 .get_interaction_databases = function(){
 	url_interactions <- 'http://omnipathdb.org/interactions/?fields=sources'
 	interactions = read.table(url_interactions, sep = '\t', header = TRUE,stringsAsFactors = F)
