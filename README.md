@@ -7,13 +7,13 @@ utility functions to work with Omnipath in R
 basic utility functions to download and interact with data from Omnipath webservice (www.omnipathdb.org).
 
 ### Install
-this will work after the repo becomes public, until then download it
+you can use the `devtools` package to install from the GitHub in one line: 
 ```{r}
 if(!require(devtools)) install.packages("devtools")
 devtools::install_github("saezlab/omnipathR")  
 ```
-after download install with  
-`install.packages('./omnipathR',repo=NULL)`
+Or download, unzip and install the usual way:
+`install.packages('./OmnipathR',repo=NULL)`
 
 ### Examples
 
