@@ -14,8 +14,8 @@ ptms_graph <- function(ptms){
 	# by genenames, and not by uniprot IDs.
 	# This might cause issue when a gene name encodes multiple uniprot IDs.
 
-	require(plyr)
-	require(dplyr)
+
+	library(dplyr)
 
 	# This does not preserve the p-Site info
 	# edges = raw %>% select(c(enzyme_genesymbol, substrate_genesymbol)) %>% distinct()
