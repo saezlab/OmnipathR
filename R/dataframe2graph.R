@@ -68,7 +68,7 @@ interaction_graph <- function(interactions){
 	# by genenames, and not by uniprot IDs.
 	# This might cause issue when a gene name encodes multiple uniprot IDs.
 
-	require(plyr)
+
 	require(dplyr)
 
 	# keep only edge attributes
