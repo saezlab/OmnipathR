@@ -2,11 +2,11 @@
 utility functions to work with Omnipath in R
 
 
-### Description
+## Description
 
 basic utility functions to download and interact with data from Omnipath webservice (www.omnipathdb.org).
 
-### Install
+## Install
 you can use the `devtools` package to install from the GitHub in one line: 
 ```{r}
 if(!require(devtools)) install.packages("devtools")
@@ -15,7 +15,7 @@ devtools::install_github("saezlab/omnipathR")
 Or download, unzip and install the usual way:
 `install.packages('./OmnipathR',repo=NULL)`
 
-### Examples
+## Examples
 
 Download post-translational modifications:  
 `ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))`
@@ -85,3 +85,8 @@ printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
 2  TP53 (P04637)  ==( ? )==>    MAPK1 (P28482)        5    11
 3 MAPK1 (P28482)  ==( + )==> MAPKAPK2 (P49137)        9    11
 ```
+
+## Feedbacks, bug reports, features
+Feedbacks and bugreports are always very welcomed!  
+Please use the Github issue page to report bugs or for questions: https://github.com/saezlab/OmnipathR/issues.
+Many thanks!
