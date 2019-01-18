@@ -31,6 +31,8 @@ import_Omnipath_PTMS = function (from_cache_file=NULL,
 
 	filteredPTMS$sources = as.character(filteredPTMS$sources)
 	filteredPTMS$references = as.character(filteredPTMS$references)
+	# we remove references mentioned multiple times:
+	filteredPTMS$references = unlist(lapply(strsplit(filteredPTMS$references,split = ";"),function(x)paste(unique(x),collapse=";")))
 	filteredPTMS$nsources =	unlist(lapply(strsplit(filteredPTMS$sources,split = ";"),length))
 	filteredPTMS$nrefs =	unlist(lapply(strsplit(filteredPTMS$references,split = ";"),length))
 
@@ -77,6 +79,8 @@ import_Omnipath_Interactions = function (from_cache_file=NULL,
 
 	filteredInteractions$sources = as.character(filteredInteractions$sources)
 	filteredInteractions$references = as.character(filteredInteractions$references)
+	# we remove references mentioned multiple times:
+	filteredInteractions$references = unlist(lapply(strsplit(filteredInteractions$references,split = ";"),function(x)paste(unique(x),collapse=";")))
 	filteredInteractions$nsources =	unlist(lapply(strsplit(filteredInteractions$sources,split = ";"),length))
 	filteredInteractions$nrefs =	unlist(lapply(strsplit(filteredInteractions$references,split = ";"),length))
 
