@@ -12,7 +12,11 @@ LazyData: true
 Depends:
     igraph,
     graphics,
-    methods
+    methods,
+    dplyr
 Imports:
-	dplyr
 RoxygenNote: 6.1.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
