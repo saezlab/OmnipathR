@@ -14,5 +14,6 @@ Depends:
     graphics,
     methods
 Imports:
-	dplyr
+    plyr,
+    dplyr
 RoxygenNote: 6.1.0
