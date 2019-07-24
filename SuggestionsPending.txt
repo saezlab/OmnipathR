@@ -1,0 +1,9 @@
+Suggestions/Pending Things 
+
+- Put the function getting the possible databases/sources availabe, transparent. We let the user filter by them after seeing them.
+
+- Put all the interactions together in the same function so the user can choose with interactions to download. Merge all the interactions in one unique function. Discuss with Attila. 
+
+- Other organisms
+
+
