@@ -1,7 +1,7 @@
 
 #' PTMS graph
 #'
-#' transforms the ptmds interactions data.frame to igraph object
+#' transforms the ptms interactions data.frame to igraph object
 #'
 #' @return igraph object
 #' @export
