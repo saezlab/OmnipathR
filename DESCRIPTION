@@ -15,6 +15,7 @@ Depends:
     methods,
     dplyr
 Imports:
+    plyr
 RoxygenNote: 6.1.0
 Suggests: 
     knitr,
