@@ -1,32 +1,23 @@
 
-#' PTMS graph
+#' Post-translational modifications (PTMs) graph
 #'
 #' transforms the ptms interactions data.frame to igraph object
 #'
-#' @return igraph object
+#' @return An igraph object
 #' @export
-#' @param interactions data.frame created by \code{\link{import_Omnipath_PTMS}}
+#' @import dplyr
+#' @param ptms data.frame created by \code{\link{import_Omnipath_PTMS}}
 #' @examples
 #' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
 #' ptms_g = ptms_graph(ptms = ptms )
+#' @seealso  \code{\link{import_Omnipath_PTMS}}
 ptms_graph <- function(ptms){
 	# This is a gene_name based conversion to igraph, i.e. the vertices are identified
 	# by genenames, and not by uniprot IDs.
 	# This might cause issue when a gene name encodes multiple uniprot IDs.
 
-
-	library(dplyr)
-
-	# This does not preserve the p-Site info
-	# edges = raw %>% select(c(enzyme_genesymbol, substrate_genesymbol)) %>% distinct()
-
-	# keep only edge attributes
+  # keep only edge attributes
 	edges = ptms %>% select(- c(enzyme, substrate))
-
-	# lets try to do it at once
-	# edgesB = raw %>% select(- c(enzyme, substrate)) %>%  # remove UniprotID
-	#	group_by(enzyme_genesymbol, substrate_genesymbol) %>%
-	#	summarise("residues" = paste(paste(residue_type, residue_offset, ifelse(is_stimulation=="1","+","?"),ifelse(is_inhibition=="1","-","?"),sep="_"),collapse=",")) %>% ungroup()
 
 	# build vertices: gene_names and gene_uniprotIDs
 	nodesA = select(ptms, c(enzyme_genesymbol, enzyme))
@@ -55,27 +46,31 @@ ptms_graph <- function(ptms){
 
 #' Build Omnipath interaction graph
 #'
-#' transforms the interactions data.frame to igraph object
+#' transforms the interactions data.frame to an igraph object
 #'
-#' @return igraph object
+#' @return An igraph object
 #' @export
-#' @param interactions data.frame created by \code{\link{import_Omnipath_Interactions}}
+#' @import dplyr
+#' @param interactions data.frame created by \code{\link{import_Omnipath_Interactions}},
+#' \code{\link{import_PathwayExtra_Interactions}}, \code{\link{import_KinaseExtra_Interactions}},
+#' \code{\link{import_LigrecExtra_Interactions}}, \code{\link{import_TFregulons_Interactions}},
+#' \code{\link{import_miRNAtarget_Interactions}} or \code{\link{import_AllInteractions}} 
 #' @examples
-#' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
-#' OPI_g = interaction_graph(interactions = interactions )
-interaction_graph <- function(interactions){
+#' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+#' OPI_g = interaction_graph(interactions)
+#' @seealso \code{\link{import_Omnipath_Interactions}},
+#' \code{\link{import_PathwayExtra_Interactions}}, \code{\link{import_KinaseExtra_Interactions}},
+#' \code{\link{import_LigrecExtra_Interactions}}, \code{\link{import_TFregulons_Interactions}},
+#' \code{\link{import_miRNAtarget_Interactions}} or \code{\link{import_AllInteractions}} 
+interaction_graph <- function(interactions = interactions){
 	# This is a gene_name based conversion to igraph, i.e. the vertices are identified
 	# by genenames, and not by uniprot IDs.
 	# This might cause issue when a gene name encodes multiple uniprot IDs.
 
-
-	require(dplyr)
-
-	# keep only edge attributes
+  # keep only edge attributes
 	edges = interactions %>% select(- c(source, target))
 
-
-	# build vertices: gene_names and gene_uniprotIDs
+  # build vertices: gene_names and gene_uniprotIDs
 	nodesA = select(interactions, c(source_genesymbol, source))
 	nodesB = select(interactions, c(target_genesymbol, target))
 	colnames(nodesA) = colnames(nodesB) = c("genesymbol", "up_id")
@@ -92,8 +87,11 @@ interaction_graph <- function(interactions){
 										  vertices = op_dfs$nodes)
 
 	igraph::E(op_g)$sources    <- strsplit(igraph::E(op_g)$sources,    ';')
-	igraph::E(op_g)$references <- strsplit(igraph::E(op_g)$references, ';')
-
+	
+	if ("references" %in% colnames(interactions)){
+	  igraph::E(op_g)$references <- strsplit(igraph::E(op_g)$references, ';')
+  }
+	
 	return(op_g)
 
 }

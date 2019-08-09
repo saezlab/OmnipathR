@@ -2,20 +2,23 @@
 % Please edit documentation in R/dataframe2graph.R
 \name{ptms_graph}
 \alias{ptms_graph}
-\title{PTMS graph}
+\title{Post-translational modifications (PTMs) graph}
 \usage{
 ptms_graph(ptms)
 }
 \arguments{
-\item{interactions}{data.frame created by \code{\link{import_Omnipath_PTMS}}}
+\item{ptms}{data.frame created by \code{\link{import_Omnipath_PTMS}}}
 }
 \value{
-igraph object
+An igraph object
 }
 \description{
-transforms the ptmds interactions data.frame to igraph object
+transforms the ptms interactions data.frame to igraph object
 }
 \examples{
 ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
 ptms_g = ptms_graph(ptms = ptms )
+}
+\seealso{
+\code{\link{import_Omnipath_PTMS}}
 }

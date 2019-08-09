@@ -1,69 +1,132 @@
-# OmnipathR
-utility functions to work with Omnipath in R
+<img src='figures/download.png' align="right" height="140" width="160">
 
+# OmnipathR
+Utility functions to work with **Omnipath** in `R`. 
 
 ## Description
 
-basic utility functions to download and interact with data from Omnipath webservice (www.omnipathdb.org).
+*OmnipathR* is an `R` package built to provide easy access to the data stored 
+in the Omnipath webservice: 
+    
+  <http://omnipathdb.org/>
+    
+The webservice implements a very simple REST style API. This package make 
+requests by the HTTP protocol to retreive the data. Hence, fast Internet 
+access is required for a proper use of *OmnipathR*. 
 
-## Install
-you can use the `devtools` package to install from the GitHub in one line: 
+The package also provides some utility functions to filter, analyse and 
+visualize the data.
+    
+## Query types
+
+We provide here a brief summary about the data available through *OmnipathR*.
+*OmnipathR* provides access to 5 types of queries:  
+
+1. **Interactions**: protein-protein interactions from different datasets.
+2. **Post-translational modifications (PTMs)**: enzyme-substrate interactions. 
+3. **Complexes**: comprehensive database of more than 22000 protein complexes.
+4. **Annotations**: large variety of data about proteins and complexes features.
+5. **Intercell**: information on the roles in inter-cellular signaling.
+
+For a more detailed information, we recommend you to visit the following sites:
+
+  <http://omnipathdb.org/>
+  
+  <http://omnipathdb.org/info>
+  
+  <https://github.com/saezlab/pypath/blob/master/webservice.rst> 
+  
+  <https://github.com/saezlab/OmnipathR/vignettes/OmnipathR.pdf>
+  
+
+## Installation
+First of all, you need a current version of `R` (<http://www.r-project.org>).
+*OmnipathR* is a freely available package deposited on
+
+  <https://github.com/saezlab/OmnipathR>
+
+You can install it by using the the `devtools` package by running the following 
+commands on a `R` console:
+ 
 ```{r}
 if(!require(devtools)) install.packages("devtools")
-devtools::install_github("saezlab/omnipathR")  
-```
-Or download, unzip and install the usual way:
-`install.packages('./OmnipathR',repo=NULL)`
-
-## Examples
-
-Download post-translational modifications:  
-`ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))`
-
-Download protein-protein interactions:  
-`interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))`
-
-Convert to igraph objects:  
-`ptms_g = ptms_graph(ptms = ptms )`
-`OPI_g = interaction_graph(interactions = interactions )`
-
-Print some interactions:  
-```{r}
-print_interactions(head(ptms))
-
-          enzyme interaction            substrate    modification nsources nrefs
-1 PRKCA (P17252)  ==( + )==> NPHS1_T1120 (O60500) phosphorylation        3     0
-2 PRKCA (P17252)  ==( + )==> NPHS1_T1125 (O60500) phosphorylation        3     0
-3 PRKCA (P17252)  ==( + )==>  PDE3A_S465 (Q14432) phosphorylation        3     0
-4 PRKCA (P17252)  ==( + )==>  PDE3A_S428 (Q14432) phosphorylation        3     0
-5 PRKCA (P17252)  ==( + )==>  PDE3A_S438 (Q14432) phosphorylation        3     0
-6 PRKCA (P17252)  ==( + )==>  PDE3A_S312 (Q14432) phosphorylation        3     0
+devtools::install_github("saezlab/omnipathR") 
 ```
 
-Interactions with references:  
-`print_interactions(tail(ptms),writeRefs=T)`
+Or download, unzip and install the package from the source files:
 
-Find interactions between kinase and substrate:  
 ```{r}
-print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",substrate_genesymbol=="MAPK3"))
+install.packages('./OmnipathR',repo=NULL)
+```
 
-           enzyme interaction           substrate    modification nsources nrefs
-2 MAP2K1 (Q02750)  ==( + )==> MAPK3_Y204 (P27361) phosphorylation        6    13
-1 MAP2K1 (Q02750)  ==( + )==> MAPK3_T202 (P27361) phosphorylation        6     8
-3 MAP2K1 (Q02750)  ==( + )==>  MAPK3_T80 (P27361) phosphorylation        1     0
-4 MAP2K1 (Q02750)  ==( + )==> MAPK3_Y222 (P27361) phosphorylation        1     0
-5 MAP2K1 (Q02750)  ==( + )==> MAPK3_Y210 (P27361) phosphorylation        1     0
-6 MAP2K1 (Q02750)  ==( + )==> MAPK3_T207 (P27361) phosphorylation        1     0
+## Getting started and some usage examples
+To get started, we strongly recommend to read our vignette in order to deal with 
+the different types of queries and handle the data they return:
+
+  <https://github.com/saezlab/OmnipathR/vignettes/OmnipathR.pdf>
+
+In addition, we provide here some examples for a quick start: 
+
+```{r}
+library(OmnipathR)
+library(igraph)
+```
+
+Download human protein-protein interactions for some source databases:  
+
+```{r}
+interactions <- 
+  import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
+  "Signor"))
+```
+
+
+Download human post-translational modifications for some source databases:  
+
+```{r}
+ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+```
+
+Convert both data frames into networks (`igraph` objects)
+```{r}
+ptms_g = ptms_graph(ptms = ptms )
+OPI_g = interaction_graph(interactions = interactions )
+```
+
+Print some interactions in a nice format:  
+```{r}
+print_interactions(head(interactions))
+
+            source interaction           target nsources nrefs
+1     UBC (P0CG48)  ==( ? )==>   IKBKG (Q9Y6K9)        5    41
+2   IKBKG (Q9Y6K9)  ==( ? )==>     UBC (P0CG48)        5    41
+4   PINK1 (Q9BXM7)  ==( + )==>     UBC (P0CG48)        5    19
+3     UBC (P0CG48)  ==( + )==>    PRKN (O60260)        3    16
+5     UBC (P0CG48)  ==( ? )==> TNFAIP3 (P21580)        5    14
+6 TNFAIP3 (P21580)  ==( ? )==>     UBC (P0CG48)        5    14
+```
+
+Find interactions between a specific kinase and a specific substrate:  
+```{r}
+print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
+  substrate_genesymbol=="MAPK3"))
+
+           enzyme interaction           substrate    modification nsources
+4 MAP2K1 (Q02750)       ====> MAPK3_Y204 (P27361) phosphorylation        6
+3 MAP2K1 (Q02750)       ====> MAPK3_T202 (P27361) phosphorylation        6
+1 MAP2K1 (Q02750)       ====> MAPK3_Y210 (P27361) phosphorylation        1
+2 MAP2K1 (Q02750)       ====> MAPK3_T207 (P27361) phosphorylation        1
+           
 ```
 
 Find shortest paths on the directed network between proteins:  
 ```{r}
-> printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
+printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
 
-      source     interaction       target nsources nrefs
-1  TYRO3 (Q06418)  ==( + )==> PIK3R1 (P27986)        4     3
-2 PIK3R1 (P27986)  ==( ? )==>     AR (P10275)        3     3
-3     AR (P10275)  ==( ? )==>  STAT3 (P40763)        3     4`
+          source interaction         target nsources nrefs
+1 TYRO3 (Q06418)  ==( + )==>  GRB2 (P62993)        1     1
+2  GRB2 (P62993)  ==( + )==>  EGFR (P00533)       11    63
+3  EGFR (P00533)  ==( + )==> STAT3 (P40763)       10    21
 ```
 
 Find all shortest paths between proteins:  
@@ -71,22 +134,26 @@ Find all shortest paths between proteins:
 printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
 [1] "pathway 1: DYRK2 -> TP53 -> MAPK3 -> MAPKAPK2"
           source interaction            target nsources nrefs
-1 DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        6   102
-2  TP53 (P04637)  ==( ? )==>    MAPK3 (P27361)        4     6
-3 MAPK3 (P27361)  ==( + )==> MAPKAPK2 (P49137)        3     4
+1 DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        7   100
+2  TP53 (P04637)  ==( - )==>    MAPK3 (P27361)        5     3
+3 MAPK3 (P27361)  ==( + )==> MAPKAPK2 (P49137)        4     4
 [1] "pathway 2: DYRK2 -> TP53 -> MAPK14 -> MAPKAPK2"
            source interaction            target nsources nrefs
-1  DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        6   102
-2   TP53 (P04637)  ==( ? )==>   MAPK14 (Q16539)        3     8
-3 MAPK14 (Q16539)  ==( + )==> MAPKAPK2 (P49137)       19    40
+1  DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        7   100
+2   TP53 (P04637)  ==( ? )==>   MAPK14 (Q16539)        5     7
+3 MAPK14 (Q16539)  ==( + )==> MAPKAPK2 (P49137)       21    27
 [1] "pathway 3: DYRK2 -> TP53 -> MAPK1 -> MAPKAPK2"
           source interaction            target nsources nrefs
-1 DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        6   102
-2  TP53 (P04637)  ==( ? )==>    MAPK1 (P28482)        5    11
-3 MAPK1 (P28482)  ==( + )==> MAPKAPK2 (P49137)        9    11
+1 DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        7   100
+2  TP53 (P04637)  ==( ? )==>    MAPK1 (P28482)        7     8
+3 MAPK1 (P28482)  ==( + )==> MAPKAPK2 (P49137)       10     9
 ```
 
 ## Feedbacks, bug reports, features
 Feedbacks and bugreports are always very welcomed!  
-Please use the Github issue page to report bugs or for questions: https://github.com/saezlab/OmnipathR/issues.
-Many thanks!
+
+Please use the Github issue page to report bugs or for questions: 
+
+  <https://github.com/saezlab/OmnipathR/issues>
+
+Many thanks for using *OmnipathR*!

@@ -1,12 +1,13 @@
 Package: OmnipathR
 Type: Package
 Title: Import Omnipath network
-Version: 0.1.0
-Author: Attila Gabor, Denes Turei
+Version: 0.2.0
+Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
 Maintainer: A.Gabor <gabor.attila87@gmail.com>
-Description: Import network from www.omnipathdb.org
-    Use four spaces when indenting paragraphs within the Description.
-License: GPL3
+Description: Import data from https://www.omnipathdb.org webservice. It also 
+    includes functions to transform and print this data. 
+License: MIT + file LICENSE
+URL: https://github.com/saezlab/OmnipathR
 Encoding: UTF-8
 LazyData: true
 Depends:
@@ -14,5 +15,9 @@ Depends:
     graphics,
     methods
 Imports:
-	dplyr
-RoxygenNote: 6.1.0
+    plyr,
+    dplyr,
+    dnet,
+    gprofiler2,
+    tidyverse
+RoxygenNote: 6.1.1

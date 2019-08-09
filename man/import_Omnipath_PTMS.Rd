@@ -2,22 +2,32 @@
 % Please edit documentation in R/import_Omnipath.R
 \name{import_Omnipath_PTMS}
 \alias{import_Omnipath_PTMS}
-\title{Import Omnipath PTMS}
+\title{Import Omnipath post-translational modifications (PTMs)}
 \usage{
 import_Omnipath_PTMS(from_cache_file = NULL,
-  filter_databases = .get_ptms_databases())
+  filter_databases = .get_ptms_databases(), select_organism = 9606)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
-\item{filter_databases}{interactions not reported in these databases are removed.}
+\item{filter_databases}{PTMs not reported in these databases are 
+removed. See \code{\link{.get_ptms_databases}} for more information}
+
+\item{select_organism}{PTMs are available for human, mouse and rat. 
+Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 }
 \value{
-data.frame
+A data frame containing the information about ptms
 }
 \description{
-imports the ptms database from http://omnipathdb.org/ptms
+imports the PTMs database from \url{http://omnipathdb.org/ptms}
 }
 \examples{
-ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
+       select_organism=9606)
+       
+}
+\seealso{
+\code{\link{.get_ptms_databases}, 
+  \link{import_Omnipath_Interactions}}
 }
