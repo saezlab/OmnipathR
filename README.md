@@ -65,6 +65,10 @@ the different types of queries and handle the data they return:
 
   <https://github.com/saezlab/OmnipathR/vignettes/OmnipathR.pdf>
 
+You can also check the manual:
+
+   <https://github.com/saezlab/OmnipathR/Manual_OmnipathR_0.2.0.pdf>
+
 In addition, we provide here some examples for a quick start: 
 
 ```{r}
