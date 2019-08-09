@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_interactions.R
 \name{printPath_vs}
 \alias{printPath_vs}
-\title{print paths given by node sequence}
+\title{print networks paths given by node sequence}
 \usage{
 printPath_vs(nodeSeq, G)
 }
@@ -15,12 +15,14 @@ printPath_vs(nodeSeq, G)
 prints the interactions in the path in a nice format
 }
 \examples{
-interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
+interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
 OPI_g = interaction_graph(interactions = interactions )
-printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
 printPath_vs(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3")$vpath,OPI_g)
 
 ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
 ptms_g = ptms_graph(ptms)
 printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
+}
+\seealso{
+\code{\link{printPath_es}}
 }

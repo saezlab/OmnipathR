@@ -4,16 +4,26 @@
 \name{OmnipathR}
 \alias{OmnipathR}
 \alias{OmnipathR-package}
-\title{OmnipathR: interact with the omnipathdb.org}
+\title{The OmnipathR package}
 \description{
-basic tool to download data from Omnipath webservice (omnipathdb.org).
+OmnipathR is an R package built to provide easy access to the data stored in 
+the Omnipath webservice:
+
+\url{http://omnipathdb.org/}
+ 
+The webservice implements a very simple REST style API. This package make 
+requests by the HTTP protocol to retreive the data. Hence, fast Internet 
+access is required for a propser use of OmnipathR.
+
+The package also provides some utility functions to filter, analyse and 
+visualize the data.
 }
 \examples{
 # Download post-translational modifications:
 ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
 
 # Download protein-protein interactions
-interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
+interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
 
 # Convert to igraph objects:
 ptms_g = ptms_graph(ptms = ptms )
@@ -23,14 +33,21 @@ OPI_g = interaction_graph(interactions = interactions )
 print_interactions(head(ptms))
 
 # interactions with references:
-print_interactions(tail(ptms),writeRefs=T)
+print_interactions(tail(ptms),writeRefs=TRUE)
 
 # find interactions between kinase and substrate:
-print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",substrate_genesymbol=="MAPK3"))
+print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
+   substrate_genesymbol=="MAPK3"))
 
 # find shortest paths on the directed network between proteins
-printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
+printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
+   output = 'epath')$epath[[1]],OPI_g)
 
 # find all shortest paths between proteins
 printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
+
+}
+\author{
+Alberto Valdeolivas <\email{alvaldeolivas@gmail}> and Attila Gabor
+<\email{gaborattila87@gmail.com}>
 }

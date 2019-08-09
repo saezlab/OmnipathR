@@ -4,18 +4,27 @@
 \alias{interaction_graph}
 \title{Build Omnipath interaction graph}
 \usage{
-interaction_graph(interactions)
+interaction_graph(interactions = interactions)
 }
 \arguments{
-\item{interactions}{object created by \code{\link{import_Omnipath_Interactions}}}
+\item{interactions}{data.frame created by \code{\link{import_Omnipath_Interactions}},
+\code{\link{import_PathwayExtra_Interactions}}, \code{\link{import_KinaseExtra_Interactions}},
+\code{\link{import_LigrecExtra_Interactions}}, \code{\link{import_TFregulons_Interactions}},
+\code{\link{import_miRNAtarget_Interactions}} or \code{\link{import_AllInteractions}}}
 }
 \value{
-igraph object
+An igraph object
 }
 \description{
-transforms the interactions data.frame to igraph object
+transforms the interactions data.frame to an igraph object
 }
 \examples{
-interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", "Signor"))
-OPI_g = interaction_graph(interactions = interactions )
+interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+OPI_g = interaction_graph(interactions)
+}
+\seealso{
+\code{\link{import_Omnipath_Interactions}},
+\code{\link{import_PathwayExtra_Interactions}}, \code{\link{import_KinaseExtra_Interactions}},
+\code{\link{import_LigrecExtra_Interactions}}, \code{\link{import_TFregulons_Interactions}},
+\code{\link{import_miRNAtarget_Interactions}} or \code{\link{import_AllInteractions}}
 }

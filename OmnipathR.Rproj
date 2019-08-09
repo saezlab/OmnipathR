@@ -5,16 +5,28 @@ SaveWorkspace: Default
 AlwaysSaveHistory: Default
 
 EnableCodeIndexing: Yes
+<<<<<<< HEAD
 UseSpacesForTab: No
 NumSpacesForTab: 4
+=======
+UseSpacesForTab: Yes
+NumSpacesForTab: 2
+>>>>>>> 00dd32df69ee4792ba7bb3f6ab379c7dec89dc9f
 Encoding: UTF-8
 
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
+<<<<<<< HEAD
 AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
 
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
+=======
+BuildType: Package
+PackageUseDevtools: Yes
+PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace
+>>>>>>> 00dd32df69ee4792ba7bb3f6ab379c7dec89dc9f
