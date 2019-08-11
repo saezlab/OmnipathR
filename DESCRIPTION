@@ -15,9 +15,10 @@ Depends:
     graphics,
     methods
 Imports:
-    plyr,
     dplyr,
+    tidyr
+Suggests: 
     dnet,
     gprofiler2,
-    tidyverse
+    BiocStyle
 RoxygenNote: 6.1.1

@@ -745,13 +745,12 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
 # not reported by the asked databases.
   
   nInter = nrow(interactions)
-  subsetInteractions = plyr::adply(interactions,1,function(interaction){
-    if (any(strsplit(interaction[["sources"]],split = ";")[[1]] %in% databases)){
-      return(interaction)
-    }else
-      return(NULL)
-  }
-  )
+  
+  subsetInteractions <- 
+    interactions[which(unlist(lapply(strsplit(interactions$sources,";"),
+                              function(x){any(x %in% databases)}))),]
+                                     
+                                     
   nInterPost = nrow(subsetInteractions)
   
   print(paste0("removed ",nInter-nInterPost, 

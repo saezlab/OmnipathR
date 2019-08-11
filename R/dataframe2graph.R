@@ -17,15 +17,17 @@ ptms_graph <- function(ptms){
 	# This might cause issue when a gene name encodes multiple uniprot IDs.
 
   # keep only edge attributes
-	edges = ptms %>% select(- c(enzyme, substrate))
+	edges = ptms %>% dplyr::select(- c(enzyme, substrate))
 
 	# build vertices: gene_names and gene_uniprotIDs
-	nodesA = select(ptms, c(enzyme_genesymbol, enzyme))
-	nodesB = select(ptms, c(substrate_genesymbol, substrate))
+	nodesA = dplyr::select(ptms, c(enzyme_genesymbol, enzyme))
+	nodesB = dplyr::select(ptms, c(substrate_genesymbol, substrate))
 	colnames(nodesA) = colnames(nodesB) = c("genesymbol", "up_id")
 	nodes = rbind(nodesA,nodesB)
 	nodes = unique(nodes)
-	nodes = nodes %>% group_by(genesymbol) %>% summarise("up_ids" = paste0(up_id,collapse=",")) %>% ungroup()
+	nodes = nodes %>% dplyr::group_by(genesymbol) %>% 
+	  dplyr::summarise("up_ids" = paste0(up_id,collapse=",")) %>% 
+	  dplyr::ungroup()
 
 
 	op_dfs = list(edges = edges,
@@ -68,15 +70,17 @@ interaction_graph <- function(interactions = interactions){
 	# This might cause issue when a gene name encodes multiple uniprot IDs.
 
   # keep only edge attributes
-	edges = interactions %>% select(- c(source, target))
+	edges = interactions %>% dplyr::select(- c(source, target))
 
   # build vertices: gene_names and gene_uniprotIDs
-	nodesA = select(interactions, c(source_genesymbol, source))
-	nodesB = select(interactions, c(target_genesymbol, target))
+	nodesA = dplyr::select(interactions, c(source_genesymbol, source))
+	nodesB = dplyr::select(interactions, c(target_genesymbol, target))
 	colnames(nodesA) = colnames(nodesB) = c("genesymbol", "up_id")
 	nodes = rbind(nodesA,nodesB)
 	nodes = unique(nodes)
-	nodes = nodes %>% group_by(genesymbol) %>% summarise("up_ids" = paste0(up_id,collapse=",")) %>% ungroup()
+	nodes = nodes %>% dplyr::group_by(genesymbol) %>% 
+	  dplyr::summarise("up_ids" = paste0(up_id,collapse=",")) %>% 
+	  dplyr::ungroup()
 	op_dfs = list(edges = edges,
 				  nodes = nodes)
 
