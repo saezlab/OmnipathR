@@ -2,18 +2,23 @@
 % Please edit documentation in R/print_interactions.R
 \name{printPath_es}
 \alias{printPath_es}
-\title{print paths given by edge sequence}
+\title{print network paths given by edge sequence}
 \usage{
 printPath_es(edgeSeq, G)
 }
 \arguments{
 \item{edgeSeq}{edge sequence}
 
-\item{G}{igraph object (from ptms or interactions)}
+\item{G}{igraph object (from ptms or any interaction dataset)}
 }
 \description{
 prints the interactions in the path in a nice format
 }
 \examples{
+interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+OPI_g = interaction_graph(interactions = interactions )
 printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
+}
+\seealso{
+\code{\link{printPath_vs}}
 }

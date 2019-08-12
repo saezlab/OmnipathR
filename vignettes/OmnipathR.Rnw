@@ -1,0 +1,661 @@
+%\VignetteIndexEntry{OmnipathR: utility functions to work with Omnipath in R}
+%\VignettePackage{OmnipathR}
+%\VignetteEngine{utils::Sweave}
+
+\documentclass{article}
+
+<<style, eval=TRUE, echo=FALSE, results=tex>>=
+  BiocStyle::latex()
+@
+  
+% \usepackage{booktabs} % book-quality tables
+
+% \newcommand\BiocStyle{\Rpackage{BiocStyle}}
+% \newcommand\knitr{\Rpackage{knitr}}
+% \newcommand\rmarkdown{\Rpackage{rmarkdown}}
+% \newcommand\latex[1]{{\ttfamily #1}}
+  
+  \makeatletter
+  \def\thefpsfigure{\fps@figure}
+  \makeatother
+  
+  \newcommand{\exitem}[3]{%
+    \item \latex{\textbackslash#1\{#2\}} #3 \csname#1\endcsname{#2}.%
+    }
+    
+    \title{OmnipathR: utility functions to work with Omnipath in R}
+    \author[1]
+    {Alberto Valdeolivas\thanks{\email{alvaldeolivas@gmail.com}}}
+    \author[1]
+    {Attila Gabor\thanks{\email{gaborattila87@gmail.com}}}
+    \affil[1]{Institute of Computational Biomedicine, Heidelberg University, 
+    Faculty of Medicine, 69120 Heidelberg, Germany}
+    
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+    % \SweaveOpts{concordance=TRUE}
+    
+    \maketitle
+    
+    \begin{abstract}
+    This vignette describes how to use the \textit{OmnipathR} package
+    to retrieve information from the Omnipath database:  
+    
+      \url{http://omnipathdb.org/}
+    
+    In addition, it includes some utility functions to filter, analyse and 
+    visualize the data. 
+    
+    \end{abstract}
+    
+    \packageVersion{\Sexpr{BiocStyle::pkg_ver("OmnipathR")}}
+    
+    Feedbacks and bugreports are always very welcomed!
+    
+    Please use the Github issue page to report bugs or for questions: 
+      
+      \url{https://github.com/saezlab/OmnipathR/issues} 
+    
+    Many thanks for using \textit{OmnipathR}!
+
+    \newpage
+    
+    \tableofcontents
+    
+    \newpage
+    
+    \section{Introduction}
+    
+    \textit{OmnipathR} is an \R{}~ package built to provide easy access to the
+    data stored in the Omnipath webservice \cite{Turei2016}: 
+    
+      \url{http://omnipathdb.org/}
+    
+    The webservice implements a very simple REST style API. This package make 
+    requests by the HTTP protocol to retreive the data. Hence, fast Internet 
+    access is required for a proper use of \textit{OmnipathR}. 
+    
+    \subsection{Query types}
+    
+    \textit{OmnipathR} can retrieve five different types of data:
+    
+\begin{itemize}
+\item \textbf{Interactions:} protein-protein interactions organized in 
+different datasets: 
+     \begin{itemize} 
+        \item \textbf{Omnipath:} the OmniPath data as defined in the original
+        publication \cite{Turei2016} and collected from different databases.
+        \item \textbf{Pathwayextra:} activity flow interactions without 
+        literature reference. 
+        \item \textbf{Kinaseextra:} enzyme-substrate interactions without 
+        literature reference.
+        \item \textbf{Ligrecextra:} ligand-receptor interactions without 
+        literature reference.
+        \item \textbf{Tfregulons:} transcription factor (TF)-target interactions 
+        from DoRothEA \cite{GarciaAlonso2017,GarciaAlonso2019}.
+        \item \textbf{Mirnatarget:} miRNA-mRNA and TF-miRNA interactions. 
+  \end{itemize}
+
+
+\item \textbf{Post-translational modifications (PTMs):} It provides 
+enzyme-substrate reactions in a very similar way to the aforementioned 
+interactions. Some of the biological databases related to PTMs integrated in 
+Omnipath are Phospho.ELM \cite{Dinkel2010} and PhosphoSitePlus 
+\cite{Hornbeck2014}. 
+
+\item \textbf{Complexes:} it provides access to a comprehensive database 
+of more than 22000 protein complexes. This data comes from different resources
+such as: CORUM \cite{Giurgiu2018} or Hu.map \cite{Drew2017}. 
+
+\item \textbf{Annotations:} it provides a large variety of data regarding 
+different annotations about proteins and complexes. These data come from dozens 
+of databases covering different topics such as: The Topology Data Bank of 
+Transmembrane Proteins (TOPDB) \cite{Dobson2014} or ExoCarta 
+\cite{Keerthikumar2016}, a database collecting the proteins that were identified 
+in exosomes in multiple organisms.
+
+\item \textbf{Intercell:} it provides information on the roles in inter-cellular 
+signaling. For instance. if a protein is a ligand, a receptor, an extracellular 
+matrix  (ECM) component, etc. The data does not come from original sources but 
+combined from several databases by us. The source databases, such as CellPhoneDB 
+\cite{VentoTormo2018} or Receptome \cite{BenShlomo2003}, are also referred for 
+each reacord.
+\end{itemize}
+
+Figure~\ref{fig:1} shows an overview of the resources featured in 
+OmniPath. For more detailed information about the original data sources 
+integrated in Omnipath, please visit: \url{http://omnipathdb.org/} and 
+\url{http://omnipathdb.org/info}.  
+
+\begin{figure*}
+\includegraphics{fig1}   
+\caption{\label{fig:1} Overview of the resources featured in OmniPath.  
+ Causal resources (including activity-flow and enzyme-substrate resources) can 
+ provide direction (*) or sign and direction (+) of interactions. 
+}
+\end{figure*}
+
+\subsection{Mouse and rat}
+Excluding the miRNA interactions, all interactions and PTMs are available for 
+human, mouse and rat. The rodent data has been translated from human using the 
+NCBI Homologene database. Many human proteins do not have known homolog in 
+rodents hence rodent datasets are smaller than their human counterparts.
+
+In case you work with mouse omics data you might do better to translate your 
+dataset to human (for example using the pypath.homology module, 
+\url{https://github.com/saezlab/pypath/}) and use human interaction data.
+    
+\section{Installation of the \textit{OmnipathR} package}
+First of all, you need a current version of \R{}~\url{(www.r-project.org)}.
+\textit{OmnipathR} is a freely available package deposited on
+\url{https://github.com/saezlab/OmnipathR}. You can install it by running 
+the following commands on an \R{}~console:
+  
+<<installation,eval=FALSE>>=
+if(!require(devtools)){install.packages("devtools")} 
+devtools::install_github("saezlab/omnipathR")
+@
+  
+\section{Usage Examples}
+In the following paragraphs, we provide some examples to describe how to use 
+the \textit{OmnipathR} package to retrieve different types of information from 
+Omnipath webserver. In addition, we play around with the data aiming at 
+obtaining some biological relevant information.
+
+Noteworthy, the sections \textbf{complexes}, \textbf{annotations} and 
+\textbf{intercell} are linked. We explore the annotations and roles in 
+inter-cellular communications of the proteins involved in a given complex. This
+basic example shows the usefulness of integrating the information avaiable in 
+the different \textbf{Omnipath} resources.
+
+\subsection{Interactions}
+
+Proteins interact among them and with other biological molecules to perform
+cellular functions. Proteins also participates in pathways, linked series of 
+reactions occurring inter/intra cells to transform products or to transmit
+signals inducing specific cellular responses. Protein interactions are therefore
+a very valuable source of information to understand cellular functioning. 
+
+We are going to download the original \textbf{Omnipath} human interactions 
+\cite{Turei2016}. To do so, we first check the different source databases and 
+select some of them. Then, we print some of the downloaded interactions 
+("+" means activation, "-" means inhibition and "?" means undirected 
+interactions or inconclusive data).
+
+<<>>=
+library(OmnipathR)
+library(igraph)
+library(dplyr)
+library(tidyr)
+library(dnet)
+library(gprofiler2)
+
+## We check the different interaction databases
+.get_interaction_databases()
+
+## The interactions are stored into a data frame.
+interactions <- 
+  import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
+  "Signor"))
+
+## We visualize the first interactions in the data frame.
+print_interactions(head(interactions))
+@
+
+\subsubsection{Protein-protein interaction networks}
+
+Protein-protein interactions are usually converted into networks. Describing 
+protein interactions as networks not only provides a convenient format for 
+visualization, but also allows applying graph theory methods to mine the 
+biological information they contain. 
+
+We convert here our set of interactions to a network/graph (\textit{igraph} 
+object). Then, we apply two very common approaches to extract information from 
+a biological network:
+
+\begin{itemize} 
+  \item \textbf{Shortest Paths:} finding a path between two nodes (proteins) 
+  going through the minimum number of edges. This can be very useful to track
+  consecutive reactions within a given pathway. We display below the shortest 
+  path between two given proteins and all the possible shortests paths between 
+  two other proteins. 
+  
+<<>>=
+## We transform the interactions data frame into a graph
+OPI_g <- interaction_graph(interactions = interactions)
+
+## Find and print shortest paths on the directed network between proteins 
+## of interest:
+printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
+                            output = 'epath')$epath[[1]],OPI_g)
+
+## Find and print all shortest paths between proteins of interest:
+printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",
+                                to = "MAPKAPK2")$res,OPI_g)
+@
+  
+  \item \textbf{Clustering:} grouping nodes (proteins) in such a way that 
+  nodes belonging to the same group (called cluster) are more connected in the
+  network to each other than to those in other groups (clusters). Since proteins 
+  interact to perform their functions, proteins within the same cluster are
+  likely to be implicated in similar biological tasks. Figure~\ref{fig:2} shows    
+  the subgraph containing the proteins and interactions of a specifc protein.  
+
+<<>>=
+## We apply a clustering algorithm (Louvain) to group proteins in 
+## our network. We apply here Louvain which is fast but can only run 
+## on undirected graphs. Other clustering algorithms can deal with 
+## directed networks but with longer computational times, 
+## such as cluster_edge_betweenness.
+OPI_g_undirected <- as.undirected(OPI_g, mode=c("mutual"))
+cl_results <- cluster_louvain(OPI_g_undirected)
+## We extract the cluster where a protein of interest is contained
+cluster_id <- cl_results$membership[which(cl_results$names == "CD22")]
+module_graph <- induced_subgraph(OPI_g_undirected, 
+        V(OPI_g)$name[which(cl_results$membership == cluster_id)])
+@
+
+
+<<fig2, echo=TRUE, fig=TRUE, include=FALSE, width=10, height=5>>=
+## We print that cluster with its interactions. 
+par(mar=c(0.1,0.1,0.1,0.1))
+plot(module_graph, vertex.label.color="black",vertex.frame.color="#ffffff",
+    vertex.size= 15, edge.curved=.2,
+    vertex.color = ifelse(igraph::V(module_graph)$name == "CD22","yellow",
+    "#00CCFF"), edge.color="blue",edge.width=0.8)
+@
+
+\begin{figure*}
+\includegraphics{\jobname-fig2}
+\caption{\label{fig:2}.  
+Subnetwork extracted from the interactions graph representing the cluster 
+where we can find the gene \textit{CD22} (yellow node).
+}
+\end{figure*}
+\end{itemize}
+
+\subsubsection{Other interaction datasets}
+We used above the interactions from the dataset described in the original 
+\textbf{Omnipath} publication \cite{Turei2016}. In this section, we provide 
+examples on how to retry and deal with interactions from the remaining datasets. 
+The same functions can been applied to every interaction dataset. 
+
+In the first example, we are going to get the interactions from the 
+\textbf{pathwayextra} dataset, which contains activity flow interactions without 
+literature reference. We are going to focus on the mouse interactions for a 
+given gene in this particular case. 
+
+<<>>=
+## We query and store the interactions into a dataframe
+interactions <- 
+  import_PathwayExtra_Interactions(filter_databases=c("BioGRID","IntAct"),
+  select_organism = 10090)
+
+## We select all the interactions in which Amfr gene is involved
+interactions_Amfr <- filter(interactions, source_genesymbol == "Amfr" | 
+                              target_genesymbol == "Amfr")
+
+## We print these interactions: 
+print_interactions(interactions_Amfr)
+@
+
+Next, we download the interactions from the \textbf{kinaseextra} dataset, which 
+contains enzyme-substrate interactions without literature reference. We are 
+going to focus on rat reactions targeting a particular gene.
+
+<<>>=
+## We query and store the interactions into a dataframe
+interactions <- 
+  import_KinaseExtra_Interactions(filter_databases=c("PhosphoPoint",
+  "PhosphoSite"), select_organism = 10116)
+
+## We select the interactions in which Dpysl2 gene is a target
+interactions_TargetDpysl2 <- filter(interactions, 
+                                    target_genesymbol == "Dpysl2")
+
+## We print these interactions: 
+print_interactions(interactions_TargetDpysl2)
+@
+
+In the following example we are going to work with the \textbf{ligrecextra} 
+dataset, which contains ligand-receptor interactions without literature 
+reference. Our goal is to find the shortest path between two proteins of our
+interest. For a more global overview, we induce a network containing the genes
+involved in our shortest path and their first neighbors (Figure~\ref{fig:3}).
+
+<<>>=
+## We query and store the interactions into a dataframe
+interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD",
+  "Guide2Pharma"),select_organism=9606)
+
+## We transform the interactions data frame into a graph
+OPI_g <- interaction_graph(interactions = interactions)
+
+## We aim at finding the shortest path between two genes of interest. 
+path <- shortest_paths(OPI_g, "CD1D", "TFR2")
+printPath_vs(path$vpath,OPI_g)
+
+## We induce a network with the genes involved in the shortest path and their
+## first neighbors to get a more general overview of the interactions 
+Induced_Network <-  dNetInduce(g=OPI_g, 
+                    nodes_query=as.character(path$vpath[[1]]$name), knn=1,
+                    remove.loops=FALSE, largest.comp=FALSE)
+
+
+@
+
+<<fig3, echo=TRUE, fig=TRUE, include=FALSE, width=10, height=5>>=
+## We print the induced network
+par(mar=c(0.1,0.1,0.1,0.1))
+plot(Induced_Network, vertex.label.color="black",
+    vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.2,
+    vertex.color = 
+      ifelse(igraph::V(Induced_Network)$name %in% c("CD1D","TFR2"),
+      "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
+@
+
+\begin{figure*}
+\includegraphics{\jobname-fig3}
+\caption{\label{fig:3}.  
+Subnetwork extracted from the \textbf{kinaseextra} interactions graph 
+containing the shortest path between \textit{CD1D} and  \textit{TFR2} 
+(yellow nodes). The first neighbors of the genes involved in the shortest 
+path are also shown. 
+}
+\end{figure*}
+
+Another very interesting interaction dataset also available in Omnipath are the 
+\textbf{tfregulons} from DoRothEA \cite{GarciaAlonso2017,GarciaAlonso2019}. It
+contains transcription factor (TF)-target interactions with confidence score, 
+ranging from A-E, being A the most confident interactions. In the code chunk 
+shown below, we select and print the most confident interactions for a given TF.  
+
+<<>>=
+## We query and store the interactions into a dataframe
+interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
+    "ARACNe-GTEx"),select_organism=9606)
+
+## We select the most confident interactions for a given TF and we print 
+## the interactions to check the way it regulates its different targets
+interactions_A_GLI1  <- filter(interactions, tfregulons_level=="A", 
+                          source_genesymbol == "GLI1")
+print_interactions(interactions_A_GLI1)
+@
+
+The last dataset describing interactions is \textbf{mirnatarget}. It stores
+miRNA-mRNA and TF-miRNA interactions. These interactions are only available for
+human so far. We next select the miRNA interacting with the TF selected in 
+the previous code chunk, \textit{GLI1}. The main function of miRNAs seems to 
+be related with gene regulation. It is therefore interesting to see how some
+miRNA can regulate the expression of a TF which in turn regulates the expression
+of other genes. Figure~\ref{fig:4} shows a schematic network of the miRNA 
+targeting \textit{GLI1} and the genes regulated by this TF. 
+
+<<>>=
+## We query and store the interactions into a dataframe
+interactions <- 
+  import_miRNAtarget_Interactions(filter_databases=c("miRTarBase","miRecords"))
+
+## We select the interactions where a miRNA is interacting with the TF 
+## used in the previous code chunk and we print these interactions.
+interactions_miRNA_GLI1 <- filter(interactions,  target_genesymbol == "GLI1")
+print_interactions(interactions_miRNA_GLI1)
+
+## We transform the previous selections to graphs (igraph objects)
+OPI_g_1 <-interaction_graph(interactions = interactions_A_GLI1)
+OPI_g_2 <-interaction_graph(interactions = interactions_miRNA_GLI1)
+@
+
+<<fig4, echo=TRUE, fig=TRUE, include=FALSE, width=10, height=5>>=
+## We print the union of both previous graphs
+par(mar=c(0.1,0.1,0.1,0.1))
+plot(OPI_g_1 %u% OPI_g_2, vertex.label.color="black",
+    vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.25,
+    vertex.color = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
+      "red",ifelse(igraph::V(OPI_g_1 %u% OPI_g_2)$name == "GLI1",
+      "yellow","#00CCFF")), edge.color="blue",
+    vertex.shape = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
+      "vrectangle","circle"),edge.width=0.8)
+@
+
+\begin{figure*}
+\includegraphics{\jobname-fig4}
+\caption{\label{fig:4}.  
+Schematic network of the miRNA (red square nodes) targeting \textit{GLI1} 
+(yellow node) and the genes regulated by this TF (blue round nodes). 
+}
+\end{figure*}
+
+\subsection{Post-translational modifications (PTMs)}
+Another query type available is PTMs which provides enzyme-substrate reactions 
+in a very similar way to the aforementioned interactions. PTMs refer 
+generally to enzymatic modification of proteins after their synthesis in the
+ribosomes. PTMs can be highly context-specific and they play a main role 
+in the activation/inhibition of biological pathways.   
+
+In the next code chunk, we download the \textbf{PTMs} for human. We first check 
+the different available source databases, even though we do not perform any 
+filter. Then, we select and print the reactions involving a specific   
+enzyme-substrate pair. Those reactions lack information about activation or 
+inhibition. To obtain that information, we match the data with \textbf{Omnipath}
+interactions. Finally, we show that it is also possible to build a graph using
+this information, and to retrieve PTMs from mouse or rat. 
+
+<<>>=
+## We check the different PTMs databases
+.get_ptms_databases()
+
+## We query and store the ptms into a dataframe. No filtering by
+## databases in this case.
+ptms <- import_Omnipath_PTMS()
+
+## We can select and print the reactions between a specific kinase and
+## a specific substrate  
+print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
+  substrate_genesymbol=="MAPK3"))
+
+## In the previous results, we can see that ptms does not contain sign 
+## (activation/inhibition). We can generate this information based on the
+## protein-protein Omnipath interaction dataset. 
+interactions <- import_Omnipath_Interactions()
+ptms <- get_signed_ptms(ptms,interactions)
+
+## We select again the same kinase and substrate. Now we have information 
+## about inhibition or activation when we print the ptms
+print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
+  substrate_genesymbol=="MAPK3")) 
+
+## We can also transform the ptms into a graph.
+ptms_g <- ptms_graph(ptms = ptms)
+
+## We download PTMs for mouse 
+ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
+       select_organism=10090)
+@
+
+\subsection{Complexes}
+Some studies indicate that around 80\% of the human proteins operate in 
+complexes, and many proteins belong to several different complexes 
+\cite{Berggrd2007}. These complexes play critical roles in a large variety of 
+biological processes. Some well-known examples are the proteasome and the 
+ribosome. Thus, the description of the full set of protein complexes functioning 
+in cells is essential to improve our understanding of biological processes.    
+
+The \textbf{complexes} query provides access to more than 20000 protein 
+complexes. This comprehensive database has been created by integrating 
+different resources. We now download these molecular complexes filtering by some 
+of the source databases. We check the complexes where a couple of specific genes
+participate. First, we look for the complexes where any of these two genes 
+participate. We then identify the complex where these two genes are jointly 
+involved. Finally, we perform an enrichment analysis with the genes 
+taking part in that complex. You should keep an eye on this complex since
+it will be used again in the forthcoming sections.
+
+<<>>=
+## We check the different complexes databases
+.get_complexes_databases()
+
+## We query and store complexes from some sources into a dataframe. 
+complexes <- import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
+
+## We check all the molecular complexes where a set of genes participate
+query_genes <- c("LMNA","CTCF")
+
+## Complexes where any of the input genes participate
+complexes_query_genes_any <- get_complex_genes(complexes,query_genes,
+                                          total_match=FALSE)
+
+## We print the components of the different selected components 
+complexes_query_genes_any$components_genesymbols 
+
+## Complexes where all the input genes participate jointly
+complexes_query_genes_join <- get_complex_genes(complexes,query_genes,
+                                          total_match=TRUE)
+
+## We print the components of the different selected components 
+complexes_query_genes_join$components_genesymbols
+@
+
+<<>>=
+genes_complex <- 
+  unlist(strsplit(complexes_query_genes_join$components_genesymbols, "-"))
+
+## We can perform an enrichment analyses with the genes in the complex
+EnrichmentResults <- gost(genes_complex, significant = TRUE, 
+  user_threshold = 0.001, correction_method = c("fdr"),
+  sources=c("GO:BP","GO:CC","GO:MF"))
+
+## We show the most significant results
+EnrichmentResults$result %>% 
+  dplyr::select(term_id, source, term_name,p_value) %>%
+  dplyr::arrange(source, p_value) 
+@
+
+\subsection{Annotations} 
+Biological annotations are statements, usually traceable and curated, about 
+the different features of a biological entity. At the genetic level, annotations
+describe the biological function, the subcellular situation, the DNA location 
+and many other related properties of a particular gene or its gene products. 
+
+The annotations query provides a large variety of data about proteins
+and complexes. These data come from dozens of databases and each kind of 
+annotation record contains different fields. Because of this, here we have a 
+record\_id field which is unique within the records of each database. Each row 
+contains one key value pair and you need to use the record\_id to connect the 
+related key-value pairs (see examples below). 
+
+Now, we focus in the annotations of the complex studied in the previous section.
+We first inspect the different available databases in the omnipath webserver.
+Then, we download the annotations for our complex itself as a biological 
+entity. We find annotations related to the nucleus and transcriptional control,
+which is in agreement with the enrichment analysis results of its individual 
+components. 
+
+<<>>=
+## We check the different annotation databases
+.get_annotation_databases()
+
+## We can further investigate the features of the complex selected 
+## in the previous section.
+
+## We first get the annotations of the complex itself:
+annotations <-import_Omnipath_annotations(select_genes=paste0("COMPLEX:",
+  complexes_query_genes_join$components_genesymbols))
+
+dplyr::select(annotations,source,label,value)
+@
+
+Afterwards, we explore the annotations of the individual components of the 
+complex in some databases. We check the pathways where these proteins 
+are involved. Once again, we also find many nucleus related annotations when 
+checking their cellular location. 
+
+<<>>=
+## Then, we explore some annotations of its individual components
+
+## Pathways where the proteins belong:
+annotations <- import_Omnipath_annotations(select_genes=genes_complex,
+  filter_databases=c("NetPath"))
+
+dplyr::select(annotations,genesymbol,value)
+
+## Cellular localization of our proteins 
+annotations <-import_Omnipath_annotations(select_genes=genes_complex,
+  filter_databases=c("ComPPI"))
+
+## Since we have same record_id for some results of our query, we spread 
+## these records across columns
+spread(annotations, label,value) %>% 
+  dplyr::arrange(desc(score)) %>%
+  dplyr::top_n(10, score)
+@
+
+
+\subsection{Intercell} 
+Cells perceive cues from their microenvironment and neighboring cells, and 
+respond accordingly to ensure proper activities and coordination between them.   
+The ensemble of these communication process is called inter-cellular signaling
+(\textbf{intercell}).
+
+\textbf{Intercell} query provides information about the roles of proteins in 
+inter-cellular signaling (e.g. if a protein is a ligand, a receptor, an 
+extracellular matrix (ECM) component, etc.) This query type is very similar to 
+annotations. However, \textbf{intercell} data does not come from original 
+sources, but combined from several databases by us into categories (we also 
+refer to the original sources).   
+
+We first inspect the different categories available in the Omnipath webserver.
+Then, we focus again in our previously selected complex and we check its 
+potential roles in inter-cellular signaling. We repeat the analysis with its
+individual components. 
+<<>>=
+## We check the different intercell categories
+.get_intercell_categories()
+
+## We import the intercell data into a dataframe
+intercell <- import_Omnipath_intercell()
+
+## We check the intercell annotations for our previous complex itself
+dplyr::filter(intercell,
+  genesymbol == complexes_query_genes_join$components_genesymbols,
+  mainclass != "") %>%
+  dplyr::select(category,genesymbol, mainclass)
+
+## We check the intercell annotations for the individual components of 
+## our previous complex. We filter our data to print it in a good format
+dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>% 
+  dplyr::distinct(genesymbol,mainclass, .keep_all = TRUE) %>%
+  dplyr::select(category, genesymbol, mainclass) %>%
+  dplyr::arrange(genesymbol)
+@
+
+\subsection{Conclusion}
+\textit{OmnipathR} provides access to the wealth of data stored in the Omnipath 
+webservice \url{http://omnipathdb.org/} from the \R{}~enviroment. In addition, 
+it contains some utility functions for visualization, filtering and analysis. 
+The main strength of \textit{OmnipathR} is the straightforward transformation of 
+the different Omnipath data into commonly used \R{}~ objects, such as dataframes 
+and graphs. Consequently, it allows an easy integration of the different types
+of data and a gateway to the vast number of \R{} packages dedicated to the 
+analysis and representaiton of biological data. We highlighted these abilities 
+in some of the examples detailed in previous sections of this document.   
+
+\newpage
+
+\bibliography{Bioc}
+
+\newpage
+
+\appendix
+
+
+%---------------------------------------------------------
+  \section{Session info}
+%---------------------------------------------------------
+  
+<<sessionInfo, results=tex, echo=FALSE>>=
+  toLatex(sessionInfo())
+@
+  
+  
+\end{document}
