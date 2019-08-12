@@ -185,7 +185,8 @@ interactions or inconclusive data).
 <<>>=
 library(OmnipathR)
 library(igraph)
-library(tidyverse)
+library(dplyr)
+library(tidyr)
 library(dnet)
 library(gprofiler2)
 

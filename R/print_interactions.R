@@ -34,9 +34,11 @@ print_interactions = function(interDF,writeRefs=FALSE){
 					   ifelse(interDF$is_inhibition==1,"( - )","( ? )"))     # stimulation: F, is inhibition?
 		interDF$interaction = paste0("==", signs,"==>")
 		if(writeRefs){
-			print(interDF[,c('enzyme',"interaction","substrate","modification","nsources","nrefs","references")])
+			print(interDF[,c('enzyme',"interaction","substrate","modification",
+			                 "nsources","nrefs","references")])
 		}else{
-			print(interDF[,c('enzyme',"interaction","substrate","modification","nsources")])
+			print(interDF[,c('enzyme',"interaction","substrate","modification",
+			                 "nsources")])
 		}
 
 
@@ -60,7 +62,8 @@ print_interactions = function(interDF,writeRefs=FALSE){
 
 		if(writeRefs){
 			if ("nrefs" %in% colnames(interDF)){
-		    print(interDF[,c('source',"interaction","target","nsources","nrefs","references")])
+		    print(interDF[,c('source',"interaction","target","nsources",
+		                     "nrefs","references")])
 			} else {
 			  print(interDF[,c('source',"interaction","target","nsources")])
 			} 
