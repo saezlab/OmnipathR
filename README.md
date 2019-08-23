@@ -36,7 +36,7 @@ For a more detailed information, we recommend you to visit the following sites:
   
   <https://github.com/saezlab/pypath/blob/master/webservice.rst> 
   
-  <https://github.com/saezlab/OmnipathR/vignettes/OmnipathR.pdf>
+  <https://github.com/saezlab/OmnipathR/vignettes/>
   
 
 ## Installation
