@@ -6,7 +6,7 @@ Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
 Maintainer: A.Gabor <gabor.attila87@gmail.com>
 Description: Import data from https://www.omnipathdb.org webservice. It also 
     includes functions to transform and print this data. 
-License: MIT + file LICENSE
+Licenise: MIT + file LICENSE
 URL: https://github.com/saezlab/OmnipathR
 Encoding: UTF-8
 LazyData: true
@@ -22,3 +22,4 @@ Suggests:
     gprofiler2,
     BiocStyle
 RoxygenNote: 6.1.1
+

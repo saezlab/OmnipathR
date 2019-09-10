@@ -36,7 +36,7 @@ For a more detailed information, we recommend you to visit the following sites:
   
   <https://github.com/saezlab/pypath/blob/master/webservice.rst> 
   
-  <https://github.com/saezlab/OmnipathR/vignettes/OmnipathR.pdf>
+  <https://github.com/saezlab/OmnipathR/blob/master/vignettes/OmnipathR.pdf>
   
 
 ## Installation
@@ -63,11 +63,11 @@ install.packages('./OmnipathR',repo=NULL)
 To get started, we strongly recommend to read our vignette in order to deal with 
 the different types of queries and handle the data they return:
 
-  <https://github.com/saezlab/OmnipathR/vignettes/OmnipathR.pdf>
+  <https://github.com/saezlab/OmnipathR/blob/master/vignettes/OmnipathR.pdf>
 
 You can also check the manual:
 
-   <https://github.com/saezlab/OmnipathR/Manual_OmnipathR_0.2.0.pdf>
+   <https://github.com/saezlab/OmnipathR/blob/master/Manual_OmnipathR_0.2.0.pdf>
 
 In addition, we provide here some examples for a quick start: 
 
