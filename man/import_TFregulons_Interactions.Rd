@@ -2,7 +2,8 @@
 % Please edit documentation in R/import_Omnipath.R
 \name{import_TFregulons_Interactions}
 \alias{import_TFregulons_Interactions}
-\title{Imports from Omnipath webservice the interactions from Dorothea dataset}
+\title{Imports from Omnipath webservice the interactions from 
+Dorothea dataset}
 \usage{
 import_TFregulons_Interactions(from_cache_file = NULL,
   filter_databases = .get_interaction_databases(),
@@ -27,8 +28,8 @@ which contains transcription factor (TF)-target interactions from DoRothEA
 \url{https://github.com/saezlab/DoRothEA}
 }
 \examples{
-interactions <- import_TFregulons_Interactions(filter_databases=c("tfact","ARACNe-GTEx"),
-                 select_organism=9606)
+interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
+    "ARACNe-GTEx"), select_organism=9606)
 }
 \seealso{
 \code{\link{.get_interaction_databases}, 

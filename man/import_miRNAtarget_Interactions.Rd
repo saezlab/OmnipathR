@@ -2,7 +2,8 @@
 % Please edit documentation in R/import_Omnipath.R
 \name{import_miRNAtarget_Interactions}
 \alias{import_miRNAtarget_Interactions}
-\title{Imports from Omnipath webservice the interactions from miRNAtarget dataset}
+\title{Imports from Omnipath webservice the interactions from 
+miRNAtarget dataset}
 \usage{
 import_miRNAtarget_Interactions(from_cache_file = NULL,
   filter_databases = .get_interaction_databases())

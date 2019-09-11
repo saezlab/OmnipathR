@@ -4,8 +4,8 @@
 \alias{get_complex_genes}
 \title{Get all the molecular complexes for a given gene(s)}
 \usage{
-get_complex_genes(complexes = import_Omnipath_complexes(),
-  select_genes = query_genes, total_match = FALSE)
+get_complex_genes(complexes = import_Omnipath_complexes(), select_genes,
+  total_match = FALSE)
 }
 \arguments{
 \item{complexes}{complexes data frame (obtained using 
@@ -14,8 +14,8 @@ get_complex_genes(complexes = import_Omnipath_complexes(),
 \item{select_genes}{vector containing the genes for whom complexes will be
 retrieved (hgnc format).}
 
-\item{total_match}{[default=FALSE] logical indicating if the user wants to get all 
-the complexes where any of the input genes participate (FALSE) or
+\item{total_match}{[default=FALSE] logical indicating if the user wants to 
+get all the complexes where any of the input genes participate (FALSE) or
 to get only the complexes where all the input genes participate together 
 (TRUE)}
 }
