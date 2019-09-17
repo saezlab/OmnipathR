@@ -1,14 +1,15 @@
 Package: OmnipathR
 Type: Package
 Title: Import Omnipath network
-Version: 0.2.0
+Version: 0.99.0
 Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
 Maintainer: Alberto Valdeolivas Urbelz <alvaldeolivas@gmail.com>
 Description: Import data from https://www.omnipathdb.org webservice. It also 
     includes functions to transform and print this data. 
 License: MIT + file LICENSE
 URL: https://github.com/saezlab/OmnipathR
-biocViews: 	AnnotationData, Homo_sapiens, Mus_musculus, Rattus_norvegicus
+biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient, 
+    DataImport, DataRepresentation
 Encoding: UTF-8
 LazyData: true
 Depends:
@@ -23,5 +24,6 @@ Suggests:
     tidyr,
     dnet,
     gprofiler2,
-    BiocStyle
+    BiocStyle,
+    testthat
 RoxygenNote: 6.1.1

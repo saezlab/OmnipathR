@@ -44,7 +44,7 @@ import_Omnipath_PTMS = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        ptms <- read.table(url_ptms, sep = '\t', header = TRUE,
+        ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(ptms), " PTMs"))
     } else {
@@ -85,7 +85,7 @@ import_Omnipath_PTMS = function (from_cache_file=NULL,
 #' @seealso  \code{\link{import_Omnipath_PTMS}} 
 .get_ptms_databases = function(){
     url_ptms <- 'http://omnipathdb.org/ptms/?fields=sources'
-    ptms <- read.table(url_ptms, sep = '\t', header = TRUE,
+    ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
     return(unique(unlist(strsplit(x = as.character(ptms$sources),split = ";"))))
 }
@@ -139,7 +139,7 @@ import_Omnipath_Interactions = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url,read.table,sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -156,7 +156,7 @@ import_Omnipath_Interactions = function (from_cache_file=NULL,
     filteredInteractions$sources <- as.character(filteredInteractions$sources)
     filteredInteractions$references<-
         as.character(filteredInteractions$references)
-    # we remove references mentioned multiple times:
+    ## we remove references mentioned multiple times:
     filteredInteractions$references <-
         unlist(lapply(strsplit(filteredInteractions$references,split = ";"),
         function(x)paste(unique(x),collapse=";")))
@@ -215,7 +215,7 @@ import_PathwayExtra_Interactions = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url,read.table,sep = '\t', header = TRUE, 
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -236,7 +236,6 @@ import_PathwayExtra_Interactions = function (from_cache_file=NULL,
     
     return(filteredInteractions)
 }
-
 
 #' Imports from Omnipath webservice the interactions from 
 #' kinaseextra dataset
@@ -283,7 +282,7 @@ import_KinaseExtra_Interactions = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url,read.table,sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -348,7 +347,7 @@ import_LigrecExtra_Interactions = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url, read.table ,sep = '\t', header = TRUE, 
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -401,12 +400,12 @@ import_TFregulons_Interactions = function (from_cache_file=NULL,
             url <- paste0(url_common,',tfregulons_level&genesymbols=1')
         } else {
             if (select_organism == 10116){
-                url <- paste0(url_common,',
-                    tfregulons_level&genesymbols=1&organisms=10116')
+                url <- paste0(url_common,
+                    ',tfregulons_level&genesymbols=1&organisms=10116')
             }
             if (select_organism == 10090){
-                url <- paste0(url_common,',
-                    tfregulons_level&genesymbols=1&organisms=10090')
+                url <- paste0(url_common,
+                    ',tfregulons_level&genesymbols=1&organisms=10090')
             }
         }     
     } else {
@@ -414,7 +413,7 @@ import_TFregulons_Interactions = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url, read.table, sep = '\t', header = TRUE, 
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -463,7 +462,7 @@ import_miRNAtarget_Interactions = function (from_cache_file=NULL,
         '&fields=sources,references&genesymbols=1') 
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url, read.table, sep = '\t', header = TRUE, 
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -547,7 +546,7 @@ import_AllInteractions = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        interactions <- read.table(url, sep = '\t', header = TRUE, 
+        interactions <- getURL(url, read.table, sep = '\t', header = TRUE, 
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(interactions), " interactions"))
     } else {
@@ -567,7 +566,7 @@ import_AllInteractions = function (from_cache_file=NULL,
         length))
     filteredInteractions$references <- 
         as.character(filteredInteractions$references)
-# we remove references mentioned multiple times:
+## we remove references mentioned multiple times:
     filteredInteractions$references <- 
         unlist(lapply(strsplit(filteredInteractions$references,split = ";"),
         function(x)paste(unique(x),collapse=";")))
@@ -597,8 +596,8 @@ import_AllInteractions = function (from_cache_file=NULL,
     url_interactions <- paste0('http://omnipathdb.org/interactions?',
         'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra',
         ',tfregulons,mirnatarget&fields=sources')
-    interactions = read.table(url_interactions, sep = '\t', header = TRUE,
-        stringsAsFactors = FALSE)
+    interactions = getURL(url_interactions, read.table, sep = '\t', 
+        header = TRUE,stringsAsFactors = FALSE)
     return(unique(unlist(strsplit(x = as.character(interactions$sources),
         split = ";"))))
 }
@@ -627,7 +626,7 @@ import_Omnipath_complexes = function (from_cache_file=NULL,
     url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
 
     if(is.null(from_cache_file)){
-        complexes <- read.csv(url_complexes, sep = '\t', header = TRUE,
+        complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(complexes), " complexes"))
     } else {
@@ -668,7 +667,7 @@ import_Omnipath_complexes = function (from_cache_file=NULL,
 #' @seealso \code{\link{import_Omnipath_complexes}}
 .get_complexes_databases = function(){
     url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
-    complexes <- read.csv(url_complexes, sep = '\t', header = TRUE,
+    complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
     return(unique(unlist(strsplit(x = as.character(complexes$sources),
         split = ";"))))
@@ -710,8 +709,8 @@ import_Omnipath_annotations = function (from_cache_file=NULL,
     }
 
     if(is.null(from_cache_file)){
-        annotations <- read.csv(url_annotations, sep = '\t', header = TRUE,
-            stringsAsFactors = FALSE)
+        annotations <- getURL(url_annotations, read.csv, sep = '\t', 
+            header = TRUE, stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(annotations), " annotations"))
     } else {
         load(from_cache_file)
@@ -782,7 +781,7 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
     url_intercell <- 'http://omnipathdb.org/intercell'
 
     if(is.null(from_cache_file)){
-        intercell <- read.csv(url_intercell, sep = '\t', header = TRUE,
+        intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         print(paste0("Downloaded ", nrow(intercell), " intercell records"))
     } else {
@@ -812,7 +811,7 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
 .get_intercell_categories = function(){
 
     url_intercell <- 'http://omnipathdb.org/intercell'
-    intercell <- read.csv(url_intercell, sep = '\t', header = TRUE,
+    intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
 
     return(unique(intercell$category))
@@ -821,11 +820,11 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
 ########## ########## ########## ##########
 ########## SOURCE FILTERING      ##########   
 ########## ########## ########## ##########
-### Non exported functions (package internal functions) to filter PTMs,
-### interactions, complexes and annotations according to the databases passed
-### to the main functions
+## Non exported functions (package internal functions) to filter PTMs,
+## interactions, complexes and annotations according to the databases passed
+## to the main functions
 
-# Filtering Interactions, PTMs and complexes
+## Filtering Interactions, PTMs and complexes
 .filter_sources = function(interactions, databases){
 
     nInter = nrow(interactions)
@@ -842,10 +841,10 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
 }
 
 
-# Filtering Annotations
+## Filtering Annotations
 .filter_sources_annotations = function(annotations, databases){
-# takes annotations and removes those which are
-# not reported by the given databases.
+## takes annotations and removes those which are
+## not reported by the given databases.
 
     nAnnot = nrow(annotations)
     subsetAnnotations <- dplyr::filter(annotations, source %in% databases)
@@ -861,10 +860,10 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
     }
 }
 
-# Filtering intercell records according to the categories selected
+## Filtering intercell records according to the categories selected
 .filter_categories_intercell = function(intercell, categories){
-# takes intercell removes and removes those not reported by the given 
-# databases
+## takes intercell removes and removes those not reported by the given 
+## databases
     nIntercell = nrow(intercell)
     subsetIntercell <- dplyr::filter(intercell, .data$category %in% categories)
     nIntercellPost = nrow(subsetIntercell)
@@ -878,3 +877,31 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
         return(NULL)
     }
 }
+
+########## ########## ########## ##########
+########## Resource Queries      ##########   
+########## ########## ########## ##########
+## This function is convenient for appropriate resource retrieval. Following:
+## http://bioconductor.org/developers/how-to/web-query/
+## It tries to retrieve the resource one or several times before failing.
+getURL <- function(URL, FUN, ..., N.TRIES=1L) {
+    N.TRIES <- as.integer(N.TRIES)
+    stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
+
+    while (N.TRIES > 0L) {
+        result <- tryCatch(FUN(URL, ...), error=identity)
+        if (!inherits(result, "error"))
+            break
+            N.TRIES <- N.TRIES - 1L
+        }
+
+    if (N.TRIES == 0L) {
+        stop("'getURL()' failed:",
+            "\n  URL: ", URL,
+            "\n  error: ", conditionMessage(result))
+    }
+
+    return(result) 
+}
+
+
