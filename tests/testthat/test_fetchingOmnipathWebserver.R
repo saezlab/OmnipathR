@@ -34,16 +34,10 @@ complexes_databases <-
     unique(unlist(strsplit(x = as.character(complexes$sources),split = ";")))
 
 ## .get_annotation_databases
-annotations_db <- 
-    c("Adhesome","SignaLink3","TopDB","HGNC","Ramilowski_location", 
-    "Vesiclepedia","HPMR","Kirouac2010","Surfaceome","Signor","Locate",
-    "CellPhoneDB",
-    "Membranome","MatrixDB", "Matrisome","GO_Intercell","Ramilowski2015",
-    "Integrins",
-    "CSPA","Guide2Pharma","Zhong2015","HPA","NetPath","ComPPI","KEGG",
-    "CPAD",
-    "Exocarta",
-    "OPM","CORUM_GO","CellPhoneDB_complex","CORUM_Funcat","HPMR_complex")
+url_annotations <- 'http://omnipathdb.org/annotations_summary'
+annotations <- read.table(url_annotations, sep = '\t', header = TRUE,
+    stringsAsFactors = FALSE)
+annotations_db <- unique(annotations$source)
 
 ## .get_intercell_categories
 url_intercell <- 'http://omnipathdb.org/intercell'
