@@ -7,10 +7,14 @@
 interaction_graph(interactions = interactions)
 }
 \arguments{
-\item{interactions}{data.frame created by \code{\link{import_Omnipath_Interactions}},
-\code{\link{import_PathwayExtra_Interactions}}, \code{\link{import_KinaseExtra_Interactions}},
-\code{\link{import_LigrecExtra_Interactions}}, \code{\link{import_TFregulons_Interactions}},
-\code{\link{import_miRNAtarget_Interactions}} or \code{\link{import_AllInteractions}}}
+\item{interactions}{data.frame created by 
+\code{\link{import_Omnipath_Interactions}},
+\code{\link{import_PathwayExtra_Interactions}}, 
+\code{\link{import_KinaseExtra_Interactions}},
+\code{\link{import_LigrecExtra_Interactions}}, 
+\code{\link{import_TFregulons_Interactions}},
+\code{\link{import_miRNAtarget_Interactions}} or 
+\code{\link{import_AllInteractions}}}
 }
 \value{
 An igraph object
@@ -24,7 +28,10 @@ OPI_g = interaction_graph(interactions)
 }
 \seealso{
 \code{\link{import_Omnipath_Interactions}},
-\code{\link{import_PathwayExtra_Interactions}}, \code{\link{import_KinaseExtra_Interactions}},
-\code{\link{import_LigrecExtra_Interactions}}, \code{\link{import_TFregulons_Interactions}},
-\code{\link{import_miRNAtarget_Interactions}} or \code{\link{import_AllInteractions}}
+\code{\link{import_PathwayExtra_Interactions}}, 
+\code{\link{import_KinaseExtra_Interactions}},
+\code{\link{import_LigrecExtra_Interactions}}, 
+\code{\link{import_TFregulons_Interactions}},
+\code{\link{import_miRNAtarget_Interactions}} or 
+\code{\link{import_AllInteractions}}
 }

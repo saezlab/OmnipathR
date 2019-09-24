@@ -2,7 +2,8 @@
 % Please edit documentation in R/import_Omnipath.R
 \name{import_LigrecExtra_Interactions}
 \alias{import_LigrecExtra_Interactions}
-\title{Imports from Omnipath webservice the interactions from ligrecextra dataset}
+\title{Imports from Omnipath webservice the interactions from 
+ligrecextra dataset}
 \usage{
 import_LigrecExtra_Interactions(from_cache_file = NULL,
   filter_databases = .get_interaction_databases(),
@@ -27,8 +28,8 @@ Imports the dataset from:
 which contains ligand-receptor interactions without literature reference
 }
 \examples{
-interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD","Guide2Pharma"),
-        select_organism=9606)
+interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD",
+      "Guide2Pharma"), select_organism=9606)
 }
 \seealso{
 \code{\link{.get_interaction_databases}, 

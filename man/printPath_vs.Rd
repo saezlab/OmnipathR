@@ -11,6 +11,9 @@ printPath_vs(nodeSeq, G)
 
 \item{G}{igraph object (from ptms or interactions)}
 }
+\value{
+Interactions displayed in a nice format
+}
 \description{
 prints the interactions in the path in a nice format
 }

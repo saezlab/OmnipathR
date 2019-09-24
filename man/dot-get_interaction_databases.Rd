@@ -18,6 +18,8 @@ get the names of the databases from \url{http://omnipath.org/interactions}
 \seealso{
 \code{\link{import_AllInteractions}, 
 \link{import_Omnipath_Interactions}, \link{import_PathwayExtra_Interactions},
-\link{import_KinaseExtra_Interactions}, \link{import_LigrecExtra_Interactions},
-\link{import_miRNAtarget_Interactions}, \link{import_TFregulons_Interactions}}
+\link{import_KinaseExtra_Interactions}, 
+\link{import_LigrecExtra_Interactions},
+\link{import_miRNAtarget_Interactions}, 
+\link{import_TFregulons_Interactions}}
 }

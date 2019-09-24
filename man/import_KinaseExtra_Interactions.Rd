@@ -2,7 +2,8 @@
 % Please edit documentation in R/import_Omnipath.R
 \name{import_KinaseExtra_Interactions}
 \alias{import_KinaseExtra_Interactions}
-\title{Imports from Omnipath webservice the interactions from kinaseextra dataset}
+\title{Imports from Omnipath webservice the interactions from 
+kinaseextra dataset}
 \usage{
 import_KinaseExtra_Interactions(from_cache_file = NULL,
   filter_databases = .get_interaction_databases(),
@@ -27,8 +28,9 @@ Imports the dataset from:
 which contains enzyme-substrate interactions without literature reference
 }
 \examples{
-interactions <- import_KinaseExtra_Interactions(filter_databases=c("PhosphoPoint","PhosphoSite"),
-                select_organism = 9606)
+interactions <- 
+   import_KinaseExtra_Interactions(filter_databases=c("PhosphoPoint",
+   "PhosphoSite"), select_organism = 9606)
 }
 \seealso{
 \code{\link{.get_interaction_databases}, 
