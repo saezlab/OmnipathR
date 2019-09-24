@@ -4,7 +4,7 @@
 
 \documentclass{article}
 
-<<style, eval=TRUE, echo=FALSE, results=tex>>=
+<<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
   BiocStyle::latex()
 @
   
@@ -91,16 +91,16 @@ different datasets:
         literature reference.
         \item \textbf{Ligrecextra:} ligand-receptor interactions without 
         literature reference.
-        \item \textbf{Tfregulons:} transcription factor (TF)-target interactions 
-        from DoRothEA \cite{GarciaAlonso2017,GarciaAlonso2019}.
+        \item \textbf{Tfregulons:} transcription factor (TF)-target 
+        interactions from DoRothEA \cite{GarciaAlonso2017,GarciaAlonso2019}.
         \item \textbf{Mirnatarget:} miRNA-mRNA and TF-miRNA interactions. 
   \end{itemize}
 
 
 \item \textbf{Post-translational modifications (PTMs):} It provides 
 enzyme-substrate reactions in a very similar way to the aforementioned 
-interactions. Some of the biological databases related to PTMs integrated in 
-Omnipath are Phospho.ELM \cite{Dinkel2010} and PhosphoSitePlus 
+interactions. Some of the biological databases related to PTMs integrated 
+in Omnipath are Phospho.ELM \cite{Dinkel2010} and PhosphoSitePlus 
 \cite{Hornbeck2014}. 
 
 \item \textbf{Complexes:} it provides access to a comprehensive database 
@@ -111,15 +111,15 @@ such as: CORUM \cite{Giurgiu2018} or Hu.map \cite{Drew2017}.
 different annotations about proteins and complexes. These data come from dozens 
 of databases covering different topics such as: The Topology Data Bank of 
 Transmembrane Proteins (TOPDB) \cite{Dobson2014} or ExoCarta 
-\cite{Keerthikumar2016}, a database collecting the proteins that were identified 
-in exosomes in multiple organisms.
+\cite{Keerthikumar2016}, a database collecting the proteins that were 
+identified in exosomes in multiple organisms.
 
-\item \textbf{Intercell:} it provides information on the roles in inter-cellular 
-signaling. For instance. if a protein is a ligand, a receptor, an extracellular 
-matrix  (ECM) component, etc. The data does not come from original sources but 
-combined from several databases by us. The source databases, such as CellPhoneDB 
-\cite{VentoTormo2018} or Receptome \cite{BenShlomo2003}, are also referred for 
-each reacord.
+\item \textbf{Intercell:} it provides information on the roles in 
+inter-cellular signaling. For instance. if a protein is a ligand, a receptor, 
+an extracellular matrix  (ECM) component, etc. The data does not come from 
+original sources but combined from several databases by us. The source 
+databases, such as CellPhoneDB \cite{VentoTormo2018} or Receptome 
+\cite{BenShlomo2003}, are also referred for each reacord.
 \end{itemize}
 
 Figure~\ref{fig:1} shows an overview of the resources featured in 
@@ -164,9 +164,9 @@ obtaining some biological relevant information.
 
 Noteworthy, the sections \textbf{complexes}, \textbf{annotations} and 
 \textbf{intercell} are linked. We explore the annotations and roles in 
-inter-cellular communications of the proteins involved in a given complex. This
-basic example shows the usefulness of integrating the information avaiable in 
-the different \textbf{Omnipath} resources.
+inter-cellular communications of the proteins involved in a given complex. 
+This basic example shows the usefulness of integrating the information avaiable 
+in the different \textbf{Omnipath} resources.
 
 \subsection{Interactions}
 
@@ -235,11 +235,12 @@ printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",
 @
   
   \item \textbf{Clustering:} grouping nodes (proteins) in such a way that 
-  nodes belonging to the same group (called cluster) are more connected in the
-  network to each other than to those in other groups (clusters). Since proteins 
-  interact to perform their functions, proteins within the same cluster are
-  likely to be implicated in similar biological tasks. Figure~\ref{fig:2} shows    
-  the subgraph containing the proteins and interactions of a specifc protein.  
+  nodes belonging to the same group (called cluster) are more connected in 
+  the network to each other than to those in other groups (clusters). 
+  Since proteins interact to perform their functions, proteins within the 
+  same cluster are likely to be implicated in similar biological tasks. 
+  Figure~\ref{fig:2} shows the subgraph containing the proteins and 
+  interactions of a specifc protein.  
 
 <<>>=
 ## We apply a clustering algorithm (Louvain) to group proteins in 
@@ -277,13 +278,13 @@ where we can find the gene \textit{CD22} (yellow node).
 \subsubsection{Other interaction datasets}
 We used above the interactions from the dataset described in the original 
 \textbf{Omnipath} publication \cite{Turei2016}. In this section, we provide 
-examples on how to retry and deal with interactions from the remaining datasets. 
-The same functions can been applied to every interaction dataset. 
+examples on how to retry and deal with interactions from the remaining 
+datasets. The same functions can been applied to every interaction dataset. 
 
 In the first example, we are going to get the interactions from the 
-\textbf{pathwayextra} dataset, which contains activity flow interactions without 
-literature reference. We are going to focus on the mouse interactions for a 
-given gene in this particular case. 
+\textbf{pathwayextra} dataset, which contains activity flow interactions 
+without literature reference. We are going to focus on the mouse interactions 
+for a given gene in this particular case. 
 
 <<>>=
 ## We query and store the interactions into a dataframe
@@ -332,7 +333,7 @@ interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD",
 OPI_g <- interaction_graph(interactions = interactions)
 
 ## We aim at finding the shortest path between two genes of interest. 
-path <- shortest_paths(OPI_g, "CD1D", "TFR2")
+path <- shortest_paths(OPI_g, "B2M", "TFR2")
 printPath_vs(path$vpath,OPI_g)
 
 ## We induce a network with the genes involved in the shortest path and their
@@ -350,7 +351,7 @@ par(mar=c(0.1,0.1,0.1,0.1))
 plot(Induced_Network, vertex.label.color="black",
     vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.2,
     vertex.color = 
-      ifelse(igraph::V(Induced_Network)$name %in% c("CD1D","TFR2"),
+      ifelse(igraph::V(Induced_Network)$name %in% c("B2M","TFR2"),
       "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
 @
 
@@ -358,7 +359,7 @@ plot(Induced_Network, vertex.label.color="black",
 \includegraphics{\jobname-fig3}
 \caption{\label{fig:3}.  
 Subnetwork extracted from the \textbf{kinaseextra} interactions graph 
-containing the shortest path between \textit{CD1D} and  \textit{TFR2} 
+containing the shortest path between \textit{B2M} and  \textit{TFR2} 
 (yellow nodes). The first neighbors of the genes involved in the shortest 
 path are also shown. 
 }
@@ -368,7 +369,8 @@ Another very interesting interaction dataset also available in Omnipath are the
 \textbf{tfregulons} from DoRothEA \cite{GarciaAlonso2017,GarciaAlonso2019}. It
 contains transcription factor (TF)-target interactions with confidence score, 
 ranging from A-E, being A the most confident interactions. In the code chunk 
-shown below, we select and print the most confident interactions for a given TF.  
+shown below, we select and print the most confident interactions for a given 
+TF.  
 
 <<>>=
 ## We query and store the interactions into a dataframe
@@ -387,9 +389,9 @@ miRNA-mRNA and TF-miRNA interactions. These interactions are only available for
 human so far. We next select the miRNA interacting with the TF selected in 
 the previous code chunk, \textit{GLI1}. The main function of miRNAs seems to 
 be related with gene regulation. It is therefore interesting to see how some
-miRNA can regulate the expression of a TF which in turn regulates the expression
-of other genes. Figure~\ref{fig:4} shows a schematic network of the miRNA 
-targeting \textit{GLI1} and the genes regulated by this TF. 
+miRNA can regulate the expression of a TF which in turn regulates the 
+expression of other genes. Figure~\ref{fig:4} shows a schematic network of the 
+miRNA targeting \textit{GLI1} and the genes regulated by this TF. 
 
 <<>>=
 ## We query and store the interactions into a dataframe
@@ -437,9 +439,9 @@ In the next code chunk, we download the \textbf{PTMs} for human. We first check
 the different available source databases, even though we do not perform any 
 filter. Then, we select and print the reactions involving a specific   
 enzyme-substrate pair. Those reactions lack information about activation or 
-inhibition. To obtain that information, we match the data with \textbf{Omnipath}
-interactions. Finally, we show that it is also possible to build a graph using
-this information, and to retrieve PTMs from mouse or rat. 
+inhibition. To obtain that information, we match the data with 
+\textbf{Omnipath} interactions. Finally, we show that it is also possible to 
+build a graph using this information, and to retrieve PTMs from mouse or rat. 
 
 <<>>=
 ## We check the different PTMs databases
@@ -478,16 +480,17 @@ Some studies indicate that around 80\% of the human proteins operate in
 complexes, and many proteins belong to several different complexes 
 \cite{Berggrd2007}. These complexes play critical roles in a large variety of 
 biological processes. Some well-known examples are the proteasome and the 
-ribosome. Thus, the description of the full set of protein complexes functioning 
-in cells is essential to improve our understanding of biological processes.    
+ribosome. Thus, the description of the full set of protein complexes 
+functioning in cells is essential to improve our understanding of biological 
+processes.    
 
 The \textbf{complexes} query provides access to more than 20000 protein 
 complexes. This comprehensive database has been created by integrating 
-different resources. We now download these molecular complexes filtering by some 
-of the source databases. We check the complexes where a couple of specific genes
-participate. First, we look for the complexes where any of these two genes 
-participate. We then identify the complex where these two genes are jointly 
-involved. Finally, we perform an enrichment analysis with the genes 
+different resources. We now download these molecular complexes filtering by 
+some of the source databases. We check the complexes where a couple of specific 
+genes participate. First, we look for the complexes where any of these two 
+genes participate. We then identify the complex where these two genes are 
+jointly involved. Finally, we perform an enrichment analysis with the genes 
 taking part in that complex. You should keep an eye on this complex since
 it will be used again in the forthcoming sections.
 
@@ -533,9 +536,10 @@ EnrichmentResults$result %>%
 
 \subsection{Annotations} 
 Biological annotations are statements, usually traceable and curated, about 
-the different features of a biological entity. At the genetic level, annotations
-describe the biological function, the subcellular situation, the DNA location 
-and many other related properties of a particular gene or its gene products. 
+the different features of a biological entity. At the genetic level, 
+annotations describe the biological function, the subcellular situation, 
+the DNA location and many other related properties of a particular gene or 
+its gene products. 
 
 The annotations query provides a large variety of data about proteins
 and complexes. These data come from dozens of databases and each kind of 
@@ -593,9 +597,9 @@ spread(annotations, label,value) %>%
 
 \subsection{Intercell} 
 Cells perceive cues from their microenvironment and neighboring cells, and 
-respond accordingly to ensure proper activities and coordination between them.   
-The ensemble of these communication process is called inter-cellular signaling
-(\textbf{intercell}).
+respond accordingly to ensure proper activities and coordination between 
+them. The ensemble of these communication process is called inter-cellular 
+signaling (\textbf{intercell}).
 
 \textbf{Intercell} query provides information about the roles of proteins in 
 inter-cellular signaling (e.g. if a protein is a ligand, a receptor, an 
@@ -633,12 +637,13 @@ dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>%
 \textit{OmnipathR} provides access to the wealth of data stored in the Omnipath 
 webservice \url{http://omnipathdb.org/} from the \R{}~enviroment. In addition, 
 it contains some utility functions for visualization, filtering and analysis. 
-The main strength of \textit{OmnipathR} is the straightforward transformation of 
-the different Omnipath data into commonly used \R{}~ objects, such as dataframes 
-and graphs. Consequently, it allows an easy integration of the different types
-of data and a gateway to the vast number of \R{} packages dedicated to the 
-analysis and representaiton of biological data. We highlighted these abilities 
-in some of the examples detailed in previous sections of this document.   
+The main strength of \textit{OmnipathR} is the straightforward transformation 
+of the different Omnipath data into commonly used \R{}~ objects, such as 
+dataframes and graphs. Consequently, it allows an easy integration of the 
+different typesof data and a gateway to the vast number of \R{} packages 
+dedicated to the analysis and representaiton of biological data. We highlighted 
+these abilities in some of the examples detailed in previous sections of this 
+document.   
 
 \newpage
 

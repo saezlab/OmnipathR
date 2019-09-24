@@ -11,13 +11,17 @@ printPath_es(edgeSeq, G)
 
 \item{G}{igraph object (from ptms or any interaction dataset)}
 }
+\value{
+Interactions displayed in a nice format
+}
 \description{
 prints the interactions in the path in a nice format
 }
 \examples{
 interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
 OPI_g = interaction_graph(interactions = interactions )
-printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
+printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
+    output = 'epath')$epath[[1]],OPI_g)
 }
 \seealso{
 \code{\link{printPath_vs}}

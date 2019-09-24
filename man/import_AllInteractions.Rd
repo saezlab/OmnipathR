@@ -2,8 +2,8 @@
 % Please edit documentation in R/import_Omnipath.R
 \name{import_AllInteractions}
 \alias{import_AllInteractions}
-\title{Imports from Omnipath webservice all the available interactions from the 
-different datasets}
+\title{Imports from Omnipath webservice all the available interactions 
+from the different datasets}
 \usage{
 import_AllInteractions(from_cache_file = NULL,
   filter_databases = .get_interaction_databases(),
@@ -23,7 +23,9 @@ A dataframe containing all the datasets in the interactions query
 }
 \description{
 Imports the dataset from: 
-\url{http://omnipathdb.org/interactions?datasets=omnipath,pathwayextra,kinaseextra,ligrecextra,tfregulons,mirnatarget&fields=sources,references&genesymbols=1}, 
+\url{http://omnipathdb.org/interactions?datasets=omnipath,pathwayextra,
+kinaseextra,ligrecextra,tfregulons,mirnatarget&fields=sources,
+references&genesymbols=1}, 
 which contains all the different interactions available in the webserver:
 }
 \details{

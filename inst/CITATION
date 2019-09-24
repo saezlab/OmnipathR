@@ -1,0 +1,11 @@
+citEntry(entry="article",
+    author = c(person("Alberto", "Valdeolivas"),
+               person("Denes", " Turei"),
+               person("Attila", "Gabor")),
+    title = "OmnipathR: Import Omnipath network",
+    journal = "Bioconductor Package",
+    year = 2019,
+
+    textVersion = "A Valdeoivas, D Turei, A Gabor. 2019. “OmnipathR: Import 
+    Omnipath network.” Bioconductor Package"
+)
