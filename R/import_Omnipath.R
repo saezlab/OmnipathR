@@ -596,7 +596,7 @@ import_AllInteractions = function (from_cache_file=NULL,
     url_interactions <- paste0('http://omnipathdb.org/interactions?',
         'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra',
         ',tfregulons,mirnatarget&fields=sources')
-    interactions = getURL(url_interactions, read.table, sep = '\t', 
+    interactions <- getURL(url_interactions, read.table, sep = '\t', 
         header = TRUE,stringsAsFactors = FALSE)
     return(unique(unlist(strsplit(x = as.character(interactions$sources),
         split = ";"))))
@@ -737,18 +737,11 @@ import_Omnipath_annotations = function (from_cache_file=NULL,
 #' .get_annotation_databases()
 #' @seealso \code{\link{import_Omnipath_annotations}}
 .get_annotation_databases = function(){
+    url_annotations <- 'http://omnipathdb.org/annotations_summary'
+    annotations <- getURL(url_annotations, read.table, sep = '\t', 
+        header = TRUE,stringsAsFactors = FALSE)
 
-    annotations_db <- 
-        c("Adhesome","SignaLink3","TopDB","HGNC","Ramilowski_location", 
-        "Vesiclepedia","HPMR","Kirouac2010","Surfaceome","Signor","Locate",
-        "CellPhoneDB",
-        "Membranome","MatrixDB", "Matrisome","GO_Intercell","Ramilowski2015",
-        "Integrins",
-        "CSPA","Guide2Pharma","Zhong2015","HPA","NetPath","ComPPI","KEGG",
-        "CPAD",
-        "Exocarta",
-        "OPM","CORUM_GO","CellPhoneDB_complex","CORUM_Funcat","HPMR_complex")
-
+    annotations_db <- unique(annotations$source)
     return(annotations_db)
 }
 
