@@ -38,7 +38,7 @@
     \maketitle
     
     \begin{abstract}
-    This vignette describes how to use the \textit{OmnipathR} package
+    This vignette describes how to use the \Biocpkg{OmnipathR} package
     to retrieve information from the Omnipath database:  
     
       \url{http://omnipathdb.org/}
@@ -56,7 +56,7 @@
       
       \url{https://github.com/saezlab/OmnipathR/issues} 
     
-    Many thanks for using \textit{OmnipathR}!
+    Many thanks for using \Biocpkg{OmnipathR}!
 
     \newpage
     
@@ -66,18 +66,18 @@
     
     \section{Introduction}
     
-    \textit{OmnipathR} is an \R{}~ package built to provide easy access to the
+    \Biocpkg{OmnipathR} is an \R{}~ package built to provide easy access to the
     data stored in the Omnipath webservice \cite{Turei2016}: 
     
       \url{http://omnipathdb.org/}
     
     The webservice implements a very simple REST style API. This package make 
     requests by the HTTP protocol to retreive the data. Hence, fast Internet 
-    access is required for a proper use of \textit{OmnipathR}. 
+    access is required for a proper use of \Biocpkg{OmnipathR}. 
     
     \subsection{Query types}
     
-    \textit{OmnipathR} can retrieve five different types of data:
+    \Biocpkg{OmnipathR} can retrieve five different types of data:
     
 \begin{itemize}
 \item \textbf{Interactions:} protein-protein interactions organized in 
@@ -128,7 +128,7 @@ integrated in Omnipath, please visit: \url{http://omnipathdb.org/} and
 \url{http://omnipathdb.org/info}.  
 
 \begin{figure*}
-\includegraphics{fig1}   
+\includegraphics{../figures/fig1}   
 \caption{\label{fig:1} Overview of the resources featured in OmniPath.  
  Causal resources (including activity-flow and enzyme-substrate resources) can 
  provide direction (*) or sign and direction (+) of interactions. 
@@ -145,20 +145,22 @@ In case you work with mouse omics data you might do better to translate your
 dataset to human (for example using the pypath.homology module, 
 \url{https://github.com/saezlab/pypath/}) and use human interaction data.
     
-\section{Installation of the \textit{OmnipathR} package}
+\section{Installation of the \Biocpkg{OmnipathR} package}
 First of all, you need a current version of \R{}~\url{(www.r-project.org)}.
-\textit{OmnipathR} is a freely available package deposited on
-\url{https://github.com/saezlab/OmnipathR}. You can install it by running 
-the following commands on an \R{}~console:
-  
+\Biocpkg{OmnipathR} is a freely available package deposited on
+\url{http://bioconductor.org/} and \url{https://github.com/saezlab/OmnipathR}. 
+You can install it by running the following commands on an \R{}~console:
+
 <<installation,eval=FALSE>>=
-if(!require(devtools)){install.packages("devtools")} 
-devtools::install_github("saezlab/omnipathR")
-@
-  
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("OmnipathR")
+@  
+
 \section{Usage Examples}
 In the following paragraphs, we provide some examples to describe how to use 
-the \textit{OmnipathR} package to retrieve different types of information from 
+the \Biocpkg{OmnipathR} package to retrieve different types of information from 
 Omnipath webserver. In addition, we play around with the data aiming at 
 obtaining some biological relevant information.
 
@@ -634,13 +636,13 @@ dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>%
 @
 
 \subsection{Conclusion}
-\textit{OmnipathR} provides access to the wealth of data stored in the Omnipath 
-webservice \url{http://omnipathdb.org/} from the \R{}~enviroment. In addition, 
-it contains some utility functions for visualization, filtering and analysis. 
-The main strength of \textit{OmnipathR} is the straightforward transformation 
-of the different Omnipath data into commonly used \R{}~ objects, such as 
-dataframes and graphs. Consequently, it allows an easy integration of the 
-different typesof data and a gateway to the vast number of \R{} packages 
+\Biocpkg{OmnipathR} provides access to the wealth of data stored in the 
+Omnipath webservice \url{http://omnipathdb.org/} from the \R{}~enviroment. 
+In addition, it contains some utility functions for visualization, filtering 
+and analysis. The main strength of \Biocpkg{OmnipathR} is the straightforward 
+transformation of the different Omnipath data into commonly used \R{}~ objects, 
+such as dataframes and graphs. Consequently, it allows an easy integration of 
+the different types of data and a gateway to the vast number of \R{} packages 
 dedicated to the analysis and representaiton of biological data. We highlighted 
 these abilities in some of the examples detailed in previous sections of this 
 document.   
