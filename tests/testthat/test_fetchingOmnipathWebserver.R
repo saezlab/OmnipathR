@@ -5,6 +5,34 @@ library(dplyr)
 ## Test of the functions fetching Omnipath Webserver
 ################################################################################
 
+########## ########## ########## ##########
+########## Resource Queries      ##########   
+########## ########## ########## ##########
+## This function is convenient for appropriate resource retrieval. Following:
+## http://bioconductor.org/developers/how-to/web-query/
+## It tries to retrieve the resource one or several times before failing.
+getURL <- function(URL, FUN, ..., N.TRIES=1L) {
+  N.TRIES <- as.integer(N.TRIES)
+  stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
+  
+  while (N.TRIES > 0L) {
+    result <- tryCatch(FUN(URL, ...), error=identity)
+    if (!inherits(result, "error"))
+      break
+    N.TRIES <- N.TRIES - 1L
+  }
+  
+  if (N.TRIES == 0L) {
+    stop("'getURL()' failed:",
+         "\n  URL: ", URL,
+         "\n  error: ", conditionMessage(result))
+  }
+  
+  return(result) 
+}
+
+
+
 ################################################################################
 ## Test of the functions getting the list of Omnipath available databases
 ################################################################################
@@ -12,7 +40,7 @@ library(dplyr)
 ## .get_ptms_databases
 url_ptms <- 
     'http://omnipathdb.org/ptms/?fields=sources&fields=references&genesymbols=1'
-ptms <- read.table(url_ptms, sep = '\t', header = TRUE, 
+ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE, 
     stringsAsFactors = FALSE)
 ptms_databases <- 
     unique(unlist(strsplit(x = as.character(ptms$sources),split = ";")))
@@ -21,27 +49,27 @@ ptms_databases <-
 url_interactions <- paste0('http://omnipathdb.org/interactions?',
     'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra',
     ',tfregulons,mirnatarget&fields=sources,references&genesymbols=1')
-interactions <- read.table(url_interactions, sep = '\t', header = TRUE, 
+interactions <- getURL(url_interactions, read.table, sep = '\t', header = TRUE, 
     stringsAsFactors = FALSE)
 interaction_databases  <- 
     unique(unlist(strsplit(x = as.character(interactions$sources),split = ";")))
 
 ## .get_complexes_databases
 url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
-complexes <- read.csv(url_complexes, sep = '\t', header = TRUE,
+complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 complexes_databases <-
     unique(unlist(strsplit(x = as.character(complexes$sources),split = ";")))
 
 ## .get_annotation_databases
 url_annotations <- 'http://omnipathdb.org/annotations_summary'
-annotations <- read.table(url_annotations, sep = '\t', header = TRUE,
+annotations <- getURL(url_annotations, read.table, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 annotations_db <- unique(annotations$source)
 
 ## .get_intercell_categories
 url_intercell <- 'http://omnipathdb.org/intercell'
-intercell <- read.csv(url_intercell, sep = '\t', header = TRUE,
+intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 intercell_categories <- unique(intercell$category)
 
