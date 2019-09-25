@@ -148,8 +148,8 @@ annotations_filter_func <-
     import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
     filter_databases=c("HPA"))
 url_annotations <- 'http://omnipathdb.org/annotations?&proteins=TP53,LMNA'
-annotations_genes <- read.csv(url_annotations, sep = '\t', header = TRUE, 
-    stringsAsFactors = FALSE)
+annotations_genes <- getURL(url_annotations, read.csv, sep = '\t', 
+    header = TRUE, stringsAsFactors = FALSE)
 annotations_filter_test <- dplyr::filter(annotations_genes, source=="HPA")
 
 ## import_Omnipath_intercell
