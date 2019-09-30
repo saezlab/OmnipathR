@@ -633,6 +633,9 @@ dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>%
   dplyr::distinct(genesymbol,mainclass, .keep_all = TRUE) %>%
   dplyr::select(category, genesymbol, mainclass) %>%
   dplyr::arrange(genesymbol)
+
+## We close graphical connections
+dev.off()
 @
 
 \subsection{Conclusion}
