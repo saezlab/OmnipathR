@@ -635,7 +635,7 @@ dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>%
   dplyr::arrange(genesymbol)
 
 ## We close graphical connections
-dev.off()
+while (!is.null(dev.list()))  dev.off()
 @
 
 \subsection{Conclusion}
