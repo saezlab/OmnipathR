@@ -29,3 +29,9 @@ rsconnect/
 .Rproj.user
 OmnipathR.Rproj
 OmnipathR.Rproj
+vignettes/OmnipathR-concordance.tex
+vignettes/OmnipathR.bbl
+vignettes/OmnipathR.log
+vignettes/OmnipathR.synctex.gz
+vignettes/OmnipathR.tex
+vignettes/OmnipathR.toc

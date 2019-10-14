@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: Import Omnipath network
-Version: 0.99.9
+Version: 0.99.10
 Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
 Maintainer: Alberto Valdeolivas Urbelz <alvaldeolivas@gmail.com>
 Description: Import data from https://www.omnipathdb.org webservice. It also 
@@ -11,7 +11,6 @@ URL: https://github.com/saezlab/OmnipathR
 biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient, 
     DataImport, DataRepresentation
 Encoding: UTF-8
-LazyData: true
 Depends:
     igraph,
     graphics,

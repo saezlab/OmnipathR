@@ -6,13 +6,13 @@
 miRNAtarget dataset}
 \usage{
 import_miRNAtarget_Interactions(from_cache_file = NULL,
-  filter_databases = .get_interaction_databases())
+  filter_databases = get_interaction_databases())
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
 \item{filter_databases}{interactions not reported in these databases are 
-removed. See \code{\link{.get_interaction_databases}} for more information.}
+removed. See \code{\link{get_interaction_databases}} for more information.}
 }
 \value{
 A dataframe containing miRNA-mRNA and TF-miRNA interactions
@@ -28,6 +28,6 @@ interactions <-
   "miRecords"))
 }
 \seealso{
-\code{\link{.get_interaction_databases}, 
+\code{\link{get_interaction_databases}, 
   \link{import_AllInteractions}}
 }

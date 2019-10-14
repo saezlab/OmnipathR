@@ -5,7 +5,7 @@
 \title{Import Omnipath Annotations}
 \usage{
 import_Omnipath_annotations(from_cache_file = NULL,
-  select_genes = NULL, filter_databases = .get_annotation_databases())
+  select_genes = NULL, filter_databases = get_annotation_databases())
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
@@ -16,7 +16,7 @@ annotations. To do so, write "COMPLEX:" right before the genesymbols of
 the genes integrating the complex. Check the vignette for examples.}
 
 \item{filter_databases}{annotations not reported in these databases are 
-removed. See \code{\link{.get_annotation_databases}} for more information.}
+removed. See \code{\link{get_annotation_databases}} for more information.}
 }
 \value{
 A data.frame containing different gene/complex annotations
@@ -30,5 +30,5 @@ annotations = import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
      filter_databases=c("HPA"))
 }
 \seealso{
-\code{\link{.get_annotation_databases}}
+\code{\link{get_annotation_databases}}
 }

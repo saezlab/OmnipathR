@@ -5,13 +5,13 @@
 \title{Import Omnipath post-translational modifications (PTMs)}
 \usage{
 import_Omnipath_PTMS(from_cache_file = NULL,
-  filter_databases = .get_ptms_databases(), select_organism = 9606)
+  filter_databases = get_ptms_databases(), select_organism = 9606)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
 \item{filter_databases}{PTMs not reported in these databases are 
-removed. See \code{\link{.get_ptms_databases}} for more information}
+removed. See \code{\link{get_ptms_databases}} for more information}
 
 \item{select_organism}{PTMs are available for human, mouse and rat. 
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
@@ -28,6 +28,6 @@ ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
        
 }
 \seealso{
-\code{\link{.get_ptms_databases}, 
+\code{\link{get_ptms_databases}, 
   \link{import_Omnipath_Interactions}}
 }
