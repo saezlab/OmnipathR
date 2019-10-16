@@ -31,7 +31,7 @@ import_Omnipath_PTMS = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(ptms), " PTMs"))
+        message("Downloaded ", nrow(ptms), " PTMs")
     } else {
         load(from_cache_file)
     }
@@ -97,7 +97,7 @@ import_Omnipath_Interactions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url_interactions,read.table,sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -141,7 +141,7 @@ import_PathwayExtra_Interactions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url_pathwayextra,read.table,sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -185,7 +185,7 @@ import_KinaseExtra_Interactions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url_kinaseextra,read.table,sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -228,7 +228,7 @@ import_LigrecExtra_Interactions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url_ligrecextra, read.table, sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -271,7 +271,7 @@ import_TFregulons_Interactions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url_tfregulons, read.table, sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -309,7 +309,7 @@ import_miRNAtarget_Interactions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url, read.table, sep = '\t', header = TRUE, 
             stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -362,7 +362,7 @@ import_AllInteractions = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         interactions <- getURL(url_allinteractions, read.table, sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(interactions), " interactions"))
+        message("Downloaded ", nrow(interactions), " interactions")
     } else {
         load(from_cache_file)
     }
@@ -422,7 +422,7 @@ import_Omnipath_complexes = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(complexes), " complexes"))
+        message("Downloaded ", nrow(complexes), " complexes")
     } else {
         load(from_cache_file)
     }
@@ -487,7 +487,7 @@ import_Omnipath_annotations = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         annotations <- getURL(url_annotations, read.csv, sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(annotations), " annotations"))
+        message("Downloaded ", nrow(annotations), " annotations")
     } else {
         load(from_cache_file)
     }
@@ -552,7 +552,7 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
     if(is.null(from_cache_file)){
         intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
-        message(paste0("Downloaded ", nrow(intercell), " intercell records"))
+        message("Downloaded ", nrow(intercell), " intercell records")
     } else {
         load(from_cache_file)
     }
@@ -604,8 +604,8 @@ filter_sources = function(interactions, databases){
 
     nInterPost = nrow(subsetInteractions)
 
-    message(paste0("removed ",nInter-nInterPost,
-        " interactions during database filtering."))
+    message("removed ",nInter-nInterPost,
+        " interactions during database filtering.")
     return(subsetInteractions)
 }
 
@@ -619,8 +619,8 @@ filter_sources_annotations = function(annotations, databases){
     subsetAnnotations <- dplyr::filter(annotations, source %in% databases)
     nAnnotPost = nrow(subsetAnnotations)
 
-    message(paste0("removed ",nAnnot-nAnnotPost,
-        " annotations during database filtering."))
+    message("removed ",nAnnot-nAnnotPost,
+        " annotations during database filtering.")
 
     if (nAnnotPost > 0){
         return(subsetAnnotations)
@@ -637,8 +637,8 @@ filter_categories_intercell = function(intercell, categories){
     subsetIntercell <- dplyr::filter(intercell, .data$category %in% categories)
     nIntercellPost = nrow(subsetIntercell)
 
-    message(paste0("removed ",nIntercell-nIntercellPost, 
-        " intercell records during category filtering."))
+    message("removed ",nIntercell-nIntercellPost, 
+        " intercell records during category filtering.")
 
     if (nIntercellPost > 0){
         return(subsetIntercell)
