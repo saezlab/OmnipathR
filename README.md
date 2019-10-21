@@ -36,7 +36,7 @@ For a more detailed information, we recommend you to visit the following sites:
   
   <https://github.com/saezlab/pypath/blob/master/webservice.rst> 
   
-  <https://bioconductor.org/packages/release/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
+  <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
   
 
 ## Installation
@@ -58,11 +58,11 @@ BiocManager::install("OmnipathR")
 To get started, we strongly recommend to read our vignette in order to deal with 
 the different types of queries and handle the data they return:
 
-  <https://bioconductor.org/packages/release/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
+  <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
   
 You can also check the manual:
 
-  <https://bioconductor.org/packages/release/bioc/manuals/OmnipathR/man/OmnipathR.pdf>
+  <https://bioconductor.org/packages/devel/bioc/manuals/OmnipathR/man/OmnipathR.pdf>
    
 In addition, we provide here some examples for a quick start: 
 

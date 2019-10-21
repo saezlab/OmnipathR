@@ -34,12 +34,12 @@ get_complex_genes = function(complexes = import_Omnipath_complexes(),
     if (total_match){
         complexes_geneset <- 
         complexes[which(unlist(lapply(strsplit(complexes$components_genesymbols,
-            '-'), function(x){
+            '_'), function(x){
             sum(x %in% select_genes) == length(select_genes)}))),]  
     } else {
         complexes_geneset <- 
         complexes[which(unlist(lapply(strsplit(complexes$components_genesymbols,
-            '-'), function(x){any(x %in% select_genes)}))),]
+            '_'), function(x){any(x %in% select_genes)}))),]
     }
     return(complexes_geneset)
 }

@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: Import Omnipath network
-Version: 0.99.11
+Version: 0.99.12
 Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
 Maintainer: Alberto Valdeolivas Urbelz <alvaldeolivas@gmail.com>
 Description: Import data from https://www.omnipathdb.org webservice. It also 
