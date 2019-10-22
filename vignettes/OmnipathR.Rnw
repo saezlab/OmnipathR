@@ -526,7 +526,7 @@ complexes_query_genes_join$components_genesymbols
 
 <<>>=
 genes_complex <- 
-  unlist(strsplit(complexes_query_genes_join$components_genesymbols, "-"))
+  unlist(strsplit(complexes_query_genes_join$components_genesymbols, "_"))
 
 ## We can perform an enrichment analyses with the genes in the complex
 EnrichmentResults <- gost(genes_complex, significant = TRUE, 
