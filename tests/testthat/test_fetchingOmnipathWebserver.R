@@ -146,11 +146,11 @@ complexes_filter_test$nrefs <-
 ## import_Omnipath_annotations 
 annotations_filter_func <- 
     import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
-    filter_databases=c("HPA"))
+    filter_databases=c("HPA_subcellular"))
 url_annotations <- 'http://omnipathdb.org/annotations?&proteins=TP53,LMNA'
 annotations_genes <- getURL(url_annotations, read.csv, sep = '\t', 
     header = TRUE, stringsAsFactors = FALSE)
-annotations_filter_test <- dplyr::filter(annotations_genes, source=="HPA")
+annotations_filter_test <- dplyr::filter(annotations_genes, source=="HPA_subcellular")
 
 ## import_Omnipath_intercell
 intercell_filter_func <- import_Omnipath_intercell(select_categories=c("ecm"))
