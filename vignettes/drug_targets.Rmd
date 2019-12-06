@@ -1,0 +1,238 @@
+---
+title: "Building protein networks around drug-targets using OmnipathR"
+author:
+- name: Attila Gabor
+  affiliation: Institute for Computational Biomedicine, Heidelberg University
+  email: attila.gabor@bioquant.uni-heidelberg.de
+- name: Alberto Valdeolivas
+  affiliation: Institute for Computational Biomedicine, Heidelberg University
+- name: Julio Saez-Rodriguez
+  affiliation: Institute for Computational Biomedicine, Heidelberg University
+  
+package: OmnipathR
+output:
+  BiocStyle::html_document
+abstract: |
+  Many applications require to connect drugs to proteins in signaling networks.
+  OmnipathR provides easy access to curated pathway resources from Omnipath[1]. Here 
+  we use data from DrugBank to find direct protein targets of drugs and to connect them 
+  to downstream signaling proteins using OmnipathR. 
+  
+vignette: |
+  %\VignetteIndexEntry{Building protein networks around drug-targets using OmnipathR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+In many applications we would like to understand how a specific drug interacts with
+the protein signaling network through its targets. 
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(OmnipathR)
+library(igraph)
+library(ggraph)
+```
+
+# Initialise Omnipath database
+We query protein-protein interactions from the webservice of http://omnipathdb.org/
+using OmnipathR package: 
+```{r}
+# Download protein-protein interactions
+interactions = import_Omnipath_Interactions() %>% as_tibble()
+
+# Convert to igraph objects:
+OPI_g = interaction_graph(interactions = interactions )
+```
+
+
+# Querying drug targets
+For direct drug targets we will use DrugBank[2] database accessed via the 
+`r CRANpkg("dbparser")` package. 
+Please note, that the following few chuncks of code is not evaluated. 
+DrugBank requires registrations to access the data, therefore we ask the reader to 
+register at DrugBank and download the data from [here](https://www.drugbank.ca/releases/latest).
+
+The next block of code is used to process the DrugBank dataset. 
+
+```{r, eval=FALSE}
+library(dbparser)
+library(XML)
+
+
+## parse data from XML and save it to memory
+get_xml_db_rows("..path-to-DrugBank/full database.xml")
+
+## load drugs data
+drugs <- parse_drug() %>% select(primary_key, name)
+drugs <- rename(drugs,drug_name = name)
+
+## load drug target data
+drug_targets <- parse_drug_targets() %>%
+   select(id, name,organism,parent_key) %>%
+   rename(target_name = name)
+
+## load polypeptide data
+drug_peptides <- parse_drug_targets_polypeptides()  %>%
+   select(id, name, general_function, specific_function,
+          gene_name, parent_id) %>%
+   rename(target_name = name, gene_id = id)
+
+# join the 3 datasets
+drug_targets_full <- inner_join(drug_targets, drug_peptides,
+                                by=c("id"="parent_id", "target_name")) %>%
+   inner_join(drugs, by=c("parent_key"="primary_key")) %>%
+   select(-other_keys)
+
+```
+Here we declare the names of drugs of interest. 
+
+```{r}
+drug_names = c("Valproat"      = "Valproic Acid",
+               "Diclofenac"    = "Diclofenac",
+               "Paracetamol"   = "Acetaminophen",
+               "Ciproflaxin"   = "Ciprofloxacin",
+               "Nitrofurantoin"= "Nitrofurantoin",
+               "Tolcapone",
+               "Azathioprine",
+               "Troglitazone",
+               "Nefazodone",
+               "Ketoconazole",
+               "Omeprazole",
+               "Phenytoin",
+               "Amiodarone",
+               "Cisplatin",
+               "Cyclosporin A"  = "Cyclosporine",
+               "Verapamil",
+               "Buspirone",
+               "Melatonin",
+               "N-Acetylcysteine"= "Acetylcysteine",
+               "Vitamin C"       = "Ascorbic acid",
+               "Famotidine",
+               "Vancomycin")
+```
+
+```{r, eval=FALSE}
+
+drug_target_data_sample <- drug_targets_full %>%
+   filter(organism == "Humans",drug_name %in% drug_names)
+
+```
+
+We only use a small sample of the database: 
+
+```{r}
+drug_targets <- OmnipathR:::drug_target_data_sample %>% 
+   filter(organism == "Humans",drug_name %in% drug_names)
+```
+
+## Quality control
+
+Check which drug targets are in Omnipath 
+```{r}
+drug_targets <-  drug_targets %>%
+   select(-target_name, -organism) %>% 
+   mutate(in_OP = gene_id %in% c(interactions$source))
+# not all drug-targets are in OP. 
+print(all(drug_targets$in_OP))
+
+# But each drug has at least one target in OP. 
+drug_targets %>% group_by(drug_name) %>% summarise(any(in_OP))
+
+```
+
+# Downstream signaling nodes
+
+We would like to investigate the effect of the drugs on some selected proteins. 
+For example, the activity of these proteins are measured upon the drug perturbation. 
+We'll build a network from the drug targets to these selected nodes.
+
+First we declare protein of interest (POI):
+
+```{r}
+POI = tibble(protein = c("NFE2L2","HMOX1","TP53","CDKN1A","BTG2","NFKB1",
+                         "ICAM1","HSPA5", "ATF4","DDIT3","XBP1"))
+```
+
+## Quality control
+Checking which POI are in Omnipath
+```{r}
+POI <- POI %>% mutate(in_OP = protein %in% interactions$target_genesymbol)
+# all POI is in Omnipath
+print(all(POI$in_OP))
+
+
+```
+
+# Build network between drug targets and POI
+
+First, we find paths between the drug targets and the POIs. 
+For the sake of this simplicity we focus on drug targets of one drug, _Cisplatin_. 
+
+The paths are represented by a set of nodes:
+
+```{r}
+
+source_nodes <- drug_targets %>% filter(in_OP, drug_name=="Cisplatin") %>% pull(gene_name)
+target_nodes <- POI %>% filter(in_OP) %>% pull(protein)
+
+collected_path_nodes = list()
+
+for(i_source in 1:length(source_nodes)){
+   
+   paths <- shortest_paths(OPI_g, from = source_nodes[[i_source]],
+                           to = target_nodes,
+                           output = 'vpath')
+   path_nodes <- lapply(paths$vpath,names) %>% unlist() %>% unique()
+   collected_path_nodes[[i_source]] <- path_nodes
+}
+collected_path_nodes <- unlist(collected_path_nodes) %>% unique()
+```
+
+The direct drug targets, the POIs and the intermediate pathway members give rise to the 
+network. 
+
+```{r}
+cisplatin_nodes <- c(source_nodes,target_nodes, collected_path_nodes) %>% unique()
+cisplatin_network <- induced_subgraph(graph = OPI_g,vids = cisplatin_nodes)  
+```
+We annotate the nodes of the network and plot it. 
+```{r}
+V(cisplatin_network)$node_type = ifelse(V(cisplatin_network)$name %in% source_nodes, "direct drug target",
+                                   ifelse(V(cisplatin_network)$name %in% target_nodes, "POI","intermediate node"))
+
+ggraph(cisplatin_network,layout = "lgl") + 
+    geom_edge_link(aes(start_cap = label_rect(node1.name),
+                       end_cap = label_rect(node2.name)), 
+                   arrow = arrow(length = unit(4, 'mm'))) + 
+   geom_node_point() +
+   geom_node_label(aes(label=name,color=node_type)) +
+   theme_bw() + xlab("") + ylab("") + ggtitle("Cisplatin induced network")
+
+```
+The above network represents a way how Cisplatin can influence the POIs. One can 
+for example filter out edges based on the number fo resources reporting the edge or 
+based on the number of papers mentioning it. However, this is already covered by previous pypath
+tutorials. 
+
+# Acknowledgements
+
+The above pipeline was inspired by the post of Denes Turei available [here](https://groups.google.com/forum/#!msg/omnipath/IAV5PEXRyMg/PvwOKkusBQAJ).
+
+
+# References
+
+[1] D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath: guidelines and gateway for literature-curated signaling pathway resources. _Nature Methods_ 13(12)
+
+[2] Wishart DS, Feunang YD, Guo AC, Lo EJ, Marcu A, Grant JR, Sajed T, Johnson D, Li C, Sayeeda Z, Assempour N, Iynkkaran I, Liu Y, Maciejewski A, Gale N, Wilson A, Chin L, Cummings R, Le D, Pon A, Knox C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for 2018. _Nucleic Acids Res._ 2017 Nov 8. doi: 10.1093/nar/gkx1037.
+
+
+# Session info {.unnumbered}
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+
