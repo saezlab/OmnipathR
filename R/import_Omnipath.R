@@ -470,7 +470,7 @@ get_complexes_databases = function(){
 #' removed. See \code{\link{get_annotation_databases}} for more information.
 #' @examples
 #' annotations = import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
-#'      filter_databases=c("HPA"))
+#'      filter_databases=c("HPA_subcellular"))
 #' @seealso \code{\link{get_annotation_databases}}       
 import_Omnipath_annotations = function (from_cache_file=NULL,
     select_genes = NULL, filter_databases = get_annotation_databases()){
