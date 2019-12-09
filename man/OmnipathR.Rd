@@ -49,5 +49,5 @@ printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
 }
 \author{
 Alberto Valdeolivas <\email{alvaldeolivas@gmail}> and Attila Gabor
-<\email{gaborattila87@gmail.com}>
+<\email{attila.gabor@uni-heidelberg.de}>
 }
