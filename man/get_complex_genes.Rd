@@ -4,8 +4,8 @@
 \alias{get_complex_genes}
 \title{Get all the molecular complexes for a given gene(s)}
 \usage{
-get_complex_genes(complexes = import_Omnipath_complexes(), select_genes,
-  total_match = FALSE)
+get_complex_genes(complexes = import_Omnipath_complexes(), select_genes, 
+total_match = FALSE)
 }
 \arguments{
 \item{complexes}{complexes data frame (obtained using 
