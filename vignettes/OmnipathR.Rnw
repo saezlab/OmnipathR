@@ -507,18 +507,18 @@ get_complexes_databases()
 complexes <- import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
 
 ## We check all the molecular complexes where a set of genes participate
-query_genes <- c("LMNA","CTCF")
+query_genes <- c("WRN","PARP1") 
 
 ## Complexes where any of the input genes participate
-complexes_query_genes_any <- get_complex_genes(complexes,query_genes,
-    total_match=FALSE)
+complexes_query_genes_any <- unique(get_complex_genes(complexes,query_genes,
+    total_match=FALSE))
 
 ## We print the components of the different selected components 
-complexes_query_genes_any$components_genesymbols 
+head(complexes_query_genes_any$components_genesymbols,6)
 
 ## Complexes where all the input genes participate jointly
-complexes_query_genes_join <- get_complex_genes(complexes,query_genes,
-    total_match=TRUE)
+complexes_query_genes_join <- unique(get_complex_genes(complexes,query_genes,
+    total_match=TRUE))
 
 ## We print the components of the different selected components 
 complexes_query_genes_join$components_genesymbols
@@ -536,7 +536,7 @@ EnrichmentResults <- gost(genes_complex, significant = TRUE,
 ## We show the most significant results
 EnrichmentResults$result %>% 
   dplyr::select(term_id, source, term_name,p_value) %>%
-  dplyr::arrange(source, p_value) 
+  dplyr::top_n(5,-p_value) 
 @
 
 \subsection{Annotations} 
@@ -571,7 +571,7 @@ get_annotation_databases()
 annotations <-import_Omnipath_annotations(select_genes=paste0("COMPLEX:",
   complexes_query_genes_join$components_genesymbols))
 
-dplyr::select(annotations,source,label,value)
+head(dplyr::select(annotations,source,label,value),10)
 @
 
 Afterwards, we explore the annotations of the individual components of the 
