@@ -27,10 +27,16 @@
     \author[1]
     {Alberto Valdeolivas\thanks{\email{alvaldeolivas@gmail.com}}}
     \author[1]
-    {Attila Gabor\thanks{\email{gaborattila87@gmail.com}}}
+    {Attila Gabor\thanks{\email{attila.gabor@bioquant.uni-heidelberg.de}}}
+    \author[1]
+    {Denes Turei\thanks{\email{denes.turei@embl.de}}}
+    \author[1,2]
+    {Julio Saez-Rodriguez\thanks{\email{julio.saez@bioquant.uni-heidelberg.de}}}
     \affil[1]{Institute of Computational Biomedicine, Heidelberg University, 
     Faculty of Medicine, 69120 Heidelberg, Germany}
-    
+    \affil[2]{RWTH Aachen University, Faculty of Medicine,Joint Research Centre
+    for Computational Biomedicine (JRC-COMBINE), 52074 Aachen, Germany}
+       
 \begin{document}
 \SweaveOpts{concordance=TRUE}
     % \SweaveOpts{concordance=TRUE}
@@ -325,26 +331,25 @@ print_interactions(interactions_TargetDpysl2)
 
 In the following example we are going to work with the \textbf{ligrecextra} 
 dataset, which contains ligand-receptor interactions without literature 
-reference. Our goal is to find the shortest path between two proteins of our
-interest. For a more global overview, we induce a network containing the genes
-involved in our shortest path and their first neighbors (Figure~\ref{fig:3}).
+reference. Our goal is to find the potential receptors associated to a given 
+ligand. For a more global overview, we induce a network containing the genes
+involved in these interactions (Figure~\ref{fig:3}).
 
 <<>>=
 ## We query and store the interactions into a dataframe
 interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD",
     "Guide2Pharma"),select_organism=9606)
 
-## We transform the interactions data frame into a graph
-OPI_g <- interaction_graph(interactions = interactions)
+## Receptors of the CDH1 ligand.
+interactions_CDH1 <- dplyr::filter(interactions, source_genesymbol == "CDH1")
 
-## We aim at finding the shortest path between two genes of interest. 
-path <- shortest_paths(OPI_g, "B2M", "TFR2")
-printPath_vs(path$vpath,OPI_g)
+## We transform the interactions data frame into a graph
+OPI_g <- interaction_graph(interactions = interactions_CDH1)
 
 ## We induce a network with the genes involved in the shortest path and their
 ## first neighbors to get a more general overview of the interactions 
 Induced_Network <-  dNetInduce(g=OPI_g, 
-    nodes_query=as.character(path$vpath[[1]]$name), knn=1,
+    nodes_query=as.character( V(OPI_g)$name), knn=0,
     remove.loops=FALSE, largest.comp=FALSE)
 
 @
@@ -355,7 +360,7 @@ par(mar=c(0.1,0.1,0.1,0.1))
 plot(Induced_Network, vertex.label.color="black",
     vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.2,
     vertex.color = 
-        ifelse(igraph::V(Induced_Network)$name %in% c("B2M","TFR2"),
+        ifelse(igraph::V(Induced_Network)$name %in% c("CDH1"),
         "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
 @
 
@@ -378,7 +383,7 @@ TF.
 
 <<>>=
 ## We query and store the interactions into a dataframe
-interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
+interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
     "ARACNe-GTEx"),select_organism=9606)
 
 ## We select the most confident interactions for a given TF and we print 
