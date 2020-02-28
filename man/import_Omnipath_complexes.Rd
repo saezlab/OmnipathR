@@ -4,8 +4,10 @@
 \alias{import_Omnipath_complexes}
 \title{Import Omnipath Complexes}
 \usage{
-import_Omnipath_complexes(from_cache_file = NULL,
-  filter_databases = get_complexes_databases())
+import_Omnipath_complexes(
+  from_cache_file = NULL,
+  filter_databases = get_complexes_databases()
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}

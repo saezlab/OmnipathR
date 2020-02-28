@@ -5,9 +5,11 @@
 \title{Imports from Omnipath webservice the interactions from 
 kinaseextra dataset}
 \usage{
-import_KinaseExtra_Interactions(from_cache_file = NULL,
+import_KinaseExtra_Interactions(
+  from_cache_file = NULL,
   filter_databases = get_interaction_databases(),
-  select_organism = 9606)
+  select_organism = 9606
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}

@@ -4,9 +4,11 @@
 \alias{import_Omnipath_Interactions}
 \title{Import Omnipath interaction database}
 \usage{
-import_Omnipath_Interactions(from_cache_file = NULL,
+import_Omnipath_Interactions(
+  from_cache_file = NULL,
   filter_databases = get_interaction_databases(),
-  select_organism = 9606)
+  select_organism = 9606
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}

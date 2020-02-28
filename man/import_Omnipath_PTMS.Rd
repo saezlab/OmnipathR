@@ -4,8 +4,11 @@
 \alias{import_Omnipath_PTMS}
 \title{Import Omnipath post-translational modifications (PTMs)}
 \usage{
-import_Omnipath_PTMS(from_cache_file = NULL,
-  filter_databases = get_ptms_databases(), select_organism = 9606)
+import_Omnipath_PTMS(
+  from_cache_file = NULL,
+  filter_databases = get_ptms_databases(),
+  select_organism = 9606
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}

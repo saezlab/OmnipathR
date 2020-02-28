@@ -4,8 +4,10 @@
 \alias{import_Omnipath_intercell}
 \title{Import Omnipath Intercell Data}
 \usage{
-import_Omnipath_intercell(from_cache_file = NULL,
-  select_categories = get_intercell_categories())
+import_Omnipath_intercell(
+  from_cache_file = NULL,
+  select_categories = get_intercell_categories()
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}

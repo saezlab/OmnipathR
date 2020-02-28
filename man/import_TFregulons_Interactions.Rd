@@ -5,9 +5,11 @@
 \title{Imports from Omnipath webservice the interactions from 
 Dorothea dataset}
 \usage{
-import_TFregulons_Interactions(from_cache_file = NULL,
+import_TFregulons_Interactions(
+  from_cache_file = NULL,
   filter_databases = get_interaction_databases(),
-  select_organism = 9606)
+  select_organism = 9606
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
@@ -28,8 +30,8 @@ which contains transcription factor (TF)-target interactions from DoRothEA
 \url{https://github.com/saezlab/DoRothEA}
 }
 \examples{
-interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
-    "ARACNe-GTEx"), select_organism=9606)
+interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
+    "ARACNe-GTEx_DoRothEA"), select_organism=9606)
 }
 \seealso{
 \code{\link{get_interaction_databases}, 

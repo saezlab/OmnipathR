@@ -4,8 +4,11 @@
 \alias{import_Omnipath_annotations}
 \title{Import Omnipath Annotations}
 \usage{
-import_Omnipath_annotations(from_cache_file = NULL,
-  select_genes = NULL, filter_databases = get_annotation_databases())
+import_Omnipath_annotations(
+  from_cache_file = NULL,
+  select_genes = NULL,
+  filter_databases = get_annotation_databases()
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
@@ -27,7 +30,7 @@ imports the annotations stored in Omnipath database from
 }
 \examples{
 annotations = import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
-     filter_databases=c("HPA"))
+     filter_databases=c("HPA_subcellular"))
 }
 \seealso{
 \code{\link{get_annotation_databases}}

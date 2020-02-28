@@ -5,8 +5,10 @@
 \title{Imports from Omnipath webservice the interactions from 
 miRNAtarget dataset}
 \usage{
-import_miRNAtarget_Interactions(from_cache_file = NULL,
-  filter_databases = get_interaction_databases())
+import_miRNAtarget_Interactions(
+  from_cache_file = NULL,
+  filter_databases = get_interaction_databases()
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}

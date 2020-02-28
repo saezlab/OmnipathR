@@ -3,7 +3,6 @@
 \docType{package}
 \name{OmnipathR}
 \alias{OmnipathR}
-\alias{OmnipathR-package}
 \title{The OmnipathR package}
 \description{
 OmnipathR is an R package built to provide easy access to the data stored in 
@@ -49,5 +48,5 @@ printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
 }
 \author{
 Alberto Valdeolivas <\email{alvaldeolivas@gmail}> and Attila Gabor
-<\email{attila.gabor@uni-heidelberg.de}>
+<\email{gaborattila87@gmail.com}>
 }

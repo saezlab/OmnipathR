@@ -255,8 +255,8 @@ import_LigrecExtra_Interactions = function (from_cache_file=NULL,
 #' @param select_organism Interactions are available for human, mouse and rat. 
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @examples
-#' interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
-#'     "ARACNe-GTEx"), select_organism=9606)
+#' interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
+#'     "ARACNe-GTEx_DoRothEA"), select_organism=9606)
 #' @seealso \code{\link{get_interaction_databases}, 
 #'   \link{import_AllInteractions}}
 import_TFregulons_Interactions = function (from_cache_file=NULL,
