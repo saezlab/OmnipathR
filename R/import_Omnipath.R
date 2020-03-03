@@ -254,13 +254,19 @@ import_LigrecExtra_Interactions = function (from_cache_file=NULL,
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param select_organism Interactions are available for human, mouse and rat. 
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param confidence_level Vector detailing the confidence levels of the 
+#' interactions to be downloaded. In dorothea, every TF-target interaction has a 
+#' confidence score ranging from A to E, being A the most reliable interactions.
+#' By default we take A and B level interactions (\code{c(A,B)}). It is to note 
+#' that E interactions are not available in OmnipathR.   
 #' @examples
 #' interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
 #'     "ARACNe-GTEx_DoRothEA"), select_organism=9606)
 #' @seealso \code{\link{get_interaction_databases}, 
 #'   \link{import_AllInteractions}}
 import_TFregulons_Interactions = function (from_cache_file=NULL,
-    filter_databases = get_interaction_databases(),select_organism=9606){
+    filter_databases = get_interaction_databases(),select_organism=9606, 
+    confidence_level = c('A','B')){
 
     url_tfregulons_common <- 
         paste0('http://omnipathdb.org/interactions?datasets=tfregulons&',
@@ -268,6 +274,20 @@ import_TFregulons_Interactions = function (from_cache_file=NULL,
 
     url_tfregulons <- organism_url(url_tfregulons_common, select_organism)  
 
+    confidence_level <- as.vector(confidence_level)
+    
+    if (length(confidence_level) > 4 | length(confidence_level) < 1){
+        stop("The confidence levels vector is not correct")
+    } else {
+        if (all(confidence_level %in% c("A","B","C","D"))){
+            url_tfregulons <- paste0(url_tfregulons, "&tfregulons_levels=",
+                 paste0(confidence_level,collapse = ","))    
+        } else {
+            stop("Your confident levels are not correct, they should range from 
+                A to D.")
+        }
+    }
+        
     if(is.null(from_cache_file)){
         interactions <- getURL(url_tfregulons, read.table, sep = '\t', 
             header = TRUE, stringsAsFactors = FALSE)

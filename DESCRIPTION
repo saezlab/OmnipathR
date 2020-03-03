@@ -12,7 +12,7 @@ biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
     DataImport, DataRepresentation
 Encoding: UTF-8
 Depends:
-    R(>= 3.5.0),
+    R(>= 3.6.0),
     igraph,
     graphics,
     methods,
@@ -25,5 +25,7 @@ Suggests:
     dnet,
     gprofiler2,
     BiocStyle,
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 7.0.2
