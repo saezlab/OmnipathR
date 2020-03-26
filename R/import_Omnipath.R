@@ -559,13 +559,17 @@ get_annotation_databases = function(){
 #' @importFrom utils read.csv
 #' @param from_cache_file path to an earlier data file
 #' @param select_categories vector containing the categories to be retrieved.
-#' All the genes belonging to that category will be returned. For furter 
+#' All the genes belonging to those categories will be returned. For furter 
 #' information about the categories see \code{\link{get_intercell_categories}} 
+#' @param select_classes vector containing the main classes to be retrieved.
+#' All the genes belonging to those classes will be returned. For furter 
+#' information about the main classes see \code{\link{get_intercell_classes}} 
 #' @examples
 #' intercell = import_Omnipath_intercell(select_categories=c("ecm"))
 #' @seealso \code{\link{get_intercell_categories}} 
 import_Omnipath_intercell = function (from_cache_file=NULL,
-    select_categories = get_intercell_categories()){
+    select_categories = get_intercell_categories(), 
+    select_classes = get_intercell_classes()){
 
     url_intercell <- 'http://omnipathdb.org/intercell'
 
@@ -577,16 +581,91 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
         load(from_cache_file)
     }
 
-    if(!is.null(select_categories)){
-        filteredintercell <- filter_categories_intercell(intercell,
-            select_categories)
+    if (!(all(select_categories == get_intercell_categories())) | 
+        !(all(select_classes == get_intercell_classes()))){
+            filteredintercell <- 
+               filter_intercell(intercell,select_categories,select_classes)
+            return(filteredintercell) 
     } else {
-        filteredintercell <- intercell
+        return(intercell)
     }
-
-    return(filteredintercell)
 }
 
+#' Imports an intercellular network combining annotations and interactions
+#'
+#' Imports an intercellular network by mapping intercellular annotations 
+#' and protein interactions. It first imports the PPI interactions from the
+#' different datasets here described. Then, it takes proteins with the 
+#' intercellular roles defined by the user. Some proteins should be defined 
+#' as transmiters (eg. ligand) and other as receivers (receptor). We find the 
+#' interactions which source is a transmiter and its target a receiver. 
+#'
+#' @return A dataframe containing information about protein-protein 
+#' interactions and the inter-cellular roles of the protiens involved in those
+#' interactions. 
+#' @export
+#' @importFrom utils read.csv
+#' @param from_cache_file path to an earlier data file
+#' @param filter_databases vector containing interactions databases. 
+#' Interactions not reported in these databases are removed. 
+#' See \code{\link{get_interaction_databases}} for more information.
+#' @param classes_source A list containing two vectors. The first one with 
+#' the main classes to be considered as transmiters and the second with the 
+#' main classes to be considered as receivers. For furter information
+#' about the main classes see \code{\link{get_intercell_classes}} 
+#' @examples
+#' intercellNetwork <- import_intercell_network(
+#' classes_source = list(transmiters=c('ligand'),receivers=c('receptor')))
+#' @seealso \code{\link{get_intercell_categories}} 
+import_intercell_network = function (from_cache_file=NULL,
+    filter_databases = get_interaction_databases(), 
+    classes_source = list(transmiters=c('ligand'),receivers=c('receptor'))) {
+
+    mainclass <- genesymbol <- NULL
+    AllClasses <- unlist(classes_source)
+    
+    if (!all(AllClasses %in% get_intercell_classes())){
+        stop("Some all the classes are not correct. 
+            Check get_intercell_classes()")
+    }
+    
+    url_allinteractions_common <- 
+        paste0('http://omnipathdb.org/interactions?datasets=omnipath',
+            ',pathwayextra,kinaseextra,ligrecextra', 
+            '&fields=sources,references')
+
+    url_allinteractions <- organism_url(url_allinteractions_common, 9606)    
+    
+    if(is.null(from_cache_file)){
+        interactions <- getURL(url_allinteractions, read.table, sep = '\t', 
+            header = TRUE, stringsAsFactors = FALSE)
+        message("Downloaded ", nrow(interactions), " interactions")
+    } else {
+        load(from_cache_file)
+    }
+
+    filteredInteractions <- filter_format_inter(interactions,filter_databases)
+    
+    intercellAnnotations <- 
+        import_Omnipath_intercell(select_classes = AllClasses)
+
+    genesTransmiters <- intercellAnnotations %>%
+        dplyr::filter(mainclass %in% classes_source$transmiters) %>%
+        dplyr::distinct(genesymbol,mainclass)
+    genesReceivers <- intercellAnnotations %>%
+        dplyr::filter(mainclass %in% classes_source$receivers) %>%
+        dplyr::distinct(genesymbol,mainclass)
+    
+    intercelNetwork <- 
+        dplyr::inner_join(filteredInteractions, genesTransmiters, 
+            by=c("source_genesymbol"="genesymbol")) %>% 
+        dplyr::rename(class_source = mainclass) %>%
+        dplyr::inner_join(genesReceivers, 
+            by=c("target_genesymbol"="genesymbol")) %>% 
+        dplyr::rename(class_target = mainclass)
+        
+    return(intercelNetwork)
+}
 
 #' Get the different intercell categories described in Omnipath
 #'
@@ -596,14 +675,34 @@ import_Omnipath_intercell = function (from_cache_file=NULL,
 #' @importFrom utils read.csv
 #' @examples
 #' get_intercell_categories()
-#' @seealso \code{\link{import_Omnipath_intercell}}
+#' @seealso \code{\link{import_Omnipath_intercell}, 
+#' \link{get_intercell_classes}}
 get_intercell_categories = function(){
 
-    url_intercell <- 'http://omnipathdb.org/intercell'
+    url_intercell <- 'http://omnipathdb.org/intercell_summary'
     intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
 
     return(unique(intercell$category))
+}
+
+#' Get the different intercell main classes described in Omnipath
+#'
+#' get the names of the main classes from \url{http://omnipath.org/intercell}
+#' @return character vector with the different intercell main classes
+#' @export
+#' @importFrom utils read.csv
+#' @examples
+#' get_intercell_classes()
+#' @seealso \code{\link{import_Omnipath_intercell},
+#' \link{get_intercell_categories}}
+get_intercell_classes = function(){
+
+    url_intercell <- 'http://omnipathdb.org/intercell_summary'
+    intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
+        stringsAsFactors = FALSE)
+
+    return(unique(intercell$mainclass))
 }
 
 ########## ########## ########## ##########
@@ -649,16 +748,20 @@ filter_sources_annotations = function(annotations, databases){
     }
 }
 
-## Filtering intercell records according to the categories selected
-filter_categories_intercell = function(intercell, categories){
+## Filtering intercell records according to the categories and/or classes 
+## selected
+filter_intercell = function(intercell, categories, classes){
 ## takes intercell removes and removes those not reported by the given 
 ## databases
     nIntercell = nrow(intercell)
-    subsetIntercell <- dplyr::filter(intercell, .data$category %in% categories)
+    subsetIntercell <- dplyr::filter(intercell, .data$category %in% categories)    
+    subsetIntercell <- 
+        dplyr::filter(subsetIntercell, .data$mainclass %in% classes)    
+    
     nIntercellPost = nrow(subsetIntercell)
 
     message("removed ",nIntercell-nIntercellPost, 
-        " intercell records during category filtering.")
+        " intercell records during category/class filtering.")
 
     if (nIntercellPost > 0){
         return(subsetIntercell)

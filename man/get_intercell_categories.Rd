@@ -16,5 +16,6 @@ get the names of the categories from \url{http://omnipath.org/intercell}
 get_intercell_categories()
 }
 \seealso{
-\code{\link{import_Omnipath_intercell}}
+\code{\link{import_Omnipath_intercell}, 
+\link{get_intercell_classes}}
 }

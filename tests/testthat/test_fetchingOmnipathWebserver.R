@@ -68,10 +68,11 @@ annotations <- getURL(url_annotations, read.table, sep = '\t', header = TRUE,
 annotations_db <- unique(annotations$source)
 
 ## get_intercell_categories
-url_intercell <- 'http://omnipathdb.org/intercell'
+url_intercell <- 'http://omnipathdb.org/intercell_summary'
 intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 intercell_categories <- unique(intercell$category)
+intercell_classes <- unique(intercell$mainclass)
 
 
 ## Check the results between simulations and original functions
@@ -81,6 +82,7 @@ test_that("Check the databases/categories available in Omnipath", {
     expect_equal(get_complexes_databases(), complexes_databases)
     expect_equal(get_annotation_databases(), annotations_db)
     expect_equal(get_intercell_categories(), intercell_categories)
+    expect_equal(get_intercell_classes(), intercell_classes)
 })
 
 ################################################################################
@@ -150,11 +152,8 @@ annotations_filter_func <-
 url_annotations <- 'http://omnipathdb.org/annotations?&proteins=TP53,LMNA'
 annotations_genes <- getURL(url_annotations, read.csv, sep = '\t', 
     header = TRUE, stringsAsFactors = FALSE)
-annotations_filter_test <- dplyr::filter(annotations_genes, source=="HPA_subcellular")
-
-## import_Omnipath_intercell
-intercell_filter_func <- import_Omnipath_intercell(select_categories=c("ecm"))
-intercell_filter_test <- dplyr::filter(intercell,category=="ecm")
+annotations_filter_test <- 
+    dplyr::filter(annotations_genes, source=="HPA_subcellular")
 
 ## Check the results between simulations and original functions
 test_that("Check the fecthing of Omnipath webserver with filters", {
@@ -162,6 +161,5 @@ test_that("Check the fecthing of Omnipath webserver with filters", {
     expect_equal(interactions_filter_func, interactions_filter_test)
     expect_equal(complexes_filter_func, complexes_filter_test)
     expect_equal(annotations_filter_func, annotations_filter_test)
-    expect_equal(intercell_filter_func, intercell_filter_test)
 })
 
