@@ -470,56 +470,186 @@ get_complexes_databases = function(){
 }
 
 ########## ########## ########## ##########
-########## Annotations           ##########   
+########## Annotations           ##########
 ########## ########## ########## ##########
 
 #' Import Omnipath Annotations
 #'
-#' imports the annotations stored in Omnipath database from 
+#' imports the annotations stored in Omnipath database from
 #' \url{http://omnipathdb.org/annotations}
 #'
 #' @return A data.frame containing different gene/complex annotations
 #' @export
 #' @importFrom utils read.csv
-#' @param from_cache_file path to an earlier data file
-#' @param select_genes vector containing the genes for whom annotations will be
-#' retrieved (hgnc format). It is also possible to donwload complexes 
-#' annotations. To do so, write "COMPLEX:" right before the genesymbols of
-#' the genes integrating the complex. Check the vignette for examples. 
-#' @param filter_databases annotations not reported in these databases are 
-#' removed. See \code{\link{get_annotation_databases}} for more information.
+#' @param from_cache_file Path to an earlier data file
+#' @param select_genes Vector containing the genes or proteins for whom
+#' annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
+#' miRBase IDs). It is also possible to donwload annotations for protein
+#' complexes. To do so, write "COMPLEX:" right before the genesymbols of
+#' the genes integrating the complex. Check the vignette for examples.
+#' @param filter_databases Load the annotations only from these databases.
+#' See \code{\link{get_annotation_databases}} for possible values.
+#' @param force_full_download Force the download of the entire annotations
+#' dataset. This is disabled by default because the size of this data is
+#' around 1GB. We recommend to retrieve the annotations for a set of proteins
+#' or only from a few databases, depending on your interest.
 #' @examples
 #' annotations = import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
 #'      filter_databases=c("HPA_subcellular"))
-#' @seealso \code{\link{get_annotation_databases}}       
+#' @seealso \code{\link{get_annotation_databases}}
 import_Omnipath_annotations = function (from_cache_file=NULL,
-    select_genes = NULL, filter_databases = get_annotation_databases()){
+    select_genes = NULL, filter_databases = NULL,
+    force_full_download = FALSE, ...){
 
-    url_annotations <- 'http://omnipathdb.org/annotations?&proteins='
+    if(
+        !force_full_download &&
+        is.null(from_cache_file) &&
+        is.null(select_genes) &&
+        is.null(filter_databases)
+    ){
+        
+        stop(
+            paste(
+                'Downloading the entire annotations database is not allowed',
+                'by default because of its huge size (>1GB). If you really',
+                'want to do this use the `force_full_download` parameter.',
+                'However we recommend to query a set of proteins or a few',
+                'databases, depending on your interest.'
+            )
+        )
+        
+    }
+
+    url_annotations <- 'http://omnipathdb.org/annotations?'
     
-    if(is.null(select_genes)){
-        stop("A vector of genes should be provided")
-    } else {
-        genes_query <- paste0(select_genes,collapse = ",")
-        url_annotations <- paste0(url_annotations,genes_query)
+    annotations <- NULL
+    
+    if(!is.null(from_cache_file)){
+        
+        annotations <-
+            filter_sources_annotations(
+                load(from_cache_file),
+                databases = filter_databases
+            )
+        
+        if(is.null(annotations) && !is.null(filter_databases)){
+            warning(
+                paste(
+                    'Empty result from cache file.',
+                    'Might be the cache file does not contain data from',
+                    'the requested databases? Trying without cache.'
+                )
+            )
+        }
+        
     }
-
-    if(is.null(from_cache_file)){
-        annotations <- getURL(url_annotations, read.csv, sep = '\t', 
-            header = TRUE, stringsAsFactors = FALSE)
-        message("Downloaded ", nrow(annotations), " annotations")
-    } else {
-        load(from_cache_file)
+    
+    if(is.null(annotations)){
+        
+        databases_part <- ''
+        
+        if(!is.null(filter_databases)){
+            
+            all_databases <- get_annotation_databases()
+            unknown_databases <- setdiff(filter_databases, all_databases)
+            
+            if(length(unknown_databases) != 0){
+                
+                warning(
+                    sprintf(
+                        paste(
+                            'The following databases are not available: %s.',
+                            'Check the database names for spelling mistakes.'
+                        ),
+                        paste0(unknown_databases, collapse = ', ')
+                    )
+                )
+                
+            }
+            
+            databases_part <- sprintf(
+                'databases=%s',
+                paste0(filter_databases, collapse = ',')
+            )
+            
+        }
+        
+        if(length(select_genes) > 600){
+            
+            annotations <- list()
+            
+            proteins_chunks <-
+                split(
+                    select_genes,
+                    cut(
+                        seq_along(select_genes),
+                        breaks = length(select_genes) / 500,
+                        labels = FALSE
+                    )
+                )
+            
+            cat('Downloading ')
+            
+            for(proteins_chunk in proteins_chunks){
+                
+                cat('.')
+                
+                annotations <- append(
+                    annotations,
+                    list(
+                        import_Omnipath_annotations(
+                            select_genes = proteins_chunk,
+                            filter_databases = filter_databases,
+                            recursive_call = TRUE
+                        )
+                    )
+                )
+                
+            }
+            
+            cat(' ready.\n')
+            
+            annotations <- do.call(rbind, annotations)
+            
+        }else{
+            
+            proteins_part <- `if`(
+                is.null(select_genes),
+                '',
+                sprintf(
+                    '&proteins=%s',
+                    paste0(select_genes, collapse = ',')
+                )
+            )
+            
+            url_annotations <- paste0(
+                url_annotations,
+                databases_part,
+                proteins_part
+            )
+            
+            annotations <- getURL(
+                url_annotations,
+                read.csv,
+                sep = '\t',
+                header = TRUE,
+                stringsAsFactors = FALSE
+            )
+            
+        }
+        
+        args <- list(...)
+        
+        if(!'recursive_call' %in% names(args) || !args$recursive_call){
+            
+            message(sprintf('Downloaded %d annotations.', nrow(annotations)))
+            
+        }
+        
     }
-
-    if(!is.null(filter_databases)){
-        filteredannotations <- filter_sources_annotations(annotations,
-            databases = filter_databases)
-    } else {
-        filteredannotations <- annotations
-    }
-
-    return(filteredannotations)
+    
+    return(annotations)
+    
 }
 
 
@@ -733,6 +863,10 @@ filter_sources = function(interactions, databases){
 filter_sources_annotations = function(annotations, databases){
 ## takes annotations and removes those which are
 ## not reported by the given databases.
+
+    if(is.null(databases)){
+        return(annotations)
+    }
 
     nAnnot = nrow(annotations)
     subsetAnnotations <- dplyr::filter(annotations, source %in% databases)
