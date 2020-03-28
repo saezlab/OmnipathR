@@ -5,7 +5,7 @@
 \documentclass{article}
 
 <<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
-  BiocStyle::latex()
+    BiocStyle::latex()
 @
   
 % \usepackage{booktabs} % book-quality tables
@@ -27,10 +27,16 @@
     \author[1]
     {Alberto Valdeolivas\thanks{\email{alvaldeolivas@gmail.com}}}
     \author[1]
-    {Attila Gabor\thanks{\email{gaborattila87@gmail.com}}}
+    {Attila Gabor\thanks{\email{attila.gabor@bioquant.uni-heidelberg.de}}}
+    \author[1]
+    {Denes Turei\thanks{\email{denes.turei@embl.de}}}
+    \author[1,2]
+    {Julio Saez-Rodriguez\thanks{\email{julio.saez@bioquant.uni-heidelberg.de}}}
     \affil[1]{Institute of Computational Biomedicine, Heidelberg University, 
     Faculty of Medicine, 69120 Heidelberg, Germany}
-    
+    \affil[2]{RWTH Aachen University, Faculty of Medicine,Joint Research Centre
+    for Computational Biomedicine (JRC-COMBINE), 52074 Aachen, Germany}
+       
 \begin{document}
 \SweaveOpts{concordance=TRUE}
     % \SweaveOpts{concordance=TRUE}
@@ -186,19 +192,17 @@ interactions or inconclusive data).
 
 <<>>=
 library(OmnipathR)
-library(igraph)
-library(dplyr)
 library(tidyr)
 library(dnet)
 library(gprofiler2)
 
-## We check the different interaction databases
-.get_interaction_databases()
+## We check some of the different interaction databases
+head(get_interaction_databases(),10)
 
 ## The interactions are stored into a data frame.
 interactions <- 
-  import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
-  "Signor"))
+    import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
+    "Signor"))
 
 ## We visualize the first interactions in the data frame.
 print_interactions(head(interactions))
@@ -220,7 +224,9 @@ a biological network:
   going through the minimum number of edges. This can be very useful to track
   consecutive reactions within a given pathway. We display below the shortest 
   path between two given proteins and all the possible shortests paths between 
-  two other proteins. 
+  two other proteins. It is to note that the functions \textit{printPath\_es} 
+  and \textit{printPath\_vs} display very similar results, but the first one 
+  takes as an input an edge sequence and the second one a node sequence. 
   
 <<>>=
 ## We transform the interactions data frame into a graph
@@ -229,11 +235,11 @@ OPI_g <- interaction_graph(interactions = interactions)
 ## Find and print shortest paths on the directed network between proteins 
 ## of interest:
 printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
-                            output = 'epath')$epath[[1]],OPI_g)
+    output = 'epath')$epath[[1]],OPI_g)
 
 ## Find and print all shortest paths between proteins of interest:
 printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",
-                                to = "MAPKAPK2")$res,OPI_g)
+    to = "MAPKAPK2")$res,OPI_g)
 @
   
   \item \textbf{Clustering:} grouping nodes (proteins) in such a way that 
@@ -242,20 +248,23 @@ printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",
   Since proteins interact to perform their functions, proteins within the 
   same cluster are likely to be implicated in similar biological tasks. 
   Figure~\ref{fig:2} shows the subgraph containing the proteins and 
-  interactions of a specifc protein.  
+  interactions of a specifc protein. The \Biocpkg{igraph} \R{} package contains 
+  functions to apply sevaral different cluster methods on graphs (visit 
+  \url{https://igraph.org/r/doc/} for detailed information.) 
 
 <<>>=
 ## We apply a clustering algorithm (Louvain) to group proteins in 
 ## our network. We apply here Louvain which is fast but can only run 
 ## on undirected graphs. Other clustering algorithms can deal with 
 ## directed networks but with longer computational times, 
-## such as cluster_edge_betweenness.
+## such as cluster_edge_betweenness. These cluster methods are directly
+## available in the igraph package.
 OPI_g_undirected <- as.undirected(OPI_g, mode=c("mutual"))
 cl_results <- cluster_louvain(OPI_g_undirected)
 ## We extract the cluster where a protein of interest is contained
 cluster_id <- cl_results$membership[which(cl_results$names == "CD22")]
 module_graph <- induced_subgraph(OPI_g_undirected, 
-        V(OPI_g)$name[which(cl_results$membership == cluster_id)])
+    V(OPI_g)$name[which(cl_results$membership == cluster_id)])
 @
 
 
@@ -291,12 +300,12 @@ for a given gene in this particular case.
 <<>>=
 ## We query and store the interactions into a dataframe
 interactions <- 
-  import_PathwayExtra_Interactions(filter_databases=c("BioGRID","IntAct"),
-  select_organism = 10090)
+    import_PathwayExtra_Interactions(filter_databases=c("BioGRID","IntAct"),
+    select_organism = 10090)
 
 ## We select all the interactions in which Amfr gene is involved
-interactions_Amfr <- filter(interactions, source_genesymbol == "Amfr" | 
-                              target_genesymbol == "Amfr")
+interactions_Amfr <- dplyr::filter(interactions, source_genesymbol == "Amfr" | 
+    target_genesymbol == "Amfr")
 
 ## We print these interactions: 
 print_interactions(interactions_Amfr)
@@ -309,12 +318,12 @@ going to focus on rat reactions targeting a particular gene.
 <<>>=
 ## We query and store the interactions into a dataframe
 interactions <- 
-  import_KinaseExtra_Interactions(filter_databases=c("PhosphoPoint",
-  "PhosphoSite"), select_organism = 10116)
+    import_KinaseExtra_Interactions(filter_databases=c("PhosphoPoint",
+    "PhosphoSite"), select_organism = 10116)
 
 ## We select the interactions in which Dpysl2 gene is a target
-interactions_TargetDpysl2 <- filter(interactions, 
-                                    target_genesymbol == "Dpysl2")
+interactions_TargetDpysl2 <- dplyr::filter(interactions, 
+    target_genesymbol == "Dpysl2")
 
 ## We print these interactions: 
 print_interactions(interactions_TargetDpysl2)
@@ -322,28 +331,26 @@ print_interactions(interactions_TargetDpysl2)
 
 In the following example we are going to work with the \textbf{ligrecextra} 
 dataset, which contains ligand-receptor interactions without literature 
-reference. Our goal is to find the shortest path between two proteins of our
-interest. For a more global overview, we induce a network containing the genes
-involved in our shortest path and their first neighbors (Figure~\ref{fig:3}).
+reference. Our goal is to find the potential receptors associated to a given 
+ligand. For a more global overview, we induce a network containing the genes
+involved in these interactions (Figure~\ref{fig:3}).
 
 <<>>=
 ## We query and store the interactions into a dataframe
 interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD",
-  "Guide2Pharma"),select_organism=9606)
+    "Guide2Pharma"),select_organism=9606)
+
+## Receptors of the CDH1 ligand.
+interactions_CDH1 <- dplyr::filter(interactions, source_genesymbol == "CDH1")
 
 ## We transform the interactions data frame into a graph
-OPI_g <- interaction_graph(interactions = interactions)
-
-## We aim at finding the shortest path between two genes of interest. 
-path <- shortest_paths(OPI_g, "B2M", "TFR2")
-printPath_vs(path$vpath,OPI_g)
+OPI_g <- interaction_graph(interactions = interactions_CDH1)
 
 ## We induce a network with the genes involved in the shortest path and their
 ## first neighbors to get a more general overview of the interactions 
 Induced_Network <-  dNetInduce(g=OPI_g, 
-                    nodes_query=as.character(path$vpath[[1]]$name), knn=1,
-                    remove.loops=FALSE, largest.comp=FALSE)
-
+    nodes_query=as.character( V(OPI_g)$name), knn=0,
+    remove.loops=FALSE, largest.comp=FALSE)
 
 @
 
@@ -353,8 +360,8 @@ par(mar=c(0.1,0.1,0.1,0.1))
 plot(Induced_Network, vertex.label.color="black",
     vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.2,
     vertex.color = 
-      ifelse(igraph::V(Induced_Network)$name %in% c("B2M","TFR2"),
-      "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
+        ifelse(igraph::V(Induced_Network)$name %in% c("CDH1"),
+        "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
 @
 
 \begin{figure*}
@@ -376,13 +383,13 @@ TF.
 
 <<>>=
 ## We query and store the interactions into a dataframe
-interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
+interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
     "ARACNe-GTEx"),select_organism=9606)
 
 ## We select the most confident interactions for a given TF and we print 
 ## the interactions to check the way it regulates its different targets
-interactions_A_GLI1  <- filter(interactions, tfregulons_level=="A", 
-                          source_genesymbol == "GLI1")
+interactions_A_GLI1  <- dplyr::filter(interactions, tfregulons_level=="A", 
+    source_genesymbol == "GLI1")
 print_interactions(interactions_A_GLI1)
 @
 
@@ -402,7 +409,8 @@ interactions <-
 
 ## We select the interactions where a miRNA is interacting with the TF 
 ## used in the previous code chunk and we print these interactions.
-interactions_miRNA_GLI1 <- filter(interactions,  target_genesymbol == "GLI1")
+interactions_miRNA_GLI1 <- 
+    dplyr::filter(interactions,  target_genesymbol == "GLI1")
 print_interactions(interactions_miRNA_GLI1)
 
 ## We transform the previous selections to graphs (igraph objects)
@@ -416,10 +424,10 @@ par(mar=c(0.1,0.1,0.1,0.1))
 plot(OPI_g_1 %u% OPI_g_2, vertex.label.color="black",
     vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.25,
     vertex.color = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
-      "red",ifelse(igraph::V(OPI_g_1 %u% OPI_g_2)$name == "GLI1",
-      "yellow","#00CCFF")), edge.color="blue",
+    "red",ifelse(igraph::V(OPI_g_1 %u% OPI_g_2)$name == "GLI1",
+    "yellow","#00CCFF")), edge.color="blue",
     vertex.shape = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
-      "vrectangle","circle"),edge.width=0.8)
+    "vrectangle","circle"),edge.width=0.8)
 @
 
 \begin{figure*}
@@ -447,7 +455,7 @@ build a graph using this information, and to retrieve PTMs from mouse or rat.
 
 <<>>=
 ## We check the different PTMs databases
-.get_ptms_databases()
+get_ptms_databases()
 
 ## We query and store the ptms into a dataframe. No filtering by
 ## databases in this case.
@@ -456,7 +464,7 @@ ptms <- import_Omnipath_PTMS()
 ## We can select and print the reactions between a specific kinase and
 ## a specific substrate  
 print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
-  substrate_genesymbol=="MAPK3"))
+    substrate_genesymbol=="MAPK3"))
 
 ## In the previous results, we can see that ptms does not contain sign 
 ## (activation/inhibition). We can generate this information based on the
@@ -467,14 +475,14 @@ ptms <- get_signed_ptms(ptms,interactions)
 ## We select again the same kinase and substrate. Now we have information 
 ## about inhibition or activation when we print the ptms
 print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
-  substrate_genesymbol=="MAPK3")) 
+    substrate_genesymbol=="MAPK3")) 
 
 ## We can also transform the ptms into a graph.
 ptms_g <- ptms_graph(ptms = ptms)
 
 ## We download PTMs for mouse 
 ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
-       select_organism=10090)
+    select_organism=10090)
 @
 
 \subsection{Complexes}
@@ -498,24 +506,24 @@ it will be used again in the forthcoming sections.
 
 <<>>=
 ## We check the different complexes databases
-.get_complexes_databases()
+get_complexes_databases()
 
 ## We query and store complexes from some sources into a dataframe. 
 complexes <- import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
 
 ## We check all the molecular complexes where a set of genes participate
-query_genes <- c("LMNA","CTCF")
+query_genes <- c("WRN","PARP1") 
 
 ## Complexes where any of the input genes participate
-complexes_query_genes_any <- get_complex_genes(complexes,query_genes,
-                                          total_match=FALSE)
+complexes_query_genes_any <- unique(get_complex_genes(complexes,query_genes,
+    total_match=FALSE))
 
 ## We print the components of the different selected components 
-complexes_query_genes_any$components_genesymbols 
+head(complexes_query_genes_any$components_genesymbols,6)
 
 ## Complexes where all the input genes participate jointly
-complexes_query_genes_join <- get_complex_genes(complexes,query_genes,
-                                          total_match=TRUE)
+complexes_query_genes_join <- unique(get_complex_genes(complexes,query_genes,
+    total_match=TRUE))
 
 ## We print the components of the different selected components 
 complexes_query_genes_join$components_genesymbols
@@ -523,17 +531,17 @@ complexes_query_genes_join$components_genesymbols
 
 <<>>=
 genes_complex <- 
-  unlist(strsplit(complexes_query_genes_join$components_genesymbols, "-"))
+  unlist(strsplit(complexes_query_genes_join$components_genesymbols, "_"))
 
 ## We can perform an enrichment analyses with the genes in the complex
 EnrichmentResults <- gost(genes_complex, significant = TRUE, 
-  user_threshold = 0.001, correction_method = c("fdr"),
-  sources=c("GO:BP","GO:CC","GO:MF"))
+    user_threshold = 0.001, correction_method = c("fdr"),
+    sources=c("GO:BP","GO:CC","GO:MF"))
 
 ## We show the most significant results
 EnrichmentResults$result %>% 
   dplyr::select(term_id, source, term_name,p_value) %>%
-  dplyr::arrange(source, p_value) 
+  dplyr::top_n(5,-p_value) 
 @
 
 \subsection{Annotations} 
@@ -559,7 +567,7 @@ components.
 
 <<>>=
 ## We check the different annotation databases
-.get_annotation_databases()
+get_annotation_databases()
 
 ## We can further investigate the features of the complex selected 
 ## in the previous section.
@@ -568,7 +576,7 @@ components.
 annotations <-import_Omnipath_annotations(select_genes=paste0("COMPLEX:",
   complexes_query_genes_join$components_genesymbols))
 
-dplyr::select(annotations,source,label,value)
+head(dplyr::select(annotations,source,label,value),10)
 @
 
 Afterwards, we explore the annotations of the individual components of the 
@@ -581,19 +589,19 @@ checking their cellular location.
 
 ## Pathways where the proteins belong:
 annotations <- import_Omnipath_annotations(select_genes=genes_complex,
-  filter_databases=c("NetPath"))
+    filter_databases=c("NetPath"))
 
 dplyr::select(annotations,genesymbol,value)
 
 ## Cellular localization of our proteins 
 annotations <-import_Omnipath_annotations(select_genes=genes_complex,
-  filter_databases=c("ComPPI"))
+   filter_databases=c("ComPPI"))
 
 ## Since we have same record_id for some results of our query, we spread 
 ## these records across columns
 spread(annotations, label,value) %>% 
-  dplyr::arrange(desc(score)) %>%
-  dplyr::top_n(10, score)
+    dplyr::arrange(desc(score)) %>%
+    dplyr::top_n(10, score)
 @
 
 
@@ -615,24 +623,24 @@ Then, we focus again in our previously selected complex and we check its
 potential roles in inter-cellular signaling. We repeat the analysis with its
 individual components. 
 <<>>=
-## We check the different intercell categories
-.get_intercell_categories()
+## We check some of the different intercell categories
+head(get_intercell_categories(),10)
 
 ## We import the intercell data into a dataframe
 intercell <- import_Omnipath_intercell()
 
 ## We check the intercell annotations for our previous complex itself
 dplyr::filter(intercell,
-  genesymbol == complexes_query_genes_join$components_genesymbols,
-  mainclass != "") %>%
-  dplyr::select(category,genesymbol, mainclass)
+    genesymbol == complexes_query_genes_join$components_genesymbols,
+    mainclass != "") %>%
+    dplyr::select(category,genesymbol, mainclass)
 
 ## We check the intercell annotations for the individual components of 
 ## our previous complex. We filter our data to print it in a good format
 dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>% 
-  dplyr::distinct(genesymbol,mainclass, .keep_all = TRUE) %>%
-  dplyr::select(category, genesymbol, mainclass) %>%
-  dplyr::arrange(genesymbol)
+    dplyr::distinct(genesymbol,mainclass, .keep_all = TRUE) %>%
+    dplyr::select(category, genesymbol, mainclass) %>%
+    dplyr::arrange(genesymbol)
 
 ## We close graphical connections
 while (!is.null(dev.list()))  dev.off()
@@ -648,7 +656,7 @@ such as dataframes and graphs. Consequently, it allows an easy integration of
 the different types of data and a gateway to the vast number of \R{} packages 
 dedicated to the analysis and representaiton of biological data. We highlighted 
 these abilities in some of the examples detailed in previous sections of this 
-document.   
+document.
 
 \newpage
 

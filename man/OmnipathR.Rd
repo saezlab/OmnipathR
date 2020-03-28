@@ -3,7 +3,6 @@
 \docType{package}
 \name{OmnipathR}
 \alias{OmnipathR}
-\alias{OmnipathR-package}
 \title{The OmnipathR package}
 \description{
 OmnipathR is an R package built to provide easy access to the data stored in 

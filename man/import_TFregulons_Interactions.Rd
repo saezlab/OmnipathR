@@ -5,18 +5,27 @@
 \title{Imports from Omnipath webservice the interactions from 
 Dorothea dataset}
 \usage{
-import_TFregulons_Interactions(from_cache_file = NULL,
-  filter_databases = .get_interaction_databases(),
-  select_organism = 9606)
+import_TFregulons_Interactions(
+  from_cache_file = NULL,
+  filter_databases = get_interaction_databases(),
+  select_organism = 9606,
+  confidence_level = c("A", "B")
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
 \item{filter_databases}{interactions not reported in these databases are 
-removed. See \code{\link{.get_interaction_databases}} for more information.}
+removed. See \code{\link{get_interaction_databases}} for more information.}
 
 \item{select_organism}{Interactions are available for human, mouse and rat. 
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
+
+\item{confidence_level}{Vector detailing the confidence levels of the 
+interactions to be downloaded. In dorothea, every TF-target interaction has a 
+confidence score ranging from A to E, being A the most reliable interactions.
+By default we take A and B level interactions (\code{c(A,B)}). It is to note 
+that E interactions are not available in OmnipathR.}
 }
 \value{
 A dataframe containing TF-target interactions from DoRothEA
@@ -28,10 +37,10 @@ which contains transcription factor (TF)-target interactions from DoRothEA
 \url{https://github.com/saezlab/DoRothEA}
 }
 \examples{
-interactions <- import_TFregulons_Interactions(filter_databases=c("tfact",
-    "ARACNe-GTEx"), select_organism=9606)
+interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
+    "ARACNe-GTEx_DoRothEA"), select_organism=9606)
 }
 \seealso{
-\code{\link{.get_interaction_databases}, 
+\code{\link{get_interaction_databases}, 
   \link{import_AllInteractions}}
 }

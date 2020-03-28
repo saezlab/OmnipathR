@@ -36,44 +36,41 @@ For a more detailed information, we recommend you to visit the following sites:
   
   <https://github.com/saezlab/pypath/blob/master/webservice.rst> 
   
-  <https://github.com/saezlab/OmnipathR/blob/master/vignettes/OmnipathR.pdf>
+  <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
   
 
 ## Installation
 First of all, you need a current version of `R` (<http://www.r-project.org>).
-*OmnipathR* is a freely available package deposited on
+*OmnipathR* is a freely available package deposited on *Bioconductor* and 
+*Github*: 
+(<http://bioconductor.org/>, <https://github.com/saezlab/OmnipathR>).
 
-  <https://github.com/saezlab/OmnipathR>
-
-You can install it by using the the `devtools` package by running the following 
-commands on a `R` console:
+You can install it by running the following commands on a `R` console:
  
 ```{r}
-if(!require(devtools)) install.packages("devtools")
-devtools::install_github("saezlab/omnipathR") 
-```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
 
-Or download, unzip and install the package from the source files:
-
-```{r}
-install.packages('./OmnipathR',repo=NULL)
+## Last release in Bioconductor
+BiocManager::install("OmnipathR")
+## Development version with the lastest updates
+BiocManager::install(version='devel')
 ```
 
 ## Getting started and some usage examples
 To get started, we strongly recommend to read our vignette in order to deal with 
 the different types of queries and handle the data they return:
 
-  <https://github.com/saezlab/OmnipathR/blob/master/vignettes/OmnipathR.pdf>
-
+  <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
+  
 You can also check the manual:
 
-   <https://github.com/saezlab/OmnipathR/blob/master/Manual_OmnipathR_0.2.0.pdf>
-
+  <https://bioconductor.org/packages/devel/bioc/manuals/OmnipathR/man/OmnipathR.pdf>
+   
 In addition, we provide here some examples for a quick start: 
 
 ```{r}
 library(OmnipathR)
-library(igraph)
 ```
 
 Download human protein-protein interactions for some source databases:  
@@ -125,7 +122,8 @@ print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
 
 Find shortest paths on the directed network between proteins:  
 ```{r}
-printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", output = 'epath')$epath[[1]],OPI_g)
+printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
+    output = 'epath')$epath[[1]],OPI_g)
 
           source interaction         target nsources nrefs
 1 TYRO3 (Q06418)  ==( + )==>  GRB2 (P62993)        1     1

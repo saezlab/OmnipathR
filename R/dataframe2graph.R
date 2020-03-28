@@ -18,29 +18,15 @@ ptms_graph = function(ptms){
     # identified by genenames, and not by uniprot IDs.
     # This might cause issue when a gene name encodes multiple uniprot IDs.
 
-    # keep only edge attributes
-    edges <- ptms %>% dplyr::select(- c(.data$enzyme, .data$substrate))
+    # We check that the input dataframe contain the required columns.
+    if (!all(c("enzyme", "substrate", "enzyme_genesymbol",
+        "substrate_genesymbol","sources") %in% colnames(ptms))) {
+    stop("The input data frame does not contain the required columns")
+    }
 
-    # build vertices: gene_names and gene_uniprotIDs
-    nodesA <- dplyr::select(ptms, c(.data$enzyme_genesymbol, .data$enzyme))
-    nodesB <- 
-        dplyr::select(ptms, c(.data$substrate_genesymbol, .data$substrate))
-    colnames(nodesA) = colnames(nodesB) = c("genesymbol", "up_id")
-    nodes <- rbind(nodesA,nodesB)
-    nodes <- unique(nodes)
-    nodes <- nodes %>% dplyr::group_by(.data$genesymbol) %>% 
-    dplyr::summarise("up_ids" = paste0(.data$up_id,collapse=",")) %>% 
-    dplyr::ungroup()
-
-    op_dfs <- list(edges = edges, nodes = nodes)
-    directed = TRUE
-
-    op_g <- igraph::graph_from_data_frame(d = op_dfs$edges,directed = directed,
-        vertices = op_dfs$nodes)
-
-    igraph::E(op_g)$sources    <- strsplit(igraph::E(op_g)$sources,    ';')
-    igraph::E(op_g)$references <- strsplit(igraph::E(op_g)$references, ';')
-    return(op_g)
+    # We give the proper format to the edges by calling to the function below
+    output_graph <- format_graph_edges(ptms,flag = "ptms_dataset")
+    return(output_graph)
 }
 
 #' Build Omnipath interaction graph
@@ -74,31 +60,73 @@ interaction_graph <- function(interactions = interactions){
     # identified by genenames, and not by uniprot IDs.
     # This might cause issue when a gene name encodes multiple uniprot IDs.
 
-    # keep only edge attributes
-    edges <- interactions %>% dplyr::select(- c(.data$source, .data$target))
+    # We check that the input dataframe contain the required columns.
+    if (!all(c("source", "target", "source_genesymbol","target_genesymbol", 
+        "sources") %in% colnames(interactions))) {
+        stop("The input data frame does not contain the required columns")
+    }
+    
+    # We give the proper format to the edges by calling to the function below
+    output_graph <- 
+        format_graph_edges(interactions,flag = "interactions_dataset")
+    return(output_graph)  
+}
 
-    # build vertices: gene_names and gene_uniprotIDs
-    nodesA <- 
-        dplyr::select(interactions, c(.data$source_genesymbol,.data$source))
-    nodesB <- 
-        dplyr::select(interactions, c(.data$target_genesymbol,.data$target))
+########## ########## ########## ##########
+########## ########## ########## ##########
+########## ########## ########## ##########
+## Non exported function to give the proper format to the edges in order to
+## transform the interactions o PTMs data frame into a graph. The input 
+## parameters are the data frame containing interactions or PTMs and a flag 
+## indicating if we are dealing with the interactions dataset or the PTMs 
+## dataset.
+
+format_graph_edges <- function(df_interact, flag){
+
+    if (flag=="ptms_dataset"){
+        # keep only edge attributes
+        edges <- df_interact %>% 
+            dplyr::select(- c(.data$enzyme, .data$substrate))
+
+        # build vertices: gene_names and gene_uniprotIDs
+        nodesA <- 
+            dplyr::select(df_interact, c(.data$enzyme_genesymbol, .data$enzyme))
+        nodesB <- 
+            dplyr::select(df_interact, c(.data$substrate_genesymbol, 
+            .data$substrate))
+    } else {
+        if (flag=="interactions_dataset"){
+            # keep only edge attributes
+            edges <- df_interact %>% 
+                dplyr::select(- c(.data$source, .data$target))      
+            # build vertices: gene_names and gene_uniprotIDs
+            nodesA <- 
+                dplyr::select(df_interact,
+                c(.data$source_genesymbol,.data$source))
+            nodesB <- 
+                dplyr::select(df_interact, 
+                c(.data$target_genesymbol,.data$target))
+        } else {
+            stop("Incorrect Input Flag")
+        }
+    }  
+
     colnames(nodesA) = colnames(nodesB) = c("genesymbol", "up_id")
     nodes <- rbind(nodesA,nodesB)
     nodes <- unique(nodes)
     nodes <- nodes %>% dplyr::group_by(.data$genesymbol) %>% 
-    dplyr::summarise("up_ids" = paste0(.data$up_id,collapse=",")) %>% 
-    dplyr::ungroup()
-    
-    op_dfs <- list(edges = edges,nodes = nodes)
+        dplyr::summarise("up_ids" = paste0(.data$up_id,collapse=",")) %>% 
+        dplyr::ungroup()
+
+    op_dfs <- list(edges = edges, nodes = nodes)
     directed <- TRUE
     op_g <- igraph::graph_from_data_frame(d = op_dfs$edges,directed = directed,
         vertices = op_dfs$nodes)
 
-    igraph::E(op_g)$sources  <- strsplit(igraph::E(op_g)$sources,';')
-    
-    if ("references" %in% colnames(interactions)){
+    igraph::E(op_g)$sources    <- strsplit(igraph::E(op_g)$sources,    ';')
+    if ("references" %in% colnames(df_interact)){
         igraph::E(op_g)$references <- strsplit(igraph::E(op_g)$references, ';')
     }
+
     return(op_g)
 }
-

@@ -4,15 +4,17 @@
 \alias{import_Omnipath_Interactions}
 \title{Import Omnipath interaction database}
 \usage{
-import_Omnipath_Interactions(from_cache_file = NULL,
-  filter_databases = .get_interaction_databases(),
-  select_organism = 9606)
+import_Omnipath_Interactions(
+  from_cache_file = NULL,
+  filter_databases = get_interaction_databases(),
+  select_organism = 9606
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
 \item{filter_databases}{interactions not reported in these databases are 
-removed. See \code{\link{.get_interaction_databases}} for more information.}
+removed. See \code{\link{get_interaction_databases}} for more information.}
 
 \item{select_organism}{Interactions are available for human, mouse and rat. 
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
@@ -31,6 +33,6 @@ interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"),
                
 }
 \seealso{
-\code{\link{.get_interaction_databases}, 
+\code{\link{get_interaction_databases}, 
   \link{import_AllInteractions}}
 }

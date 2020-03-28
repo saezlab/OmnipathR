@@ -4,15 +4,22 @@
 \alias{import_Omnipath_intercell}
 \title{Import Omnipath Intercell Data}
 \usage{
-import_Omnipath_intercell(from_cache_file = NULL,
-  select_categories = .get_intercell_categories())
+import_Omnipath_intercell(
+  from_cache_file = NULL,
+  select_categories = get_intercell_categories(),
+  select_classes = get_intercell_classes()
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
 \item{select_categories}{vector containing the categories to be retrieved.
-All the genes belonging to that category will be returned. For furter 
-information about the categories see \code{\link{.get_intercell_categories}}}
+All the genes belonging to those categories will be returned. For furter 
+information about the categories see \code{\link{get_intercell_categories}}}
+
+\item{select_classes}{vector containing the main classes to be retrieved.
+All the genes belonging to those classes will be returned. For furter 
+information about the main classes see \code{\link{get_intercell_classes}}}
 }
 \value{
 A dataframe cotaining information about roles in inter-cellular
@@ -28,5 +35,5 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc.
 intercell = import_Omnipath_intercell(select_categories=c("ecm"))
 }
 \seealso{
-\code{\link{.get_intercell_categories}}
+\code{\link{get_intercell_categories}}
 }

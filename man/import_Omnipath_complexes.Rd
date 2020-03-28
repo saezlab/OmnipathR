@@ -4,14 +4,16 @@
 \alias{import_Omnipath_complexes}
 \title{Import Omnipath Complexes}
 \usage{
-import_Omnipath_complexes(from_cache_file = NULL,
-  filter_databases = .get_complexes_databases())
+import_Omnipath_complexes(
+  from_cache_file = NULL,
+  filter_databases = get_complexes_databases()
+)
 }
 \arguments{
 \item{from_cache_file}{path to an earlier data file}
 
 \item{filter_databases}{complexes not reported in these databases are 
-removed. See \code{\link{.get_complexes_databases}} for more information.}
+removed. See \code{\link{get_complexes_databases}} for more information.}
 }
 \value{
 A dataframe containing information about complexes
@@ -24,5 +26,5 @@ imports the complexes stored in Omnipath database from
 complexes = import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
 }
 \seealso{
-\code{\link{.get_complexes_databases}}
+\code{\link{get_complexes_databases}}
 }

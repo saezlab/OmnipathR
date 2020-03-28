@@ -22,7 +22,7 @@
 #'   substrate_genesymbol=="MAPK3"))
 print_interactions = function(interDF,writeRefs=FALSE){
     if(nrow(interDF)==0) {
-        print("no interactions")
+        message("No interactions")
         return(invisible(NULL))
     }
 
@@ -40,11 +40,11 @@ print_interactions = function(interDF,writeRefs=FALSE){
             ifelse(interDF$is_inhibition==1,"( - )","( ? )"))     
         interDF$interaction <- paste0("==", signs,"==>")
         if(writeRefs){
-            print(interDF[,c('enzyme',"interaction","substrate","modification",
-            "nsources","nrefs","references")])
+            interDF[,c('enzyme',"interaction","substrate","modification",
+            "nsources","nrefs","references")]
         } else {
-            print(interDF[,c('enzyme',"interaction","substrate","modification",
-            "nsources")])
+            interDF[,c('enzyme',"interaction","substrate","modification",
+            "nsources")]
         }
     } else { 
         if ("nrefs" %in% colnames(interDF)){
@@ -68,17 +68,17 @@ print_interactions = function(interDF,writeRefs=FALSE){
 
         if(writeRefs){
             if ("nrefs" %in% colnames(interDF)){
-                print(interDF[,c('source',"interaction","target","nsources",
-                "nrefs","references")])
+                interDF[,c('source',"interaction","target","nsources",
+                "nrefs","references")]
             } else {
-                print(interDF[,c('source',"interaction","target","nsources")])
+                interDF[,c('source',"interaction","target","nsources")]
             } 
         } else {
             if ("nrefs" %in% colnames(interDF)){
-                print(interDF[,c('source',"interaction","target","nsources",
-                "nrefs")])
+                interDF[,c('source',"interaction","target","nsources",
+                "nrefs")]
             } else {
-                print(interDF[,c('source',"interaction","target","nsources")])
+                interDF[,c('source',"interaction","target","nsources")]
             }
         }
     }
@@ -102,7 +102,7 @@ print_interactions = function(interDF,writeRefs=FALSE){
 printPath_es = function(edgeSeq,G){
 
     if(length(edgeSeq)==0) {
-        cat("\nempty path\n")
+        message("Empty path")
         return(NULL)
     }
     signs <- ifelse(edgeSeq$is_stimulation==1,
@@ -142,7 +142,7 @@ printPath_es = function(edgeSeq,G){
             nsources = edgeSeq$nsources)
         }
     }
-    print(df)
+    df
 }
 
 
@@ -185,12 +185,12 @@ unique_nodeSeq = function(nodeSeq_list){
 printPath_vs = function(nodeSeq,G){
 
     if(length(nodeSeq)==0){
-        print("empty path")
+        message("Empty path")
         return(invisible(NULL))
     }
     nodeSeq_names <- unique_nodeSeq(nodeSeq)
     for(i in seq(nodeSeq_names)){
-        print(paste0("pathway ", i, ": ", 
+        message(paste0("Pathway ", i, ": ", 
             paste(nodeSeq_names[[i]],collapse = " -> ")))
         edgeSet <- c()
         for(j in 2:length(nodeSeq_names[[i]])){
