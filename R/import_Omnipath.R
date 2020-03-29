@@ -23,8 +23,10 @@
 import_Omnipath_PTMS = function (from_cache_file=NULL,
     filter_databases = get_ptms_databases(),select_organism = 9606){
 
-    url_ptms_common <- 
-        'http://omnipathdb.org/ptms/?fields=sources&fields=references'
+    url_ptms_common <- paste0(
+        'http://omnipathdb.org/ptms/?',
+        'fields=sources&fields=references&fields=curation_effort'
+    )
 
     url_ptms <- organism_url(url_ptms_common, select_organism)
     
@@ -89,8 +91,10 @@ get_ptms_databases = function(){
 import_Omnipath_Interactions = function (from_cache_file=NULL,
     filter_databases = get_interaction_databases(),select_organism = 9606){
 
-    url_interactions_common <- 
-        'http://omnipathdb.org/interactions?fields=sources&fields=references'
+    url_interactions_common <- paste0(
+        'http://omnipathdb.org/interactions?',
+        'fields=sources&fields=references&fields=curation_effort'
+    )
     
     url_interactions <- organism_url(url_interactions_common, select_organism)
     
