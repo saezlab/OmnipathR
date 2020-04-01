@@ -497,6 +497,7 @@ get_complexes_databases = function(){
 #' dataset. This is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few databases, depending on your interest.
+#' @param ... Additional arguments. 
 #' @examples
 #' annotations = import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
 #'      filter_databases=c("HPA_subcellular"))

@@ -39,7 +39,9 @@ getURL <- function(URL, FUN, ..., N.TRIES=1L) {
 
 ## get_ptms_databases
 url_ptms <- 
-    'http://omnipathdb.org/ptms/?fields=sources&fields=references&genesymbols=1'
+    paste0("http://omnipathdb.org/ptms/?fields=sources&fields=references&", 
+    "fields=curation_effort&genesymbols=1")
+
 ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE, 
     stringsAsFactors = FALSE)
 ptms_databases <- 
