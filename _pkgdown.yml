@@ -1,0 +1,16 @@
+destination: docs
+url: https://saezlab.github.io/OmnipathR
+navbar:
+  structure:
+    left: [home, intro, reference, articles, tutorials, news]
+    right: [github, twitter, homepage1, homepage2]
+  components:
+     twitter:
+       icon: "fab fa-twitter fa-lg"
+       href: https://twitter.com/omnipathdb
+     homepage1:
+       icon: "fas fa-database"
+       href: http://omnipathdb.org/
+     homepage2:
+       icon: "fas fa-university"
+       href: http://saezlab.org/

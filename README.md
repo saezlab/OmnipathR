@@ -1,6 +1,7 @@
-<img src='figures/download.png' align="right" height="140" width="160">
+<img src='man/figures/logo_omnipath.png' align="right" height="140">
 
 # OmnipathR
+
 Utility functions to work with **Omnipath** in `R`. 
 
 ## Description
@@ -34,7 +35,7 @@ For a more detailed information, we recommend you to visit the following sites:
   
   <http://omnipathdb.org/info>
   
-  <https://github.com/saezlab/pypath/blob/master/webservice.rst> 
+  <https://github.com/saezlab/pypath/blob/master/webservice.rst>
   
   <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
   

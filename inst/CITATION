@@ -1,4 +1,17 @@
 citEntry(entry="article",
+    author = c(person("Denes", "Turei"),
+               person("Tamas", " Korcsmaros"),
+               person("Julio", "Saez-Rodriguez")),
+    title = "OmniPath: guidelines and gateway for literature-curated signaling pathway resources",
+    journal = "Nature Methods",
+    year = 2016,
+
+    textVersion = "D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath: 
+    guidelines and gateway for literature-curated signaling pathway resources. 
+    Nature Methods 13 (12) PMID: 27898060"
+)
+
+citEntry(entry="article",
     author = c(person("Alberto", "Valdeolivas"),
                person("Denes", " Turei"),
                person("Attila", "Gabor")),
