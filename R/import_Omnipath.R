@@ -2,10 +2,10 @@
 ########## PTMS                  ##########
 ########## ########## ########## ##########
 
-#' Imports enzyme-PTM relationships from OmniPath
+#' Imports enzyme-substrate relationships from OmniPath
 #'
-#' Imports the PTM (enzyme-PTM relationship) database from
-#' \url{http://omnipathdb.org/ptms}
+#' Imports the enzyme-substrate (more exactly, enzyme-PTM) relationship
+#' database from \url{http://omnipathdb.org/enzsub}
 #'
 #' @return A data frame containing the information about ptms
 #' @export
@@ -17,7 +17,7 @@
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
-#' ptms = import_omnipath_ptms(
+#' ptms = import_omnipath_enzsub(
 #'     filter_databases = c("PhosphoSite", "Signor"),
 #'     select_organism = 9606
 #' )
@@ -26,56 +26,64 @@
 #'   \link{import_Omnipath_Interactions}}
 #'
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
-import_omnipath_ptms <- function(
+import_omnipath_enzsub <- function(
     from_cache_file = NULL,
-    filter_databases = get_ptms_databases(),
+    filter_databases = get_enzsub_resources(),
     select_organism = 9606
 ){
 
-    url_ptms_common <- paste0(
-        'http://omnipathdb.org/ptms/?',
+    url_enzsub_common <- paste0(
+        'http://omnipathdb.org/enzsub/?',
         'fields=sources&fields=references&fields=curation_effort'
     )
 
-    url_ptms <- organism_url(url_ptms_common, select_organism)
+    url_enzsub <- organism_url(url_enzsub_common, select_organism)
 
     if(is.null(from_cache_file)){
-        ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE,
+        enzsub <- getURL(url_enzsub, read.table, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
-        message("Downloaded ", nrow(ptms), " PTMs")
+        message(
+            sprintf(
+                'Downloaded %d enzyme-substrate relationships.',
+                nrow(enzsub)
+            )
+        )
     } else {
         load(from_cache_file)
     }
 
-    filteredPTMS <- filter_format_inter(ptms, filter_databases)
-    return(filteredPTMS)
+    filtered_enzsub <- filter_format_inter(enzsub, filter_databases)
+    return(filtered_enzsub)
 }
 
 # synonyms (old name)
-import_Omnipath_PTMS <- import_omnipath_ptms
-import_OmniPath_PTMS <- import_omnipath_ptms
+import_Omnipath_PTMS <- import_omnipath_enzsub
+import_OmniPath_PTMS <- import_omnipath_enzsub
 
-#' Get Post-translational modification (PTMs) databases
+#' Retrieve a list of enzyme-substrate resources available in OmniPath
 #'
-#' get the names of the different databases available for ptms databases
-#' \url{http://omnipath.org/ptms}
+#' get the names of the enzyme-substrate relationship resources available
+#' in \url{http://omnipath.org/enzsub}
 #'
-#' @return character vector with the names of the PTMs databases
+#' @return character vector with the names of the enzyme-substrate resources
 #' @export
 #' @importFrom utils read.table
+#'
 #' @examples
-#' get_ptms_databases()
-#' @seealso  \code{\link{import_Omnipath_PTMS}}
-get_ptms_databases <- function(){
+#' get_enzsub_resources()
+#'
+#' @seealso  \code{\link{get_resources},
+#' \link{import_omnipath_enzsub}
+#'
+#' @aliases get_ptms_databases
+get_enzsub_resources <- function(dataset = NULL){
 
-    url_ptms <- 'http://omnipathdb.org/ptms/?fields=sources'
-    ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE,
-        stringsAsFactors = FALSE)
-    return(unique(unlist(
-        strsplit(x = as.character(ptms$sources), split = ";")
-    )))
+    return(get_resources(query_type = 'enzsub', dataset = dataset))
 
 }
+
+# synonym (old name)
+get_ptms_databases <- get_enzsub_resources
 
 ########## ########## ########## ##########
 ########## INTERACTIONS          ##########
@@ -517,9 +525,14 @@ import_all_interactions <- function(
 # synonym (old name)
 import_AllInteractions <- import_all_interactions
 
-#' Get the interaction databases available in OmniPath
+#' Retrieve a list of interaction resources available in Omnipath
 #'
-#' gets the names of the databases from \url{http://omnipath.org/interactions}
+#' gets the names of the resources from \url{http://omnipath.org/interactions}
+#'
+#' @param dataset a dataset within the interactions query type. Currently
+#' available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
+#' `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
+#' `lncrna_mrna`
 #'
 #' @return character vector with the names of the interaction databases
 #' @export
@@ -528,29 +541,23 @@ import_AllInteractions <- import_all_interactions
 #' @examples
 #' get_interaction_databases()
 #'
-#' @seealso \code{\link{import_all_interactions},
+#' @seealso \code{\link{get_resources},
+#' \link{import_all_interactions},
 #' \link{import_omnipath_interactions}, \link{improt_pathwayextra_interactions},
 #' \link{import_kinaseextra_interactions},
 #' \link{import_ligrecextra_interactions},
 #' \link{import_mirnatarget_interactions},
 #' \link{import_dorothea_interactions}}
-get_interaction_databases <- function(){
+#'
+#' @aliases get_interaction_databases
+get_interaction_resources <- function(dataset = NULL){
 
-    url_interactions <- paste0(
-        'http://omnipathdb.org/interactions?',
-        'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra,',
-        'tfregulons,mirnatarget&fields=sources'
-    )
-    interactions <- getURL(
-        url_interactions, read.table, sep = '\t',
-        header = TRUE, stringsAsFactors = FALSE
-    )
-
-    return(unique(unlist(
-        strsplit(x = as.character(interactions$sources), split = ";")
-    )))
+    return(get_resources(query_type = 'interactions', dataset = dataset))
 
 }
+
+# synonym (old name)
+get_interaction_databases <- get_interaction_resources
 
 #' Retrieve the available resources for a given query type
 #'
@@ -565,13 +572,15 @@ get_interaction_databases <- function(){
 #' `lncrna_mrna`
 #'
 #' @return a character vector with resource names
+#' @export
 #'
 #' @import jsonlite
 get_resources <- function(query_type, dataset = NULL){
 
     qt_synonyms <- list(
         ptms = 'enzsub',
-        enz_sub = 'enzsub'
+        enz_sub = 'enzsub',
+        complex = 'complexes'
     )
 
     query_type <- `if`(
@@ -583,16 +592,15 @@ get_resources <- function(query_type, dataset = NULL){
     resources <- jsonlite::fromJSON(txt = 'http://omnipathdb.org/resources')
 
     return(
-        Filter(
+        sort(Filter(
             function(resource){
-                query_type %in% names(resources[[resource]]$datasets) &
-                (
-                    is.null(dataset) |
-                    dataset %in% resources[[resource]][[query_type]]
+                query_type %in% names(resources[[resource]]$datasets) && (
+                is.null(dataset)  ||
+                dataset %in% resources[[resource]][[query_type]]
                 )
             },
             names(resources)
-        )
+        ))
     )
 
 }
@@ -621,7 +629,7 @@ get_resources <- function(query_type, dataset = NULL){
 #' @aliases import_Omnipath_complexes import_OmniPath_complexes
 import_omnipath_complexes <- function(
     from_cache_file = NULL,
-    filter_databases = get_complexes_databases()
+    filter_databases = get_complex_resources()
 ){
 
     url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
@@ -643,26 +651,28 @@ import_Omnipath_complexes <- import_omnipath_complexes
 import_OmniPath_complexes <- import_omnipath_complexes
 
 
-#' Get the different complexes databases integrated in Omnipath
+#' Retrieve a list of complex resources available in Omnipath
 #'
-#' get the names of the databases from \url{http://omnipath.org/complexes}
+#' get the names of the resources from \url{http://omnipath.org/complexes}
 #' @return character vector with the names of the databases
 #' @export
 #' @importFrom utils read.csv
 #'
 #' @examples
-#' get_complexes_databases()
+#' get_complex_resources()
 #'
-#' @seealso \code{\link{import_Omnipath_complexes}}
-get_complexes_databases <- function(){
+#' @seealso \code{\link{get_resources},
+#' \link{import_omnipath_complexes}}
+#'
+#' @aliases get_complexes_databases
+get_complex_resources <- function(dataset = NULL){
 
-    url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
-    complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
-        stringsAsFactors = FALSE)
-    return(unique(unlist(strsplit(x = as.character(complexes$sources),
-        split = ";"))))
+    return(get_resources(query_type = 'complexes', dataset = dataset))
 
 }
+
+# synonym (old name)
+get_complexes_databases <- get_complex_resources
 
 ########## ########## ########## ##########
 ########## Annotations           ##########
@@ -683,7 +693,7 @@ get_complexes_databases <- function(){
 #' complexes. To do so, write "COMPLEX:" right before the genesymbols of
 #' the genes integrating the complex. Check the vignette for examples.
 #' @param filter_databases Load the annotations only from these databases.
-#' See \code{\link{get_annotation_databases}} for possible values.
+#' See \code{\link{get_annotation_resources}} for possible values.
 #' @param force_full_download Force the download of the entire annotations
 #' dataset. This is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
@@ -861,24 +871,26 @@ import_OmniPath_annotations <- import_omnipath_annotations
 
 #' Get the resources available in the annotations database of OmniPath
 #'
-#' get the names of the databases from \url{http://omnipath.org/annotation}
+#' get the names of the resources from \url{http://omnipath.org/annotations}
 #'
-#' @return character vector with the names of the annotation databases
+#' @return character vector with the names of the annotation resources
 #' @export
 #'
 #' @examples
-#' get_annotation_databases()
+#' get_annotation_resources()
 #'
-#' @seealso \code{\link{import_Omnipath_annotations}}
-get_annotation_databases <- function(){
-    url_annotations <- 'http://omnipathdb.org/annotations_summary'
-    annotations <- getURL(url_annotations, read.table, sep = '\t',
-        header = TRUE, stringsAsFactors = FALSE)
+#' @seealso \code{\link{get_resources},
+#' \link{import_omnipath_annotations}}
+#'
+#' @aliases get_annotation_databases
+get_annotation_resources <- function(dataset = NULL){
 
-    annotations_db <- unique(annotations$source)
-    return(annotations_db)
+    return(get_resources(query_type = 'annotations', dataset = dataset))
+
 }
 
+# synonym (old name)
+get_annotation_databases <- get_annotation_resources
 
 ########## ########## ########## ##########
 ########## Intercell             ##########
@@ -938,6 +950,27 @@ import_omnipath_intercell <- function(
 # synonyms (old name)
 import_Omnipath_intercell <- import_omnipath_intercell
 import_OmniPath_intercell <- import_omnipath_intercell
+
+
+#' Retrieve a list of intercellular communication resources available in
+#' Omnipath
+#'
+#' get the names of the databases from \url{http://omnipath.org/intercell}
+#' @return character vector with the names of the databases
+#' @export
+#' @importFrom utils read.csv
+#'
+#' @examples
+#' get_intercell_resources()
+#'
+#' @seealso \code{\link{get_resources},
+#' \link{import_omnipath_intercell}}
+get_intercell_resources <- function(dataset = NULL){
+
+    return(get_resources(query_type = 'intercell', dataset = dataset))
+
+}
+
 
 #' Imports an intercellular network combining annotations and interactions
 #'
