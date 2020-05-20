@@ -1,3 +1,31 @@
+.omnipath_qt_synonyms <- list(
+    ptms = 'enzsub',
+    enz_sub = 'enzsub',
+    complex = 'complexes'
+)
+
+.omnipath_qt_messages <- list(
+    interactions = 'interactions',
+    enzsub = 'enzyme-substrate relationships',
+    complexes = 'protein complexes',
+    annotations = 'annotations',
+    intercell = 'intercellular communication role records'
+)
+
+.omnipath_arg_synonyms <- list(
+    select_organism = 'organisms',
+    filter_databases = 'resources',
+    from_cache_file = 'cache_file'
+)
+
+.omnipath_querystring_param <- c(
+    'genesymbols',
+    'resources',
+    'datasets',
+    'organisms',
+    'dorothea_levels'
+)
+
 ########## ########## ########## ##########
 ########## PTMS                  ##########
 ########## ########## ########## ##########
@@ -28,16 +56,17 @@
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
 import_omnipath_enzsub <- function(
     from_cache_file = NULL,
-    filter_databases = get_enzsub_resources(),
-    select_organism = 9606
+    filter_databases = NULL,
+    select_organism = 9606,
+    ...
 ){
 
-    url_enzsub_common <- paste0(
-        'http://omnipathdb.org/enzsub/?',
-        'fields=sources&fields=references&fields=curation_effort'
+    url_enzsub <- paste0(
+        'http://omnipathdb.org/enzsub/?genesymbols=1',
+        '&fields=sources,references,curation_effort'
     )
-
-    url_enzsub <- organism_url(url_enzsub_common, select_organism)
+    url_enzsub <- organism_url(url_enzsub, select_organism)
+    url_enzsub <- resources_url(url_enzsub, resources = filter_databases)
 
     if(is.null(from_cache_file)){
         enzsub <- getURL(url_enzsub, read.table, sep = '\t', header = TRUE,
@@ -52,8 +81,46 @@ import_omnipath_enzsub <- function(
         load(from_cache_file)
     }
 
-    filtered_enzsub <- filter_format_inter(enzsub, filter_databases)
-    return(filtered_enzsub)
+    return(enzsub)
+
+}
+
+import_omnipath <- function(
+    query_type,
+    organism = 9606,
+    resources = NULL,
+    datasets = NULL,
+    cache_file = NULL,
+    genesymbols = 'yes',
+    ...
+){
+
+    param <- as.list(match.call())
+    param <- omnipath_check_query_type(param)
+
+    if(!is.null(cache_file) & file.exists(cache_file)){
+        load(cache_file)
+        msg <- 'Loaded %u %s from cache.'
+    }else{
+
+        url <- omnipath_url(param)
+        result <- getURL(
+            url,
+            read.table,
+            sep = '\t',
+            header = TRUE,
+            stringsAsFactors = FALSE
+        )
+        if(!is.null(cache_file)){
+            save(result, file = cache_file)
+        }
+        msg <- 'Downloaded %u %s.'
+    }
+
+    message(sprintf(msg, nrow(result), param$qt_message))
+
+    return(result)
+
 }
 
 # synonyms (old name)
@@ -99,7 +166,7 @@ get_ptms_databases <- get_enzsub_resources
 #' This part of the interaction database compiled a similar way as it has
 #' been presented in the first paper describing OmniPath (Turei et al. 2016).
 #'
-#' @return A dataframe containing information about protein-protein interactions
+#' @return A dataframe of protein-protein interactions
 #' @export
 #' @importFrom utils read.table
 #' @param from_cache_file path to an earlier data file
@@ -118,32 +185,40 @@ get_ptms_databases <- get_enzsub_resources
 #'   \link{import_AllInteractions}}
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
-import_omnipath_interactions <- function(
-    from_cache_file = NULL,
-    filter_databases = get_interaction_databases(),
-    select_organism = 9606
+import_interactions <- function(
+    cache_file = NULL,
+    resources = NULL,
+    organism = 9606,
+    datasets = NULL
 ){
 
-    url_interactions_common <- paste0(
-        'http://omnipathdb.org/interactions?',
-        'fields=sources&fields=references&fields=curation_effort'
+    url_interactions <- paste0(
+        'http://omnipathdb.org/interactions?genesymbols=1',
+        '&fields=sources,references,curation_effort'
     )
 
-    url_interactions <- organism_url(url_interactions_common, select_organism)
+    url_interactions <- organism_url(url_interactions, select_organism)
+    url_interactions <- resources_url(
+        url_interactions,
+        resources = filter_databases
+    )
+    url_interactions <- datasets_url(url_interactions, datasets)
 
     if(is.null(from_cache_file)){
         interactions <- getURL(url_interactions, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
-        message("Downloaded ", nrow(interactions), " interactions")
+        message(
+            sprintf(
+                "Downloaded %d interactions.",
+                nrow(interactions)
+            )
+        )
     } else {
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(
-        interactions,
-        filter_databases
-    )
-    return(filteredInteractions)
+    return(interactions)
+
 }
 
 # synonyms (old name)
@@ -371,7 +446,7 @@ import_dorothea_interactions <- function(
 
     url_tfregulons_common <-
         paste0('http://omnipathdb.org/interactions?datasets=tfregulons&',
-        'fields=sources, tfregulons_level')
+        'fields=sources,tfregulons_level')
 
     url_tfregulons <- organism_url(url_tfregulons_common, select_organism)
 
@@ -436,7 +511,7 @@ import_mirnatarget_interactions <- function(
 ){
 
     url <- paste0('http://omnipathdb.org/interactions?datasets=mirnatarget',
-        '&fields=sources, references&genesymbols=1')
+        '&fields=sources,references&genesymbols=1')
 
     if(is.null(from_cache_file)){
         interactions <- getURL(url, read.table, sep = '\t', header = TRUE,
@@ -577,15 +652,9 @@ get_interaction_databases <- get_interaction_resources
 #' @import jsonlite
 get_resources <- function(query_type, dataset = NULL){
 
-    qt_synonyms <- list(
-        ptms = 'enzsub',
-        enz_sub = 'enzsub',
-        complex = 'complexes'
-    )
-
     query_type <- `if`(
-        query_type %in% names(qt_synonyms),
-        qt_synonyms[[query_type]],
+        query_type %in% names(.omnipath_qt_synonyms),
+        .omnipath_qt_synonyms[[query_type]],
         query_type
     )
 
@@ -1203,23 +1272,84 @@ getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
 ########## ########## ########## ##########
 ## This function format de url for the queries to the Omnipath webserver
 ## according to the selected organism
-organism_url <- function(url, organism){
+omnipath_organism_url <- function(url, organism){
 
-    if (organism %in% c(9606, 10116, 10090)){
-        if (organism == 9606){
-            url_final <- paste0(url, '&genesymbols=1')
-        } else {
-            if (organism == 10116){
-                url_final <- paste0(url, '&genesymbols=1&organisms=10116')
-            }
-            if (organism == 10090){
-                url_final <- paste0(url, '&genesymbols=1&organisms=10090')
-            }
-        }
+    if(organism %in% c(9606, 10116, 10090)){
+        url <- sprintf('%s&organisms=%d', url, organism)
     } else {
-        stop("The selected organism is not correct")
+        stop(sprintf("Organism not abvailable: %s", organism))
     }
-    return(url_final)
+
+    return(url)
+
+}
+
+
+omnipath_url <- function(param){
+
+    baseurl <- sprintf('http://omnipathdb.org/%s', param$query_type)
+
+    Reduce(
+        function(url, key){
+            omnipath_url_add_param(url, key, param[[key]])
+        },
+        .omnipath_querystring_param
+    )
+
+}
+
+
+omnipath_url_add_param <- function(url, name, values = NULL){
+
+    url <- `if`(
+        is.null(values),
+        url,
+        sprintf(
+            '%s%s%s=%s',
+            url,
+            `if`(grepl(url, '?', fixed = TRUE), '&', '?'),
+            name,
+            paste(values, collapse = ',')
+        )
+    )
+
+    return(url)
+
+}
+
+
+omnipath_resources_url <- function(url, resources = NULL){
+
+    return(omnipath_url_add_param(url, 'resources', resources))
+
+}
+
+
+omnipath_datasets_url <- function(url, datasets = NULL){
+
+    return(omnipath_url_add_param(url, 'datasets', datasets))
+
+}
+
+
+omnipath_check_query_type <- function(param){
+
+    param$query_type <- `if`(
+        !is.null(param$query_type) &
+        param$query_type %in% names(.omnipath_qt_synonyms),
+        .omnipath_qt_synonyms[[param$query_type]],
+        param$query_type
+    )
+
+    param$qt_message <- `if`(
+        !is.null(param$query_type) &
+        param$query_type %in% names(.omnipath_qt_messages),
+        .omnipath_qt_messages[[param$query_type]],
+        'records'
+    )
+
+    return(param)
+
 }
 
 ########## ########## ########## ########## ##########
