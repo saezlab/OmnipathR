@@ -2,9 +2,10 @@
 ########## PTMS                  ##########
 ########## ########## ########## ##########
 
-#' Import Omnipath post-translational modifications (PTMs)
+#' Imports enzyme-PTM relationships from OmniPath
 #'
-#' imports the PTMs database from \url{http://omnipathdb.org/ptms}
+#' Imports the PTM (enzyme-PTM relationship) database from
+#' \url{http://omnipathdb.org/ptms}
 #'
 #' @return A data frame containing the information about ptms
 #' @export
@@ -14,14 +15,19 @@
 #' removed. See \code{\link{get_ptms_databases}} for more information
 #' @param select_organism PTMs are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#'
 #' @examples
-#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
-#'        select_organism=9606)
+#' ptms = import_omnipath_ptms(
+#'     filter_databases = c("PhosphoSite", "Signor"),
+#'     select_organism = 9606
+#' )
 #'
 #' @seealso \code{\link{get_ptms_databases},
 #'   \link{import_Omnipath_Interactions}}
-import_Omnipath_PTMS <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
+import_omnipath_ptms <- function(
+    from_cache_file = NULL,
     filter_databases = get_ptms_databases(),
     select_organism = 9606
 ){
@@ -44,6 +50,10 @@ import_Omnipath_PTMS <- function(
     filteredPTMS <- filter_format_inter(ptms, filter_databases)
     return(filteredPTMS)
 }
+
+# synonyms (old name)
+import_Omnipath_PTMS <- import_omnipath_ptms
+import_OmniPath_PTMS <- import_omnipath_ptms
 
 #' Get Post-translational modification (PTMs) databases
 #'
@@ -71,14 +81,15 @@ get_ptms_databases <- function(){
 ########## INTERACTIONS          ##########
 ########## ########## ########## ##########
 
-## Import Omnipath interaction Database. The new version of Ominpath contains
-## several different datastes.
+## Functions for importing interactions from OmniPath.
+## The new version of OminPath contains several different datastes.
 
-#' Import Omnipath interaction database
+#' Imports interactions from the `omnipath` dataset of Omnipath
 #'
 #' imports the database from \url{http://omnipathdb.org/interactions}, which
-#' contains only interactions with references. These interactions are the
-#' original ones from the first Omnipath version.
+#' contains only interactions supported by literature references.
+#' This part of the interaction database compiled a similar way as it has
+#' been presented in the first paper describing OmniPath (Turei et al. 2016).
 #'
 #' @return A dataframe containing information about protein-protein interactions
 #' @export
@@ -90,13 +101,17 @@ get_ptms_databases <- function(){
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
-#' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"),
-#'                select_organism = 9606)
+#' interactions = import_Omnipath_Interactions(
+#'     filter_databases = c("SignaLink3"),
+#'     select_organism = 9606
+#' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_AllInteractions}}
-import_Omnipath_Interactions <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
+import_omnipath_Interactions <- function(
+    from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
     select_organism = 9606
 ){
@@ -120,13 +135,18 @@ import_Omnipath_Interactions <- function(
     return(filteredInteractions)
 }
 
+# synonyms (old name)
+import_Omnipath_Interactions <- import_omnipath_interactions
+import_OmniPath_Interactions <- import_omnipath_interactions
 
-#' Imports from Omnipath webservice the interactions from
-#' Pathwayextra dataset
+
+#' Imports interactions from the `pathway extra` dataset of Omnipath
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=pathwayextra},
-#' which contains activity flow interactions without literature reference
+#' which contains activity flow interactions without literature reference.
+#' The activity flow interactions supported by literature references
+#' are part of the `omnipath` dataset.
 #'
 #' @return A dataframe containing activity flow interactions between proteins
 #' without literature reference
@@ -137,14 +157,20 @@ import_Omnipath_Interactions <- function(
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param select_organism Interactions are available for human, mouse and rat.
 #' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse
+#'
 #' @examples
 #' interactions <-
-#'     import_PathwayExtra_Interactions(filter_databases=c("BioGRID", "IntAct"),
-#'      select_organism = 9606)
+#'     import_pathwayextra_interactions(
+#'         filter_databases = c("BioGRID", "IntAct"),
+#'         select_organism = 9606
+#'     )
+#'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_AllInteractions}}
-import_PathwayExtra_Interactions <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_PathwayExtra_Interactions
+import_pathwayextra_interactions <- function(
+    from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
     select_organism = 9606
 ){
@@ -167,12 +193,17 @@ import_PathwayExtra_Interactions <- function(
     return(filteredInteractions)
 }
 
-#' Imports from Omnipath webservice the interactions from
-#' kinaseextra dataset
+# synonym (old name)
+import_PathwayExtra_Interactions <- import_pathwayextra_interactions
+
+
+#' Imports interactions from the `kinase extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=kinaseextra},
-#' which contains enzyme-substrate interactions without literature reference
+#' which contains enzyme-substrate interactions without literature reference.
+#' The enzyme-substrate interactions supported by literature references
+#' are part of the `omnipath` dataset.
 #'
 #' @return A dataframe containing enzyme-substrate interactions without
 #' literature reference
@@ -186,11 +217,16 @@ import_PathwayExtra_Interactions <- function(
 #'
 #' @examples
 #' interactions <-
-#'    import_KinaseExtra_Interactions(filter_databases=c("PhosphoPoint",
-#'    "PhosphoSite"), select_organism = 9606)
+#'    import_kinaseextra_interactions(
+#'        filter_databases = c("PhosphoPoint", "PhosphoSite"),
+#'        select_organism = 9606
+#'    )
+#'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_AllInteractions}}
-import_KinaseExtra_Interactions <- function(
+#'
+#' @aliases import_KinaseExtra_Interactions
+import_kinaseextra_interactions <- function(
     from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
     select_organism = 9606
@@ -214,16 +250,20 @@ import_KinaseExtra_Interactions <- function(
     return(filteredInteractions)
 }
 
+# synonym (old name)
+import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 
-#' Imports from Omnipath webservice the interactions from
-#' ligrecextra dataset
+
+#' Imports interactions from the `ligrec extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=ligrecextra},
-#' which contains ligand-receptor interactions without literature reference
+#' which contains ligand-receptor interactions without literature reference.
+#' The ligand-receptor interactions supported by literature references
+#' are part of the `omnipath` dataset.
 #'
-#' @return A dataframe containing ligand-receptor interaction without literature
-#' reference
+#' @return A dataframe containing ligand-receptor interactions including
+#' the ones without literature references
 #' @export
 #' @importFrom utils read.table
 #' @param from_cache_file path to an earlier data file
@@ -231,15 +271,21 @@ import_KinaseExtra_Interactions <- function(
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param select_organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#'
 #' @examples
-#' interactions <- import_LigrecExtra_Interactions(filter_databases=c("HPRD",
-#'       "Guide2Pharma"), select_organism=9606)
+#' interactions <- import_ligrecextra_interactions(
+#'     filter_databases = c("HPRD", "Guide2Pharma"),
+#'     select_organism = 9606
+#' )
+#'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_AllInteractions}}
-import_LigrecExtra_Interactions <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_LigrecExtra_Interactions
+import_ligrecextra_interactions <- function(
+    from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
-    select_organism=9606
+    select_organism = 9606
 ){
 
     url_ligrecextra_common <-
@@ -260,6 +306,8 @@ import_LigrecExtra_Interactions <- function(
     return(filteredInteractions)
 }
 
+# synonym (old name)
+import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 
 #' Imports from Omnipath webservice the interactions from
 #' Dorothea dataset
@@ -278,19 +326,26 @@ import_LigrecExtra_Interactions <- function(
 #' @param select_organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param confidence_level Vector detailing the confidence levels of the
-#' interactions to be downloaded. In dorothea, every TF-target interaction has a
-#' confidence score ranging from A to E, being A the most reliable interactions.
-#' By default we take A and B level interactions (\code{c(A, B)}). It is to note
-#' that E interactions are not available in OmnipathR.
+#' interactions to be downloaded. In dorothea, every TF-target interaction
+#' has a confidence score ranging from A to E, being A the most reliable
+#' interactions.
+#' By default we take A and B level interactions (\code{c(A, B)}).
+#' It is to note that E interactions are not available in OmnipathR.
+#'
 #' @examples
-#' interactions <- import_TFregulons_Interactions(filter_databases=c("DoRothEA_A",
-#'     "ARACNe-GTEx_DoRothEA"), select_organism=9606)
+#' interactions <- import_dorothea_interactions(
+#'     filter_databases = c("DoRothEA_A", "ARACNe-GTEx_DoRothEA"),
+#'     select_organism = 9606
+#' )
+#'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_AllInteractions}}
-import_TFregulons_Interactions <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_TFregulons_Interactions import_tfregulons_interactions
+import_dorothea_interactions <- function(
+    from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
-    select_organism=9606,
+    select_organism = 9606,
     confidence_level = c('A', 'B')
 ){
 
@@ -306,7 +361,7 @@ import_TFregulons_Interactions <- function(
         stop("The confidence levels vector is not correct")
     } else {
         if (all(confidence_level %in% c("A", "B", "C", "D"))){
-            url_tfregulons <- paste0(url_tfregulons, "&tfregulons_levels=",
+            url_tfregulons <- paste0(url_tfregulons, "&tfregulons_levels = ",
                  paste0(confidence_level, collapse = ", "))
         } else {
             stop("Your confident levels are not correct, they should range from
@@ -322,19 +377,24 @@ import_TFregulons_Interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 }
 
+# synonym (old name)
+import_TFregulons_Interactions <- import_dorothea_interactions
+import_tfregulons_interactions <- import_dorothea_interactions
 
-#' Imports from Omnipath webservice the interactions from
-#' miRNAtarget dataset
+#' Imports interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=mirnatarget},
-#' which contains miRNA-mRNA and TF-miRNA interactions
+#' which contains miRNA-mRNA interactions
 #'
-#' @return A dataframe containing miRNA-mRNA and TF-miRNA interactions
+#' @return A dataframe containing miRNA-mRNA interactions
 #' @export
 #' @importFrom utils read.table
 #' @param from_cache_file path to an earlier data file
@@ -342,12 +402,16 @@ import_TFregulons_Interactions <- function(
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @examples
 #' interactions <-
-#'   import_miRNAtarget_Interactions(filter_databases=c("miRTarBase",
-#'   "miRecords"))
+#'     import_mirnatarget_interactions(
+#'         filter_databases = c("miRTarBase", "miRecords")
+#'     )
+#'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_AllInteractions}}
-import_miRNAtarget_Interactions <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_miRNAtarget_Interactions
+import_mirnatarget_interactions <- function(
+    from_cache_file = NULL,
     filter_databases = get_interaction_databases()
 ){
 
@@ -362,13 +426,17 @@ import_miRNAtarget_Interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 }
 
+# synonym (old name)
+import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 
-#' Imports from Omnipath webservice all the available interactions
-#' from the different datasets
+#' Imports all interaction datasets available in Omnipath
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=omnipath, pathwayextra,
@@ -392,17 +460,28 @@ import_miRNAtarget_Interactions <- function(
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param select_organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#'
 #' @examples
-#' interactions <- import_AllInteractions(filter_databases=c("HPRD", "BioGRID"),
-#'     select_organism = 9606)
+#' interactions <- import_all_interactions(
+#'     filter_databases = c("HPRD", "BioGRID"),
+#'     select_organism = 9606
+#' )
+#'
 #' @seealso \code{\link{get_interaction_databases}}
-import_AllInteractions <- function(from_cache_file=NULL,
-    filter_databases = get_interaction_databases(), select_organism = 9606){
+#'
+#' @aliases import_AllInteractions
+import_all_interactions <- function(
+    from_cache_file = NULL,
+    filter_databases = get_interaction_databases(),
+    select_organism = 9606
+){
 
     url_allinteractions_common <-
-        paste0('http://omnipathdb.org/interactions?datasets=omnipath',
-            ', pathwayextra, kinaseextra, ligrecextra, tfregulons, mirnatarget',
-            '&fields=sources, references')
+        paste0(
+            'http://omnipathdb.org/interactions?',
+            'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra,',
+            'tfregulons,mirnatarget&fields=sources,references'
+        )
 
     url_allinteractions <- organism_url(url_allinteractions_common,
         select_organism)
@@ -417,38 +496,52 @@ import_AllInteractions <- function(from_cache_file=NULL,
 
     filteredInteractions <- filter_format_inter(interactions, filter_databases)
     return(filteredInteractions)
+
 }
 
-#' Get the different interaction databases
+# synonym (old name)
+import_AllInteractions <- import_all_interactions
+
+#' Get the interaction databases available in OmniPath
 #'
 #' get the names of the databases from \url{http://omnipath.org/interactions}
 #'
 #' @return character vector with the names of the interaction databases
 #' @export
 #' @importFrom utils read.table
+#'
 #' @examples
 #' get_interaction_databases()
-#' @seealso \code{\link{import_AllInteractions},
-#' \link{import_Omnipath_Interactions}, \link{import_PathwayExtra_Interactions},
-#' \link{import_KinaseExtra_Interactions},
-#' \link{import_LigrecExtra_Interactions},
-#' \link{import_miRNAtarget_Interactions},
-#' \link{import_TFregulons_Interactions}}
+#'
+#' @seealso \code{\link{import_all_interactions},
+#' \link{import_omnipath_interactions}, \link{improt_pathwayextra_interactions},
+#' \link{import_kinaseextra_interactions},
+#' \link{import_ligrecextra_interactions},
+#' \link{import_mirnatarget_interactions},
+#' \link{import_dorothea_interactions}}
 get_interaction_databases <- function(){
-    url_interactions <- paste0('http://omnipathdb.org/interactions?',
-        'datasets=omnipath, pathwayextra, kinaseextra, ligrecextra',
-        ', tfregulons, mirnatarget&fields=sources')
-    interactions <- getURL(url_interactions, read.table, sep = '\t',
-        header = TRUE, stringsAsFactors = FALSE)
-    return(unique(unlist(strsplit(x = as.character(interactions$sources),
-        split = ";"))))
+
+    url_interactions <- paste0(
+        'http://omnipathdb.org/interactions?',
+        'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra,',
+        'tfregulons,mirnatarget&fields=sources'
+    )
+    interactions <- getURL(
+        url_interactions, read.table, sep = '\t',
+        header = TRUE, stringsAsFactors = FALSE
+    )
+
+    return(unique(unlist(
+        strsplit(x = as.character(interactions$sources), split = ";")
+    )))
+
 }
 
 ########## ########## ########## ##########
 ########## Complexes             ##########
 ########## ########## ########## ##########
 
-#' Import Omnipath Complexes
+#' Imports protein complexes from Omnipath
 #'
 #' imports the complexes stored in Omnipath database from
 #' \url{http://omnipathdb.org/complexes}
@@ -460,10 +553,14 @@ get_interaction_databases <- function(){
 #' @param filter_databases complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
 #' @examples
-#' complexes = import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
+#' complexes = import_omnipath_complexes(
+#'     filter_databases = c("CORUM", "hu.MAP")
+#' )
 #' @seealso \code{\link{get_complexes_databases}}
-import_Omnipath_complexes <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_Omnipath_complexes import_OmniPath_complexes
+import_omnipath_complexes <- function(
+    from_cache_file = NULL,
     filter_databases = get_complexes_databases()
 ){
 
@@ -481,6 +578,10 @@ import_Omnipath_complexes <- function(
     return(filteredcomplexes)
 }
 
+# synonyms (old name)
+import_Omnipath_complexes <- import_omnipath_complexes
+import_OmniPath_complexes <- import_omnipath_complexes
+
 
 #' Get the different complexes databases integrated in Omnipath
 #'
@@ -488,22 +589,26 @@ import_Omnipath_complexes <- function(
 #' @return character vector with the names of the databases
 #' @export
 #' @importFrom utils read.csv
+#'
 #' @examples
 #' get_complexes_databases()
+#'
 #' @seealso \code{\link{import_Omnipath_complexes}}
 get_complexes_databases <- function(){
+
     url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
     complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
     return(unique(unlist(strsplit(x = as.character(complexes$sources),
         split = ";"))))
+
 }
 
 ########## ########## ########## ##########
 ########## Annotations           ##########
 ########## ########## ########## ##########
 
-#' Import Omnipath Annotations
+#' Import Annotations from OmniPath
 #'
 #' imports the annotations stored in Omnipath database from
 #' \url{http://omnipathdb.org/annotations}
@@ -524,11 +629,15 @@ get_complexes_databases <- function(){
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few databases, depending on your interest.
 #' @examples
-#' annotations = import_Omnipath_annotations(select_genes=c("TP53", "LMNA"),
-#'      filter_databases=c("HPA_subcellular"))
+#' annotations = import_omnipath_annotations(
+#'     select_genes = c("TP53", "LMNA"),
+#'     filter_databases = c("HPA_subcellular")
+#' )
 #' @seealso \code{\link{get_annotation_databases}}
-import_Omnipath_annotations <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_Omnipath_annotations import_OmniPath_annotations
+import_omnipath_annotations <- function(
+    from_cache_file = NULL,
     select_genes = NULL,
     filter_databases = NULL,
     force_full_download = FALSE,
@@ -563,7 +672,7 @@ import_Omnipath_annotations <- function(
         annotations <-
             filter_sources_annotations(
                 load(from_cache_file),
-                databases = filter_databases
+                databases=filter_databases
             )
 
         if(is.null(annotations) && !is.null(filter_databases)){
@@ -587,7 +696,7 @@ import_Omnipath_annotations <- function(
             all_databases <- get_annotation_databases()
             unknown_databases <- setdiff(filter_databases, all_databases)
 
-            if(length(unknown_databases) != 0){
+            if(length(unknown_databases) ! = 0){
 
                 warning(
                     sprintf(
@@ -631,7 +740,7 @@ import_Omnipath_annotations <- function(
                 annotations <- append(
                     annotations,
                     list(
-                        import_Omnipath_annotations(
+                        import_omnipath_annotations(
                             select_genes = proteins_chunk,
                             filter_databases = filter_databases,
                             recursive_call = TRUE
@@ -651,7 +760,7 @@ import_Omnipath_annotations <- function(
                 is.null(select_genes),
                 '',
                 sprintf(
-                    '&proteins=%s',
+                    '&proteins = %s',
                     paste0(select_genes, collapse = ', ')
                 )
             )
@@ -686,15 +795,20 @@ import_Omnipath_annotations <- function(
 
 }
 
+# synonyms (old name)
+import_Omnipath_annotations <- get_omnipath_annotations
+import_OmniPath_annotations <- get_omnipath_annotations
 
-#' Get the different annotation databases integrated in Omnipath
+#' Get the resources available in the annotations database of OmniPath
 #'
 #' get the names of the databases from \url{http://omnipath.org/annotation}
 #'
 #' @return character vector with the names of the annotation databases
 #' @export
+#'
 #' @examples
 #' get_annotation_databases()
+#'
 #' @seealso \code{\link{import_Omnipath_annotations}}
 get_annotation_databases <- function(){
     url_annotations <- 'http://omnipathdb.org/annotations_summary'
@@ -710,7 +824,7 @@ get_annotation_databases <- function(){
 ########## Intercell             ##########
 ########## ########## ########## ##########
 
-#' Import Omnipath Intercell Data
+#' Import OmniPath Intercell Data
 #'
 #' imports the intercell data stored in Omnipath database from
 #' \url{http://omnipathdb.org/intercell}. Intercell provides
@@ -728,11 +842,15 @@ get_annotation_databases <- function(){
 #' @param select_classes vector containing the main classes to be retrieved.
 #' All the genes belonging to those classes will be returned. For furter
 #' information about the main classes see \code{\link{get_intercell_classes}}
+#'
 #' @examples
-#' intercell = import_Omnipath_intercell(select_categories=c("ecm"))
+#' intercell = import_omnipath_intercell(select_categories = c("ecm"))
+#'
 #' @seealso \code{\link{get_intercell_categories}}
-import_Omnipath_intercell <- function(
-    from_cache_file=NULL,
+#'
+#' @aliases import_Omnipath_intercell import_OmniPath_intercell
+import_omnipath_intercell <- function(
+    from_cache_file = NULL,
     select_categories = get_intercell_categories(),
     select_classes = get_intercell_classes()
 ){
@@ -747,8 +865,8 @@ import_Omnipath_intercell <- function(
         load(from_cache_file)
     }
 
-    if (!(all(select_categories == get_intercell_categories())) |
-        !(all(select_classes == get_intercell_classes()))){
+    if (!(all(select_categories = = get_intercell_categories())) |
+        !(all(select_classes = = get_intercell_classes()))){
             filteredintercell <-
                filter_intercell(intercell, select_categories, select_classes)
             return(filteredintercell)
@@ -756,6 +874,10 @@ import_Omnipath_intercell <- function(
         return(intercell)
     }
 }
+
+# synonyms (old name)
+import_Omnipath_intercell <- import_omnipath_intercell
+import_OmniPath_intercell <- import_omnipath_intercell
 
 #' Imports an intercellular network combining annotations and interactions
 #'
@@ -781,13 +903,13 @@ import_Omnipath_intercell <- function(
 #' about the main classes see \code{\link{get_intercell_classes}}
 #' @examples
 #' intercellNetwork <- import_intercell_network(
-#' classes_source = list(transmiters=c('ligand'), receivers=c('receptor')))
+#' classes_source = list(transmiters = c('ligand'), receivers = c('receptor')))
 #' @seealso \code{\link{get_intercell_categories}}
 import_intercell_network <- function(
-    from_cache_file=NULL,
+    from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
-    classes_source = list(transmiters=c('ligand'),
-    receivers=c('receptor'))
+    classes_source = list(transmiters = c('ligand'),
+    receivers = c('receptor'))
 ){
 
     mainclass <- genesymbol <- NULL
@@ -827,10 +949,10 @@ import_intercell_network <- function(
 
     intercelNetwork <-
         dplyr::inner_join(filteredInteractions, genesTransmiters,
-            by=c("source_genesymbol"="genesymbol")) %>%
+            by = c("source_genesymbol" = "genesymbol")) %>%
         dplyr::rename(class_source = mainclass) %>%
         dplyr::inner_join(genesReceivers,
-            by=c("target_genesymbol"="genesymbol")) %>%
+            by = c("target_genesymbol" = "genesymbol")) %>%
         dplyr::rename(class_target = mainclass)
 
     return(intercelNetwork)
@@ -892,8 +1014,12 @@ filter_sources <- function(interactions, databases){
 
     nInterPost = nrow(subsetInteractions)
 
-    message("removed ", nInter-nInterPost,
-        " interactions during database filtering.")
+    message(
+        sprintf(
+            "Removed %d interactions during database filtering.",
+            nInter - nInterPost
+        )
+    )
     return(subsetInteractions)
 }
 
@@ -907,12 +1033,16 @@ filter_sources_annotations <- function(annotations, databases){
         return(annotations)
     }
 
-    nAnnot = nrow(annotations)
+    nAnnot <- nrow(annotations)
     subsetAnnotations <- dplyr::filter(annotations, source %in% databases)
-    nAnnotPost = nrow(subsetAnnotations)
+    nAnnotPost <- nrow(subsetAnnotations)
 
-    message("removed ", nAnnot-nAnnotPost,
-        " annotations during database filtering.")
+    message(
+        sprintf(
+            "Removed %d annotations during database filtering.",
+            nAnnot - nAnnotPost
+        )
+    )
 
     if (nAnnotPost > 0){
         return(subsetAnnotations)
@@ -933,8 +1063,12 @@ filter_intercell <- function(intercell, categories, classes){
 
     nIntercellPost = nrow(subsetIntercell)
 
-    message("removed ", nIntercell-nIntercellPost,
-        " intercell records during category/class filtering.")
+    message(
+        sprintf(
+            "Removed %d intercell records during category/class filtering.",
+            nIntercell - nIntercellPost,
+        )
+    )
 
     if (nIntercellPost > 0){
         return(subsetIntercell)
@@ -949,18 +1083,18 @@ filter_intercell <- function(intercell, categories, classes){
 ## This function is convenient for appropriate resource retrieval. Following:
 ## http://bioconductor.org/developers/how-to/web-query/
 ## It tries to retrieve the resource one or several times before failing.
-getURL <- function(URL, FUN, ..., N.TRIES=1L) {
+getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
     N.TRIES <- as.integer(N.TRIES)
-    stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
+    stopifnot(length(N.TRIES) = = 1L, !is.na(N.TRIES))
 
     while (N.TRIES > 0L) {
-        result <- tryCatch(FUN(URL, ...), error=identity)
+        result <- tryCatch(FUN(URL, ...), error = identity)
         if (!inherits(result, "error"))
             break
             N.TRIES <- N.TRIES - 1L
         }
 
-    if (N.TRIES == 0L) {
+    if (N.TRIES = = 0L) {
         stop("'getURL()' failed:",
             "\n  URL: ", URL,
             "\n  error: ", conditionMessage(result))
@@ -977,13 +1111,13 @@ getURL <- function(URL, FUN, ..., N.TRIES=1L) {
 organism_url <- function(url, organism){
 
     if (organism %in% c(9606, 10116, 10090)){
-        if (organism == 9606){
+        if (organism = = 9606){
             url_final <- paste0(url, '&genesymbols=1')
         } else {
-            if (organism == 10116){
+            if (organism = = 10116){
                 url_final <- paste0(url, '&genesymbols=1&organisms=10116')
             }
-            if (organism == 10090){
+            if (organism = = 10090){
                 url_final <- paste0(url, '&genesymbols=1&organisms=10090')
             }
         }
@@ -1010,7 +1144,7 @@ filter_format_inter <- function(interaction_df, databases){
         interaction_df <- interaction_df
     }
 
-    if (nrow(interaction_df)==0){
+    if (nrow(interaction_df) = =0){
         stop("Try another database filtering: No records found")
     }
 
@@ -1028,7 +1162,7 @@ filter_format_inter <- function(interaction_df, databases){
         ## we remove references mentioned multiple times:
         interaction_df$references <-
             unlist(lapply(strsplit(interaction_df$references, split = ";"),
-            function(x)paste(unique(x), collapse=";")))
+            function(x)paste(unique(x), collapse = ";")))
         interaction_df$nrefs <-
             unlist(lapply(strsplit(interaction_df$references, split = ";"),
             length))
