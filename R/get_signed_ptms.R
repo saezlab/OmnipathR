@@ -14,12 +14,18 @@
 #' ptms = get_signed_ptms(ptms,interactions)
 #' @seealso \code{\link{import_Omnipath_PTMS}}
 #' \code{\link{import_Omnipath_Interactions}}
-get_signed_ptms <- function(ptms = import_Omnipath_PTMS(),
-    interactions = import_Omnipath_Interactions()){
+get_signed_ptms <- function(
+    ptms = import_Omnipath_PTMS(),
+    interactions = import_Omnipath_Interactions()
+){
 
-    signed.ptms <- merge(ptms,interactions[,
-        c("source","target","is_stimulation","is_inhibition")],
-        by.x = c("enzyme","substrate"),by.y = c("source","target"),all.x = TRUE)
+    signed.ptms <- merge(
+        ptms,
+        interactions[,c("source","target","is_stimulation","is_inhibition")],
+        by.x = c("enzyme","substrate"),
+        by.y = c("source","target"),
+        all.x = TRUE
+    )
 
     return(signed.ptms)
 }
