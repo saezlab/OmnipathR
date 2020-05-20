@@ -8,7 +8,7 @@ Description: Import data from https://www.omnipathdb.org webservice. It also
     includes functions to transform and print this data. 
 License: MIT + file LICENSE
 URL: https://github.com/saezlab/OmnipathR
-biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient, 
+biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
     DataImport, DataRepresentation
 Encoding: UTF-8
 VignetteBuilder: knitr
@@ -17,11 +17,12 @@ Depends:
     igraph,
     graphics,
     methods,
-    utils
+    utils,
+    jsonlite
 Imports:
     dplyr,
     rlang
-Suggests: 
+Suggests:
     tidyr,
     dnet,
     gprofiler2,

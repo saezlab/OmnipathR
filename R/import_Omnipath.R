@@ -101,7 +101,7 @@ get_ptms_databases <- function(){
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
-#' interactions = import_Omnipath_Interactions(
+#' interactions = import_omnipath_interactions(
 #'     filter_databases = c("SignaLink3"),
 #'     select_organism = 9606
 #' )
@@ -110,7 +110,7 @@ get_ptms_databases <- function(){
 #'   \link{import_AllInteractions}}
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
-import_omnipath_Interactions <- function(
+import_omnipath_interactions <- function(
     from_cache_file = NULL,
     filter_databases = get_interaction_databases(),
     select_organism = 9606
@@ -131,7 +131,10 @@ import_omnipath_Interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 }
 
@@ -189,7 +192,10 @@ import_pathwayextra_interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 }
 
@@ -246,7 +252,10 @@ import_kinaseextra_interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 }
 
@@ -302,7 +311,10 @@ import_ligrecextra_interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 }
 
@@ -494,7 +506,10 @@ import_all_interactions <- function(
         load(from_cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(
+        interactions,
+        filter_databases
+    )
     return(filteredInteractions)
 
 }
@@ -504,7 +519,7 @@ import_AllInteractions <- import_all_interactions
 
 #' Get the interaction databases available in OmniPath
 #'
-#' get the names of the databases from \url{http://omnipath.org/interactions}
+#' gets the names of the databases from \url{http://omnipath.org/interactions}
 #'
 #' @return character vector with the names of the interaction databases
 #' @export
@@ -534,6 +549,51 @@ get_interaction_databases <- function(){
     return(unique(unlist(
         strsplit(x = as.character(interactions$sources), split = ";")
     )))
+
+}
+
+#' Retrieve the available resources for a given query type
+#'
+#' collects the names of the resources available in OmniPath for a certain
+#' query type and optionally for a dataset within that.
+#'
+#' @param query_type one of the query types `interactions`, `enz_sub`,
+#' `complexes`, `annotations` or `intercell`
+#' @param dataset currently within the `interactions` query type only,
+#' multiple datasets are available: `omnipath`, `kinaseextra`, `pathwayextra`,
+#' `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
+#' `lncrna_mrna`
+#'
+#' @return a character vector with resource names
+#'
+#' @import jsonlite
+get_resources <- function(query_type, dataset = NULL){
+
+    qt_synonyms <- list(
+        ptms = 'enzsub',
+        enz_sub = 'enzsub'
+    )
+
+    query_type <- `if`(
+        query_type %in% names(qt_synonyms),
+        qt_synonyms[[query_type]],
+        query_type
+    )
+
+    resources <- jsonlite::fromJSON(txt = 'http://omnipathdb.org/resources')
+
+    return(
+        Filter(
+            function(resource){
+                query_type %in% names(resources[[resource]]$datasets) &
+                (
+                    is.null(dataset) |
+                    dataset %in% resources[[resource]][[query_type]]
+                )
+            },
+            names(resources)
+        )
+    )
 
 }
 
@@ -696,7 +756,7 @@ import_omnipath_annotations <- function(
             all_databases <- get_annotation_databases()
             unknown_databases <- setdiff(filter_databases, all_databases)
 
-            if(length(unknown_databases) ! = 0){
+            if(length(unknown_databases) != 0){
 
                 warning(
                     sprintf(
@@ -796,8 +856,8 @@ import_omnipath_annotations <- function(
 }
 
 # synonyms (old name)
-import_Omnipath_annotations <- get_omnipath_annotations
-import_OmniPath_annotations <- get_omnipath_annotations
+import_Omnipath_annotations <- import_omnipath_annotations
+import_OmniPath_annotations <- import_omnipath_annotations
 
 #' Get the resources available in the annotations database of OmniPath
 #'
@@ -865,8 +925,8 @@ import_omnipath_intercell <- function(
         load(from_cache_file)
     }
 
-    if (!(all(select_categories = = get_intercell_categories())) |
-        !(all(select_classes = = get_intercell_classes()))){
+    if (!(all(select_categories == get_intercell_categories())) |
+        !(all(select_classes == get_intercell_classes()))){
             filteredintercell <-
                filter_intercell(intercell, select_categories, select_classes)
             return(filteredintercell)
@@ -901,9 +961,11 @@ import_OmniPath_intercell <- import_omnipath_intercell
 #' the main classes to be considered as transmiters and the second with the
 #' main classes to be considered as receivers. For furter information
 #' about the main classes see \code{\link{get_intercell_classes}}
+#'
 #' @examples
 #' intercellNetwork <- import_intercell_network(
 #' classes_source = list(transmiters = c('ligand'), receivers = c('receptor')))
+#'
 #' @seealso \code{\link{get_intercell_categories}}
 import_intercell_network <- function(
     from_cache_file = NULL,
@@ -1085,7 +1147,7 @@ filter_intercell <- function(intercell, categories, classes){
 ## It tries to retrieve the resource one or several times before failing.
 getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
     N.TRIES <- as.integer(N.TRIES)
-    stopifnot(length(N.TRIES) = = 1L, !is.na(N.TRIES))
+    stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
 
     while (N.TRIES > 0L) {
         result <- tryCatch(FUN(URL, ...), error = identity)
@@ -1094,7 +1156,7 @@ getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
             N.TRIES <- N.TRIES - 1L
         }
 
-    if (N.TRIES = = 0L) {
+    if (N.TRIES == 0L) {
         stop("'getURL()' failed:",
             "\n  URL: ", URL,
             "\n  error: ", conditionMessage(result))
@@ -1111,13 +1173,13 @@ getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
 organism_url <- function(url, organism){
 
     if (organism %in% c(9606, 10116, 10090)){
-        if (organism = = 9606){
+        if (organism == 9606){
             url_final <- paste0(url, '&genesymbols=1')
         } else {
-            if (organism = = 10116){
+            if (organism == 10116){
                 url_final <- paste0(url, '&genesymbols=1&organisms=10116')
             }
-            if (organism = = 10090){
+            if (organism == 10090){
                 url_final <- paste0(url, '&genesymbols=1&organisms=10090')
             }
         }
@@ -1144,7 +1206,7 @@ filter_format_inter <- function(interaction_df, databases){
         interaction_df <- interaction_df
     }
 
-    if (nrow(interaction_df) = =0){
+    if (nrow(interaction_df) ==0){
         stop("Try another database filtering: No records found")
     }
 
