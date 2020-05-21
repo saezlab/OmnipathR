@@ -23,7 +23,21 @@
     'resources',
     'datasets',
     'organisms',
-    'dorothea_levels'
+    'dorothea_levels',
+    'fields'
+)
+
+.omnipath_querystring_synonyms <- list(
+    organism = 'organisms',
+    resource = 'resources',
+    databases = 'resources',
+    database = 'resources',
+    dorothea_level = 'dorothea_levels',
+    tfregulons_levels = 'dorothea_levels',
+    tfregulons_level = 'dorothea_levels',
+    genesymbol = 'genesymbols',
+    field = 'fields',
+    dataset = 'datasets'
 )
 
 ########## ########## ########## ##########
@@ -55,9 +69,9 @@
 #'
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
 import_omnipath_enzsub <- function(
-    from_cache_file = NULL,
-    filter_databases = NULL,
-    select_organism = 9606,
+    cache_file = NULL,
+    resources = NULL,
+    organism = 9606,
     ...
 ){
 
@@ -92,11 +106,12 @@ import_omnipath <- function(
     datasets = NULL,
     cache_file = NULL,
     genesymbols = 'yes',
+    fields = NULL,
     ...
 ){
 
     param <- as.list(match.call())
-    param <- omnipath_check_query_type(param)
+    param <- omnipath_check_param(param)
 
     if(!is.null(cache_file) & file.exists(cache_file)){
         load(cache_file)
@@ -1272,29 +1287,19 @@ getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
 ########## ########## ########## ##########
 ## This function format de url for the queries to the Omnipath webserver
 ## according to the selected organism
-omnipath_organism_url <- function(url, organism){
-
-    if(organism %in% c(9606, 10116, 10090)){
-        url <- sprintf('%s&organisms=%d', url, organism)
-    } else {
-        stop(sprintf("Organism not abvailable: %s", organism))
-    }
-
-    return(url)
-
-}
-
-
 omnipath_url <- function(param){
 
     baseurl <- sprintf('http://omnipathdb.org/%s', param$query_type)
 
-    Reduce(
+    url <- Reduce(
         function(url, key){
             omnipath_url_add_param(url, key, param[[key]])
         },
-        .omnipath_querystring_param
+        .omnipath_querystring_param,
+        init = baseurl
     )
+
+    return(url)
 
 }
 
@@ -1318,21 +1323,7 @@ omnipath_url_add_param <- function(url, name, values = NULL){
 }
 
 
-omnipath_resources_url <- function(url, resources = NULL){
-
-    return(omnipath_url_add_param(url, 'resources', resources))
-
-}
-
-
-omnipath_datasets_url <- function(url, datasets = NULL){
-
-    return(omnipath_url_add_param(url, 'datasets', datasets))
-
-}
-
-
-omnipath_check_query_type <- function(param){
+omnipath_check_param <- function(param){
 
     param$query_type <- `if`(
         !is.null(param$query_type) &
@@ -1347,6 +1338,12 @@ omnipath_check_query_type <- function(param){
         .omnipath_qt_messages[[param$query_type]],
         'records'
     )
+
+    for(name in names(param)){
+        if(name %in% names(.omnipath_querystring_synonyms)){
+            param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
+        }
+    }
 
     return(param)
 
