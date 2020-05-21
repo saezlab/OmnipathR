@@ -1,3 +1,7 @@
+########## ########## ########## ##########
+########## Generic non exported functions #
+########## ########## ########## ##########
+
 .omnipath_qt_synonyms <- list(
     ptms = 'enzsub',
     enz_sub = 'enzsub',
@@ -27,6 +31,7 @@
     'fields'
 )
 
+
 .omnipath_querystring_synonyms <- list(
     organism = 'organisms',
     resource = 'resources',
@@ -39,6 +44,123 @@
     field = 'fields',
     dataset = 'datasets'
 )
+
+#' Downloads data from the OmniPath web service
+#' Generic method for retrieval of a table and creating a data frame.
+#' All methods specific for certain query types or datasets use this function
+#' to manage the download.
+#' Not exported.
+import_omnipath <- function(
+    query_type,
+    organism = 9606,
+    resources = NULL,
+    datasets = NULL,
+    cache_file = NULL,
+    genesymbols = 'yes',
+    fields = NULL,
+    ...
+){
+
+    param <- as.list(match.call())
+    param <- omnipath_check_param(param)
+
+    if(!is.null(cache_file) & file.exists(cache_file)){
+        load(cache_file)
+        msg <- 'Loaded %u %s from cache.'
+    }else{
+
+        url <- omnipath_url(param)
+        result <- getURL(
+            url,
+            read.table,
+            sep = '\t',
+            header = TRUE,
+            stringsAsFactors = FALSE
+        )
+        if(!is.null(cache_file)){
+            save(result, file = cache_file)
+        }
+        msg <- 'Downloaded %u %s.'
+    }
+
+    message(sprintf(msg, nrow(result), param$qt_message))
+
+    return(result)
+
+}
+
+
+#' Check the arguments of \link{import_omnipath}, corrects some easy to
+#' confuse or deprecated synonyms and selects the message printed by
+#' the download function.
+#' Not exported.
+omnipath_check_param <- function(param){
+
+    param$query_type <- `if`(
+        !is.null(param$query_type) &
+        param$query_type %in% names(.omnipath_qt_synonyms),
+        .omnipath_qt_synonyms[[param$query_type]],
+        param$query_type
+    )
+
+    param$qt_message <- `if`(
+        !is.null(param$query_type) &
+        param$query_type %in% names(.omnipath_qt_messages),
+        .omnipath_qt_messages[[param$query_type]],
+        'records'
+    )
+
+    for(name in names(param)){
+        if(name %in% names(.omnipath_querystring_synonyms)){
+            param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
+        }
+    }
+
+    return(param)
+
+}
+
+
+#' Constructs the URL by creating a base URL according to the query type and
+#' adding all user or package defined query string parameters.
+#' Not exported.
+omnipath_url <- function(param){
+
+    baseurl <- sprintf('http://omnipathdb.org/%s', param$query_type)
+
+    url <- Reduce(
+        function(url, key){
+            omnipath_url_add_param(url, key, param[[key]])
+        },
+        .omnipath_querystring_param,
+        init = baseurl
+    )
+
+    return(url)
+
+}
+
+
+#' Appends a query string parameter to the URL.
+#' Not exported, used internally for assembling the URLs.
+omnipath_url_add_param <- function(url, name, values = NULL){
+
+    url <- `if`(
+        is.null(values),
+        url,
+        sprintf(
+            '%s%s%s=%s',
+            url,
+            `if`(grepl(url, '?', fixed = TRUE), '&', '?'),
+            name,
+            paste(values, collapse = ',')
+        )
+    )
+
+    return(url)
+
+}
+
 
 ########## ########## ########## ##########
 ########## PTMS                  ##########
@@ -99,44 +221,6 @@ import_omnipath_enzsub <- function(
 
 }
 
-import_omnipath <- function(
-    query_type,
-    organism = 9606,
-    resources = NULL,
-    datasets = NULL,
-    cache_file = NULL,
-    genesymbols = 'yes',
-    fields = NULL,
-    ...
-){
-
-    param <- as.list(match.call())
-    param <- omnipath_check_param(param)
-
-    if(!is.null(cache_file) & file.exists(cache_file)){
-        load(cache_file)
-        msg <- 'Loaded %u %s from cache.'
-    }else{
-
-        url <- omnipath_url(param)
-        result <- getURL(
-            url,
-            read.table,
-            sep = '\t',
-            header = TRUE,
-            stringsAsFactors = FALSE
-        )
-        if(!is.null(cache_file)){
-            save(result, file = cache_file)
-        }
-        msg <- 'Downloaded %u %s.'
-    }
-
-    message(sprintf(msg, nrow(result), param$qt_message))
-
-    return(result)
-
-}
 
 # synonyms (old name)
 import_Omnipath_PTMS <- import_omnipath_enzsub
@@ -1287,67 +1371,7 @@ getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
 ########## ########## ########## ##########
 ## This function format de url for the queries to the Omnipath webserver
 ## according to the selected organism
-omnipath_url <- function(param){
 
-    baseurl <- sprintf('http://omnipathdb.org/%s', param$query_type)
-
-    url <- Reduce(
-        function(url, key){
-            omnipath_url_add_param(url, key, param[[key]])
-        },
-        .omnipath_querystring_param,
-        init = baseurl
-    )
-
-    return(url)
-
-}
-
-
-omnipath_url_add_param <- function(url, name, values = NULL){
-
-    url <- `if`(
-        is.null(values),
-        url,
-        sprintf(
-            '%s%s%s=%s',
-            url,
-            `if`(grepl(url, '?', fixed = TRUE), '&', '?'),
-            name,
-            paste(values, collapse = ',')
-        )
-    )
-
-    return(url)
-
-}
-
-
-omnipath_check_param <- function(param){
-
-    param$query_type <- `if`(
-        !is.null(param$query_type) &
-        param$query_type %in% names(.omnipath_qt_synonyms),
-        .omnipath_qt_synonyms[[param$query_type]],
-        param$query_type
-    )
-
-    param$qt_message <- `if`(
-        !is.null(param$query_type) &
-        param$query_type %in% names(.omnipath_qt_messages),
-        .omnipath_qt_messages[[param$query_type]],
-        'records'
-    )
-
-    for(name in names(param)){
-        if(name %in% names(.omnipath_querystring_synonyms)){
-            param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
-        }
-    }
-
-    return(param)
-
-}
 
 ########## ########## ########## ########## ##########
 ########## Format and filter of interactions #########
