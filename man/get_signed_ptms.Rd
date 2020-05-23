@@ -23,7 +23,7 @@ ptms data does not contain sign (activation/inhibition), we generate this
 information based on the interaction network
 }
 \examples{
-ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 interactions = import_Omnipath_Interactions()
 ptms = get_signed_ptms(ptms,interactions)
 }

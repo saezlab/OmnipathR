@@ -22,7 +22,7 @@ interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
 OPI_g = interaction_graph(interactions = interactions )
 printPath_vs(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3")$vpath,OPI_g)
 
-ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 ptms_g = ptms_graph(ptms)
 printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
 }

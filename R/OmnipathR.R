@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' # Download post-translational modifications:
-#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 #'
 #' # Download protein-protein interactions
 #' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))

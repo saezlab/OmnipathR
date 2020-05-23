@@ -26,7 +26,7 @@ A data frame containing the information about ptms
 imports the PTMs database from \url{http://omnipathdb.org/ptms}
 }
 \examples{
-ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
+ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"),
        select_organism=9606)
        
 }

@@ -78,14 +78,14 @@ Download human protein-protein interactions for some source databases:
 ```{r}
 interactions <- 
   import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
-  "Signor"))
+  "SIGNOR"))
 ```
 
 
 Download human post-translational modifications for some source databases:  
 
 ```{r}
-ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 ```
 
 Convert both data frames into networks (`igraph` objects)

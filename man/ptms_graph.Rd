@@ -16,7 +16,7 @@ An igraph object
 transforms the ptms interactions data.frame to igraph object
 }
 \examples{
-ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 ptms_g = ptms_graph(ptms = ptms )
 }
 \seealso{

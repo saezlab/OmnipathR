@@ -202,7 +202,7 @@ head(get_interaction_databases(),10)
 ## The interactions are stored into a data frame.
 interactions <- 
     import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
-    "Signor"))
+    "SIGNOR"))
 
 ## We visualize the first interactions in the data frame.
 print_interactions(head(interactions))
@@ -481,7 +481,7 @@ print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
 ptms_g <- ptms_graph(ptms = ptms)
 
 ## We download PTMs for mouse 
-ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"),
+ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"),
     select_organism=10090)
 @
 

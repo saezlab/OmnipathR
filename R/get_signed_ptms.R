@@ -9,7 +9,7 @@
 #' @return data.frame of ptms with is_inhibition and is_stimulation columns
 #' @export
 #' @examples
-#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 #' interactions = import_Omnipath_Interactions()
 #' ptms = get_signed_ptms(ptms,interactions)
 #' @seealso \code{\link{import_Omnipath_PTMS}}

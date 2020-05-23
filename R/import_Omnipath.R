@@ -209,7 +209,7 @@ omnipath_check_result <- function(result, url){
 #'
 #' @examples
 #' ptms = import_omnipath_enzsub(
-#'     filter_databases = c('PhosphoSite', 'Signor'),
+#'     filter_databases = c('PhosphoSite', 'SIGNOR'),
 #'     select_organism = 9606
 #' )
 #'

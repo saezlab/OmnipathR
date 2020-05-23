@@ -10,7 +10,7 @@
 #' @importFrom rlang .data
 #' @param ptms data.frame created by \code{\link{import_Omnipath_PTMS}}
 #' @examples
-#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "Signor"))
+#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
 #' ptms_g = ptms_graph(ptms = ptms )
 #' @seealso  \code{\link{import_Omnipath_PTMS}}
 ptms_graph = function(ptms){
