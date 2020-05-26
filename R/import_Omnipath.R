@@ -66,7 +66,7 @@
     genesymbol = 'genesymbols',
     field = 'fields',
     dataset = 'datasets',
-    directed = 'directed',
+    directed = 'directed'
 )
 
 #' Downloads data from the OmniPath web service
@@ -85,7 +85,7 @@ import_omnipath <- function(
     ...
 ){
 
-    param <- as.list(environment(), list(...))
+    param <- c(as.list(environment()), list(...))
     param <- omnipath_check_param(param)
 
     if(!is.null(cache_file) && file.exists(cache_file)){
@@ -177,6 +177,20 @@ omnipath_url <- function(param){
 #' Appends a query string parameter to the URL.
 #' Not exported, used internally for assembling the URLs.
 omnipath_url_add_param <- function(url, name, values = NULL){
+
+    values <- `if`(
+        is.null(values),
+        NULL,
+        `if`(
+            identical(values, TRUE),
+            'yes',
+            `if`(
+                identical(values, FALSE),
+                'no',
+                values
+            )
+        )
+    )
 
     url <- `if`(
         is.null(values),
@@ -333,8 +347,6 @@ import_omnipath_interactions <- function(
     fields = c('sources', 'references'),
     ...
 ){
-
-    
 
     result <- import_omnipath(
         query_type = 'interactions',
