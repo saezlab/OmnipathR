@@ -106,7 +106,8 @@ import_omnipath <- function(
             read.table,
             sep = '\t',
             header = TRUE,
-            stringsAsFactors = FALSE
+            stringsAsFactors = FALSE,
+            quote = ''
         )
         omnipath_check_result(result, url)
         if(!is.null(cache_file)){
@@ -172,6 +173,12 @@ omnipath_check_param <- function(param){
         ),
         param$fields
     )
+
+    # removing some fields according to query type
+    if(!param$query_type %in% c('interactions', 'enzsub')){
+        param$genesymbols <- NULL
+        param$organisms <- NULL
+    }
 
     return(param)
 
@@ -953,6 +960,7 @@ import_all_interactions <- function(
 # synonym (old name)
 import_AllInteractions <- import_all_interactions
 
+
 #' Retrieve a list of interaction resources available in Omnipath
 #'
 #' gets the names of the resources from \url{http://omnipath.org/interactions}
@@ -986,6 +994,7 @@ get_interaction_resources <- function(dataset = NULL){
 
 # synonym (old name)
 get_interaction_databases <- get_interaction_resources
+
 
 #' Retrieve the available resources for a given query type
 #'
@@ -1049,6 +1058,7 @@ get_resources <- function(
 
 }
 
+
 ########## ########## ########## ##########
 ########## Complexes             ##########
 ########## ########## ########## ##########
@@ -1060,34 +1070,35 @@ get_resources <- function(
 #'
 #' @return A dataframe containing information about complexes
 #' @export
-#' @importFrom utils read.csv
+#' @importFrom utils read.table
+#'
 #' @param cache_file path to an earlier data file
 #' @param resources complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
+#'
 #' @examples
 #' complexes = import_omnipath_complexes(
 #'     resources = c('CORUM', 'hu.MAP')
 #' )
+#'
 #' @seealso \code{\link{get_complexes_databases}}
 #'
 #' @aliases import_Omnipath_complexes import_OmniPath_complexes
 import_omnipath_complexes <- function(
     cache_file = NULL,
-    resources = get_complex_resources()
+    resources = NULL,
+    ...
 ){
 
-    url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
+    result <- import_omnipath(
+        query_type = 'complexes',
+        cache_file = cache_file,
+        resources = resources,
+        ...
+    )
 
-    if(is.null(cache_file)){
-        complexes <- omnipath_download(url_complexes, read.csv, sep = '\t', header = TRUE,
-            stringsAsFactors = FALSE)
-        message('Downloaded ', nrow(complexes), ' complexes')
-    } else {
-        load(cache_file)
-    }
+    return(result)
 
-    filteredcomplexes <- filter_format_inter(complexes, resources)
-    return(filteredcomplexes)
 }
 
 # synonyms (old name)
