@@ -355,6 +355,9 @@ get_ptms_databases <- get_enzsub_resources
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
 #'
 #' @examples
 #' interactions = import_omnipath_interactions(
@@ -363,7 +366,7 @@ get_ptms_databases <- get_enzsub_resources
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
-#'   \link{import_AllInteractions}}
+#'   \link{import_all_interactions}}
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
 import_omnipath_interactions <- function(
@@ -411,6 +414,9 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
 #'
 #' @examples
 #' interactions <-
@@ -420,7 +426,7 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
-#'   \link{import_AllInteractions}}
+#'   \link{import_all_interactions}}
 #'
 #' @aliases import_PathwayExtra_Interactions
 import_pathwayextra_interactions <- function(
@@ -461,6 +467,9 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
 #'
 #' @examples
 #' interactions <-
@@ -470,7 +479,7 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #'    )
 #'
 #' @seealso \code{\link{get_interaction_databases},
-#'   \link{import_AllInteractions}}
+#'   \link{import_all_interactions}}
 #'
 #' @aliases import_KinaseExtra_Interactions
 import_kinaseextra_interactions <- function(
@@ -511,6 +520,9 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
 #'
 #' @examples
 #' interactions <- import_ligrecextra_interactions(
@@ -519,7 +531,7 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
-#'   \link{import_AllInteractions}}
+#'   \link{import_all_interactions}}
 #'
 #' @aliases import_LigrecExtra_Interactions
 import_ligrecextra_interactions <- function(
@@ -564,6 +576,9 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #' interactions.
 #' By default we take A and B level interactions (\code{c(A, B)}).
 #' It is to note that E interactions are not available in OmnipathR.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
 #'
 #' @examples
 #' interactions <- import_dorothea_interactions(
@@ -572,10 +587,10 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
-#'   \link{import_AllInteractions}}
+#'   \link{import_all_interactions}}
 #'
 #' @aliases import_TFregulons_Interactions import_tfregulons_interactions
-import_ligrecextra_interactions <- function(
+import_dorothea_interactions <- function(
     cache_file = NULL,
     organism = 9606,
     confidence_levels = c('A', 'B'),
@@ -593,47 +608,7 @@ import_ligrecextra_interactions <- function(
     return(result)
 
 }
-import_dorothea_interactions <- function(
-    cache_file = NULL,
-    resources = get_interaction_databases(),
-    organism = 9606,
-    confidence_level = c('A', 'B')
-){
 
-    url_tfregulons_common <-
-        paste0('http://omnipathdb.org/interactions?datasets=tfregulons&',
-        'fields=sources,tfregulons_level')
-
-    url_tfregulons <- organism_url(url_tfregulons_common, organism)
-
-    confidence_level <- as.vector(confidence_level)
-
-    if (length(confidence_level) > 4 | length(confidence_level) < 1){
-        stop('The confidence levels vector is not correct')
-    } else {
-        if (all(confidence_level %in% c('A', 'B', 'C', 'D'))){
-            url_tfregulons <- paste0(url_tfregulons, '&tfregulons_levels = ',
-                 paste0(confidence_level, collapse = ', '))
-        } else {
-            stop('Your confident levels are not correct, they should range from
-                A to D.')
-        }
-    }
-
-    if(is.null(cache_file)){
-        interactions <- omnipath_download(url_tfregulons, read.table, sep = '\t',
-            header = TRUE, stringsAsFactors = FALSE)
-        message('Downloaded ', nrow(interactions), ' interactions')
-    } else {
-        load(cache_file)
-    }
-
-    filteredInteractions <- filter_format_inter(
-        interactions,
-        resources
-    )
-    return(filteredInteractions)
-}
 
 # synonym (old name)
 import_TFregulons_Interactions <- import_dorothea_interactions
@@ -658,7 +633,7 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
-#'   \link{import_AllInteractions}}
+#'   \link{import_all_interactions}}
 #'
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
