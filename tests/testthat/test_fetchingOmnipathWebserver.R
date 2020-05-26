@@ -11,7 +11,7 @@ library(dplyr)
 ## This function is convenient for appropriate resource retrieval. Following:
 ## http://bioconductor.org/developers/how-to/web-query/
 ## It tries to retrieve the resource one or several times before failing.
-getURL <- function(URL, FUN, ..., N.TRIES=1L) {
+omnipath_download <- function(URL, FUN, ..., N.TRIES=1L) {
   N.TRIES <- as.integer(N.TRIES)
   stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
   
@@ -23,7 +23,7 @@ getURL <- function(URL, FUN, ..., N.TRIES=1L) {
   }
   
   if (N.TRIES == 0L) {
-    stop("'getURL()' failed:",
+    stop("'omnipath_download()' failed:",
          "\n  URL: ", URL,
          "\n  error: ", conditionMessage(result))
   }
@@ -40,7 +40,7 @@ getURL <- function(URL, FUN, ..., N.TRIES=1L) {
 ## get_ptms_databases
 url_ptms <- 
     'http://omnipathdb.org/ptms/?fields=sources&fields=references&genesymbols=1'
-ptms <- getURL(url_ptms, read.table, sep = '\t', header = TRUE, 
+ptms <- omnipath_download(url_ptms, read.table, sep = '\t', header = TRUE, 
     stringsAsFactors = FALSE)
 ptms_databases <- 
     unique(unlist(strsplit(x = as.character(ptms$sources),split = ";")))
@@ -49,27 +49,27 @@ ptms_databases <-
 url_interactions <- paste0('http://omnipathdb.org/interactions?',
     'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra',
     ',tfregulons,mirnatarget&fields=sources,references&genesymbols=1')
-interactions <- getURL(url_interactions, read.table, sep = '\t', header = TRUE, 
+interactions <- omnipath_download(url_interactions, read.table, sep = '\t', header = TRUE, 
     stringsAsFactors = FALSE)
 interaction_databases  <- 
     unique(unlist(strsplit(x = as.character(interactions$sources),split = ";")))
 
 ## get_complexes_databases
 url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
-complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
+complexes <- omnipath_download(url_complexes, read.csv, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 complexes_databases <-
     unique(unlist(strsplit(x = as.character(complexes$sources),split = ";")))
 
 ## get_annotation_databases
 url_annotations <- 'http://omnipathdb.org/annotations_summary'
-annotations <- getURL(url_annotations, read.table, sep = '\t', header = TRUE,
+annotations <- omnipath_download(url_annotations, read.table, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 annotations_db <- unique(annotations$source)
 
 ## get_intercell_categories
 url_intercell <- 'http://omnipathdb.org/intercell_summary'
-intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
+intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
     stringsAsFactors = FALSE)
 intercell_categories <- unique(intercell$category)
 intercell_classes <- unique(intercell$mainclass)
@@ -150,7 +150,7 @@ annotations_filter_func <-
     import_Omnipath_annotations(select_genes=c("TP53","LMNA"),
     filter_databases=c("HPA_subcellular"))
 url_annotations <- 'http://omnipathdb.org/annotations?&proteins=TP53,LMNA'
-annotations_genes <- getURL(url_annotations, read.csv, sep = '\t', 
+annotations_genes <- omnipath_download(url_annotations, read.csv, sep = '\t', 
     header = TRUE, stringsAsFactors = FALSE)
 annotations_filter_test <- 
     dplyr::filter(annotations_genes, source=="HPA_subcellular")

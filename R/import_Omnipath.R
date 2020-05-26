@@ -42,7 +42,8 @@
     tfregulons_level = 'dorothea_levels',
     genesymbol = 'genesymbols',
     field = 'fields',
-    dataset = 'datasets'
+    dataset = 'datasets',
+    directed = 'directed',
 )
 
 #' Downloads data from the OmniPath web service
@@ -71,7 +72,7 @@ import_omnipath <- function(
 
         url <- omnipath_url(param)
         message(url)
-        result <- getURL(
+        result <- omnipath_download(
             url,
             read.table,
             sep = '\t',
@@ -221,6 +222,7 @@ import_omnipath_enzsub <- function(
     cache_file = NULL,
     resources = NULL,
     organism = 9606,
+    fields = c('sources', 'references'),
     ...
 ){
 
@@ -229,6 +231,7 @@ import_omnipath_enzsub <- function(
         cache_file = cache_file,
         resources = resources,
         organism = organism,
+        fields = fields,
         ...
     )
 
@@ -304,8 +307,11 @@ import_omnipath_interactions <- function(
     resources = NULL,
     organism = 9606,
     datasets = 'omnipath',
+    fields = c('sources', 'references'),
     ...
 ){
+
+    
 
     result <- import_omnipath(
         query_type = 'interactions',
@@ -313,6 +319,7 @@ import_omnipath_interactions <- function(
         resources = resources,
         organism = organism,
         datasets = datasets,
+        fields = fields,
         ...
     )
 
@@ -552,7 +559,7 @@ import_dorothea_interactions <- function(
     }
 
     if(is.null(from_cache_file)){
-        interactions <- getURL(url_tfregulons, read.table, sep = '\t',
+        interactions <- omnipath_download(url_tfregulons, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
@@ -601,7 +608,7 @@ import_mirnatarget_interactions <- function(
         '&fields=sources,references&genesymbols=1')
 
     if(is.null(from_cache_file)){
-        interactions <- getURL(url, read.table, sep = '\t', header = TRUE,
+        interactions <- omnipath_download(url, read.table, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
@@ -669,7 +676,7 @@ import_all_interactions <- function(
         select_organism)
 
     if(is.null(from_cache_file)){
-        interactions <- getURL(url_allinteractions, read.table, sep = '\t',
+        interactions <- omnipath_download(url_allinteractions, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
@@ -728,16 +735,39 @@ get_interaction_databases <- get_interaction_resources
 #'
 #' @param query_type one of the query types `interactions`, `enz_sub`,
 #' `complexes`, `annotations` or `intercell`
-#' @param dataset currently within the `interactions` query type only,
+#' @param datasets currently within the `interactions` query type only,
 #' multiple datasets are available: `omnipath`, `kinaseextra`, `pathwayextra`,
 #' `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
 #' `lncrna_mrna`
+#' @param generic_categories for the `intercell` query type, restrict the
+#' search for some generic categories e.g. `ligand` or `receptor`
 #'
 #' @return a character vector with resource names
 #' @export
 #'
 #' @import jsonlite
-get_resources <- function(query_type, dataset = NULL){
+get_resources <- function(
+    query_type,
+    datasets = NULL,
+    generic_categories = NULL
+){
+
+    null_or_matches <- function(
+        res_data,
+        values,
+        key = deparse(substitute(values))
+    ){
+
+        qt_data <- res_data[['queries']][[query_type]]
+
+        return(
+            is.null(values) || (
+                key %in% names(qt_data) &&
+                length(intersect(qt_data[[key]], values)) > 0
+            )
+        )
+
+    }
 
     query_type <- `if`(
         query_type %in% names(.omnipath_qt_synonyms),
@@ -750,10 +780,9 @@ get_resources <- function(query_type, dataset = NULL){
     return(
         sort(Filter(
             function(resource){
-                query_type %in% names(resources[[resource]]$datasets) && (
-                    is.null(dataset)  ||
-                    dataset %in% resources[[resource]][[query_type]]
-                )
+                query_type %in% names(resources[[resource]]$queries) &&
+                null_or_matches(resources[[resource]], datasets) &&
+                null_or_matches(resources[[resource]], generic_categories)
             },
             names(resources)
         ))
@@ -791,7 +820,7 @@ import_omnipath_complexes <- function(
     url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
 
     if(is.null(from_cache_file)){
-        complexes <- getURL(url_complexes, read.csv, sep = '\t', header = TRUE,
+        complexes <- omnipath_download(url_complexes, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         message('Downloaded ', nrow(complexes), ' complexes')
     } else {
@@ -997,7 +1026,7 @@ import_omnipath_annotations <- function(
                 proteins_part
             )
 
-            annotations <- getURL(
+            annotations <- omnipath_download(
                 url_annotations,
                 read.csv,
                 sep = '\t',
@@ -1086,7 +1115,7 @@ import_omnipath_intercell <- function(
     url_intercell <- 'http://omnipathdb.org/intercell'
 
     if(is.null(from_cache_file)){
-        intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
+        intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         message('Downloaded ', nrow(intercell), ' intercell records')
     } else {
@@ -1173,13 +1202,13 @@ import_intercell_network <- function(
 
     url_allinteractions_common <-
         paste0('http://omnipathdb.org/interactions?datasets=omnipath',
-            ', pathwayextra, kinaseextra, ligrecextra',
-            '&fields=sources, references')
+            ', pathwayextra,kinaseextra,ligrecextra',
+            '&fields=sources,references')
 
     url_allinteractions <- organism_url(url_allinteractions_common, 9606)
 
     if(is.null(from_cache_file)){
-        interactions <- getURL(url_allinteractions, read.table, sep = '\t',
+        interactions <- omnipath_download(url_allinteractions, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
@@ -1222,7 +1251,7 @@ import_intercell_network <- function(
 get_intercell_categories <- function(){
 
     url_intercell <- 'http://omnipathdb.org/intercell_summary'
-    intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
+    intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
 
     return(unique(intercell$category))
@@ -1241,7 +1270,7 @@ get_intercell_categories <- function(){
 get_intercell_classes <- function(){
 
     url_intercell <- 'http://omnipathdb.org/intercell_summary'
-    intercell <- getURL(url_intercell, read.csv, sep = '\t', header = TRUE,
+    intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
         stringsAsFactors = FALSE)
 
     return(unique(intercell$mainclass))
@@ -1334,7 +1363,7 @@ filter_intercell <- function(intercell, categories, classes){
 ## This function is convenient for appropriate resource retrieval. Following:
 ## http://bioconductor.org/developers/how-to/web-query/
 ## It tries to retrieve the resource one or several times before failing.
-getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
+omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
     N.TRIES <- as.integer(N.TRIES)
     stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
 
@@ -1346,9 +1375,13 @@ getURL <- function(URL, FUN, ..., N.TRIES = 1L) {
         }
 
     if (N.TRIES == 0L) {
-        stop(''getURL()' failed:',
-            '\n  URL: ', URL,
-            '\n  error: ', conditionMessage(result))
+        stop(
+            sprintf(
+                'omnipath_download() failed:\n  URL: %s\n  error: %s',
+                URL,
+                conditionMessage(result)
+            )
+        )
     }
 
     return(result)
