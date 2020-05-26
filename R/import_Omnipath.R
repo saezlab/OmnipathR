@@ -554,6 +554,50 @@ import_ligrecextra_interactions <- function(
 # synonym (old name)
 import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 
+
+#' Imports all post-translational interactions from OmniPath
+#'
+#' Imports the dataset from all post-translational datasets of OmniPath
+#'
+#' @return A dataframe containing post-translational interactions
+#' @export
+#' @importFrom utils read.table
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#' @param exclude datasets to exclude
+#'
+#' @examples
+#' interactions <-
+#'     import_transcriptional_interactions(
+#'         resources = c('PAZAR', 'ORegAnnO', 'DoRothEA')
+#'     )
+#'
+#' @seealso \code{\link{get_interaction_databases},
+#'   \link{import_all_interactions}}
+import_post_translational_interactions <- function(
+    organism = 9606,
+    exclude = NULL,
+    ...
+){
+
+    datasets <- c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
+    datasets <- setdiff(datasets, exclude)
+
+
+    result <- import_omnipath_interactions(
+        organism = organism,
+        datasets = datasets,
+        ...
+    )
+
+    return(result)
+
+}
+
+
 #' Imports from Omnipath webservice the interactions from
 #' Dorothea dataset
 #'
@@ -614,6 +658,98 @@ import_dorothea_interactions <- function(
 import_TFregulons_Interactions <- import_dorothea_interactions
 import_tfregulons_interactions <- import_dorothea_interactions
 
+
+#' Imports interactions from the TF-target dataset of OmniPath
+#'
+#' Imports the dataset from:
+#' \url{http://omnipathdb.org/interactions?datasets=tf_target},
+#' which contains transcription factor-target protein coding gene
+#' interactions. Note: this is not the only TF-target dataset in OmniPath,
+#' `dorothea` is the other one and the `tf_mirna` dataset provides
+#' TF-miRNA gene interactions.
+#'
+#' @return A dataframe containing TF-target interactions
+#' @export
+#' @importFrom utils read.table
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#'
+#' @examples
+#' interactions <-
+#'     import_tf_target_interactions(
+#'         resources = c('miRTarBase', 'miRecords')
+#'     )
+#'
+#' @seealso \code{\link{get_interaction_databases},
+#'   \link{import_all_interactions}}
+#'
+#' @aliases import_miRNAtarget_Interactions
+import_tf_target_interactions <- function(
+    cache_file = NULL,
+    organism = 9606,
+    ...
+){
+
+    result <- import_omnipath_interactions(
+        datasets = 'tf_target',
+        cache_file = cache_file,
+        organism = organism,
+        ...
+    )
+
+    return(result)
+
+}
+
+
+#' Imports all TF-target interactions from OmniPath
+#'
+#' Imports the dataset from:
+#' \url{http://omnipathdb.org/interactions?datasets=tf_target,dorothea},
+#' which contains transcription factor-target protein coding gene
+#' interactions.
+#'
+#' @return A dataframe containing TF-target interactions
+#' @export
+#' @importFrom utils read.table
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#'
+#' @examples
+#' interactions <-
+#'     import_transcriptional_interactions(
+#'         resources = c('PAZAR', 'ORegAnnO', 'DoRothEA')
+#'     )
+#'
+#' @seealso \code{\link{get_interaction_databases},
+#'   \link{import_all_interactions}}
+import_transcriptional_interactions <- function(
+    organism = 9606,
+    confidence_levels = c('A', 'B'),
+    ...
+){
+
+    result <- rbind(
+        import_dorothea_interactions(
+            organism = organism,
+            confidence_levels = confidence_levels,
+            ...
+        ),
+        import_tf_target_interactions(organism = organism, ...)
+    )
+
+    return(result)
+
+}
+
+
 #' Imports interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
@@ -626,6 +762,10 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#'
 #' @examples
 #' interactions <-
 #'     import_mirnatarget_interactions(
@@ -638,29 +778,108 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
     cache_file = NULL,
-    resources = get_interaction_databases()
+    organism = 9606,
+    ...
 ){
 
-    url <- paste0('http://omnipathdb.org/interactions?datasets=mirnatarget',
-        '&fields=sources,references&genesymbols=1')
-
-    if(is.null(cache_file)){
-        interactions <- omnipath_download(url, read.table, sep = '\t', header = TRUE,
-            stringsAsFactors = FALSE)
-        message('Downloaded ', nrow(interactions), ' interactions')
-    } else {
-        load(cache_file)
-    }
-
-    filteredInteractions <- filter_format_inter(
-        interactions,
-        resources
+    result <- import_omnipath_interactions(
+        datasets = 'mirnatarget',
+        cache_file = cache_file,
+        organism = organism,
+        ...
     )
-    return(filteredInteractions)
+
+    return(result)
+
 }
 
 # synonym (old name)
 import_miRNAtarget_Interactions <- import_mirnatarget_interactions
+
+
+#' Imports interactions from the TF-miRNA dataset of OmniPath
+#'
+#' Imports the dataset from:
+#' \url{http://omnipathdb.org/interactions?datasets=tf_mirna},
+#' which contains transcription factor-miRNA gene interactions
+#'
+#' @return A dataframe containing TF-miRNA interactions
+#' @export
+#' @importFrom utils read.table
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#'
+#' @examples
+#' interactions <-
+#'     import_tf_mirna_interactions(
+#'         resources = c('TransmiR')
+#'     )
+#'
+#' @seealso \code{\link{get_interaction_databases},
+#'   \link{import_all_interactions}}
+import_tf_mirna_interactions <- function(
+    cache_file = NULL,
+    organism = 9606,
+    ...
+){
+
+    result <- import_omnipath_interactions(
+        datasets = 'tf_mirna',
+        cache_file = cache_file,
+        organism = organism,
+        ...
+    )
+
+    return(result)
+
+}
+
+
+#' Imports interactions from the lncRNA-mRNA dataset of OmniPath
+#'
+#' Imports the dataset from:
+#' \url{http://omnipathdb.org/interactions?datasets=lncrna_mrna},
+#' which contains lncRNA-mRNA interactions
+#'
+#' @return A dataframe containing lncRNA-mRNA interactions
+#' @export
+#' @importFrom utils read.table
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#'
+#' @examples
+#' interactions <-
+#'     import_lncrna_mrna_interactions(
+#'         resources = c('ncRDeathDB')
+#'     )
+#'
+#' @seealso \code{\link{get_interaction_databases},
+#'   \link{import_all_interactions}}
+import_lncrna_mrna_interactions <- function(
+    cache_file = NULL,
+    organism = 9606,
+    ...
+){
+
+    result <- import_omnipath_interactions(
+        datasets = 'lncrna_mrna',
+        cache_file = cache_file,
+        organism = organism,
+        ...
+    )
+
+    return(result)
+
+}
+
 
 #' Imports all interaction datasets available in Omnipath
 #'
@@ -675,8 +894,12 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' pathwayextra: activity flow interactions without literature reference
 #' kinaseextra: enzyme-substrate interactions without literature reference
 #' ligrecextra: ligand-receptor interactions without literature reference
-#' tfregulons: transcription factor (TF)-target interactions from DoRothEA
-#' mirnatarget: miRNA-mRNA and TF-miRNA interactions
+#' dorothea: transcription factor (TF)-target interactions from DoRothEA
+#' tf_target: transcription factor (TF)-target interactions from other
+#' resources
+#' mirnatarget: miRNA-mRNA interactions
+#' tf_mirna: TF-miRNA interactions
+#' lncrna_mrna: lncRNA-mRNA interactions
 #'
 #' @return A dataframe containing all the datasets in the interactions query
 #' @export
@@ -686,6 +909,10 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#' @param exclude datasets to exclude
 #'
 #' @examples
 #' interactions <- import_all_interactions(
@@ -698,33 +925,28 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' @aliases import_AllInteractions
 import_all_interactions <- function(
     cache_file = NULL,
-    resources = get_interaction_databases(),
-    organism = 9606
+    resources = NULL,
+    organism = 9606,
+    dorothea_confidence_levels = c('A', 'B'),
+    exclude = NULL,
+    ...
 ){
 
-    url_allinteractions_common <-
-        paste0(
-            'http://omnipathdb.org/interactions?',
-            'datasets=omnipath,pathwayextra,kinaseextra,ligrecextra,',
-            'tfregulons,mirnatarget&fields=sources,references'
-        )
+    all_datasets <- jsonlite::fromJSON(
+        txt = 'http://omnipathdb.org/queries/interactions?format=json'
+    )$datasets
 
-    url_allinteractions <- organism_url(url_allinteractions_common,
-        organism)
+    all_datasets <- setdiff(all_datasets, exclude)
 
-    if(is.null(cache_file)){
-        interactions <- omnipath_download(url_allinteractions, read.table, sep = '\t',
-            header = TRUE, stringsAsFactors = FALSE)
-        message('Downloaded ', nrow(interactions), ' interactions')
-    } else {
-        load(cache_file)
-    }
-
-    filteredInteractions <- filter_format_inter(
-        interactions,
-        resources
+    result <- import_omnipath_interactions(
+        cache_file = cache_file,
+        datasets = all_datasets,
+        organism = organism,
+        confidence_levels = dorothea_confidence_levels,
+        ...
     )
-    return(filteredInteractions)
+
+    return(result)
 
 }
 
