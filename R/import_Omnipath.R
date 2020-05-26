@@ -28,7 +28,30 @@
     'datasets',
     'organisms',
     'dorothea_levels',
-    'fields'
+    'dorothea_methods',
+    'source_target',
+    'fields',
+    'format',
+    'directed',
+    'signed',
+    'enzymes',
+    'substrates',
+    'partners',
+    'entity_types',
+    'sources',
+    'targets',
+    'residues',
+    'modification',
+    'scope',
+    'aspect',
+    'source',
+    'categories',
+    'parent',
+    'transmitter',
+    'receiver',
+    'secreted',
+    'plasma_membrane_transmembrane',
+    'plasma_membrane_peripheral'
 )
 
 
@@ -118,7 +141,7 @@ omnipath_check_param <- function(param){
             param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
         }
     }
-    
+
     if(
         'dorothea_levels' %in% names(param) &&
         !all(param$dorothea_levels %in% c('A', 'B', 'C', 'D'))
