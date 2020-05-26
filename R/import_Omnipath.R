@@ -17,9 +17,14 @@
 )
 
 .omnipath_arg_synonyms <- list(
-    select_organism = 'organisms',
-    filter_databases = 'resources',
-    from_cache_file = 'cache_file'
+    organism = 'organisms',
+    resources = 'resources',
+    cache_file = 'cache_file'
+)
+
+.omnipath_default_fields <- list(
+    enzsub = c('sources', 'references'),
+    interactions = c('sources', 'references')
 )
 
 .omnipath_querystring_param <- c(
@@ -82,6 +87,7 @@ import_omnipath <- function(
     cache_file = NULL,
     genesymbols = 'yes',
     fields = NULL,
+    default_fields = TRUE,
     ...
 ){
 
@@ -122,6 +128,7 @@ import_omnipath <- function(
 #' Not exported.
 omnipath_check_param <- function(param){
 
+    # mapping query type synonyms
     param$query_type <- `if`(
         !is.null(param$query_type) &
         param$query_type %in% names(.omnipath_qt_synonyms),
@@ -129,6 +136,8 @@ omnipath_check_param <- function(param){
         param$query_type
     )
 
+    # adding the message template which will be printed upon successful
+    # download
     param$qt_message <- `if`(
         !is.null(param$query_type) &
         param$query_type %in% names(.omnipath_qt_messages),
@@ -136,18 +145,33 @@ omnipath_check_param <- function(param){
         'records'
     )
 
+    # mapping the query string parameter synonyms
     for(name in names(param)){
         if(name %in% names(.omnipath_querystring_synonyms)){
             param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
         }
     }
 
+    # checking DoRothEA confidence level values
     if(
         'dorothea_levels' %in% names(param) &&
         !all(param$dorothea_levels %in% c('A', 'B', 'C', 'D'))
     ){
         warning('DoRothEA confidence levels available are A, B, C and D.')
     }
+
+    # adding default fields if not disabled
+    param$fields <- `if`(
+        param$default_fields &&
+        param$query_type %in% names(.omnipath_default_fields),
+        unique(
+            c(
+                param$fields,
+                .omnipath_default_fields[[param$query_type]]
+            )
+        ),
+        param$fields
+    )
 
     return(param)
 
@@ -239,16 +263,19 @@ omnipath_check_result <- function(result, url){
 #' @return A data frame containing the information about ptms
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases PTMs not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources PTMs not reported in these databases are
 #' removed. See \code{\link{get_ptms_databases}} for more information
-#' @param select_organism PTMs are available for human, mouse and rat.
+#' @param organism PTMs are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
 #'
 #' @examples
 #' ptms = import_omnipath_enzsub(
-#'     filter_databases = c('PhosphoSite', 'SIGNOR'),
-#'     select_organism = 9606
+#'     resources = c('PhosphoSite', 'SIGNOR'),
+#'     organism = 9606
 #' )
 #'
 #' @seealso \code{\link{get_ptms_databases},
@@ -259,7 +286,7 @@ import_omnipath_enzsub <- function(
     cache_file = NULL,
     resources = NULL,
     organism = 9606,
-    fields = c('sources', 'references'),
+    fields = NULL,
     ...
 ){
 
@@ -323,16 +350,16 @@ get_ptms_databases <- get_enzsub_resources
 #' @return A dataframe of protein-protein interactions
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param select_organism Interactions are available for human, mouse and rat.
+#' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
 #' interactions = import_omnipath_interactions(
-#'     filter_databases = c('SignaLink3'),
-#'     select_organism = 9606
+#'     resources = c('SignaLink3'),
+#'     organism = 9606
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
@@ -344,7 +371,7 @@ import_omnipath_interactions <- function(
     resources = NULL,
     organism = 9606,
     datasets = 'omnipath',
-    fields = c('sources', 'references'),
+    fields = NULL,
     ...
 ){
 
@@ -379,17 +406,17 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #' without literature reference
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param select_organism Interactions are available for human, mouse and rat.
+#' @param organism Interactions are available for human, mouse and rat.
 #' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse
 #'
 #' @examples
 #' interactions <-
 #'     import_pathwayextra_interactions(
-#'         filter_databases = c('BioGRID', 'IntAct'),
-#'         select_organism = 9606
+#'         resources = c('BioGRID', 'IntAct'),
+#'         organism = 9606
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
@@ -429,17 +456,17 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #' literature reference
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param select_organism Interactions are available for human, mouse and rat.
+#' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
 #' interactions <-
 #'    import_kinaseextra_interactions(
-#'        filter_databases = c('PhosphoPoint', 'PhosphoSite'),
-#'        select_organism = 9606
+#'        resources = c('PhosphoPoint', 'PhosphoSite'),
+#'        organism = 9606
 #'    )
 #'
 #' @seealso \code{\link{get_interaction_databases},
@@ -479,16 +506,16 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' the ones without literature references
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param select_organism Interactions are available for human, mouse and rat.
+#' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
 #' interactions <- import_ligrecextra_interactions(
-#'     filter_databases = c('HPRD', 'Guide2Pharma'),
-#'     select_organism = 9606
+#'     resources = c('HPRD', 'Guide2Pharma'),
+#'     organism = 9606
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
@@ -526,10 +553,10 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #' @return A dataframe containing TF-target interactions from DoRothEA
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param select_organism Interactions are available for human, mouse and rat.
+#' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param confidence_level Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
@@ -540,8 +567,8 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #'
 #' @examples
 #' interactions <- import_dorothea_interactions(
-#'     filter_databases = c('DoRothEA_A', 'ARACNe-GTEx_DoRothEA'),
-#'     select_organism = 9606
+#'     resources = c('DoRothEA_A', 'ARACNe-GTEx_DoRothEA'),
+#'     organism = 9606
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases},
@@ -567,9 +594,9 @@ import_ligrecextra_interactions <- function(
 
 }
 import_dorothea_interactions <- function(
-    from_cache_file = NULL,
-    filter_databases = get_interaction_databases(),
-    select_organism = 9606,
+    cache_file = NULL,
+    resources = get_interaction_databases(),
+    organism = 9606,
     confidence_level = c('A', 'B')
 ){
 
@@ -577,7 +604,7 @@ import_dorothea_interactions <- function(
         paste0('http://omnipathdb.org/interactions?datasets=tfregulons&',
         'fields=sources,tfregulons_level')
 
-    url_tfregulons <- organism_url(url_tfregulons_common, select_organism)
+    url_tfregulons <- organism_url(url_tfregulons_common, organism)
 
     confidence_level <- as.vector(confidence_level)
 
@@ -593,17 +620,17 @@ import_dorothea_interactions <- function(
         }
     }
 
-    if(is.null(from_cache_file)){
+    if(is.null(cache_file)){
         interactions <- omnipath_download(url_tfregulons, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
-        load(from_cache_file)
+        load(cache_file)
     }
 
     filteredInteractions <- filter_format_inter(
         interactions,
-        filter_databases
+        resources
     )
     return(filteredInteractions)
 }
@@ -621,13 +648,13 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #' @return A dataframe containing miRNA-mRNA interactions
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @examples
 #' interactions <-
 #'     import_mirnatarget_interactions(
-#'         filter_databases = c('miRTarBase', 'miRecords')
+#'         resources = c('miRTarBase', 'miRecords')
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
@@ -635,24 +662,24 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #'
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
-    from_cache_file = NULL,
-    filter_databases = get_interaction_databases()
+    cache_file = NULL,
+    resources = get_interaction_databases()
 ){
 
     url <- paste0('http://omnipathdb.org/interactions?datasets=mirnatarget',
         '&fields=sources,references&genesymbols=1')
 
-    if(is.null(from_cache_file)){
+    if(is.null(cache_file)){
         interactions <- omnipath_download(url, read.table, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
-        load(from_cache_file)
+        load(cache_file)
     }
 
     filteredInteractions <- filter_format_inter(
         interactions,
-        filter_databases
+        resources
     )
     return(filteredInteractions)
 }
@@ -679,25 +706,25 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' @return A dataframe containing all the datasets in the interactions query
 #' @export
 #' @importFrom utils read.table
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases interactions not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param select_organism Interactions are available for human, mouse and rat.
+#' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #'
 #' @examples
 #' interactions <- import_all_interactions(
-#'     filter_databases = c('HPRD', 'BioGRID'),
-#'     select_organism = 9606
+#'     resources = c('HPRD', 'BioGRID'),
+#'     organism = 9606
 #' )
 #'
 #' @seealso \code{\link{get_interaction_databases}}
 #'
 #' @aliases import_AllInteractions
 import_all_interactions <- function(
-    from_cache_file = NULL,
-    filter_databases = get_interaction_databases(),
-    select_organism = 9606
+    cache_file = NULL,
+    resources = get_interaction_databases(),
+    organism = 9606
 ){
 
     url_allinteractions_common <-
@@ -708,19 +735,19 @@ import_all_interactions <- function(
         )
 
     url_allinteractions <- organism_url(url_allinteractions_common,
-        select_organism)
+        organism)
 
-    if(is.null(from_cache_file)){
+    if(is.null(cache_file)){
         interactions <- omnipath_download(url_allinteractions, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
-        load(from_cache_file)
+        load(cache_file)
     }
 
     filteredInteractions <- filter_format_inter(
         interactions,
-        filter_databases
+        resources
     )
     return(filteredInteractions)
 
@@ -837,32 +864,32 @@ get_resources <- function(
 #' @return A dataframe containing information about complexes
 #' @export
 #' @importFrom utils read.csv
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases complexes not reported in these databases are
+#' @param cache_file path to an earlier data file
+#' @param resources complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
 #' @examples
 #' complexes = import_omnipath_complexes(
-#'     filter_databases = c('CORUM', 'hu.MAP')
+#'     resources = c('CORUM', 'hu.MAP')
 #' )
 #' @seealso \code{\link{get_complexes_databases}}
 #'
 #' @aliases import_Omnipath_complexes import_OmniPath_complexes
 import_omnipath_complexes <- function(
-    from_cache_file = NULL,
-    filter_databases = get_complex_resources()
+    cache_file = NULL,
+    resources = get_complex_resources()
 ){
 
     url_complexes <- 'http://omnipathdb.org/complexes?&fields=sources'
 
-    if(is.null(from_cache_file)){
+    if(is.null(cache_file)){
         complexes <- omnipath_download(url_complexes, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         message('Downloaded ', nrow(complexes), ' complexes')
     } else {
-        load(from_cache_file)
+        load(cache_file)
     }
 
-    filteredcomplexes <- filter_format_inter(complexes, filter_databases)
+    filteredcomplexes <- filter_format_inter(complexes, resources)
     return(filteredcomplexes)
 }
 
@@ -906,13 +933,13 @@ get_complexes_databases <- get_complex_resources
 #' @return A data.frame containing different gene/complex annotations
 #' @export
 #' @importFrom utils read.csv
-#' @param from_cache_file Path to an earlier data file
+#' @param cache_file Path to an earlier data file
 #' @param select_genes Vector containing the genes or proteins for whom
 #' annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
 #' miRBase IDs). It is also possible to donwload annotations for protein
 #' complexes. To do so, write 'COMPLEX:' right before the genesymbols of
 #' the genes integrating the complex. Check the vignette for examples.
-#' @param filter_databases Load the annotations only from these databases.
+#' @param resources Load the annotations only from these databases.
 #' See \code{\link{get_annotation_resources}} for possible values.
 #' @param force_full_download Force the download of the entire annotations
 #' dataset. This is disabled by default because the size of this data is
@@ -921,24 +948,24 @@ get_complexes_databases <- get_complex_resources
 #' @examples
 #' annotations = import_omnipath_annotations(
 #'     select_genes = c('TP53', 'LMNA'),
-#'     filter_databases = c('HPA_subcellular')
+#'     resources = c('HPA_subcellular')
 #' )
 #' @seealso \code{\link{get_annotation_databases}}
 #'
 #' @aliases import_Omnipath_annotations import_OmniPath_annotations
 import_omnipath_annotations <- function(
-    from_cache_file = NULL,
+    cache_file = NULL,
     select_genes = NULL,
-    filter_databases = NULL,
+    resources = NULL,
     force_full_download = FALSE,
     ...
 ){
 
     if(
         !force_full_download &&
-        is.null(from_cache_file) &&
+        is.null(cache_file) &&
         is.null(select_genes) &&
-        is.null(filter_databases)
+        is.null(resources)
     ){
 
         stop(
@@ -957,15 +984,15 @@ import_omnipath_annotations <- function(
 
     annotations <- NULL
 
-    if(!is.null(from_cache_file)){
+    if(!is.null(cache_file)){
 
         annotations <-
             filter_sources_annotations(
-                load(from_cache_file),
-                databases=filter_databases
+                load(cache_file),
+                databases=resources
             )
 
-        if(is.null(annotations) && !is.null(filter_databases)){
+        if(is.null(annotations) && !is.null(resources)){
             warning(
                 paste(
                     'Empty result from cache file.',
@@ -981,10 +1008,10 @@ import_omnipath_annotations <- function(
 
         databases_part <- ''
 
-        if(!is.null(filter_databases)){
+        if(!is.null(resources)){
 
             all_databases <- get_annotation_databases()
-            unknown_databases <- setdiff(filter_databases, all_databases)
+            unknown_databases <- setdiff(resources, all_databases)
 
             if(length(unknown_databases) != 0){
 
@@ -1002,7 +1029,7 @@ import_omnipath_annotations <- function(
 
             databases_part <- sprintf(
                 'databases=%s',
-                paste0(filter_databases, collapse = ', ')
+                paste0(resources, collapse = ', ')
             )
 
         }
@@ -1032,7 +1059,7 @@ import_omnipath_annotations <- function(
                     list(
                         import_omnipath_annotations(
                             select_genes = proteins_chunk,
-                            filter_databases = filter_databases,
+                            resources = resources,
                             recursive_call = TRUE
                         )
                     )
@@ -1127,7 +1154,7 @@ get_annotation_databases <- get_annotation_resources
 #' signaling.
 #' @export
 #' @importFrom utils read.csv
-#' @param from_cache_file path to an earlier data file
+#' @param cache_file path to an earlier data file
 #' @param select_categories vector containing the categories to be retrieved.
 #' All the genes belonging to those categories will be returned. For furter
 #' information about the categories see \code{\link{get_intercell_categories}}
@@ -1142,19 +1169,19 @@ get_annotation_databases <- get_annotation_resources
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
-    from_cache_file = NULL,
+    cache_file = NULL,
     select_categories = get_intercell_categories(),
     select_classes = get_intercell_classes()
 ){
 
     url_intercell <- 'http://omnipathdb.org/intercell'
 
-    if(is.null(from_cache_file)){
+    if(is.null(cache_file)){
         intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
             stringsAsFactors = FALSE)
         message('Downloaded ', nrow(intercell), ' intercell records')
     } else {
-        load(from_cache_file)
+        load(cache_file)
     }
 
     if (!(all(select_categories == get_intercell_categories())) |
@@ -1206,8 +1233,8 @@ get_intercell_resources <- function(dataset = NULL){
 #' interactions.
 #' @export
 #' @importFrom utils read.csv
-#' @param from_cache_file path to an earlier data file
-#' @param filter_databases vector containing interactions databases.
+#' @param cache_file path to an earlier data file
+#' @param resources vector containing interactions databases.
 #' Interactions not reported in these databases are removed.
 #' See \code{\link{get_interaction_databases}} for more information.
 #' @param classes_source A list containing two vectors. The first one with
@@ -1221,8 +1248,8 @@ get_intercell_resources <- function(dataset = NULL){
 #'
 #' @seealso \code{\link{get_intercell_categories}}
 import_intercell_network <- function(
-    from_cache_file = NULL,
-    filter_databases = get_interaction_databases(),
+    cache_file = NULL,
+    resources = get_interaction_databases(),
     classes_source = list(transmiters = c('ligand'),
     receivers = c('receptor'))
 ){
@@ -1242,15 +1269,15 @@ import_intercell_network <- function(
 
     url_allinteractions <- organism_url(url_allinteractions_common, 9606)
 
-    if(is.null(from_cache_file)){
+    if(is.null(cache_file)){
         interactions <- omnipath_download(url_allinteractions, read.table, sep = '\t',
             header = TRUE, stringsAsFactors = FALSE)
         message('Downloaded ', nrow(interactions), ' interactions')
     } else {
-        load(from_cache_file)
+        load(cache_file)
     }
 
-    filteredInteractions <- filter_format_inter(interactions, filter_databases)
+    filteredInteractions <- filter_format_inter(interactions, resources)
 
     intercellAnnotations <-
         import_Omnipath_intercell(select_classes = AllClasses)
