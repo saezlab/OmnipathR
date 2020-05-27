@@ -93,6 +93,7 @@ import_omnipath <- function(
     default_fields = TRUE,
     silent = FALSE,
     logicals = NULL,
+    download_args = list(),
     ...
 ){
 
@@ -111,20 +112,26 @@ import_omnipath <- function(
     }else{
 
         url <- omnipath_url(param)
-        message(url)
-        result <- omnipath_download(
-            url,
-            read.table,
-            sep = '\t',
+        download_args_defaults <- list(
+            URL = url,
+            FUN = read.table,
             header = TRUE,
             stringsAsFactors = FALSE,
             quote = ''
         )
+        download_args <- modifyList(
+            download_args_defaults,
+            download_args
+        )
+
+        result <- do.call(omnipath_download, download_args)
+
         omnipath_check_result(result, url)
         if(!is.null(cache_file)){
             save(result, file = cache_file)
         }
         msg <- 'Downloaded %d %s.'
+
     }
 
     result <- cast_logicals(result, logicals)
@@ -1746,12 +1753,6 @@ omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
 
     return(result)
 }
-
-########## ########## ########## ##########
-########## Queries Format        ##########
-########## ########## ########## ##########
-## This function format de url for the queries to the Omnipath webserver
-## according to the selected organism
 
 
 ########## ########## ########## ########## ##########
