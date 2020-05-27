@@ -401,6 +401,37 @@ split_unique_join <- function(
 
 }
 
+
+#' For each undirected interaction adds a duplicate with the source and
+#' target nodes swapped
+swap_undirected <- function(data){
+
+    data <- data %>%
+        dplyr::filter(is_directed == 0) %>%
+        dplyr::rename(
+            source = target,
+            target = source,
+            source_genesymbol = target_genesymbol,
+            target_genesymbol = source_genesymbol
+        ) %>%
+        {`if`(
+            'ncbi_tax_id_source' %in% names(.),
+            dplyr::rename(
+                .,
+                ncbi_tax_id_source = ncbi_tax_id_target,
+                ncbi_tax_id_target = ncbi_tax_id_source
+            ),
+            .
+        )} %>%
+        dplyr::bind_rows(
+            data %>%
+            dplyr::filter(is_directed == 1)
+        )
+
+    return(data)
+
+}
+
 ########## ########## ########## ##########
 ########## Enzyme-substrate      ##########
 ########## ########## ########## ##########
@@ -1536,7 +1567,8 @@ get_annotation_databases <- get_annotation_resources
 #' @examples
 #' intercell = import_omnipath_intercell(categories = c('ecm'))
 #'
-#' @seealso \code{\link{get_intercell_categories}}
+#' @seealso \code{\link{get_intercell_categories},
+#' \link{get_intercell_generic_categories}, \link{import_intercell_network}}
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
@@ -1620,25 +1652,35 @@ get_intercell_resources <- function(dataset = NULL){
 #' interactions.
 #' @export
 #' @importFrom utils read.csv
-#' @param cache_file path to an earlier data file
-#' @param resources vector containing interactions databases.
-#' Interactions not reported in these databases are removed.
-#' See \code{\link{get_interaction_databases}} for more information.
-#' @param classes_source A list containing two vectors. The first one with
-#' the main classes to be considered as transmiters and the second with the
-#' main classes to be considered as receivers. For furter information
-#' about the main classes see \code{\link{get_intercell_classes}}
+#' @importFrom dplyr %>% rename bind_rows filter inner_join distinct
+#'
+#' @param cache_file path to an earlier data file; if exists, will be loaded
+#' as it is, the further arguments have no effect; if does not exists, the
+#' result will be dumped into this file.
+#' @param interactions_param a list with arguments for
+#' \code{\link{import_omnipath_interactions}}
+#' @param transmitter_param a list with arguments for
+#' \code{\link{import_omnipath_intercell}}, to define the transmitter side
+#' of intercellular connections
+#' @param receiver_param a list with arguments for
+#' \code{\link{import_omnipath_intercell}}, to define the receiver side
+#' of intercellular connections
 #'
 #' @examples
 #' intercellNetwork <- import_intercell_network(
-#' classes_source = list(transmiters = c('ligand'), receivers = c('receptor')))
+#'    interactions_param = list(datasets = 'ligrecextra'),
+#'    receiver_param = list(categories = c('receptor', 'transporter')),
+#'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
+#' )
 #'
-#' @seealso \code{\link{get_intercell_categories}}
+#' @seealso \code{\link{get_intercell_categories},
+#' \link{get_intercell_generic_categories}, \link{import_omnipath_intercell},
+#' \link{import_omnipath_interactions}}
 import_intercell_network <- function(
     cache_file = NULL,
     interactions_param = NULL,
-    intercell_transmitter_param = NULL,
-    intercell_receiver_param = NULL
+    transmitter_param = NULL,
+    receiver_param = NULL
 ){
 
     result <- NULL
@@ -1651,6 +1693,7 @@ import_intercell_network <- function(
     }
 
     if(is.null(result)){
+
         interactions_param_default <- list(
             datasets <- c(
                 'omnipath',
@@ -1667,51 +1710,76 @@ import_intercell_network <- function(
             import_omnipath_interactions,
             interactions_param
         )
+        interactions <- swap_undirected(interactions)
+
+        transmitter_param_defaults <- list(
+            causality = 'trans',
+            scope = 'generic',
+        )
+        transmitter_param <- modifyList(
+            transmitter_param_defaults,
+            transmitter_param
+        )
+
+        receiver_param_defaults <- list(
+            causality = 'rec',
+            scope = 'generic',
+        )
+        receiver_param <- modifyList(
+            receiver_param_defaults,
+            receiver_param
+        )
+
+        intracell <- c('intracellular_intercellular_related', 'intracellular')
+        transmitters <-
+            do.call(import_omnipath_intercell, transmitter_param) %>%
+            dplyr::filter(!parent %in% intracell)
+        receivers <-
+            do.call(import_omnipath_intercell, receiver_param) %>%
+            dplyr::filter(!parent %in% intracell)
+
+        result <-
+            interactions %>%
+            dplyr::inner_join(
+                transmitters,
+                by = c('source' = 'uniprot')
+            ) %>%
+            dplyr::group_by(
+                category, parent, source, target
+            ) %>%
+            dplyr::mutate(
+                database = paste(database, collapse = ';')
+            ) %>%
+            dplyr::summarize_all(first) %>%
+            dplyr::inner_join(
+                receivers,
+                by = c('target' = 'uniprot'),
+                suffix = c('_intercell_source', '_intercell_target')
+            ) %>%
+            dplyr::group_by(
+                category_intercell_source,
+                parent_intercell_source,
+                source,
+                target,
+                category_intercell_target,
+                parent_intercell_target
+            ) %>%
+            dplyr::mutate(
+                database_intercell_target = paste(
+                    database_intercell_target,
+                    collapse = ';'
+                )
+            ) %>%
+            dplyr::summarize_all(first)
+
+        if(!is.null(cache_file)){
+            save(result, cache_file)
+        }
+
     }
-    mainclass <- genesymbol <- NULL
-    AllClasses <- unlist(classes_source)
 
-    if (!all(AllClasses %in% get_intercell_classes())){
-        stop('Some all the classes are not correct.
-            Check get_intercell_classes()')
-    }
+    return(result)
 
-    url_allinteractions_common <-
-        paste0('http://omnipathdb.org/interactions?datasets=omnipath',
-            ', pathwayextra,kinaseextra,ligrecextra',
-            '&fields=sources,references')
-
-    url_allinteractions <- organism_url(url_allinteractions_common, 9606)
-
-    if(is.null(cache_file)){
-        interactions <- omnipath_download(url_allinteractions, read.table, sep = '\t',
-            header = TRUE, stringsAsFactors = FALSE)
-        message('Downloaded ', nrow(interactions), ' interactions')
-    } else {
-        load(cache_file)
-    }
-
-    filteredInteractions <- filter_format_inter(interactions, resources)
-
-    intercellAnnotations <-
-        import_Omnipath_intercell(select_classes = AllClasses)
-
-    genesTransmiters <- intercellAnnotations %>%
-        dplyr::filter(mainclass %in% classes_source$transmiters) %>%
-        dplyr::distinct(genesymbol, mainclass)
-    genesReceivers <- intercellAnnotations %>%
-        dplyr::filter(mainclass %in% classes_source$receivers) %>%
-        dplyr::distinct(genesymbol, mainclass)
-
-    intercelNetwork <-
-        dplyr::inner_join(filteredInteractions, genesTransmiters,
-            by = c('source_genesymbol' = 'genesymbol')) %>%
-        dplyr::rename(class_source = mainclass) %>%
-        dplyr::inner_join(genesReceivers,
-            by = c('target_genesymbol' = 'genesymbol')) %>%
-        dplyr::rename(class_target = mainclass)
-
-    return(intercelNetwork)
 }
 
 
