@@ -97,6 +97,7 @@ import_omnipath <- function(
     logicals = NULL,
     download_args = list(),
     references_by_resource = TRUE,
+    add_counts = TRUE,
     ...
 ){
 
@@ -153,7 +154,7 @@ import_omnipath <- function(
 
     result <- cast_logicals(result, logicals)
     result <- strip_resource_labels(result, references_by_resource)
-    if(param$query_type %in% c('interactions', 'enzsub')){
+    if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result <- count_references(result)
         result <- count_resources(result)
     }
@@ -221,7 +222,12 @@ omnipath_check_param <- function(param){
         unique(
             c(
                 param$fields,
-                .omnipath_default_fields[[param$query_type]]
+                .omnipath_default_fields[[param$query_type]],
+                `if`(
+                    'dorothea' %in% param$datasets,
+                    'dorothea_level',
+                    NULL
+                )
             )
         ),
         param$fields
@@ -585,6 +591,7 @@ get_enzsub_resources <- function(dataset = NULL){
 # synonym (old name)
 get_ptms_databases <- get_enzsub_resources
 
+
 ########## ########## ########## ##########
 ########## INTERACTIONS          ##########
 ########## ########## ########## ##########
@@ -602,6 +609,7 @@ get_ptms_databases <- get_enzsub_resources
 #' @return A dataframe of protein-protein interactions
 #' @export
 #' @importFrom utils read.table
+#'
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
@@ -869,13 +877,14 @@ import_post_translational_interactions <- function(
 #' Dorothea dataset
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=tfregulons}
+#' \url{http://omnipathdb.org/interactions?datasets=dorothea}
 #' which contains transcription factor (TF)-target interactions from DoRothEA
 #' \url{https://github.com/saezlab/DoRothEA}
 #'
 #' @return A dataframe containing TF-target interactions from DoRothEA
 #' @export
 #' @importFrom utils read.table
+#'
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
@@ -1166,13 +1175,9 @@ import_lncrna_mrna_interactions <- function(
 }
 
 
-#' Imports all interaction datasets available in Omnipath
+#' Imports all interaction datasets available in OmniPath
 #'
-#' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=omnipath, pathwayextra,
-#' kinaseextra, ligrecextra, tfregulons, mirnatarget&fields=sources,
-#' references&genesymbols=1},
-#' which contains all the different interactions available in the webserver:
+#' The interaction datasets currently available in OmniPath:
 #'
 #' omnipath: the OmniPath data as defined in the paper, an arbitrary optimum
 #' between coverage and quality
@@ -1443,7 +1448,7 @@ get_complexes_databases <- get_complex_resources
 #'
 #' @examples
 #' annotations = import_omnipath_annotations(
-#'     select_genes = c('TP53', 'LMNA'),
+#'     proteins = c('TP53', 'LMNA'),
 #'     resources = c('HPA_subcellular')
 #' )
 #' @seealso \code{\link{get_annotation_databases}}
@@ -1456,6 +1461,9 @@ import_omnipath_annotations <- function(
     force_full_download = FALSE,
     ...
 ){
+
+    # account for the old argument name
+    proteins <- c(proteins, list(...)$select_genes)
 
     if(
         !force_full_download &&
@@ -1491,9 +1499,6 @@ import_omnipath_annotations <- function(
             cache_file = cache_file,
             ...
         )
-
-        # account for the old argument name
-        proteins <- c(proteins, list(...)$select_genes)
 
         if(!is.null(proteins)){
             result <- result[
@@ -1563,6 +1568,7 @@ import_omnipath_annotations <- function(
 import_Omnipath_annotations <- import_omnipath_annotations
 import_OmniPath_annotations <- import_omnipath_annotations
 
+
 #' Get the resources available in the annotations database of OmniPath
 #'
 #' get the names of the resources from \url{http://omnipath.org/annotations}
@@ -1586,6 +1592,7 @@ get_annotation_resources <- function(dataset = NULL){
 
 # synonym (old name)
 get_annotation_databases <- get_annotation_resources
+
 
 ########## ########## ########## ##########
 ########## Intercell             ##########
@@ -1898,6 +1905,7 @@ get_intercell_generic_categories <- function(){
 
 # synonym (old name)
 get_intercell_classes <- get_intercell_generic_categories
+
 
 ########## ########## ########## ##########
 ########## RESOURCE FILTERING      ########
