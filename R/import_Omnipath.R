@@ -73,7 +73,8 @@
     genesymbol = 'genesymbols',
     field = 'fields',
     dataset = 'datasets',
-    directed = 'directed'
+    directed = 'directed',
+    entity_type = 'entity_types'
 )
 
 #' Downloads data from the OmniPath web service
@@ -90,6 +91,7 @@ import_omnipath <- function(
     genesymbols = 'yes',
     fields = NULL,
     default_fields = TRUE,
+    silent = FALSE,
     ...
 ){
 
@@ -99,7 +101,7 @@ import_omnipath <- function(
     if(!is.null(cache_file) && file.exists(cache_file)){
         loaded <- load(cache_file)
         if(length(loaded) > 0){
-            result <- as.name(loaded[1])
+            result <- get(loaded[1])
         }else{
             stop(sprintf('Cache file `%s` yielded no data.', cache_file))
         }
@@ -124,7 +126,9 @@ import_omnipath <- function(
         msg <- 'Downloaded %d %s.'
     }
 
-    message(sprintf(msg, nrow(result), param$qt_message))
+    if(!silent){
+        message(sprintf(msg, nrow(result), param$qt_message))
+    }
 
     return(result)
 
@@ -186,6 +190,27 @@ omnipath_check_param <- function(param){
     if(!param$query_type %in% c('interactions', 'enzsub')){
         param$genesymbols <- NULL
         param$organisms <- NULL
+    }
+
+    # checking for wrong resource names
+    if(!is.null(param$resources)){
+
+        all_resources <- get_resources(param$query_type)
+        unknown_resources <- setdiff(param$resources, all_resources)
+
+        if(length(unknown_resources) != 0){
+
+            warning(
+                sprintf(
+                    paste(
+                        'The following resources are not available: %s.',
+                        'Check the resource names for spelling mistakes.'
+                    ),
+                    paste0(unknown_resources, collapse = ', ')
+                )
+            )
+
+        }
     }
 
     return(param)
@@ -1142,10 +1167,14 @@ get_complexes_databases <- get_complex_resources
 ########## Annotations           ##########
 ########## ########## ########## ##########
 
-#' Import Annotations from OmniPath
+#' Imports annotations from OmniPath
 #'
-#' imports the annotations stored in Omnipath database from
-#' \url{http://omnipathdb.org/annotations}
+#' imports protein annotations about function, localization, expression,
+#' structure and other properties of proteins from OmniPath
+#' \url{http://omnipathdb.org/annotations}.
+#' Note: there might be also a few miRNAs annotated; a vast majority of
+#' protein complex annotations are inferred from the annotations of the
+#' members: if all members carry the same annotation the complex inherits.
 #'
 #' @return A data.frame containing different gene/complex annotations
 #' @export
@@ -1162,7 +1191,7 @@ get_complexes_databases <- get_complex_resources
 #' @param force_full_download Force the download of the entire annotations
 #' dataset. This is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
-#' or only from a few databases, depending on your interest.
+#' or only from a few resources, depending on your interest.
 #'
 #' @examples
 #' annotations = import_omnipath_annotations(
@@ -1193,141 +1222,92 @@ import_omnipath_annotations <- function(
                 'by default because of its huge size (>1GB). If you really',
                 'want to do this use the `force_full_download` parameter.',
                 'However we recommend to query a set of proteins or a few',
-                'databases, depending on your interest.'
+                'resources, depending on your interest.'
             )
         )
 
     }
 
-    url_annotations <- 'http://omnipathdb.org/annotations?'
+    if(
+        (
+            !is.null(cache_file) &&
+            file.exists(cache_file)
+        ) ||
+        length(proteins) < 600
+    ){
 
-    annotations <- NULL
+        result <- import_omnipath(
+            query_type = 'annotations',
+            proteins = proteins,
+            resources = resources,
+            cache_file = cache_file,
+            ...
+        )
 
-    if(!is.null(cache_file)){
+        # account for the old argument name
+        proteins <- c(proteins, list(...)$select_genes)
 
-        annotations <-
-            filter_sources_annotations(
-                load(cache_file),
-                databases=resources
-            )
+        if(!is.null(proteins)){
+            result <- result[
+                which(
+                    result$uniprot %in% proteins ||
+                    result$genesymbol %in% proteins
+                ),
+            ]
+        }
 
-        if(is.null(annotations) && !is.null(resources)){
-            warning(
-                paste(
-                    'Empty result from cache file.',
-                    'Might be the cache file does not contain data from',
-                    'the requested databases? Trying without cache.'
+    }else{
+
+        parts <- list()
+
+        proteins_chunks <-
+            split(
+                proteins,
+                cut(
+                    seq_along(proteins),
+                    breaks = length(proteins) / 500,
+                    labels = FALSE
                 )
             )
+
+        cat('Downloading ')
+
+        for(proteins_chunk in proteins_chunks){
+
+            cat('.')
+
+            parts <- append(
+                parts,
+                list(
+                    import_omnipath(
+                        query_type = annotations,
+                        proteins = proteins_chunk,
+                        resources = resources,
+                        recursive_call = TRUE,
+                        silent = TRUE,
+                        ...
+                    )
+                )
+            )
+
         }
+
+        cat(' ready.\n')
+
+        result <- do.call(rbind, result)
+
+        if(!is.null(cache_file)){
+            save(result, cache_file)
+        }
+
+        message(sprintf(
+            'Downloaded %d annotation records.',
+            nrow(result)
+        ))
 
     }
 
-    if(is.null(annotations)){
-
-        databases_part <- ''
-
-        if(!is.null(resources)){
-
-            all_databases <- get_annotation_databases()
-            unknown_databases <- setdiff(resources, all_databases)
-
-            if(length(unknown_databases) != 0){
-
-                warning(
-                    sprintf(
-                        paste(
-                            'The following databases are not available: %s.',
-                            'Check the database names for spelling mistakes.'
-                        ),
-                        paste0(unknown_databases, collapse = ', ')
-                    )
-                )
-
-            }
-
-            databases_part <- sprintf(
-                'databases=%s',
-                paste0(resources, collapse = ', ')
-            )
-
-        }
-
-        if(length(proteins) > 600){
-
-            annotations <- list()
-
-            proteins_chunks <-
-                split(
-                    proteins,
-                    cut(
-                        seq_along(proteins),
-                        breaks = length(proteins) / 500,
-                        labels = FALSE
-                    )
-                )
-
-            cat('Downloading ')
-
-            for(proteins_chunk in proteins_chunks){
-
-                cat('.')
-
-                annotations <- append(
-                    annotations,
-                    list(
-                        import_omnipath_annotations(
-                            proteins = proteins_chunk,
-                            resources = resources,
-                            recursive_call = TRUE
-                        )
-                    )
-                )
-
-            }
-
-            cat(' ready.\n')
-
-            annotations <- do.call(rbind, annotations)
-
-        }else{
-
-            proteins_part <- `if`(
-                is.null(proteins),
-                '',
-                sprintf(
-                    '&proteins=%s',
-                    paste0(proteins, collapse = ', ')
-                )
-            )
-
-            url_annotations <- paste0(
-                url_annotations,
-                databases_part,
-                proteins_part
-            )
-
-            annotations <- omnipath_download(
-                url_annotations,
-                read.csv,
-                sep = '\t',
-                header = TRUE,
-                stringsAsFactors = FALSE
-            )
-
-        }
-
-        args <- list(...)
-
-        if(!'recursive_call' %in% names(args) || !args$recursive_call){
-
-            message(sprintf('Downloaded %d annotations.', nrow(annotations)))
-
-        }
-
-    }
-
-    return(annotations)
+    return(result)
 
 }
 
@@ -1341,6 +1321,7 @@ import_OmniPath_annotations <- import_omnipath_annotations
 #'
 #' @return character vector with the names of the annotation resources
 #' @export
+#' @param dataset ignored for this query type
 #'
 #' @examples
 #' get_annotation_resources()
@@ -1606,7 +1587,7 @@ filter_by_resource <- function(data, resources = NULL){
 }
 
 # synonym (old name)
-filter_sources <- filter_by_resources
+filter_sources <- filter_by_resource
 
 ## Filtering Annotations
 filter_sources_annotations <- function(annotations, databases){
