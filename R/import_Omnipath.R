@@ -25,8 +25,8 @@
 )
 
 .omnipath_default_fields <- list(
-    enzsub = c('sources', 'references'),
-    interactions = c('sources', 'references')
+    enzsub = c('sources', 'references', 'curation_effort'),
+    interactions = c('sources', 'references', 'curation_effort')
 )
 
 .omnipath_querystring_param <- c(
