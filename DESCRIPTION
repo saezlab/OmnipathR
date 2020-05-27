@@ -1,13 +1,26 @@
 Package: OmnipathR
 Type: Package
-Title: Client for the OmniPath web service
-Version: 1.2.0
-Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
+Title: Import Omnipath network
+Version: 1.4.0
+Authors@R: c(
+    person(given = "Alberto",
+           family = "Valdeolivas",
+           role = c("cre","aut"),
+           email = "alvaldeolivas@gmail.com",
+           comment = c(ORCID = "0000-0001-5482-9023")),
+    person(given = "Denes",
+           family = "Turei",
+           role = "ctb"),
+    person(given = "Attila",
+           family = "Gabor",
+           role = "ctb")
+           )
 Maintainer: Alberto Valdeolivas Urbelz <alvaldeolivas@gmail.com>
 Description: Import data from https://www.omnipathdb.org webservice. It also
     includes functions to transform and print this data.
 License: MIT + file LICENSE
-URL: https://github.com/saezlab/OmnipathR
+URL: https://saezlab.github.io/OmnipathR/
+BugReports: https://github.com/saezlab/OmnipathR/issues
 biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
     DataImport, DataRepresentation
 Encoding: UTF-8
@@ -31,5 +44,6 @@ Suggests:
     knitr,
     rmarkdown,
     ggplot2,
-    ggraph
-RoxygenNote: 7.0.2
+    ggraph,
+    png
+RoxygenNote: 7.1.0

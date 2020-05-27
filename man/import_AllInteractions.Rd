@@ -25,9 +25,7 @@ A dataframe containing all the datasets in the interactions query
 }
 \description{
 Imports the dataset from: 
-\url{http://omnipathdb.org/interactions?datasets=omnipath,pathwayextra,
-kinaseextra,ligrecextra,tfregulons,mirnatarget&fields=sources,
-references&genesymbols=1}, 
+\url{http://omnipathdb.org/interactions?datasets=omnipath,pathwayextra,kinaseextra,ligrecextra,tfregulons,mirnatarget&fields=sources,references&genesymbols=1}, 
 which contains all the different interactions available in the webserver:
 }
 \details{

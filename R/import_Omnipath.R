@@ -1445,7 +1445,7 @@ get_complexes_databases <- get_complex_resources
 #' dataset. This is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few resources, depending on your interest.
-#'
+#' @param ... Additional arguments.
 #' @examples
 #' annotations = import_omnipath_annotations(
 #'     proteins = c('TP53', 'LMNA'),

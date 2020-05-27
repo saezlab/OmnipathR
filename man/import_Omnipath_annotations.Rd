@@ -7,25 +7,35 @@
 import_Omnipath_annotations(
   from_cache_file = NULL,
   select_genes = NULL,
-  filter_databases = get_annotation_databases()
+  filter_databases = NULL,
+  force_full_download = FALSE,
+  ...
 )
 }
 \arguments{
-\item{from_cache_file}{path to an earlier data file}
+\item{from_cache_file}{Path to an earlier data file}
 
-\item{select_genes}{vector containing the genes for whom annotations will be
-retrieved (hgnc format). It is also possible to donwload complexes 
-annotations. To do so, write "COMPLEX:" right before the genesymbols of
+\item{select_genes}{Vector containing the genes or proteins for whom
+annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
+miRBase IDs). It is also possible to donwload annotations for protein
+complexes. To do so, write "COMPLEX:" right before the genesymbols of
 the genes integrating the complex. Check the vignette for examples.}
 
-\item{filter_databases}{annotations not reported in these databases are 
-removed. See \code{\link{get_annotation_databases}} for more information.}
+\item{filter_databases}{Load the annotations only from these databases.
+See \code{\link{get_annotation_databases}} for possible values.}
+
+\item{force_full_download}{Force the download of the entire annotations
+dataset. This is disabled by default because the size of this data is
+around 1GB. We recommend to retrieve the annotations for a set of proteins
+or only from a few databases, depending on your interest.}
+
+\item{...}{Additional arguments.}
 }
 \value{
 A data.frame containing different gene/complex annotations
 }
 \description{
-imports the annotations stored in Omnipath database from 
+imports the annotations stored in Omnipath database from
 \url{http://omnipathdb.org/annotations}
 }
 \examples{
