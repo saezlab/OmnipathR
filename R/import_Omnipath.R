@@ -1742,9 +1742,9 @@ get_intercell_resources <- function(dataset = NULL){
 #' \link{import_omnipath_interactions}}
 import_intercell_network <- function(
     cache_file = NULL,
-    interactions_param = NULL,
-    transmitter_param = NULL,
-    receiver_param = NULL
+    interactions_param = list(),
+    transmitter_param = list(),
+    receiver_param = list()
 ){
 
     result <- NULL
@@ -1759,7 +1759,7 @@ import_intercell_network <- function(
     if(is.null(result)){
 
         interactions_param_default <- list(
-            datasets <- c(
+            datasets = c(
                 'omnipath',
                 'pathwayextra',
                 'kinaseextra',
@@ -1778,7 +1778,7 @@ import_intercell_network <- function(
 
         transmitter_param_defaults <- list(
             causality = 'trans',
-            scope = 'generic',
+            scope = 'generic'
         )
         transmitter_param <- modifyList(
             transmitter_param_defaults,
@@ -1787,7 +1787,7 @@ import_intercell_network <- function(
 
         receiver_param_defaults <- list(
             causality = 'rec',
-            scope = 'generic',
+            scope = 'generic'
         )
         receiver_param <- modifyList(
             receiver_param_defaults,
@@ -1797,10 +1797,12 @@ import_intercell_network <- function(
         intracell <- c('intracellular_intercellular_related', 'intracellular')
         transmitters <-
             do.call(import_omnipath_intercell, transmitter_param) %>%
-            dplyr::filter(!parent %in% intracell)
+            dplyr::filter(!parent %in% intracell) %>%
+            dplyr::rename(category_source = source)
         receivers <-
             do.call(import_omnipath_intercell, receiver_param) %>%
-            dplyr::filter(!parent %in% intracell)
+            dplyr::filter(!parent %in% intracell) %>%
+            dplyr::rename(category_source = source)
 
         result <-
             interactions %>%
