@@ -94,6 +94,7 @@ import_omnipath <- function(
     silent = FALSE,
     logicals = NULL,
     download_args = list(),
+    references_by_resource = TRUE,
     ...
 ){
 
@@ -149,6 +150,7 @@ import_omnipath <- function(
     }
 
     result <- cast_logicals(result, logicals)
+    result <- strip_resource_labels(result, references_by_resource)
 
 
     if(!silent){
@@ -324,7 +326,9 @@ omnipath_check_result <- function(result, url){
 
 }
 
-
+#' Makes sure the boolean variables, listed in argument `logicals`, are of
+#' R logical type. Converts various string and numeric representations.
+#' Checks only for TRUE values, whatever does not match remains FALSE.
 cast_logicals <- function(data, logicals = NULL){
 
     true_values <- c('True', '1', 'TRUE', 'T', 'yes', 'YES', 'Y', 'y')
@@ -338,6 +342,60 @@ cast_logicals <- function(data, logicals = NULL){
     }
 
     return(data)
+
+}
+
+
+#' Removes the resource labels from references (PubMed IDs) in the
+#' interactions and enzyme-substrate data frames.
+strip_resource_labels <- function(
+    data,
+    references_by_resource = FALSE,
+    colname = 'references',
+    inplace = TRUE
+){
+
+    if(!references_by_resource && colname %in% names(data)){
+
+        result <- split_unique_join(
+            gsub(
+                '[-\\w]*:?(\\d+)',
+                '\\1',
+                data[[colname]],
+                perl = TRUE
+            )
+        )
+
+        if(inplace){
+            data[[colname]] <- result
+        }else{
+            return(result)
+        }
+
+    }
+
+    return(data)
+
+}
+
+
+#' For a character vector splits each element and re-joins sorted unique
+#' values.
+split_unique_join <- function(
+    x,
+    sep = ';',
+    outsep = sep
+){
+
+    return(
+        vapply(
+            strsplit(x, sep),
+            function(values){
+                paste(sort(unique(values)), collapse = outsep)
+            },
+            character(1)
+        )
+    )
 
 }
 
@@ -361,6 +419,9 @@ cast_logicals <- function(data, logicals = NULL){
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' ptms = import_omnipath_enzsub(
@@ -448,6 +509,9 @@ get_ptms_databases <- get_enzsub_resources
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions = import_omnipath_interactions(
@@ -507,6 +571,9 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -560,6 +627,9 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -613,6 +683,9 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <- import_ligrecextra_interactions(
@@ -658,6 +731,9 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param exclude datasets to exclude
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -713,6 +789,9 @@ import_post_translational_interactions <- function(
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <- import_dorothea_interactions(
@@ -767,6 +846,9 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -811,6 +893,9 @@ import_tf_target_interactions <- function(
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -855,6 +940,9 @@ import_transcriptional_interactions <- function(
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -902,6 +990,9 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -944,6 +1035,9 @@ import_tf_mirna_interactions <- function(
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <-
@@ -1003,6 +1097,9 @@ import_lncrna_mrna_interactions <- function(
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param exclude datasets to exclude
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
 #'
 #' @examples
 #' interactions <- import_all_interactions(
