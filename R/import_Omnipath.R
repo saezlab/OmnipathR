@@ -17,9 +17,11 @@
 )
 
 .omnipath_arg_synonyms <- list(
-    organism = 'organisms',
-    resources = 'resources',
-    cache_file = 'cache_file'
+    select_organism = 'organisms',
+    filter_databases = 'resources',
+    databases = 'resources',
+    from_cache_file = 'cache_file',
+    select_genes = 'proteins'
 )
 
 .omnipath_default_fields <- list(
@@ -95,7 +97,13 @@ import_omnipath <- function(
     param <- omnipath_check_param(param)
 
     if(!is.null(cache_file) && file.exists(cache_file)){
-        load(cache_file)
+        loaded <- load(cache_file)
+        if(length(loaded) > 0){
+            result <- as.name(loaded[1])
+        }else{
+            stop(sprintf('Cache file `%s` yielded no data.', cache_file))
+        }
+        result <- filter_by_resource(result, resources = resources)
         msg <- 'Loaded %d %s from cache.'
     }else{
 
@@ -1129,6 +1137,7 @@ get_complex_resources <- function(dataset = NULL){
 # synonym (old name)
 get_complexes_databases <- get_complex_resources
 
+
 ########## ########## ########## ##########
 ########## Annotations           ##########
 ########## ########## ########## ##########
@@ -1141,8 +1150,9 @@ get_complexes_databases <- get_complex_resources
 #' @return A data.frame containing different gene/complex annotations
 #' @export
 #' @importFrom utils read.csv
+#'
 #' @param cache_file Path to an earlier data file
-#' @param select_genes Vector containing the genes or proteins for whom
+#' @param proteins Vector containing the genes or proteins for whom
 #' annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
 #' miRBase IDs). It is also possible to donwload annotations for protein
 #' complexes. To do so, write 'COMPLEX:' right before the genesymbols of
@@ -1153,6 +1163,7 @@ get_complexes_databases <- get_complex_resources
 #' dataset. This is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few databases, depending on your interest.
+#'
 #' @examples
 #' annotations = import_omnipath_annotations(
 #'     select_genes = c('TP53', 'LMNA'),
@@ -1163,7 +1174,7 @@ get_complexes_databases <- get_complex_resources
 #' @aliases import_Omnipath_annotations import_OmniPath_annotations
 import_omnipath_annotations <- function(
     cache_file = NULL,
-    select_genes = NULL,
+    proteins = NULL,
     resources = NULL,
     force_full_download = FALSE,
     ...
@@ -1172,7 +1183,7 @@ import_omnipath_annotations <- function(
     if(
         !force_full_download &&
         is.null(cache_file) &&
-        is.null(select_genes) &&
+        is.null(proteins) &&
         is.null(resources)
     ){
 
@@ -1242,16 +1253,16 @@ import_omnipath_annotations <- function(
 
         }
 
-        if(length(select_genes) > 600){
+        if(length(proteins) > 600){
 
             annotations <- list()
 
             proteins_chunks <-
                 split(
-                    select_genes,
+                    proteins,
                     cut(
-                        seq_along(select_genes),
-                        breaks = length(select_genes) / 500,
+                        seq_along(proteins),
+                        breaks = length(proteins) / 500,
                         labels = FALSE
                     )
                 )
@@ -1266,7 +1277,7 @@ import_omnipath_annotations <- function(
                     annotations,
                     list(
                         import_omnipath_annotations(
-                            select_genes = proteins_chunk,
+                            proteins = proteins_chunk,
                             resources = resources,
                             recursive_call = TRUE
                         )
@@ -1282,11 +1293,11 @@ import_omnipath_annotations <- function(
         }else{
 
             proteins_part <- `if`(
-                is.null(select_genes),
+                is.null(proteins),
                 '',
                 sprintf(
-                    '&proteins = %s',
-                    paste0(select_genes, collapse = ', ')
+                    '&proteins=%s',
+                    paste0(proteins, collapse = ', ')
                 )
             )
 
@@ -1547,32 +1558,55 @@ get_intercell_classes <- function(){
 }
 
 ########## ########## ########## ##########
-########## SOURCE FILTERING      ##########
+########## RESOURCE FILTERING      ########
 ########## ########## ########## ##########
 ## Non exported functions (package internal functions) to filter PTMs,
 ## interactions, complexes and annotations according to the databases passed
 ## to the main functions
 
 ## Filtering Interactions, PTMs and complexes
-filter_sources <- function(interactions, databases){
+filter_by_resource <- function(data, resources = NULL){
 
-    nInter = nrow(interactions)
+    if(!is.null(resources)){
 
-    subsetInteractions <-
-        interactions[which(unlist(lapply(strsplit(interactions$sources, ';'),
-        function(x){any(x %in% databases)}))), ]
+        before <- nrow(data)
 
-    nInterPost = nrow(subsetInteractions)
+        for(field in c('sources', 'database', 'source')){
 
-    message(
-        sprintf(
-            'Removed %d interactions during database filtering.',
-            nInter - nInterPost
+            if(field %in% names(data)){
+
+                data <-data[
+                    which(
+                        unlist(lapply(
+                            strsplit(data[[field]], ';'),
+                            function(res){
+                                length(intersect(res, resources)) > 0
+                            }
+                        ))
+                    ),
+                ]
+                break
+
+            }
+
+        }
+
+        after <- nrow(data)
+
+        message(
+            sprintf(
+                'Filtering by resources: removed %d records.',
+                before - after
+            )
         )
-    )
-    return(subsetInteractions)
+
+    }
+
+    return(data)
 }
 
+# synonym (old name)
+filter_sources <- filter_by_resources
 
 ## Filtering Annotations
 filter_sources_annotations <- function(annotations, databases){
