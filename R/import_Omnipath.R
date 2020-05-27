@@ -58,7 +58,9 @@
     'receiver',
     'secreted',
     'plasma_membrane_transmembrane',
-    'plasma_membrane_peripheral'
+    'plasma_membrane_peripheral',
+    'topology',
+    'causality'
 )
 
 
@@ -1525,6 +1527,11 @@ get_annotation_databases <- get_annotation_resources
 #' transmembrane proteins
 #' @param secreted logical, include only secreted proteins
 #' @param proteins limit the query to certain proteins
+#' @param topology topology categories: one or more of `secreted` (sec),
+#' `plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane` (pmtm)
+#' (both short or long notation can be used)
+#' @param causality `transmitter` (trans), `receiver` (rec) or `both` (both
+#' short or long notation can be used)
 #'
 #' @examples
 #' intercell = import_omnipath_intercell(categories = c('ecm'))
@@ -1546,6 +1553,8 @@ import_omnipath_intercell <- function(
     plasma_membrane_peripheral = NULL,
     plasma_membrane_transmembrane = NULL,
     proteins = NULL,
+    topology = NULL,
+    causality = NULL,
     ...
 ){
 
@@ -1627,11 +1636,38 @@ get_intercell_resources <- function(dataset = NULL){
 #' @seealso \code{\link{get_intercell_categories}}
 import_intercell_network <- function(
     cache_file = NULL,
-    resources = get_interaction_databases(),
-    classes_source = list(transmiters = c('ligand'),
-    receivers = c('receptor'))
+    interactions_param = NULL,
+    intercell_transmitter_param = NULL,
+    intercell_receiver_param = NULL
 ){
 
+    result <- NULL
+
+    if(!is.null(cache_file) && file.exists(cache_file)){
+        loaded <- load(cache_file)
+        if(length(loaded) > 0){
+            result <- get(loaded[1])
+        }
+    }
+
+    if(is.null(result)){
+        interactions_param_default <- list(
+            datasets <- c(
+                'omnipath',
+                'pathwayextra',
+                'kinaseextra',
+                'ligrecextra'
+            )
+        )
+        interactions_param <- modifyList(
+            interactions_param_default,
+            interactions_param
+        )
+        interactions <- do.call(
+            import_omnipath_interactions,
+            interactions_param
+        )
+    }
     mainclass <- genesymbol <- NULL
     AllClasses <- unlist(classes_source)
 
