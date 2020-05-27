@@ -354,7 +354,8 @@ strip_resource_labels <- function(
     data,
     references_by_resource = FALSE,
     colname = 'references',
-    inplace = TRUE
+    inplace = TRUE,
+    method = NULL
 ){
 
     if(!references_by_resource && colname %in% names(data)){
@@ -365,7 +366,8 @@ strip_resource_labels <- function(
                 '\\1',
                 data[[colname]],
                 perl = TRUE
-            )
+            ),
+            method = method
         )
 
         if(inplace){
@@ -386,21 +388,83 @@ strip_resource_labels <- function(
 split_unique_join <- function(
     x,
     sep = ';',
-    outsep = sep
+    outsep = sep,
+    method = NULL
 ){
 
+    method <- `if`(
+        is.null(method),
+        function(values, outsep, ...){
+            paste(sort(unique(values)), collapse = outsep)
+        },
+        method
+    )
+
     return(
-        vapply(
-            strsplit(x, sep),
-            function(values){
-                paste(sort(unique(values)), collapse = outsep)
-            },
-            character(1)
+        split_apply(
+            x = x,
+            method = method,
+            sep = sep,
+            outsep = outsep
         )
     )
 
 }
 
+
+#' For a character vector splits each element and applies a method for
+#' each sub vector.
+split_apply <- function(
+    x,
+    method,
+    sep = ';',
+    ...
+){
+    return(
+        sapply(
+            strsplit(x, sep),
+            function(x){method(x, ...)}
+        )
+    )
+}
+
+
+#' For an interactions or enzyme-substrate data frame adds a column
+#' `n_resources` with the number of resources for each record.
+count_resources <- function(data, only_primary = TRUE){
+
+    data[['n_resources']] <- split_apply(
+        data$sources,
+        method = function(values, only_primary){
+            if(only_primary){
+                values <- values[!grepl('_', values)]
+            }
+            return(length(values))
+        },
+        sep = ';',
+        only_primary = only_primary
+    )
+
+    return(data)
+
+}
+
+
+#' For an interactions or enzyme-substrate data frame adds a column
+#' `n_references` with the number of references for each record.
+count_references <- function(data){
+
+    data[['n_references']] <- strip_resource_labels(
+        data,
+        inplace = FALSE,
+        method = function(refs, ...){
+            length(unique(refs))
+        }
+    )
+
+    return(data)
+
+}
 
 #' For each undirected interaction adds a duplicate with the source and
 #' target nodes swapped
