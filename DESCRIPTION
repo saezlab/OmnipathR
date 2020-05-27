@@ -1,11 +1,11 @@
 Package: OmnipathR
 Type: Package
-Title: Import Omnipath network
-Version: 1.1.4
+Title: Client for the OmniPath web service
+Version: 1.2.0
 Author: Attila Gabor, Denes Turei, Alberto Valdeolivas
 Maintainer: Alberto Valdeolivas Urbelz <alvaldeolivas@gmail.com>
-Description: Import data from https://www.omnipathdb.org webservice. It also 
-    includes functions to transform and print this data. 
+Description: Import data from https://www.omnipathdb.org webservice. It also
+    includes functions to transform and print this data.
 License: MIT + file LICENSE
 URL: https://github.com/saezlab/OmnipathR
 biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
