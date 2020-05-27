@@ -12,7 +12,7 @@
     interactions = 'interactions',
     enzsub = 'enzyme-substrate relationships',
     complexes = 'protein complexes',
-    annotations = 'annotations',
+    annotations = 'annotation records',
     intercell = 'intercellular communication role records'
 )
 
@@ -1343,11 +1343,11 @@ get_annotation_databases <- get_annotation_resources
 ########## Intercell             ##########
 ########## ########## ########## ##########
 
-#' Import OmniPath Intercell Data
+#' Imports OmniPath Intercell Data
 #'
-#' imports the intercell data stored in Omnipath database from
-#' \url{http://omnipathdb.org/intercell}. Intercell provides
-#' information on the roles in inter-cellular signaling. E.g. if a protein is
+#' imports the OmniPath intercellular communication role annotation database
+#' from \url{http://omnipathdb.org/intercell}. It provides information
+#' on the roles in inter-cellular signaling. E.g. if a protein is
 #' a ligand, a receptor, an extracellular matrix (ECM) component, etc.
 #'
 #' @return A dataframe cotaining information about roles in inter-cellular
@@ -1355,43 +1355,66 @@ get_annotation_databases <- get_annotation_resources
 #' @export
 #' @importFrom utils read.csv
 #' @param cache_file path to an earlier data file
-#' @param select_categories vector containing the categories to be retrieved.
-#' All the genes belonging to those categories will be returned. For furter
+#' @param categories vector containing the categories to be retrieved.
+#' All the genes belonging to those categories will be returned. For further
 #' information about the categories see \code{\link{get_intercell_categories}}
-#' @param select_classes vector containing the main classes to be retrieved.
+#' @param parent vector containing the parent classes to be retrieved.
 #' All the genes belonging to those classes will be returned. For furter
-#' information about the main classes see \code{\link{get_intercell_classes}}
+#' information about the main classes see
+#' \code{\link{get_intercell_categories}}
+#' @param resources limit the query to certain resources; see the available
+#' resources by \code{\link{get_intercell_resources}}
+#' @param scope either `specific` or `generic`
+#' @param aspect either `locational` or `functional`
+#' @param source either `resource_specific` or `composite`
+#' @param transmitter logical, include only transmitters i.e. proteins
+#' delivering signal from a cell to
+#' its environment
+#' @param receiver logical, include only receivers i.e. proteins delivering
+#' signal to the cell from its environment
+#' @param plasma_membrane_peripheral logical, include only plasma membrane
+#' peripheral membrane proteins
+#' @param plasma_membrane_transmembrane logical, include only plasma membrane
+#' transmembrane proteins
+#' @param secreted logical, include only secreted proteins
+#' @param proteins limit the query to certain proteins
 #'
 #' @examples
-#' intercell = import_omnipath_intercell(select_categories = c('ecm'))
+#' intercell = import_omnipath_intercell(categories = c('ecm'))
 #'
 #' @seealso \code{\link{get_intercell_categories}}
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
     cache_file = NULL,
-    select_categories = get_intercell_categories(),
-    select_classes = get_intercell_classes()
+    categories = NULL,
+    resources = NULL,
+    parent = NULL,
+    scope = NULL,
+    aspect = NULL,
+    source = NULL,
+    transmitter = NULL,
+    receiver = NULL,
+    secreted = NULL,
+    plasma_membrane_peripheral = NULL,
+    plasma_membrane_transmembrane = NULL,
+    proteins = NULL,
+    ...
 ){
 
-    url_intercell <- 'http://omnipathdb.org/intercell'
+    from_cache <- !is.null(cache_file) && file.exists(cache_file)
+    args <- c(as.list(environment()), list(...))
+    args$query_type <- 'intercell'
 
-    if(is.null(cache_file)){
-        intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
-            stringsAsFactors = FALSE)
-        message('Downloaded ', nrow(intercell), ' intercell records')
-    } else {
-        load(cache_file)
+    result <- do.call(import_omnipath, args)
+
+    if(from_cache){
+        args$data <- result
+        result <- do.call(filter_intercell, args)
     }
 
-    if (!(all(select_categories == get_intercell_categories())) |
-        !(all(select_classes == get_intercell_classes()))){
-            filteredintercell <-
-               filter_intercell(intercell, select_categories, select_classes)
-            return(filteredintercell)
-    } else {
-        return(intercell)
-    }
+    return(result)
+
 }
 
 # synonyms (old name)
