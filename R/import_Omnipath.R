@@ -153,6 +153,10 @@ import_omnipath <- function(
 
     result <- cast_logicals(result, logicals)
     result <- strip_resource_labels(result, references_by_resource)
+    if(param$query_type %in% c('interactions', 'enzsub')){
+        result <- count_references(result)
+        result <- count_resources(result)
+    }
 
 
     if(!silent){

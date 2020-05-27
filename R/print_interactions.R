@@ -28,7 +28,13 @@ print_interactions = function(interDF,writeRefs=FALSE){
 
     if("enzyme" %in% colnames(interDF)){  #PTMS
         interDF <-
-            interDF[order(interDF$nrefs,interDF$nsources,decreasing = TRUE),]
+            interDF[
+                order(
+                    interDF$n_references,
+                    interDF$n_resources,
+                    decreasing = TRUE
+                ),
+            ]
         interDF$enzyme <-
             paste0(interDF$enzyme_genesymbol, " (", interDF$enzyme ,")")
         interDF$substrate <-paste0(interDF$substrate_genesymbol,"_",
@@ -41,18 +47,18 @@ print_interactions = function(interDF,writeRefs=FALSE){
         interDF$interaction <- paste0("==", signs,"==>")
         if(writeRefs){
             interDF[,c('enzyme',"interaction","substrate","modification",
-            "nsources","nrefs","references")]
+            "n_resources","n_references","references")]
         } else {
             interDF[,c('enzyme',"interaction","substrate","modification",
-            "nsources")]
+            "n_resources")]
         }
     } else {
-        if ("nrefs" %in% colnames(interDF)){
+        if ("n_references" %in% colnames(interDF)){
             interDF <-
-                interDF[order(interDF$nrefs,interDF$nsources,
+                interDF[order(interDF$n_references,interDF$n_resources,
                 decreasing = TRUE),]
         } else {
-            interDF <- interDF[order(interDF$nsources,decreasing = TRUE),]
+            interDF <- interDF[order(interDF$n_resources,decreasing = TRUE),]
         }
         interDF$source <- paste0(interDF$source_genesymbol, " (",
             interDF$source ,")")
@@ -67,18 +73,18 @@ print_interactions = function(interDF,writeRefs=FALSE){
         interDF$interaction <- paste0("==", signs,"==",direction)
 
         if(writeRefs){
-            if ("nrefs" %in% colnames(interDF)){
-                interDF[,c('source',"interaction","target","nsources",
-                "nrefs","references")]
+            if ("n_references" %in% colnames(interDF)){
+                interDF[,c('source',"interaction","target","n_resources",
+                "n_references","references")]
             } else {
-                interDF[,c('source',"interaction","target","nsources")]
+                interDF[,c('source',"interaction","target","n_resources")]
             }
         } else {
-            if ("nrefs" %in% colnames(interDF)){
-                interDF[,c('source',"interaction","target","nsources",
-                "nrefs")]
+            if ("n_references" %in% colnames(interDF)){
+                interDF[,c('source',"interaction","target","n_resources",
+                "n_references")]
             } else {
-                interDF[,c('source',"interaction","target","nsources")]
+                interDF[,c('source',"interaction","target","n_resources")]
             }
         }
     }
@@ -112,34 +118,45 @@ printPath_es = function(edgeSeq,G){
 
     if(! is.null(edgeSeq$residue_type)){
         edgeSeq$residue_type
-        if(! is.null(edgeSeq$nrefs)){
-            df <- data.frame(source = paste(tail_of(G, edgeSeq)$name," (",
-            tail_of(G, edgeSeq)$up_ids,")",sep = ""),interaction = interaction,
-            target = paste(paste0(head_of(G, edgeSeq)$name, "_",
-            edgeSeq$residue_type,edgeSeq$residue_offset)," (",
-            head_of(G, edgeSeq)$up_ids,")",sep = ""),
-            nsources = edgeSeq$nsources, nrefs = edgeSeq$nrefs)
+        if(! is.null(edgeSeq$n_references)){
+            df <- data.frame(
+                source = paste(tail_of(G, edgeSeq)$name," (",
+                tail_of(G, edgeSeq)$up_ids,")",sep = ""),
+                interaction = interaction,
+                target = paste(paste0(head_of(G, edgeSeq)$name, "_",
+                edgeSeq$residue_type,edgeSeq$residue_offset)," (",
+                head_of(G, edgeSeq)$up_ids,")",sep = ""),
+                n_resources = edgeSeq$n_resources,
+                n_references = edgeSeq$n_references
+            )
         } else {
             df <- data.frame(source = paste(tail_of(G, edgeSeq)$name," (",
             tail_of(G, edgeSeq)$up_ids,")",sep = ""),interaction = interaction,
             target = paste(paste0(head_of(G, edgeSeq)$name, "_",
             edgeSeq$residue_type , edgeSeq$residue_offset)," (",
             head_of(G, edgeSeq)$up_ids,")",sep = ""),
-            nsources = edgeSeq$nsources)
+            n_resources = edgeSeq$n_resources)
         }
     } else {
-        if(! is.null(edgeSeq$nrefs)){
-            df <- data.frame(source = paste(tail_of(G, edgeSeq)$name," (",
-            tail_of(G, edgeSeq)$up_ids,")",sep = ""),interaction = interaction,
-            target = paste(head_of(G, edgeSeq)$name," (",
-            head_of(G, edgeSeq)$up_ids,")",sep = ""),
-            nsources = edgeSeq$nsources,nrefs = edgeSeq$nrefs)
+        if(! is.null(edgeSeq$n_references)){
+            df <- data.frame(
+                source = paste(tail_of(G, edgeSeq)$name," (",
+                tail_of(G, edgeSeq)$up_ids,")",sep = ""),
+                interaction = interaction,
+                target = paste(head_of(G, edgeSeq)$name," (",
+                head_of(G, edgeSeq)$up_ids,")",sep = ""),
+                n_resources = edgeSeq$n_resources,
+                n_references = edgeSeq$n_references
+            )
         } else {
-            df <- data.frame(source = paste(tail_of(G, edgeSeq)$name," (",
-            tail_of(G, edgeSeq)$up_ids,")",sep = ""),interaction = interaction,
-            target = paste(head_of(G, edgeSeq)$name," (",
-            head_of(G, edgeSeq)$up_ids,")",sep = ""),
-            nsources = edgeSeq$nsources)
+            df <- data.frame(
+                source = paste(tail_of(G, edgeSeq)$name," (",
+                tail_of(G, edgeSeq)$up_ids,")",sep = ""),
+                interaction = interaction,
+                target = paste(head_of(G, edgeSeq)$name," (",
+                head_of(G, edgeSeq)$up_ids,")",sep = ""),
+                n_resources = edgeSeq$n_resources
+            )
         }
     }
     df

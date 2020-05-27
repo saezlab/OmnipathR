@@ -7,7 +7,7 @@
 <<style-Sweave, eval=TRUE, echo=FALSE, results=tex>>=
     BiocStyle::latex()
 @
-  
+
 % \usepackage{booktabs} % book-quality tables
 
 % \newcommand\BiocStyle{\Rpackage{BiocStyle}}
@@ -638,7 +638,7 @@ dplyr::filter(intercell,
 ## We check the intercell annotations for the individual components of 
 ## our previous complex. We filter our data to print it in a good format
 dplyr::filter(intercell,genesymbol %in% genes_complex, mainclass!="") %>% 
-    dplyr::distinct(genesymbol,mainclass, .keep_all = TRUE) %>%
+    dplyr::distinct(genesymbol, mainclass, .keep_all = TRUE) %>%
     dplyr::select(category, genesymbol, mainclass) %>%
     dplyr::arrange(genesymbol)
 
