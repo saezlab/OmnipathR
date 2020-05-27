@@ -1968,14 +1968,42 @@ filter_intercell <- function(
     plasma_membrane_peripheral = NULL,
     plasma_membrane_transmembrane = NULL,
     proteins = NULL,
+    causality = NULL,
+    topology = NULL,
     ...
 ){
 
     before <- nrow(data)
 
-    subsetIntercell <- dplyr::filter(
-        data,
-        (
+    topology <-
+        data.frame(setNames(
+            as.list(topology),
+            rep(TRUE, length(topology))
+        )) %>%
+        dplyr::rename_all(
+            dplyr::recode,
+            secreted = 'sec',
+            plasma_membrane_peripheral = 'pmp',
+            plasma_membrane_transmembrane = 'pmtm'
+        )
+
+    if('both' %in% causality){
+        causality <- c('transmitter', 'receiver')
+    }
+    causality <-
+        data.frame(setNames(
+            as.list(causality),
+            rep(TRUE, length(causality))
+        )) %>%
+        dplyr::rename_all(
+            dplyr::recode,
+            transmitter = 'trans',
+            receiver = 'rec'
+        )
+
+    data <-
+        data %>%
+        dplyr::filter(
             (is.null(categories) || category %in% categories) &&
             (is.null(parent) || .data$parent %in% parent) &&
             (is.null(scope) || .data$scope %in% scope) &&
@@ -1997,8 +2025,17 @@ filter_intercell <- function(
                 uniprot %in% proteins ||
                 genesymbol %in% proteins
             )
-        )
-    )
+        ) %>%
+        {`if`(
+            ncol(topology) > 0,
+            dplyr::inner_join(., topology, by = names(topology)),
+            .
+        )} %>%
+        {`if`(
+            ncol(causality) > 0,
+            dplyr::inner_join(., causality, by = names(causality)),
+            .
+        )}
 
     after <- nrow(data)
 
@@ -2009,7 +2046,7 @@ filter_intercell <- function(
         )
     )
 
-    return(result)
+    return(data)
 
 }
 
