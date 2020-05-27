@@ -92,6 +92,7 @@ import_omnipath <- function(
     fields = NULL,
     default_fields = TRUE,
     silent = FALSE,
+    logicals = NULL,
     ...
 ){
 
@@ -125,6 +126,9 @@ import_omnipath <- function(
         }
         msg <- 'Downloaded %d %s.'
     }
+
+    result <- cast_logicals(result, logicals)
+
 
     if(!silent){
         message(sprintf(msg, nrow(result), param$qt_message))
@@ -288,6 +292,23 @@ omnipath_check_result <- function(result, url){
             )
         )
     }
+
+}
+
+
+cast_logicals <- function(data, logicals = NULL){
+
+    true_values <- c('True', '1', 'TRUE', 'T', 'yes', 'YES', 'Y', 'y')
+
+    for(name in logicals){
+        data[[name]] <- (
+            identical(data[[name]], TRUE) ||
+            data[[name]] %in% true_values ||
+            (is.numeric(data[[name]]) && data[[name]] > 0)
+        )
+    }
+
+    return(data)
 
 }
 
@@ -1350,7 +1371,7 @@ get_annotation_databases <- get_annotation_resources
 #' on the roles in inter-cellular signaling. E.g. if a protein is
 #' a ligand, a receptor, an extracellular matrix (ECM) component, etc.
 #'
-#' @return A dataframe cotaining information about roles in inter-cellular
+#' @return A dataframe cotaining information about roles in intercellular
 #' signaling.
 #' @export
 #' @importFrom utils read.csv
@@ -1405,6 +1426,13 @@ import_omnipath_intercell <- function(
     from_cache <- !is.null(cache_file) && file.exists(cache_file)
     args <- c(as.list(environment()), list(...))
     args$query_type <- 'intercell'
+    args$logicals <- c(
+        'transmitter',
+        'receiver',
+        'secreted',
+        'plasma_membrane_peripheral',
+        'plasma_membrane_transmembrane'
+    )
 
     result <- do.call(import_omnipath, args)
 
@@ -1429,6 +1457,7 @@ import_OmniPath_intercell <- import_omnipath_intercell
 #' @return character vector with the names of the databases
 #' @export
 #' @importFrom utils read.csv
+#' @param dataset ignored at this query type
 #'
 #' @examples
 #' get_intercell_resources()
@@ -1523,7 +1552,8 @@ import_intercell_network <- function(
     return(intercelNetwork)
 }
 
-#' Get the different intercell categories described in Omnipath
+
+#' Retrieve a list of categories from the intercell database of OmniPath
 #'
 #' get the names of the categories from \url{http://omnipath.org/intercell}
 #' @return character vector with the different intercell categories
@@ -1531,35 +1561,43 @@ import_intercell_network <- function(
 #' @importFrom utils read.csv
 #' @examples
 #' get_intercell_categories()
-#' @seealso \code{\link{import_Omnipath_intercell},
+#' @seealso \code{\link{import_omnipath_intercell},
 #' \link{get_intercell_classes}}
 get_intercell_categories <- function(){
 
-    url_intercell <- 'http://omnipathdb.org/intercell_summary'
-    intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
-        stringsAsFactors = FALSE)
+    return(
+        unique(
+            import_omnipath('intercell_summary')$category
+        )
+    )
 
-    return(unique(intercell$category))
 }
 
-#' Get the different intercell main classes described in Omnipath
+
+#' Retrieve a list of the generic categories in the intercell database
+#' of OmniPath
 #'
-#' get the names of the main classes from \url{http://omnipath.org/intercell}
+#' get the names of the generic categories from
+#' \url{http://omnipath.org/intercell}
 #' @return character vector with the different intercell main classes
 #' @export
 #' @importFrom utils read.csv
 #' @examples
-#' get_intercell_classes()
-#' @seealso \code{\link{import_Omnipath_intercell},
+#' get_intercell_generic_categories()
+#' @seealso \code{\link{import_omnipath_intercell},
 #' \link{get_intercell_categories}}
-get_intercell_classes <- function(){
+get_intercell_generic_categories <- function(){
 
-    url_intercell <- 'http://omnipathdb.org/intercell_summary'
-    intercell <- omnipath_download(url_intercell, read.csv, sep = '\t', header = TRUE,
-        stringsAsFactors = FALSE)
-
-    return(unique(intercell$mainclass))
+    return(
+        unique(
+            import_omnipath('intercell_summary')$parent
+        )
+    )
 }
+
+
+# synonym (old name)
+get_intercell_classes <- get_intercell_main_categories
 
 ########## ########## ########## ##########
 ########## RESOURCE FILTERING      ########
@@ -1569,12 +1607,15 @@ get_intercell_classes <- function(){
 ## to the main functions
 
 ## Filtering Interactions, PTMs and complexes
+#TODO: actually this we could export as it might be useful for users
 filter_by_resource <- function(data, resources = NULL){
 
     if(!is.null(resources)){
 
         before <- nrow(data)
 
+        # unfortunately the column title is different across the various
+        # query types, so we need to guess
         for(field in c('sources', 'database', 'source')){
 
             if(field %in% names(data)){
@@ -1612,57 +1653,68 @@ filter_by_resource <- function(data, resources = NULL){
 # synonym (old name)
 filter_sources <- filter_by_resource
 
-## Filtering Annotations
-filter_sources_annotations <- function(annotations, databases){
-## takes annotations and removes those which are
-## not reported by the given databases.
-
-    if(is.null(databases)){
-        return(annotations)
-    }
-
-    nAnnot <- nrow(annotations)
-    subsetAnnotations <- dplyr::filter(annotations, source %in% databases)
-    nAnnotPost <- nrow(subsetAnnotations)
-
-    message(
-        sprintf(
-            'Removed %d annotations during database filtering.',
-            nAnnot - nAnnotPost
-        )
-    )
-
-    if (nAnnotPost > 0){
-        return(subsetAnnotations)
-    } else {
-        return(NULL)
-    }
-}
 
 ## Filtering intercell records according to the categories and/or classes
 ## selected
-filter_intercell <- function(intercell, categories, classes){
-## takes intercell removes and removes those not reported by the given
-## databases
-    nIntercell = nrow(intercell)
-    subsetIntercell <- dplyr::filter(intercell, .data$category %in% categories)
-    subsetIntercell <-
-        dplyr::filter(subsetIntercell, .data$mainclass %in% classes)
+#TODO: actually this we could export as it might be useful for users
+#' Filters an intercell data table according to various criteria
+filter_intercell <- function(
+    data,
+    categories = NULL,
+    resources = NULL,
+    parent = NULL,
+    scope = NULL,
+    aspect = NULL,
+    source = NULL,
+    transmitter = NULL,
+    receiver = NULL,
+    secreted = NULL,
+    plasma_membrane_peripheral = NULL,
+    plasma_membrane_transmembrane = NULL,
+    proteins = NULL,
+    ...
+){
 
-    nIntercellPost = nrow(subsetIntercell)
+    before <- nrow(data)
 
-    message(
-        sprintf(
-            'Removed %d intercell records during category/class filtering.',
-            nIntercell - nIntercellPost,
+    subsetIntercell <- dplyr::filter(
+        data,
+        (
+            (is.null(categories) || category %in% categories) &&
+            (is.null(parent) || .data$parent %in% parent) &&
+            (is.null(scope) || .data$scope %in% scope) &&
+            (is.null(aspect) || .data$aspect %in% aspect) &&
+            (is.null(source) || .data$source %in% source) &&
+            (is.null(transmitter) || .data$transmitter) &&
+            (is.null(receiver) || .data$receiver) &&
+            (is.null(secreted) || .data$secreted) &&
+            (
+                is.null(plasma_membrane_peripheral) ||
+                .data$plasma_membrane_peripheral
+            ) &&
+            (
+                is.null(plasma_membrane_transmembrane) ||
+                .data$plasma_membrane_transmembrane
+            ) &&
+            (
+                is.null(proteins) ||
+                uniprot %in% proteins ||
+                genesymbol %in% proteins
+            )
         )
     )
 
-    if (nIntercellPost > 0){
-        return(subsetIntercell)
-    } else {
-        return(NULL)
-    }
+    after <- nrow(data)
+
+    message(
+        sprintf(
+            'Removed %d records from intercell data.',
+            before - after
+        )
+    )
+
+    return(result)
+
 }
 
 ########## ########## ########## ##########
