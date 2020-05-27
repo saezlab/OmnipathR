@@ -113,11 +113,25 @@ import_omnipath <- function(
 
         url <- omnipath_url(param)
         download_args_defaults <- list(
-            URL = url,
+            URL = url
+        )
+        dataframe_defaults <- list(
             FUN = read.table,
             header = TRUE,
+            sep = '\t',
             stringsAsFactors = FALSE,
             quote = ''
+        )
+        json_defaults <- list(
+            FUN = jsonlite::fromJSON
+        )
+        download_args <- modifyList(
+            `if`(
+                !is.null(param$format) && param$format == 'json',
+                json_defaults,
+                dataframe_defaults
+            ),
+            download_args
         )
         download_args <- modifyList(
             download_args_defaults,
@@ -138,7 +152,15 @@ import_omnipath <- function(
 
 
     if(!silent){
-        message(sprintf(msg, nrow(result), param$qt_message))
+        message(sprintf(
+            msg,
+            `if`(
+                class(result) == 'data.frame',
+                nrow(result),
+                length(result)
+            ),
+            param$qt_message)
+        )
     }
 
     return(result)
@@ -289,7 +311,7 @@ omnipath_url_add_param <- function(url, name, values = NULL){
 #' from the server.
 omnipath_check_result <- function(result, url){
 
-    if(ncol(result) == 1){
+    if(length(result) == 1){
         server_msg <- paste(result[[1]], collapse = '\n')
         stop(
             sprintf(
@@ -1604,7 +1626,7 @@ get_intercell_generic_categories <- function(){
 
 
 # synonym (old name)
-get_intercell_classes <- get_intercell_main_categories
+get_intercell_classes <- get_intercell_generic_categories
 
 ########## ########## ########## ##########
 ########## RESOURCE FILTERING      ########
