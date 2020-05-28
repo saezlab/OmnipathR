@@ -507,13 +507,13 @@ components.
 
 ```{r complex_annotations}
 ## We check the different annotation databases
-get_annotation_databases()
+get_annotation_resources()
 
 ## We can further investigate the features of the complex selected
 ## in the previous section.
 
 ## We first get the annotations of the complex itself:
-annotations <- import_omnipath_annotations(select_genes=paste0("COMPLEX:",
+annotations <- import_omnipath_annotations(proteins=paste0("COMPLEX:",
   complexes_query_genes_join$components_genesymbols))
 
 head(dplyr::select(annotations,source,label,value),10)
@@ -528,18 +528,18 @@ checking their cellular location.
 ## Then, we explore some annotations of its individual components
 
 ## Pathways where the proteins belong:
-annotations <- import_Omnipath_annotations(select_genes=genes_complex,
+annotations <- import_omnipath_annotations(proteins=genes_complex,
     resources=c("NetPath"))
 
 dplyr::select(annotations,genesymbol,value)
 
 ## Cellular localization of our proteins
-annotations <-import_Omnipath_annotations(select_genes=genes_complex,
+annotations <-import_omnipath_annotations(proteins=genes_complex,
    resources=c("ComPPI"))
 
 ## Since we have same record_id for some results of our query, we spread
 ## these records across columns
-spread(annotations, label,value) %>%
+spread(annotations, label, value) %>%
     dplyr::arrange(desc(score)) %>%
     dplyr::top_n(10, score)
 ```

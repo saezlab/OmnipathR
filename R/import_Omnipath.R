@@ -44,6 +44,7 @@
     'enzymes',
     'substrates',
     'partners',
+    'proteins',
     'entity_types',
     'sources',
     'targets',
@@ -347,9 +348,9 @@ cast_logicals <- function(data, logicals = NULL){
 
     for(name in logicals){
         data[[name]] <- (
-            identical(data[[name]], TRUE) ||
-            data[[name]] %in% true_values ||
-            (is.numeric(data[[name]]) && data[[name]] > 0)
+            identical(data[[name]], TRUE) |
+            data[[name]] %in% true_values |
+            (is.numeric(data[[name]]) & data[[name]] > 0)
         )
     }
 
@@ -1503,7 +1504,7 @@ import_omnipath_annotations <- function(
         if(!is.null(proteins)){
             result <- result[
                 which(
-                    result$uniprot %in% proteins ||
+                    result$uniprot %in% proteins |
                     result$genesymbol %in% proteins
                 ),
             ]
@@ -2016,25 +2017,25 @@ filter_intercell <- function(
     data <-
         data %>%
         dplyr::filter(
-            (is.null(categories) || category %in% categories) &&
-            (is.null(parent) || .data$parent %in% parent) &&
-            (is.null(scope) || .data$scope %in% scope) &&
-            (is.null(aspect) || .data$aspect %in% aspect) &&
-            (is.null(source) || .data$source %in% source) &&
-            (is.null(transmitter) || .data$transmitter) &&
-            (is.null(receiver) || .data$receiver) &&
-            (is.null(secreted) || .data$secreted) &&
+            (is.null(categories) | category %in% categories) &
+            (is.null(parent) | .data$parent %in% parent) &
+            (is.null(scope) | .data$scope %in% scope) &
+            (is.null(aspect) | .data$aspect %in% aspect) &
+            (is.null(source) | .data$source %in% source) &
+            (is.null(transmitter) | .data$transmitter) &
+            (is.null(receiver) | .data$receiver) &
+            (is.null(secreted) | .data$secreted) &
             (
-                is.null(plasma_membrane_peripheral) ||
+                is.null(plasma_membrane_peripheral) |
                 .data$plasma_membrane_peripheral
-            ) &&
+            ) &
             (
-                is.null(plasma_membrane_transmembrane) ||
+                is.null(plasma_membrane_transmembrane) |
                 .data$plasma_membrane_transmembrane
-            ) &&
+            ) &
             (
-                is.null(proteins) ||
-                uniprot %in% proteins ||
+                is.null(proteins) |
+                uniprot %in% proteins |
                 genesymbol %in% proteins
             )
         ) %>%
