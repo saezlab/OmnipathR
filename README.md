@@ -2,12 +2,12 @@
 
 # OmnipathR
 
-Utility functions to work with **Omnipath** in `R`. 
+Utility functions to work with **OmniPath** in `R`. 
 
 ## Description
 
 *OmnipathR* is an `R` package built to provide easy access to the data stored 
-in the Omnipath webservice: 
+in the OmniPath webservice: 
     
   <http://omnipathdb.org/>
     
@@ -24,7 +24,8 @@ We provide here a brief summary about the data available through *OmnipathR*.
 *OmnipathR* provides access to 5 types of queries:  
 
 1. **Interactions**: protein-protein interactions from different datasets.
-2. **Post-translational modifications (PTMs)**: enzyme-substrate interactions. 
+2. **Enzyme-substrate**: enzyme-PTM (post-translational modification)
+    relationships.
 3. **Complexes**: comprehensive database of more than 22000 protein complexes.
 4. **Annotations**: large variety of data about proteins and complexes features.
 5. **Intercell**: information on the roles in inter-cellular signaling.
@@ -68,31 +69,31 @@ You can also check the manual:
 
   <https://bioconductor.org/packages/devel/bioc/manuals/OmnipathR/man/OmnipathR.pdf>
    
-In addition, we provide here some examples for a quick start: 
+In addition, we provide here some examples for a quick start:
 
 ```{r}
 library(OmnipathR)
 ```
 
-Download human protein-protein interactions for some source databases:  
+Download human protein-protein interactions from the specified resources:
 
 ```{r}
 interactions <- 
-  import_Omnipath_Interactions(filter_databases=c("SignaLink3","PhosphoSite", 
+  import_omnipath_interactions(filter_databases=c("SignaLink3","PhosphoSite", 
   "SIGNOR"))
 ```
 
 
-Download human post-translational modifications for some source databases:  
+Download human enzyme-PTM relationships from the specified resources:  
 
 ```{r}
-ptms <- import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
+enzsub <- import_omnipath_enzsub(filter_databases=c("PhosphoSite", "SIGNOR"))
 ```
 
 Convert both data frames into networks (`igraph` objects)
 ```{r}
-ptms_g = ptms_graph(ptms = ptms )
-OPI_g = interaction_graph(interactions = interactions )
+ptms_g = ptms_graph(ptms = enzsub)
+OPI_g = interaction_graph(interactions = interactions)
 ```
 
 Print some interactions in a nice format:  
