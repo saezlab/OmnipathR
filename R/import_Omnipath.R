@@ -498,10 +498,7 @@ swap_undirected <- function(data){
             ),
             .
         )} %>%
-        dplyr::bind_rows(
-            data %>%
-            dplyr::filter(is_directed == 1)
-        )
+        dplyr::bind_rows(data)
 
     return(data)
 
