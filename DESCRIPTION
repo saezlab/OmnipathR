@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: Import Omnipath network
-Version: 1.4.0
+Version: 1.4.1
 Authors@R: c(
     person(given = "Alberto",
            family = "Valdeolivas",
@@ -15,7 +15,6 @@ Authors@R: c(
            family = "Gabor",
            role = "ctb")
            )
-Maintainer: Alberto Valdeolivas Urbelz <alvaldeolivas@gmail.com>
 Description: Import data from https://www.omnipathdb.org webservice. It also
     includes functions to transform and print this data.
 License: MIT + file LICENSE
@@ -26,7 +25,7 @@ biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
 Encoding: UTF-8
 VignetteBuilder: knitr
 Depends:
-    R(>= 3.6.0),
+    R(>= 4.0),
     igraph,
     graphics,
     methods,
@@ -34,6 +33,7 @@ Depends:
     jsonlite
 Imports:
     dplyr,
+    stats,
     rlang
 Suggests:
     tidyr,

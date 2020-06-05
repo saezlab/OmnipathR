@@ -5,16 +5,16 @@
 \alias{OmnipathR}
 \title{The OmnipathR package}
 \description{
-OmnipathR is an R package built to provide easy access to the data stored in 
+OmnipathR is an R package built to provide easy access to the data stored in
 the Omnipath webservice:
 
 \url{http://omnipathdb.org/}
- 
-The webservice implements a very simple REST style API. This package make 
-requests by the HTTP protocol to retreive the data. Hence, fast Internet 
+
+The webservice implements a very simple REST style API. This package make
+requests by the HTTP protocol to retreive the data. Hence, fast Internet
 access is required for a propser use of OmnipathR.
 
-The package also provides some utility functions to filter, analyse and 
+The package also provides some utility functions to filter, analyse and
 visualize the data.
 }
 \examples{
@@ -39,7 +39,7 @@ print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
    substrate_genesymbol=="MAPK3"))
 
 # find shortest paths on the directed network between proteins
-printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
+printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
    output = 'epath')$epath[[1]],OPI_g)
 
 # find all shortest paths between proteins

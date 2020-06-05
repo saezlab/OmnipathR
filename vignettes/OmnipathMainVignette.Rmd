@@ -44,17 +44,20 @@ access is required for a proper use of `r Biocpkg("OmnipathR")`.
 `r Biocpkg("OmnipathR")` can retrieve five different types of data:
 
 * **Interactions**: protein-protein interactions organized in different datasets:
-    + **Omnipath**: the OmniPath data as defined in the original
+    + **omnipath**: the OmniPath data as defined in the original
     publication [@Turei2016] and collected from different databases.
-    + **Pathwayextra**: activity flow interactions without literature
+    + **pathwayextra**: activity flow interactions without literature
     reference.
-    + **Kinaseextra**: enzyme-substrate interactions without literature
+    + **kinaseextra**: enzyme-substrate interactions without literature
     reference.
-    + **Ligrecextra**: ligand-receptor interactions without literature
+    + **ligrecextra**: ligand-receptor interactions without literature
     reference.
-    + **Tfregulons**: transcription factor (TF)-target interactions from
+    + **tfregulons**: transcription factor (TF)-target interactions from
     **DoRothEA** [@GarciaAlonso2019].
-    + **Mirnatarget**: miRNA-mRNA and TF-miRNA interactions.
+    + **tf-miRNA**: transcription factor-miRNA interactions
+    + **miRNA-target**: miRNA-mRNA interactions.
+    + **lncRNA-mRNA**: lncRNA-mRNA interactions. 
+     
 
 * **Post-translational modifications (PTMs)**: It provides
 enzyme-substrate reactions in a very similar way to the aforementioned
@@ -114,6 +117,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("OmnipathR")
+```
 
 We also load here the required packages to run the code in this vignette.
 
@@ -151,7 +155,7 @@ means inhibition and "?" means undirected interactions or inconclusive data).
 
 ```{r interactions}
 ## We check some of the different interaction databases
-head(get_interaction_databases(),10)
+get_interaction_databases()
 
 ## The interactions are stored into a data frame.
 interactions <-
@@ -178,11 +182,10 @@ the minimum number of edges. This can be very useful to track consecutive
 reactions within a given pathway. We display below the shortest path between
 two given proteins and all the possible shortests paths between two other
 proteins. It is to note that the functions `printPath\_es` and `printPath\_vs`
-display very similar results, but the first one takes as an input an edge s
-equence and the second one a node sequence.
+display very similar results, but the first one takes as an input an edge 
+sequence and the second one a node sequence.
 
-```{r sp, message=FALSE}
-
+```{r sp, message=TRUE}
 ## We transform the interactions data frame into a graph
 OPI_g <- interaction_graph(interactions = interactions)
 
@@ -194,7 +197,6 @@ printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
 ## Find and print all shortest paths between proteins of interest:
 printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",
     to = "MAPKAPK2")$res,OPI_g)
-
 ```
 
 
@@ -250,7 +252,7 @@ for a given gene in this particular case.
 ```{r pathwayextra}
 ## We query and store the interactions into a dataframe
 interactions <-
-    import_pathwayextra_interactions(resources=c("BioGRID","IntAct"),
+    import_pathwayextra_interactions(resources=c("BioGRID","STRING"),
     organism = 10090)
 
 ## We select all the interactions in which Amfr gene is involved
@@ -560,21 +562,16 @@ refer to the original sources).
 
 We first inspect the different categories available in the Omnipath webserver.
 Then, we focus again in our previously selected complex and we check its
-potential roles in inter-cellular signaling. We repeat the analysis with its
-individual components.
+the location of its individual components in the inter-cellular context. We can
+however see that the components of this particular complex are intracellular. 
 
 ```{r intercell}
 ## We check some of the different intercell categories
-head(get_intercell_categories(),10)
+get_intercell_generic_categories()
 
 ## We import the intercell data into a dataframe
 intercell <- import_omnipath_intercell(scope = 'generic',
-    aspect = 'functional')
-
-## We check the intercell annotations for our previous complex itself
-dplyr::filter(intercell,
-    genesymbol == complexes_query_genes_join$components_genesymbols) %>%
-    dplyr::select(category, genesymbol, parent)
+    aspect = 'locational')
 
 ## We check the intercell annotations for the individual components of
 ## our previous complex. We filter our data to print it in a good format

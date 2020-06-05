@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
       </span>
     </div>
 
@@ -69,6 +69,18 @@
 <li>
   <a href="https://github.com/saezlab/OmnipathR/">
     <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/omnipathdb">
+    <span class="fab fa fab fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://omnipathdb.org/">
+    <span class="fas fa fas fa-university"></span>
      
   </a>
 </li>
@@ -126,17 +138,21 @@
 <p><strong>Interactions</strong>: protein-protein interactions organized in different datasets:</p>
 <ul>
 <li>
-<strong>Omnipath</strong>: the OmniPath data as defined in the original publication <span class="citation">(Türei, Korcsmáros, and Saez-Rodriguez 2016)</span> and collected from different databases.</li>
+<strong>omnipath</strong>: the OmniPath data as defined in the original publication <span class="citation">(Türei, Korcsmáros, and Saez-Rodriguez 2016)</span> and collected from different databases.</li>
 <li>
-<strong>Pathwayextra</strong>: activity flow interactions without literature reference.</li>
+<strong>pathwayextra</strong>: activity flow interactions without literature reference.</li>
 <li>
-<strong>Kinaseextra</strong>: enzyme-substrate interactions without literature reference.</li>
+<strong>kinaseextra</strong>: enzyme-substrate interactions without literature reference.</li>
 <li>
-<strong>Ligrecextra</strong>: ligand-receptor interactions without literature reference.</li>
+<strong>ligrecextra</strong>: ligand-receptor interactions without literature reference.</li>
 <li>
-<strong>Tfregulons</strong>: transcription factor (TF)-target interactions from <strong>DoRothEA</strong> <span class="citation">(Garcia-Alonso et al. 2019)</span>.</li>
+<strong>tfregulons</strong>: transcription factor (TF)-target interactions from <strong>DoRothEA</strong> <span class="citation">(Garcia-Alonso et al. 2019)</span>.</li>
 <li>
-<strong>Mirnatarget</strong>: miRNA-mRNA and TF-miRNA interactions.</li>
+<strong>tf-miRNA</strong>: transcription factor-miRNA interactions</li>
+<li>
+<strong>miRNA-target</strong>: miRNA-mRNA interactions.</li>
+<li>
+<strong>lncRNA-mRNA</strong>: lncRNA-mRNA interactions.</li>
 </ul>
 </li>
 <li><p><strong>Post-translational modifications (PTMs)</strong>: It provides enzyme-substrate reactions in a very similar way to the aforementioned interactions. Some of the biological databases related to PTMs integrated in Omnipath are Phospho.ELM <span class="citation">(Dinkel et al. 2010)</span> and PhosphoSitePlus [<span class="citation">Hornbeck et al. (2014)</span>}.</p></li>
@@ -166,12 +182,11 @@ Overview of the resources featured in OmniPath. Causal resources (including acti
 <h1 class="hasAnchor">
 <a href="#installation-of-the-omnipathr-package" class="anchor"></a>Installation of the <em><a href="https://bioconductor.org/packages/3.11/OmnipathR">OmnipathR</a></em> package</h1>
 <p>First of all, you need a current version of <em>R</em>. <em><a href="https://bioconductor.org/packages/3.11/OmnipathR">OmnipathR</a></em> is a freely available package deposited on <em>Bioconductor</em> and <a href="https://github.com/saezlab/OmnipathR">GitHub</a>. You can install it by running the following commands on an <em>R</em> console:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r">if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="kw">if</span> (!<span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span>(<span class="st">"BiocManager"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
+    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"BiocManager"</span>)
 
-BiocManager::install("OmnipathR")
-
-We also load here the required packages to run the code in this vignette.</pre></body></html></div>
+<span class="kw pkg">BiocManager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span>(<span class="st">"OmnipathR"</span>)</pre></body></html></div>
+<p>We also load here the required packages to run the code in this vignette.</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">OmnipathR</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dnet</span>)
@@ -188,16 +203,67 @@ We also load here the required packages to run the code in this vignette.</pre><
 <p>Proteins interact among them and with other biological molecules to perform cellular functions. Proteins also participates in pathways, linked series of reactions occurring inter/intra cells to transform products or to transmit signals inducing specific cellular responses. Protein interactions are therefore a very valuable source of information to understand cellular functioning.</p>
 <p>We here download the original <strong>OmniPath</strong> human interactions <span class="citation">(Türei, Korcsmáros, and Saez-Rodriguez 2016)</span>. To do so, we first check the different source databases and select some of them. Then, we print some of the downloaded interactions (“+” means activation, “-” means inhibition and “?” means undirected interactions or inconclusive data).</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co">## We check some of the different interaction databases</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/get_interaction_resources.html">get_interaction_databases</a></span>(),<span class="fl">10</span>)</pre></body></html></div>
-<pre><code>##  [1] "ABS"                  "ACSN"                 "Adhesome"            
-##  [4] "AlzPathway"           "ARACNe-GTEx_DoRothEA" "ARN"                 
-##  [7] "Baccin2019"           "BEL-Large-Corpus"     "BioGRID"             
-## [10] "CA1"</code></pre>
+<span class="fu"><a href="../reference/get_interaction_resources.html">get_interaction_databases</a></span>()</pre></body></html></div>
+<pre><code>##   [1] "ABS"                       "ACSN"                     
+##   [3] "Adhesome"                  "AlzPathway"               
+##   [5] "ARACNe-GTEx_DoRothEA"      "ARN"                      
+##   [7] "Baccin2019"                "BEL-Large-Corpus"         
+##   [9] "BioGRID"                   "CA1"                      
+##  [11] "CancerCellMap"             "CellPhoneDB"              
+##  [13] "cellsignal.com"            "dbPTM"                    
+##  [15] "DeathDomain"               "DEPOD"                    
+##  [17] "Dinarello2013"             "DIP"                      
+##  [19] "DOMINO"                    "DoRothEA_A"               
+##  [21] "DoRothEA_B"                "DoRothEA_C"               
+##  [23] "DoRothEA_D"                "DoRothEA-reviews_DoRothEA"
+##  [25] "ELM"                       "EMBRACE"                  
+##  [27] "ENCODE_tf-mirna"           "ENCODE-distal"            
+##  [29] "ENCODE-proximal"           "FANTOM4_DoRothEA"         
+##  [31] "Fantom5"                   "GO-lig-rec"               
+##  [33] "Guide2Pharma"              "Guide2Pharma_CellPhoneDB" 
+##  [35] "HOCOMOCO-v11_DoRothEA"     "HPMR"                     
+##  [37] "HPRD"                      "HPRD-phos"                
+##  [39] "HTRIdb"                    "HTRIdb_DoRothEA"          
+##  [41] "I2D_CellPhoneDB"           "ICELLNET"                 
+##  [43] "IMEx_CellPhoneDB"          "InnateDB"                 
+##  [45] "InnateDB_CellPhoneDB"      "InnateDB-All_CellPhoneDB" 
+##  [47] "IntAct_CellPhoneDB"        "IntAct_DoRothEA"          
+##  [49] "iPTMnet"                   "iTALK"                    
+##  [51] "JASPAR-v2018_DoRothEA"     "KEA"                      
+##  [53] "KEGG"                      "KEGG_DoRothEA"            
+##  [55] "Kinexus"                   "Kirouac2010"              
+##  [57] "Li2012"                    "LMPID"                    
+##  [59] "lncrnadb"                  "LncRNADisease"            
+##  [61] "LRdb"                      "Macrophage"               
+##  [63] "MatrixDB"                  "MatrixDB_CellPhoneDB"     
+##  [65] "MIMP"                      "MINT_CellPhoneDB"         
+##  [67] "miR2Disease"               "miRDeathDB"               
+##  [69] "miRecords"                 "miRTarBase"               
+##  [71] "MPPI"                      "NCI-PID"                  
+##  [73] "ncRDeathDB"                "NetPath"                  
+##  [75] "NetworKIN"                 "NFIRegulomeDB_DoRothEA"   
+##  [77] "NRF2ome"                   "ORegAnno"                 
+##  [79] "ORegAnno_DoRothEA"         "PAZAR"                    
+##  [81] "PAZAR_DoRothEA"            "PDZBase"                  
+##  [83] "phosphoELM"                "PhosphoNetworks"          
+##  [85] "PhosphoPoint"              "PhosphoSite"              
+##  [87] "PhosphoSite_noref"         "ProtMapper"               
+##  [89] "Ramilowski2015"            "REACH"                    
+##  [91] "Reactome"                  "RegNetwork_DoRothEA"      
+##  [93] "ReMap_DoRothEA"            "RLIMS-P"                  
+##  [95] "SignaLink3"                "SIGNOR"                   
+##  [97] "Sparser"                   "SPIKE"                    
+##  [99] "STRING"                    "TCRcuration"              
+## [101] "TFactS_DoRothEA"           "TFe_DoRothEA"             
+## [103] "TransmiR"                  "TRED_DoRothEA"            
+## [105] "TRIP"                      "TRRD_DoRothEA"            
+## [107] "TRRUST_DoRothEA"           "UniProt"                  
+## [109] "UniProt_CellPhoneDB"       "Wang"</code></pre>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co">## The interactions are stored into a data frame.</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span>
     <span class="fu"><a href="../reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SignaLink3"</span>,<span class="st">"PhosphoSite"</span>,
     <span class="st">"SIGNOR"</span>))</pre></body></html></div>
-<pre><code>## Downloaded 16 interactions.</code></pre>
+<pre><code>## Downloaded 17420 interactions.</code></pre>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co">## We visualize the first interactions in the data frame.</span>
 <span class="fu"><a href="../reference/print_interactions.html">print_interactions</a></span>(<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">interactions</span>))</pre></body></html></div>
 <pre><code>##            source interaction         target n_resources n_references
@@ -214,7 +280,7 @@ We also load here the required packages to run the code in this vignette.</pre><
 <p>We convert here our set of interactions to a network/graph (<em><a href="https://CRAN.R-project.org/package=igraph">igraph</a></em> object). Then, we apply two very common approaches to extract information from a biological network:</p>
 <ul>
 <li>
-<strong>Shortest Paths</strong>: finding a path between two nodes (proteins) going through the minimum number of edges. This can be very useful to track consecutive reactions within a given pathway. We display below the shortest path between two given proteins and all the possible shortests paths between two other proteins. It is to note that the functions <code>printPath\_es</code> and <code>printPath\_vs</code> display very similar results, but the first one takes as an input an edge s equence and the second one a node sequence.</li>
+<strong>Shortest Paths</strong>: finding a path between two nodes (proteins) going through the minimum number of edges. This can be very useful to track consecutive reactions within a given pathway. We display below the shortest path between two given proteins and all the possible shortests paths between two other proteins. It is to note that the functions <code>printPath\_es</code> and <code>printPath\_vs</code> display very similar results, but the first one takes as an input an edge sequence and the second one a node sequence.</li>
 </ul>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co">## We transform the interactions data frame into a graph</span>
 <span class="no">OPI_g</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span>(<span class="kw">interactions</span> <span class="kw">=</span> <span class="no">interactions</span>)
@@ -230,11 +296,85 @@ We also load here the required packages to run the code in this vignette.</pre><
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co">## Find and print all shortest paths between proteins of interest:</span>
 <span class="fu"><a href="../reference/printPath_vs.html">printPath_vs</a></span>(<span class="fu">all_shortest_paths</span>(<span class="no">OPI_g</span>,<span class="kw">from</span> <span class="kw">=</span> <span class="st">"DYRK2"</span>,
     <span class="kw">to</span> <span class="kw">=</span> <span class="st">"MAPKAPK2"</span>)$<span class="no">res</span>,<span class="no">OPI_g</span>)</pre></body></html></div>
+<pre><code>## Pathway 1: DYRK2 -&gt; TBK1 -&gt; NFKB1 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 2: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 3: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 4: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 5: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 7: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 8: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; PPP1CA -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 9: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PPP1CA -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 10: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; PPP1CA -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 11: DYRK2 -&gt; TBK1 -&gt; PEBP1 -&gt; MAP2K1 -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 12: DYRK2 -&gt; TP53 -&gt; RPS6KA5 -&gt; CDC25A -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 13: DYRK2 -&gt; TP53 -&gt; RPS6KA4 -&gt; CDC25A -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 14: DYRK2 -&gt; TP53 -&gt; RPS6KA3 -&gt; CDC25A -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 15: DYRK2 -&gt; TP53 -&gt; RPS6KA2 -&gt; CDC25A -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 16: DYRK2 -&gt; TP53 -&gt; RPS6KA1 -&gt; CDC25A -&gt; MAPK3 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 17: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP2K4 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 18: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP2K4 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 19: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP2K4 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 20: DYRK2 -&gt; TP53 -&gt; RPS6KA3 -&gt; MAP3K5 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 21: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP3K5 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 22: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP3K5 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 23: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP3K5 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 24: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; RAC1 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 25: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; RAC1 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 26: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; RAC1 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 27: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; SH3RF1 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 28: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; SH3RF1 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 29: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; SH3RF1 -&gt; MAPK8 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 30: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP2K4 -&gt; MAPK10 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 31: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP2K4 -&gt; MAPK10 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 32: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP2K4 -&gt; MAPK10 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 33: DYRK2 -&gt; TP53 -&gt; RPS6KA5 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 34: DYRK2 -&gt; TP53 -&gt; RPS6KA4 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 35: DYRK2 -&gt; TP53 -&gt; RPS6KA3 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 36: DYRK2 -&gt; TP53 -&gt; RPS6KA2 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 37: DYRK2 -&gt; TP53 -&gt; RPS6KA1 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 38: DYRK2 -&gt; TBK1 -&gt; RPS6KB1 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 39: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 40: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 41: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; GSK3B -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 42: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP2K4 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 43: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP2K4 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 44: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP2K4 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 45: DYRK2 -&gt; TP53 -&gt; RPS6KA3 -&gt; MAP3K5 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 46: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP3K5 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 47: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP3K5 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 48: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP3K5 -&gt; MAPK14 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 49: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; CSNK2A1 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 50: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP2K4 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 51: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP2K4 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 52: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP2K4 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 53: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; RAC1 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 54: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; RAC1 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 55: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; RAC1 -&gt; MAPK9 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 56: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; CSNK2A1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 57: DYRK2 -&gt; TBK1 -&gt; NFKB1 -&gt; MAP3K8 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 58: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP3K8 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 59: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP3K8 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 60: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; MAP3K8 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 61: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; PEA15 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 62: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 63: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; PEA15 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 64: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; PPP1CA -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 65: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PPP1CA -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 66: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; PPP1CA -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 67: DYRK2 -&gt; TBK1 -&gt; PEBP1 -&gt; RAF1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 68: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; RAF1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 69: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; RAF1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 70: DYRK2 -&gt; TBK1 -&gt; AKT1 -&gt; RAF1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 71: DYRK2 -&gt; TBK1 -&gt; PEBP1 -&gt; MAP2K1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 72: DYRK2 -&gt; TP53 -&gt; RPS6KA3 -&gt; DAPK1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 73: DYRK2 -&gt; TP53 -&gt; RPS6KA2 -&gt; DAPK1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
+<pre><code>## Pathway 74: DYRK2 -&gt; TP53 -&gt; RPS6KA1 -&gt; DAPK1 -&gt; MAPK1 -&gt; MAPKAPK2</code></pre>
 <ul>
 <li>
 <strong>Clustering</strong>: grouping nodes (proteins) in such a way that nodes belonging to the same group (called cluster) are more connected in the network to each other than to those in other groups (clusters). Since proteins interact to perform their functions, proteins within the same cluster are likely to be implicated in similar biological tasks. Figure @ref(fig:fig2) shows the subgraph containing the proteins and interactions of a specifc protein, CD22. The <em><a href="https://CRAN.R-project.org/package=igraph">igraph</a></em> package contains functions to apply sevaral different cluster methods on graphs (visit <a href="https://igraph.org/r/doc/" class="uri">https://igraph.org/r/doc/</a> for detailed information.)</li>
 </ul>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co">## We apply a clustering algorithm (Louvain) to group proteins in</span>
+<div class="sourceCode" id="cb86"><html><body><pre class="r"><span class="co">## We apply a clustering algorithm (Louvain) to group proteins in</span>
 <span class="co">## our network. We apply here Louvain which is fast but can only run</span>
 <span class="co">## on undirected graphs. Other clustering algorithms can deal with</span>
 <span class="co">## directed networks but with longer computational times,</span>
@@ -262,12 +402,12 @@ CD22 associated cluser. Subnetwork extracted from the interactions graph represe
 <h3 class="hasAnchor">
 <a href="#pathway-extra" class="anchor"></a>Pathway Extra</h3>
 <p>In the first example, we are going to get the interactions from the <strong>pathwayextra</strong> dataset, which contains activity flow interactions without literature reference. We are going to focus on the mouse interactions for a given gene in this particular case.</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
+<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span>
     <span class="fu"><a href="../reference/import_pathwayextra_interactions.html">import_pathwayextra_interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"BioGRID"</span>,<span class="st">"STRING"</span>),
     <span class="kw">organism</span> <span class="kw">=</span> <span class="fl">10090</span>)</pre></body></html></div>
-<pre><code>## Downloaded 16 interactions.</code></pre>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co">## We select all the interactions in which Amfr gene is involved</span>
+<pre><code>## Downloaded 1028 interactions.</code></pre>
+<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="co">## We select all the interactions in which Amfr gene is involved</span>
 <span class="no">interactions_Amfr</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">interactions</span>, <span class="no">source_genesymbol</span> <span class="kw">==</span> <span class="st">"Amfr"</span> <span class="kw">|</span>
     <span class="no">target_genesymbol</span> <span class="kw">==</span> <span class="st">"Amfr"</span>)
 
@@ -280,12 +420,12 @@ CD22 associated cluser. Subnetwork extracted from the interactions graph represe
 <h3 class="hasAnchor">
 <a href="#kinase-extra" class="anchor"></a>Kinase Extra</h3>
 <p>Next, we download the interactions from the <strong>kinaseextra</strong> dataset, which contains enzyme-substrate interactions without literature reference. We are going to focus on rat reactions targeting a particular gene.</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
+<div class="sourceCode" id="cb91"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span>
     <span class="fu"><a href="../reference/import_kinaseextra_interactions.html">import_kinaseextra_interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PhosphoPoint"</span>,
     <span class="st">"PhosphoSite"</span>), <span class="kw">organism</span> <span class="kw">=</span> <span class="fl">10116</span>)</pre></body></html></div>
-<pre><code>## Downloaded 16 interactions.</code></pre>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="co">## We select the interactions in which Dpysl2 gene is a target</span>
+<pre><code>## Downloaded 4937 interactions.</code></pre>
+<div class="sourceCode" id="cb93"><html><body><pre class="r"><span class="co">## We select the interactions in which Dpysl2 gene is a target</span>
 <span class="no">interactions_TargetDpysl2</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">interactions</span>,
     <span class="no">target_genesymbol</span> <span class="kw">==</span> <span class="st">"Dpysl2"</span>)
 
@@ -303,11 +443,11 @@ CD22 associated cluser. Subnetwork extracted from the interactions graph represe
 <h3 class="hasAnchor">
 <a href="#ligand-receptor-extra" class="anchor"></a>Ligand-receptor Extra</h3>
 <p>In the following example we are going to work with the <strong>ligrecextra</strong> dataset, which contains ligand-receptor interactions without literature reference. Our goal is to find the potential receptors associated to a given ligand, CDH1 (Figure @ref(fig:fig3)).</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
+<div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_ligrecextra_interactions.html">import_LigrecExtra_Interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"HPRD"</span>,
     <span class="st">"Guide2Pharma"</span>), <span class="kw">organism</span><span class="kw">=</span><span class="fl">9606</span>)</pre></body></html></div>
-<pre><code>## Downloaded 16 interactions.</code></pre>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="co">## Receptors of the CDH1 ligand.</span>
+<pre><code>## Downloaded 1512 interactions.</code></pre>
+<div class="sourceCode" id="cb97"><html><body><pre class="r"><span class="co">## Receptors of the CDH1 ligand.</span>
 <span class="no">interactions_CDH1</span> <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">interactions</span>, <span class="no">source_genesymbol</span> <span class="kw">==</span> <span class="st">"CDH1"</span>)
 
 <span class="co">## We transform the interactions data frame into a graph</span>
@@ -327,11 +467,11 @@ Ligand-receptor interactions for the CDH1 ligand.
 <h3 class="hasAnchor">
 <a href="#dorothea-regulons" class="anchor"></a>DoRothEA Regulons</h3>
 <p>Another very interesting interaction dataset also available in OmniPath is <strong>DoRothEA</strong> <span class="citation">(Garcia-Alonso et al. 2019)</span>. It contains transcription factor (TF)-target interactions with confidence score, ranging from A-E, being A the most confident interactions. In the code chunk shown below, we select and print the most confident interactions for a given TF.</p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
+<div class="sourceCode" id="cb98"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_dorothea_interactions.html">import_dorothea_interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"DoRothEA_A"</span>,
     <span class="st">"ARACNe-GTEx_DoRothEA"</span>), <span class="kw">organism</span><span class="kw">=</span><span class="fl">9606</span>)</pre></body></html></div>
-<pre><code>## Downloaded 17 interactions.</code></pre>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="co">## We select the most confident interactions for a given TF and we print</span>
+<pre><code>## Downloaded 6976 interactions.</code></pre>
+<div class="sourceCode" id="cb100"><html><body><pre class="r"><span class="co">## We select the most confident interactions for a given TF and we print</span>
 <span class="co">## the interactions to check the way it regulates its different targets</span>
 <span class="no">interactions_A_GLI1</span>  <span class="kw">&lt;-</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">interactions</span>, <span class="no">dorothea_level</span><span class="kw">==</span><span class="st">"A"</span>,
     <span class="no">source_genesymbol</span> <span class="kw">==</span> <span class="st">"GLI1"</span>)
@@ -348,11 +488,11 @@ Ligand-receptor interactions for the CDH1 ligand.
 <h3 class="hasAnchor">
 <a href="#mirna-target-dataset" class="anchor"></a>miRNA-target dataset</h3>
 <p>The last dataset describing interactions is <strong>mirnatarget</strong>. It stores miRNA-mRNA and TF-miRNA interactions. These interactions are only available for human so far. We next select the miRNA interacting with the TF selected in the previous code chunk, <em>GLI1</em>. The main function of miRNAs seems to be related with gene regulation. It is therefore interesting to see how some miRNA can regulate the expression of a TF which in turn regulates the expression of other genes. Figure @ref(fig:fig4) shows a schematic network of the miRNA targeting <em>GLI1</em> and the genes regulated by this TF.</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
+<div class="sourceCode" id="cb102"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span>
   <span class="fu"><a href="../reference/import_mirnatarget_interactions.html">import_miRNAtarget_Interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"miRTarBase"</span>,<span class="st">"miRecords"</span>))</pre></body></html></div>
-<pre><code>## Downloaded 16 interactions.</code></pre>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="co">## We select the interactions where a miRNA is interacting with the TF</span>
+<pre><code>## Downloaded 5962 interactions.</code></pre>
+<div class="sourceCode" id="cb104"><html><body><pre class="r"><span class="co">## We select the interactions where a miRNA is interacting with the TF</span>
 <span class="co">## used in the previous code chunk and we print these interactions.</span>
 <span class="no">interactions_miRNA_GLI1</span> <span class="kw">&lt;-</span>
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">interactions</span>,  <span class="no">target_genesymbol</span> <span class="kw">==</span> <span class="st">"GLI1"</span>)
@@ -369,7 +509,7 @@ Ligand-receptor interactions for the CDH1 ligand.
 ## 3            1
 ## 4            1
 ## 5            1</code></pre>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="co">## We transform the previous selections to graphs (igraph objects)</span>
+<div class="sourceCode" id="cb106"><html><body><pre class="r"><span class="co">## We transform the previous selections to graphs (igraph objects)</span>
 <span class="no">OPI_g_1</span> <span class="kw">&lt;-</span><span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span>(<span class="kw">interactions</span> <span class="kw">=</span> <span class="no">interactions_A_GLI1</span>)
 <span class="no">OPI_g_2</span> <span class="kw">&lt;-</span><span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span>(<span class="kw">interactions</span> <span class="kw">=</span> <span class="no">interactions_miRNA_GLI1</span>)</pre></body></html></div>
 <div class="figure">
@@ -384,7 +524,7 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 <a href="#post-translational-modifications-ptms" class="anchor"></a>Post-translational modifications (PTMs)</h2>
 <p>Another query type available is PTMs which provides enzyme-substrate reactions in a very similar way to the aforementioned interactions. PTMs refer generally to enzymatic modification of proteins after their synthesis in the ribosomes. PTMs can be highly context-specific and they play a main role in the activation/inhibition of biological pathways.</p>
 <p>In the next code chunk, we download the <strong>PTMs</strong> for human. We first check the different available source databases, even though we do not perform any filter. Then, we select and print the reactions involving a specific enzyme-substrate pair. Those reactions lack information about activation or inhibition. To obtain that information, we match the data with <strong>OmniPath</strong> interactions. Finally, we show that it is also possible to build a graph using this information, and to retrieve PTMs from mouse or rat.</p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="co">## We check the different PTMs databases</span>
+<div class="sourceCode" id="cb107"><html><body><pre class="r"><span class="co">## We check the different PTMs databases</span>
 <span class="fu"><a href="../reference/get_enzsub_resources.html">get_enzsub_resources</a></span>()</pre></body></html></div>
 <pre><code>##  [1] "BEL-Large-Corpus_ProtMapper" "dbPTM"                      
 ##  [3] "DEPOD"                       "HPRD"                       
@@ -397,11 +537,11 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## [17] "REACH_ProtMapper"            "Reactome_ProtMapper"        
 ## [19] "RLIMS-P_ProtMapper"          "SIGNOR"                     
 ## [21] "SIGNOR_ProtMapper"           "Sparser_ProtMapper"</code></pre>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="co">## We query and store the ptms into a dataframe. No filtering by</span>
+<div class="sourceCode" id="cb109"><html><body><pre class="r"><span class="co">## We query and store the ptms into a dataframe. No filtering by</span>
 <span class="co">## databases in this case.</span>
 <span class="no">ptms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span>()</pre></body></html></div>
-<pre><code>## Downloaded 12 enzyme-substrate relationships.</code></pre>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co">## We can select and print the reactions between a specific kinase and</span>
+<pre><code>## Downloaded 39639 enzyme-substrate relationships.</code></pre>
+<div class="sourceCode" id="cb111"><html><body><pre class="r"><span class="co">## We can select and print the reactions between a specific kinase and</span>
 <span class="co">## a specific substrate</span>
 <span class="fu"><a href="../reference/print_interactions.html">print_interactions</a></span>(<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">ptms</span>,<span class="no">enzyme_genesymbol</span><span class="kw">==</span><span class="st">"MAP2K1"</span>,
     <span class="no">substrate_genesymbol</span><span class="kw">==</span><span class="st">"MAPK3"</span>))</pre></body></html></div>
@@ -412,12 +552,12 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 4 MAP2K1 (Q02750)       ====&gt; MAPK3_T207 (P27361) phosphorylation           2
 ## 5 MAP2K1 (Q02750)       ====&gt;  MAPK3_T80 (P27361) phosphorylation           1
 ## 6 MAP2K1 (Q02750)       ====&gt; MAPK3_Y222 (P27361) phosphorylation           1</code></pre>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="co">## In the previous results, we can see that ptms does not contain sign</span>
+<div class="sourceCode" id="cb113"><html><body><pre class="r"><span class="co">## In the previous results, we can see that ptms does not contain sign</span>
 <span class="co">## (activation/inhibition). We can generate this information based on the</span>
 <span class="co">## protein-protein Omnipath interaction dataset.</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span>()</pre></body></html></div>
-<pre><code>## Downloaded 16 interactions.</code></pre>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="no">ptms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_signed_ptms.html">get_signed_ptms</a></span>(<span class="no">ptms</span>, <span class="no">interactions</span>)
+<pre><code>## Downloaded 36684 interactions.</code></pre>
+<div class="sourceCode" id="cb115"><html><body><pre class="r"><span class="no">ptms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_signed_ptms.html">get_signed_ptms</a></span>(<span class="no">ptms</span>, <span class="no">interactions</span>)
 
 <span class="co">## We select again the same kinase and substrate. Now we have information</span>
 <span class="co">## about inhibition or activation when we print the ptms</span>
@@ -430,29 +570,29 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 3 MAP2K1 (Q02750)  ==( + )==&gt; MAPK3_T207 (P27361) phosphorylation           2
 ## 1 MAP2K1 (Q02750)  ==( + )==&gt; MAPK3_Y222 (P27361) phosphorylation           1
 ## 5 MAP2K1 (Q02750)  ==( + )==&gt;  MAPK3_T80 (P27361) phosphorylation           1</code></pre>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="co">## We can also transform the ptms into a graph.</span>
+<div class="sourceCode" id="cb117"><html><body><pre class="r"><span class="co">## We can also transform the ptms into a graph.</span>
 <span class="no">ptms_g</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/ptms_graph.html">ptms_graph</a></span>(<span class="kw">ptms</span> <span class="kw">=</span> <span class="no">ptms</span>)
 
 <span class="co">## We download PTMs for mouse</span>
 <span class="no">ptms</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PhosphoSite"</span>, <span class="st">"SIGNOR"</span>),
     <span class="kw">organism</span><span class="kw">=</span><span class="fl">10090</span>)</pre></body></html></div>
-<pre><code>## Downloaded 12 enzyme-substrate relationships.</code></pre>
+<pre><code>## Downloaded 14136 enzyme-substrate relationships.</code></pre>
 </div>
 <div id="complexes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#complexes" class="anchor"></a>Complexes</h2>
 <p>Some studies indicate that around 80% of the human proteins operate in complexes, and many proteins belong to several different complexes <span class="citation">(Berggård, Linse, and James 2007)</span>. These complexes play critical roles in a large variety of biological processes. Some well-known examples are the proteasome and the ribosome. Thus, the description of the full set of protein complexes functioning in cells is essential to improve our understanding of biological processes.</p>
 <p>The <strong>complexes</strong> query provides access to more than 20000 protein complexes. This comprehensive database has been created by integrating different resources. We now download these molecular complexes filtering by some of the source databases. We check the complexes where a couple of specific genes participate. First, we look for the complexes where any of these two genes participate. We then identify the complex where these two genes are jointly involved. Finally, we perform an enrichment analysis with the genes taking part in that complex. You should keep an eye on this complex since it will be used again in the forthcoming sections.</p>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="co">## We check the different complexes databases</span>
+<div class="sourceCode" id="cb119"><html><body><pre class="r"><span class="co">## We check the different complexes databases</span>
 <span class="fu"><a href="../reference/get_complex_resources.html">get_complex_resources</a></span>()</pre></body></html></div>
 <pre><code>##  [1] "CellPhoneDB"    "CFinder"        "Compleat"       "ComplexPortal" 
 ##  [5] "CORUM"          "Guide2Pharma"   "Havugimana2012" "HPMR"          
 ##  [9] "hu.MAP"         "ICELLNET"       "NetworkBlast"   "PDB"           
 ## [13] "Signor"         "SIGNOR"</code></pre>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="co">## We query and store complexes from some sources into a dataframe.</span>
+<div class="sourceCode" id="cb121"><html><body><pre class="r"><span class="co">## We query and store complexes from some sources into a dataframe.</span>
 <span class="no">complexes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_complexes.html">import_omnipath_complexes</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CORUM"</span>, <span class="st">"hu.MAP"</span>))</pre></body></html></div>
-<pre><code>## Downloaded 7 protein complexes.</code></pre>
-<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="co">## We check all the molecular complexes where a set of genes participate</span>
+<pre><code>## Downloaded 7215 protein complexes.</code></pre>
+<div class="sourceCode" id="cb123"><html><body><pre class="r"><span class="co">## We check all the molecular complexes where a set of genes participate</span>
 <span class="no">query_genes</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"WRN"</span>,<span class="st">"PARP1"</span>)
 
 <span class="co">## Complexes where any of the input genes participate</span>
@@ -467,14 +607,14 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## [4] "MRE11_PARP1_RAD50_TERF2_TERF2IP_XRCC5_XRCC6"                          
 ## [5] "TERF2_WRN"                                                            
 ## [6] "CALR_DHX30_H2AFX_HIST3H2BB_HSPA5_NPM1_PARP1"</code></pre>
-<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="co">## Complexes where all the input genes participate jointly</span>
+<div class="sourceCode" id="cb125"><html><body><pre class="r"><span class="co">## Complexes where all the input genes participate jointly</span>
 <span class="no">complexes_query_genes_join</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="fu"><a href="../reference/get_complex_genes.html">get_complex_genes</a></span>(<span class="no">complexes</span>,<span class="no">query_genes</span>,
     <span class="kw">total_match</span><span class="kw">=</span><span class="fl">TRUE</span>))
 
 <span class="co">## We print the components of the different selected components</span>
 <span class="no">complexes_query_genes_join</span>$<span class="no">components_genesymbols</span></pre></body></html></div>
 <pre><code>## [1] "PARP1_WRN_XRCC5_XRCC6"</code></pre>
-<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="no">genes_complex</span> <span class="kw">&lt;-</span>
+<div class="sourceCode" id="cb127"><html><body><pre class="r"><span class="no">genes_complex</span> <span class="kw">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span>(<span class="no">complexes_query_genes_join</span>$<span class="no">components_genesymbols</span>, <span class="st">"_"</span>))
 
 <span class="co">## We can perform an enrichment analyses with the genes in the complex</span>
@@ -499,7 +639,7 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 <p>Biological annotations are statements, usually traceable and curated, about the different features of a biological entity. At the genetic level, annotations describe the biological function, the subcellular situation, the DNA location and many other related properties of a particular gene or its gene products.</p>
 <p>The annotations query provides a large variety of data about proteins and complexes. These data come from dozens of databases and each kind of annotation record contains different fields. Because of this, here we have a record_id field which is unique within the records of each database. Each row contains one key value pair and you need to use the record_id to connect the related key-value pairs (see examples below).</p>
 <p>Now, we focus in the annotations of the complex studied in the previous section. We first inspect the different available databases in the omnipath webserver. Then, we download the annotations for our complex itself as a biological entity. We find annotations related to the nucleus and transcriptional control, which is in agreement with the enrichment analysis results of its individual components.</p>
-<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="co">## We check the different annotation databases</span>
+<div class="sourceCode" id="cb129"><html><body><pre class="r"><span class="co">## We check the different annotation databases</span>
 <span class="fu"><a href="../reference/get_annotation_resources.html">get_annotation_resources</a></span>()</pre></body></html></div>
 <pre><code>##  [1] "Adhesome"             "Almen2009"            "Baccin2019"          
 ##  [4] "CancerGeneCensus"     "CancerSEA"            "CellCellInteractions"
@@ -522,14 +662,14 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## [55] "TopDB"                "UniProt_family"       "UniProt_keyword"     
 ## [58] "UniProt_location"     "UniProt_tissue"       "UniProt_topology"    
 ## [61] "Vesiclepedia"         "Zhong2015"</code></pre>
-<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="co">## We can further investigate the features of the complex selected</span>
+<div class="sourceCode" id="cb131"><html><body><pre class="r"><span class="co">## We can further investigate the features of the complex selected</span>
 <span class="co">## in the previous section.</span>
 
 <span class="co">## We first get the annotations of the complex itself:</span>
 <span class="no">annotations</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span>(<span class="kw">proteins</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"COMPLEX:"</span>,
   <span class="no">complexes_query_genes_join</span>$<span class="no">components_genesymbols</span>))</pre></body></html></div>
-<pre><code>## Downloaded 7 annotation records.</code></pre>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">annotations</span>,<span class="no">source</span>,<span class="no">label</span>,<span class="no">value</span>),<span class="fl">10</span>)</pre></body></html></div>
+<pre><code>## Downloaded 42 annotation records.</code></pre>
+<div class="sourceCode" id="cb133"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">annotations</span>,<span class="no">source</span>,<span class="no">label</span>,<span class="no">value</span>),<span class="fl">10</span>)</pre></body></html></div>
 <pre><code>##    source      label                              value
 ## 1  LOCATE   location                          nucleolus
 ## 2  LOCATE   location                            nucleus
@@ -542,13 +682,13 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 9  MSigDB collection chemical_and_genetic_perturbations
 ## 10 MSigDB    geneset            COLLIS_PRKDC_SUBSTRATES</code></pre>
 <p>Afterwards, we explore the annotations of the individual components of the complex in some databases. We check the pathways where these proteins are involved. Once again, we also find many nucleus related annotations when checking their cellular location.</p>
-<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="co">## Then, we explore some annotations of its individual components</span>
+<div class="sourceCode" id="cb135"><html><body><pre class="r"><span class="co">## Then, we explore some annotations of its individual components</span>
 
 <span class="co">## Pathways where the proteins belong:</span>
 <span class="no">annotations</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span>(<span class="kw">proteins</span><span class="kw">=</span><span class="no">genes_complex</span>,
     <span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"NetPath"</span>))</pre></body></html></div>
 <pre><code>## Downloaded 7 annotation records.</code></pre>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">annotations</span>,<span class="no">genesymbol</span>,<span class="no">value</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb137"><html><body><pre class="r"><span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">annotations</span>,<span class="no">genesymbol</span>,<span class="no">value</span>)</pre></body></html></div>
 <pre><code>##   genesymbol                                         value
 ## 1      PARP1         Corticotropin-releasing hormone (CRH)
 ## 2      PARP1 TNF-related weak inducer of apoptosis (TWEAK)
@@ -557,11 +697,11 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 5      PARP1                        Androgen receptor (AR)
 ## 6      XRCC5                        Androgen receptor (AR)
 ## 7      XRCC6                        Androgen receptor (AR)</code></pre>
-<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="co">## Cellular localization of our proteins</span>
+<div class="sourceCode" id="cb139"><html><body><pre class="r"><span class="co">## Cellular localization of our proteins</span>
 <span class="no">annotations</span> <span class="kw">&lt;-</span><span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span>(<span class="kw">proteins</span><span class="kw">=</span><span class="no">genes_complex</span>,
    <span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"ComPPI"</span>))</pre></body></html></div>
-<pre><code>## Downloaded 7 annotation records.</code></pre>
-<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="co">## Since we have same record_id for some results of our query, we spread</span>
+<pre><code>## Downloaded 28 annotation records.</code></pre>
+<div class="sourceCode" id="cb141"><html><body><pre class="r"><span class="co">## Since we have same record_id for some results of our query, we spread</span>
 <span class="co">## these records across columns</span>
 <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(<span class="no">annotations</span>, <span class="no">label</span>, <span class="no">value</span>) <span class="kw">%&gt;%</span>
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu">desc</span>(<span class="no">score</span>)) <span class="kw">%&gt;%</span>
@@ -596,34 +736,47 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 <a href="#intercell" class="anchor"></a>Intercell</h2>
 <p>Cells perceive cues from their microenvironment and neighboring cells, and respond accordingly to ensure proper activities and coordination between them. The ensemble of these communication process is called inter-cellular signaling (<strong>intercell</strong>).</p>
 <p><strong>Intercell</strong> query provides information about the roles of proteins in inter-cellular signaling (e.g. if a protein is a ligand, a receptor, an extracellular matrix (ECM) component, etc.) This query type is very similar to annotations. However, <strong>intercell</strong> data does not come from original sources, but combined from several databases by us into categories (we also refer to the original sources).</p>
-<p>We first inspect the different categories available in the Omnipath webserver. Then, we focus again in our previously selected complex and we check its potential roles in inter-cellular signaling. We repeat the analysis with its individual components.</p>
-<div class="sourceCode" id="cb69"><html><body><pre class="r"><span class="co">## We check some of the different intercell categories</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/get_intercell_categories.html">get_intercell_categories</a></span>(),<span class="fl">10</span>)</pre></body></html></div>
-<pre><code>## Downloaded 3 records.</code></pre>
-<pre><code>##  [1] "apical_cell_membrane"       "apicolateral_cell_membrane"
-##  [3] "basal_cell_membrane"        "basolateral_cell_membrane" 
-##  [5] "lateral_cell_membrane"      "lhfpl"                     
-##  [7] "peripheral"                 "plasma_membrane"           
-##  [9] "transmembrane"              "transmembrane_phobius"</code></pre>
-<div class="sourceCode" id="cb72"><html><body><pre class="r"><span class="co">## We import the intercell data into a dataframe</span>
+<p>We first inspect the different categories available in the Omnipath webserver. Then, we focus again in our previously selected complex and we check its the location of its individual components in the inter-cellular context. We can however see that the components of this particular complex are intracellular.</p>
+<div class="sourceCode" id="cb143"><html><body><pre class="r"><span class="co">## We check some of the different intercell categories</span>
+<span class="fu"><a href="../reference/get_intercell_generic_categories.html">get_intercell_generic_categories</a></span>()</pre></body></html></div>
+<pre><code>## Downloaded 1095 records.</code></pre>
+<pre><code>##  [1] "plasma_membrane"                     "transmembrane"                      
+##  [3] "peripheral"                          "transmembrane_predicted"            
+##  [5] "receptor"                            "ligand"                             
+##  [7] "cell_surface_ligand"                 "ecm"                                
+##  [9] "secreted"                            "ion_channel"                        
+## [11] "cell_surface"                        "ligand_regulator"                   
+## [13] "receptor_regulator"                  "plasma_membrane_transmembrane"      
+## [15] "extracellular"                       "secreted_receptor"                  
+## [17] "matrix_adhesion"                     "cell_adhesion"                      
+## [19] "plasma_membrane_peripheral"          "plasma_membrane_regulator"          
+## [21] "secreted_enzyme"                     "cell_surface_enzyme"                
+## [23] "matrix_adhesion_regulator"           "secreted_peptidase"                 
+## [25] "adhesion"                            "transporter"                        
+## [27] "intracellular"                       "cell_surface_peptidase"             
+## [29] "intracellular_intercellular_related" "adherens_junction"                  
+## [31] "ion_channel_regulator"               "extracellular_peptidase"            
+## [33] "tight_junction"                      "secreted_peptidase_inhibitor"       
+## [35] "secreted_enyzme"                     "desmosome"                          
+## [37] "ecm_regulator"                       "gap_junction"                       
+## [39] "ligand_dgidb"                        "ligand_kirouac"                     
+## [41] "sparc_ecm_regulator"</code></pre>
+<div class="sourceCode" id="cb146"><html><body><pre class="r"><span class="co">## We import the intercell data into a dataframe</span>
 <span class="no">intercell</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_intercell.html">import_omnipath_intercell</a></span>(<span class="kw">scope</span> <span class="kw">=</span> <span class="st">'generic'</span>,
-    <span class="kw">aspect</span> <span class="kw">=</span> <span class="st">'functional'</span>)</pre></body></html></div>
-<pre><code>## Downloaded 14 intercellular communication role records.</code></pre>
-<div class="sourceCode" id="cb74"><html><body><pre class="r"><span class="co">## We check the intercell annotations for our previous complex itself</span>
-<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">intercell</span>,
-    <span class="no">genesymbol</span> <span class="kw">==</span> <span class="no">complexes_query_genes_join</span>$<span class="no">components_genesymbols</span>) <span class="kw">%&gt;%</span>
-    <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">category</span>, <span class="no">genesymbol</span>, <span class="no">parent</span>)</pre></body></html></div>
-<pre><code>## [1] category   genesymbol parent    
-## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
-<div class="sourceCode" id="cb76"><html><body><pre class="r"><span class="co">## We check the intercell annotations for the individual components of</span>
+    <span class="kw">aspect</span> <span class="kw">=</span> <span class="st">'locational'</span>)</pre></body></html></div>
+<pre><code>## Downloaded 211428 intercellular communication role records.</code></pre>
+<div class="sourceCode" id="cb148"><html><body><pre class="r"><span class="co">## We check the intercell annotations for the individual components of</span>
 <span class="co">## our previous complex. We filter our data to print it in a good format</span>
 <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">intercell</span>,<span class="no">genesymbol</span> <span class="kw">%in%</span> <span class="no">genes_complex</span>) <span class="kw">%&gt;%</span>
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span>(<span class="no">genesymbol</span>, <span class="no">parent</span>, <span class="kw">.keep_all</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">category</span>, <span class="no">genesymbol</span>, <span class="no">parent</span>) <span class="kw">%&gt;%</span>
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="no">genesymbol</span>)</pre></body></html></div>
-<pre><code>## [1] category   genesymbol parent    
-## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
-<div class="sourceCode" id="cb78"><html><body><pre class="r"><span class="co">## We close graphical connections</span>
+<pre><code>##        category genesymbol        parent
+## 1 intracellular      PARP1 intracellular
+## 2 intracellular        WRN intracellular
+## 3 intracellular      XRCC5 intracellular
+## 4 intracellular      XRCC6 intracellular</code></pre>
+<div class="sourceCode" id="cb150"><html><body><pre class="r"><span class="co">## We close graphical connections</span>
 <span class="kw">while</span> (!<span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.list</a></span>()))  <span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html">dev.off</a></span>()</pre></body></html></div>
 </div>
 </div>
@@ -656,7 +809,7 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 
 ## other attached packages:
 ##  [1] gprofiler2_0.1.9 dnet_1.1.7       supraHex_1.26.0  hexbin_1.28.1   
-##  [5] tidyr_1.1.0      OmnipathR_1.3.1  jsonlite_1.6.1   igraph_1.2.5    
+##  [5] tidyr_1.1.0      OmnipathR_1.4.1  jsonlite_1.6.1   igraph_1.2.5    
 ##  [9] knitr_1.28       BiocStyle_2.16.0
 ## 
 ## loaded via a namespace (and not attached):

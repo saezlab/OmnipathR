@@ -38,7 +38,7 @@ For a more detailed information, we recommend you to visit the following sites:
   
   <https://github.com/saezlab/pypath/blob/master/webservice.rst>
   
-  <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
+  <https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html>
   
 
 ## Installation
@@ -60,14 +60,14 @@ BiocManager::install(version='devel')
 ```
 
 ## Getting started and some usage examples
-To get started, we strongly recommend to read our vignette in order to deal with 
-the different types of queries and handle the data they return:
+To get started, we strongly recommend to read our main vignette in order to deal 
+with the different types of queries and handle the data they return:
 
-  <https://bioconductor.org/packages/devel/bioc/vignettes/OmnipathR/inst/doc/OmnipathR.pdf>
+  <https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html>
   
 You can also check the manual:
 
-  <https://bioconductor.org/packages/devel/bioc/manuals/OmnipathR/man/OmnipathR.pdf>
+  <https://saezlab.github.io/OmnipathR/reference/index.html>
    
 In addition, we provide here some examples for a quick start:
 
@@ -79,7 +79,7 @@ Download human protein-protein interactions from the specified resources:
 
 ```{r}
 interactions <- 
-  import_omnipath_interactions(filter_databases=c("SignaLink3","PhosphoSite", 
+  import_omnipath_interactions(resources=c("SignaLink3","PhosphoSite", 
   "SIGNOR"))
 ```
 
@@ -87,7 +87,7 @@ interactions <-
 Download human enzyme-PTM relationships from the specified resources:  
 
 ```{r}
-enzsub <- import_omnipath_enzsub(filter_databases=c("PhosphoSite", "SIGNOR"))
+enzsub <- import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 ```
 
 Convert both data frames into networks (`igraph` objects)
@@ -99,26 +99,26 @@ OPI_g = interaction_graph(interactions = interactions)
 Print some interactions in a nice format:  
 ```{r}
 print_interactions(head(interactions))
-
-            source interaction           target nsources nrefs
-1     UBC (P0CG48)  ==( ? )==>   IKBKG (Q9Y6K9)        5    41
-2   IKBKG (Q9Y6K9)  ==( ? )==>     UBC (P0CG48)        5    41
-4   PINK1 (Q9BXM7)  ==( + )==>     UBC (P0CG48)        5    19
-3     UBC (P0CG48)  ==( + )==>    PRKN (O60260)        3    16
-5     UBC (P0CG48)  ==( ? )==> TNFAIP3 (P21580)        5    14
-6 TNFAIP3 (P21580)  ==( ? )==>     UBC (P0CG48)        5    14
+          
+          source interaction         target n_resources n_references
+4    SRC (P12931)  ==( + )==> TRPV1 (Q8NER1)           9            6
+2  PRKG1 (Q13976)  ==( - )==> TRPC6 (Q9Y210)           7            5
+1  PRKG1 (Q13976)  ==( - )==> TRPC3 (Q13507)           9            2
+5    LYN (P07948)  ==( + )==> TRPV4 (Q9HBA0)           9            2
+6  PTPN1 (P18031)  ==( - )==> TRPV6 (Q9H1D0)           3            2
+3 PRKACA (P17612)  ==( + )==> TRPV1 (Q8NER1)           6            1
 ```
 
 Find interactions between a specific kinase and a specific substrate:  
 ```{r}
-print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
+print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
   substrate_genesymbol=="MAPK3"))
-
-           enzyme interaction           substrate    modification nsources
-4 MAP2K1 (Q02750)       ====> MAPK3_Y204 (P27361) phosphorylation        6
-3 MAP2K1 (Q02750)       ====> MAPK3_T202 (P27361) phosphorylation        6
-1 MAP2K1 (Q02750)       ====> MAPK3_Y210 (P27361) phosphorylation        1
-2 MAP2K1 (Q02750)       ====> MAPK3_T207 (P27361) phosphorylation        1
+  
+           enzyme interaction           substrate    modification n_resources
+1 MAP2K1 (Q02750)       ====> MAPK3_Y204 (P27361) phosphorylation           8
+2 MAP2K1 (Q02750)       ====> MAPK3_T202 (P27361) phosphorylation           8
+3 MAP2K1 (Q02750)       ====> MAPK3_Y210 (P27361) phosphorylation           2
+4 MAP2K1 (Q02750)       ====> MAPK3_T207 (P27361) phosphorylation           2
            
 ```
 
@@ -127,30 +127,22 @@ Find shortest paths on the directed network between proteins:
 printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
     output = 'epath')$epath[[1]],OPI_g)
 
-          source interaction         target nsources nrefs
-1 TYRO3 (Q06418)  ==( + )==>  GRB2 (P62993)        1     1
-2  GRB2 (P62993)  ==( + )==>  EGFR (P00533)       11    63
-3  EGFR (P00533)  ==( + )==> STAT3 (P40763)       10    21
+           source interaction          target n_resources n_references
+1  TYRO3 (Q06418)  ==( ? )==>   AKT1 (P31749)           2            0
+2   AKT1 (P31749)  ==( - )==> DAB2IP (Q5VWQ8)           3            1
+3 DAB2IP (Q5VWQ8)  ==( - )==>  STAT3 (P40763)           1            1
 ```
 
 Find all shortest paths between proteins:  
 ```{r}
 printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
-[1] "pathway 1: DYRK2 -> TP53 -> MAPK3 -> MAPKAPK2"
-          source interaction            target nsources nrefs
-1 DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        7   100
-2  TP53 (P04637)  ==( - )==>    MAPK3 (P27361)        5     3
-3 MAPK3 (P27361)  ==( + )==> MAPKAPK2 (P49137)        4     4
-[1] "pathway 2: DYRK2 -> TP53 -> MAPK14 -> MAPKAPK2"
-           source interaction            target nsources nrefs
-1  DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        7   100
-2   TP53 (P04637)  ==( ? )==>   MAPK14 (Q16539)        5     7
-3 MAPK14 (Q16539)  ==( + )==> MAPKAPK2 (P49137)       21    27
-[1] "pathway 3: DYRK2 -> TP53 -> MAPK1 -> MAPKAPK2"
-          source interaction            target nsources nrefs
-1 DYRK2 (Q92630)  ==( + )==>     TP53 (P04637)        7   100
-2  TP53 (P04637)  ==( ? )==>    MAPK1 (P28482)        7     8
-3 MAPK1 (P28482)  ==( + )==> MAPKAPK2 (P49137)       10     9
+Pathway 1: DYRK2 -> TBK1 -> NFKB1 -> MAP3K8 -> MAPK3 -> MAPKAPK2
+Pathway 2: DYRK2 -> TBK1 -> AKT3 -> MAP3K8 -> MAPK3 -> MAPKAPK2
+Pathway 3: DYRK2 -> TBK1 -> AKT2 -> MAP3K8 -> MAPK3 -> MAPKAPK2
+Pathway 4: DYRK2 -> TBK1 -> AKT1 -> MAP3K8 -> MAPK3 -> MAPKAPK2
+Pathway 5: DYRK2 -> TBK1 -> AKT3 -> PEA15 -> MAPK3 -> MAPKAPK2
+Pathway 6: DYRK2 -> TBK1 -> AKT2 -> PEA15 -> MAPK3 -> MAPKAPK2
+.....
 ```
 
 ## Feedbacks, bug reports, features

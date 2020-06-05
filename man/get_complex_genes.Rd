@@ -11,15 +11,15 @@ get_complex_genes(
 )
 }
 \arguments{
-\item{complexes}{complexes data frame (obtained using 
+\item{complexes}{complexes data frame (obtained using
 \code{\link{import_Omnipath_complexes}})}
 
 \item{select_genes}{vector containing the genes for whom complexes will be
 retrieved (hgnc format).}
 
-\item{total_match}{[default=FALSE] logical indicating if the user wants to 
+\item{total_match}{[default=FALSE] logical indicating if the user wants to
 get all the complexes where any of the input genes participate (FALSE) or
-to get only the complexes where all the input genes participate together 
+to get only the complexes where all the input genes participate together
 (TRUE)}
 }
 \value{
@@ -27,7 +27,7 @@ data.frame of complexes
 }
 \description{
 This function returns all the molecular complexes where an input set
-of genes participate. User can choose to retrieve every complex where 
+of genes participate. User can choose to retrieve every complex where
 any of the input genes participate or just retrieve these complexes where
 all the genes in input set participate together.
 }

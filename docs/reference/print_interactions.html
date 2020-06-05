@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
       </span>
     </div>
 
@@ -110,6 +110,18 @@
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
     <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/omnipathdb">
+    <span class="fab fa fab fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://omnipathdb.org/">
+    <span class="fas fa fas fa-university"></span>
      
   </a>
 </li>
@@ -163,7 +175,7 @@ following functions: <code><a href='import_omnipath_enzsub.html'>import_Omnipath
     <p>Interactions displayed in a nice format</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ptms</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_enzsub.html'>import_Omnipath_PTMS</a></span>()</div><div class='output co'>#&gt; <span class='message'>Downloaded 12 enzyme-substrate relationships.</span></div><div class='input'><span class='fu'>print_interactions</span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>ptms</span>))</div><div class='output co'>#&gt;         enzyme interaction           substrate    modification n_resources
+    <pre class="examples"><div class='input'><span class='no'>ptms</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_enzsub.html'>import_Omnipath_PTMS</a></span>()</div><div class='output co'>#&gt; <span class='message'>Downloaded 39639 enzyme-substrate relationships.</span></div><div class='input'><span class='fu'>print_interactions</span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>ptms</span>))</div><div class='output co'>#&gt;         enzyme interaction           substrate    modification n_resources
 #&gt; 3 SRC (P12931)       ====&gt;  TERT_Y707 (O14746) phosphorylation           8
 #&gt; 5 FYN (P06241)       ====&gt;  FYB1_Y595 (O15117) phosphorylation           7
 #&gt; 2 LCK (P06239)       ====&gt; SOCS3_Y221 (O14543) phosphorylation           6

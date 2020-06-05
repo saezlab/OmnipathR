@@ -5,40 +5,67 @@
 \title{Imports an intercellular network combining annotations and interactions}
 \usage{
 import_intercell_network(
-  from_cache_file = NULL,
-  filter_databases = get_interaction_databases(),
-  classes_source = list(transmiters = c("ligand"), receivers = c("receptor"))
+  cache_file = NULL,
+  interactions_param = list(),
+  transmitter_param = list(),
+  receiver_param = list()
 )
 }
 \arguments{
-\item{from_cache_file}{path to an earlier data file}
+\item{cache_file}{path to an earlier data file; if exists, will be loaded
+as it is, the further arguments have no effect; if does not exists, the
+result will be dumped into this file.}
 
-\item{filter_databases}{vector containing interactions databases. 
-Interactions not reported in these databases are removed. 
-See \code{\link{get_interaction_databases}} for more information.}
+\item{interactions_param}{a list with arguments for an interactions query: 
+\code{\link{import_omnipath_interactions}, 
+\link{import_pathwayextra_interactions},
+\link{import_kinaseextra_interactions},
+\link{import_ligrecextra_interactions}}}
 
-\item{classes_source}{A list containing two vectors. The first one with 
-the main classes to be considered as transmiters and the second with the 
-main classes to be considered as receivers. For furter information
-about the main classes see \code{\link{get_intercell_classes}}}
+\item{transmitter_param}{a list with arguments for
+\code{\link{import_omnipath_intercell}}, to define the transmitter side
+of intercellular connections}
+
+\item{receiver_param}{a list with arguments for
+\code{\link{import_omnipath_intercell}}, to define the receiver side
+of intercellular connections}
 }
 \value{
-A dataframe containing information about protein-protein 
+A dataframe containing information about protein-protein
 interactions and the inter-cellular roles of the protiens involved in those
 interactions.
 }
 \description{
-Imports an intercellular network by mapping intercellular annotations 
-and protein interactions. It first imports the PPI interactions from the
-different datasets here described. Then, it takes proteins with the 
-intercellular roles defined by the user. Some proteins should be defined 
-as transmiters (eg. ligand) and other as receivers (receptor). We find the 
-interactions which source is a transmiter and its target a receiver.
+Imports an intercellular network by mapping intercellular annotations
+and protein interactions. First imports a network of protein-protein
+interactions. Then, it retrieves annotations about the proteins
+intercellular communication roles, once for the transmitter (delivering
+information from the expressing cell) and second, the receiver (receiving
+signal and relaying it towards the expressing cell) side. These 3 queries
+can be customized by providing parameters in lists which will be passed to
+the respective methods (\code{\link{import_omnipath_interactions}} for
+the network and \code{\link{import_omnipath_intercell}} for the
+annotations). Finally the 3 data frames combined in a way that the source
+proteins in each interaction annotated by the transmitter, and the target
+proteins by the receiver categories. If undirected interactions present
+(these are disabled by default) they will be duplicated, i.e. both
+partners can be both receiver and transmitter.
+If a cache file provided, its content will be returned without any further
+filtering.
 }
 \examples{
 intercellNetwork <- import_intercell_network(
-classes_source = list(transmiters=c('ligand'),receivers=c('receptor')))
+   interactions_param = list(datasets = 'ligrecextra'),
+   receiver_param = list(categories = c('receptor', 'transporter')),
+   transmitter_param = list(categories = c('ligand', 'secreted_enzyme')))
+
 }
 \seealso{
-\code{\link{get_intercell_categories}}
+\code{\link{get_intercell_categories},
+\link{get_intercell_generic_categories}, 
+\link{import_omnipath_intercell},
+\link{import_omnipath_interactions}, 
+\link{import_pathwayextra_interactions},
+\link{import_kinaseextra_interactions}, 
+\link{import_ligrecextra_interactions}}
 }

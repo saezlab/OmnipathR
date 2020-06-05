@@ -2,6 +2,17 @@
 ########## Generic non exported functions #
 ########## ########## ########## ##########
 
+utils::globalVariables(
+    c("category", "uniprot", "genesymbol", "annotations", 
+    "target", "database", "category_intercell_source", "target_genesymbol",
+    "category_intercell_target", "parent_intercell_source", 
+    "database_intercell_target","parent_intercell_target","source_genesymbol",
+    "is_stimulation", "is_inhibition", "consensus_direction", 
+    "consensus_stimulation","consensus_inhibition","dip_url","sources",
+    "references", "curation_effort", "dorothea_level", "n_references",
+    "n_resources", "ncbi_tax_id_target", "ncbi_tax_id_source")
+)
+
 .omnipath_qt_synonyms <- list(
     ptms = 'enzsub',
     enz_sub = 'enzsub',
@@ -80,11 +91,11 @@
     entity_type = 'entity_types'
 )
 
-#' Downloads data from the OmniPath web service
-#' Generic method for retrieval of a table and creating a data frame.
-#' All methods specific for certain query types or datasets use this function
-#' to manage the download.
-#' Not exported.
+## Downloads data from the OmniPath web service
+## Generic method for retrieval of a table and creating a data frame.
+## All methods specific for certain query types or datasets use this function
+## to manage the download.
+## Not exported.
 import_omnipath <- function(
     query_type,
     organism = 9606,
@@ -165,7 +176,7 @@ import_omnipath <- function(
         message(sprintf(
             msg,
             `if`(
-                class(result) == 'data.frame',
+                is.data.frame(result),
                 nrow(result),
                 length(result)
             ),
@@ -178,10 +189,10 @@ import_omnipath <- function(
 }
 
 
-#' Check the arguments of \link{import_omnipath}, corrects some easy to
-#' confuse or deprecated synonyms and selects the message printed by
-#' the download function.
-#' Not exported.
+## Check the arguments of \link{import_omnipath}, corrects some easy to
+## confuse or deprecated synonyms and selects the message printed by
+## the download function.
+## Not exported.
 omnipath_check_param <- function(param){
 
     # mapping query type synonyms
@@ -266,9 +277,9 @@ omnipath_check_param <- function(param){
 }
 
 
-#' Constructs the URL by creating a base URL according to the query type and
-#' adding all user or package defined query string parameters.
-#' Not exported.
+## Constructs the URL by creating a base URL according to the query type and
+## adding all user or package defined query string parameters.
+## Not exported.
 omnipath_url <- function(param){
 
     baseurl <- sprintf('http://omnipathdb.org/%s', param$query_type)
@@ -286,8 +297,8 @@ omnipath_url <- function(param){
 }
 
 
-#' Appends a query string parameter to the URL.
-#' Not exported, used internally for assembling the URLs.
+## Appends a query string parameter to the URL.
+## Not exported, used internally for assembling the URLs.
 omnipath_url_add_param <- function(url, name, values = NULL){
 
     values <- `if`(
@@ -321,9 +332,9 @@ omnipath_url_add_param <- function(url, name, values = NULL){
 }
 
 
-#' Checks whether the response is real data or an error message.
-#' In case of error stops the execution and prints the URL and the message
-#' from the server.
+## Checks whether the response is real data or an error message.
+## In case of error stops the execution and prints the URL and the message
+## from the server.
 omnipath_check_result <- function(result, url){
 
     if(length(result) == 1){
@@ -339,9 +350,9 @@ omnipath_check_result <- function(result, url){
 
 }
 
-#' Makes sure the boolean variables, listed in argument `logicals`, are of
-#' R logical type. Converts various string and numeric representations.
-#' Checks only for TRUE values, whatever does not match remains FALSE.
+## Makes sure the boolean variables, listed in argument `logicals`, are of
+## R logical type. Converts various string and numeric representations.
+## Checks only for TRUE values, whatever does not match remains FALSE.
 cast_logicals <- function(data, logicals = NULL){
 
     true_values <- c('True', '1', 'TRUE', 'T', 'yes', 'YES', 'Y', 'y')
@@ -359,8 +370,8 @@ cast_logicals <- function(data, logicals = NULL){
 }
 
 
-#' Removes the resource labels from references (PubMed IDs) in the
-#' interactions and enzyme-substrate data frames.
+## Removes the resource labels from references (PubMed IDs) in the
+## interactions and enzyme-substrate data frames.
 strip_resource_labels <- function(
     data,
     references_by_resource = FALSE,
@@ -394,8 +405,8 @@ strip_resource_labels <- function(
 }
 
 
-#' For a character vector splits each element and re-joins sorted unique
-#' values.
+## For a character vector splits each element and re-joins sorted unique
+## values.
 split_unique_join <- function(
     x,
     sep = ';',
@@ -423,8 +434,8 @@ split_unique_join <- function(
 }
 
 
-#' For a character vector splits each element and applies a method for
-#' each sub vector.
+## For a character vector splits each element and applies a method for
+## each sub vector.
 split_apply <- function(
     x,
     method,
@@ -440,8 +451,8 @@ split_apply <- function(
 }
 
 
-#' For an interactions or enzyme-substrate data frame adds a column
-#' `n_resources` with the number of resources for each record.
+## For an interactions or enzyme-substrate data frame adds a column
+## `n_resources` with the number of resources for each record.
 count_resources <- function(data, only_primary = TRUE){
 
     data[['n_resources']] <- split_apply(
@@ -461,8 +472,8 @@ count_resources <- function(data, only_primary = TRUE){
 }
 
 
-#' For an interactions or enzyme-substrate data frame adds a column
-#' `n_references` with the number of references for each record.
+## For an interactions or enzyme-substrate data frame adds a column
+## `n_references` with the number of references for each record.
 count_references <- function(data){
 
     data[['n_references']] <- strip_resource_labels(
@@ -477,8 +488,8 @@ count_references <- function(data){
 
 }
 
-#' For each undirected interaction adds a duplicate with the source and
-#' target nodes swapped
+## For each undirected interaction adds a duplicate with the source and
+## target nodes swapped
 swap_undirected <- function(data){
 
     data <- data %>%
@@ -521,12 +532,15 @@ swap_undirected <- function(data){
 #' removed. See \code{\link{get_ptms_databases}} for more information
 #' @param organism PTMs are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' ptms = import_omnipath_enzsub(
@@ -543,6 +557,8 @@ import_omnipath_enzsub <- function(
     resources = NULL,
     organism = 9606,
     fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
@@ -552,6 +568,8 @@ import_omnipath_enzsub <- function(
         resources = resources,
         organism = organism,
         fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -559,8 +577,10 @@ import_omnipath_enzsub <- function(
 
 }
 
-
-# synonyms (old name)
+# Aliases (old names)
+#' @rdname import_omnipath_enzsub
+#' @param ... Passed to \code{import_omnipath_enzsub}.
+#' @export
 import_Omnipath_PTMS <- import_omnipath_enzsub
 import_OmniPath_PTMS <- import_omnipath_enzsub
 
@@ -569,6 +589,7 @@ import_OmniPath_PTMS <- import_omnipath_enzsub
 #' get the names of the enzyme-substrate relationship resources available
 #' in \url{http://omnipath.org/enzsub}
 #'
+#' @param dataset ignored for this query type
 #' @return character vector with the names of the enzyme-substrate resources
 #' @export
 #' @importFrom utils read.table
@@ -577,16 +598,18 @@ import_OmniPath_PTMS <- import_omnipath_enzsub
 #' get_enzsub_resources()
 #'
 #' @seealso  \code{\link{get_resources},
-#' \link{import_omnipath_enzsub}
+#' \link{import_omnipath_enzsub}}
 #'
 #' @aliases get_ptms_databases
 get_enzsub_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'enzsub', dataset = dataset))
+    return(get_resources(query_type = 'enzsub', datasets = dataset))
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname get_enzsub_resources
+#' @export
 get_ptms_databases <- get_enzsub_resources
 
 
@@ -613,12 +636,15 @@ get_ptms_databases <- get_enzsub_resources
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions = import_omnipath_interactions(
@@ -634,8 +660,9 @@ import_omnipath_interactions <- function(
     cache_file = NULL,
     resources = NULL,
     organism = 9606,
-    datasets = 'omnipath',
     fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
@@ -644,8 +671,10 @@ import_omnipath_interactions <- function(
         cache_file = cache_file,
         resources = resources,
         organism = organism,
-        datasets = datasets,
+        datasets = 'omnipath',
         fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -653,7 +682,10 @@ import_omnipath_interactions <- function(
 
 }
 
-# synonyms (old name)
+# Aliases (old names)
+#' @rdname import_omnipath_interactions
+#' @param ... Passed to \code{import_omnipath_interactions}.
+#' @export
 import_Omnipath_Interactions <- import_omnipath_interactions
 import_OmniPath_Interactions <- import_omnipath_interactions
 
@@ -674,13 +706,16 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
-#' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse
+#' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse.
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
@@ -695,14 +730,23 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #' @aliases import_PathwayExtra_Interactions
 import_pathwayextra_interactions <- function(
     cache_file = NULL,
+    resources = NULL,
     organism = 9606,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'pathwayextra',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'pathwayextra',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -710,7 +754,10 @@ import_pathwayextra_interactions <- function(
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname import_pathwayextra_interactions
+#' @param ... Passed to \code{import_pathwayextra_interactions}.
+#' @export
 import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 
 
@@ -731,12 +778,15 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
@@ -751,14 +801,23 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #' @aliases import_KinaseExtra_Interactions
 import_kinaseextra_interactions <- function(
     cache_file = NULL,
+    resources = NULL,
     organism = 9606,
+    fields = NULL, 
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'kinaseextra',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'kinaseextra',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -766,7 +825,10 @@ import_kinaseextra_interactions <- function(
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname import_kinaseextra_interactions
+#' @param ... Passed to \code{import_kinaseextra_interactions}.
+#' @export
 import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 
 
@@ -787,12 +849,15 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <- import_ligrecextra_interactions(
@@ -806,14 +871,23 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' @aliases import_LigrecExtra_Interactions
 import_ligrecextra_interactions <- function(
     cache_file = NULL,
+    resources = NULL,
     organism = 9606,
+    fields = NULL, 
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'ligrecextra',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'ligrecextra',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -821,9 +895,11 @@ import_ligrecextra_interactions <- function(
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname import_ligrecextra_interactions
+#' @param ... Passed to \code{import_ligrecextra_interactions}.
+#' @export
 import_LigrecExtra_Interactions <- import_ligrecextra_interactions
-
 
 #' Imports all post-translational interactions from OmniPath
 #'
@@ -834,25 +910,27 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param exclude datasets to exclude
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
-#'     import_transcriptional_interactions(
-#'         resources = c('PAZAR', 'ORegAnnO', 'DoRothEA')
+#'     import_post_translational_interactions(
+#'         resources = c('BioGRID')
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_all_interactions}}
 import_post_translational_interactions <- function(
+    resources = NULL,
     organism = 9606,
     exclude = NULL,
+    references_by_resource = TRUE,
     ...
 ){
 
@@ -860,9 +938,12 @@ import_post_translational_interactions <- function(
     datasets <- setdiff(datasets, exclude)
 
 
-    result <- import_omnipath_interactions(
+    result <- import_omnipath(
+        query_type = 'interactions',
+        resources = resources,
         organism = organism,
         datasets = datasets,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -888,18 +969,21 @@ import_post_translational_interactions <- function(
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param confidence_level Vector detailing the confidence levels of the
+#' @param confidence_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
 #' interactions.
 #' By default we take A and B level interactions (\code{c(A, B)}).
 #' It is to note that E interactions are not available in OmnipathR.
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <- import_dorothea_interactions(
@@ -913,25 +997,36 @@ import_post_translational_interactions <- function(
 #' @aliases import_TFregulons_Interactions import_tfregulons_interactions
 import_dorothea_interactions <- function(
     cache_file = NULL,
+    resources = NULL, 
     organism = 9606,
     confidence_levels = c('A', 'B'),
+    fields = NULL, 
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'dorothea',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
         confidence_levels = confidence_levels,
+        datasets = 'dorothea',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
-
+    
     return(result)
 
 }
 
-
-# synonym (old name)
+# Aliases (old names)
+#' @rdname import_dorothea_interactions
+#' @param ... Passed to \code{import_dorothea_interactions}.
+#' @export
 import_TFregulons_Interactions <- import_dorothea_interactions
 import_tfregulons_interactions <- import_dorothea_interactions
 
@@ -951,40 +1046,52 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
 #'     import_tf_target_interactions(
-#'         resources = c('miRTarBase', 'miRecords')
+#'         resources = c('DoRothEA_A', 'SIGNOR')
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_all_interactions}}
 #'
-#' @aliases import_miRNAtarget_Interactions
 import_tf_target_interactions <- function(
     cache_file = NULL,
+    resources = NULL, 
     organism = 9606,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'tf_target',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'tf_target',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
     return(result)
 
 }
-
 
 #' Imports all TF-target interactions from OmniPath
 #'
@@ -996,42 +1103,62 @@ import_tf_target_interactions <- function(
 #' @return A dataframe containing TF-target interactions
 #' @export
 #' @importFrom utils read.table
+#' @importFrom dplyr %>% mutate select
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param confidence_levels Vector detailing the confidence levels of the
+#' interactions to be downloaded. In dorothea, every TF-target interaction
+#' has a confidence score ranging from A to E, being A the most reliable
+#' interactions.
+#' By default we take A and B level interactions (\code{c(A, B)}).
+#' It is to note that E interactions are not available in OmnipathR.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
 #'     import_transcriptional_interactions(
-#'         resources = c('PAZAR', 'ORegAnnO', 'DoRothEA')
+#'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA_A')
 #'     )
 #'
 #' @seealso \code{\link{get_interaction_databases},
 #'   \link{import_all_interactions}}
 import_transcriptional_interactions <- function(
+    resources = NULL, 
     organism = 9606,
     confidence_levels = c('A', 'B'),
+    references_by_resource = TRUE,
     ...
 ){
 
     result <- rbind(
         import_dorothea_interactions(
+            resources = resources,
             organism = organism,
             confidence_levels = confidence_levels,
+            references_by_resource = references_by_resource,
             ...
         ),
-        import_tf_target_interactions(organism = organism, ...)
+        import_tf_target_interactions(
+            resources = resources, 
+            organism = organism, 
+            references_by_resource = references_by_resource, 
+            ...) %>% 
+            dplyr::mutate(dorothea_level = "") %>% 
+            dplyr::select(source, target, source_genesymbol, target_genesymbol, 
+                is_directed, is_stimulation, is_inhibition, consensus_direction,
+                consensus_stimulation, consensus_inhibition, dip_url, sources,
+                references, curation_effort, dorothea_level,n_references, 
+                n_resources)
     )
 
     return(result)
 
 }
-
 
 #' Imports interactions from the miRNA-target dataset of OmniPath
 #'
@@ -1045,12 +1172,17 @@ import_transcriptional_interactions <- function(
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
@@ -1064,14 +1196,23 @@ import_transcriptional_interactions <- function(
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
     cache_file = NULL,
+    resources = resources,
     organism = 9606,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'mirnatarget',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'mirnatarget',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
 
@@ -1079,7 +1220,10 @@ import_mirnatarget_interactions <- function(
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname import_mirnatarget_interactions
+#' @param ... Passed to \code{import_mirnatarget_interactions}.
+#' @export
 import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 
 
@@ -1095,12 +1239,17 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
@@ -1112,17 +1261,26 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #'   \link{import_all_interactions}}
 import_tf_mirna_interactions <- function(
     cache_file = NULL,
+    resources = NULL,
     organism = 9606,
+    fields = NULL, 
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'tf_mirna',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'tf_mirna',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
-
+    
     return(result)
 
 }
@@ -1140,12 +1298,17 @@ import_tf_mirna_interactions <- function(
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_databases}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <-
@@ -1157,17 +1320,26 @@ import_tf_mirna_interactions <- function(
 #'   \link{import_all_interactions}}
 import_lncrna_mrna_interactions <- function(
     cache_file = NULL,
+    resources = NULL,
     organism = 9606,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
-    result <- import_omnipath_interactions(
-        datasets = 'lncrna_mrna',
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
+        resources = resources,
         organism = organism,
+        datasets = 'lncrna_mrna',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
-
+    
     return(result)
 
 }
@@ -1197,13 +1369,19 @@ import_lncrna_mrna_interactions <- function(
 #' removed. See \code{\link{get_interaction_databases}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param dorothea_confidence_levels The confidence levels of the dorothea 
+#' interactions (TF-target) which range from A to D. Set to A and B by default. 
+#' @param exclude datasets to exclude
+#' @param fields The user can define here the fields to be added. If used, set 
+#' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
-#' @param exclude datasets to exclude
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' interactions <- import_all_interactions(
@@ -1220,6 +1398,9 @@ import_all_interactions <- function(
     organism = 9606,
     dorothea_confidence_levels = c('A', 'B'),
     exclude = NULL,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
     ...
 ){
 
@@ -1229,19 +1410,27 @@ import_all_interactions <- function(
 
     all_datasets <- setdiff(all_datasets, exclude)
 
-    result <- import_omnipath_interactions(
+    result <- import_omnipath(
+        query_type = 'interactions',
         cache_file = cache_file,
-        datasets = all_datasets,
+        resources = resources,
         organism = organism,
         confidence_levels = dorothea_confidence_levels,
+        exclude = exclude,
+        datasets = all_datasets,
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
         ...
     )
-
     return(result)
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname import_all_interactions
+#' @param ... Passed to \code{import_all_interactions}.
+#' @export
 import_AllInteractions <- import_all_interactions
 
 
@@ -1263,7 +1452,7 @@ import_AllInteractions <- import_all_interactions
 #'
 #' @seealso \code{\link{get_resources},
 #' \link{import_all_interactions},
-#' \link{import_omnipath_interactions}, \link{improt_pathwayextra_interactions},
+#' \link{import_omnipath_interactions}, \link{import_pathwayextra_interactions},
 #' \link{import_kinaseextra_interactions},
 #' \link{import_ligrecextra_interactions},
 #' \link{import_mirnatarget_interactions},
@@ -1272,11 +1461,13 @@ import_AllInteractions <- import_all_interactions
 #' @aliases get_interaction_databases
 get_interaction_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'interactions', dataset = dataset))
+    return(get_resources(query_type = 'interactions', datasets = dataset))
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname get_interaction_resources
+#' @export
 get_interaction_databases <- get_interaction_resources
 
 
@@ -1298,6 +1489,9 @@ get_interaction_databases <- get_interaction_resources
 #' @export
 #'
 #' @import jsonlite
+#' 
+#' @examples
+#' get_resources(query_type = 'interactions')
 get_resources <- function(
     query_type,
     datasets = NULL,
@@ -1359,6 +1553,7 @@ get_resources <- function(
 #' @param cache_file path to an earlier data file
 #' @param resources complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' complexes = import_omnipath_complexes(
@@ -1385,7 +1580,10 @@ import_omnipath_complexes <- function(
 
 }
 
-# synonyms (old name)
+# Aliases (old names)
+#' @rdname import_omnipath_complexes
+#' @param ... Passed to \code{import_omnipath_complexes}.
+#' @export
 import_Omnipath_complexes <- import_omnipath_complexes
 import_OmniPath_complexes <- import_omnipath_complexes
 
@@ -1393,6 +1591,7 @@ import_OmniPath_complexes <- import_omnipath_complexes
 #' Retrieve a list of complex resources available in Omnipath
 #'
 #' get the names of the resources from \url{http://omnipath.org/complexes}
+#' @param dataset ignored for this query type
 #' @return character vector with the names of the databases
 #' @export
 #' @importFrom utils read.csv
@@ -1406,11 +1605,13 @@ import_OmniPath_complexes <- import_omnipath_complexes
 #' @aliases get_complexes_databases
 get_complex_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'complexes', dataset = dataset))
+    return(get_resources(query_type = 'complexes', datasets = dataset))
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname get_complex_resources
+#' @export
 get_complexes_databases <- get_complex_resources
 
 
@@ -1562,7 +1763,10 @@ import_omnipath_annotations <- function(
 
 }
 
-# synonyms (old name)
+# Aliases (old names)
+#' @rdname import_omnipath_annotations
+#' @param ... Passed to \code{import_omnipath_annotations}.
+#' @export
 import_Omnipath_annotations <- import_omnipath_annotations
 import_OmniPath_annotations <- import_omnipath_annotations
 
@@ -1574,6 +1778,7 @@ import_OmniPath_annotations <- import_omnipath_annotations
 #' @return character vector with the names of the annotation resources
 #' @export
 #' @param dataset ignored for this query type
+#' @param ... optional additional arguments 
 #'
 #' @examples
 #' get_annotation_resources()
@@ -1582,13 +1787,16 @@ import_OmniPath_annotations <- import_omnipath_annotations
 #' \link{import_omnipath_annotations}}
 #'
 #' @aliases get_annotation_databases
-get_annotation_resources <- function(dataset = NULL){
+get_annotation_resources <- function(dataset = NULL, ...){
 
-    return(get_resources(query_type = 'annotations', dataset = dataset))
+    return(get_resources(query_type = 'annotations', datasets = dataset))
 
 }
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname get_annotation_resources
+#' @param ... Passed to \code{get_annotation_resources}.
+#' @export
 get_annotation_databases <- get_annotation_resources
 
 
@@ -1607,6 +1815,7 @@ get_annotation_databases <- get_annotation_resources
 #' signaling.
 #' @export
 #' @importFrom utils read.csv
+#' @importFrom stats setNames
 #' @param cache_file path to an earlier data file
 #' @param categories vector containing the categories to be retrieved.
 #' All the genes belonging to those categories will be returned. For further
@@ -1636,6 +1845,7 @@ get_annotation_databases <- get_annotation_resources
 #' (both short or long notation can be used)
 #' @param causality `transmitter` (trans), `receiver` (rec) or `both` (both
 #' short or long notation can be used)
+#' @param ... Additional optional arguments 
 #'
 #' @examples
 #' intercell = import_omnipath_intercell(categories = c('ecm'))
@@ -1685,7 +1895,9 @@ import_omnipath_intercell <- function(
 
 }
 
-# synonyms (old name)
+# Aliases (old names)
+#' @rdname import_omnipath_intercell
+#' @export
 import_Omnipath_intercell <- import_omnipath_intercell
 import_OmniPath_intercell <- import_omnipath_intercell
 
@@ -1706,7 +1918,7 @@ import_OmniPath_intercell <- import_omnipath_intercell
 #' \link{import_omnipath_intercell}}
 get_intercell_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'intercell', dataset = dataset))
+    return(get_resources(query_type = 'intercell', datasets = dataset))
 
 }
 
@@ -1734,15 +1946,18 @@ get_intercell_resources <- function(dataset = NULL){
 #' interactions and the inter-cellular roles of the protiens involved in those
 #' interactions.
 #' @export
-#' @importFrom utils read.csv
+#' @importFrom utils read.csv modifyList
 #' @importFrom dplyr %>% rename bind_rows filter inner_join distinct group_by
 #' summarize_all first
 #'
 #' @param cache_file path to an earlier data file; if exists, will be loaded
 #' as it is, the further arguments have no effect; if does not exists, the
 #' result will be dumped into this file.
-#' @param interactions_param a list with arguments for
-#' \code{\link{import_omnipath_interactions}}
+#' @param interactions_param a list with arguments for an interactions query: 
+#' \code{\link{import_omnipath_interactions}, 
+#' \link{import_pathwayextra_interactions},
+#' \link{import_kinaseextra_interactions},
+#' \link{import_ligrecextra_interactions}}
 #' @param transmitter_param a list with arguments for
 #' \code{\link{import_omnipath_intercell}}, to define the transmitter side
 #' of intercellular connections
@@ -1754,12 +1969,15 @@ get_intercell_resources <- function(dataset = NULL){
 #' intercellNetwork <- import_intercell_network(
 #'    interactions_param = list(datasets = 'ligrecextra'),
 #'    receiver_param = list(categories = c('receptor', 'transporter')),
-#'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
-#' )
+#'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme')))
 #'
 #' @seealso \code{\link{get_intercell_categories},
-#' \link{get_intercell_generic_categories}, \link{import_omnipath_intercell},
-#' \link{import_omnipath_interactions}}
+#' \link{get_intercell_generic_categories}, 
+#' \link{import_omnipath_intercell},
+#' \link{import_omnipath_interactions}, 
+#' \link{import_pathwayextra_interactions},
+#' \link{import_kinaseextra_interactions}, 
+#' \link{import_ligrecextra_interactions}}
 import_intercell_network <- function(
     cache_file = NULL,
     interactions_param = list(),
@@ -1779,6 +1997,7 @@ import_intercell_network <- function(
     if(is.null(result)){
 
         interactions_param_default <- list(
+            query_type = 'interactions',
             datasets = c(
                 'omnipath',
                 'pathwayextra',
@@ -1791,7 +2010,7 @@ import_intercell_network <- function(
             interactions_param
         )
         interactions <- do.call(
-            import_omnipath_interactions,
+            import_omnipath,
             interactions_param
         )
         interactions <- swap_undirected(interactions)
@@ -1912,7 +2131,9 @@ get_intercell_generic_categories <- function(){
 }
 
 
-# synonym (old name)
+# Aliases (old names)
+#' @rdname get_intercell_generic_categories
+#' @export
 get_intercell_classes <- get_intercell_generic_categories
 
 
@@ -1974,7 +2195,7 @@ filter_sources <- filter_by_resource
 ## Filtering intercell records according to the categories and/or classes
 ## selected
 #TODO: actually this we could export as it might be useful for users
-#' Filters an intercell data table according to various criteria
+## Filters an intercell data table according to various criteria
 filter_intercell <- function(
     data,
     categories = NULL,
