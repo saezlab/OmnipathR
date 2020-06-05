@@ -8,13 +8,13 @@ interaction_graph(interactions = interactions)
 }
 \arguments{
 \item{interactions}{data.frame created by 
-\code{\link{import_Omnipath_Interactions}},
-\code{\link{import_PathwayExtra_Interactions}}, 
-\code{\link{import_KinaseExtra_Interactions}},
-\code{\link{import_LigrecExtra_Interactions}}, 
-\code{\link{import_TFregulons_Interactions}},
-\code{\link{import_miRNAtarget_Interactions}} or 
-\code{\link{import_AllInteractions}}}
+\code{\link{import_omnipath_interactions}},
+\code{\link{import_pathwayextra_interactions}}, 
+\code{\link{import_kinaseextra_interactions}},
+\code{\link{import_ligrecextra_interactions}}, 
+\code{\link{import_dorothea_interactions}},
+\code{\link{import_mirnatarget_interactions}} or 
+\code{\link{import_all_interactions}}}
 }
 \value{
 An igraph object
@@ -23,15 +23,15 @@ An igraph object
 transforms the interactions data.frame to an igraph object
 }
 \examples{
-interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 OPI_g = interaction_graph(interactions)
 }
 \seealso{
-\code{\link{import_Omnipath_Interactions}},
-\code{\link{import_PathwayExtra_Interactions}}, 
-\code{\link{import_KinaseExtra_Interactions}},
-\code{\link{import_LigrecExtra_Interactions}}, 
-\code{\link{import_TFregulons_Interactions}},
-\code{\link{import_miRNAtarget_Interactions}} or 
-\code{\link{import_AllInteractions}}
+\code{\link{import_omnipath_interactions}},
+\code{\link{import_pathwayextra_interactions}}, 
+\code{\link{import_kinaseextra_interactions}},
+\code{\link{import_ligrecextra_interactions}}, 
+\code{\link{import_dorothea_interactions}},
+\code{\link{import_mirnatarget_interactions}} or 
+\code{\link{import_all_interactions}}
 }

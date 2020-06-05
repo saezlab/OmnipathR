@@ -12,7 +12,7 @@ get_complex_genes(
 }
 \arguments{
 \item{complexes}{complexes data frame (obtained using
-\code{\link{import_Omnipath_complexes}})}
+\code{\link{import_omnipath_complexes}})}
 
 \item{select_genes}{vector containing the genes for whom complexes will be
 retrieved (hgnc format).}
@@ -32,10 +32,10 @@ any of the input genes participate or just retrieve these complexes where
 all the genes in input set participate together.
 }
 \examples{
-complexes = import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
+complexes = import_omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
 query_genes = c("LMNA","BANF1")
 complexes_query_genes = get_complex_genes(complexes,query_genes)
 }
 \seealso{
-\code{\link{import_Omnipath_complexes}})
+\code{\link{import_omnipath_complexes}})
 }

@@ -7,7 +7,7 @@
 \usage{
 get_annotation_resources(dataset = NULL, ...)
 
-get_annotation_databases(dataset = NULL, ...)
+get_annotation_databases(...)
 }
 \arguments{
 \item{dataset}{ignored for this query type}

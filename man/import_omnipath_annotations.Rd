@@ -14,13 +14,9 @@ import_omnipath_annotations(
   ...
 )
 
-import_Omnipath_annotations(
-  cache_file = NULL,
-  proteins = NULL,
-  resources = NULL,
-  force_full_download = FALSE,
-  ...
-)
+import_Omnipath_annotations(...)
+
+import_OmniPath_annotations(...)
 }
 \arguments{
 \item{cache_file}{Path to an earlier data file}

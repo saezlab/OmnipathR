@@ -549,7 +549,7 @@ swap_undirected <- function(data){
 #' )
 #'
 #' @seealso \code{\link{get_ptms_databases},
-#'   \link{import_Omnipath_Interactions}}
+#'   \link{import_omnipath_interactions}}
 #'
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
 import_omnipath_enzsub <- function(
@@ -577,12 +577,23 @@ import_omnipath_enzsub <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be Deprecated
 #' @rdname import_omnipath_enzsub
 #' @param ... Passed to \code{import_omnipath_enzsub}.
 #' @export
-import_Omnipath_PTMS <- import_omnipath_enzsub
-import_OmniPath_PTMS <- import_omnipath_enzsub
+import_Omnipath_PTMS <- function(...){
+    .Deprecated("import_omnipath_enzsub")
+    import_omnipath_enzsub(...)
+} 
+# Aliases (old names) to be Deprecated
+#' @rdname import_omnipath_enzsub
+#' @param ... Passed to \code{import_omnipath_enzsub}.
+#' @export
+import_OmniPath_PTMS <- function(...){
+    .Deprecated("import_omnipath_enzsub")
+    import_omnipath_enzsub(...)
+}
+
 
 #' Retrieve a list of enzyme-substrate resources available in OmniPath
 #'
@@ -607,11 +618,14 @@ get_enzsub_resources <- function(dataset = NULL){
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname get_enzsub_resources
+#' @param ... Passed to \code{get_enzsub_resources}.
 #' @export
-get_ptms_databases <- get_enzsub_resources
-
+get_ptms_databases <- function(...){
+    .Deprecated("get_enzsub_resources")
+    get_enzsub_resources(...)
+}
 
 ########## ########## ########## ##########
 ########## INTERACTIONS          ##########
@@ -633,7 +647,7 @@ get_ptms_databases <- get_enzsub_resources
 #'
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -652,7 +666,7 @@ get_ptms_databases <- get_enzsub_resources
 #'     organism = 9606
 #' )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
@@ -682,12 +696,23 @@ import_omnipath_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_omnipath_interactions
 #' @param ... Passed to \code{import_omnipath_interactions}.
 #' @export
-import_Omnipath_Interactions <- import_omnipath_interactions
-import_OmniPath_Interactions <- import_omnipath_interactions
+import_Omnipath_Interactions <- function(...){
+    .Deprecated("import_omnipath_interactions")
+    import_omnipath_interactions(...)
+}
+    
+# Aliases (old names) to be deprecated
+#' @rdname import_omnipath_interactions
+#' @param ... Passed to \code{import_omnipath_interactions}.
+#' @export
+import_OmniPath_Interactions <- function(...){
+    .Deprecated("import_omnipath_interactions")
+    import_omnipath_interactions(...)
+}
 
 
 #' Imports interactions from the `pathway extra` dataset of Omnipath
@@ -704,7 +729,7 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse.
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -724,7 +749,7 @@ import_OmniPath_Interactions <- import_omnipath_interactions
 #'         organism = 9606
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 #' @aliases import_PathwayExtra_Interactions
@@ -754,12 +779,14 @@ import_pathwayextra_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_pathwayextra_interactions
 #' @param ... Passed to \code{import_pathwayextra_interactions}.
 #' @export
-import_PathwayExtra_Interactions <- import_pathwayextra_interactions
-
+import_PathwayExtra_Interactions <- function(...){
+    .Deprecated("import_pathwayextra_interactions")
+    import_pathwayextra_interactions(...)
+}
 
 #' Imports interactions from the `kinase extra` dataset of OmniPath
 #'
@@ -775,7 +802,7 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -795,7 +822,7 @@ import_PathwayExtra_Interactions <- import_pathwayextra_interactions
 #'        organism = 9606
 #'    )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 #' @aliases import_KinaseExtra_Interactions
@@ -825,12 +852,14 @@ import_kinaseextra_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_kinaseextra_interactions
 #' @param ... Passed to \code{import_kinaseextra_interactions}.
 #' @export
-import_KinaseExtra_Interactions <- import_kinaseextra_interactions
-
+import_KinaseExtra_Interactions <- function(...){
+    .Deprecated("import_kinaseextra_interactions")
+    import_kinaseextra_interactions(...)
+}
 
 #' Imports interactions from the `ligrec extra` dataset of OmniPath
 #'
@@ -846,7 +875,7 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -865,7 +894,7 @@ import_KinaseExtra_Interactions <- import_kinaseextra_interactions
 #'     organism = 9606
 #' )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 #' @aliases import_LigrecExtra_Interactions
@@ -895,11 +924,14 @@ import_ligrecextra_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_ligrecextra_interactions
 #' @param ... Passed to \code{import_ligrecextra_interactions}.
 #' @export
-import_LigrecExtra_Interactions <- import_ligrecextra_interactions
+import_LigrecExtra_Interactions <- function(...){
+    .Deprecated("import_ligrecextra_interactions")
+    import_ligrecextra_interactions(...)
+}
 
 #' Imports all post-translational interactions from OmniPath
 #'
@@ -909,7 +941,7 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #' @export
 #' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param exclude datasets to exclude
@@ -924,7 +956,7 @@ import_LigrecExtra_Interactions <- import_ligrecextra_interactions
 #'         resources = c('BioGRID')
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 import_post_translational_interactions <- function(
     resources = NULL,
@@ -966,7 +998,7 @@ import_post_translational_interactions <- function(
 #'
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param confidence_levels Vector detailing the confidence levels of the
@@ -991,7 +1023,7 @@ import_post_translational_interactions <- function(
 #'     organism = 9606
 #' )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 #' @aliases import_TFregulons_Interactions import_tfregulons_interactions
@@ -1023,14 +1055,23 @@ import_dorothea_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_dorothea_interactions
 #' @param ... Passed to \code{import_dorothea_interactions}.
 #' @export
-import_TFregulons_Interactions <- import_dorothea_interactions
-import_tfregulons_interactions <- import_dorothea_interactions
-
-
+import_TFregulons_Interactions <- function(...){
+    .Deprecated("import_dorothea_interactions")
+    import_dorothea_interactions(...)
+}
+    
+#' @rdname import_dorothea_interactions
+#' @param ... Passed to \code{import_dorothea_interactions}.
+#' @export
+import_tfregulons_interactions <- function(...){
+    .Deprecated("import_dorothea_interactions")
+    import_dorothea_interactions(...)
+}
+    
 #' Imports interactions from the TF-target dataset of OmniPath
 #'
 #' Imports the dataset from:
@@ -1045,7 +1086,7 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -1064,7 +1105,7 @@ import_tfregulons_interactions <- import_dorothea_interactions
 #'         resources = c('DoRothEA_A', 'SIGNOR')
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 import_tf_target_interactions <- function(
@@ -1105,7 +1146,7 @@ import_tf_target_interactions <- function(
 #' @importFrom utils read.table
 #' @importFrom dplyr %>% mutate select
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param confidence_levels Vector detailing the confidence levels of the
@@ -1125,7 +1166,7 @@ import_tf_target_interactions <- function(
 #'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA_A')
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 import_transcriptional_interactions <- function(
     resources = NULL, 
@@ -1171,7 +1212,7 @@ import_transcriptional_interactions <- function(
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -1190,7 +1231,7 @@ import_transcriptional_interactions <- function(
 #'         resources = c('miRTarBase', 'miRecords')
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 #'
 #' @aliases import_miRNAtarget_Interactions
@@ -1220,12 +1261,14 @@ import_mirnatarget_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_mirnatarget_interactions
 #' @param ... Passed to \code{import_mirnatarget_interactions}.
 #' @export
-import_miRNAtarget_Interactions <- import_mirnatarget_interactions
-
+import_miRNAtarget_Interactions <- function(...){
+    .Deprecated("import_mirnatarget_interactions")
+    import_mirnatarget_interactions(...)
+}
 
 #' Imports interactions from the TF-miRNA dataset of OmniPath
 #'
@@ -1238,7 +1281,7 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -1257,7 +1300,7 @@ import_miRNAtarget_Interactions <- import_mirnatarget_interactions
 #'         resources = c('TransmiR')
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 import_tf_mirna_interactions <- function(
     cache_file = NULL,
@@ -1297,7 +1340,7 @@ import_tf_mirna_interactions <- function(
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -1316,7 +1359,7 @@ import_tf_mirna_interactions <- function(
 #'         resources = c('ncRDeathDB')
 #'     )
 #'
-#' @seealso \code{\link{get_interaction_databases},
+#' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
 import_lncrna_mrna_interactions <- function(
     cache_file = NULL,
@@ -1366,7 +1409,7 @@ import_lncrna_mrna_interactions <- function(
 #' @importFrom utils read.table
 #' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_databases}} for more information.
+#' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param dorothea_confidence_levels The confidence levels of the dorothea 
@@ -1389,7 +1432,7 @@ import_lncrna_mrna_interactions <- function(
 #'     organism = 9606
 #' )
 #'
-#' @seealso \code{\link{get_interaction_databases}}
+#' @seealso \code{\link{get_interaction_resources}}
 #'
 #' @aliases import_AllInteractions
 import_all_interactions <- function(
@@ -1427,12 +1470,14 @@ import_all_interactions <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_all_interactions
 #' @param ... Passed to \code{import_all_interactions}.
 #' @export
-import_AllInteractions <- import_all_interactions
-
+import_AllInteractions <- function(...){
+    .Deprecated("import_all_interactions")
+    import_all_interactions(...)
+}
 
 #' Retrieve a list of interaction resources available in Omnipath
 #'
@@ -1448,7 +1493,7 @@ import_AllInteractions <- import_all_interactions
 #' @importFrom utils read.table
 #'
 #' @examples
-#' get_interaction_databases()
+#' get_interaction_resources()
 #'
 #' @seealso \code{\link{get_resources},
 #' \link{import_all_interactions},
@@ -1465,11 +1510,14 @@ get_interaction_resources <- function(dataset = NULL){
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname get_interaction_resources
+#' @param ... Passed to \code{get_interaction_resources}.
 #' @export
-get_interaction_databases <- get_interaction_resources
-
+get_interaction_databases <- function(...){
+    .Deprecated("get_interaction_resources")
+    get_interaction_resources(...)
+}
 
 #' Retrieve the available resources for a given query type
 #'
@@ -1580,13 +1628,22 @@ import_omnipath_complexes <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_omnipath_complexes
 #' @param ... Passed to \code{import_omnipath_complexes}.
 #' @export
-import_Omnipath_complexes <- import_omnipath_complexes
-import_OmniPath_complexes <- import_omnipath_complexes
+import_Omnipath_complexes <- function(...){
+    .Deprecated("import_omnipath_complexes")
+    import_omnipath_complexes(...)
+}
 
+#' @rdname import_omnipath_complexes
+#' @param ... Passed to \code{import_omnipath_complexes}.
+#' @export
+import_OmniPath_complexes <- function(...){
+    .Deprecated("import_omnipath_complexes")
+    import_omnipath_complexes(...)    
+}
 
 #' Retrieve a list of complex resources available in Omnipath
 #'
@@ -1609,11 +1666,14 @@ get_complex_resources <- function(dataset = NULL){
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname get_complex_resources
+#' @param ... Passed to \code{import_omnipath_enzsub}.
 #' @export
-get_complexes_databases <- get_complex_resources
-
+get_complexes_databases <- function(...){
+    .Deprecated("get_complex_resources")
+    get_complex_resources(...)
+}
 
 ########## ########## ########## ##########
 ########## Annotations           ##########
@@ -1763,13 +1823,22 @@ import_omnipath_annotations <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_omnipath_annotations
 #' @param ... Passed to \code{import_omnipath_annotations}.
 #' @export
-import_Omnipath_annotations <- import_omnipath_annotations
-import_OmniPath_annotations <- import_omnipath_annotations
-
+import_Omnipath_annotations <- function(...){
+    .Deprecated("import_omnipath_annotations")
+    import_omnipath_annotations(...)
+}
+#' @rdname import_omnipath_annotations
+#' @param ... Passed to \code{import_omnipath_annotations}.
+#' @export
+import_OmniPath_annotations <- function(...){
+    .Deprecated("import_omnipath_annotations")
+    import_omnipath_annotations(...)
+}
+    
 
 #' Get the resources available in the annotations database of OmniPath
 #'
@@ -1793,12 +1862,14 @@ get_annotation_resources <- function(dataset = NULL, ...){
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname get_annotation_resources
 #' @param ... Passed to \code{get_annotation_resources}.
 #' @export
-get_annotation_databases <- get_annotation_resources
-
+get_annotation_databases <- function(...){
+    .Deprecated("get_annotation_resources")
+    get_annotation_resources(...)
+}
 
 ########## ########## ########## ##########
 ########## Intercell             ##########
@@ -1895,12 +1966,21 @@ import_omnipath_intercell <- function(
 
 }
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname import_omnipath_intercell
+#' @param ... Passed to \code{import_omnipath_intercell}.
 #' @export
-import_Omnipath_intercell <- import_omnipath_intercell
-import_OmniPath_intercell <- import_omnipath_intercell
-
+import_Omnipath_intercell <- function(...){
+    .Deprecated("import_omnipath_intercell")
+    import_omnipath_intercell(...)
+}
+#' @rdname import_omnipath_intercell
+#' @param ... Passed to \code{import_omnipath_intercell}.
+#' @export
+import_OmniPath_intercell <- function(...){
+    .Deprecated("import_omnipath_intercell")
+    import_omnipath_intercell(...)
+}
 
 #' Retrieve a list of intercellular communication resources available in
 #' Omnipath
@@ -2131,10 +2211,14 @@ get_intercell_generic_categories <- function(){
 }
 
 
-# Aliases (old names)
+# Aliases (old names) to be deprecated
 #' @rdname get_intercell_generic_categories
+#' @param ... Passed to \code{get_intercell_generic_categories}.
 #' @export
-get_intercell_classes <- get_intercell_generic_categories
+get_intercell_classes <- function(...){
+    .Deprecated("get_intercell_generic_categories")
+    get_intercell_generic_categories(...)
+}
 
 
 ########## ########## ########## ##########

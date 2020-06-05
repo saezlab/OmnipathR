@@ -18,7 +18,7 @@ Interactions displayed in a nice format
 prints the interactions in the path in a nice format
 }
 \examples{
-interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 OPI_g = interaction_graph(interactions = interactions )
 printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
     output = 'epath')$epath[[1]],OPI_g)

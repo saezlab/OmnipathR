@@ -14,7 +14,7 @@ import_transcriptional_interactions(
 }
 \arguments{
 \item{resources}{interactions not reported in these databases are
-removed. See \code{\link{get_interaction_databases}} for more information.}
+removed. See \code{\link{get_interaction_resources}} for more information.}
 
 \item{organism}{Interactions are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
@@ -49,6 +49,6 @@ interactions <-
 
 }
 \seealso{
-\code{\link{get_interaction_databases},
+\code{\link{get_interaction_resources},
   \link{import_all_interactions}}
 }

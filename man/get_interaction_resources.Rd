@@ -7,13 +7,15 @@
 \usage{
 get_interaction_resources(dataset = NULL)
 
-get_interaction_databases(dataset = NULL)
+get_interaction_databases(...)
 }
 \arguments{
 \item{dataset}{a dataset within the interactions query type. Currently
 available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
 `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
 `lncrna_mrna`}
+
+\item{...}{Passed to \code{get_interaction_resources}.}
 }
 \value{
 character vector with the names of the interaction databases
@@ -22,7 +24,7 @@ character vector with the names of the interaction databases
 gets the names of the resources from \url{http://omnipath.org/interactions}
 }
 \examples{
-get_interaction_databases()
+get_interaction_resources()
 
 }
 \seealso{

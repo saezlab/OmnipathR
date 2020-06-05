@@ -6,7 +6,7 @@
 #' all the genes in input set participate together.
 #'
 #' @param complexes complexes data frame (obtained using
-#'    \code{\link{import_Omnipath_complexes}})
+#'    \code{\link{import_omnipath_complexes}})
 #' @param select_genes vector containing the genes for whom complexes will be
 #' retrieved (hgnc format).
 #' @param total_match [default=FALSE] logical indicating if the user wants to
@@ -16,10 +16,10 @@
 #' @export
 #' @return data.frame of complexes
 #' @examples
-#' complexes = import_Omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
+#' complexes = import_omnipath_complexes(filter_databases=c("CORUM", "hu.MAP"))
 #' query_genes = c("LMNA","BANF1")
 #' complexes_query_genes = get_complex_genes(complexes,query_genes)
-#' @seealso \code{\link{import_Omnipath_complexes}})
+#' @seealso \code{\link{import_omnipath_complexes}})
 get_complex_genes = function(complexes = import_Omnipath_complexes(),
     select_genes, total_match = FALSE){
 

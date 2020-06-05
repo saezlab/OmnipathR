@@ -16,15 +16,9 @@ import_omnipath_enzsub(
   ...
 )
 
-import_Omnipath_PTMS(
-  cache_file = NULL,
-  resources = NULL,
-  organism = 9606,
-  fields = NULL,
-  default_fields = TRUE,
-  references_by_resource = TRUE,
-  ...
-)
+import_Omnipath_PTMS(...)
+
+import_OmniPath_PTMS(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}
@@ -64,5 +58,5 @@ ptms = import_omnipath_enzsub(
 }
 \seealso{
 \code{\link{get_ptms_databases},
-  \link{import_Omnipath_Interactions}}
+  \link{import_omnipath_interactions}}
 }

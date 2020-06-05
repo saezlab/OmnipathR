@@ -7,7 +7,7 @@
 ptms_graph(ptms)
 }
 \arguments{
-\item{ptms}{data.frame created by \code{\link{import_Omnipath_PTMS}}}
+\item{ptms}{data.frame created by \code{\link{import_omnipath_enzsub}}}
 }
 \value{
 An igraph object
@@ -16,9 +16,9 @@ An igraph object
 transforms the ptms interactions data.frame to igraph object
 }
 \examples{
-ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
+ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 ptms_g = ptms_graph(ptms = ptms )
 }
 \seealso{
-\code{\link{import_Omnipath_PTMS}}
+\code{\link{import_omnipath_enzsub}}
 }

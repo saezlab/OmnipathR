@@ -15,10 +15,10 @@
 #'
 #' @examples
 #' # Download post-translational modifications:
-#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
+#' ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 #'
 #' # Download protein-protein interactions
-#' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+#' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 #'
 #' # Convert to igraph objects:
 #' ptms_g = ptms_graph(ptms = ptms )

@@ -79,7 +79,7 @@ visualize the data." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
       </span>
     </div>
 
@@ -166,9 +166,9 @@ visualize the data.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Download post-translational modifications:</span>
-<span class='no'>ptms</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_enzsub.html'>import_Omnipath_PTMS</a></span>(<span class='kw'>filter_databases</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"PhosphoSite"</span>, <span class='st'>"SIGNOR"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 39639 enzyme-substrate relationships.</span></div><div class='input'>
+<span class='no'>ptms</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_enzsub.html'>import_omnipath_enzsub</a></span>(<span class='kw'>resources</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"PhosphoSite"</span>, <span class='st'>"SIGNOR"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 14899 enzyme-substrate relationships.</span></div><div class='input'>
 <span class='co'># Download protein-protein interactions</span>
-<span class='no'>interactions</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_interactions.html'>import_Omnipath_Interactions</a></span>(<span class='kw'>filter_databases</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SignaLink3"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 36684 interactions.</span></div><div class='input'>
+<span class='no'>interactions</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></span>(<span class='kw'>resources</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SignaLink3"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 1808 interactions.</span></div><div class='input'>
 <span class='co'># Convert to igraph objects:</span>
 <span class='no'>ptms_g</span> <span class='kw'>=</span> <span class='fu'><a href='ptms_graph.html'>ptms_graph</a></span>(<span class='kw'>ptms</span> <span class='kw'>=</span> <span class='no'>ptms</span> )
 <span class='no'>OPI_g</span> <span class='kw'>=</span> <span class='fu'><a href='interaction_graph.html'>interaction_graph</a></span>(<span class='kw'>interactions</span> <span class='kw'>=</span> <span class='no'>interactions</span> )
@@ -179,44 +179,33 @@ visualize the data.</p>
 #&gt; 5 FYN (P06241)       ====&gt;  FYB1_Y595 (O15117) phosphorylation           7
 #&gt; 2 LCK (P06239)       ====&gt; SOCS3_Y221 (O14543) phosphorylation           6
 #&gt; 4 FYN (P06241)       ====&gt;  FYB1_Y651 (O15117) phosphorylation           6
-#&gt; 6 FYN (P06241)       ====&gt;  FYB1_Y697 (O15117) phosphorylation           3
-#&gt; 1 LCK (P06239)       ====&gt; SOCS3_Y204 (O14543) phosphorylation           6</div><div class='input'>
+#&gt; 1 LCK (P06239)       ====&gt; SOCS3_Y204 (O14543) phosphorylation           6
+#&gt; 6 FYN (P06241)       ====&gt;  FYB1_Y625 (O15117) phosphorylation           2</div><div class='input'>
 <span class='co'># interactions with references:</span>
-<span class='fu'><a href='print_interactions.html'>print_interactions</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='no'>ptms</span>),<span class='kw'>writeRefs</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;                 enzyme interaction             substrate    modification
-#&gt; 39636   TYRO3 (Q06418)       ====&gt;   PLCG1_Y771 (P19174) phosphorylation
-#&gt; 39635    TYK2 (P29597)       ====&gt;  STAT5B_Y699 (P51692) phosphorylation
-#&gt; 39634    TYK2 (P29597)       ====&gt; IL13RA1_Y402 (P78552) phosphorylation
-#&gt; 39637    WNK1 (Q9H4A3)       ====&gt;    OSR1_T185 (Q8TAX0) phosphorylation
-#&gt; 39638    WNK1 (Q9H4A3)       ====&gt;    WNK4_S335 (Q96J92) phosphorylation
-#&gt; 39639 MAP3K20 (Q9NYL2)       ====&gt;     CDS1_T68 (Q92903) phosphorylation
-#&gt;       n_resources n_references
-#&gt; 39636           1            8
-#&gt; 39635           1            3
-#&gt; 39634           1            1
-#&gt; 39637           1            1
-#&gt; 39638           1            1
-#&gt; 39639           1            1
-#&gt;                                                                                                references
-#&gt; 39636 KEA:12601080;KEA:15144186;KEA:15592455;KEA:16038803;KEA:1689310;KEA:1708307;KEA:7682059;KEA:8657103
-#&gt; 39635                                                              KEA:10830280;KEA:11751923;KEA:12411494
-#&gt; 39634                                                                                        KEA:10409622
-#&gt; 39637                                                                                        KEA:18270262
-#&gt; 39638                                                                                        KEA:15883153
-#&gt; 39639                                                                                        KEA:10973490</div><div class='input'>
+<span class='fu'><a href='print_interactions.html'>print_interactions</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='no'>ptms</span>),<span class='kw'>writeRefs</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;                enzyme interaction            substrate    modification
+#&gt; 14894 PRKACA (P17612)       ====&gt;  PLCL1_T246 (Q15111) phosphorylation
+#&gt; 14897   ULK2 (Q8IYT8)       ====&gt; SEC16A_S846 (O15027) phosphorylation
+#&gt; 14898   ULK2 (Q8IYT8)       ====&gt; DENND3_S472 (A2RUS2) phosphorylation
+#&gt; 14899   ULK2 (Q8IYT8)       ====&gt; DENND3_S490 (A2RUS2) phosphorylation
+#&gt; 14895  NUAK1 (O60285)       ====&gt;   MAPT_S356 (P10636) phosphorylation
+#&gt; 14896  NUAK1 (O60285)       ====&gt;   MAPT_S262 (P10636) phosphorylation
+#&gt;       n_resources n_references   references
+#&gt; 14894           2            1 KEA:16854455
+#&gt; 14897           2            0             
+#&gt; 14898           2            0             
+#&gt; 14899           2            0             
+#&gt; 14895           1            0             
+#&gt; 14896           1            0             </div><div class='input'>
 <span class='co'># find interactions between kinase and substrate:</span>
 <span class='fu'><a href='print_interactions.html'>print_interactions</a></span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>ptms</span>,<span class='no'>enzyme_genesymbol</span><span class='kw'>==</span><span class='st'>"MAP2K1"</span>,
    <span class='no'>substrate_genesymbol</span><span class='kw'>==</span><span class='st'>"MAPK3"</span>))</div><div class='output co'>#&gt;            enzyme interaction           substrate    modification n_resources
 #&gt; 1 MAP2K1 (Q02750)       ====&gt; MAPK3_Y204 (P27361) phosphorylation           8
 #&gt; 2 MAP2K1 (Q02750)       ====&gt; MAPK3_T202 (P27361) phosphorylation           8
 #&gt; 3 MAP2K1 (Q02750)       ====&gt; MAPK3_Y210 (P27361) phosphorylation           2
-#&gt; 4 MAP2K1 (Q02750)       ====&gt; MAPK3_T207 (P27361) phosphorylation           2
-#&gt; 5 MAP2K1 (Q02750)       ====&gt;  MAPK3_T80 (P27361) phosphorylation           1
-#&gt; 6 MAP2K1 (Q02750)       ====&gt; MAPK3_Y222 (P27361) phosphorylation           1</div><div class='input'>
+#&gt; 4 MAP2K1 (Q02750)       ====&gt; MAPK3_T207 (P27361) phosphorylation           2</div><div class='input'>
 <span class='co'># find shortest paths on the directed network between proteins</span>
 <span class='fu'><a href='printPath_es.html'>printPath_es</a></span>(<span class='fu'>shortest_paths</span>(<span class='no'>OPI_g</span>,<span class='kw'>from</span> <span class='kw'>=</span> <span class='st'>"TYRO3"</span>,<span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"STAT3"</span>,
-   <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>'epath'</span>)$<span class='no'>epath</span><span class='kw'>[[</span><span class='fl'>1</span>]],<span class='no'>OPI_g</span>)</div><div class='output co'>#&gt;            source interaction          target n_resources n_references
-#&gt; 1  TYRO3 (Q06418)  ==( + )==&gt; PIK3R1 (P27986)           2            3
-#&gt; 2 PIK3R1 (P27986)  ==( + )==&gt;  STAT3 (P40763)           2            1</div><div class='input'>
+   <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>'epath'</span>)$<span class='no'>epath</span><span class='kw'>[[</span><span class='fl'>1</span>]],<span class='no'>OPI_g</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: At structural_properties.c:745 :Couldn't reach some vertices</span></div><div class='output co'>#&gt; <span class='message'>Empty path</span></div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'># find all shortest paths between proteins</span>
 <span class='fu'><a href='printPath_vs.html'>printPath_vs</a></span>(<span class='fu'>all_shortest_paths</span>(<span class='no'>ptms_g</span>,<span class='kw'>from</span> <span class='kw'>=</span> <span class='st'>"SRC"</span>,<span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"STAT1"</span>)$<span class='no'>res</span>,<span class='no'>ptms_g</span>)</div><div class='output co'>#&gt; <span class='message'>Pathway 1: SRC -&gt; STAT1</span></div><div class='input'>
 </div></pre>

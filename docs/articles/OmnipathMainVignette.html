@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
       </span>
     </div>
 
@@ -203,7 +203,7 @@ Overview of the resources featured in OmniPath. Causal resources (including acti
 <p>Proteins interact among them and with other biological molecules to perform cellular functions. Proteins also participates in pathways, linked series of reactions occurring inter/intra cells to transform products or to transmit signals inducing specific cellular responses. Protein interactions are therefore a very valuable source of information to understand cellular functioning.</p>
 <p>We here download the original <strong>OmniPath</strong> human interactions <span class="citation">(Türei, Korcsmáros, and Saez-Rodriguez 2016)</span>. To do so, we first check the different source databases and select some of them. Then, we print some of the downloaded interactions (“+” means activation, “-” means inhibition and “?” means undirected interactions or inconclusive data).</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co">## We check some of the different interaction databases</span>
-<span class="fu"><a href="../reference/get_interaction_resources.html">get_interaction_databases</a></span>()</pre></body></html></div>
+<span class="fu"><a href="../reference/get_interaction_resources.html">get_interaction_resources</a></span>()</pre></body></html></div>
 <pre><code>##   [1] "ABS"                       "ACSN"                     
 ##   [3] "Adhesome"                  "AlzPathway"               
 ##   [5] "ARACNe-GTEx_DoRothEA"      "ARN"                      
@@ -444,7 +444,7 @@ CD22 associated cluser. Subnetwork extracted from the interactions graph represe
 <a href="#ligand-receptor-extra" class="anchor"></a>Ligand-receptor Extra</h3>
 <p>In the following example we are going to work with the <strong>ligrecextra</strong> dataset, which contains ligand-receptor interactions without literature reference. Our goal is to find the potential receptors associated to a given ligand, CDH1 (Figure @ref(fig:fig3)).</p>
 <div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
-<span class="no">interactions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_ligrecextra_interactions.html">import_LigrecExtra_Interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"HPRD"</span>,
+<span class="no">interactions</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_ligrecextra_interactions.html">import_ligrecextra_interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"HPRD"</span>,
     <span class="st">"Guide2Pharma"</span>), <span class="kw">organism</span><span class="kw">=</span><span class="fl">9606</span>)</pre></body></html></div>
 <pre><code>## Downloaded 1512 interactions.</code></pre>
 <div class="sourceCode" id="cb97"><html><body><pre class="r"><span class="co">## Receptors of the CDH1 ligand.</span>
@@ -490,7 +490,7 @@ Ligand-receptor interactions for the CDH1 ligand.
 <p>The last dataset describing interactions is <strong>mirnatarget</strong>. It stores miRNA-mRNA and TF-miRNA interactions. These interactions are only available for human so far. We next select the miRNA interacting with the TF selected in the previous code chunk, <em>GLI1</em>. The main function of miRNAs seems to be related with gene regulation. It is therefore interesting to see how some miRNA can regulate the expression of a TF which in turn regulates the expression of other genes. Figure @ref(fig:fig4) shows a schematic network of the miRNA targeting <em>GLI1</em> and the genes regulated by this TF.</p>
 <div class="sourceCode" id="cb102"><html><body><pre class="r"><span class="co">## We query and store the interactions into a dataframe</span>
 <span class="no">interactions</span> <span class="kw">&lt;-</span>
-  <span class="fu"><a href="../reference/import_mirnatarget_interactions.html">import_miRNAtarget_Interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"miRTarBase"</span>,<span class="st">"miRecords"</span>))</pre></body></html></div>
+  <span class="fu"><a href="../reference/import_mirnatarget_interactions.html">import_mirnatarget_interactions</a></span>(<span class="kw">resources</span><span class="kw">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"miRTarBase"</span>,<span class="st">"miRecords"</span>))</pre></body></html></div>
 <pre><code>## Downloaded 5962 interactions.</code></pre>
 <div class="sourceCode" id="cb104"><html><body><pre class="r"><span class="co">## We select the interactions where a miRNA is interacting with the TF</span>
 <span class="co">## used in the previous code chunk and we print these interactions.</span>
@@ -809,7 +809,7 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 
 ## other attached packages:
 ##  [1] gprofiler2_0.1.9 dnet_1.1.7       supraHex_1.26.0  hexbin_1.28.1   
-##  [5] tidyr_1.1.0      OmnipathR_1.4.1  jsonlite_1.6.1   igraph_1.2.5    
+##  [5] tidyr_1.1.0      OmnipathR_1.3.1  jsonlite_1.6.1   igraph_1.2.5    
 ##  [9] knitr_1.28       BiocStyle_2.16.0
 ## 
 ## loaded via a namespace (and not attached):

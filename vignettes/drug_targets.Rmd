@@ -41,7 +41,7 @@ We query protein-protein interactions from the webservice of
 http://omnipathdb.org/ using OmnipathR package: 
 ```{r}
 # Download protein-protein interactions
-interactions = import_Omnipath_Interactions() %>% as_tibble()
+interactions = import_omnipath_interactions() %>% as_tibble()
 
 # Convert to igraph objects:
 OPI_g = interaction_graph(interactions = interactions )

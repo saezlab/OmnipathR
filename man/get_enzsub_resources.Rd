@@ -7,10 +7,12 @@
 \usage{
 get_enzsub_resources(dataset = NULL)
 
-get_ptms_databases(dataset = NULL)
+get_ptms_databases(...)
 }
 \arguments{
 \item{dataset}{ignored for this query type}
+
+\item{...}{Passed to \code{get_enzsub_resources}.}
 }
 \value{
 character vector with the names of the enzyme-substrate resources

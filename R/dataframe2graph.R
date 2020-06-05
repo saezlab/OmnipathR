@@ -8,11 +8,11 @@
 #' @import igraph
 #' @importFrom dplyr %>% select group_by summarise ungroup
 #' @importFrom rlang .data
-#' @param ptms data.frame created by \code{\link{import_Omnipath_PTMS}}
+#' @param ptms data.frame created by \code{\link{import_omnipath_enzsub}}
 #' @examples
-#' ptms = import_Omnipath_PTMS(filter_databases=c("PhosphoSite", "SIGNOR"))
+#' ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 #' ptms_g = ptms_graph(ptms = ptms )
-#' @seealso  \code{\link{import_Omnipath_PTMS}}
+#' @seealso  \code{\link{import_omnipath_enzsub}}
 ptms_graph = function(ptms){
     # This is a gene_name based conversion to igraph, i.e. the vertices are 
     # identified by genenames, and not by uniprot IDs.
@@ -38,23 +38,23 @@ ptms_graph = function(ptms){
 #' @import igraph
 #' @importFrom dplyr %>% select group_by summarise ungroup
 #' @param interactions data.frame created by 
-#' \code{\link{import_Omnipath_Interactions}},
-#' \code{\link{import_PathwayExtra_Interactions}}, 
-#' \code{\link{import_KinaseExtra_Interactions}},
-#' \code{\link{import_LigrecExtra_Interactions}}, 
-#' \code{\link{import_TFregulons_Interactions}},
-#' \code{\link{import_miRNAtarget_Interactions}} or 
-#' \code{\link{import_AllInteractions}} 
+#' \code{\link{import_omnipath_interactions}},
+#' \code{\link{import_pathwayextra_interactions}}, 
+#' \code{\link{import_kinaseextra_interactions}},
+#' \code{\link{import_ligrecextra_interactions}}, 
+#' \code{\link{import_dorothea_interactions}},
+#' \code{\link{import_mirnatarget_interactions}} or 
+#' \code{\link{import_all_interactions}} 
 #' @examples
-#' interactions = import_Omnipath_Interactions(filter_databases=c("SignaLink3"))
+#' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 #' OPI_g = interaction_graph(interactions)
-#' @seealso \code{\link{import_Omnipath_Interactions}},
-#' \code{\link{import_PathwayExtra_Interactions}}, 
-#' \code{\link{import_KinaseExtra_Interactions}},
-#' \code{\link{import_LigrecExtra_Interactions}}, 
-#' \code{\link{import_TFregulons_Interactions}},
-#' \code{\link{import_miRNAtarget_Interactions}} or 
-#' \code{\link{import_AllInteractions}} 
+#' @seealso \code{\link{import_omnipath_interactions}},
+#' \code{\link{import_pathwayextra_interactions}}, 
+#' \code{\link{import_kinaseextra_interactions}},
+#' \code{\link{import_ligrecextra_interactions}}, 
+#' \code{\link{import_dorothea_interactions}},
+#' \code{\link{import_mirnatarget_interactions}} or 
+#' \code{\link{import_all_interactions}} 
 interaction_graph <- function(interactions = interactions){
     # This is a gene_name based conversion to igraph, i.e. the vertices are 
     # identified by genenames, and not by uniprot IDs.

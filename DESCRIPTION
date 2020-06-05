@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: Import Omnipath network
-Version: 1.4.1
+Version: 1.3.1
 Authors@R: c(
     person(given = "Alberto",
            family = "Valdeolivas",

@@ -8,7 +8,10 @@ of OmniPath}
 \usage{
 get_intercell_generic_categories()
 
-get_intercell_classes()
+get_intercell_classes(...)
+}
+\arguments{
+\item{...}{Passed to \code{get_intercell_generic_categories}.}
 }
 \value{
 character vector with the different intercell main classes

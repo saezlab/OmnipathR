@@ -18,22 +18,15 @@ import_dorothea_interactions(
   ...
 )
 
-import_TFregulons_Interactions(
-  cache_file = NULL,
-  resources = NULL,
-  organism = 9606,
-  confidence_levels = c("A", "B"),
-  fields = NULL,
-  default_fields = TRUE,
-  references_by_resource = TRUE,
-  ...
-)
+import_TFregulons_Interactions(...)
+
+import_tfregulons_interactions(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}
 
 \item{resources}{interactions not reported in these databases are
-removed. See \code{\link{get_interaction_databases}} for more information.}
+removed. See \code{\link{get_interaction_resources}} for more information.}
 
 \item{organism}{Interactions are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
@@ -75,6 +68,6 @@ interactions <- import_dorothea_interactions(
 
 }
 \seealso{
-\code{\link{get_interaction_databases},
+\code{\link{get_interaction_resources},
   \link{import_all_interactions}}
 }

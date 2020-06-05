@@ -75,7 +75,7 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
       </span>
     </div>
 
@@ -172,24 +172,9 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc.</p>
   <span class='no'>...</span>
 )
 
-<span class='fu'>import_Omnipath_intercell</span>(
-  <span class='kw'>cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>categories</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>scope</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>aspect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>transmitter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>receiver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>secreted</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plasma_membrane_peripheral</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plasma_membrane_transmembrane</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>proteins</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>topology</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>causality</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>import_Omnipath_intercell</span>(<span class='no'>...</span>)
+
+<span class='fu'>import_OmniPath_intercell</span>(<span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -270,7 +255,7 @@ short or long notation can be used)</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional optional arguments</p></td>
+      <td><p>Passed to <code>import_omnipath_intercell</code>.</p></td>
     </tr>
     </table>
 

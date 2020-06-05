@@ -8,7 +8,9 @@
 \usage{
 import_omnipath_complexes(cache_file = NULL, resources = NULL, ...)
 
-import_Omnipath_complexes(cache_file = NULL, resources = NULL, ...)
+import_Omnipath_complexes(...)
+
+import_OmniPath_complexes(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}

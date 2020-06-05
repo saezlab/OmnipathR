@@ -155,7 +155,7 @@ means inhibition and "?" means undirected interactions or inconclusive data).
 
 ```{r interactions}
 ## We check some of the different interaction databases
-get_interaction_databases()
+get_interaction_resources()
 
 ## The interactions are stored into a data frame.
 interactions <-
@@ -292,7 +292,7 @@ ligand, CDH1 (Figure \@ref(fig:fig3)).
 
 ```{r ligrecextra}
 ## We query and store the interactions into a dataframe
-interactions <- import_LigrecExtra_Interactions(resources=c("HPRD",
+interactions <- import_ligrecextra_interactions(resources=c("HPRD",
     "Guide2Pharma"), organism=9606)
 
 ## Receptors of the CDH1 ligand.
@@ -351,7 +351,7 @@ the miRNA targeting *GLI1* and the genes regulated by this TF.
 ```{r mirnatarget}
 ## We query and store the interactions into a dataframe
 interactions <-
-  import_miRNAtarget_Interactions(resources=c("miRTarBase","miRecords"))
+  import_mirnatarget_interactions(resources=c("miRTarBase","miRecords"))
 
 ## We select the interactions where a miRNA is interacting with the TF
 ## used in the previous code chunk and we print these interactions.

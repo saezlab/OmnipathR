@@ -7,10 +7,12 @@
 \usage{
 get_complex_resources(dataset = NULL)
 
-get_complexes_databases(dataset = NULL)
+get_complexes_databases(...)
 }
 \arguments{
 \item{dataset}{ignored for this query type}
+
+\item{...}{Passed to \code{import_omnipath_enzsub}.}
 }
 \value{
 character vector with the names of the databases
