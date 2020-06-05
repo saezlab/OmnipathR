@@ -1001,7 +1001,7 @@ import_post_translational_interactions <- function(
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param confidence_levels Vector detailing the confidence levels of the
+#' @param dorothea_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
 #' interactions.
@@ -1031,7 +1031,7 @@ import_dorothea_interactions <- function(
     cache_file = NULL,
     resources = NULL, 
     organism = 9606,
-    confidence_levels = c('A', 'B'),
+    dorothea_levels = c('A', 'B'),
     fields = NULL, 
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -1043,7 +1043,7 @@ import_dorothea_interactions <- function(
         cache_file = cache_file,
         resources = resources,
         organism = organism,
-        confidence_levels = confidence_levels,
+        dorothea_levels = dorothea_levels,
         datasets = 'dorothea',
         fields = fields,
         default_fields = default_fields,
@@ -1149,7 +1149,7 @@ import_tf_target_interactions <- function(
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param confidence_levels Vector detailing the confidence levels of the
+#' @param dorothea_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
 #' interactions.
@@ -1171,7 +1171,7 @@ import_tf_target_interactions <- function(
 import_transcriptional_interactions <- function(
     resources = NULL, 
     organism = 9606,
-    confidence_levels = c('A', 'B'),
+    dorothea_levels = c('A', 'B'),
     references_by_resource = TRUE,
     ...
 ){
@@ -1180,7 +1180,7 @@ import_transcriptional_interactions <- function(
         import_dorothea_interactions(
             resources = resources,
             organism = organism,
-            confidence_levels = confidence_levels,
+            dorothea_levels = dorothea_levels,
             references_by_resource = references_by_resource,
             ...
         ),
@@ -1412,7 +1412,7 @@ import_lncrna_mrna_interactions <- function(
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param dorothea_confidence_levels The confidence levels of the dorothea 
+#' @param dorothea_levels The confidence levels of the dorothea 
 #' interactions (TF-target) which range from A to D. Set to A and B by default. 
 #' @param exclude datasets to exclude
 #' @param fields The user can define here the fields to be added. If used, set 
@@ -1439,7 +1439,7 @@ import_all_interactions <- function(
     cache_file = NULL,
     resources = NULL,
     organism = 9606,
-    dorothea_confidence_levels = c('A', 'B'),
+    dorothea_levels = c('A', 'B'),
     exclude = NULL,
     fields = NULL,
     default_fields = TRUE,
@@ -1458,7 +1458,7 @@ import_all_interactions <- function(
         cache_file = cache_file,
         resources = resources,
         organism = organism,
-        confidence_levels = dorothea_confidence_levels,
+        dorothea_levels = dorothea_levels,
         exclude = exclude,
         datasets = all_datasets,
         fields = fields,

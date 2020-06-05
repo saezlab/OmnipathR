@@ -9,7 +9,7 @@ import_all_interactions(
   cache_file = NULL,
   resources = NULL,
   organism = 9606,
-  dorothea_confidence_levels = c("A", "B"),
+  dorothea_levels = c("A", "B"),
   exclude = NULL,
   fields = NULL,
   default_fields = TRUE,
@@ -28,7 +28,7 @@ removed. See \code{\link{get_interaction_resources}} for more information.}
 \item{organism}{Interactions are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 
-\item{dorothea_confidence_levels}{The confidence levels of the dorothea 
+\item{dorothea_levels}{The confidence levels of the dorothea 
 interactions (TF-target) which range from A to D. Set to A and B by default.}
 
 \item{exclude}{datasets to exclude}

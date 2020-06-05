@@ -7,7 +7,7 @@
 import_transcriptional_interactions(
   resources = NULL,
   organism = 9606,
-  confidence_levels = c("A", "B"),
+  dorothea_levels = c("A", "B"),
   references_by_resource = TRUE,
   ...
 )
@@ -19,7 +19,7 @@ removed. See \code{\link{get_interaction_resources}} for more information.}
 \item{organism}{Interactions are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 
-\item{confidence_levels}{Vector detailing the confidence levels of the
+\item{dorothea_levels}{Vector detailing the confidence levels of the
 interactions to be downloaded. In dorothea, every TF-target interaction
 has a confidence score ranging from A to E, being A the most reliable
 interactions.
