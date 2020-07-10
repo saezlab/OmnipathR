@@ -131,6 +131,7 @@ import_omnipath <- function(
         download_args_defaults <- list(
             URL = url
         )
+        print(url)
         dataframe_defaults <- list(
             FUN = read.table,
             header = TRUE,
@@ -214,10 +215,15 @@ omnipath_check_param <- function(param){
 
     # mapping the query string parameter synonyms
     for(name in names(param)){
-        if(name %in% names(.omnipath_querystring_synonyms)){
+        if(
+            name %in% names(.omnipath_querystring_synonyms) &&
+            !.omnipath_querystring_synonyms[[name]] %in% names(param)
+        ){
             param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
         }
     }
+
+    print(param)
 
     # checking DoRothEA confidence level values
     if(
