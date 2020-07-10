@@ -674,6 +674,7 @@ import_omnipath_interactions <- function(
     cache_file = NULL,
     resources = NULL,
     organism = 9606,
+    datasets = 'omnipath',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -685,7 +686,7 @@ import_omnipath_interactions <- function(
         cache_file = cache_file,
         resources = resources,
         organism = organism,
-        datasets = 'omnipath',
+        datasets = datasets,
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
@@ -1452,6 +1453,9 @@ import_all_interactions <- function(
     )$datasets
 
     all_datasets <- setdiff(all_datasets, exclude)
+
+    # it does not make sense without the type field
+    fields <- unique(c(fields), 'type')
 
     result <- import_omnipath(
         query_type = 'interactions',
