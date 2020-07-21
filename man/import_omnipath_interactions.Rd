@@ -10,6 +10,7 @@ import_omnipath_interactions(
   cache_file = NULL,
   resources = NULL,
   organism = 9606,
+  datasets = "omnipath",
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,
@@ -28,6 +29,11 @@ removed. See \code{\link{get_interaction_resources}} for more information.}
 
 \item{organism}{Interactions are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
+
+\item{datasets}{Names of the interaction datasts to download: omnipath 
+(by default). Other possiblites are: pathwayextra, kinaseextra, ligrecextra,
+dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna. The user can select 
+multiple datasets as for example: c('omnipath', 'pathwayextra','kinaseextra')}
 
 \item{fields}{The user can define here the fields to be added. If used, set 
 the next argument, `default_fields`, to FALSE.}
