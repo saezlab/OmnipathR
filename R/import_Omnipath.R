@@ -2162,7 +2162,8 @@ import_intercell_network <- function(
                     collapse = ';'
                 )
             ) %>%
-            dplyr::summarize_all(first)
+            dplyr::summarize_all(first) %>%
+            dplyr::ungroup()
 
         if(!is.null(cache_file)){
             save(result, cache_file)
