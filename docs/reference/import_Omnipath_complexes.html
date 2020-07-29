@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Import Omnipath Complexes — import_Omnipath_complexes • OmnipathR</title>
+<title>Imports protein complexes from Omnipath — import_omnipath_complexes • OmnipathR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Import Omnipath Complexes — import_Omnipath_complexes" />
-<meta property="og:description" content="imports the complexes stored in Omnipath database from 
+<meta property="og:title" content="Imports protein complexes from Omnipath — import_omnipath_complexes" />
+<meta property="og:description" content="imports the complexes stored in Omnipath database from
 http://omnipathdb.org/complexes" />
 
 
@@ -96,7 +96,7 @@ http://omnipathdb.org/complexes" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with Omnipath in R</a>
+      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
     <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
@@ -122,12 +122,6 @@ http://omnipathdb.org/complexes" />
 </li>
 <li>
   <a href="http://omnipathdb.org/">
-    <span class="fas fa fas fa-database"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="http://saezlab.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -145,32 +139,37 @@ http://omnipathdb.org/complexes" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Import Omnipath Complexes</h1>
+    <h1>Imports protein complexes from Omnipath</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import_Omnipath.R'><code>R/import_Omnipath.R</code></a></small>
-    <div class="hidden name"><code>import_Omnipath_complexes.Rd</code></div>
+    <div class="hidden name"><code>import_omnipath_complexes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>imports the complexes stored in Omnipath database from 
+    <p>imports the complexes stored in Omnipath database from
 <a href='http://omnipathdb.org/complexes'>http://omnipathdb.org/complexes</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>import_Omnipath_complexes</span>(
-  <span class='kw'>from_cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>filter_databases</span> <span class='kw'>=</span> <span class='fu'><a href='get_complexes_databases.html'>get_complexes_databases</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>import_omnipath_complexes</span>(<span class='kw'>cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+
+<span class='fu'>import_Omnipath_complexes</span>(<span class='no'>...</span>)
+
+<span class='fu'>import_OmniPath_complexes</span>(<span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>from_cache_file</th>
+      <th>cache_file</th>
       <td><p>path to an earlier data file</p></td>
     </tr>
     <tr>
-      <th>filter_databases</th>
-      <td><p>complexes not reported in these databases are 
-removed. See <code><a href='get_complexes_databases.html'>get_complexes_databases</a></code> for more information.</p></td>
+      <th>resources</th>
+      <td><p>complexes not reported in these databases are
+removed. See <code><a href='get_complex_resources.html'>get_complexes_databases</a></code> for more information.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Passed to <code>import_omnipath_complexes</code>.</p></td>
     </tr>
     </table>
 
@@ -179,10 +178,13 @@ removed. See <code><a href='get_complexes_databases.html'>get_complexes_database
     <p>A dataframe containing information about complexes</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_complexes_databases.html'>get_complexes_databases</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_complex_resources.html'>get_complexes_databases</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>complexes</span> <span class='kw'>=</span> <span class='fu'>import_Omnipath_complexes</span>(<span class='kw'>filter_databases</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CORUM"</span>, <span class='st'>"hu.MAP"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 21949 complexes</span></div><div class='output co'>#&gt; <span class='message'>removed 14729 interactions during database filtering.</span></div></pre>
+    <pre class="examples"><div class='input'><span class='no'>complexes</span> <span class='kw'>=</span> <span class='fu'>import_omnipath_complexes</span>(
+    <span class='kw'>resources</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'CORUM'</span>, <span class='st'>'hu.MAP'</span>)
+)</div><div class='output co'>#&gt; <span class='message'>Downloaded 7215 protein complexes.</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

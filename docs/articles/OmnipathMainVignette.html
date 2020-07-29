@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="OmnipathMainVignette_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>OmnipathR: utility functions to work with OmniPath in R</h1>
@@ -166,9 +166,7 @@
 <li><a href="http://omnipathdb.org/info" class="uri">http://omnipathdb.org/info</a></li>
 </ul>
 <div class="figure">
-<img src="../man/figures/page1_1.png" alt="Overview of the resources featured in OmniPath. Causal resources (including activity-flow and enzyme-substrate resources) can provide direction (*) or sign and direction (+) of interactions." width="983"><p class="caption">
-Overview of the resources featured in OmniPath. Causal resources (including activity-flow and enzyme-substrate resources) can provide direction (*) or sign and direction (+) of interactions.
-</p>
+<img src="../man/figures/page1_1.png" alt=""><p class="caption">Overview of the resources featured in OmniPath. Causal resources (including activity-flow and enzyme-substrate resources) can provide direction (*) or sign and direction (+) of interactions.</p>
 </div>
 </div>
 <div id="mouse-and-rat" class="section level2">
@@ -513,7 +511,7 @@ Ligand-receptor interactions for the CDH1 ligand.
 <span class="no">OPI_g_1</span> <span class="kw">&lt;-</span><span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span>(<span class="kw">interactions</span> <span class="kw">=</span> <span class="no">interactions_A_GLI1</span>)
 <span class="no">OPI_g_2</span> <span class="kw">&lt;-</span><span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span>(<span class="kw">interactions</span> <span class="kw">=</span> <span class="no">interactions_miRNA_GLI1</span>)</pre></body></html></div>
 <div class="figure">
-<img src="OmnipathMainVignette_files/figure-html/fig4-1.png" alt="miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targeting     extit{GLI1} (yellow node) and the genes regulated by this TF (blue round nodes)." width="2187.5"><p class="caption">
+<img src="OmnipathMainVignette_files/figure-html/fig4-1.png" alt="miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targeting  extit{GLI1} (yellow node) and the genes regulated by this TF (blue round nodes)." width="2187.5"><p class="caption">
 miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targeting extit{GLI1} (yellow node) and the genes regulated by this TF (blue round nodes).
 </p>
 </div>
@@ -627,11 +625,11 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
   <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">term_id</span>, <span class="no">source</span>, <span class="no">term_name</span>,<span class="no">p_value</span>) <span class="kw">%&gt;%</span>
   <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/top_n.html">top_n</a></span>(<span class="fl">5</span>,-<span class="no">p_value</span>)</pre></body></html></div>
 <pre><code>##      term_id source                      term_name      p_value
-## 1 GO:0010332  GO:BP    response to gamma radiation 5.249561e-08
-## 2 GO:0032392  GO:BP           DNA geometric change 3.532059e-07
-## 3 GO:0032508  GO:BP           DNA duplex unwinding 3.532059e-07
-## 4 GO:0010212  GO:BP response to ionizing radiation 6.490259e-07
-## 5 GO:0000781  GO:CC   chromosome, telomeric region 3.067319e-07</code></pre>
+## 1 GO:0010332  GO:BP    response to gamma radiation 5.195056e-08
+## 2 GO:0032392  GO:BP           DNA geometric change 3.259476e-07
+## 3 GO:0032508  GO:BP           DNA duplex unwinding 3.259476e-07
+## 4 GO:0010212  GO:BP response to ionizing radiation 6.422873e-07
+## 5 GO:0000781  GO:CC   chromosome, telomeric region 2.960715e-07</code></pre>
 </div>
 <div id="annotations" class="section level2">
 <h2 class="hasAnchor">
@@ -670,17 +668,17 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
   <span class="no">complexes_query_genes_join</span>$<span class="no">components_genesymbols</span>))</pre></body></html></div>
 <pre><code>## Downloaded 42 annotation records.</code></pre>
 <div class="sourceCode" id="cb133"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">annotations</span>,<span class="no">source</span>,<span class="no">label</span>,<span class="no">value</span>),<span class="fl">10</span>)</pre></body></html></div>
-<pre><code>##    source      label                              value
-## 1  LOCATE   location                          nucleolus
-## 2  LOCATE   location                            nucleus
-## 3  MSigDB collection chemical_and_genetic_perturbations
-## 4  MSigDB    geneset           PUJANA_BRCA1_PCC_NETWORK
-## 5  MSigDB collection chemical_and_genetic_perturbations
-## 6  MSigDB    geneset           PUJANA_CHEK2_PCC_NETWORK
-## 7  MSigDB collection                  reactome_pathways
-## 8  MSigDB    geneset                REACTOME_DNA_REPAIR
-## 9  MSigDB collection chemical_and_genetic_perturbations
-## 10 MSigDB    geneset            COLLIS_PRKDC_SUBSTRATES</code></pre>
+<pre><code>##    source      label                                   value
+## 1  LOCATE   location                                 nucleus
+## 2  LOCATE   location                               nucleolus
+## 3  MSigDB collection                       reactome_pathways
+## 4  MSigDB    geneset REACTOME_DNA_DOUBLE_STRAND_BREAK_REPAIR
+## 5  MSigDB collection      chemical_and_genetic_perturbations
+## 6  MSigDB    geneset              KAUFFMANN_DNA_REPAIR_GENES
+## 7  MSigDB collection                       reactome_pathways
+## 8  MSigDB    geneset                     REACTOME_DNA_REPAIR
+## 9  MSigDB collection      chemical_and_genetic_perturbations
+## 10 MSigDB    geneset                PUJANA_CHEK2_PCC_NETWORK</code></pre>
 <p>Afterwards, we explore the annotations of the individual components of the complex in some databases. We check the pathways where these proteins are involved. Once again, we also find many nucleus related annotations when checking their cellular location.</p>
 <div class="sourceCode" id="cb135"><html><body><pre class="r"><span class="co">## Then, we explore some annotations of its individual components</span>
 
@@ -690,11 +688,11 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 <pre><code>## Downloaded 7 annotation records.</code></pre>
 <div class="sourceCode" id="cb137"><html><body><pre class="r"><span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">annotations</span>,<span class="no">genesymbol</span>,<span class="no">value</span>)</pre></body></html></div>
 <pre><code>##   genesymbol                                         value
-## 1      PARP1         Corticotropin-releasing hormone (CRH)
-## 2      PARP1 TNF-related weak inducer of apoptosis (TWEAK)
-## 3      PARP1             Tumor necrosis factor (TNF) alpha
-## 4      PARP1                            Oncostatin-M (OSM)
-## 5      PARP1                        Androgen receptor (AR)
+## 1      PARP1 TNF-related weak inducer of apoptosis (TWEAK)
+## 2      PARP1                            Oncostatin-M (OSM)
+## 3      PARP1         Corticotropin-releasing hormone (CRH)
+## 4      PARP1                        Androgen receptor (AR)
+## 5      PARP1             Tumor necrosis factor (TNF) alpha
 ## 6      XRCC5                        Androgen receptor (AR)
 ## 7      XRCC6                        Androgen receptor (AR)</code></pre>
 <div class="sourceCode" id="cb139"><html><body><pre class="r"><span class="co">## Cellular localization of our proteins</span>
@@ -707,17 +705,17 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(<span class="fu">desc</span>(<span class="no">score</span>)) <span class="kw">%&gt;%</span>
     <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/top_n.html">top_n</a></span>(<span class="fl">10</span>, <span class="no">score</span>)</pre></body></html></div>
 <pre><code>##    uniprot genesymbol entity_type source record_id      location
-## 1   P12956      XRCC6     protein ComPPI      2972       nucleus
-## 2   P09874      PARP1     protein ComPPI     11261       nucleus
-## 3   Q14191        WRN     protein ComPPI     16122       nucleus
+## 1   P12956      XRCC6     protein ComPPI      2971       nucleus
+## 2   P09874      PARP1     protein ComPPI     11260       nucleus
+## 3   Q14191        WRN     protein ComPPI     16123       nucleus
 ## 4   P13010      XRCC5     protein ComPPI     13394       nucleus
 ## 5   P13010      XRCC5     protein ComPPI     13396      membrane
-## 6   P12956      XRCC6     protein ComPPI      2971       cytosol
-## 7   P13010      XRCC5     protein ComPPI     13393       cytosol
-## 8   Q14191        WRN     protein ComPPI     16123       cytosol
-## 9   P12956      XRCC6     protein ComPPI      2974      membrane
-## 10  P12956      XRCC6     protein ComPPI      2975 extracellular
-## 11  P13010      XRCC5     protein ComPPI     13395 extracellular
+## 6   P12956      XRCC6     protein ComPPI      2975       cytosol
+## 7   P13010      XRCC5     protein ComPPI     13395       cytosol
+## 8   Q14191        WRN     protein ComPPI     16122       cytosol
+## 9   P12956      XRCC6     protein ComPPI      2972      membrane
+## 10  P12956      XRCC6     protein ComPPI      2974 extracellular
+## 11  P13010      XRCC5     protein ComPPI     13393 extracellular
 ##                 score
 ## 1    0.99999997629184
 ## 2      0.999999887104
@@ -739,7 +737,7 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 <p>We first inspect the different categories available in the Omnipath webserver. Then, we focus again in our previously selected complex and we check its the location of its individual components in the inter-cellular context. We can however see that the components of this particular complex are intracellular.</p>
 <div class="sourceCode" id="cb143"><html><body><pre class="r"><span class="co">## We check some of the different intercell categories</span>
 <span class="fu"><a href="../reference/get_intercell_generic_categories.html">get_intercell_generic_categories</a></span>()</pre></body></html></div>
-<pre><code>## Downloaded 1095 records.</code></pre>
+<pre><code>## Downloaded 1143 records.</code></pre>
 <pre><code>##  [1] "plasma_membrane"                     "transmembrane"                      
 ##  [3] "peripheral"                          "transmembrane_predicted"            
 ##  [5] "receptor"                            "ligand"                             
@@ -759,12 +757,11 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## [33] "tight_junction"                      "secreted_peptidase_inhibitor"       
 ## [35] "secreted_enyzme"                     "desmosome"                          
 ## [37] "ecm_regulator"                       "gap_junction"                       
-## [39] "ligand_dgidb"                        "ligand_kirouac"                     
-## [41] "sparc_ecm_regulator"</code></pre>
+## [39] "sparc_ecm_regulator"</code></pre>
 <div class="sourceCode" id="cb146"><html><body><pre class="r"><span class="co">## We import the intercell data into a dataframe</span>
 <span class="no">intercell</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_intercell.html">import_omnipath_intercell</a></span>(<span class="kw">scope</span> <span class="kw">=</span> <span class="st">'generic'</span>,
     <span class="kw">aspect</span> <span class="kw">=</span> <span class="st">'locational'</span>)</pre></body></html></div>
-<pre><code>## Downloaded 211428 intercellular communication role records.</code></pre>
+<pre><code>## Downloaded 212225 intercellular communication role records.</code></pre>
 <div class="sourceCode" id="cb148"><html><body><pre class="r"><span class="co">## We check the intercell annotations for the individual components of</span>
 <span class="co">## our previous complex. We filter our data to print it in a good format</span>
 <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">intercell</span>,<span class="no">genesymbol</span> <span class="kw">%in%</span> <span class="no">genes_complex</span>) <span class="kw">%&gt;%</span>
@@ -785,16 +782,16 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 <a href="#conclusion" class="anchor"></a>Conclusion</h1>
 <p><em><a href="https://bioconductor.org/packages/3.11/OmnipathR">OmnipathR</a></em> provides access to the wealth of data stored in the Omnipath webservice <a href="http://omnipathdb.org/" class="uri">http://omnipathdb.org/</a> from the <em>R</em> enviroment. In addition, it contains some utility functions for visualization, filtering and analysis. The main strength of <em><a href="https://bioconductor.org/packages/3.11/OmnipathR">OmnipathR</a></em> is the straightforward transformation of the different Omnipath data into commonly used <em>R</em> objects, such as dataframes and graphs. Consequently, it allows an easy integration of the different types of data and a gateway to the vast number of <em>R</em> packages dedicated to the analysis and representaiton of biological data. We highlighted these abilities in some of the examples detailed in previous sections of this document.</p>
 </div>
-<div id="session-info" class="section level1">
+<div id="session-info" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h1>
-<pre><code>## R version 4.0.0 (2020-04-24)
+<pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 19.10
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
-## LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.3.7.so
+## BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0
+## LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              
@@ -809,36 +806,36 @@ miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targe
 ## 
 ## other attached packages:
 ##  [1] gprofiler2_0.1.9 dnet_1.1.7       supraHex_1.26.0  hexbin_1.28.1   
-##  [5] tidyr_1.1.0      OmnipathR_1.3.1  jsonlite_1.6.1   igraph_1.2.5    
-##  [9] knitr_1.28       BiocStyle_2.16.0
+##  [5] tidyr_1.1.0      OmnipathR_1.3.3  jsonlite_1.7.0   igraph_1.2.5    
+##  [9] knitr_1.29       BiocStyle_2.16.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.4.6        ape_5.3             lattice_0.20-41    
-##  [4] png_0.1-7           assertthat_0.2.1    rprojroot_1.3-2    
-##  [7] digest_0.6.25       R6_2.4.1            backports_1.1.7    
-## [10] stats4_4.0.0        evaluate_0.14       httr_1.4.1         
-## [13] ggplot2_3.3.1       highr_0.8           pillar_1.4.4       
-## [16] rlang_0.4.6         lazyeval_0.2.2      curl_4.3           
-## [19] rstudioapi_0.11     data.table_1.12.8   Rgraphviz_2.32.0   
-## [22] Matrix_1.2-18       rmarkdown_2.2       pkgdown_1.5.1      
-## [25] desc_1.2.0          stringr_1.4.0       htmlwidgets_1.5.1  
-## [28] RCurl_1.98-1.2      munsell_0.5.0       compiler_4.0.0     
-## [31] xfun_0.14           pkgconfig_2.0.3     BiocGenerics_0.34.0
-## [34] htmltools_0.4.0     tidyselect_1.1.0    tibble_3.0.1       
-## [37] bookdown_0.19       viridisLite_0.3.0   crayon_1.3.4       
-## [40] dplyr_1.0.0         MASS_7.3-51.6       bitops_1.0-6       
-## [43] grid_4.0.0          nlme_3.1-147        gtable_0.3.0       
-## [46] lifecycle_0.2.0     magrittr_1.5        scales_1.1.1       
-## [49] graph_1.66.0        stringi_1.4.6       fs_1.4.1           
-## [52] ellipsis_0.3.1      generics_0.0.2      vctrs_0.3.1        
-## [55] tools_4.0.0         glue_1.4.1          purrr_0.3.4        
-## [58] parallel_4.0.0      yaml_2.2.1          colorspace_1.4-1   
-## [61] BiocManager_1.30.10 memoise_1.1.0       plotly_4.9.2.1</code></pre>
+##  [1] tidyselect_1.1.0    xfun_0.16           purrr_0.3.4        
+##  [4] lattice_0.20-41     colorspace_1.4-1    vctrs_0.3.2        
+##  [7] generics_0.0.2      viridisLite_0.3.0   htmltools_0.5.0    
+## [10] stats4_4.0.2        yaml_2.2.1          plotly_4.9.2.1     
+## [13] rlang_0.4.7         pkgdown_1.5.1       pillar_1.4.6       
+## [16] glue_1.4.1          Rgraphviz_2.32.0    BiocGenerics_0.34.0
+## [19] lifecycle_0.2.0     stringr_1.4.0       munsell_0.5.0      
+## [22] gtable_0.3.0        htmlwidgets_1.5.1   memoise_1.1.0      
+## [25] evaluate_0.14       curl_4.3            parallel_4.0.2     
+## [28] highr_0.8           Rcpp_1.0.5          backports_1.1.8    
+## [31] scales_1.1.1        BiocManager_1.30.10 desc_1.2.0         
+## [34] graph_1.66.0        fs_1.4.2            ggplot2_3.3.2      
+## [37] digest_0.6.25       stringi_1.4.6       bookdown_0.20      
+## [40] dplyr_1.0.0         rprojroot_1.3-2     grid_4.0.2         
+## [43] bitops_1.0-6        tools_4.0.2         magrittr_1.5       
+## [46] RCurl_1.98-1.2      lazyeval_0.2.2      tibble_3.0.3       
+## [49] crayon_1.3.4        ape_5.4             pkgconfig_2.0.3    
+## [52] MASS_7.3-51.6       ellipsis_0.3.1      Matrix_1.2-18      
+## [55] data.table_1.13.0   httr_1.4.2          assertthat_0.2.1   
+## [58] rmarkdown_2.3       rstudioapi_0.11     R6_2.4.1           
+## [61] nlme_3.1-147        compiler_4.0.2</code></pre>
 </div>
-<div id="references" class="section level1">
+<div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references hanging-indent">
+<div id="refs" class="references">
 <div id="ref-BenShlomo2003">
 <p>Ben-Shlomo, I., S. Yu Hsu, R. Rauch, H. W. Kowalski, and A. J. W. Hsueh. 2003. “Signaling Receptome: A Genomic and Evolutionary Perspective of Plasma Membrane Receptors Involved in Signal Transduction.” <em>Science Signaling</em> 2003 (187): re9–re9. <a href="https://doi.org/10.1126/stke.2003.187.re9">https://doi.org/10.1126/stke.2003.187.re9</a>.</p>
 </div>

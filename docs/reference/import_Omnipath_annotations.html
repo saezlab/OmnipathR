@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Import Omnipath Annotations — import_Omnipath_annotations • OmnipathR</title>
+<title>Imports annotations from OmniPath — import_omnipath_annotations • OmnipathR</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,13 @@
 
 
 
-<meta property="og:title" content="Import Omnipath Annotations — import_Omnipath_annotations" />
-<meta property="og:description" content="imports the annotations stored in Omnipath database from
-http://omnipathdb.org/annotations" />
+<meta property="og:title" content="Imports annotations from OmniPath — import_omnipath_annotations" />
+<meta property="og:description" content="imports protein annotations about function, localization, expression,
+structure and other properties of proteins from OmniPath
+http://omnipathdb.org/annotations.
+Note: there might be also a few miRNAs annotated; a vast majority of
+protein complex annotations are inferred from the annotations of the
+members: if all members carry the same annotation the complex inherits." />
 
 
 
@@ -96,7 +100,7 @@ http://omnipathdb.org/annotations" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with Omnipath in R</a>
+      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
     <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
@@ -122,12 +126,6 @@ http://omnipathdb.org/annotations" />
 </li>
 <li>
   <a href="http://omnipathdb.org/">
-    <span class="fas fa fas fa-database"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="http://saezlab.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -145,54 +143,62 @@ http://omnipathdb.org/annotations" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Import Omnipath Annotations</h1>
+    <h1>Imports annotations from OmniPath</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import_Omnipath.R'><code>R/import_Omnipath.R</code></a></small>
-    <div class="hidden name"><code>import_Omnipath_annotations.Rd</code></div>
+    <div class="hidden name"><code>import_omnipath_annotations.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>imports the annotations stored in Omnipath database from
-<a href='http://omnipathdb.org/annotations'>http://omnipathdb.org/annotations</a></p>
+    <p>imports protein annotations about function, localization, expression,
+structure and other properties of proteins from OmniPath
+<a href='http://omnipathdb.org/annotations'>http://omnipathdb.org/annotations</a>.
+Note: there might be also a few miRNAs annotated; a vast majority of
+protein complex annotations are inferred from the annotations of the
+members: if all members carry the same annotation the complex inherits.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import_Omnipath_annotations</span>(
-  <span class='kw'>from_cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>select_genes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>filter_databases</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>import_omnipath_annotations</span>(
+  <span class='kw'>cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>proteins</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>force_full_download</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='no'>...</span>
-)</pre>
+)
+
+<span class='fu'>import_Omnipath_annotations</span>(<span class='no'>...</span>)
+
+<span class='fu'>import_OmniPath_annotations</span>(<span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>from_cache_file</th>
+      <th>cache_file</th>
       <td><p>Path to an earlier data file</p></td>
     </tr>
     <tr>
-      <th>select_genes</th>
+      <th>proteins</th>
       <td><p>Vector containing the genes or proteins for whom
 annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
 miRBase IDs). It is also possible to donwload annotations for protein
-complexes. To do so, write "COMPLEX:" right before the genesymbols of
+complexes. To do so, write 'COMPLEX:' right before the genesymbols of
 the genes integrating the complex. Check the vignette for examples.</p></td>
     </tr>
     <tr>
-      <th>filter_databases</th>
+      <th>resources</th>
       <td><p>Load the annotations only from these databases.
-See <code><a href='get_annotation_databases.html'>get_annotation_databases</a></code> for possible values.</p></td>
+See <code><a href='get_annotation_resources.html'>get_annotation_resources</a></code> for possible values.</p></td>
     </tr>
     <tr>
       <th>force_full_download</th>
       <td><p>Force the download of the entire annotations
 dataset. This is disabled by default because the size of this data is
 around 1GB. We recommend to retrieve the annotations for a set of proteins
-or only from a few databases, depending on your interest.</p></td>
+or only from a few resources, depending on your interest.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional arguments.</p></td>
+      <td><p>Passed to <code>import_omnipath_annotations</code>.</p></td>
     </tr>
     </table>
 
@@ -201,11 +207,13 @@ or only from a few databases, depending on your interest.</p></td>
     <p>A data.frame containing different gene/complex annotations</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_annotation_databases.html'>get_annotation_databases</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_annotation_resources.html'>get_annotation_databases</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>annotations</span> <span class='kw'>=</span> <span class='fu'>import_Omnipath_annotations</span>(<span class='kw'>select_genes</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"TP53"</span>,<span class='st'>"LMNA"</span>),
-     <span class='kw'>filter_databases</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"HPA_subcellular"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 8 annotations.</span></div></pre>
+    <pre class="examples"><div class='input'><span class='no'>annotations</span> <span class='kw'>=</span> <span class='fu'>import_omnipath_annotations</span>(
+    <span class='kw'>proteins</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'TP53'</span>, <span class='st'>'LMNA'</span>),
+    <span class='kw'>resources</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'HPA_subcellular'</span>)
+)</div><div class='output co'>#&gt; <span class='message'>Downloaded 8 annotation records.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

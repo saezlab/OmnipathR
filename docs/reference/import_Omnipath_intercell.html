@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Import Omnipath Intercell Data — import_Omnipath_intercell • OmnipathR</title>
+<title>Imports OmniPath Intercell Data — import_omnipath_intercell • OmnipathR</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Import Omnipath Intercell Data — import_Omnipath_intercell" />
-<meta property="og:description" content="imports the intercell data stored in Omnipath database from 
-http://omnipathdb.org/intercell. Intercell provides 
-information on the roles in inter-cellular signaling. E.g. if a protein is 
+<meta property="og:title" content="Imports OmniPath Intercell Data — import_omnipath_intercell" />
+<meta property="og:description" content="imports the OmniPath intercellular communication role annotation database
+from http://omnipathdb.org/intercell. It provides information
+on the roles in inter-cellular signaling. E.g. if a protein is
 a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
 
 
@@ -98,7 +98,7 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with Omnipath in R</a>
+      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
     <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
@@ -124,12 +124,6 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
 </li>
 <li>
   <a href="http://omnipathdb.org/">
-    <span class="fas fa fas fa-database"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="http://saezlab.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -147,55 +141,136 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Import Omnipath Intercell Data</h1>
+    <h1>Imports OmniPath Intercell Data</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import_Omnipath.R'><code>R/import_Omnipath.R</code></a></small>
-    <div class="hidden name"><code>import_Omnipath_intercell.Rd</code></div>
+    <div class="hidden name"><code>import_omnipath_intercell.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>imports the intercell data stored in Omnipath database from 
-<a href='http://omnipathdb.org/intercell'>http://omnipathdb.org/intercell</a>. Intercell provides 
-information on the roles in inter-cellular signaling. E.g. if a protein is 
+    <p>imports the OmniPath intercellular communication role annotation database
+from <a href='http://omnipathdb.org/intercell'>http://omnipathdb.org/intercell</a>. It provides information
+on the roles in inter-cellular signaling. E.g. if a protein is
 a ligand, a receptor, an extracellular matrix (ECM) component, etc.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import_Omnipath_intercell</span>(
-  <span class='kw'>from_cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>select_categories</span> <span class='kw'>=</span> <span class='fu'><a href='get_intercell_categories.html'>get_intercell_categories</a></span>(),
-  <span class='kw'>select_classes</span> <span class='kw'>=</span> <span class='fu'><a href='get_intercell_classes.html'>get_intercell_classes</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>import_omnipath_intercell</span>(
+  <span class='kw'>cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>categories</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>scope</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>aspect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>transmitter</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>receiver</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>secreted</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>plasma_membrane_peripheral</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>plasma_membrane_transmembrane</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>proteins</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>topology</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>causality</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)
+
+<span class='fu'>import_Omnipath_intercell</span>(<span class='no'>...</span>)
+
+<span class='fu'>import_OmniPath_intercell</span>(<span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>from_cache_file</th>
+      <th>cache_file</th>
       <td><p>path to an earlier data file</p></td>
     </tr>
     <tr>
-      <th>select_categories</th>
+      <th>categories</th>
       <td><p>vector containing the categories to be retrieved.
-All the genes belonging to those categories will be returned. For furter 
+All the genes belonging to those categories will be returned. For further
 information about the categories see <code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></td>
     </tr>
     <tr>
-      <th>select_classes</th>
-      <td><p>vector containing the main classes to be retrieved.
-All the genes belonging to those classes will be returned. For furter 
-information about the main classes see <code><a href='get_intercell_classes.html'>get_intercell_classes</a></code></p></td>
+      <th>resources</th>
+      <td><p>limit the query to certain resources; see the available
+resources by <code><a href='get_intercell_resources.html'>get_intercell_resources</a></code></p></td>
+    </tr>
+    <tr>
+      <th>parent</th>
+      <td><p>vector containing the parent classes to be retrieved.
+All the genes belonging to those classes will be returned. For furter
+information about the main classes see
+<code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></td>
+    </tr>
+    <tr>
+      <th>scope</th>
+      <td><p>either `specific` or `generic`</p></td>
+    </tr>
+    <tr>
+      <th>aspect</th>
+      <td><p>either `locational` or `functional`</p></td>
+    </tr>
+    <tr>
+      <th>source</th>
+      <td><p>either `resource_specific` or `composite`</p></td>
+    </tr>
+    <tr>
+      <th>transmitter</th>
+      <td><p>logical, include only transmitters i.e. proteins
+delivering signal from a cell to
+its environment</p></td>
+    </tr>
+    <tr>
+      <th>receiver</th>
+      <td><p>logical, include only receivers i.e. proteins delivering
+signal to the cell from its environment</p></td>
+    </tr>
+    <tr>
+      <th>secreted</th>
+      <td><p>logical, include only secreted proteins</p></td>
+    </tr>
+    <tr>
+      <th>plasma_membrane_peripheral</th>
+      <td><p>logical, include only plasma membrane
+peripheral membrane proteins</p></td>
+    </tr>
+    <tr>
+      <th>plasma_membrane_transmembrane</th>
+      <td><p>logical, include only plasma membrane
+transmembrane proteins</p></td>
+    </tr>
+    <tr>
+      <th>proteins</th>
+      <td><p>limit the query to certain proteins</p></td>
+    </tr>
+    <tr>
+      <th>topology</th>
+      <td><p>topology categories: one or more of `secreted` (sec),
+`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane` (pmtm)
+(both short or long notation can be used)</p></td>
+    </tr>
+    <tr>
+      <th>causality</th>
+      <td><p>`transmitter` (trans), `receiver` (rec) or `both` (both
+short or long notation can be used)</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Passed to <code>import_omnipath_intercell</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A dataframe cotaining information about roles in inter-cellular
+    <p>A dataframe cotaining information about roles in intercellular
 signaling.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a>,
+<a href='get_intercell_generic_categories.html'>get_intercell_generic_categories</a>, <a href='import_intercell_network.html'>import_intercell_network</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>intercell</span> <span class='kw'>=</span> <span class='fu'>import_Omnipath_intercell</span>(<span class='kw'>select_categories</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ecm"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 212296 intercell records</span></div><div class='output co'>#&gt; <span class='message'>removed 211239 intercell records during category/class filtering.</span></div></pre>
+    <pre class="examples"><div class='input'><span class='no'>intercell</span> <span class='kw'>=</span> <span class='fu'>import_omnipath_intercell</span>(<span class='kw'>categories</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'ecm'</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 2137 intercellular communication role records.</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

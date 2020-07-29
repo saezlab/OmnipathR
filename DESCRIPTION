@@ -44,6 +44,5 @@ Suggests:
     knitr,
     rmarkdown,
     ggplot2,
-    ggraph,
-    png
-RoxygenNote: 7.1.0
+    ggraph
+RoxygenNote: 7.1.1

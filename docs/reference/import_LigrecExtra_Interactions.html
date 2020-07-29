@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Imports from Omnipath webservice the interactions from 
-ligrecextra dataset — import_LigrecExtra_Interactions • OmnipathR</title>
+<title>Imports interactions from the `ligrec extra` dataset of OmniPath — import_ligrecextra_interactions • OmnipathR</title>
 
 
 <!-- jquery -->
@@ -40,11 +39,12 @@ ligrecextra dataset — import_LigrecExtra_Interactions • OmnipathR</title>
 
 
 
-<meta property="og:title" content="Imports from Omnipath webservice the interactions from 
-ligrecextra dataset — import_LigrecExtra_Interactions" />
-<meta property="og:description" content="Imports the dataset from: 
-http://omnipathdb.org/interactions?datasets=ligrecextra, 
-which contains ligand-receptor interactions without literature reference" />
+<meta property="og:title" content="Imports interactions from the `ligrec extra` dataset of OmniPath — import_ligrecextra_interactions" />
+<meta property="og:description" content="Imports the dataset from:
+http://omnipathdb.org/interactions?datasets=ligrecextra,
+which contains ligand-receptor interactions without literature reference.
+The ligand-receptor interactions supported by literature references
+are part of the `omnipath` dataset." />
 
 
 
@@ -99,7 +99,7 @@ which contains ligand-receptor interactions without literature reference" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with Omnipath in R</a>
+      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
     <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
@@ -125,12 +125,6 @@ which contains ligand-receptor interactions without literature reference" />
 </li>
 <li>
   <a href="http://omnipathdb.org/">
-    <span class="fas fa fas fa-database"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="http://saezlab.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -148,55 +142,86 @@ which contains ligand-receptor interactions without literature reference" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Imports from Omnipath webservice the interactions from 
-ligrecextra dataset</h1>
+    <h1>Imports interactions from the `ligrec extra` dataset of OmniPath</h1>
     <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import_Omnipath.R'><code>R/import_Omnipath.R</code></a></small>
-    <div class="hidden name"><code>import_LigrecExtra_Interactions.Rd</code></div>
+    <div class="hidden name"><code>import_ligrecextra_interactions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Imports the dataset from: 
-<a href='http://omnipathdb.org/interactions?datasets=ligrecextra'>http://omnipathdb.org/interactions?datasets=ligrecextra</a>, 
-which contains ligand-receptor interactions without literature reference</p>
+    <p>Imports the dataset from:
+<a href='http://omnipathdb.org/interactions?datasets=ligrecextra'>http://omnipathdb.org/interactions?datasets=ligrecextra</a>,
+which contains ligand-receptor interactions without literature reference.
+The ligand-receptor interactions supported by literature references
+are part of the `omnipath` dataset.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import_LigrecExtra_Interactions</span>(
-  <span class='kw'>from_cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>filter_databases</span> <span class='kw'>=</span> <span class='fu'><a href='get_interaction_databases.html'>get_interaction_databases</a></span>(),
-  <span class='kw'>select_organism</span> <span class='kw'>=</span> <span class='fl'>9606</span>
-)</pre>
+    <pre class="usage"><span class='fu'>import_ligrecextra_interactions</span>(
+  <span class='kw'>cache_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>organism</span> <span class='kw'>=</span> <span class='fl'>9606</span>,
+  <span class='kw'>fields</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>default_fields</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>references_by_resource</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>...</span>
+)
+
+<span class='fu'>import_LigrecExtra_Interactions</span>(<span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>from_cache_file</th>
+      <th>cache_file</th>
       <td><p>path to an earlier data file</p></td>
     </tr>
     <tr>
-      <th>filter_databases</th>
-      <td><p>interactions not reported in these databases are 
-removed. See <code><a href='get_interaction_databases.html'>get_interaction_databases</a></code> for more information.</p></td>
+      <th>resources</th>
+      <td><p>interactions not reported in these databases are
+removed. See <code><a href='get_interaction_resources.html'>get_interaction_resources</a></code> for more information.</p></td>
     </tr>
     <tr>
-      <th>select_organism</th>
-      <td><p>Interactions are available for human, mouse and rat. 
+      <th>organism</th>
+      <td><p>Interactions are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse</p></td>
+    </tr>
+    <tr>
+      <th>fields</th>
+      <td><p>The user can define here the fields to be added. If used, set 
+the next argument, `default_fields`, to FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>default_fields</th>
+      <td><p>whether to include the default fields (columns) for
+the query type. If FALSE, only the fields defined by the user in the
+`fields` argument will be added.</p></td>
+    </tr>
+    <tr>
+      <th>references_by_resource</th>
+      <td><p>if FALSE, removes the resource name prefixes
+from the references (PubMed IDs); this way the information which reference
+comes from which resource will be lost and the PubMed IDs will be unique.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Passed to <code>import_ligrecextra_interactions</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A dataframe containing ligand-receptor interaction without literature
-reference</p>
+    <p>A dataframe containing ligand-receptor interactions including
+the ones without literature references</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_interaction_databases.html'>get_interaction_databases</a>, 
-  <a href='import_AllInteractions.html'>import_AllInteractions</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_interaction_resources.html'>get_interaction_resources</a>,
+  <a href='import_all_interactions.html'>import_all_interactions</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>interactions</span> <span class='kw'>&lt;-</span> <span class='fu'>import_LigrecExtra_Interactions</span>(<span class='kw'>filter_databases</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"HPRD"</span>,
-      <span class='st'>"Guide2Pharma"</span>), <span class='kw'>select_organism</span><span class='kw'>=</span><span class='fl'>9606</span>)</div><div class='output co'>#&gt; <span class='message'>Downloaded 4569 interactions</span></div><div class='output co'>#&gt; <span class='message'>removed 2758 interactions during database filtering.</span></div></pre>
+    <pre class="examples"><div class='input'><span class='no'>interactions</span> <span class='kw'>&lt;-</span> <span class='fu'>import_ligrecextra_interactions</span>(
+    <span class='kw'>resources</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'HPRD'</span>, <span class='st'>'Guide2Pharma'</span>),
+    <span class='kw'>organism</span> <span class='kw'>=</span> <span class='fl'>9606</span>
+)</div><div class='output co'>#&gt; <span class='message'>Downloaded 1512 interactions.</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
