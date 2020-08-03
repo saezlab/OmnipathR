@@ -72,7 +72,9 @@ utils::globalVariables(
     'plasma_membrane_transmembrane',
     'plasma_membrane_peripheral',
     'topology',
-    'causality'
+    'causality',
+    'license',
+    'password'
 )
 
 
@@ -110,6 +112,8 @@ import_omnipath <- function(
     download_args = list(),
     references_by_resource = TRUE,
     add_counts = TRUE,
+    license = NULL,
+    password = NULL,
     ...
 ){
 
@@ -273,6 +277,17 @@ omnipath_check_param <- function(param){
             )
 
         }
+    }
+
+    # setting up generic defaults from options
+    for(opt in c('license', 'password')){
+
+        param[opt] <- `if`(
+            is.null(param[[opt]]),
+            options(sprintf('omnipath.%s', opt)),
+            param[[opt]]
+        )
+
     }
 
     return(param)
@@ -1041,7 +1056,7 @@ import_dorothea_interactions <- function(
     resources = NULL, 
     organism = 9606,
     dorothea_levels = c('A', 'B'),
-    fields = NULL, 
+    fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
     ...
