@@ -285,7 +285,8 @@ omnipath_check_param <- function(param){
 ## Not exported.
 omnipath_url <- function(param){
 
-    baseurl <- sprintf('http://omnipathdb.org/%s', param$query_type)
+    baseurl <- options('omnipath.url')
+    baseurl <- sprintf('%s%s', baseurl, param$query_type)
 
     url <- Reduce(
         function(url, key){
