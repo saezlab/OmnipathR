@@ -17,4 +17,8 @@
     omnipath.password = NULL
 )
 
-do.call(options, .omnipath_options_defaults)
+.onAttach <- function(libname, pkgname){
+
+    do.call(options, .omnipath_options_defaults)
+
+}
