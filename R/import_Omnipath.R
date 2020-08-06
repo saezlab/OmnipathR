@@ -1261,7 +1261,7 @@ import_transcriptional_interactions <- function(
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
     cache_file = NULL,
-    resources = resources,
+    resources = NULL,
     organism = 9606,
     fields = NULL,
     default_fields = TRUE,
