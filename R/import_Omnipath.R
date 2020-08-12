@@ -335,7 +335,7 @@ omnipath_url_add_param <- function(url, name, values = NULL){
     )
 
     url <- `if`(
-        is.null(values),
+        is.null(values) || is.na(values),
         url,
         sprintf(
             '%s%s%s=%s',
@@ -2210,7 +2210,7 @@ get_intercell_categories <- function(){
 
     return(
         unique(
-            import_omnipath('intercell_summary')$category
+            import_omnipath('intercell_summary', license = NA)$category
         )
     )
 
@@ -2233,7 +2233,7 @@ get_intercell_generic_categories <- function(){
 
     return(
         unique(
-            import_omnipath('intercell_summary')$parent
+            import_omnipath('intercell_summary', license = NA)$parent
         )
     )
 }
