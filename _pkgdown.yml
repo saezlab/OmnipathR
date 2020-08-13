@@ -11,3 +11,7 @@ navbar:
      homepage:
        icon: "fas fa-university"
        href: http://omnipathdb.org/
+       
+template:
+  params:
+    ganalytics: UA-119440867-10
