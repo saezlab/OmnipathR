@@ -14,7 +14,8 @@
 .omnipath_options_defaults <- list(
     omnipath.url = 'https://omnipathdb.org/',
     omnipath.license = 'academic',
-    omnipath.password = NULL
+    omnipath.password = NULL,
+    omnipath.print_urls = FALSE
 )
 
 .onAttach <- function(libname, pkgname){

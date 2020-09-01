@@ -2411,6 +2411,13 @@ filter_intercell <- function(
 ## http://bioconductor.org/developers/how-to/web-query/
 ## It tries to retrieve the resource one or several times before failing.
 omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
+
+    if(options('omnipath.print_urls')[[1]]){
+
+        message(sprintf('Retrieving URL: %s', URL))
+
+    }
+
     N.TRIES <- as.integer(N.TRIES)
     stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
 
