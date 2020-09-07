@@ -291,8 +291,8 @@ ligand, CDH1 (Figure \@ref(fig:fig3)).
 
 ```{r ligrecextra}
 ## We query and store the interactions into a dataframe
-interactions <- import_ligrecextra_interactions(resources=c("HPRD",
-    "Guide2Pharma"), organism=9606)
+interactions <- import_ligrecextra_interactions(resources=c("iTALK",
+    "Baccin2019"), organism=9606)
 
 ## Receptors of the CDH1 ligand.
 interactions_ADM2 <- dplyr::filter(interactions, source_genesymbol == "ADM2")
