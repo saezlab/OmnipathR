@@ -20,7 +20,6 @@ abstract: |
     retrieve information from the Omnipath database: <http://omnipathdb.org/>.
     In addition, it includes some utility functions to filter, analyse and
     visualize the data.
-
 vignette: |
   %\VignetteIndexEntry{OmnipathR: utility functions to work with OmniPath in R}
   %\VignetteEngine{knitr::rmarkdown}
@@ -205,7 +204,7 @@ to the same group (called cluster) are more connected in the network to each
 other than to those in other groups (clusters). Since proteins interact to
 perform their functions, proteins within the same cluster are likely to be
 implicated in similar biological tasks. Figure \@ref(fig:fig2) shows the
-subgraph containing the proteins and interactions of a specifc protein, CD22.
+subgraph containing the proteins and interactions of a specifc protein, ERBB2
 The `r CRANpkg("igraph")` package contains functions to apply sevaral different
 cluster methods on graphs (visit <https://igraph.org/r/doc/> for detailed
 information.)
@@ -221,17 +220,17 @@ OPI_g_undirected <- as.undirected(OPI_g, mode=c("mutual"))
 OPI_g_undirected <- simplify(OPI_g_undirected)
 cl_results <- cluster_fast_greedy(OPI_g_undirected)
 ## We extract the cluster where a protein of interest is contained
-cluster_id <- cl_results$membership[which(cl_results$names == "SOCS3")]
+cluster_id <- cl_results$membership[which(cl_results$names == "ERBB2")]
 module_graph <- induced_subgraph(OPI_g_undirected,
     V(OPI_g)$name[which(cl_results$membership == cluster_id)])
 ```
 
-```{r fig2, fig.width=10, fig.height=5, dpi=300, echo = FALSE, fig.cap="CD22 associated cluser. Subnetwork extracted from the interactions graph representing the cluster where we can find the gene *CD22* (yellow node)"}
+```{r fig2, fig.width=10, fig.height=5, dpi=300, echo = FALSE, fig.cap="ERBB2 associated cluser. Subnetwork extracted from the interactions graph representing the cluster where we can find the gene *ERBB2* (yellow node)"}
 ## We print that cluster with its interactions.
 par(mar=c(0.1,0.1,0.1,0.1))
 plot(module_graph, vertex.label.color="black",vertex.frame.color="#ffffff",
     vertex.size= 15, edge.curved=.2,
-    vertex.color = ifelse(igraph::V(module_graph)$name == "CD22","yellow",
+    vertex.color = ifelse(igraph::V(module_graph)$name == "ERBB2","yellow",
     "#00CCFF"), edge.color="blue",edge.width=0.8)
 ```
 
@@ -296,10 +295,10 @@ interactions <- import_ligrecextra_interactions(resources=c("HPRD",
     "Guide2Pharma"), organism=9606)
 
 ## Receptors of the CDH1 ligand.
-interactions_CDH1 <- dplyr::filter(interactions, source_genesymbol == "CDH1")
+interactions_ADM2 <- dplyr::filter(interactions, source_genesymbol == "ADM2")
 
 ## We transform the interactions data frame into a graph
-OPI_g <- interaction_graph(interactions = interactions_CDH1)
+OPI_g <- interaction_graph(interactions = interactions_ADM2)
 
 ## We induce a network with these genes
 Induced_Network <-  dNetInduce(g=OPI_g,
@@ -307,13 +306,13 @@ Induced_Network <-  dNetInduce(g=OPI_g,
     remove.loops=FALSE, largest.comp=FALSE)
 ```
 
-```{r fig3, dpi=300, echo = FALSE, fig.cap="Ligand-receptor interactions for the CDH1 ligand."}
+```{r fig3, dpi=300, echo = FALSE, fig.cap="Ligand-receptor interactions for the ADM2 ligand."}
 ## We print the induced network
 par(mar=c(0.1,0.1,0.1,0.1))
 plot(Induced_Network, vertex.label.color="black",
     vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.2,
     vertex.color =
-        ifelse(igraph::V(Induced_Network)$name %in% c("CDH1"),
+        ifelse(igraph::V(Induced_Network)$name %in% c("ADM2"),
         "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
 ```
 
@@ -327,8 +326,8 @@ select and print the most confident interactions for a given TF.
 
 ```{r dorothea}
 ## We query and store the interactions into a dataframe
-interactions <- import_dorothea_interactions(resources=c("DoRothEA_A",
-    "ARACNe-GTEx_DoRothEA"), organism=9606)
+interactions <- import_dorothea_interactions(resources=c("DoRothEA_A"), 
+    organism=9606)
 
 ## We select the most confident interactions for a given TF and we print
 ## the interactions to check the way it regulates its different targets
