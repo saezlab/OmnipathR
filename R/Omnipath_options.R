@@ -18,7 +18,7 @@
     omnipath.print_urls = FALSE
 )
 
-.onAttach <- function(libname, pkgname){
+.onLoad <- function(libname, pkgname){
 
     do.call(options, .omnipath_options_defaults)
 
