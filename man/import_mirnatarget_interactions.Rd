@@ -7,7 +7,7 @@
 \usage{
 import_mirnatarget_interactions(
   cache_file = NULL,
-  resources = resources,
+  resources = NULL,
   organism = 9606,
   fields = NULL,
   default_fields = TRUE,
