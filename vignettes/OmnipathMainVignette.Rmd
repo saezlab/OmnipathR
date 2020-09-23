@@ -326,8 +326,11 @@ select and print the most confident interactions for a given TF.
 
 ```{r dorothea}
 ## We query and store the interactions into a dataframe
-interactions <- import_dorothea_interactions(resources=c("DoRothEA_A"), 
-    organism=9606)
+interactions <- import_dorothea_interactions(
+    resources=c("DoRothEA"),
+    dorothea_levels = 'A',
+    organism=9606
+)
 
 ## We select the most confident interactions for a given TF and we print
 ## the interactions to check the way it regulates its different targets
