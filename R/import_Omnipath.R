@@ -1731,6 +1731,9 @@ get_complexes_databases <- function(...){
 #' dataset. This is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few resources, depending on your interest.
+#' @param wide Convert the annotation table to wide format, which
+#' corresponds more or less to the original resource. If the data comes from
+#' more than one resource a list of wide tables will be returned.
 #' @param ... Additional arguments.
 #' @examples
 #' annotations = import_omnipath_annotations(
@@ -1745,6 +1748,7 @@ import_omnipath_annotations <- function(
     proteins = NULL,
     resources = NULL,
     force_full_download = FALSE,
+    wide = FALSE,
     ...
 ){
 
@@ -1846,6 +1850,12 @@ import_omnipath_annotations <- function(
 
     }
 
+    if(wide){
+
+        result <- pivot_annotations(result)
+
+    }
+
     return(result)
 
 }
@@ -1896,6 +1906,49 @@ get_annotation_resources <- function(dataset = NULL, ...){
 get_annotation_databases <- function(...){
     .Deprecated("get_annotation_resources")
     get_annotation_resources(...)
+}
+
+
+#' Converts annotation tables to a wide format.
+#'
+#' Use this method to reconstitute the annotation tables into the format of
+#' the original resources. With the `wide=TRUE` option
+#' \code{import_omnipath_annotations} applies this function to the downloaded
+#' data.
+#'
+#' @return A wide format tibble if the provided data contains annotations
+#' from one resource, otherwise a list of wide format tibbles.
+#' @export
+#' @param annotations A data frame of annotations downloaded from the
+#' OmniPath web service.
+pivot_annotations <- function(annotations){
+
+    if(annotations %>% pull(source) %>% unique %>% length %>% `>`(1)){
+
+        annotations %>%
+        group_split(source) %>%
+        setNames(annotations %>% pull(source) %>% unique %>% sort) %>%
+        lapply(pivot_annotations)
+
+    }else{
+
+        (
+            annotations %>%
+            pivot_wider(
+                id_cols = c(
+                    'record_id',
+                    'uniprot',
+                    'genesymbol',
+                    'entity_type',
+                ),
+                names_from = 'label',
+                values_from = 'value'
+            ) %>%
+            select(-record_id)
+        )
+
+    }
+
 }
 
 ########## ########## ########## ##########
