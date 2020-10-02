@@ -1,24 +1,55 @@
-citEntry(entry="article",
-    author = c(person("Denes", "Turei"),
-               person("Tamas", " Korcsmaros"),
-               person("Julio", "Saez-Rodriguez")),
-    title = "OmniPath: guidelines and gateway for literature-curated signaling pathway resources",
+citEntry(
+    entry="Article",
+    author = c(
+        person("Denes", "Turei"),
+        person("Alberto", "Valdeolivas"),
+        person("Lejla", "Gul"),
+        person("Nicolas", "Palacio-Escat"),
+        person("Olga", "Ivanova"),
+        person("Attila", "Gabor"),
+        person("Dezso", "Modos"),
+        person("Tamas", " Korcsmaros"),
+        person("Julio", "Saez-Rodriguez")
+    ),
+    title = "Integrated intra- and intercellular signaling knowledge for
+        multicellular omics analysis",
+    journal = "bioRxiv",
+    year = 2020,
+    doi = "10.1101/2020.08.03.221242",
+    textVersion = "D Turei, A Valdeolivas, L Gul, N Palacio-Escat, O Ivanova,
+        A Gabor, D Modos, T Korcsmaros and J Saez-Rodriguez (2020)
+        Integrated intra- and intercellular signaling knowledge for
+        multicellular omics analysis. bioRxiv 2020.08.03.221242;
+        DOI: 10.1101/2020.08.03.221242"
+)
+
+citEntry(
+    entry="Article",
+    author = c(
+        person("Denes", "Turei"),
+        person("Tamas", " Korcsmaros"),
+        person("Julio", "Saez-Rodriguez")
+    ),
+    title = "OmniPath: guidelines and gateway for literature-curated
+        signaling pathway resources",
     journal = "Nature Methods",
     year = 2016,
 
-    textVersion = "D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath: 
-    guidelines and gateway for literature-curated signaling pathway resources. 
-    Nature Methods 13 (12) PMID: 27898060"
+    textVersion = "D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath:
+        guidelines and gateway for literature-curated signaling pathway
+        resources. Nature Methods 13 (12) PMID: 27898060"
 )
 
-citEntry(entry="article",
-    author = c(person("Alberto", "Valdeolivas"),
-               person("Denes", " Turei"),
-               person("Attila", "Gabor")),
-    title = "OmnipathR: Import Omnipath network",
-    journal = "Bioconductor Package",
+citEntry(
+    entry="Misc",
+    author = c(
+        person("Alberto", "Valdeolivas"),
+        person("Denes", " Turei"),
+        person("Attila", "Gabor")
+    ),
+    title = "OmnipathR: client for the OmniPath web service",
+    note = "Bioconductor Package",
     year = 2019,
-
-    textVersion = "A Valdeoivas, D Turei, A Gabor. 2019. “OmnipathR: Import 
-    Omnipath network.” Bioconductor Package"
+    textVersion = "A Valdeolivas, D Turei, A Gabor. 2019. “OmnipathR: client
+        for the OmniPath web service.” Bioconductor Package"
 )
