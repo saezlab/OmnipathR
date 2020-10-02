@@ -180,7 +180,7 @@ a biological network:
 the minimum number of edges. This can be very useful to track consecutive
 reactions within a given pathway. We display below the shortest path between
 two given proteins and all the possible shortests paths between two other
-proteins. It is to note that the functions `printPath\_es` and `printPath\_vs`
+proteins. It is to note that the functions `print_path\_es` and `print_path\_vs`
 display very similar results, but the first one takes as an input an edge 
 sequence and the second one a node sequence.
 
@@ -190,11 +190,11 @@ OPI_g <- interaction_graph(interactions = interactions)
 
 ## Find and print shortest paths on the directed network between proteins
 ## of interest:
-printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
+print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
     output = 'epath')$epath[[1]],OPI_g)
 
 ## Find and print all shortest paths between proteins of interest:
-printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",
+print_path_vs(all_shortest_paths(OPI_g,from = "DYRK2",
     to = "MAPKAPK2")$res,OPI_g)
 ```
 

@@ -614,9 +614,9 @@ import_OmniPath_PTMS <- function(...){
 }
 
 
-#' Retrieve a list of enzyme-substrate resources available in OmniPath
+#' Retrieves a list of enzyme-substrate resources available in OmniPath
 #'
-#' get the names of the enzyme-substrate relationship resources available
+#' Get the names of the enzyme-substrate relationship resources available
 #' in \url{http://omnipath.org/enzsub}
 #'
 #' @param dataset ignored for this query type
@@ -655,7 +655,7 @@ get_ptms_databases <- function(...){
 
 #' Imports interactions from the `omnipath` dataset of Omnipath
 #'
-#' imports the database from \url{http://omnipathdb.org/interactions}, which
+#' Imports the database from \url{http://omnipathdb.org/interactions}, which
 #' contains only interactions supported by literature references.
 #' This part of the interaction database compiled a similar way as it has
 #' been presented in the first paper describing OmniPath (Turei et al. 2016).
@@ -804,6 +804,7 @@ import_pathwayextra_interactions <- function(
 }
 
 # Aliases (old names) to be deprecated
+#'
 #' @rdname import_pathwayextra_interactions
 #' @param ... Passed to \code{import_pathwayextra_interactions}.
 #' @export
@@ -959,7 +960,7 @@ import_LigrecExtra_Interactions <- function(...){
 
 #' Imports all post-translational interactions from OmniPath
 #'
-#' Imports the dataset from all post-translational datasets of OmniPath
+#' Imports the dataset from all post-translational datasets of OmniPath.
 #'
 #' @return A dataframe containing post-translational interactions
 #' @export
@@ -1008,8 +1009,8 @@ import_post_translational_interactions <- function(
 }
 
 
-#' Imports from Omnipath webservice the interactions from
-#' Dorothea dataset
+#' From the OmniPath webservice imports interactions from the
+#' DoRothEA dataset
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=dorothea}
@@ -1074,7 +1075,7 @@ import_dorothea_interactions <- function(
         references_by_resource = references_by_resource,
         ...
     )
-    
+
     return(result)
 
 }
@@ -1087,7 +1088,7 @@ import_TFregulons_Interactions <- function(...){
     .Deprecated("import_dorothea_interactions")
     import_dorothea_interactions(...)
 }
-    
+
 #' @rdname import_dorothea_interactions
 #' @param ... Passed to \code{import_dorothea_interactions}.
 #' @export
@@ -1095,7 +1096,7 @@ import_tfregulons_interactions <- function(...){
     .Deprecated("import_dorothea_interactions")
     import_dorothea_interactions(...)
 }
-    
+
 #' Imports interactions from the TF-target dataset of OmniPath
 #'
 #' Imports the dataset from:
@@ -1229,7 +1230,7 @@ import_transcriptional_interactions <- function(
 #'
 #' Imports the dataset from:
 #' \url{http://omnipathdb.org/interactions?datasets=mirnatarget},
-#' which contains miRNA-mRNA interactions
+#' which contains miRNA-mRNA interactions.
 #'
 #' @return A dataframe containing miRNA-mRNA interactions
 #' @export
@@ -1347,7 +1348,7 @@ import_tf_mirna_interactions <- function(
         references_by_resource = references_by_resource,
         ...
     )
-    
+
     return(result)
 
 }
@@ -1406,7 +1407,7 @@ import_lncrna_mrna_interactions <- function(
         references_by_resource = references_by_resource,
         ...
     )
-    
+
     return(result)
 
 }
@@ -1507,7 +1508,8 @@ import_AllInteractions <- function(...){
 
 #' Retrieve a list of interaction resources available in Omnipath
 #'
-#' gets the names of the resources from \url{http://omnipath.org/interactions}
+#' Gets the names of the resources from
+#' \url{http://omnipath.org/interactions}.
 #'
 #' @param dataset a dataset within the interactions query type. Currently
 #' available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
@@ -1547,7 +1549,7 @@ get_interaction_databases <- function(...){
 
 #' Retrieve the available resources for a given query type
 #'
-#' collects the names of the resources available in OmniPath for a certain
+#' Collects the names of the resources available in OmniPath for a certain
 #' query type and optionally for a dataset within that.
 #'
 #' @param query_type one of the query types `interactions`, `enz_sub`,
@@ -1615,10 +1617,10 @@ get_resources <- function(
 ########## Complexes             ##########
 ########## ########## ########## ##########
 
-#' Imports protein complexes from Omnipath
+#' Imports protein complexes from OmniPath
 #'
-#' imports the complexes stored in Omnipath database from
-#' \url{http://omnipathdb.org/complexes}
+#' Imports the complexes stored in Omnipath database from
+#' \url{http://omnipathdb.org/complexes}.
 #'
 #' @return A dataframe containing information about complexes
 #' @export
@@ -1707,7 +1709,7 @@ get_complexes_databases <- function(...){
 
 #' Imports annotations from OmniPath
 #'
-#' imports protein annotations about function, localization, expression,
+#' Imports protein annotations about function, localization, expression,
 #' structure and other properties of proteins from OmniPath
 #' \url{http://omnipathdb.org/annotations}.
 #' Note: there might be also a few miRNAs annotated; a vast majority of
@@ -1874,11 +1876,12 @@ import_OmniPath_annotations <- function(...){
     .Deprecated("import_omnipath_annotations")
     import_omnipath_annotations(...)
 }
-    
 
-#' Get the resources available in the annotations database of OmniPath
+
+#' Retrieves a list of available resources in the annotations database
+#' of OmniPath
 #'
-#' get the names of the resources from \url{http://omnipath.org/annotations}
+#' Get the names of the resources from \url{http://omnipath.org/annotations}.
 #'
 #' @return character vector with the names of the annotation resources
 #' @export
@@ -1908,7 +1911,7 @@ get_annotation_databases <- function(...){
 }
 
 
-#' Converts annotation tables to a wide format.
+#' Converts annotation tables to a wide format
 #'
 #' Use this method to reconstitute the annotation tables into the format of
 #' the original resources. With the `wide=TRUE` option
@@ -1918,6 +1921,10 @@ get_annotation_databases <- function(...){
 #' @return A wide format tibble if the provided data contains annotations
 #' from one resource, otherwise a list of wide format tibbles.
 #' @export
+#' @importFrom tidyr pivot_wider
+#' @importFrom dplyr select
+#' @importFrom dplyr pull
+#' @importFrom dplyr group_split
 #' @param annotations A data frame of annotations downloaded from the
 #' OmniPath web service.
 pivot_annotations <- function(annotations){
@@ -1933,17 +1940,17 @@ pivot_annotations <- function(annotations){
 
         (
             annotations %>%
-            pivot_wider(
+            tidyr::pivot_wider(
                 id_cols = c(
                     'record_id',
                     'uniprot',
                     'genesymbol',
-                    'entity_type',
+                    'entity_type'
                 ),
                 names_from = 'label',
                 values_from = 'value'
             ) %>%
-            select(-record_id)
+            dplyr::select(-record_id)
         )
 
     }
@@ -1954,9 +1961,9 @@ pivot_annotations <- function(annotations){
 ########## Intercell             ##########
 ########## ########## ########## ##########
 
-#' Imports OmniPath Intercell Data
+#' Imports OmniPath intercell annotations
 #'
-#' imports the OmniPath intercellular communication role annotation database
+#' Imports the OmniPath intercellular communication role annotation database
 #' from \url{http://omnipathdb.org/intercell}. It provides information
 #' on the roles in inter-cellular signaling. E.g. if a protein is
 #' a ligand, a receptor, an extracellular matrix (ECM) component, etc.
@@ -2061,10 +2068,11 @@ import_OmniPath_intercell <- function(...){
     import_omnipath_intercell(...)
 }
 
-#' Retrieve a list of intercellular communication resources available in
-#' Omnipath
+#' Retrieves a list of intercellular communication resources available in
+#' OmniPath
 #'
-#' get the names of the databases from \url{http://omnipath.org/intercell}
+#' Retrieves a list of the databases from \url{http://omnipath.org/intercell}.
+#'
 #' @return character vector with the names of the databases
 #' @export
 #' @importFrom utils read.csv
@@ -2248,9 +2256,10 @@ import_intercell_network <- function(
 }
 
 
-#' Retrieve a list of categories from the intercell database of OmniPath
+#' Retrieves a list of categories from the intercell database of OmniPath
 #'
-#' get the names of the categories from \url{http://omnipath.org/intercell}
+#' Retrieves a list of categories from \url{http://omnipath.org/intercell}.
+#'
 #' @return character vector with the different intercell categories
 #' @export
 #' @importFrom utils read.csv
@@ -2269,11 +2278,12 @@ get_intercell_categories <- function(){
 }
 
 
-#' Retrieve a list of the generic categories in the intercell database
+#' Retrieves a list of the generic categories in the intercell database
 #' of OmniPath
 #'
-#' get the names of the generic categories from
-#' \url{http://omnipath.org/intercell}
+#' Retrieves a list of the generic categories from
+#' \url{http://omnipath.org/intercell}.
+#'
 #' @return character vector with the different intercell main classes
 #' @export
 #' @importFrom utils read.csv

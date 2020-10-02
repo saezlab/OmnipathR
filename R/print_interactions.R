@@ -92,7 +92,7 @@ print_interactions = function(interDF,writeRefs=FALSE){
 
 #' print network paths given by edge sequence
 #'
-#' prints the interactions in the path in a nice format
+#' Prints the interactions in the path in a nice format.
 #'
 #' @param edgeSeq edge sequence
 #' @param G igraph object (from ptms or any interaction dataset)
@@ -102,10 +102,10 @@ print_interactions = function(interDF,writeRefs=FALSE){
 #' @examples
 #' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 #' OPI_g = interaction_graph(interactions = interactions )
-#' printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
+#' print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
 #'     output = 'epath')$epath[[1]],OPI_g)
-#' @seealso \code{\link{printPath_vs}}
-printPath_es = function(edgeSeq,G){
+#' @seealso \code{\link{print_path_vs}}
+print_path_es <- function(edgeSeq,G){
 
     if(length(edgeSeq)==0) {
         message("Empty path")
@@ -164,7 +164,7 @@ printPath_es = function(edgeSeq,G){
 
 
 # convert vertex sequence to named sequence to find unique
-unique_nodeSeq = function(nodeSeq_list){
+unique_nodeSeq <- function(nodeSeq_list){
 # takes a list of nodeSequences converts them to names and takes the unique
 # paths
     name_path <- list()
@@ -183,7 +183,7 @@ unique_nodeSeq = function(nodeSeq_list){
 
 #' print networks paths given by node sequence
 #'
-#' prints the interactions in the path in a nice format
+#' Prints the interactions in the path in a nice format.
 #'
 #' @param nodeSeq node sequence
 #' @param G igraph object (from ptms or interactions)
@@ -193,13 +193,13 @@ unique_nodeSeq = function(nodeSeq_list){
 #' @examples
 #' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 #' OPI_g = interaction_graph(interactions = interactions )
-#' printPath_vs(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3")$vpath,OPI_g)
+#' print_path_vs(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3")$vpath,OPI_g)
 #'
 #' ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 #' ptms_g = ptms_graph(ptms)
-#' printPath_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
-#' @seealso \code{\link{printPath_es}}
-printPath_vs = function(nodeSeq,G){
+#' print_path_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
+#' @seealso \code{\link{print_path_es}}
+print_path_vs <- function(nodeSeq,G){
 
     if(length(nodeSeq)==0){
         message("Empty path")
@@ -214,8 +214,26 @@ printPath_vs = function(nodeSeq,G){
             edgeSet <- c(edgeSet, E(G)[nodeSeq_names[[i]][[j-1]]  %->%
                 nodeSeq_names[[i]][[j]]])
         }
-        printPath_es(E(G)[edgeSet],G)
+        print_path_es(E(G)[edgeSet],G)
     }
 }
 
-#printPath_vs(nodeSeq,G)
+
+# Aliases (old names) to be deprecated
+#' @rdname print_path_vs
+#' @param ... Passed to \code{print_path_vs}.
+#' @export
+printPath_vs <- function(...){
+    .Deprecated("print_path_vs")
+    print_path_vs(...)
+}
+
+
+# Aliases (old names) to be deprecated
+#' @rdname print_path_es
+#' @param ... Passed to \code{print_path_es}.
+#' @export
+printPath_es <- function(...){
+    .Deprecated("print_path_es")
+    print_path_es(...)
+}

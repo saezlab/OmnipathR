@@ -39,9 +39,9 @@ Depends:
 Imports:
     dplyr,
     stats,
-    rlang
+    rlang,
+    tidyr
 Suggests:
-    tidyr,
     dnet,
     gprofiler2,
     BiocStyle,

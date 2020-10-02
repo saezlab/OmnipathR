@@ -1,3 +1,5 @@
+#' Default values for the package options
+#'
 #' These options describe the default settings for OmnipathR so you do not
 #' need to pass these parameters at each function call.
 #' Currently the only option useful for the public web service at

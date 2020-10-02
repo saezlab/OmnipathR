@@ -124,7 +124,7 @@ print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
 
 Find shortest paths on the directed network between proteins:  
 ```{r}
-printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3", 
+print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
     output = 'epath')$epath[[1]],OPI_g)
 
            source interaction          target n_resources n_references
@@ -135,7 +135,7 @@ printPath_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
 
 Find all shortest paths between proteins:  
 ```{r}
-printPath_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
+print_path_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
 Pathway 1: DYRK2 -> TBK1 -> NFKB1 -> MAP3K8 -> MAPK3 -> MAPKAPK2
 Pathway 2: DYRK2 -> TBK1 -> AKT3 -> MAP3K8 -> MAPK3 -> MAPKAPK2
 Pathway 3: DYRK2 -> TBK1 -> AKT2 -> MAP3K8 -> MAPK3 -> MAPKAPK2
