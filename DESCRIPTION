@@ -8,21 +8,17 @@ Authors@R: c(
         family = "Valdeolivas",
         role = c("aut"),
         email = "alvaldeolivas@gmail.com",
-        comment = c(ORCID = "0000-0001-5482-9023")
-    ),
+        comment = c(ORCID = "0000-0001-5482-9023")),
     person(
         given = "Denes",
         family = "Turei",
         role = c("cre", "aut"),
         email = "turei.denes@gmail.com",
-        comment = c(ORCID = "0000-0002-7249-9379")
-    ),
+        comment = c(ORCID = "0000-0002-7249-9379")),
     person(
         given = "Attila",
         family = "Gabor",
-        role = "aut"
-    )
-)
+        role = "aut"))
 Description: A client for the OmniPath web service
     (https://www.omnipathdb.org). It also includes functions to transform
     and pretty print some of the downloaded data.
