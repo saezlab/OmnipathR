@@ -55,6 +55,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-10');
+</script>
+
 
   </head>
 
@@ -72,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -95,10 +105,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
   </ul>
 </li>
@@ -120,7 +130,7 @@
   </a>
 </li>
 <li>
-  <a href="http://omnipathdb.org/">
+  <a href="https://omnipathdb.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -147,7 +157,7 @@
     <p>prints the interactions/ptms in a nice format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>print_interactions</span>(<span class='no'>interDF</span>, <span class='kw'>writeRefs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>print_interactions</span><span class='op'>(</span><span class='va'>interDF</span>, writeRefs <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,34 +185,38 @@ following functions: <code><a href='import_omnipath_enzsub.html'>import_omnipath
     <p>Interactions displayed in a nice format</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>ptms</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_enzsub.html'>import_omnipath_enzsub</a></span>()</div><div class='output co'>#&gt; <span class='message'>Downloaded 39639 enzyme-substrate relationships.</span></div><div class='input'><span class='fu'>print_interactions</span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>ptms</span>))</div><div class='output co'>#&gt;         enzyme interaction           substrate    modification n_resources
+    <pre class="examples"><div class='input'><span class='va'>ptms</span> <span class='op'>=</span> <span class='fu'><a href='import_omnipath_enzsub.html'>import_omnipath_enzsub</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Downloaded 39201 enzyme-substrate relationships.</span></div><div class='input'><span class='fu'>print_interactions</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>ptms</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         enzyme interaction           substrate    modification n_resources
 #&gt; 3 SRC (P12931)       ====&gt;  TERT_Y707 (O14746) phosphorylation           8
 #&gt; 5 FYN (P06241)       ====&gt;  FYB1_Y595 (O15117) phosphorylation           7
 #&gt; 2 LCK (P06239)       ====&gt; SOCS3_Y221 (O14543) phosphorylation           6
 #&gt; 4 FYN (P06241)       ====&gt;  FYB1_Y651 (O15117) phosphorylation           6
 #&gt; 6 FYN (P06241)       ====&gt;  FYB1_Y697 (O15117) phosphorylation           3
-#&gt; 1 LCK (P06239)       ====&gt; SOCS3_Y204 (O14543) phosphorylation           6</div><div class='input'><span class='fu'>print_interactions</span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='no'>ptms</span>),<span class='kw'>writeRefs</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;                 enzyme interaction             substrate    modification
-#&gt; 39636   TYRO3 (Q06418)       ====&gt;   PLCG1_Y771 (P19174) phosphorylation
-#&gt; 39635    TYK2 (P29597)       ====&gt;  STAT5B_Y699 (P51692) phosphorylation
-#&gt; 39634    TYK2 (P29597)       ====&gt; IL13RA1_Y402 (P78552) phosphorylation
-#&gt; 39637    WNK1 (Q9H4A3)       ====&gt;    OSR1_T185 (Q8TAX0) phosphorylation
-#&gt; 39638    WNK1 (Q9H4A3)       ====&gt;    WNK4_S335 (Q96J92) phosphorylation
-#&gt; 39639 MAP3K20 (Q9NYL2)       ====&gt;     CDS1_T68 (Q92903) phosphorylation
+#&gt; 1 LCK (P06239)       ====&gt; SOCS3_Y204 (O14543) phosphorylation           6</div><div class='input'><span class='fu'>print_interactions</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>ptms</span><span class='op'>)</span>,writeRefs<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                 enzyme interaction             substrate    modification
+#&gt; 39198   TYRO3 (Q06418)       ====&gt;   PLCG1_Y771 (P19174) phosphorylation
+#&gt; 39197    TYK2 (P29597)       ====&gt;  STAT5B_Y699 (P51692) phosphorylation
+#&gt; 39196    TYK2 (P29597)       ====&gt; IL13RA1_Y402 (P78552) phosphorylation
+#&gt; 39199    WNK1 (Q9H4A3)       ====&gt;    OSR1_T185 (Q8TAX0) phosphorylation
+#&gt; 39200    WNK1 (Q9H4A3)       ====&gt;    WNK4_S335 (Q96J92) phosphorylation
+#&gt; 39201 MAP3K20 (Q9NYL2)       ====&gt;     CDS1_T68 (Q92903) phosphorylation
 #&gt;       n_resources n_references
-#&gt; 39636           1            8
-#&gt; 39635           1            3
-#&gt; 39634           1            1
-#&gt; 39637           1            1
-#&gt; 39638           1            1
-#&gt; 39639           1            1
+#&gt; 39198           1            8
+#&gt; 39197           1            3
+#&gt; 39196           1            1
+#&gt; 39199           1            1
+#&gt; 39200           1            1
+#&gt; 39201           1            1
 #&gt;                                                                                                references
-#&gt; 39636 KEA:12601080;KEA:15144186;KEA:15592455;KEA:16038803;KEA:1689310;KEA:1708307;KEA:7682059;KEA:8657103
-#&gt; 39635                                                              KEA:10830280;KEA:11751923;KEA:12411494
-#&gt; 39634                                                                                        KEA:10409622
-#&gt; 39637                                                                                        KEA:18270262
-#&gt; 39638                                                                                        KEA:15883153
-#&gt; 39639                                                                                        KEA:10973490</div><div class='input'><span class='fu'>print_interactions</span>(<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>ptms</span>,<span class='no'>enzyme_genesymbol</span><span class='kw'>==</span><span class='st'>"MAP2K1"</span>,
-  <span class='no'>substrate_genesymbol</span><span class='kw'>==</span><span class='st'>"MAPK3"</span>))</div><div class='output co'>#&gt;            enzyme interaction           substrate    modification n_resources
+#&gt; 39198 KEA:12601080;KEA:15144186;KEA:15592455;KEA:16038803;KEA:1689310;KEA:1708307;KEA:7682059;KEA:8657103
+#&gt; 39197                                                              KEA:10830280;KEA:11751923;KEA:12411494
+#&gt; 39196                                                                                        KEA:10409622
+#&gt; 39199                                                                                        KEA:18270262
+#&gt; 39200                                                                                        KEA:15883153
+#&gt; 39201                                                                                        KEA:10973490</div><div class='input'><span class='fu'>print_interactions</span><span class='op'>(</span><span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ptms</span>,<span class='va'>enzyme_genesymbol</span><span class='op'>==</span><span class='st'>"MAP2K1"</span>,
+  <span class='va'>substrate_genesymbol</span><span class='op'>==</span><span class='st'>"MAPK3"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;            enzyme interaction           substrate    modification n_resources
 #&gt; 1 MAP2K1 (Q02750)       ====&gt; MAPK3_Y204 (P27361) phosphorylation           8
 #&gt; 2 MAP2K1 (Q02750)       ====&gt; MAPK3_T202 (P27361) phosphorylation           8
 #&gt; 3 MAP2K1 (Q02750)       ====&gt; MAPK3_Y210 (P27361) phosphorylation           2
@@ -220,11 +234,11 @@ following functions: <code><a href='import_omnipath_enzsub.html'>import_omnipath
 
       <footer>
       <div class="copyright">
-  <p>Developed by Alberto Valdeolivas.</p>
+  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

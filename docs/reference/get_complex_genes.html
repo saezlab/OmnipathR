@@ -58,6 +58,16 @@ all the genes in input set participate together." />
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-10');
+</script>
+
 
   </head>
 
@@ -75,7 +85,7 @@ all the genes in input set participate together." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -98,10 +108,10 @@ all the genes in input set participate together." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
   </ul>
 </li>
@@ -123,7 +133,7 @@ all the genes in input set participate together." />
   </a>
 </li>
 <li>
-  <a href="http://omnipathdb.org/">
+  <a href="https://omnipathdb.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -142,7 +152,7 @@ all the genes in input set participate together." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get all the molecular complexes for a given gene(s)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/get_complex_genes.R'><code>R/get_complex_genes.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/complexes_genes.R'><code>R/complexes_genes.R</code></a></small>
     <div class="hidden name"><code>get_complex_genes.Rd</code></div>
     </div>
 
@@ -153,11 +163,11 @@ any of the input genes participate or just retrieve these complexes where
 all the genes in input set participate together.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_complex_genes</span>(
-  <span class='kw'>complexes</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_complexes.html'>import_Omnipath_complexes</a></span>(),
-  <span class='no'>select_genes</span>,
-  <span class='kw'>total_match</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>get_complex_genes</span><span class='op'>(</span>
+  complexes <span class='op'>=</span> <span class='fu'><a href='import_omnipath_complexes.html'>import_Omnipath_complexes</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='va'>select_genes</span>,
+  total_match <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,8 +199,10 @@ to get only the complexes where all the input genes participate together
     <div class='dont-index'><p><code><a href='import_omnipath_complexes.html'>import_omnipath_complexes</a></code>)</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>complexes</span> <span class='kw'>=</span> <span class='fu'><a href='import_omnipath_complexes.html'>import_omnipath_complexes</a></span>(<span class='kw'>filter_databases</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CORUM"</span>, <span class='st'>"hu.MAP"</span>))</div><div class='output co'>#&gt; <span class='message'>Downloaded 21853 protein complexes.</span></div><div class='input'><span class='no'>query_genes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"LMNA"</span>,<span class='st'>"BANF1"</span>)
-<span class='no'>complexes_query_genes</span> <span class='kw'>=</span> <span class='fu'>get_complex_genes</span>(<span class='no'>complexes</span>,<span class='no'>query_genes</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>complexes</span> <span class='op'>=</span> <span class='fu'><a href='import_omnipath_complexes.html'>import_omnipath_complexes</a></span><span class='op'>(</span>filter_databases<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"CORUM"</span>, <span class='st'>"hu.MAP"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Downloaded 22011 protein complexes.</span></div><div class='input'><span class='va'>query_genes</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LMNA"</span>,<span class='st'>"BANF1"</span><span class='op'>)</span>
+<span class='va'>complexes_query_genes</span> <span class='op'>=</span> <span class='fu'>get_complex_genes</span><span class='op'>(</span><span class='va'>complexes</span>,<span class='va'>query_genes</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -202,11 +214,11 @@ to get only the complexes where all the input genes participate together
 
       <footer>
       <div class="copyright">
-  <p>Developed by Alberto Valdeolivas.</p>
+  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

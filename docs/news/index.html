@@ -54,6 +54,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-10');
+</script>
+
 
   </head>
 
@@ -71,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -94,10 +104,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
   </ul>
 </li>
@@ -119,7 +129,7 @@
   </a>
 </li>
 <li>
-  <a href="http://omnipathdb.org/">
+  <a href="https://omnipathdb.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -141,22 +151,47 @@
       <small>Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="omnipathr-v141-2020-06-05" class="section level2">
+    <div id="omnipathr-v140-2020-10-02" class="section level2">
 <h2 class="hasAnchor">
-<a href="#omnipathr-v141-2020-06-05" class="anchor"></a>OmnipathR v1.4.1 (2020-06-05)</h2>
+<a href="#omnipathr-v140-2020-10-02" class="anchor"></a>OmnipathR v1.4.0 (2020-10-02)</h2>
 <ul>
-<li>Addition of the package Website.</li>
+<li>New tests</li>
+<li>Many little bugfixes</li>
+<li>Updated package metadata</li>
+<li>Preparation for Bioconductor 3.12</li>
+</ul>
+</div>
+    <div id="omnipathr-v134-2020-08-04" class="section level2">
+<h2 class="hasAnchor">
+<a href="#omnipathr-v134-2020-08-04" class="anchor"></a>OmnipathR v1.3.4 (2020-08-04)</h2>
+<ul>
+<li>License and password handling</li>
+<li>Can be directed to different server by options</li>
+</ul>
+</div>
+    <div id="omnipathr-v131-2020-06-05" class="section level2">
+<h2 class="hasAnchor">
+<a href="#omnipathr-v131-2020-06-05" class="anchor"></a>OmnipathR v1.3.1 (2020-06-05)</h2>
+<ul>
+<li>Addition of the package website.</li>
 <li>Modification of the pdf vignette for an html one.</li>
 <li>Major refactoring of functions.</li>
 <li>Addition of the intercellular network function.</li>
 <li>Modification for the intercellular categories.</li>
 </ul>
 </div>
+    <div id="omnipathr-v114-2020-03-28" class="section level2">
+<h2 class="hasAnchor">
+<a href="#omnipathr-v114-2020-03-28" class="anchor"></a>OmnipathR v1.1.4 (2020-03-28)</h2>
+<ul>
+<li>Refactored the <code>import_annotations</code> method</li>
+</ul>
+</div>
     <div id="omnipathr-v09912-2019-10-10" class="section level2">
 <h2 class="hasAnchor">
 <a href="#omnipathr-v09912-2019-10-10" class="anchor"></a>OmnipathR v0.99.12 (2019-10-10)</h2>
 <ul>
-<li>Modification in the separation between genes within a complex (From dash) to Underscore</li>
+<li>Modification in the separation between genes within a complex (from dash to underscore)</li>
 </ul>
 </div>
     <div id="omnipathr-v0990-2019-10-10" class="section level2">
@@ -179,11 +214,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Alberto Valdeolivas.</p>
+  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

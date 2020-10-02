@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the resources available in the annotations database of OmniPath — get_annotation_resources • OmnipathR</title>
+<title>Retrieves a list of available resources in the annotations database
+of OmniPath — get_annotation_resources • OmnipathR</title>
 
 
 <!-- jquery -->
@@ -39,8 +40,9 @@
 
 
 
-<meta property="og:title" content="Get the resources available in the annotations database of OmniPath — get_annotation_resources" />
-<meta property="og:description" content="get the names of the resources from http://omnipath.org/annotations" />
+<meta property="og:title" content="Retrieves a list of available resources in the annotations database
+of OmniPath — get_annotation_resources" />
+<meta property="og:description" content="Get the names of the resources from http://omnipath.org/annotations." />
 
 
 
@@ -54,6 +56,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-10');
+</script>
 
 
   </head>
@@ -72,7 +84,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -95,10 +107,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
   </ul>
 </li>
@@ -120,7 +132,7 @@
   </a>
 </li>
 <li>
-  <a href="http://omnipathdb.org/">
+  <a href="https://omnipathdb.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -138,18 +150,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the resources available in the annotations database of OmniPath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import_Omnipath.R'><code>R/import_Omnipath.R</code></a></small>
+    <h1>Retrieves a list of available resources in the annotations database
+of OmniPath</h1>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
     <div class="hidden name"><code>get_annotation_resources.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>get the names of the resources from <a href='http://omnipath.org/annotations'>http://omnipath.org/annotations</a></p>
+    <p>Get the names of the resources from <a href='http://omnipath.org/annotations'>http://omnipath.org/annotations</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_annotation_resources</span>(<span class='kw'>dataset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>get_annotation_resources</span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>get_annotation_databases</span>(<span class='no'>...</span>)</pre>
+<span class='fu'>get_annotation_databases</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,27 +186,28 @@
 <a href='import_omnipath_annotations.html'>import_omnipath_annotations</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>get_annotation_resources</span>()</div><div class='output co'>#&gt;  [1] "Adhesome"             "Almen2009"            "Baccin2019"          
+    <pre class="examples"><div class='input'><span class='fu'>get_annotation_resources</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "Adhesome"             "Almen2009"            "Baccin2019"          
 #&gt;  [4] "CancerGeneCensus"     "CancerSEA"            "CellCellInteractions"
 #&gt;  [7] "CellPhoneDB"          "CellPhoneDB_complex"  "ComPPI"              
-#&gt; [10] "CORUM_Funcat"         "CORUM_GO"             "CPAD"                
-#&gt; [13] "CSPA"                 "CSPA_celltype"        "DGIdb"               
-#&gt; [16] "DisGeNet"             "EMBRACE"              "Exocarta"            
-#&gt; [19] "GO_Intercell"         "GPCRdb"               "Guide2Pharma"        
-#&gt; [22] "HGNC"                 "HPA_secretome"        "HPA_subcellular"     
-#&gt; [25] "HPA_tissue"           "HPMR"                 "HPMR_complex"        
-#&gt; [28] "ICELLNET"             "ICELLNET_complex"     "Integrins"           
-#&gt; [31] "IntOGen"              "iTALK"                "KEGG"                
-#&gt; [34] "kinase.com"           "Kirouac2010"          "LOCATE"              
-#&gt; [37] "LRdb"                 "Matrisome"            "MatrixDB"            
-#&gt; [40] "MCAM"                 "Membranome"           "MSigDB"              
-#&gt; [43] "NetPath"              "OPM"                  "Phobius"             
-#&gt; [46] "Phosphatome"          "Ramilowski_location"  "Ramilowski2015"      
-#&gt; [49] "SignaLink_function"   "SignaLink_pathway"    "SIGNOR"              
-#&gt; [52] "Surfaceome"           "TCDB"                 "TFcensus"            
-#&gt; [55] "TopDB"                "UniProt_family"       "UniProt_keyword"     
-#&gt; [58] "UniProt_location"     "UniProt_tissue"       "UniProt_topology"    
-#&gt; [61] "Vesiclepedia"         "Zhong2015"           </div><div class='input'>
+#&gt; [10] "CORUM_Funcat"         "CORUM_GO"             "CSPA"                
+#&gt; [13] "CSPA_celltype"        "DGIdb"                "DisGeNet"            
+#&gt; [16] "EMBRACE"              "Exocarta"             "GO_Intercell"        
+#&gt; [19] "GPCRdb"               "Guide2Pharma"         "HGNC"                
+#&gt; [22] "HPA_secretome"        "HPA_subcellular"      "HPA_tissue"          
+#&gt; [25] "HPMR"                 "HPMR_complex"         "ICELLNET"            
+#&gt; [28] "ICELLNET_complex"     "Integrins"            "IntOGen"             
+#&gt; [31] "iTALK"                "KEGG-PC"              "kinase.com"          
+#&gt; [34] "Kirouac2010"          "LOCATE"               "LRdb"                
+#&gt; [37] "Matrisome"            "MatrixDB"             "MCAM"                
+#&gt; [40] "Membranome"           "MSigDB"               "NetPath"             
+#&gt; [43] "OPM"                  "Phobius"              "Phosphatome"         
+#&gt; [46] "Ramilowski_location"  "Ramilowski2015"       "SignaLink_function"  
+#&gt; [49] "SignaLink_pathway"    "SIGNOR"               "Surfaceome"          
+#&gt; [52] "TCDB"                 "TFcensus"             "TopDB"               
+#&gt; [55] "UniProt_family"       "UniProt_keyword"      "UniProt_location"    
+#&gt; [58] "UniProt_tissue"       "UniProt_topology"     "Vesiclepedia"        
+#&gt; [61] "Zhong2015"           </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -206,11 +220,11 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Alberto Valdeolivas.</p>
+  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -54,6 +54,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-10');
+</script>
+
 
   </head>
 
@@ -71,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -94,10 +104,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
   </ul>
 </li>
@@ -119,7 +129,7 @@
   </a>
 </li>
 <li>
-  <a href="http://omnipathdb.org/">
+  <a href="https://omnipathdb.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -169,9 +179,16 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="dot-omnipath_options_defaults.html">.omnipath_options_defaults</a></code> </p>
+        </td>
+        <td><p>Default values for the package options</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="get_annotation_resources.html">get_annotation_resources()</a></code> <code><a href="get_annotation_resources.html">get_annotation_databases()</a></code> </p>
         </td>
-        <td><p>Get the resources available in the annotations database of OmniPath</p></td>
+        <td><p>Retrieves a list of available resources in the annotations database
+of OmniPath</p></td>
       </tr><tr>
         
         <td>
@@ -189,7 +206,7 @@
         <td>
           <p><code><a href="get_enzsub_resources.html">get_enzsub_resources()</a></code> <code><a href="get_enzsub_resources.html">get_ptms_databases()</a></code> </p>
         </td>
-        <td><p>Retrieve a list of enzyme-substrate resources available in OmniPath</p></td>
+        <td><p>Retrieves a list of enzyme-substrate resources available in OmniPath</p></td>
       </tr><tr>
         
         <td>
@@ -201,21 +218,21 @@
         <td>
           <p><code><a href="get_intercell_categories.html">get_intercell_categories()</a></code> </p>
         </td>
-        <td><p>Retrieve a list of categories from the intercell database of OmniPath</p></td>
+        <td><p>Retrieves a list of categories from the intercell database of OmniPath</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="get_intercell_generic_categories.html">get_intercell_generic_categories()</a></code> <code><a href="get_intercell_generic_categories.html">get_intercell_classes()</a></code> </p>
         </td>
-        <td><p>Retrieve a list of the generic categories in the intercell database
+        <td><p>Retrieves a list of the generic categories in the intercell database
 of OmniPath</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="get_intercell_resources.html">get_intercell_resources()</a></code> </p>
         </td>
-        <td><p>Retrieve a list of intercellular communication resources available in
-Omnipath</p></td>
+        <td><p>Retrieves a list of intercellular communication resources available in
+OmniPath</p></td>
       </tr><tr>
         
         <td>
@@ -239,8 +256,8 @@ Omnipath</p></td>
         <td>
           <p><code><a href="import_dorothea_interactions.html">import_dorothea_interactions()</a></code> <code><a href="import_dorothea_interactions.html">import_TFregulons_Interactions()</a></code> <code><a href="import_dorothea_interactions.html">import_tfregulons_interactions()</a></code> </p>
         </td>
-        <td><p>Imports from Omnipath webservice the interactions from
-Dorothea dataset</p></td>
+        <td><p>From the OmniPath webservice imports interactions from the
+DoRothEA dataset</p></td>
       </tr><tr>
         
         <td>
@@ -282,7 +299,7 @@ Dorothea dataset</p></td>
         <td>
           <p><code><a href="import_omnipath_complexes.html">import_omnipath_complexes()</a></code> <code><a href="import_omnipath_complexes.html">import_Omnipath_complexes()</a></code> <code><a href="import_omnipath_complexes.html">import_OmniPath_complexes()</a></code> </p>
         </td>
-        <td><p>Imports protein complexes from Omnipath</p></td>
+        <td><p>Imports protein complexes from OmniPath</p></td>
       </tr><tr>
         
         <td>
@@ -300,7 +317,7 @@ Dorothea dataset</p></td>
         <td>
           <p><code><a href="import_omnipath_intercell.html">import_omnipath_intercell()</a></code> <code><a href="import_omnipath_intercell.html">import_Omnipath_intercell()</a></code> <code><a href="import_omnipath_intercell.html">import_OmniPath_intercell()</a></code> </p>
         </td>
-        <td><p>Imports OmniPath Intercell Data</p></td>
+        <td><p>Imports OmniPath intercell annotations</p></td>
       </tr><tr>
         
         <td>
@@ -340,21 +357,27 @@ Dorothea dataset</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="printPath_es.html">printPath_es()</a></code> </p>
+          <p><code><a href="pivot_annotations.html">pivot_annotations()</a></code> </p>
         </td>
-        <td><p>print network paths given by edge sequence</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="printPath_vs.html">printPath_vs()</a></code> </p>
-        </td>
-        <td><p>print networks paths given by node sequence</p></td>
+        <td><p>Converts annotation tables to a wide format</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="print_interactions.html">print_interactions()</a></code> </p>
         </td>
         <td><p>print interactions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print_path_es.html">print_path_es()</a></code> <code><a href="print_path_es.html">printPath_es()</a></code> </p>
+        </td>
+        <td><p>print network paths given by edge sequence</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print_path_vs.html">print_path_vs()</a></code> <code><a href="print_path_vs.html">printPath_vs()</a></code> </p>
+        </td>
+        <td><p>print networks paths given by node sequence</p></td>
       </tr><tr>
         
         <td>
@@ -376,11 +399,11 @@ Dorothea dataset</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Alberto Valdeolivas.</p>
+  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -7,6 +7,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/OmnipathR.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/dot-omnipath_options_defaults.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/get_annotation_resources.html</loc>
   </url>
   <url>
@@ -91,21 +94,24 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/interaction_graph.html</loc>
   </url>
   <url>
-    <loc>https://saezlab.github.io/OmnipathR/reference/printPath_es.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/reference/printPath_vs.html</loc>
+    <loc>https://saezlab.github.io/OmnipathR/reference/pivot_annotations.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/print_interactions.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/print_path_es.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/print_path_vs.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/ptms_graph.html</loc>
   </url>
   <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html</loc>
+    <loc>https://saezlab.github.io/OmnipathR/articles/drug_targets.html</loc>
   </url>
   <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/drug_targets.html</loc>
+    <loc>https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html</loc>
   </url>
 </urlset>

@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Retrieve a list of interaction resources available in Omnipath — get_interaction_resources" />
-<meta property="og:description" content="gets the names of the resources from http://omnipath.org/interactions" />
+<meta property="og:description" content="Gets the names of the resources from
+http://omnipath.org/interactions." />
 
 
 
@@ -54,6 +55,16 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119440867-10"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-119440867-10');
+</script>
 
 
   </head>
@@ -72,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4.0</span>
       </span>
     </div>
 
@@ -95,10 +106,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/OmnipathMainVignette.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
     </li>
   </ul>
 </li>
@@ -120,7 +131,7 @@
   </a>
 </li>
 <li>
-  <a href="http://omnipathdb.org/">
+  <a href="https://omnipathdb.org/">
     <span class="fas fa fas fa-university"></span>
      
   </a>
@@ -139,17 +150,18 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Retrieve a list of interaction resources available in Omnipath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import_Omnipath.R'><code>R/import_Omnipath.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
     <div class="hidden name"><code>get_interaction_resources.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>gets the names of the resources from <a href='http://omnipath.org/interactions'>http://omnipath.org/interactions</a></p>
+    <p>Gets the names of the resources from
+<a href='http://omnipath.org/interactions'>http://omnipath.org/interactions</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_interaction_resources</span>(<span class='kw'>dataset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+    <pre class="usage"><span class='fu'>get_interaction_resources</span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>get_interaction_databases</span>(<span class='no'>...</span>)</pre>
+<span class='fu'>get_interaction_databases</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,61 +193,75 @@ available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
 <a href='import_dorothea_interactions.html'>import_dorothea_interactions</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>get_interaction_resources</span>()</div><div class='output co'>#&gt;   [1] "ABS"                       "ACSN"                     
-#&gt;   [3] "Adhesome"                  "AlzPathway"               
-#&gt;   [5] "ARACNe-GTEx_DoRothEA"      "ARN"                      
-#&gt;   [7] "Baccin2019"                "BEL-Large-Corpus"         
-#&gt;   [9] "BioGRID"                   "CA1"                      
-#&gt;  [11] "CancerCellMap"             "CellPhoneDB"              
-#&gt;  [13] "cellsignal.com"            "dbPTM"                    
-#&gt;  [15] "DeathDomain"               "DEPOD"                    
-#&gt;  [17] "Dinarello2013"             "DIP"                      
-#&gt;  [19] "DOMINO"                    "DoRothEA_A"               
-#&gt;  [21] "DoRothEA_B"                "DoRothEA_C"               
-#&gt;  [23] "DoRothEA_D"                "DoRothEA-reviews_DoRothEA"
-#&gt;  [25] "ELM"                       "EMBRACE"                  
-#&gt;  [27] "ENCODE_tf-mirna"           "ENCODE-distal"            
-#&gt;  [29] "ENCODE-proximal"           "FANTOM4_DoRothEA"         
-#&gt;  [31] "Fantom5"                   "GO-lig-rec"               
-#&gt;  [33] "Guide2Pharma"              "Guide2Pharma_CellPhoneDB" 
-#&gt;  [35] "HOCOMOCO-v11_DoRothEA"     "HPMR"                     
-#&gt;  [37] "HPRD"                      "HPRD-phos"                
-#&gt;  [39] "HTRIdb"                    "HTRIdb_DoRothEA"          
-#&gt;  [41] "I2D_CellPhoneDB"           "ICELLNET"                 
-#&gt;  [43] "IMEx_CellPhoneDB"          "InnateDB"                 
-#&gt;  [45] "InnateDB_CellPhoneDB"      "InnateDB-All_CellPhoneDB" 
-#&gt;  [47] "IntAct_CellPhoneDB"        "IntAct_DoRothEA"          
-#&gt;  [49] "iPTMnet"                   "iTALK"                    
-#&gt;  [51] "JASPAR-v2018_DoRothEA"     "KEA"                      
-#&gt;  [53] "KEGG"                      "KEGG_DoRothEA"            
-#&gt;  [55] "Kinexus"                   "Kirouac2010"              
-#&gt;  [57] "Li2012"                    "LMPID"                    
-#&gt;  [59] "lncrnadb"                  "LncRNADisease"            
-#&gt;  [61] "LRdb"                      "Macrophage"               
-#&gt;  [63] "MatrixDB"                  "MatrixDB_CellPhoneDB"     
-#&gt;  [65] "MIMP"                      "MINT_CellPhoneDB"         
-#&gt;  [67] "miR2Disease"               "miRDeathDB"               
-#&gt;  [69] "miRecords"                 "miRTarBase"               
-#&gt;  [71] "MPPI"                      "NCI-PID"                  
-#&gt;  [73] "ncRDeathDB"                "NetPath"                  
-#&gt;  [75] "NetworKIN"                 "NFIRegulomeDB_DoRothEA"   
-#&gt;  [77] "NRF2ome"                   "ORegAnno"                 
-#&gt;  [79] "ORegAnno_DoRothEA"         "PAZAR"                    
-#&gt;  [81] "PAZAR_DoRothEA"            "PDZBase"                  
-#&gt;  [83] "phosphoELM"                "PhosphoNetworks"          
-#&gt;  [85] "PhosphoPoint"              "PhosphoSite"              
-#&gt;  [87] "PhosphoSite_noref"         "ProtMapper"               
-#&gt;  [89] "Ramilowski2015"            "REACH"                    
-#&gt;  [91] "Reactome"                  "RegNetwork_DoRothEA"      
-#&gt;  [93] "ReMap_DoRothEA"            "RLIMS-P"                  
-#&gt;  [95] "SignaLink3"                "SIGNOR"                   
-#&gt;  [97] "Sparser"                   "SPIKE"                    
-#&gt;  [99] "STRING"                    "TCRcuration"              
-#&gt; [101] "TFactS_DoRothEA"           "TFe_DoRothEA"             
-#&gt; [103] "TransmiR"                  "TRED_DoRothEA"            
-#&gt; [105] "TRIP"                      "TRRD_DoRothEA"            
-#&gt; [107] "TRRUST_DoRothEA"           "UniProt"                  
-#&gt; [109] "UniProt_CellPhoneDB"       "Wang"                     </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>get_interaction_resources</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   [1] "ABS"                         "ACSN"                       
+#&gt;   [3] "ACSN_SignaLink3"             "Adhesome"                   
+#&gt;   [5] "AlzPathway"                  "ARACNe-GTEx_DoRothEA"       
+#&gt;   [7] "ARN"                         "Baccin2019"                 
+#&gt;   [9] "BEL-Large-Corpus_ProtMapper" "BioGRID"                    
+#&gt;  [11] "BioGRID_ICELLNET"            "CA1"                        
+#&gt;  [13] "CancerCellMap"               "CellPhoneDB"                
+#&gt;  [15] "CellPhoneDB_ICELLNET"        "dbPTM"                      
+#&gt;  [17] "DeathDomain"                 "DEPOD"                      
+#&gt;  [19] "Dinarello2013_ICELLNET"      "DIP"                        
+#&gt;  [21] "DOMINO"                      "DoRothEA"                   
+#&gt;  [23] "DoRothEA-reviews_DoRothEA"   "ELM"                        
+#&gt;  [25] "EMBRACE"                     "ENCODE_tf-mirna"            
+#&gt;  [27] "ENCODE-distal"               "ENCODE-proximal"            
+#&gt;  [29] "FANTOM4_DoRothEA"            "Fantom5_LRdb"               
+#&gt;  [31] "GO-lig-rec_ICELLNET"         "Guide2Pharma"               
+#&gt;  [33] "Guide2Pharma_CellPhoneDB"    "Guide2Pharma_ICELLNET"      
+#&gt;  [35] "Guide2Pharma_LRdb"           "HOCOMOCO_DoRothEA"          
+#&gt;  [37] "HPMR"                        "HPMR_ICELLNET"              
+#&gt;  [39] "HPMR_LRdb"                   "HPRD"                       
+#&gt;  [41] "HPRD_KEA"                    "HPRD_LRdb"                  
+#&gt;  [43] "HPRD_MIMP"                   "HPRD-phos"                  
+#&gt;  [45] "HTRIdb"                      "HTRIdb_DoRothEA"            
+#&gt;  [47] "HuRI"                        "I2D_CellPhoneDB"            
+#&gt;  [49] "ICELLNET"                    "IMEx_CellPhoneDB"           
+#&gt;  [51] "InnateDB"                    "InnateDB_CellPhoneDB"       
+#&gt;  [53] "InnateDB_ICELLNET"           "InnateDB_SignaLink3"        
+#&gt;  [55] "InnateDB-All_CellPhoneDB"    "IntAct"                     
+#&gt;  [57] "IntAct_CellPhoneDB"          "IntAct_DoRothEA"            
+#&gt;  [59] "iPTMnet"                     "iTALK"                      
+#&gt;  [61] "JASPAR_DoRothEA"             "KEA"                        
+#&gt;  [63] "KEGG-MEDICUS"                "Kinexus_KEA"                
+#&gt;  [65] "Kirouac2010"                 "Kirouac2010_ICELLNET"       
+#&gt;  [67] "Li2012"                      "Lit-BM-17"                  
+#&gt;  [69] "LMPID"                       "lncrnadb"                   
+#&gt;  [71] "LncRNADisease"               "LRdb"                       
+#&gt;  [73] "Macrophage"                  "Macrophage_ICELLNET"        
+#&gt;  [75] "MatrixDB"                    "MatrixDB_CellPhoneDB"       
+#&gt;  [77] "MIMP"                        "MINT_CellPhoneDB"           
+#&gt;  [79] "miR2Disease"                 "miRDeathDB"                 
+#&gt;  [81] "miRecords"                   "miRTarBase"                 
+#&gt;  [83] "MPPI"                        "NCI-PID_ProtMapper"         
+#&gt;  [85] "ncRDeathDB"                  "NetPath"                    
+#&gt;  [87] "NetworKIN_KEA"               "NFIRegulomeDB_DoRothEA"     
+#&gt;  [89] "NRF2ome"                     "ORegAnno"                   
+#&gt;  [91] "ORegAnno_DoRothEA"           "PAZAR"                      
+#&gt;  [93] "PAZAR_DoRothEA"              "phosphoELM"                 
+#&gt;  [95] "phosphoELM_KEA"              "phosphoELM_MIMP"            
+#&gt;  [97] "PhosphoNetworks"             "PhosphoPoint"               
+#&gt;  [99] "PhosphoSite"                 "PhosphoSite_KEA"            
+#&gt; [101] "PhosphoSite_MIMP"            "PhosphoSite_noref"          
+#&gt; [103] "PhosphoSite_ProtMapper"      "ProtMapper"                 
+#&gt; [105] "Ramilowski2015"              "Ramilowski2015_Baccin2019"  
+#&gt; [107] "Ramilowski2015_ICELLNET"     "REACH_ProtMapper"           
+#&gt; [109] "Reactome_ICELLNET"           "Reactome_LRdb"              
+#&gt; [111] "Reactome_ProtMapper"         "Reactome_SignaLink3"        
+#&gt; [113] "RegNetwork_DoRothEA"         "ReMap_DoRothEA"             
+#&gt; [115] "RLIMS-P_ProtMapper"          "SignaLink3"                 
+#&gt; [117] "SignaLink3_ICELLNET"         "SIGNOR"                     
+#&gt; [119] "SIGNOR_ICELLNET"             "SIGNOR_ProtMapper"          
+#&gt; [121] "Sparser_ProtMapper"          "SPIKE"                      
+#&gt; [123] "SPIKE_ICELLNET"              "STRING_ICELLNET"            
+#&gt; [125] "TCRcuration_SignaLink3"      "TFactS_DoRothEA"            
+#&gt; [127] "TFe_DoRothEA"                "TransmiR"                   
+#&gt; [129] "TRED_DoRothEA"               "TRIP"                       
+#&gt; [131] "TRRD_DoRothEA"               "TRRUST_DoRothEA"            
+#&gt; [133] "UniProt_CellPhoneDB"         "UniProt_LRdb"               
+#&gt; [135] "Wang"                       </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -248,11 +274,11 @@ available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
 
       <footer>
       <div class="copyright">
-  <p>Developed by Alberto Valdeolivas.</p>
+  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
