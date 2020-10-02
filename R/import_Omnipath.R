@@ -1471,9 +1471,8 @@ import_all_interactions <- function(
     ...
 ){
 
-    all_datasets <- jsonlite::fromJSON(
-        txt = 'http://omnipathdb.org/queries/interactions?format=json'
-    )$datasets
+    url <- paste0(options('omnipath.url'), 'queries/interactions?format=json')
+    all_datasets <- jsonlite::fromJSON(txt = url)$datasets
 
     all_datasets <- setdiff(all_datasets, exclude)
 
