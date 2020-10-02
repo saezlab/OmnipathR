@@ -10,8 +10,8 @@ navbar:
        href: https://twitter.com/omnipathdb
      homepage:
        icon: "fas fa-university"
-       href: http://omnipathdb.org/
-       
+       href: https://omnipathdb.org/
+
 template:
   params:
     ganalytics: UA-119440867-10
