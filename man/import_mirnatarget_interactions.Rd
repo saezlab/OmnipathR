@@ -44,7 +44,7 @@ A dataframe containing miRNA-mRNA interactions
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=mirnatarget},
+\url{https://omnipathdb.org/interactions?datasets=mirnatarget},
 which contains miRNA-mRNA interactions.
 }
 \examples{

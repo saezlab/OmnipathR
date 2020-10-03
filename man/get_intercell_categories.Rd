@@ -10,7 +10,7 @@ get_intercell_categories()
 character vector with the different intercell categories
 }
 \description{
-Retrieves a list of categories from \url{http://omnipath.org/intercell}.
+Retrieves a list of categories from \url{https://omnipath.org/intercell}.
 }
 \examples{
 get_intercell_categories()

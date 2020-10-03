@@ -19,7 +19,7 @@ character vector with the names of the enzyme-substrate resources
 }
 \description{
 Get the names of the enzyme-substrate relationship resources available
-in \url{http://omnipath.org/enzsub}
+in \url{https://omnipath.org/enzsub}
 }
 \examples{
 get_enzsub_resources()

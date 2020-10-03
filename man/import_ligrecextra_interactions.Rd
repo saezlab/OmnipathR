@@ -45,7 +45,7 @@ the ones without literature references
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=ligrecextra},
+\url{https://omnipathdb.org/interactions?datasets=ligrecextra},
 which contains ligand-receptor interactions without literature reference.
 The ligand-receptor interactions supported by literature references
 are part of the `omnipath` dataset.

@@ -53,7 +53,7 @@ comes from which resource will be lost and the PubMed IDs will be unique.}
 A dataframe of protein-protein interactions
 }
 \description{
-Imports the database from \url{http://omnipathdb.org/interactions}, which
+Imports the database from \url{https://omnipathdb.org/interactions}, which
 contains only interactions supported by literature references.
 This part of the interaction database compiled a similar way as it has
 been presented in the first paper describing OmniPath (Turei et al. 2016).

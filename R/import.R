@@ -541,7 +541,7 @@ swap_undirected <- function(data){
 #' Imports enzyme-substrate relationships from OmniPath
 #'
 #' Imports the enzyme-substrate (more exactly, enzyme-PTM) relationship
-#' database from \url{http://omnipathdb.org/enzsub}
+#' database from \url{https://omnipathdb.org/enzsub}
 #'
 #' @return A data frame containing the information about ptms
 #' @export
@@ -617,7 +617,7 @@ import_OmniPath_PTMS <- function(...){
 #' Retrieves a list of enzyme-substrate resources available in OmniPath
 #'
 #' Get the names of the enzyme-substrate relationship resources available
-#' in \url{http://omnipath.org/enzsub}
+#' in \url{https://omnipath.org/enzsub}
 #'
 #' @param dataset ignored for this query type
 #' @return character vector with the names of the enzyme-substrate resources
@@ -655,7 +655,7 @@ get_ptms_databases <- function(...){
 
 #' Imports interactions from the `omnipath` dataset of Omnipath
 #'
-#' Imports the database from \url{http://omnipathdb.org/interactions}, which
+#' Imports the database from \url{https://omnipathdb.org/interactions}, which
 #' contains only interactions supported by literature references.
 #' This part of the interaction database compiled a similar way as it has
 #' been presented in the first paper describing OmniPath (Turei et al. 2016).
@@ -743,7 +743,7 @@ import_OmniPath_Interactions <- function(...){
 #' Imports interactions from the `pathway extra` dataset of Omnipath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=pathwayextra},
+#' \url{https://omnipathdb.org/interactions?datasets=pathwayextra},
 #' which contains activity flow interactions without literature reference.
 #' The activity flow interactions supported by literature references
 #' are part of the `omnipath` dataset.
@@ -817,7 +817,7 @@ import_PathwayExtra_Interactions <- function(...){
 #' Imports interactions from the `kinase extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=kinaseextra},
+#' \url{https://omnipathdb.org/interactions?datasets=kinaseextra},
 #' which contains enzyme-substrate interactions without literature reference.
 #' The enzyme-substrate interactions supported by literature references
 #' are part of the `omnipath` dataset.
@@ -890,7 +890,7 @@ import_KinaseExtra_Interactions <- function(...){
 #' Imports interactions from the `ligrec extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=ligrecextra},
+#' \url{https://omnipathdb.org/interactions?datasets=ligrecextra},
 #' which contains ligand-receptor interactions without literature reference.
 #' The ligand-receptor interactions supported by literature references
 #' are part of the `omnipath` dataset.
@@ -1014,7 +1014,7 @@ import_post_translational_interactions <- function(
 #' DoRothEA dataset
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=dorothea}
+#' \url{https://omnipathdb.org/interactions?datasets=dorothea}
 #' which contains transcription factor (TF)-target interactions from DoRothEA
 #' \url{https://github.com/saezlab/DoRothEA}
 #'
@@ -1101,7 +1101,7 @@ import_tfregulons_interactions <- function(...){
 #' Imports interactions from the TF-target dataset of OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=tf_target},
+#' \url{https://omnipathdb.org/interactions?datasets=tf_target},
 #' which contains transcription factor-target protein coding gene
 #' interactions. Note: this is not the only TF-target dataset in OmniPath,
 #' `dorothea` is the other one and the `tf_mirna` dataset provides
@@ -1163,7 +1163,7 @@ import_tf_target_interactions <- function(
 #' Imports all TF-target interactions from OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=tf_target,dorothea},
+#' \url{https://omnipathdb.org/interactions?datasets=tf_target,dorothea},
 #' which contains transcription factor-target protein coding gene
 #' interactions.
 #'
@@ -1230,7 +1230,7 @@ import_transcriptional_interactions <- function(
 #' Imports interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=mirnatarget},
+#' \url{https://omnipathdb.org/interactions?datasets=mirnatarget},
 #' which contains miRNA-mRNA interactions.
 #'
 #' @return A dataframe containing miRNA-mRNA interactions
@@ -1299,7 +1299,7 @@ import_miRNAtarget_Interactions <- function(...){
 #' Imports interactions from the TF-miRNA dataset of OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=tf_mirna},
+#' \url{https://omnipathdb.org/interactions?datasets=tf_mirna},
 #' which contains transcription factor-miRNA gene interactions
 #'
 #' @return A dataframe containing TF-miRNA interactions
@@ -1358,7 +1358,7 @@ import_tf_mirna_interactions <- function(
 #' Imports interactions from the lncRNA-mRNA dataset of OmniPath
 #'
 #' Imports the dataset from:
-#' \url{http://omnipathdb.org/interactions?datasets=lncrna_mrna},
+#' \url{https://omnipathdb.org/interactions?datasets=lncrna_mrna},
 #' which contains lncRNA-mRNA interactions
 #'
 #' @return A dataframe containing lncRNA-mRNA interactions
@@ -1511,7 +1511,7 @@ import_AllInteractions <- function(...){
 #' Retrieve a list of interaction resources available in Omnipath
 #'
 #' Gets the names of the resources from
-#' \url{http://omnipath.org/interactions}.
+#' \url{https://omnipath.org/interactions}.
 #'
 #' @param dataset a dataset within the interactions query type. Currently
 #' available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
@@ -1599,7 +1599,7 @@ get_resources <- function(
         query_type
     )
 
-    resources <- jsonlite::fromJSON(txt = 'http://omnipathdb.org/resources')
+    resources <- jsonlite::fromJSON(txt = 'https://omnipathdb.org/resources')
 
     return(
         sort(Filter(
@@ -1622,7 +1622,7 @@ get_resources <- function(
 #' Imports protein complexes from OmniPath
 #'
 #' Imports the complexes stored in Omnipath database from
-#' \url{http://omnipathdb.org/complexes}.
+#' \url{https://omnipathdb.org/complexes}.
 #'
 #' @return A dataframe containing information about complexes
 #' @export
@@ -1677,7 +1677,7 @@ import_OmniPath_complexes <- function(...){
 
 #' Retrieve a list of complex resources available in Omnipath
 #'
-#' get the names of the resources from \url{http://omnipath.org/complexes}
+#' get the names of the resources from \url{https://omnipath.org/complexes}
 #' @param dataset ignored for this query type
 #' @return character vector with the names of the databases
 #' @export
@@ -1713,7 +1713,7 @@ get_complexes_databases <- function(...){
 #'
 #' Imports protein annotations about function, localization, expression,
 #' structure and other properties of proteins from OmniPath
-#' \url{http://omnipathdb.org/annotations}.
+#' \url{https://omnipathdb.org/annotations}.
 #' Note: there might be also a few miRNAs annotated; a vast majority of
 #' protein complex annotations are inferred from the annotations of the
 #' members: if all members carry the same annotation the complex inherits.
@@ -1883,7 +1883,7 @@ import_OmniPath_annotations <- function(...){
 #' Retrieves a list of available resources in the annotations database
 #' of OmniPath
 #'
-#' Get the names of the resources from \url{http://omnipath.org/annotations}.
+#' Get the names of the resources from \url{https://omnipath.org/annotations}.
 #'
 #' @return character vector with the names of the annotation resources
 #' @export
@@ -1966,7 +1966,7 @@ pivot_annotations <- function(annotations){
 #' Imports OmniPath intercell annotations
 #'
 #' Imports the OmniPath intercellular communication role annotation database
-#' from \url{http://omnipathdb.org/intercell}. It provides information
+#' from \url{https://omnipathdb.org/intercell}. It provides information
 #' on the roles in inter-cellular signaling. E.g. if a protein is
 #' a ligand, a receptor, an extracellular matrix (ECM) component, etc.
 #'
@@ -2073,7 +2073,7 @@ import_OmniPath_intercell <- function(...){
 #' Retrieves a list of intercellular communication resources available in
 #' OmniPath
 #'
-#' Retrieves a list of the databases from \url{http://omnipath.org/intercell}.
+#' Retrieves a list of the databases from \url{https://omnipath.org/intercell}.
 #'
 #' @return character vector with the names of the databases
 #' @export
@@ -2260,7 +2260,7 @@ import_intercell_network <- function(
 
 #' Retrieves a list of categories from the intercell database of OmniPath
 #'
-#' Retrieves a list of categories from \url{http://omnipath.org/intercell}.
+#' Retrieves a list of categories from \url{https://omnipath.org/intercell}.
 #'
 #' @return character vector with the different intercell categories
 #' @export
@@ -2284,7 +2284,7 @@ get_intercell_categories <- function(){
 #' of OmniPath
 #'
 #' Retrieves a list of the generic categories from
-#' \url{http://omnipath.org/intercell}.
+#' \url{https://omnipath.org/intercell}.
 #'
 #' @return character vector with the different intercell main classes
 #' @export

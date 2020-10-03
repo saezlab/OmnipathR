@@ -22,7 +22,7 @@ character vector with the names of the interaction databases
 }
 \description{
 Gets the names of the resources from
-\url{http://omnipath.org/interactions}.
+\url{https://omnipath.org/interactions}.
 }
 \examples{
 get_interaction_resources()

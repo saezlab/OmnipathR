@@ -19,7 +19,7 @@ get_annotation_databases(...)
 character vector with the names of the annotation resources
 }
 \description{
-Get the names of the resources from \url{http://omnipath.org/annotations}.
+Get the names of the resources from \url{https://omnipath.org/annotations}.
 }
 \examples{
 get_annotation_resources()

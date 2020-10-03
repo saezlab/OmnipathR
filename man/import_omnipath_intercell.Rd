@@ -82,7 +82,7 @@ signaling.
 }
 \description{
 Imports the OmniPath intercellular communication role annotation database
-from \url{http://omnipathdb.org/intercell}. It provides information
+from \url{https://omnipathdb.org/intercell}. It provides information
 on the roles in inter-cellular signaling. E.g. if a protein is
 a ligand, a receptor, an extracellular matrix (ECM) component, etc.
 }

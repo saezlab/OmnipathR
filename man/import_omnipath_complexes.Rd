@@ -25,7 +25,7 @@ A dataframe containing information about complexes
 }
 \description{
 Imports the complexes stored in Omnipath database from
-\url{http://omnipathdb.org/complexes}.
+\url{https://omnipathdb.org/complexes}.
 }
 \examples{
 complexes = import_omnipath_complexes(

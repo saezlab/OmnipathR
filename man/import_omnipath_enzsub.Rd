@@ -47,7 +47,7 @@ A data frame containing the information about ptms
 }
 \description{
 Imports the enzyme-substrate (more exactly, enzyme-PTM) relationship
-database from \url{http://omnipathdb.org/enzsub}
+database from \url{https://omnipathdb.org/enzsub}
 }
 \examples{
 ptms = import_omnipath_enzsub(

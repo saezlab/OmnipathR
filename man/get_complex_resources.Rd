@@ -18,7 +18,7 @@ get_complexes_databases(...)
 character vector with the names of the databases
 }
 \description{
-get the names of the resources from \url{http://omnipath.org/complexes}
+get the names of the resources from \url{https://omnipath.org/complexes}
 }
 \examples{
 get_complex_resources()

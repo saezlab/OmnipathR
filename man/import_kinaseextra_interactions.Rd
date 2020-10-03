@@ -45,7 +45,7 @@ literature reference
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=kinaseextra},
+\url{https://omnipathdb.org/interactions?datasets=kinaseextra},
 which contains enzyme-substrate interactions without literature reference.
 The enzyme-substrate interactions supported by literature references
 are part of the `omnipath` dataset.

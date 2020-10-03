@@ -48,7 +48,7 @@ A data.frame containing different gene/complex annotations
 \description{
 Imports protein annotations about function, localization, expression,
 structure and other properties of proteins from OmniPath
-\url{http://omnipathdb.org/annotations}.
+\url{https://omnipathdb.org/annotations}.
 Note: there might be also a few miRNAs annotated; a vast majority of
 protein complex annotations are inferred from the annotations of the
 members: if all members carry the same annotation the complex inherits.

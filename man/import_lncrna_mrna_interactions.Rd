@@ -41,7 +41,7 @@ A dataframe containing lncRNA-mRNA interactions
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=lncrna_mrna},
+\url{https://omnipathdb.org/interactions?datasets=lncrna_mrna},
 which contains lncRNA-mRNA interactions
 }
 \examples{

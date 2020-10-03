@@ -37,7 +37,7 @@ A dataframe containing TF-target interactions
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=tf_target,dorothea},
+\url{https://omnipathdb.org/interactions?datasets=tf_target,dorothea},
 which contains transcription factor-target protein coding gene
 interactions.
 }

@@ -45,7 +45,7 @@ without literature reference
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=pathwayextra},
+\url{https://omnipathdb.org/interactions?datasets=pathwayextra},
 which contains activity flow interactions without literature reference.
 The activity flow interactions supported by literature references
 are part of the `omnipath` dataset.

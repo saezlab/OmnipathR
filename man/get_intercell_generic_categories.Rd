@@ -18,7 +18,7 @@ character vector with the different intercell main classes
 }
 \description{
 Retrieves a list of the generic categories from
-\url{http://omnipath.org/intercell}.
+\url{https://omnipath.org/intercell}.
 }
 \examples{
 get_intercell_generic_categories()

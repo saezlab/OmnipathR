@@ -56,7 +56,7 @@ A dataframe containing TF-target interactions from DoRothEA
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=dorothea}
+\url{https://omnipathdb.org/interactions?datasets=dorothea}
 which contains transcription factor (TF)-target interactions from DoRothEA
 \url{https://github.com/saezlab/DoRothEA}
 }

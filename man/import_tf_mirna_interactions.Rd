@@ -41,7 +41,7 @@ A dataframe containing TF-miRNA interactions
 }
 \description{
 Imports the dataset from:
-\url{http://omnipathdb.org/interactions?datasets=tf_mirna},
+\url{https://omnipathdb.org/interactions?datasets=tf_mirna},
 which contains transcription factor-miRNA gene interactions
 }
 \examples{

@@ -9,7 +9,7 @@ Utility functions to work with **OmniPath** in `R`.
 *OmnipathR* is an `R` package built to provide easy access to the data stored 
 in the OmniPath webservice: 
     
-  <http://omnipathdb.org/>
+  <https://omnipathdb.org/>
     
 The webservice implements a very simple REST style API. This package make 
 requests by the HTTP protocol to retreive the data. Hence, fast Internet 
@@ -32,9 +32,9 @@ We provide here a brief summary about the data available through *OmnipathR*.
 
 For a more detailed information, we recommend you to visit the following sites:
 
-  <http://omnipathdb.org/>
+  <https://omnipathdb.org/>
   
-  <http://omnipathdb.org/info>
+  <https://omnipathdb.org/info>
   
   <https://github.com/saezlab/pypath/blob/master/webservice.rst>
   
@@ -42,10 +42,10 @@ For a more detailed information, we recommend you to visit the following sites:
   
 
 ## Installation
-First of all, you need a current version of `R` (<http://www.r-project.org>).
+First of all, you need a current version of `R` (<https://r-project.org>).
 *OmnipathR* is a freely available package deposited on *Bioconductor* and 
 *Github*: 
-(<http://bioconductor.org/>, <https://github.com/saezlab/OmnipathR>).
+(<https://bioconductor.org/>, <https://github.com/saezlab/OmnipathR>).
 
 You can install it by running the following commands on a `R` console:
  
