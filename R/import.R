@@ -670,10 +670,11 @@ get_ptms_databases <- function(...){
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param datasets Names of the interaction datasts to download: omnipath 
-#' (by default). Other possiblites are: pathwayextra, kinaseextra, ligrecextra,
-#' dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna. The user can select 
-#' multiple datasets as for example: c('omnipath', 'pathwayextra','kinaseextra')
-#' @param fields The user can define here the fields to be added. If used, set 
+#' (by default). Other possiblites are: pathwayextra, kinaseextra,
+#' ligrecextra, dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna.
+#' The user can select multiple datasets as for example: c('omnipath',
+#' 'pathwayextra', 'kinaseextra')
+#' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
@@ -1032,7 +1033,7 @@ import_post_translational_interactions <- function(
 #' interactions.
 #' By default we take A and B level interactions (\code{c(A, B)}).
 #' It is to note that E interactions are not available in OmnipathR.
-#' @param fields The user can define here the fields to be added. If used, set 
+#' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
@@ -1114,7 +1115,7 @@ import_tfregulons_interactions <- function(...){
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param fields The user can define here the fields to be added. If used, set 
+#' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
@@ -1438,9 +1439,10 @@ import_lncrna_mrna_interactions <- function(
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
 #' @param dorothea_levels The confidence levels of the dorothea 
-#' interactions (TF-target) which range from A to D. Set to A and B by default. 
+#' interactions (TF-target) which range from A to D. Set to A and B by
+#' default.
 #' @param exclude datasets to exclude
-#' @param fields The user can define here the fields to be added. If used, set 
+#' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the

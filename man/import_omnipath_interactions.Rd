@@ -31,11 +31,12 @@ removed. See \code{\link{get_interaction_resources}} for more information.}
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 
 \item{datasets}{Names of the interaction datasts to download: omnipath 
-(by default). Other possiblites are: pathwayextra, kinaseextra, ligrecextra,
-dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna. The user can select 
-multiple datasets as for example: c('omnipath', 'pathwayextra','kinaseextra')}
+(by default). Other possiblites are: pathwayextra, kinaseextra,
+ligrecextra, dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna.
+The user can select multiple datasets as for example: c('omnipath',
+'pathwayextra', 'kinaseextra')}
 
-\item{fields}{The user can define here the fields to be added. If used, set 
+\item{fields}{The user can define here the fields to be added. If used, set
 the next argument, `default_fields`, to FALSE.}
 
 \item{default_fields}{whether to include the default fields (columns) for

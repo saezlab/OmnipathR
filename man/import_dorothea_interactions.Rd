@@ -38,7 +38,7 @@ interactions.
 By default we take A and B level interactions (\code{c(A, B)}).
 It is to note that E interactions are not available in OmnipathR.}
 
-\item{fields}{The user can define here the fields to be added. If used, set 
+\item{fields}{The user can define here the fields to be added. If used, set
 the next argument, `default_fields`, to FALSE.}
 
 \item{default_fields}{whether to include the default fields (columns) for

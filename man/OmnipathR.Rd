@@ -43,10 +43,18 @@ print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
    output = 'epath')$epath[[1]],OPI_g)
 
 # find all shortest paths between proteins
-print_path_vs(all_shortest_paths(ptms_g,from = "SRC",to = "STAT1")$res,ptms_g)
+print_path_vs(
+    all_shortest_paths(
+        ptms_g,
+        from = "SRC",
+        to = "STAT1"
+    )$res,
+    ptms_g
+)
 
 }
 \author{
-Alberto Valdeolivas <\email{alvaldeolivas@gmail}> and Attila Gabor
+Alberto Valdeolivas <\email{alvaldeolivas@gmail}> and
+Denes Turei <\email{turei.denes@gmail.com}> and Attila Gabor
 <\email{gaborattila87@gmail.com}>
 }
