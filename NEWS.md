@@ -1,4 +1,4 @@
-## OmnipathR v1.4.0 (2020-10-02)
+## OmnipathR v1.99.0 (2020-10-03)
 
 + New tests
 + Many little bugfixes
