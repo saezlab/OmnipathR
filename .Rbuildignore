@@ -4,3 +4,14 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^OmnipathR.Rcheck/.+$
+^OmnipathR-manual.+$
+^openout.+$
+.+\.Rdata
+^[^/]+\.png$
+^[^/]+\.r$
+^[^/]+\.R$
+^[^/]+\.Rmd$
+^[^/]+\.html$
+^[^/]+\.svg$
+.+\.tar\.gz$
