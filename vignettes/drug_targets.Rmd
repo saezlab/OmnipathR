@@ -17,9 +17,7 @@ abstract: |
   OmniPath. Here we use data from DrugBank to find direct protein targets of
   drugs and to connect them to downstream signaling proteins using OmnipathR.
 vignette: |
-  %\VignetteIndexEntry{
-      Building protein networks around drug-targets using OmnipathR
-  }
+  %\VignetteIndexEntry{Building protein networks around drug-targets using OmnipathR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 fig_width: 9
@@ -242,6 +240,7 @@ ggraph(
    ggtitle("Cisplatin induced network")
 
 ```
+
 The above network represents a way how Cisplatin can influence the POIs. One
 can for example filter out edges based on the number fo resources reporting the
 edge or based on the number of papers mentioning it. However, this is already
