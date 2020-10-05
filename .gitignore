@@ -35,3 +35,5 @@ vignettes/OmnipathR.log
 vignettes/OmnipathR.synctex.gz
 vignettes/OmnipathR.tex
 vignettes/OmnipathR.toc
+# bioconductor release test directory
+bioctest/
