@@ -335,7 +335,7 @@ omnipath_url_add_param <- function(url, name, values = NULL){
     )
 
     url <- `if`(
-        is.null(values) || is.na(values),
+        all(is.null(values)) || all(is.na(values)),
         url,
         sprintf(
             '%s%s%s=%s',
