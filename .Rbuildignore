@@ -16,3 +16,4 @@
 ^[^/]+\.svg$
 .+\.tar\.gz$
 ^bioctest.*$
+^Renviron\.bioc$

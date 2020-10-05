@@ -37,3 +37,5 @@ vignettes/OmnipathR.tex
 vignettes/OmnipathR.toc
 # bioconductor release test directory
 bioctest/
+# bioconductor testing R environment
+Renviron.bioc
