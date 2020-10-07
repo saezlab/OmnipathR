@@ -101,6 +101,20 @@ get_resources_test <- function(
 }
 
 
+can_we_download_anything_at_all <- function(){
+
+    tryCatch(
+        as.logical(
+            nrow(
+                read.csv('https://omnipathdb.org/queries/interactions')
+            )
+        ),
+        error = function(...){FALSE}
+    )
+
+}
+
+
 ## Here we build a list with parameters that we later iterate through
 ## in order to test all the various download methods.
 test_items <- list(
@@ -118,46 +132,68 @@ test_items <- list(
     mirnatarget_interactions = list(datasets = 'mirnatarget')
 )
 
-for(item in names(test_items)){
+if(can_we_download_anything_at_all()){
 
-    resource_col <- list(
-        complexes = 'sources',
-        interactions = 'sources',
-        enzsub = 'sources',
-        annotations = 'source',
-        intercell = 'database'
-    )
+    for(item in names(test_items)){
 
-    method <- get(sprintf('import_%s', item))
-    dataset <- `if`(
-        'datasets' %in% names(test_items[[item]]),
-        test_items[[item]]$datasets,
-        NULL
-    )
-    query_type <- tail(strsplit(item, '_')[[1]], 1)
+        resource_col <- list(
+            complexes = 'sources',
+            interactions = 'sources',
+            enzsub = 'sources',
+            annotations = 'source',
+            intercell = 'database'
+        )
 
-    resources <- get_resources_test(
-        query_type = query_type,
-        dataset = dataset,
-        license = 'academic',
-        top = 5
-    )
+        method <- get(sprintf('import_%s', item))
+        dataset <- `if`(
+            'datasets' %in% names(test_items[[item]]),
+            test_items[[item]]$datasets,
+            NULL
+        )
+        query_type <- tail(strsplit(item, '_')[[1]], 1)
 
-    response <- method(resources = resources)
+        resources <- get_resources_test(
+            query_type = query_type,
+            dataset = dataset,
+            license = 'academic',
+            top = 5
+        )
 
-    if(query_type %in% c('enzsub', 'interactions', 'complexes')){
-        response <- response %>% separate_rows(sources, sep = ';')
+        response <- method(resources = resources)
+
+        if(query_type %in% c('enzsub', 'interactions', 'complexes')){
+            response <- response %>% separate_rows(sources, sep = ';')
+        }
+
+        resources_in_response <- response %>%
+            pull(resource_col[[query_type]]) %>%
+            unique()
+
+        label <- sprintf(
+            '%s%s',
+            query_type,
+            `if`(is.null(dataset), '', sprintf(' (%s)', dataset))
+        )
+
+        test_that(
+            sprintf('%s: resources', label),
+            expect_true(
+                all(resources %in% resources_in_response)
+            )
+        )
+
+        test_that(
+            sprintf('%s: numof rows', label),
+            expect_gt(nrow(response), 10)
+        )
+
     }
 
-    resources_in_response <- response %>%
-        pull(resource_col[[query_type]]) %>%
-        unique()
+}else{
 
     test_that(
-        expect_true(
-            all(resources %in% resources_in_response)
-        ),
-        expect_gt(nrow(response), 10)
+        'Skipping tests, could not establish connection.',
+        expect_true(TRUE)
     )
 
 }
