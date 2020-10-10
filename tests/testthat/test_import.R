@@ -115,6 +115,20 @@ can_we_download_anything_at_all <- function(){
 }
 
 
+can_jsonlite_download <- function(){
+
+    tryCatch(
+        as.logical(
+            length(
+                fromJSON('https://omnipathdb.org/resources')
+            )
+        ),
+        error = function(...){FALSE}
+    )
+
+}
+
+
 ## Here we build a list with parameters that we later iterate through
 ## in order to test all the various download methods.
 test_items <- list(
@@ -132,7 +146,7 @@ test_items <- list(
     mirnatarget_interactions = list(datasets = 'mirnatarget')
 )
 
-if(can_we_download_anything_at_all()){
+if(can_we_download_anything_at_all() && can_jsonlite_download()){
 
     for(item in names(test_items)){
 
