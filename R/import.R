@@ -2498,6 +2498,9 @@ filter_intercell <- function(
 ## It tries to retrieve the resource one or several times before failing.
 omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
 
+    op <- options(timeout = 600)
+    on.exit(options(op))
+
     if(options('omnipath.print_urls')[[1]]){
 
         message(sprintf('Retrieving URL: %s', URL))
