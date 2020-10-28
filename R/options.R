@@ -47,6 +47,10 @@
     omnipath.harmonizome_url = paste0(
         'https://maayanlab.cloud/static/hdfs/harmonizome/data/',
         '%s/gene_attribute_edges.txt.gz'
+    ),
+    omnipath.vinayagam_url = paste0(
+        'https://stke.sciencemag.org/content/sigtrans/suppl/2011/09/01/',
+        '4.189.rs8.DC1/4_rs8_Tables_S1_S2_and_S6.zip'
     )
 )
 
