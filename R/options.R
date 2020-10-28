@@ -43,6 +43,10 @@
     omnipath.pathwaycommons_url = paste0(
         'https://www.pathwaycommons.org/archives/PC2/v12/',
         'PathwayCommons12.All.hgnc.sif.gz'
+    ),
+    omnipath.harmonizome_url = paste0(
+        'https://maayanlab.cloud/static/hdfs/harmonizome/data/',
+        '%s/gene_attribute_edges.txt.gz'
     )
 )
 

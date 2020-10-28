@@ -97,10 +97,98 @@ nichenet_signaling_network_omnipath <- function(
 
 }
 
+
+#' Builds signaling network prior knowledge for NicheNet using PathwayCommons
+#'
+#' @param interaction_types Character vector with PathwayCommons interaction
+#'     types. Please refer to the default value and the PathwayCommons
+#'     webpage.
 #' importsFrom dplyr %>% mutate
 #' @importsFrom readr read_tsv
-nichenet_signaling_network_pathwaycommons <- function(...){
+#' @export
+nichenet_signaling_network_pathwaycommons <- function(
+    interaction_types = c(
+        'catalysis-precedes',
+        'controls-phosphorylation-of',
+        'controls-state-change-of',
+        'controls-transport-of',
+        'in-complex-with',
+        'interacts-with'
+    ),
+    ...
+){
 
-    read_tsv()
+    options('omnipath.pathwaycommons_url') %>%
+    read_tsv(
+        col_names = c('from', 'source', 'to'),
+        col_types = cols()
+    ) %>%
+    filter(
+        source %in% interaction_types
+    ) %>%
+    mutate(
+        source = sprintf(
+            'pathwaycommons_%s',
+            gsub('-', '_', source, fixed = TRUE)
+        ),
+        database = 'pathwaycommons_signaling'
+    )
+
+}
+
+#' Builds signaling network prior knowledge for NicheNet using Harmonizome
+#'
+#' @param datasets The datasets to use. For possible values please refer to
+#'     default value and the Harmonizome webpage.
+#' @importsFrom dplyr %>% mutate bind_rows
+#' @export
+nichenet_signaling_network_harmonizome <- function(
+    datasets = c(
+        'phosphosite',
+        'kea',
+        'depod',
+    ),
+    ...
+){
+
+    dataset_names <- list(
+        phosphosite = 'PhosphoSite',
+        kea = 'KEA',
+        depod = 'DEPOD'
+    )
+
+    do.call(
+        bind_rows,
+        datasets %>% lapply(harmonizome_download)
+    ) %>%
+    mutate(
+        source = sprintf('harmonizome_%s', dataset_names[source]),
+        database = 'harmonizome'
+    )
+
+}
+
+
+#' Downloads a single network dataset from Harmonizome
+#' https://maayanlab.cloud/Harmonizome
+#'
+#' @param dataset The dataset part of the URL. Please refer to the download
+#'     section of the Harmonizome webpage.
+#' @importsFrom dplyr %>% mutate select
+#' @importsFrom readr read_tsv read_lines
+#' @export
+harmonizome_download <- function(dataset){
+
+    'omnipath.harmonizome_url' %>%
+    options() %>%
+    as.character() %>%
+    sprintf(dataset) %>%
+    url() %>%
+    gzcon() %>%
+    read_lines() %>%
+    `[`(-2) %>%
+    read_tsv(col_types = cols()) %>%
+    select(from = source, to = target) %>%
+    mutate(source = dataset)
 
 }
