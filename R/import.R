@@ -950,7 +950,7 @@ import_ligrecextra_interactions <- function(
     cache_file = NULL,
     resources = NULL,
     organism = 9606,
-    fields = NULL, 
+    fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
     ...

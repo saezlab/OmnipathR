@@ -39,7 +39,11 @@
     omnipath.url = 'https://omnipathdb.org/',
     omnipath.license = 'academic',
     omnipath.password = NULL,
-    omnipath.print_urls = FALSE
+    omnipath.print_urls = FALSE,
+    omnipath.pathwaycommons_url = paste0(
+        'https://www.pathwaycommons.org/archives/PC2/v12/',
+        'PathwayCommons12.All.hgnc.sif.gz'
+    )
 )
 
 .onLoad <- function(libname, pkgname){
