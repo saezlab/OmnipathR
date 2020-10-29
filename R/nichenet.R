@@ -20,7 +20,12 @@
 #
 
 
-#' Builds all prior knowledge data required by NicheNet
+#' Build NicheNet prior knowledge
+#'
+#' Builds all prior knowledge data required by NicheNet. For this it calls
+#' a multitude of methods to download and combine data from various
+#' databases according to the settings. The content of the prior knowledge
+#' data is highly customizable, see more in Details.
 #'
 #' @param signaling_network A list of parameters for building the signaling
 #'     network, passed to \code{\link{nichenet_signaling_network}}
@@ -41,8 +46,10 @@ nichenet_prior_knowledge <- function(
 }
 
 
+#' Build a NicheNet signaling network
+#'
 #' Builds signaling network prior knowledge for NicheNet using multiple
-#' resources
+#' resources.
 #'
 #' @param omnipath List with paramaters to be passed to
 #'     \code{\link{nichenet_signaling_network_omnipath}}
@@ -98,7 +105,9 @@ nichenet_signaling_network_omnipath <- function(
 }
 
 
-#' Builds signaling network prior knowledge for NicheNet using PathwayCommons
+#' NicheNet signaling network from PathwayCommons
+#'
+#' Builds signaling network prior knowledge for NicheNet using PathwayCommons.
 #'
 #' @param interaction_types Character vector with PathwayCommons interaction
 #'     types. Please refer to the default value and the PathwayCommons
@@ -136,6 +145,9 @@ nichenet_signaling_network_pathwaycommons <- function(
 
 }
 
+
+#' NicheNet signaling network from Harmonizome
+#'
 #' Builds signaling network prior knowledge for NicheNet using Harmonizome
 #'
 #' @param datasets The datasets to use. For possible values please refer to
@@ -169,6 +181,8 @@ nichenet_signaling_network_harmonizome <- function(
 }
 
 
+#' Downloads a Harmonizome network dataset
+#'
 #' Downloads a single network dataset from Harmonizome
 #' https://maayanlab.cloud/Harmonizome
 #'
@@ -194,6 +208,8 @@ harmonizome_download <- function(dataset){
 }
 
 
+#' NicheNet signaling network from Vinayagam
+#'
 #' Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
 #' Supplementary Table S6
 #'
@@ -262,8 +278,10 @@ nichenet_signaling_network_cpdb <- function(...){
 }
 
 
+#' Retrieves the ConsensusPathDB network
+#'
 #' Compiles a table of binary interactions from ConsensusPathDB and
-#' translates the UniProtKB ACs to Gene Symbols
+#' translates the UniProtKB ACs to Gene Symbols.
 #'
 #' @importsFrom readr read_tsv
 #' @importsFrom tidyr separate_rows
@@ -330,14 +348,26 @@ consensuspathdb_raw_table <- function(){
 
 nichenet_signaling_network_evex <- function(...){
 
+    evex %>%
+    select()
 
 }
 
 
+#' Interactions from the EVEX database
+#'
+#' Downloads interactions from EVEX, a versatile text mining resource
+#' (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
+#' combines the interactions and references into a single data frame.
+#'
 #' @importsFrom magrittr %>%
 #' @importsFrom readr read_tsv cols
 #' @importsFrom dplyr left_join mutate group_by summarize_all first ungroup
 #' @importsFrom dplyr rename
+#' @export
+#'
+#' @examples
+#' evex_interactions <- evex()
 evex <- function(...){
 
     tmp_tgz <- tempfile(fileext = '.tar.gz')
