@@ -181,33 +181,6 @@ nichenet_signaling_network_harmonizome <- function(
 }
 
 
-#' Downloads a Harmonizome network dataset
-#'
-#' Downloads a single network dataset from Harmonizome
-#' https://maayanlab.cloud/Harmonizome
-#'
-#' @param dataset The dataset part of the URL. Please refer to the download
-#'     section of the Harmonizome webpage.
-#' @importsFrom dplyr %>% mutate select
-#' @importsFrom readr read_tsv read_lines
-#' @export
-harmonizome_download <- function(dataset){
-
-    'omnipath.harmonizome_url' %>%
-    options() %>%
-    as.character() %>%
-    sprintf(dataset) %>%
-    url() %>%
-    gzcon() %>%
-    read_lines() %>%
-    `[`(-2) %>%
-    read_tsv(col_types = cols()) %>%
-    select(from = source, to = target) %>%
-    mutate(source = dataset)
-
-}
-
-
 #' NicheNet signaling network from Vinayagam
 #'
 #' Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
