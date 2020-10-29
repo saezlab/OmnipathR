@@ -55,6 +55,15 @@
     omnipath.cpdb_url = paste0(
         'http://cpdb.molgen.mpg.de/download/',
         'ConsensusPathDB_human_PPI.gz'
+    ),
+    omnipath.evex_url = paste0(
+        'http://evexdb.org/download/network-format/Metazoa/',
+        'Homo_sapiens.tar.gz'
+    ),
+    omnipath.all_uniprots_url = paste0(
+        'https://www.uniprot.org/uniprot/?',
+        'query=*&format=tab&force=true&columns=%s&fil=',
+        'organism:%d%s&compress=no'
     )
 )
 
