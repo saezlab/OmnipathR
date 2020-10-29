@@ -41,7 +41,8 @@ Imports:
     dplyr,
     stats,
     rlang,
-    tidyr
+    tidyr,
+    readr
 Suggests:
     dnet,
     gprofiler2,

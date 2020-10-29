@@ -106,6 +106,8 @@ translate_ids <- function(
 
     from_col <- enquo(from_col)
     to_col <- enquo(to_col)
+    from <- enquo(from)
+    to <- enquo(to)
 
     join_method <- `if`(keep_untranslated, left_join, inner_join)
 
@@ -114,8 +116,8 @@ translate_ids <- function(
         d %>%
         pull(!!from_col) %>%
         unique() %>%
-        uniprot_id_mapping_table(from = from, to = to),
-        all_uniprots_id_mapping_table(from = from, to = to, ...)
+        uniprot_id_mapping_table(from = !!from, to = !!to),
+        uniprot_full_id_mapping_table(from = !!from, to = !!to, ...)
     )}
 
     d %>%
@@ -182,8 +184,8 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' https://www.uniprot.org/help/uniprotkb%5Fcolumn%5Fnames
 #' The shortcuts are entrez, genesymbol, genesymbol_syn (synonym gene
 #' symbols), hgnc, embl, refseqp (RefSeq protein), enst (Ensembl transcript),
-#' uniprot_entry (UniProt AC, e.g. EGFR_HUMAN), protein_name (full name of
-#' the protein).
+#' uniprot_entry (UniProtKB AC, e.g. EGFR_HUMAN), protein_name (full name of
+#' the protein), uniprot (UniProtKB ID, e.g. P00533).
 #'
 #' @importsFrom magrittr %>%
 #' @importsFrom dplyr mutate rename
@@ -193,7 +195,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #'
 #' @examples
 #' uniprot_entrez <- all_uniprots_id_mapping_table(to = 'entrez')
-all_uniprots_id_mapping_table <- function(
+uniprot_full_id_mapping_table <- function(
     to,
     from = 'id',
     reviewed = TRUE,
@@ -210,6 +212,7 @@ all_uniprots_id_mapping_table <- function(
         refseqp = c('database', 'refseq'),
         enst = c('database', 'ensembl'),
         uniprot_entry = c('entry name', NULL),
+        uniprot = c('id', NULL),
         protein_name = c('protein names', NULL)
     )
 

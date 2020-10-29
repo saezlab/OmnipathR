@@ -251,9 +251,6 @@ nichenet_signaling_network_cpdb <- function(...){
 }
 
 
-
-
-
 #' NicheNet signaling network from EVEX
 #'
 #' Builds signaling network prior knowledge for NicheNet from the EVEX
