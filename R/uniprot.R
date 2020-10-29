@@ -118,3 +118,40 @@ translate_ids <- function(
     select(-To)
 
 }
+
+
+#' Retrieves a table from UniProt with all proteins for a certain organism
+#'
+#' @param fields Character vector of fields as defined by UniProt. For
+#'     possible values please refer to
+#'     https://www.uniprot.org/help/uniprotkb%5Fcolumn%5Fnames
+#' @param reviewed Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
+#'     both (NULL).
+#' @param organism Integer, NCBI Taxonomy ID of the organism (by default
+#'     9606 for human).
+#'
+#' @importsFrom readr read_tsv cols
+#' @importsFrom magrittr %>%
+#' @export
+#'
+#' @examples
+#' human_swissprot_ac <- all_uniprots(fields = 'entry name')
+all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
+
+    on.exit(closeAllConnections())
+
+    fields <- fields %>% paste(collapse = ',')
+    reviewed <- `if`(
+        is.null(reviewed),
+        '',
+        sprintf(' AND reviewed:%s', `if`(reviewed, 'yes', 'no'))
+    )
+
+    'omnipath.all_uniprots_url' %>%
+    options() %>%
+    as.character() %>%
+    sprintf(fields, organism, reviewed) %>%
+    URLencode() %>%
+    read_tsv(col_types = cols(), progress = FALSE)
+
+}
