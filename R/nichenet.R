@@ -346,81 +346,19 @@ consensuspathdb_raw_table <- function(){
 }
 
 
+#' NicheNet signaling network from EVEX
+#'
+#' Builds signaling network prior knowledge for NicheNet from the EVEX
+#' database.
+#'
+#' @importsFrom magrittr %>%
+#' @importsFrom dplyt select mutate
+#' @export
+#'
+#' @seealso \code{\link{evex}}
 nichenet_signaling_network_evex <- function(...){
 
     evex %>%
-    select()
-
-}
-
-
-#' Interactions from the EVEX database
-#'
-#' Downloads interactions from EVEX, a versatile text mining resource
-#' (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
-#' combines the interactions and references into a single data frame.
-#'
-#' @importsFrom magrittr %>%
-#' @importsFrom readr read_tsv cols
-#' @importsFrom dplyr left_join mutate group_by summarize_all first ungroup
-#' @importsFrom dplyr rename
-#' @export
-#'
-#' @examples
-#' evex_interactions <- evex()
-evex <- function(...){
-
-    tmp_tgz <- tempfile(fileext = '.tar.gz')
-    tmpdir_ex <- tempdir()
-
-    on.exit({
-        unlink(tmpdir_ex)
-        closeAllConnections()
-    })
-
-    'omnipath.evex_url' %>%
-    options() %>%
-    as.character() %>%
-    download.file(destfile = tmp_tgz, quiet = TRUE)
-
-    tmp_tgz %>%
-    untar(exdir = tmpdir_ex)
-    unlink(tmp_tgz)
-
-    tmpdir_ex %>%
-    file.path('EVEX_relations_9606.tab') %>%
-    read_tsv(
-        col_types = cols(
-            source_entrezgene_id = col_character(),
-            target_entrezgene_id = col_character()
-        ),
-        progress = FALSE
-    ) %>%
-    translate_ids(
-        source_entrezgene_id,
-        source_genesymbol,
-        'entrez',
-        'genesymbol',
-        uploadlists = FALSE
-    ) %>%
-    translate_ids(
-        target_entrezgene_id,
-        target_genesymbol,
-        'entrez',
-        'genesymbol',
-        uploadlists = FALSE
-    ) %>%
-    left_join(
-        tmpdir_ex %>%
-        file.path('EVEX_articles_9606.tab') %>%
-        read_tsv(col_types = cols(), progress = FALSE) %>%
-        rename(references = article_id),
-        by = 'general_event_id'
-    ) %>%
-    mutate(references = sub('PMC?ID: ', '', references)) %>%
-    group_by(general_event_id) %>%
-    mutate(references = paste(references, sep = ',')) %>%
-    summarize_all(first) %>%
-    ungroup()
+    select(source_genesymbol)
 
 }
