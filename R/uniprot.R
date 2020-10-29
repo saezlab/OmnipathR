@@ -155,3 +155,90 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     read_tsv(col_types = cols(), progress = FALSE)
 
 }
+
+
+#' Creates an ID translation table from UniProt data
+#'
+#' @param to Target ID type. See Details for possible values.
+#' @param from Source ID type. See Details for possible values.
+#' @param reviewed Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
+#'     both (NULL).
+#' @param organism Integer, NCBI Taxonomy ID of the organism (by default
+#'     9606 for human).
+#'
+#' @details
+#' For both source and target ID type, this function accepts column codes
+#' used by UniProt and some simple shortcuts defined here. For the UniProt
+#' codes please refer to
+#' https://www.uniprot.org/help/uniprotkb%5Fcolumn%5Fnames
+#' The shortcuts are entrez, genesymbol, genesymbol_syn (synonym gene
+#' symbols), hgnc, embl, refseqp (RefSeq protein), enst (Ensembl transcript),
+#' uniprot_entry (UniProt AC, e.g. EGFR_HUMAN), protein_name (full name of
+#' the protein).
+#'
+#' @importsFrom magrittr %>%
+#' @importsFrom dplyr mutate rename
+#' @importsFrom tidyr separate_rows
+#' @importsFrom rlang !! enquo
+#' @export
+#'
+#' @examples
+#' uniprot_entrez <- all_uniprots_id_mapping_table(to = 'entrez')
+all_uniprots_id_mapping_table <- function(
+    to,
+    from = 'id',
+    reviewed = TRUE,
+    organism = 9606
+){
+
+    id_types = list(
+        entrez = c('database', 'GeneID'),
+        genesymbol = c('genes', 'PREFERRED'),
+        genesymbol_syn = c('genes', 'ALTERNATIVE'),
+        hgnc = c('database', 'HGNC'),
+        embl = c('database', 'embl'),
+        entrez = c('database', 'geneid'),
+        refseqp = c('database', 'refseq'),
+        enst = c('database', 'ensembl'),
+        uniprot_entry = c('entry name', NULL),
+        protein_name = c('protein names', NULL)
+    )
+
+    get_field_name <- function(label){
+
+        label %>%
+        {`if`(
+            . %in% names(id_types),
+            sprintf(
+                '%s%s',
+                id_types[[.]][1],
+                `if`(
+                    is.null(id_types[[.]][2]),
+                    '',
+                    sprintf('(%s)', id_types[[.]][2])
+                )
+            ),
+            .
+        )}
+
+    }
+
+    strip_semicol <- function(v){sub(';$', '', v)}
+
+    to <-
+        .nse_ensure_str(!!enquo(to)) %>%
+        get_field_name()
+    from <-
+        .nse_ensure_str(!!enquo(from)) %>%
+        get_field_name()
+
+    c(from, to) %>%
+    all_uniprots(reviewed = reviewed, organism = organism) %>%
+    rename(From = 1, To = 2) %>%
+    mutate(
+        From = strip_semicol(From),
+        To = strip_semicol(To)
+    ) %>%
+    separate_rows(From, To, sep = ';')
+
+}
