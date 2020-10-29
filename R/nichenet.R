@@ -279,7 +279,7 @@ consensuspathdb <- function(){
         separate_rows(participants, sep = '[,.]') %>%
         pull(participants) %>%
         unique() %>%
-        uniprot_id_mapping(from = 'AC', to = 'GENENAME')
+        uniprot_id_mapping(from = 'ACC', to = 'GENENAME')
 
     cpdb_raw %>%
     mutate(
@@ -328,25 +328,69 @@ consensuspathdb_raw_table <- function(){
 }
 
 
-#' Retrieves an identifier translation table from the UniProt uploadlists
-#' service
-#'
-#' @importsFrom readr read_tsv cols
-#' @importsFrom httr POST
-#' @importsFrom magrittr %>%
-#' @export
-uniprot_id_mapping <- function(identifiers, from, to){
+nichenet_signaling_network_evex <- function(...){
 
-    POST(
-        url = 'https://www.uniprot.org/uploadlists/',
-        body = list(
-            from = from,
-            to = to,
-            format = 'tab',
-            query = paste(identifiers, collapse = ' ')
-        )
+
+}
+
+
+#' @importsFrom magrittr %>%
+#' @importsFrom readr read_tsv cols
+#' @importsFrom dplyr left_join mutate group_by summarize_all first ungroup
+#' @importsFrom dplyr rename
+evex <- function(...){
+
+    tmp_tgz <- tempfile(fileext = '.tar.gz')
+    tmpdir_ex <- tempdir()
+
+    on.exit({
+        unlink(tmpdir_ex)
+        closeAllConnections()
+    })
+
+    'omnipath.evex_url' %>%
+    options() %>%
+    as.character() %>%
+    download.file(destfile = tmp_tgz, quiet = TRUE)
+
+    tmp_tgz %>%
+    untar(exdir = tmpdir_ex)
+    unlink(tmp_tgz)
+
+    tmpdir_ex %>%
+    file.path('EVEX_relations_9606.tab') %>%
+    read_tsv(
+        col_types = cols(
+            source_entrezgene_id = col_character(),
+            target_entrezgene_id = col_character()
+        ),
+        progress = FALSE
     ) %>%
-    content(encoding = 'ASCII') %>%
-    read_tsv(col_types = cols())
+    translate_ids(
+        source_entrezgene_id,
+        source_genesymbol,
+        'entrez',
+        'genesymbol',
+        uploadlists = FALSE
+    ) %>%
+    translate_ids(
+        target_entrezgene_id,
+        target_genesymbol,
+        'entrez',
+        'genesymbol',
+        uploadlists = FALSE
+    ) %>%
+    left_join(
+        tmpdir_ex %>%
+        file.path('EVEX_articles_9606.tab') %>%
+        read_tsv(col_types = cols(), progress = FALSE) %>%
+        rename(references = article_id),
+        by = 'general_event_id'
+    ) %>%
+    mutate(references = sub('PMC?ID: ', '', references)) %>%
+    group_by(general_event_id) %>%
+    mutate(references = paste(references, sep = ',')) %>%
+    summarize_all(first) %>%
+    ungroup()
 
 }
