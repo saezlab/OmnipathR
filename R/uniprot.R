@@ -72,6 +72,9 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' @param from Identifier type for `from_col`. See Details for possible
 #'     values.
 #' @param to Identifier type for `to_col`. See Details for possible values.
+#' @param uploadlists Whether to use the `uploadlists` service from UniProt
+#'     or the plain query interface (implemented in
+#'     \code{\link{all_uniprots_id_mapping_table}} in this package).
 #' @param keep_untranslated Keep the records where the source identifier
 #'     could not be translated. At these records the target identifier will
 #'     be NA.
@@ -96,7 +99,9 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' @seealso \code{\link{uniprot_id_mapping_table}}
 translate_ids <- function(
     d, from_col, to_col, from, to,
-    keep_untranslated = TRUE
+    uploadlists = TRUE,
+    keep_untranslated = TRUE,
+    ...
 ){
 
     from_col <- enquo(from_col)
@@ -104,10 +109,14 @@ translate_ids <- function(
 
     join_method <- `if`(keep_untranslated, left_join, inner_join)
 
-    translation_table <- d %>%
-    pull(!!from_col) %>%
-    unique() %>%
-    uniprot_id_mapping_table(from = from, to = to)
+    translation_table <- {`if`(
+        uploadlists,
+        d %>%
+        pull(!!from_col) %>%
+        unique() %>%
+        uniprot_id_mapping_table(from = from, to = to),
+        all_uniprots_id_mapping_table(from = from, to = to, ...)
+    )}
 
     d %>%
     join_method(
@@ -239,6 +248,7 @@ all_uniprots_id_mapping_table <- function(
         From = strip_semicol(From),
         To = strip_semicol(To)
     ) %>%
-    separate_rows(From, To, sep = ';')
+    separate_rows(From, sep = ';') %>%
+    separate_rows(To, sep = ';')
 
 }
