@@ -64,6 +64,13 @@
         'https://www.uniprot.org/uniprot/?',
         'query=*&format=tab&force=true&columns=%s&fil=',
         'organism:%d%s&compress=no'
+    ),
+    omnipath.inbiomap_url = paste0(
+        'https://inbio-discover.intomics.com/api/data/map_public/',
+        '2016_09_12/inBio_Map_core_2016_09_12.tar.gz'
+    ),
+    omnipath.inbiomap_login_url = paste0(
+        'https://inbio-discover.intomics.com/api/login_guest'
     )
 )
 
