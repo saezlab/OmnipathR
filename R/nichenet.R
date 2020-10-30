@@ -256,14 +256,55 @@ nichenet_signaling_network_cpdb <- function(...){
 #' Builds signaling network prior knowledge for NicheNet from the EVEX
 #' database.
 #'
-#' @importsFrom magrittr %>%
-#' @importsFrom dplyt select mutate
+#' @importsFrom magrittr %>% `n'est pas`
+#' @importsFrom dplyt select mutate filter
 #' @export
 #'
 #' @seealso \code{\link{evex}}
 nichenet_signaling_network_evex <- function(...){
 
-    evex %>%
-    select(source_genesymbol)
+    categories <- list(
+        Binding = 'binding',
+        `Regulation of binding` = 'regulation_binding',
+        Regulation_of_phosphorylation = 'phosphorylation'
+    )
+
+    evex() %>%
+    select(
+        from = source_genesymbol,
+        to = target_genesymbol,
+        coarse_type,
+        refined_type
+    ) %>%
+    filter(
+        coarse_type != 'Indirect_regulation' &
+        `n'est pas`(refined_type %in% c(
+            # these belong to transcriptional regulation
+            'Regulation of expression',
+            'Regulation of transcription',
+            'Catalysis of DNA methylation'
+        ))
+    ) %>%
+    mutate(
+        source = sprintf(
+            'evex_%s',
+            ifelse(
+                refined_type %in% names(categories),
+                categories[refined_type],
+                ifelse(
+                    startsWith(refined_type, 'Catalysis'),
+                    'catalysis',
+                    ifelse(
+                        coarse_type == 'Regulation',
+                        'regulation_other',
+                        'binding'
+                    )
+                )
+            )
+        ),
+        database = 'evex_signaling'
+    ) %>%
+    select(-coarse_type, -refined_type)
+
 
 }
