@@ -44,28 +44,6 @@ ptms_graph = function(ptms){
 #' \code{\link{import_ligrecextra_interactions}}, 
 #' \code{\link{import_dorothea_interactions}},
 #' \code{\link{import_mirnatarget_interactions}} or 
-#!/usr/bin/env Rscript
-
-#
-#  This file is part of the `OmnipathR` R package
-#
-#  Copyright
-#  2018-2020
-#  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
-#
-#  File author(s): Alberto Valdeolivas
-#                  Dénes Türei (turei.denes@gmail.com)
-#                  Attila Gábor
-#
-#  Distributed under the MIT (Expat) License.
-#  See accompanying file `LICENSE` or find a copy at
-#      https://directory.fsf.org/wiki/License:Expat
-#
-#  Website: https://saezlab.github.io/omnipathr
-#  Git repo: https://github.com/saezlab/OmnipathR
-#
-
-
 #' \code{\link{import_all_interactions}}
 #' @examples
 #' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
@@ -151,4 +129,121 @@ format_graph_edges <- function(df_interact, flag){
     }
 
     return(op_g)
+}
+
+
+#' All paths between two groups of vertices
+#'
+#' Finds all paths up to length `maxlen` between specified groups of
+#' vertices. This function is needed only becaues igraph`s
+#' `all_shortest_paths` finds only the shortest, not any
+#' path up to a defined length.
+#'
+#' @param graph graph An igraph graph object.
+#' @param start integer Numeric or character vector with the indices or names
+#' of one or more start vertices.
+#' @param end integer Numeric or character vector with the indices or names
+#' of one or more end vertices.
+#' @param attr character Name of the vertex attribute to identify the
+#' vertices by. Necessary if `start` and `end` are not igraph vertex ids
+#' but for example vertex names or labels.
+#' @param mode character IN, OUT or ALL. Default is OUT.
+#' @param maxlen integer Maximum length of paths in steps, i.e. if maxlen = 3,
+#' then the longest path may consist of 3 edges and 4 nodes.
+#' @param progress logical Show a progress bar. Default is FALSE.
+#'
+#' @return List of vertex paths
+#'
+#' @importsFrom igraph ego vertex_attr vertex_attr_names
+#' @importsFrom purrr map cross2 map2 transpose
+#' @importsFrom magrittr %>% %<>%
+#' @importsFrom progress progress_bar
+#' @export
+#'
+#' @examples
+#' graph <- import_omnipath_interactions()
+#' paths <- find_all_paths(
+#'     c('EGFR', 'STAT3'),
+#'     c('AKT1', 'ULK1'),
+#'     attr = 'name'
+#' )
+#'
+#' @seealso \code{\link{interactions_graph}, \link{ptms_graph}}
+find_all_paths <- function(
+        graph,
+        start,
+        end,
+        attr = NULL,
+        mode = 'OUT',
+        maxlen = 2,
+        progress = TRUE,
+        ...
+    ){
+
+        find_all_paths_aux <- function(start, end, path = NULL){
+
+            path %<>% append(start)
+
+            if(start == end) return(list(path))
+
+            paths <- list()
+
+            if(length(path) <= maxlen){
+
+                paths <- adjlist[[start]] %>%
+                    setdiff(path) %>%
+                    map(find_all_paths_aux, end = end, path = path) %>%
+                    unlist(recursive = FALSE)
+
+            }
+
+            return(paths)
+
+        }
+
+
+        adjlist <- G %>% ego(mode = mode) %>% map(as.numeric)
+
+        if(!is.null(attr)){
+
+            if(!attr %in% vertex_attr_names(G)){
+
+                stop(sprintf('No such vertex attribute: `%s`.', attr))
+
+            }
+
+            attr_to_id <- G %>%
+                vertex_attr(attr) %>%
+                setNames(G %>% vcount %>% seq, .)
+            start <- attr_to_id[start]
+            end <- attr_to_id[end]
+
+        }
+
+        if(progress){
+            pbar <- progress_bar$new(
+                format = 'Finding paths [:bar] :percent eta: :eta',
+                total = length(start * length(end))
+            )
+            fun <- {pbar$tick(); find_all_paths_aux}
+        }else{
+            fun <- find_all_paths_aux
+        }
+
+        paths <- cross2(start, end) %>%
+            transpose() %>%
+            c(fun) %>%
+            do.call(map2, .) %>%
+            unlist(recursive = FALSE)
+
+        if(!is.null(attr)){
+
+            paths %<>% map(
+                function(path){vertex_attr(G, attr)[path]}
+            )
+
+        }
+
+        return(paths)
+
 }
