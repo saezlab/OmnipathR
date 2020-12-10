@@ -154,21 +154,22 @@ format_graph_edges <- function(df_interact, flag){
 #'
 #' @return List of vertex paths
 #'
-#' @importsFrom igraph ego vertex_attr vertex_attr_names
-#' @importsFrom purrr map cross2 map2 transpose
-#' @importsFrom magrittr %>% %<>%
-#' @importsFrom progress progress_bar
+#' @importFrom igraph ego vertex_attr vertex_attr_names
+#' @importFrom purrr map cross2 map2 transpose
+#' @importFrom magrittr %>% %<>%
+#' @importFrom progress progress_bar
 #' @export
 #'
 #' @examples
-#' graph <- import_omnipath_interactions()
+#' interactions <- import_omnipath_interactions()
+#' graph <- interaction_graph(interaction)
 #' paths <- find_all_paths(
 #'     c('EGFR', 'STAT3'),
 #'     c('AKT1', 'ULK1'),
 #'     attr = 'name'
 #' )
 #'
-#' @seealso \code{\link{interactions_graph}, \link{ptms_graph}}
+#' @seealso \code{\link{interaction_graph}, \link{ptms_graph}}
 find_all_paths <- function(
         graph,
         start,
@@ -202,19 +203,19 @@ find_all_paths <- function(
         }
 
 
-        adjlist <- G %>% ego(mode = mode) %>% map(as.numeric)
+        adjlist <- graph %>% ego(mode = mode) %>% map(as.numeric)
 
         if(!is.null(attr)){
 
-            if(!attr %in% vertex_attr_names(G)){
+            if(!attr %in% vertex_attr_names(graph)){
 
                 stop(sprintf('No such vertex attribute: `%s`.', attr))
 
             }
 
-            attr_to_id <- G %>%
+            attr_to_id <- graph %>%
                 vertex_attr(attr) %>%
-                setNames(G %>% vcount %>% seq, .)
+                setNames(graph %>% vcount %>% seq, .)
             start <- attr_to_id[start]
             end <- attr_to_id[end]
 
@@ -239,7 +240,7 @@ find_all_paths <- function(
         if(!is.null(attr)){
 
             paths %<>% map(
-                function(path){vertex_attr(G, attr)[path]}
+                function(path){vertex_attr(graph, attr)[path]}
             )
 
         }

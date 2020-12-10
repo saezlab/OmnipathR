@@ -36,7 +36,10 @@ Depends:
     graphics,
     methods,
     utils,
-    jsonlite
+    jsonlite,
+    progress,
+    magrittr,
+    purrr
 Imports:
     dplyr,
     stats,
