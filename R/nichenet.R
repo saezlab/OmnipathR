@@ -308,3 +308,24 @@ nichenet_signaling_network_evex <- function(...){
 
 
 }
+
+
+#' NicheNet signaling network from InWeb InBioMap
+#'
+#' Builds signaling network prior knowledge for NicheNet from the InWeb
+#' InBioMap database.
+#'
+#' @importsFrom magrittr %>%
+#' @importsFrom dplyr select
+#' @export
+nichenet_signaling_network_inbiomap <- function(...){
+
+    inbiomap() %>%
+    select(
+        from = genesymbol_a,
+        to = genesymbol_b,
+        source = 'inweb_interaction',
+        database = 'inweb_inbiomap'
+    )
+
+}
