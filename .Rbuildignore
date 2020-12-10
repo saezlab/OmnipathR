@@ -17,4 +17,4 @@
 .+\.tar\.gz$
 ^bioctest.*$
 ^Renviron\.bioc$
-^nichenet_original_data$
+^nichenet_original_data.*$
