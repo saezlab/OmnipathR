@@ -1,27 +1,27 @@
-<img src='man/figures/logo_omnipath.png' align="right" height="140">
+<img src='man/figures/logo_omnipath.png' align='right' height='140'>
 
 # OmnipathR
 
-Utility functions to work with **OmniPath** in `R`. 
+Utility functions to work with **OmniPath** in `R`.
 
 ## Description
 
-*OmnipathR* is an `R` package built to provide easy access to the data stored 
-in the OmniPath webservice: 
-    
-  <https://omnipathdb.org/>
-    
-The webservice implements a very simple REST style API. This package make 
-requests by the HTTP protocol to retreive the data. Hence, fast Internet 
-access is required for a proper use of *OmnipathR*. 
+*OmnipathR* is an `R` package built to provide easy access to the data stored
+in the OmniPath webservice:
 
-The package also provides some utility functions to filter, analyse and 
+  <https://omnipathdb.org/>
+
+The webservice implements a very simple REST style API. This package make
+requests by the HTTP protocol to retreive the data. Hence, fast Internet
+access is required for a proper use of *OmnipathR*.
+
+The package also provides some utility functions to filter, analyse and
 visualize the data.
-    
+
 ## Query types
 
 We provide here a brief summary about the data available through *OmnipathR*.
-*OmnipathR* provides access to 5 types of queries:  
+*OmnipathR* provides access to 5 types of queries:
 
 1. **Interactions**: protein-protein interactions from different datasets.
 2. **Enzyme-substrate**: enzyme-PTM (post-translational modification)
@@ -33,42 +33,49 @@ We provide here a brief summary about the data available through *OmnipathR*.
 For a more detailed information, we recommend you to visit the following sites:
 
   <https://omnipathdb.org/>
-  
+
   <https://omnipathdb.org/info>
-  
+
   <https://github.com/saezlab/pypath/blob/master/webservice.rst>
-  
+
   <https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html>
-  
+
 
 ## Installation
 First of all, you need a current version of `R` (<https://r-project.org>).
-*OmnipathR* is a freely available package deposited on *Bioconductor* and 
-*Github*: 
+*OmnipathR* is a freely available package deposited on *Bioconductor* and
+*Github*:
 (<https://bioconductor.org/>, <https://github.com/saezlab/OmnipathR>).
 
 You can install it by running the following commands on a `R` console:
- 
+
 ```{r}
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+if (!requireNamespace('BiocManager', quietly = TRUE))
+    install.packages('BiocManager')
 
 ## Last release in Bioconductor
-BiocManager::install("OmnipathR")
+BiocManager::install('OmnipathR', version = '3.12')
 ## Development version with the lastest updates
-BiocManager::install(version='devel')
+BiocManager::install('OmnipathR', version = 'devel')
+```
+
+Sometimes it's easier to install directly from github:
+
+```{r}
+require(devtools)
+install_github('saezlab/OmnipathR')
 ```
 
 ## Getting started and some usage examples
-To get started, we strongly recommend to read our main vignette in order to deal 
+To get started, we strongly recommend to read our main vignette in order to deal
 with the different types of queries and handle the data they return:
 
   <https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html>
-  
+
 You can also check the manual:
 
   <https://saezlab.github.io/OmnipathR/reference/index.html>
-   
+
 In addition, we provide here some examples for a quick start:
 
 ```{r}
@@ -78,16 +85,16 @@ library(OmnipathR)
 Download human protein-protein interactions from the specified resources:
 
 ```{r}
-interactions <- 
-  import_omnipath_interactions(resources=c("SignaLink3","PhosphoSite", 
-  "SIGNOR"))
+interactions <- import_omnipath_interactions(
+    resources = c('SignaLink3', 'PhosphoSite', 'SIGNOR')
+)
 ```
 
 
-Download human enzyme-PTM relationships from the specified resources:  
+Download human enzyme-PTM relationships from the specified resources:
 
 ```{r}
-enzsub <- import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
+enzsub <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
 ```
 
 Convert both data frames into networks (`igraph` objects)
@@ -96,10 +103,10 @@ ptms_g = ptms_graph(ptms = enzsub)
 OPI_g = interaction_graph(interactions = interactions)
 ```
 
-Print some interactions in a nice format:  
+Print some interactions in a nice format:
 ```{r}
 print_interactions(head(interactions))
-          
+
           source interaction         target n_resources n_references
 4    SRC (P12931)  ==( + )==> TRPV1 (Q8NER1)           9            6
 2  PRKG1 (Q13976)  ==( - )==> TRPC6 (Q9Y210)           7            5
@@ -109,22 +116,22 @@ print_interactions(head(interactions))
 3 PRKACA (P17612)  ==( + )==> TRPV1 (Q8NER1)           6            1
 ```
 
-Find interactions between a specific kinase and a specific substrate:  
+Find interactions between a specific kinase and a specific substrate:
 ```{r}
-print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
-  substrate_genesymbol=="MAPK3"))
-  
+print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
+  substrate_genesymbol=='MAPK3'))
+
            enzyme interaction           substrate    modification n_resources
 1 MAP2K1 (Q02750)       ====> MAPK3_Y204 (P27361) phosphorylation           8
 2 MAP2K1 (Q02750)       ====> MAPK3_T202 (P27361) phosphorylation           8
 3 MAP2K1 (Q02750)       ====> MAPK3_Y210 (P27361) phosphorylation           2
 4 MAP2K1 (Q02750)       ====> MAPK3_T207 (P27361) phosphorylation           2
-           
+
 ```
 
-Find shortest paths on the directed network between proteins:  
+Find shortest paths on the directed network between proteins:
 ```{r}
-print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
+print_path_es(shortest_paths(OPI_g,from = 'TYRO3',to = 'STAT3',
     output = 'epath')$epath[[1]],OPI_g)
 
            source interaction          target n_resources n_references
@@ -133,9 +140,9 @@ print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
 3 DAB2IP (Q5VWQ8)  ==( - )==>  STAT3 (P40763)           1            1
 ```
 
-Find all shortest paths between proteins:  
+Find all shortest paths between proteins:
 ```{r}
-print_path_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
+print_path_vs(all_shortest_paths(OPI_g,from = 'DYRK2',to = 'MAPKAPK2')$res,OPI_g)
 Pathway 1: DYRK2 -> TBK1 -> NFKB1 -> MAP3K8 -> MAPK3 -> MAPKAPK2
 Pathway 2: DYRK2 -> TBK1 -> AKT3 -> MAP3K8 -> MAPK3 -> MAPKAPK2
 Pathway 3: DYRK2 -> TBK1 -> AKT2 -> MAP3K8 -> MAPK3 -> MAPKAPK2
@@ -146,9 +153,10 @@ Pathway 6: DYRK2 -> TBK1 -> AKT2 -> PEA15 -> MAPK3 -> MAPKAPK2
 ```
 
 ## Feedbacks, bug reports, features
-Feedbacks and bugreports are always very welcomed!  
 
-Please use the Github issue page to report bugs or for questions: 
+Feedbacks and bugreports are always very welcome!
+
+Please use the Github issue page to report bugs or for questions:
 
   <https://github.com/saezlab/OmnipathR/issues>
 
