@@ -39,7 +39,11 @@ Depends:
     jsonlite,
     progress,
     magrittr,
-    purrr
+    purrr,
+    RCurl,
+    readr,
+    dplyr,
+    tidyr
 Imports:
     dplyr,
     stats,

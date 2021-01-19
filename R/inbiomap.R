@@ -33,7 +33,7 @@
 #' @importsFrom RCurl basicHeaderGatherer basicTextGatherer CFILE
 #' @importsFrom RCurl getCurlHandle curlSetOpt curlPerform close
 #' @importsFrom jsonlite parse_json
-#' @importsFrom read_tsv cols
+#' @importsFrom readr read_tsv cols
 #' @export
 #'
 #' @return A data frame (tibble) with the extracted interaction table.
@@ -130,7 +130,8 @@ inbiomap_raw <- function(.verbose = FALSE){
 #' UniProt IDs, Gene Symbols and scores and removes the irrelevant columns.
 #'
 #' @importsFrom magrittr %>%
-#' @importsFrom dplyr mutate separate select
+#' @importsFrom dplyr mutate select
+#' @importsFrom tidyr separate
 #' @export
 #'
 #' @return A data frame (tibble) of interactions.
