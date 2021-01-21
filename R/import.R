@@ -1740,6 +1740,14 @@ get_complexes_databases <- function(...){
 #' protein complex annotations are inferred from the annotations of the
 #' members: if all members carry the same annotation the complex inherits.
 #'
+#' @details Downloading the full annotations
+#' dataset is disabled by default because the size of this data is
+#' around 1GB. We recommend to retrieve the annotations for a set of proteins
+#' or only from a few resources, depending on your interest. You can always
+#' download the full database from
+#' https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv
+#' using any standard R or readr method.
+#'
 #' @return A data.frame containing different gene/complex annotations
 #' @export
 #' @importFrom utils read.csv
@@ -1752,10 +1760,6 @@ get_complexes_databases <- function(...){
 #' the genes integrating the complex. Check the vignette for examples.
 #' @param resources Load the annotations only from these databases.
 #' See \code{\link{get_annotation_resources}} for possible values.
-#' @param force_full_download Force the download of the entire annotations
-#' dataset. This is disabled by default because the size of this data is
-#' around 1GB. We recommend to retrieve the annotations for a set of proteins
-#' or only from a few resources, depending on your interest.
 #' @param wide Convert the annotation table to wide format, which
 #' corresponds more or less to the original resource. If the data comes from
 #' more than one resource a list of wide tables will be returned.
@@ -1772,7 +1776,6 @@ import_omnipath_annotations <- function(
     cache_file = NULL,
     proteins = NULL,
     resources = NULL,
-    force_full_download = FALSE,
     wide = FALSE,
     ...
 ){
@@ -1781,7 +1784,6 @@ import_omnipath_annotations <- function(
     proteins <- c(proteins, list(...)$select_genes)
 
     if(
-        !force_full_download &&
         is.null(cache_file) &&
         is.null(proteins) &&
         is.null(resources)
