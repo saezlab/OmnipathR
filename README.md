@@ -152,6 +152,39 @@ Pathway 6: DYRK2 -> TBK1 -> AKT2 -> PEA15 -> MAPK3 -> MAPKAPK2
 .....
 ```
 
+## Alternatives
+
+### Python
+
+A similar web service client is available for Python:
+
+    <https://github.com/saezlab/omnipath>
+
+### Cytoscape
+
+The OmniPath Cytoscape app provides access to the interactions, enzyme-PTM
+relationships and some of the annotations:
+
+    <https://apps.cytoscape.org/apps/omnipath>
+
+### Customization
+
+The [*pypath*](https://github.com/saezlab/pypath) Python module is a tool for
+building the OmniPath databases in a fully customizable way. We recommend to
+use pypath if you want to:
+
+* Tailor the database building to your needs
+* Include resources not available in the public web service
+* Use the rich Python APIs available for the database objects
+* Make sure the data from the original sources is the most up-to-date
+* Use the methods in ``pypath.inputs`` to download data from resources
+* Use the various extra tools in ``pypath.utils``, e.g. for identifier
+  translation, homology translation, querying Gene Ontology, working with
+  protein sequences, processing BioPAX, etc.
+
+With *pypath* it's also possible to run your own web service and serve your
+custom databases to the *OmnipathR* R client and the *omnipath* Python cient.
+
 ## Feedbacks, bug reports, features
 
 Feedbacks and bugreports are always very welcome!
