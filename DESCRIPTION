@@ -43,7 +43,9 @@ Depends:
     RCurl,
     readr,
     dplyr,
-    tidyr
+    tidyr,
+    rappdirs,
+    ini
 Imports:
     dplyr,
     stats,

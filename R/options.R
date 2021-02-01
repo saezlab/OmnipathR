@@ -77,6 +77,9 @@
     )
 )
 
+
+#' @importFrom rappdirs user_config_dir
+#' @importFrom ini read.ini write.ini
 .onLoad <- function(libname, pkgname){
 
     # setting the default options
