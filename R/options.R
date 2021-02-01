@@ -41,7 +41,7 @@
     omnipath.password = NULL,
     omnipath.print_urls = FALSE,
     omnipath.loglevel = 'trace',
-    omnipath.log_console_level = 'success',
+    omnipath.console_loglevel = 'success',
     omnipath.logfile = NULL,
     omnipath.pathwaycommons_url = paste0(
         'https://www.pathwaycommons.org/archives/PC2/v12/',
@@ -93,27 +93,54 @@
     )
     dir.create(dirname(log_path), showWarnings = FALSE, recursive = TRUE)
 
-    logger::log_formatter(logger::formatter_sprintf, namespace = pkgname)
-    logger::log_threshold(
-        get(
-            toupper(options('omnipath.loglevel')[[1]]),
-            envir = getNamespace('logger')
-        ),
-        namespace = pkgname
-    )
-    logger::log_appender(
-        logger::appender_file(log_path),
-        namespace = pkgname
-    )
-    logger::log_layout(
-        logger::layout_glue_generator(
-            format = paste0(
+    for(idx in 1:2){
+
+
+        loglevel <- sprintf(
+            'omnipath.%sloglevel',
+            `if`(idx == 1, '', 'console_')
+        )
+        appender <- `if`(
+            idx == 1,
+            logger::appender_file(log_path),
+            logger::appender_console
+        )
+        layout_format <- `if`(
+            idx == 1,
+            paste0(
                 '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
-                '[{level}] [{ns}] {msg}'
+                '[{colorize_by_log_level(level, levelr)}] [{ns}] ',
+                '{grayscale_by_log_level(msg, levelr)}'
+            ),
+            paste0(
+                '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
+                '[{level}] [{ns}] ',
+                '{msg}'
             )
-        ),
-        namespace = pkgname
-    )
+        )
+
+        logger::log_formatter(
+            logger::formatter_glue_or_sprintf,
+            namespace = pkgname,
+            index = idx
+        )
+        logger::log_threshold(
+            get(
+                toupper(options(loglevel)[[1]]),
+                envir = getNamespace('logger')
+            ),
+            namespace = pkgname,
+            index = idx
+        )
+        logger::log_appender(appender, namespace = pkgname, index = idx)
+        logger::log_layout(
+            logger::layout_glue_generator(format = layout_format),
+            namespace = pkgname,
+            index = idx
+        )
+
+    }
+
     logger::log_info('Welcome to OmnipathR!')
 
 }
