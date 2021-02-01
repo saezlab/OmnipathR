@@ -32,7 +32,6 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 Depends:
     R(>= 4.0),
-    igraph,
     graphics,
     methods,
     utils,
@@ -45,8 +44,9 @@ Depends:
     dplyr,
     tidyr,
     rappdirs,
-    ini
+    yaml
 Imports:
+    igraph,
     dplyr,
     stats,
     rlang,

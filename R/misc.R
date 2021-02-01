@@ -34,3 +34,17 @@
     )}
 
 }
+
+
+.ensure_dir <- function(path){
+
+    dir_path <- dirname(path)
+    dir.create(dir_path, showWarnings = FALSE, recursive = TRUE)
+
+    if(dir.exists(dir_path)){
+        logger::log_debug('Created directory `%s`', dir_path)
+    }else{
+        logger::log_warning('Failed to create directory `%s`', dir_path)
+    }
+
+}

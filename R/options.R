@@ -77,6 +77,177 @@
     )
 )
 
+.omnipath_local_config_fname <- 'omnipathr.yml'
+
+omnipath_get_user_config_path <- function(){
+
+    file.path(
+        user_config_dir(appname = 'OmnipathR', appauthor = 'saezlab'),
+        'omnipathr.yml'
+    )
+
+}
+
+#' importFrom rappdirs user_config_dir
+omnipath_get_default_config_path <- function(user = FALSE){
+
+    `if`(
+        file.exists(.omnipath_local_config_fname) && !user,
+        .omnipath_local_config_fname,
+        omnipath_get_user_config_path()
+    )
+
+}
+
+
+omnipath_get_config_path <- function(user = FALSE){
+
+    config_path_default <- omnipath_get_default_config_path(user = user)
+
+    config_path <- mget(
+        'omnipath_config',
+        envir = .GlobalEnv,
+        ifnotfound = Sys.getenv('OMNIPATHR_CONFIG')
+    )[[1]]
+
+    `if`(nchar(omnipath_config_path) > 0, config_path, config_path_default)
+
+}
+
+
+omnipath_ensure_config_dir <- function(){
+
+    .ensure_dir(.omnipath_config_path)
+
+}
+
+
+#' Save the current package configuration
+#'
+#' @param path Path to the config file. Directories and the file will be
+#' created if don't exist.
+#' @param title Save the config under this title. One config file might
+#' contain multple configurations, each identified by a title.
+#' @param local Save into a config file in the current directory instead of
+#' a user level config file. When loading, the config in the current directory
+#' has prioroty over the user level config.
+#'
+#' @export
+#' @importFrom yaml write_yaml
+omnipath_save_config <- function(
+        path = NULL,
+        title = 'default',
+        local = FALSE
+    ){
+
+    path <- `if`(
+        is.null(path),
+        `if`(
+            local,
+            omnipath_local_config_fname(),
+            omnipath_get_config_path()
+        ),
+        path
+    )
+    .ensure_dir(path)
+
+    this_config <- list()
+    this_config[[title]] <- .omnipath_config
+
+    write_yaml(this_config, file = path)
+
+    logger::success('Saved config to `%s`, section `%s`.', path, title)
+
+}
+
+
+#' Load the package configuration from a config file
+#'
+#' @param path Path to the config file.
+#' @param title Load the config under this title. One config file might
+#' contain multple configurations, each identified by a title. If the title
+#' is not available the first section of the config file will be used.
+#' @param user Force to use the user level config even if a config file
+#' exists in the current directory. By default, the local config files have
+#' prioroty over the user level config.
+#'
+#' @export
+#' @importFrom yaml yaml.load_file
+#' @importFrom
+omnipath_load_config <- function(
+        path = NULL,
+        title = 'default',
+        user = FALSE,
+        ...
+    ){
+
+    path <- `if`(
+        is.null(path),
+        omnipath_get_config_path(user = user),
+        path
+    )
+
+    yaml_config <- yaml.load_file(input = path, ...)
+
+    if(title %in% names(yaml_config)){
+        this_config <- yaml_config[[title]]
+    }else{
+        logger::warning(
+            'Section `%s` is not available in config file `%s`.',
+            title, path
+        )
+        title <- names(yaml_config)[1]
+        if(!is.na(title)){
+            this_config <- yaml_config[[title]]
+            logger::log_info('Using section `%s` instead.', title)
+        }
+    }
+
+    if(title != 'default' && 'default' %in% yaml_config){
+        this_config <- RCurl::merge.list(
+            this_config
+            yaml_config[['default']]
+        )
+    }
+    this_config <- RCurl::merge.list(
+        this_config,
+        .omnipath_options_defaults
+    )
+
+    .omnipath_config <<- this_config
+
+    logger::success('Loaded config from section `%s` of `%s`.', title, path)
+
+}
+
+
+#' Restores the built-in default values of all config parameters
+#'
+#' @param save If a path, the restored config will be also saved
+#' to this file. If TRUE, the config will be saved to the current default
+#' config path (the `.omnipath_config_path` global variable).
+#'
+#' @return The config as a list.
+#'
+#' @export
+#' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config}}
+omnipath_reset_config <- function(save = NULL){
+
+    .omnipath_config <<- .omnipath_options_defaults
+
+    if(!is.null(save)){
+        path <- `if`(
+            is.logical(save) && save,
+            omnipath_get_config_path(),
+            save
+        )
+        omnipath_save_config(path)
+    }
+
+    invisible(.omnipath_config)
+
+}
+
 
 #' @importFrom rappdirs user_config_dir
 #' @importFrom ini read.ini write.ini
