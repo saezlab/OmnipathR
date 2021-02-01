@@ -40,10 +40,11 @@ omnipath_console_loglevel <- function(){
 }
 
 
-#' Returns the path to the current log file
+#' Returns the path to the current OmnipathR log file
 #'
 #' @export
 #' @importFrom magrittr %>%
+#' @seealso \code{\link{omnipath_log}}
 omnipath_logfile <- function(){
 
     logger:::get_logger_definitions(
@@ -52,5 +53,18 @@ omnipath_logfile <- function(){
     environment() %>%
     `$`('file') %>%
     normalizePath()
+
+}
+
+
+#' Browse the current OmnipathR log file
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @seealso \code{\link{omnipath_logfile}}
+omnipath_log <- function(){
+
+    omnipath_logfile() %>%
+    file.show(title = 'OmnipathR log')
 
 }
