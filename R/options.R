@@ -125,10 +125,7 @@
             index = idx
         )
         logger::log_threshold(
-            get(
-                toupper(options(loglevel)[[1]]),
-                envir = getNamespace('logger')
-            ),
+            ensure_loglevel(options(loglevel)[[1]]),
             namespace = pkgname,
             index = idx
         )

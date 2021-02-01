@@ -197,18 +197,22 @@ import_omnipath <- function(
         result <- count_resources(result)
     }
 
+    loglevel <- `if`(
+        silent,
+        logger::DEBUG,
+        omnipath_console_loglevel()
+    )
 
-    if(!silent){
-        message(sprintf(
-            msg,
-            `if`(
-                is.data.frame(result),
-                nrow(result),
-                length(result)
-            ),
-            param$qt_message)
-        )
-    }
+    logger::log_level(
+        level = loglevel,
+        msg,
+        `if`(
+            is.data.frame(result),
+            nrow(result),
+            length(result)
+        ),
+        param$qt_message
+    )
 
     return(result)
 
@@ -2503,11 +2507,12 @@ omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
     op <- options(timeout = 600)
     on.exit(options(op))
 
-    if(options('omnipath.print_urls')[[1]]){
-
-        message(sprintf('Retrieving URL: %s', URL))
-
-    }
+    url_loglevel <- `if`(
+        options('omnipath.print_urls')[[1]],
+        omnipath_console_loglevel(),
+        logger::INFO
+    )
+    logger::log_level(level = url_loglevel, 'Retrieving URL: %s', URL)
 
     N.TRIES <- as.integer(N.TRIES)
     stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
