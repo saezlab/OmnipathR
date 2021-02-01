@@ -94,7 +94,8 @@
     dir.create(dirname(log_path), showWarnings = FALSE, recursive = TRUE)
 
     for(idx in 1:2){
-
+        # 1 = logfile
+        # 2 = console
 
         loglevel <- sprintf(
             'omnipath.%sloglevel',
@@ -109,13 +110,13 @@
             idx == 1,
             paste0(
                 '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
-                '[{colorize_by_log_level(level, levelr)}] [{ns}] ',
-                '{grayscale_by_log_level(msg, levelr)}'
+                '[{level}] [{ns}] ',
+                '{msg}'
             ),
             paste0(
                 '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
-                '[{level}] [{ns}] ',
-                '{msg}'
+                '[{colorize_by_log_level(level, levelr)}] [{ns}] ',
+                '{grayscale_by_log_level(msg, levelr)}'
             )
         )
 
