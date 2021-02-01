@@ -110,7 +110,7 @@ omnipath_get_config_path <- function(user = FALSE){
         ifnotfound = Sys.getenv('OMNIPATHR_CONFIG')
     )[[1]]
 
-    `if`(nchar(omnipath_config_path) > 0, config_path, config_path_default)
+    `if`(nchar(config_path) > 0, config_path, config_path_default)
 
 }
 
@@ -151,12 +151,11 @@ omnipath_save_config <- function(
     )
     .ensure_dir(path)
 
+    omnipath_options_to_config()
     this_config <- list()
     this_config[[title]] <- .omnipath_config
 
     write_yaml(this_config, file = path)
-
-    logger::success('Saved config to `%s`, section `%s`.', path, title)
 
 }
 
@@ -173,7 +172,7 @@ omnipath_save_config <- function(
 #'
 #' @export
 #' @importFrom yaml yaml.load_file
-#' @importFrom
+#' @importFrom RCurl merge.list
 omnipath_load_config <- function(
         path = NULL,
         title = 'default',
@@ -192,31 +191,33 @@ omnipath_load_config <- function(
     if(title %in% names(yaml_config)){
         this_config <- yaml_config[[title]]
     }else{
-        logger::warning(
-            'Section `%s` is not available in config file `%s`.',
-            title, path
-        )
         title <- names(yaml_config)[1]
         if(!is.na(title)){
             this_config <- yaml_config[[title]]
-            logger::log_info('Using section `%s` instead.', title)
         }
     }
 
     if(title != 'default' && 'default' %in% yaml_config){
         this_config <- RCurl::merge.list(
-            this_config
+            this_config,
             yaml_config[['default']]
         )
     }
+
+    # ensure the `omnipath.` prefix for all parameter keys
+    names(this_config) <- ifelse(
+        startsWith(names(this_config), 'omnipath.'),
+        names(this_config),
+        sprintf('omnipath.%s', names(this_config))
+    )
+
     this_config <- RCurl::merge.list(
         this_config,
         .omnipath_options_defaults
     )
 
     .omnipath_config <<- this_config
-
-    logger::success('Loaded config from section `%s` of `%s`.', title, path)
+    omnipath_config_to_options()
 
 }
 
@@ -225,15 +226,17 @@ omnipath_load_config <- function(
 #'
 #' @param save If a path, the restored config will be also saved
 #' to this file. If TRUE, the config will be saved to the current default
-#' config path (the `.omnipath_config_path` global variable).
+#' config path (see `omnipath_get_config_path()`).
 #'
 #' @return The config as a list.
 #'
 #' @export
-#' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config}}
+#' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config},
+#' \link{omnipath_get_config_path}}
 omnipath_reset_config <- function(save = NULL){
 
     .omnipath_config <<- .omnipath_options_defaults
+    omnipath_config_to_options()
 
     if(!is.null(save)){
         path <- `if`(
@@ -249,14 +252,48 @@ omnipath_reset_config <- function(save = NULL){
 }
 
 
-#' @importFrom rappdirs user_config_dir
-#' @importFrom ini read.ini write.ini
-.onLoad <- function(libname, pkgname){
+#' Populates the config from the default local or user level config file
+#' or the built-in defaults.
+omnipath_init_config <- function(user = FALSE){
 
-    # setting the default options
-    do.call(options, .omnipath_options_defaults)
+    config_path <- omnipath_get_config_path(user = user)
 
-    # the rest is logger setup
+    if(file.exists(config_path)){
+        omnipath_load_config(config_path)
+    }else{
+        omnipath_reset_config(save = config_path)
+    }
+
+}
+
+
+#' Loads the settings from .omnipath_config to options
+omnipath_config_to_options <- function(){
+
+    do.call(options, .omnipath_config)
+
+}
+
+#' Copies OmnipathR settings from options to .omnipath_config
+#'
+#' @importFrom RCurl merge.list
+omnipath_options_to_config <- function(){
+
+    from_options <- do.call(
+        options,
+        as.list(names(.omnipath_options_defaults))
+    )
+    .omnipath_config <<- merge.list(
+        from_options,
+        .omnipath_config
+    )
+
+}
+
+
+#' Setting up the logfile and logging parameters.
+omnipath_init_log <- function(pkgname = 'OmnipathR'){
+
     log_path <- `if`(
         is.null(options('omnipath.logfile')[[1]]),
         file.path(
@@ -312,6 +349,14 @@ omnipath_reset_config <- function(save = NULL){
         )
 
     }
+
+}
+
+
+.onLoad <- function(libname, pkgname){
+
+    omnipath_init_config()
+    omnipath_init_log(pkgname = pkgname)
 
     logger::log_info('Welcome to OmnipathR!')
 
