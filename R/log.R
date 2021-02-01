@@ -19,6 +19,7 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
+#' Ensures that `level` is a `loglevel` class object, converts if necessary
 ensure_loglevel <- function(level){
 
     `if`(
@@ -30,8 +31,26 @@ ensure_loglevel <- function(level){
 }
 
 
+#' Returns the log level threshold for console messages, according to the
+#' current settings
 omnipath_console_loglevel <- function(){
 
     ensure_loglevel(options('omnipath.console_loglevel')[[1]])
+
+}
+
+
+#' Returns the path to the current log file
+#'
+#' @export
+#' @importFrom magrittr %>%
+omnipath_logfile <- function(){
+
+    logger:::get_logger_definitions(
+        namespace = 'OmnipathR'
+    )$default$appender %>%
+    environment() %>%
+    `$`('file') %>%
+    normalizePath()
 
 }
