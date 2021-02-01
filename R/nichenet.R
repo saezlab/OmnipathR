@@ -318,9 +318,11 @@ nichenet_signaling_network_evex <- function(...){
 #' @importsFrom magrittr %>%
 #' @importsFrom dplyr select
 #' @export
+#'
+#' @seealso \code{\link{nichenet_signaling_network}, \link{inbiomap}}
 nichenet_signaling_network_inbiomap <- function(...){
 
-    inbiomap() %>%
+    inbiomap(...) %>%
     select(
         from = genesymbol_a,
         to = genesymbol_b,

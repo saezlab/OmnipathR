@@ -49,7 +49,8 @@ Imports:
     stats,
     rlang,
     tidyr,
-    readr
+    readr,
+    logger
 Suggests:
     dnet,
     gprofiler2,

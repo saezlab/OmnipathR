@@ -40,6 +40,9 @@
     omnipath.license = 'academic',
     omnipath.password = NULL,
     omnipath.print_urls = FALSE,
+    omnipath.loglevel = 'trace',
+    omnipath.log_console_level = 'success',
+    omnipath.logfile = NULL,
     omnipath.pathwaycommons_url = paste0(
         'https://www.pathwaycommons.org/archives/PC2/v12/',
         'PathwayCommons12.All.hgnc.sif.gz'
@@ -76,6 +79,41 @@
 
 .onLoad <- function(libname, pkgname){
 
+    # setting the default options
     do.call(options, .omnipath_options_defaults)
+
+    # the rest is logger setup
+    log_path <- `if`(
+        is.null(options('omnipath.logfile')[[1]]),
+        file.path(
+            'omnipathr-log',
+            sprintf('omnipathr-%s.log', format(Sys.time(), "%Y%m%d-%H%M"))
+        ),
+        options('omnipath.logfile')[[1]]
+    )
+    dir.create(dirname(log_path), showWarnings = FALSE, recursive = TRUE)
+
+    logger::log_formatter(logger::formatter_sprintf, namespace = pkgname)
+    logger::log_threshold(
+        get(
+            toupper(options('omnipath.loglevel')[[1]]),
+            envir = getNamespace('logger')
+        ),
+        namespace = pkgname
+    )
+    logger::log_appender(
+        logger::appender_file(log_path),
+        namespace = pkgname
+    )
+    logger::log_layout(
+        logger::layout_glue_generator(
+            format = paste0(
+                '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
+                '[{level}] [{ns}] {msg}'
+            )
+        ),
+        namespace = pkgname
+    )
+    logger::log_info('Welcome to OmnipathR!')
 
 }
