@@ -2144,8 +2144,9 @@ get_intercell_resources <- function(dataset = NULL){
 #' interactions.
 #' @export
 #' @importFrom utils read.csv modifyList
-#' @importFrom dplyr %>% rename bind_rows filter inner_join distinct group_by
+#' @importFrom dplyr rename bind_rows filter inner_join distinct group_by
 #' summarize_all first
+#' @importFrom magrittr %>%
 #'
 #' @param cache_file path to an earlier data file; if exists, will be loaded
 #' as it is, the further arguments have no effect; if does not exists, the
@@ -2161,6 +2162,13 @@ get_intercell_resources <- function(dataset = NULL){
 #' @param receiver_param a list with arguments for
 #' \code{\link{import_omnipath_intercell}}, to define the receiver side
 #' of intercellular connections
+#' @param resources A character vector of resources to be applied to
+#' both the interactions and the annotations. For example, \code{resources =
+#' 'CellChatDB' will download the transmitters and receivers defined by
+#' CellChatDB, connected by connections from CellChatDB.
+#' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
+#' annotations will be used instead of the more generic *transmitter* and
+#' *receiver* categories.
 #'
 #' @examples
 #' intercellNetwork <- import_intercell_network(
@@ -2169,17 +2177,21 @@ get_intercell_resources <- function(dataset = NULL){
 #'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme')))
 #'
 #' @seealso \code{\link{get_intercell_categories},
-#' \link{get_intercell_generic_categories}, 
+#' \link{get_intercell_generic_categories},
 #' \link{import_omnipath_intercell},
-#' \link{import_omnipath_interactions}, 
+#' \link{import_omnipath_interactions},
 #' \link{import_pathwayextra_interactions},
-#' \link{import_kinaseextra_interactions}, 
+#' \link{import_kinaseextra_interactions},
 #' \link{import_ligrecextra_interactions}}
 import_intercell_network <- function(
     cache_file = NULL,
     interactions_param = list(),
     transmitter_param = list(),
-    receiver_param = list()
+    receiver_param = list(),
+    resources = NULL,
+    entity_types = NULL,
+    ligand_receptor = FALSE,
+    ...
 ){
 
     result <- NULL
@@ -2193,42 +2205,56 @@ import_intercell_network <- function(
 
     if(is.null(result)){
 
-        interactions_param_default <- list(
-            query_type = 'interactions',
-            datasets = c(
-                'omnipath',
-                'pathwayextra',
-                'kinaseextra',
-                'ligrecextra'
-            )
-        )
-        interactions_param <- modifyList(
-            interactions_param_default,
-            interactions_param
-        )
+        interactions_param <- list(
+                query_type = 'interactions',
+                datasets = c(
+                    'omnipath',
+                    'pathwayextra',
+                    'kinaseextra',
+                    'ligrecextra'
+                )
+            ) %>%
+            insert_if_not_null(
+                resources = resources,
+                entity_types = entity_types
+            ) %>%
+            modifyList(interactions_param)
+
         interactions <- do.call(
             import_omnipath,
             interactions_param
         )
         interactions <- swap_undirected(interactions)
 
-        transmitter_param_defaults <- list(
-            causality = 'trans',
-            scope = 'generic'
-        )
-        transmitter_param <- modifyList(
-            transmitter_param_defaults,
-            transmitter_param
-        )
+        transmitter_param <- list(
+                causality = 'trans',
+                scope = 'generic'
+            ) %>%
+            insert_if_not_null(
+                resources = resources,
+                entity_types = entity_types
+            ) %>%
+            {`if`(
+                ligand_receptor,
+                `[[<-`(., 'parent', 'ligand'),
+                .
+            )} %>%
+            modifyList(transmitter_param)
 
-        receiver_param_defaults <- list(
-            causality = 'rec',
-            scope = 'generic'
-        )
-        receiver_param <- modifyList(
-            receiver_param_defaults,
-            receiver_param
-        )
+        receiver_param <- list(
+                causality = 'rec',
+                scope = 'generic'
+            ) %>%
+            insert_if_not_null(
+                resources = resources,
+                entity_types = entity_types
+            ) %>%
+            {`if`(
+                ligand_receptor,
+                `[[<-`(., 'parent', 'receptor'),
+                .
+            )} %>%
+            modifyList(receiver_param)
 
         intracell <- c('intracellular_intercellular_related', 'intracellular')
         transmitters <-

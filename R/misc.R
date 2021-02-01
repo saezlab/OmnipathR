@@ -48,3 +48,23 @@
     }
 
 }
+
+
+#' Inserts an element to a list if the value is not null.
+insert_if_not_null <- function(l, ...){
+
+    elements <- list(...)
+
+    for(name in names(elements)){
+
+        if(!is.null(elements[[name]])){
+
+            l[[name]] <- elements[[name]]
+
+        }
+
+    }
+
+    return(l)
+
+}
