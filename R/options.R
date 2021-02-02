@@ -43,6 +43,8 @@
     omnipath.loglevel = 'trace',
     omnipath.console_loglevel = 'success',
     omnipath.logfile = NULL,
+    omnipath.cachedir = NULL,
+    omnipath.cache_timeout = 5,
     omnipath.pathwaycommons_url = paste0(
         'https://www.pathwaycommons.org/archives/PC2/v12/',
         'PathwayCommons12.All.hgnc.sif.gz'
@@ -261,6 +263,7 @@ omnipath_init_config <- function(user = FALSE){
     if(file.exists(config_path)){
         omnipath_load_config(config_path)
     }else{
+        # this normally happens only at the very first use of the package
         omnipath_reset_config(save = config_path)
     }
 
