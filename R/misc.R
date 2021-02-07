@@ -22,8 +22,8 @@
 
 #' Makes sure we have a string even if the argument was passed by NSE
 #'
-#' @importsFrom magrittr %>%
-#' @importsFrom rlang enquo quo_get_expr quo_text is_symbol
+#' @importFrom magrittr %>%
+#' @importFrom rlang enquo quo_get_expr quo_text is_symbol
 .nse_ensure_str <- function(arg){
 
     enquo(arg) %>%
@@ -66,5 +66,44 @@ insert_if_not_null <- function(l, ...){
     }
 
     return(l)
+
+}
+
+
+#' Returns the extension of a file name
+#'
+#' @importFrom magrittr %>%
+file_extenstion <- function(name){
+
+    name %>%
+    strsplit('\\?') %>%
+    `[[`(1) %>%
+    `[`(1) %>%
+    strsplit('\\.') %>%
+    `[[`(1) %>%
+    tail(
+        `if`(
+            length(.) > 1 && nchar(tail(., 1)) < 5,
+            `if`(
+                .[length(.) - 1] == 'tar',
+                2,
+                1
+            ),
+            0
+        )
+    ) %>%
+    paste(collapse = '.')
+
+}
+
+
+#' Adds an extension
+file_add_extension <- function(fname, ext){
+
+    ifelse(
+        is.character(ext) & ext != '' & !endsWith(fname, ext),
+        paste(fname, ext, sep = '.'),
+        fname
+    )
 
 }

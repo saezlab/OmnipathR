@@ -29,6 +29,7 @@ omnipath_init_cache <- function(){
     cachedir <- omnipath_default_cachedir()
     omnipath_new_cachedir(cachedir)
     options(omnipath.cachedir = cachedir)
+    omnipath_read_cache_db()
     logger::log_info('Initialized cache: `%s`.', cachedir)
 
     invisible(cachedir)
@@ -98,14 +99,25 @@ omnipath_get_cachedir <- function(){
 #' reading and writing of the cache file database
 omnipath_lock_cache_db <- function(){
 
+
     lockfile <- omnipath_cache_lock_path()
 
     for(i in 1:options('omnipath.cache_timeout')){
 
-        if(file.exists(lockfile))
-        Sys.sleep(1)
+        if(file.exists(lockfile)){
+
+            Sys.sleep(1)
+
+        }else{
+
+            file.create(lockfile)
+            return(TRUE)
+
+        }
 
     }
+
+    omnipath_locked_cache_error()
 
 }
 
@@ -132,9 +144,19 @@ omnipath_unlock_cache_db <- function(){
 #' @importFrom magrittr %>%
 omnipath_cache_lock_path <- function(){
 
-    'omnipath.cachedir' %>%
-    options() %>%
+    omnipath_get_cachedir() %>%
     file.path('cache.lock')
+
+}
+
+
+#' Tells the path to the cache database
+#'
+#' @importFrom magrittr %>%
+omnipath_cache_db_path <- function(){
+
+    omnipath_get_cachedir() %>%
+    file.path('cache.json')
 
 }
 
@@ -203,26 +225,92 @@ omnipath_cache_get <- function(){
 
 
 #' Adds a new item to the cache
-omnipath_cache_add <- function(){
+#'
+#' @importFrom RCurl merge.list
+omnipath_cache_add <- function(record){
 
+    omnipath_lock_cache_db()
+    omnipath_read_cache_db()
 
+    record$versions[[1]]$dl_finished <- Sys.time()
+
+    if(record$key %in% .omnipath_cache){
+
+        .omnipath_cache[[record$key]]$versions <-
+            RCurl::merge.list(
+                .omnipath_cache[[record$key]]$versions,
+                record$versions
+            )
+
+    }else{
+
+        .omnipath_cache[[record$key]] <- record
+
+    }
+
+    omnipath_write_cache_db()
+    omnipath_unlock_cache_db()
 
 }
 
 
 #' Creates a record for the cache database, describing a cache item with its
 #' metadata such as download date
-omnipath_cache_record <- function(){
+#'
+#' @importFrom magrittr %>% %<>%
+omnipath_cache_record <- function(
+        key,
+        url,
+        version = 1,
+        ext = NULL,
+        post = NULL,
+        payload = NULL,
+        dl_start = Sys.time(),
+        status = 'downloading'
+    ){
+
+    version %<>% as.character
+
+    if(is.null(ext)) ext <- file_extension(url)
+
+    path <-
+        omnipath_get_cachedir() %>%
+        file.path(
+            sprintf('%s-%s', key, version)
+        ) %>%
+        file_add_extension(ext)
 
 
+    list(
+        key = key,
+        url = url,
+        post = post,
+        payload = payload,
+        ext = ext,
+        versions =
+            list(
+                list(
+                    number = version,
+                    path = path,
+                    dl_start = dl_start,
+                    dl_finished = NULL,
+                    status = status
+                )
+            ) %>%
+            setNames(version)
+    )
 
 }
 
 
 #' Generates a hash which identifies an element in the cache database
-omnipath_cache_key <- function(){
+#'
+#' @importFrom digest sha1_digest
+#' @importFrom magrittr %>%
+omnipath_cache_key <- function(url, post = NULL, payload = NULL){
 
-
+    list(url, post, payload) %>%
+    sha1_digest()
 
 }
 
@@ -256,21 +344,23 @@ omnipath_cache_db_edit <- function(){
 #' @importFrom jsonlite
 omnipath_read_cache_db <- function(){
 
-
+    .omnipath_cache <<-
+        omnipath_cache_db_path() %>%
+        jsonlite::fromJSON()
 
 }
 
 
 #' Writes the cache DB contents from the memory to the disk
 #'
+#' Never call this function directly.
+#'
 #' @importFrom jsonlite toJSON
+#' @importFrom magrittr %>%
 omnipath_write_cache_db <- function(){
 
-    omnipath_lock_cache_db()
-    write(
-        jsonlite::toJSON(.omnipath_cache, pretty = TRUE),
-        file.path()
-    )
-    omnipath_unlock_cache_db()
+    .omnipath_cache %>%
+    jsonlite::toJSON(pretty = TRUE) %>%
+    write(omnipath_cache_db_path())
 
 }
