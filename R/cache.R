@@ -167,7 +167,7 @@ omnipath_locked_cache_error <- function(){
     msg <- sprintf(
         paste0(
             'The cache directory `%s` is locked for longer than %d seconds. ',
-            'If you keep experiencing this issue please call `omnipath_'
+            'If you keep experiencing this issue please call `omnipath_',
             'unlock_cache_db()`. '
         ),
         options('omnipath.cachedir'),

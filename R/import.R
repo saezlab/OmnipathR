@@ -1854,7 +1854,7 @@ import_omnipath_annotations <- function(
                 parts,
                 list(
                     import_omnipath(
-                        query_type = annotations,
+                        query_type = 'annotations',
                         proteins = proteins_chunk,
                         resources = resources,
                         recursive_call = TRUE,
