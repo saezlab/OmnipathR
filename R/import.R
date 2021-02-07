@@ -1868,7 +1868,7 @@ import_omnipath_annotations <- function(
 
         cat(' ready.\n')
 
-        result <- do.call(rbind, result)
+        result <- do.call(rbind, parts)
 
         if(!is.null(cache_file)){
             save(result, cache_file)
