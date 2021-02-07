@@ -1874,10 +1874,10 @@ import_omnipath_annotations <- function(
             save(result, cache_file)
         }
 
-        message(sprintf(
+        logger::log_success(
             'Downloaded %d annotation records.',
             nrow(result)
-        ))
+        )
 
     }
 
