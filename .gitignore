@@ -39,3 +39,5 @@ vignettes/OmnipathR.toc
 bioctest/
 # bioconductor testing R environment
 Renviron.bioc
+# Log directory
+omnipathr-log/
