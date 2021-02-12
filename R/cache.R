@@ -134,7 +134,7 @@ omnipath_lock_cache_db <- function(){
 omnipath_unlock_cache_db <- function(){
 
     omnipath_cache_lock_path() %>%
-    file.remove()
+    file.remove(showWarnings = FALSE)
 
 }
 
@@ -224,15 +224,14 @@ omnipath_cache_get <- function(){
 }
 
 
-#' Adds a new item to the cache
+#' Adds a new item to the cache or updates an existing one
 #'
 #' @importFrom RCurl merge.list
+#' @importFrom purrr map
+#' @importFrom magrittr %>%
 omnipath_cache_add <- function(record){
 
-    omnipath_lock_cache_db()
-    omnipath_read_cache_db()
 
-    record$versions[[1]]$dl_finished <- Sys.time()
 
     if(record$key %in% .omnipath_cache){
 
@@ -248,8 +247,23 @@ omnipath_cache_add <- function(record){
 
     }
 
+
+
+}
+
+
+#' Executes a function with locking the cache database
+omnipath_cache_db_rw_wrapper <- function(FUN, ...){
+
+    omnipath_lock_cache_db()
+    omnipath_read_cache_db()
+
+    result <- FUN(...)
+
     omnipath_write_cache_db()
     omnipath_unlock_cache_db()
+
+    invisible(result)
 
 }
 
@@ -261,7 +275,7 @@ omnipath_cache_add <- function(record){
 omnipath_cache_record <- function(
         key,
         url,
-        version = 1,
+        version = '1',
         ext = NULL,
         post = NULL,
         payload = NULL,
@@ -332,9 +346,9 @@ omnipath_cache_db_remove <- function(){
 
 
 #' Modifies an element in the cache database
-omnipath_cache_db_edit <- function(){
+omnipath_cache_db_update <- function(){
 
-
+    record$versions[[1]]$dl_finished <- Sys.time()
 
 }
 
@@ -364,3 +378,25 @@ omnipath_write_cache_db <- function(){
     write(omnipath_cache_db_path())
 
 }
+
+
+
+        versions <-
+            .omnipath_cache[[record$key]]$versions %>%
+            purrr::map(
+                function(version){
+                    version$number
+                }
+            ) %>%
+            unlist() %>%
+            as.numeric()
+
+        for(version in record$versions){
+
+            this_version <-
+                version$number %>%
+                as.numeric()
+
+
+
+        }
