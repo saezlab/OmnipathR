@@ -23,31 +23,54 @@
 #  Author: Ben Hall
 #
 
+#' Ends a function where something has gone wrong, printing information about the error
+#' @param a string with information about why the error occurred
+#' @NoRd
 wrongInput <- function(reason){
     cat(reason)
     return(NULL)
     }
 
+#' Returns a formatted string describing a BMA interaction between variables
+#' @param a unique id, variable ids describing the source and targets, and the edge description
+#' @NoRd
 bmaRelationship <- function(id,from,to,type){
     rel <- sprintf('{"Id":%d,"FromVariable":%d,"ToVariable":%d,"Type":"%s"}', id, from, to, type)
     return(rel)
     }
 
+#' Returns a formatted string describing the model parameters of a BMA variable
+#' @param a unique id, human readable name (e.g. JAG1), unique variable id, granularity (number of levels) and the formula
+#' @NoRd
 bmaVariableModel <- function(id,name,granularity,formula=""){
     var <- sprintf('{"Name":"%s","Id":%d,"RangeFrom":0,"RangeTo":%d,"Formula":"%s"}', name, id, granularity, formula)
     return(var)
     }
 
+#' Returns a formatted string describing the layout parameters of a BMA variable
+#' @param a unique id, human readable name (e.g. JAG1), granularity (number of levels) and the update formula
+#' @NoRd
 bmaVariableLayout <- function(id,name,x,y,description="") {
     var <- sprintf('{"Id":%d,"Name":"%s","Type":"Constant","ContainerId":0,"PositionX":%f,"PositionY":%f,"CellX":0,"CellY":0,"Angle":0,"Description":"%s"}',id,name,x,y,description)
     return(var)
     }
 
+#' Returns a string containing the target function of a variable
+#' 
+#' Returns either empty string (interpreted as default function), or granularity - activity of upstream inhibitor
+#' @param bool stating whether the interaciton is an inhibition, granularity of 
+#' variables (number of levels), and source of interaction
+#' @NoRd
 bmaFormula <- function(inhibitor,granularity,upstream){
     f <- ifelse(inhibitor,sprintf("%d-var(%s)",granularity,upstream),"")
     return(f)
 }
 
+#' Returns a string describing the evidence behind an interaction
+#' 
+#' Contains all interaction types with a simple descriptor and PMIDs
+#' @param takes an edge from omnipath "e", and optionally the name of the upstream variable ("incoming")
+#' @NoRd
 bmaDescription <- function(e,incoming=""){
     sign <- ifelse(e$is_stimulation == 1,
             ifelse(e$is_inhibition == 1,"Mixed","Activator"),
@@ -57,6 +80,11 @@ bmaDescription <- function(e,incoming=""){
     return(sprintf("%s%s-PMID:%s.",incoming,sign,refs))
     }
 
+#' Prints a BMA motif to the screen from a sequence of edges, which can be copy/pasted into the BMA canvas 
+#' 
+#' Intended to parallel print_path_es
+#' @param takes an sequence of edges, a graph, and a granularity
+#' @export
 bmaMotif_es <- function(edgeSeq,G,granularity=2){
     if(length(edgeSeq) == 0) {
         wrongInput("\nempty path\n")
@@ -120,6 +148,11 @@ bmaMotif_es <- function(edgeSeq,G,granularity=2){
 
 }
 
+#' Prints a BMA motif to the screen from a sequence of nodes, which can be copy/pasted into the BMA canvas 
+#'
+#' Intended to parallel print_path_vs
+#' @param takes an sequence of nodes, and a granularity
+#' @export
 bmaMotif_vs <- function(nodeSeq,G){
 
     if(length(nodeSeq) == 0){
