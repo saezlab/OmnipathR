@@ -217,9 +217,31 @@ omnipath_cache_clean <- function(){
 
 
 #' Retrieves one item from the cache directory
-omnipath_cache_get <- function(){
+#'
+#' @return cache record
+omnipath_cache_get <- cache_locked %@% function(
+    url,
+    post = NULL,
+    payload = NULL
+){
 
+    key <- omnipath_cache_key(url = url, post = post, payload = payload)
 
+    if(key %in% names(.omnipath_cache)){
+
+        return(.omnipath_cache[[key]])
+
+    }else{
+
+        return(
+            omnipath_cache_record(
+                url = url,
+                post = post,
+                payload = payload
+            )
+        )
+
+    }
 
 }
 
@@ -229,9 +251,7 @@ omnipath_cache_get <- function(){
 #' @importFrom RCurl merge.list
 #' @importFrom purrr map
 #' @importFrom magrittr %>%
-omnipath_cache_add <- function(record){
-
-
+omnipath_cache_add <- cache_locked %@% function(record){
 
     if(record$key %in% .omnipath_cache){
 
@@ -247,23 +267,25 @@ omnipath_cache_add <- function(record){
 
     }
 
-
-
 }
 
 
 #' Executes a function with locking the cache database
-omnipath_cache_db_rw_wrapper <- function(FUN, ...){
+cache_locked <- decorator %@% function(FUN){
 
-    omnipath_lock_cache_db()
-    omnipath_read_cache_db()
+    function(...){
 
-    result <- FUN(...)
+        omnipath_lock_cache_db()
+        omnipath_read_cache_db()
 
-    omnipath_write_cache_db()
-    omnipath_unlock_cache_db()
+        result <- FUN(...)
 
-    invisible(result)
+        omnipath_write_cache_db()
+        omnipath_unlock_cache_db()
+
+        invisible(result)
+
+    }
 
 }
 

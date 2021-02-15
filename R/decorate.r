@@ -61,7 +61,16 @@ print.decorated = function (x, useSource = TRUE, ...) {
     invisible(x)
 }
 
-modules::register_S3_method('print', 'decorated', print.decorated)
+attr(environment(print.decorated), 'S3') <- c(
+    attr(environment(print.decorated)),
+    'print.decorated'
+)
+registerS3method(
+    'print',
+    'decorated',
+    print.decorated,
+    environment(print.decorated)
+)
 
 prettify = function (f, original, decorator_calls) {
     attr(f, 'srcref') = pretty_code(original)
