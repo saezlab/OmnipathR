@@ -197,7 +197,8 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 
 }
 
-#' Prints a BMA motif to the screen from a sequence of nodes, which can be copy/pasted into the BMA canvas 
+#' Prints a BMA motif to the screen from a sequence of nodes, which can be
+#' copy/pasted into the BMA canvas
 #'
 #' Intended to parallel print_path_vs
 #' @param takes an sequence of nodes, and a granularity
