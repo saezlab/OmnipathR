@@ -660,6 +660,15 @@ omnipath_cache_move_in <- function(
         keep_original = FALSE
     ){
 
+    record <- omnipath_cache_get(
+        key = key,
+        url = url,
+        post = post,
+        payload = payload,
+        ext = file_extension(path)
+    )
+    key <- record$key
+
     version <- omnipath_cache_update_status(
         key = key,
         version = version,

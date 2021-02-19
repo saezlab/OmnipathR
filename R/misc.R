@@ -73,7 +73,7 @@ insert_if_not_null <- function(l, ...){
 #' Returns the extension of a file name
 #'
 #' @importFrom magrittr %>%
-file_extenstion <- function(name){
+file_extension <- function(name){
 
     name %>%
     strsplit('\\?') %>%
