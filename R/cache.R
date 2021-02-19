@@ -381,10 +381,13 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
     .omnipath_cache <<-
         .omnipath_cache %>%
         map(
-            ~keep(
-                .x$versions,
-                function(v){file.exists(v$path)}
-            )
+            function(record){
+                record$versions %<>%
+                keep(
+                    function(v){file.exists(v$path)}
+                )
+                record
+            }
         ) %>%
         keep(
             function(record){length(record$versions) > 0}
@@ -578,7 +581,7 @@ omnipath_cache_load <- function(
         if(!file.exists(path)){
             msg <- sprintf(
                 paste0(
-                    'Missing cache file: `%s`. Please run '
+                    'Missing cache file: `%s`. Please run ',
                     '`omnipath_clean_cache_db()` and try again.'
                 ),
                 path
