@@ -574,7 +574,7 @@ omnipath_cache_load <- function(
     if(!is.null(version)){
 
         path <- record$versions[[version]]$path
-        data <- loadRDS(path)
+        data <- readRDS(path)
         logger::log_trace('Loaded data from RDS `%s`.', path)
         return(data)
 
@@ -887,14 +887,14 @@ omnipath_cache_filter_versions <- function(
         t_latest <- versions %>%
             map(function(v){v$dl_finished}) %>%
             unlist()
-        selection %<>% `&`(which_dl_finished, t_latest, op = `==`)
+        selection %<>% `&`(which_dl_finished(versions, t_latest, op = `==`))
     }
 
 
     dates <- map(record$versions, function(v){v$dl_finished})
     versions <- versions[!sapply(dates, is.null)]
     dates %<>% unlist
-    return(versions[which.max(dates)])
+    return(names(versions[which.max(dates)]))
 
 }
 
