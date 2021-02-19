@@ -534,7 +534,7 @@ omnipath_cache_get <- function(
 #' @param version Version of the cache item. If does not exist or NULL, the
 #' latest version will be retrieved
 #'
-#' @importFrom logger log_info log_trace
+#' @importFrom logger log_info log_trace log_fatal
 #' @export
 #' @seealso \code{\link{omnipath_cache_save}}
 omnipath_cache_load <- function(
@@ -574,6 +574,19 @@ omnipath_cache_load <- function(
     if(!is.null(version)){
 
         path <- record$versions[[version]]$path
+
+        if(!file.exists(path)){
+            msg <- sprintf(
+                paste0(
+                    'Missing cache file: `%s`. Please run '
+                    '`omnipath_clean_cache_db()` and try again.'
+                ),
+                path
+            )
+            log_fatal(msg)
+            stop(msg)
+        }
+
         data <- readRDS(path)
         logger::log_trace('Loaded data from RDS `%s`.', path)
         return(data)
