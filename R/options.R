@@ -360,6 +360,7 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
     omnipath_init_config()
     omnipath_init_log(pkgname = pkgname)
+    omnipath_init_cache()
 
     logger::log_info('Welcome to OmnipathR!')
 

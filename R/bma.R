@@ -185,8 +185,8 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
     }
     result <- sprintf(
         paste0(
-            '{"Model": {"Name": "Omnipath motif", "Variables":[%s], '
-            '"Relationships":[%s]}, "Layout":{"Variables":[%s], '
+            '{"Model": {"Name": "Omnipath motif", "Variables":[%s], ',
+            '"Relationships":[%s]}, "Layout":{"Variables":[%s], ',
             '"Containers":[]}}\n'
         ),
         paste(variables, sep = '', collapse = ', '),

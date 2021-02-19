@@ -35,7 +35,6 @@ PROTECTED_FILES <- c('cache.lock', 'cache.json')
 #' Sets up the cache once the module is loaded or after the cachedir option
 #' has been changed
 #'
-#' @importFrom rappdirs user_cache_dir
 omnipath_init_cache <- function(){
 
     cachedir <- omnipath_default_cachedir()
@@ -52,6 +51,7 @@ omnipath_init_cache <- function(){
 #' Returns the default cache directory path
 #'
 #' @importFrom magrittr %>%
+#' @importFrom rappdirs user_cache_dir
 omnipath_default_cachedir <- function(){
 
     user_cache_dir() %>%
@@ -86,7 +86,7 @@ omnipath_new_cachedir <- function(path){
 #' Tells if a directory looks like an OmnipathR cache directory
 omnipath_is_cachedir <- function(path){
 
-    dir.exists(path) && file.exists(file.path(cache, 'cache.json'))
+    dir.exists(path) && file.exists(file.path(path, 'cache.json'))
 
 }
 
@@ -94,7 +94,7 @@ omnipath_is_cachedir <- function(path){
 #' Determines the path of the cache directory according to the settings
 omnipath_get_cachedir <- function(){
 
-    cachedir <- options('omnipath.cachedir')
+    cachedir <- options('omnipath.cachedir')[[1]]
 
     if(is.null(cachedir) || !omnipath_is_cachedir(cachedir)){
 
@@ -187,6 +187,26 @@ omnipath_locked_cache_error <- function(){
     )
     logger::log_fatal(msg)
     stop(msg)
+
+}
+
+
+#' Executes a function with locking the cache database
+cache_locked <- decorator %@% function(FUN){
+
+    function(...){
+
+        omnipath_lock_cache_db()
+        omnipath_read_cache_db()
+
+        result <- FUN(...)
+
+        omnipath_write_cache_db()
+        omnipath_unlock_cache_db()
+
+        invisible(result)
+
+    }
 
 }
 
@@ -716,7 +736,7 @@ omnipath_cache_update_status <- cache_locked %@% function(
         logger::log_info(
             'Cache item `%s` version %s: status changed from `%s` to `%s`.',
             key,
-            version
+            version,
             old_status,
             status
         )
@@ -934,26 +954,6 @@ omnipath_cache_ensure_key <- function(
     }
 
     return(key)
-
-}
-
-
-#' Executes a function with locking the cache database
-cache_locked <- decorator %@% function(FUN){
-
-    function(...){
-
-        omnipath_lock_cache_db()
-        omnipath_read_cache_db()
-
-        result <- FUN(...)
-
-        omnipath_write_cache_db()
-        omnipath_unlock_cache_db()
-
-        invisible(result)
-
-    }
 
 }
 

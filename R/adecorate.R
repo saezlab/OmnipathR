@@ -62,7 +62,7 @@ print.decorated = function (x, useSource = TRUE, ...) {
 }
 
 attr(environment(print.decorated), 'S3') <- c(
-    attr(environment(print.decorated)),
+    attr(environment(print.decorated), 'S3'),
     'print.decorated'
 )
 registerS3method(
