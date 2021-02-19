@@ -200,7 +200,7 @@ import_omnipath <- function(
     loglevel <- `if`(
         silent,
         logger::DEBUG,
-        omnipath_console_loglevel()
+        logger::SUCCESS
     )
 
     logger::log_level(

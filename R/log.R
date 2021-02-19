@@ -68,3 +68,61 @@ omnipath_log <- function(){
     file.show(title = 'OmnipathR log')
 
 }
+
+
+#' Sets the log level for the package logger
+#'
+#' @param level Character or class `loglevel`. The desired log level.
+#' @param target Character, either 'logfile' or 'console'
+#'
+#' @export
+#' @importFrom magrittr %<>% %>%
+omnipath_set_loglevel <- function(level, target = 'logfile'){
+
+    level %<>% ensure_loglevel
+    i_logger <- target %>% `==`(c('logfile', 'console')) %>% which
+
+    omnipathr_loggers <- logger:::namespaces$OmnipathR
+    omnipathr_loggers[[i_logger]]$threshold <- level
+
+    assign(
+        'OmnipathR',
+        omnipathr_loggers,
+        envir <- logger:::namespaces
+    )
+
+}
+
+
+#' Sets the log level for the console
+#'
+#' Use this method to change during a session which messages you want to be
+#' printed on the console. Before loading the package, you can set it also by
+#' the config file, with the omnipath.console_loglevel key.
+#'
+#' @param level Character or class `loglevel`. The desired log level.
+#'
+#' @export
+#' @seealso \code{\link{omnipath_set_logfile_loglevel}}
+omnipath_set_console_loglevel <- function(level){
+
+    omnipath_set_loglevel(level = level, target = 'console')
+
+}
+
+
+#' Sets the log level for the logfile
+#'
+#' Use this method to change during a session which messages you want to be
+#' written into the logfile. Before loading the package, you can set it also
+#' by the config file, with the omnipath.loglevel key.
+#'
+#' @param level Character or class `loglevel`. The desired log level.
+#'
+#' @export
+#' @seealso \code{\link{omnipath_set_console_loglevel}}
+omnipath_set_console_loglevel <- function(level){
+
+    omnipath_set_loglevel(level = level, target = 'logfile')
+
+}
