@@ -81,6 +81,8 @@
 
 .omnipath_local_config_fname <- 'omnipathr.yml'
 
+
+#' importFrom rappdirs user_config_dir
 omnipath_get_user_config_path <- function(){
 
     file.path(
@@ -90,7 +92,7 @@ omnipath_get_user_config_path <- function(){
 
 }
 
-#' importFrom rappdirs user_config_dir
+
 omnipath_get_default_config_path <- function(user = FALSE){
 
     `if`(
