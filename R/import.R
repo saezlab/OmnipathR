@@ -2522,12 +2522,14 @@ filter_intercell <- function(
 
 }
 
-########## ########## ########## ##########
-########## Resource Queries      ##########
-########## ########## ########## ##########
-## This function is convenient for appropriate resource retrieval. Following:
-## http://bioconductor.org/developers/how-to/web-query/
-## It tries to retrieve the resource one or several times before failing.
+
+#' Downloads an URL
+#'
+#' This function is convenient for appropriate resource retrieval. Following
+#' http://bioconductor.org/developers/how-to/web-query/
+#' It tries to retrieve the resource one or several times before failing.
+#'
+#' @importFrom logger log_level log_info
 omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
 
     op <- options(timeout = 600)
@@ -2538,6 +2540,17 @@ omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
         omnipath_console_loglevel(),
         logger::INFO
     )
+
+
+    from_cache <- omnipath_cache_load(url = URL)
+
+    if(!is.null(from_cache)){
+
+        logger::log_info('Loaded from cache: %s', URL)
+        return(from_cache)
+
+    }
+
     logger::log_level(level = url_loglevel, 'Retrieving URL: %s', URL)
 
     N.TRIES <- as.integer(N.TRIES)
@@ -2559,6 +2572,8 @@ omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
             )
         )
     }
+
+    omnipath_cache_save(data = result, url = URL)
 
     return(result)
 }

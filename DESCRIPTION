@@ -44,7 +44,8 @@ Depends:
     dplyr,
     tidyr,
     rappdirs,
-    yaml
+    yaml,
+    digest
 Imports:
     igraph,
     dplyr,
