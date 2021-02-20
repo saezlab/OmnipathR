@@ -70,6 +70,38 @@ insert_if_not_null <- function(l, ...){
 }
 
 
+#' Makes sure value is a list
+#'
+#' This function is different from `as.list` because it returns a list with
+#' a single NULL element if `value` is NULL
+#'
+#' @return A list
+#'
+ensure_list <- function(value){
+
+    `if`(
+        is.null(value),
+        list(NULL),
+        as.list(value)
+    )
+
+}
+
+
+#' Returns NULL if `value` is a list with a single NULL element otherwise
+#' the value itself
+#'
+list_null <- function(value){
+
+    `if`(
+        is.list(value) && length(value) == 1 && is.null(value[[1]]),
+        NULL,
+        value
+    )
+
+}
+
+
 #' Returns the extension of a file name
 #'
 #' @importFrom magrittr %>%

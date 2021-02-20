@@ -250,13 +250,13 @@ omnipath_cache_search <- function(pattern, ...){
 #' @param min_age Age of cache items in days. Remove everything more recent
 #' than this age
 #' @param status Remove items having any of the states listed here
-#' @param keep_latest Keep the latest
+#' @param only_latest Keep only the latest version
 #' @param autoclean Remove the entries about failed downloads, the files in
 #' the cache directory which are missing from the cache database, and the
 #' entries without existing files in the cache directory
 #'
 #' @importFrom magrittr %<>% %>%
-#' @importFrom purrr map keep
+#' @importFrom purrr map keep map_lgl
 #' @export
 #' @seealso \code{\link{omnipath_cache_wipe}, \link{omnipath_cache_clean},
 #' \link{omnipath_cache_autoclean}}
@@ -268,7 +268,7 @@ omnipath_cache_remove <- cache_locked %@% function(
     max_age = NULL,
     min_age = NULL,
     status = NULL,
-    keep_latest = FALSE,
+    only_latest = FALSE,
     wipe = FALSE,
     autoclean = TRUE
 ){
@@ -281,11 +281,17 @@ omnipath_cache_remove <- cache_locked %@% function(
 
     }
 
+    key %<>% ensure_list
+    url %<>% ensure_list
+
     key <- ifelse(
-        is.null(key),
+        map_lgl(key, is.null) & !map_lgl(url, is.null),
         omnipath_cache_key(url = url, post = post, payload = payload),
         key
     )
+
+    key %<>% list_null
+    url %<>% list_null
 
     .omnipath_cache %<>%
     {`if`(
@@ -296,7 +302,7 @@ omnipath_cache_remove <- cache_locked %@% function(
                 is.null(max_age) &&
                 is.null(min_age) &&
                 is.null(status) &&
-                !keep_latest
+                !only_latest
             ),
             `[`(., .omnipath_cache %>% names %>% setdiff(key)),
             `[`(., key)
@@ -307,7 +313,7 @@ omnipath_cache_remove <- cache_locked %@% function(
         max_age = max_age,
         min_age = min_age,
         status = status,
-        keep_latest = keep_latest
+        only_latest = only_latest
     ) %>%
     {`if`(
         is.null(key),
@@ -332,10 +338,9 @@ omnipath_cache_remove <- cache_locked %@% function(
         omnipath_unlock_cache_db()
 
         omnipath_cache_clean_db()
+        omnipath_cache_autoclean()
 
         omnipath_lock_cache_db()
-
-        omnipath_cache_autoclean()
 
     }
 
@@ -344,23 +349,30 @@ omnipath_cache_remove <- cache_locked %@% function(
 
 #' Removes version items from a cache record
 #'
+#' @param record A cache record
+#' @param max_age Age of cache items in days. Remove everything that is older
+#' than this age
+#' @param min_age Age of cache items in days. Remove everything more recent
+#' than this age
+#' @param status Remove items having any of the states listed here
+#' @param only_latest Keep only the latest version
+#'
 #' @return A cache record with the version items removed
 #'
-#' @importFrom magrittr %<>% %>%
+#' @importFrom magrittr %<>%
 omnipath_cache_remove_versions <- function(
     record,
     max_age = NULL,
     min_age = NULL,
     status = NULL,
-    keep_latest = FALSE
+    only_latest = FALSE
 ){
 
     record$versions %<>%
-        record$versions %>%
         `[`(
             omnipath_cache_filter_versions(
                 record = record,
-                latest = keep_latest,
+                latest = only_latest,
                 max_age = max_age,
                 min_age = min_age,
                 status = setdiff(CACHE_STATUS, status)
@@ -425,8 +437,6 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 #' @importFrom magrittr %>%
 omnipath_cache_clean <- function(){
 
-
-
     files_in_db <-
         .omnipath_cache %>%
         map(~map_chr(.x$versions, 'path')) %>%
@@ -459,8 +469,9 @@ omnipath_cache_clean <- function(){
 omnipath_cache_autoclean <- function(){
 
     omnipath_cache_remove(
-        keep_most_recent = TRUE,
-        status = CACHE_STATUS$READY
+        only_latest = TRUE,
+        status = CACHE_STATUS$READY,
+        autoclean = FALSE
     )
     omnipath_cache_clean()
 
