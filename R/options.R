@@ -76,6 +76,20 @@
     ),
     omnipath.inbiomap_login_url = paste0(
         'https://inbio-discover.intomics.com/api/login_guest'
+    ),
+    omnipath.bioplex_1.0_url = paste0(
+        'https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v2.tsv'
+    ),
+    omnipath.bioplex_2.0_url = paste0(
+        'https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v4a.tsv'
+    ),
+    omnipath.bioplex_3.0_url = paste0(
+        'https://bioplex.hms.harvard.edu/data/',
+        'BioPlex_293T_Network_10K_Dec_2019.tsv'
+    ),
+    omnipath.bioplex_HCT116_1.0_url = paste0(
+        'https://bioplex.hms.harvard.edu/data/',
+        'BioPlex_HCT116_Network_5.5K_Dec_2019.tsv'
     )
 )
 

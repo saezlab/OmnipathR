@@ -307,7 +307,8 @@ omnipath_cache_remove <- cache_locked %@% function(
             `[`(., .omnipath_cache %>% names %>% setdiff(key)),
             `[`(., key)
         )
-    )} %>%
+    )} %T>%
+    print() %>%
     map(
         omnipath_cache_remove_versions,
         max_age = max_age,
