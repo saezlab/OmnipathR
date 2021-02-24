@@ -617,6 +617,8 @@ omnipath_cache_load <- function(
 #'
 #' Exports the object in RDS format, creates new cache record if necessary.
 #'
+#' @return Returns invisibly the data itself.
+#'
 #' @param data An object
 #' @param key Key of the cache item
 #' @param url URL of the downloaded resource
@@ -658,6 +660,8 @@ omnipath_cache_save <- function(
     logger::log_trace('Exported RDS to `%s`.', target_path)
 
     omnipath_cache_download_ready(key, version)
+
+    invisible(data)
 
 }
 

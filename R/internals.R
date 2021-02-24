@@ -62,9 +62,8 @@ generic_downloader <- function(
         result <-
             url %>%
             c(reader_param) %>%
-            do.call(what = reader)
-
-        omnipath_cache_save(data = result, url = url)
+            do.call(what = reader) %>%
+            omnipath_cache_save(url = url)
 
     }
 
