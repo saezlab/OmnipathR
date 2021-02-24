@@ -132,7 +132,6 @@ nichenet_gr_network <- function(
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_post_translational_interactions}}
 #' @importFrom magrittr %>% %<>%
-#' @importFrom dplyr %>% mutate select
 #' @export
 #'
 #' @seealso
@@ -146,21 +145,12 @@ nichenet_signaling_network_omnipath <- function(
     args$entity_types <- 'protein'
 
     do.call(import_post_translational_interactions, args) %>%
-    select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
-    mutate(
-        source = ifelse(
-            is_directed,
-            'omnipath_directed',
-            'omnipath_undirected'
-        ),
-        database = 'omnipath'
-    ) %>%
-    select(-is_directed)
+    omnipath_interactions_postprocess()
 
 }
 
 
-#' Builds signaling network prior knowledge for NicheNet using OmniPath
+#' Builds ligand-receptor network prior knowledge for NicheNet using OmniPath
 #'
 #' This method never downloads the `ligrecextra` dataset because the
 #' ligand-receptor interactions are supposed to come from \code{
@@ -169,7 +159,29 @@ nichenet_signaling_network_omnipath <- function(
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_intercell_network}}
 #' @importFrom magrittr %>%
-#' @importFrom dplyr %>% mutate select
+#' @export
+#'
+#' @seealso
+nichenet_lr_network_omnipath <- function(
+    min_curation_effort = 0,
+    ...
+){
+
+    import_intercell_network(...) %>%
+    omnipath_interactions_postprocess()
+
+}
+
+
+#' Builds gene regulatory network prior knowledge for NicheNet using OmniPath
+#'
+#' This method never downloads the `ligrecextra` dataset because the
+#' ligand-receptor interactions are supposed to come from \code{
+#' \link{nichenet_lr_network_omnipath}}.
+#'
+#' @param min_curation_effort Lower threshold for curation effort
+#' @param ... Passed to \code{\link{import_transcriptional_interactions}}
+#' @importFrom magrittr %>% %<>%
 #' @export
 #'
 #' @seealso
@@ -178,7 +190,23 @@ nichenet_signaling_network_omnipath <- function(
     ...
 ){
 
-    import_intercell_network(...) %>%
+    args <- as.list(...)
+    args$exclude %<>% union('ligrecextra')
+    args$entity_types <- 'protein'
+
+    do.call(import_transcriptional_interactions, args) %>%
+    omnipath_interactions_postprocess()
+
+}
+
+
+#' Processes OmniPath interactions table into NicheNet format
+#'
+#' @importFrom dplyr select mutate distinct
+#' @importFrom magrittr %>%
+omnipath_interactions_postprocess <- function(interactions){
+
+    interactions %>%
     select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
     mutate(
         source = ifelse(
@@ -188,6 +216,7 @@ nichenet_signaling_network_omnipath <- function(
         ),
         database = 'omnipath'
     ) %>%
+    distinct() %>%
     select(-is_directed)
 
 }
