@@ -538,6 +538,49 @@ omnipath_cache_get <- function(
 }
 
 
+#' The latest or a new version of a cache record
+#'
+#' Looks up a record in the cache and returns its latest valid version. If
+#' the record doesn't exist or no valid version available, creates a new one.
+#'
+#' @param key The key of the cache record
+#' @param url URL pointing to the resource
+#' @param post HTTP POST parameters as a list
+#' @param payload HTTP data payload
+#' @return A cache version item.
+#' @export
+omnipath_cache_latest_or_new <- function(
+    key = NULL,
+    url = NULL,
+    post = NULL,
+    payload = NULL,
+    ...
+){
+
+    record <-
+        omnipath_cache_get(
+            key = key,
+            url = url,
+            post = post,
+            payload = payload,
+            ...
+        )
+
+    version <- omnipath_cache_latest_version(record)
+
+    if(is.null(version)){
+
+        version <-
+            omnipath_cache_new_version %>%
+            cache_locked()(record$key)
+
+    }
+
+    return(version)
+
+}
+
+
 #' Loads an R object from the cache
 #'
 #' Loads the object from RDS format.
@@ -659,7 +702,7 @@ omnipath_cache_save <- function(
     saveRDS(data, target_path)
     logger::log_trace('Exported RDS to `%s`.', target_path)
 
-    omnipath_cache_download_ready(key, version)
+    omnipath_cache_download_ready(version, key = key)
 
     invisible(data)
 
@@ -718,7 +761,7 @@ omnipath_cache_move_in <- function(
 
     }
 
-    omnipath_cache_download_ready(key, version)
+    omnipath_cache_download_ready(version, key = key)
 
 }
 
@@ -729,7 +772,9 @@ omnipath_cache_move_in <- function(
 #' @param version Version of the cache item. If does not exist a new version
 #' item will be created
 #' @export
-omnipath_cache_download_ready <- function(key, version){
+omnipath_cache_download_ready <- function(version, key = NULL){
+
+    key <- `if`(is.null(key), omnipath_cache_key_from_version(version), key)
 
     omnipath_cache_update_status(
         key = key,
@@ -738,6 +783,19 @@ omnipath_cache_download_ready <- function(key, version){
         dl_finished = Sys.time()
     ) %>%
     invisible()
+
+}
+
+
+#' From a cache version item extracts the cache record key
+#'
+#' @importFrom magrittr %>%
+omnipath_cache_key_from_version <- function(version){
+
+    version$path %>%
+    basename() %>%
+    substr(0, 40)
+
 
 }
 
