@@ -93,6 +93,11 @@
     ),
     omnipath.guide2pharma_url = paste0(
         'https://www.guidetopharmacology.org/DATA/interactions.tsv'
+    ),
+    omnipath.ramilowski_url = paste0(
+        'https://static-content.springer.com/esm/',
+        'art%%3A10.1038%%2Fncomms8866/MediaObjects/',
+        '41467_2015_BFncomms8866_MOESM611_ESM.xlsx'
     )
 )
 
