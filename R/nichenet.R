@@ -404,6 +404,7 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' Downloads ligand-receptor interactions from the Guide to Pharmacology
 #' database and converts it to a format suitable for NicheNet.
 #'
+#' @return Data frame with ligand-receptor interactions in NicheNet format.
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter mutate select distinct
@@ -423,6 +424,41 @@ nichenet_lr_network_guide2pharma <- function(){
     mutate(
         source = 'pharmacology',
         database = 'guide2pharmacology'
+    )
+
+}
+
+
+#' Ligand-receptor network from Ramilowski 2015
+#'
+#' Downloads ligand-receptor interactions from Supplementary Table 2 of the
+#' paper 'A draft network of ligand–receptor-mediated multicellular signalling
+#' in human' (Ramilowski et al. 2015,
+#' https://www.nature.com/articles/ncomms8866). It converts the downloaded
+#' table to a format suitable for NicheNet.
+#'
+#' @param evidences Character: evidence types, "literature supported",
+#' "putative" or both.
+#'
+#' @return Data frame with ligand-receptor interactions in NicheNet format.
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter mutate select distinct
+#' @seealso \code{\link{nichenet_lr_network}}
+nichenet_lr_network_ramilowski <- function(
+    evidences = c('literature supported', 'putative')
+){
+
+    ramilowski_download() %>%
+    filter(Pair.Evidence %in% evidences) %>%
+    select(
+        from = Ligand.ApprovedSymbol,
+        to = Receptor.ApprovedSymbol
+    ) %>%
+    distinct() %>%
+    mutate(
+        source = 'ramilowski_known',
+        database = 'ramilowski'
     )
 
 }
