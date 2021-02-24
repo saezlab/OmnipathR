@@ -46,7 +46,7 @@ nichenet_prior_knowledge <- function(
 }
 
 
-#' Build a NicheNet signaling network
+#' Builds a NicheNet signaling network
 #'
 #' Builds signaling network prior knowledge for NicheNet using multiple
 #' resources.
@@ -77,11 +77,39 @@ nichenet_signaling_network <- function(
 }
 
 
+#' Builds a NicheNet ligand-receptor network
+#'
+#' Builds ligand-receptor network prior knowledge for NicheNet using multiple
+#' resources.
+#'
+#' @param omnipath List with paramaters to be passed to
+#'     \code{\link{nichenet_signaling_network_omnipath}}
+#' @param guide2pharma List with paramaters to be passed to
+#'     \code{\link{nichenet_lr_network_guide2pharma}}
+#' @export
+#'
+#' @seealso \code{\link{nichenet_lr_network_omnipath},
+#'     \link{nichenet_lr_network_guide2pharma}}
+nichenet_lr_network <- function(
+    omnipath = list(),
+    guide2pharma = NULL
+){
+
+
+
+}
+
+
 #' Builds signaling network prior knowledge for NicheNet using OmniPath
+#'
+#' This method never downloads the `ligrecextra` dataset because the
+#' ligand-receptor interactions are supposed to come from \code{
+#' \link{nichenet_lr_network_omnipath}}.
 #'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_post_translational_interactions}}
-#' @importsFrom dplyr %>% mutate select
+#' @importFrom magrittr %>% %<>%
+#' @importFrom dplyr %>% mutate select
 #' @export
 #'
 #' @seealso
@@ -90,7 +118,44 @@ nichenet_signaling_network_omnipath <- function(
     ...
 ){
 
-    import_post_translational_interactions(entity_types = 'protein', ...) %>%
+    args <- as.list(...)
+    args$exclude %<>% union('ligrecextra')
+    args$entity_types <- 'protein'
+
+    do.call(import_post_translational_interactions, args) %>%
+    select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
+    mutate(
+        source = ifelse(
+            is_directed,
+            'omnipath_directed',
+            'omnipath_undirected'
+        ),
+        database = 'omnipath'
+    ) %>%
+    select(-is_directed)
+
+}
+
+
+#' Builds signaling network prior knowledge for NicheNet using OmniPath
+#'
+#' This method never downloads the `ligrecextra` dataset because the
+#' ligand-receptor interactions are supposed to come from \code{
+#' \link{nichenet_lr_network_omnipath}}.
+#'
+#' @param min_curation_effort Lower threshold for curation effort
+#' @param ... Passed to \code{\link{import_intercell_network}}
+#' @importFrom magrittr %>%
+#' @importFrom dplyr %>% mutate select
+#' @export
+#'
+#' @seealso
+nichenet_signaling_network_omnipath <- function(
+    min_curation_effort = 0,
+    ...
+){
+
+    import_intercell_network(...) %>%
     select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
     mutate(
         source = ifelse(
@@ -112,8 +177,9 @@ nichenet_signaling_network_omnipath <- function(
 #' @param interaction_types Character vector with PathwayCommons interaction
 #'     types. Please refer to the default value and the PathwayCommons
 #'     webpage.
-#' importsFrom dplyr %>% mutate
-#' @importsFrom readr read_tsv
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate filter
+#' @importFrom readr read_tsv cols
 #' @export
 nichenet_signaling_network_pathwaycommons <- function(
     interaction_types = c(
@@ -152,7 +218,7 @@ nichenet_signaling_network_pathwaycommons <- function(
 #'
 #' @param datasets The datasets to use. For possible values please refer to
 #'     default value and the Harmonizome webpage.
-#' @importsFrom dplyr %>% mutate bind_rows
+#' @importFrom dplyr %>% mutate bind_rows
 #' @export
 nichenet_signaling_network_harmonizome <- function(
     datasets = c(
@@ -188,8 +254,8 @@ nichenet_signaling_network_harmonizome <- function(
 #'
 #' Find out more at https://doi.org/10.1126/scisignal.2001699
 #'
-#' @importsFrom dplyr %>% select mutate
-#' @importsFrom readxl read_xls
+#' @importFrom dplyr %>% select mutate
+#' @importFrom readxl read_xls
 #' @export
 nichenet_signaling_network_vinayagam <- function(...){
 
@@ -231,8 +297,8 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
 #' (CPDB)
 #'
-#' @importsFrom dplyr select mutate distinct
-#' @importsFrom magrittr %>%
+#' @importFrom dplyr select mutate distinct
+#' @importFrom magrittr %>%
 #' @export
 nichenet_signaling_network_cpdb <- function(...){
 
@@ -256,8 +322,8 @@ nichenet_signaling_network_cpdb <- function(...){
 #' Builds signaling network prior knowledge for NicheNet from the EVEX
 #' database.
 #'
-#' @importsFrom magrittr %>% `n'est pas`
-#' @importsFrom dplyt select mutate filter
+#' @importFrom magrittr %>% `n'est pas`
+#' @importFrom dplyt select mutate filter
 #' @export
 #'
 #' @seealso \code{\link{evex}}
@@ -315,8 +381,8 @@ nichenet_signaling_network_evex <- function(...){
 #' Builds signaling network prior knowledge for NicheNet from the InWeb
 #' InBioMap database.
 #'
-#' @importsFrom magrittr %>%
-#' @importsFrom dplyr select
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select
 #' @export
 #'
 #' @seealso \code{\link{nichenet_signaling_network}, \link{inbiomap}}
@@ -329,5 +395,14 @@ nichenet_signaling_network_inbiomap <- function(...){
         source = 'inweb_interaction',
         database = 'inweb_inbiomap'
     )
+
+}
+
+
+#' @export
+#' @seealso \code{\link{nichenet_lr_network}}
+nichenet_lr_network_guide2pharma <- function(){
+
+
 
 }
