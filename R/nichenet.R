@@ -270,7 +270,6 @@ nichenet_signaling_network_pathwaycommons <- function(
 #'
 #' @param datasets The datasets to use. For possible values please refer to
 #'     default value and the Harmonizome webpage.
-#' @importFrom dplyr %>% mutate bind_rows
 #' @export
 nichenet_signaling_network_harmonizome <- function(
     datasets = c(
@@ -287,14 +286,42 @@ nichenet_signaling_network_harmonizome <- function(
         depod = 'DEPOD'
     )
 
-    do.call(
-        bind_rows,
-        datasets %>% lapply(harmonizome_download)
-    ) %>%
+    harmonizome_nichenet(datasets, dataset_names)
+
+}
+
+
+#' Combines multiple Harmonizome datasets and converts them to NicheNet format
+#'
+#' @importFrom dplyr mutate bind_rows
+#' @importFrom purrr map
+#' @importFrom magrittr %>%
+#' @seealso \code{\link{harmonizome_download},
+#'     \link{harmonizome_nichenet_process}}
+harmonizome_nichenet <- function(datasets, dataset_names){
+
+    datasets %>%
+    map(harmonizome_nichenet_process) %>%
+    bind_rows() %>%
     mutate(
         source = sprintf('harmonizome_%s', dataset_names[source]),
         database = 'harmonizome'
     )
+
+}
+
+
+#' Processes a table downloaded from Harmonizome to NicheNet format
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select mutate
+#' @seealso \code{\link{harmonizome_download}, \link{harmonizome_nichenet}}
+harmonizome_nichenet_process <- function(dataset){
+
+    dataset %>%
+    harmonizome_download() %>%
+    select(from = source, to = target) %>%
+    mutate(source = dataset)
 
 }
 

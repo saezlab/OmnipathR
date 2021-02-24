@@ -27,21 +27,29 @@
 #'
 #' @param dataset The dataset part of the URL. Please refer to the download
 #'     section of the Harmonizome webpage.
-#' @importsFrom dplyr %>% mutate select
-#' @importsFrom readr read_tsv read_lines
+#' @importFrom dplyr mutate select
+#' @importFrom readr read_tsv read_lines
+#' @importFrom magrittr %>%
 #' @export
 harmonizome_download <- function(dataset){
 
-    'omnipath.harmonizome_url' %>%
-    options() %>%
-    as.character() %>%
-    sprintf(dataset) %>%
-    url() %>%
-    gzcon() %>%
+    url <-
+        'omnipath.harmonizome_url' %>%
+        url_parser(url_param = list(dataset))
+
+    version <- omnipath_cache_latest_or_new(url = url)
+
+    if(version$status != CACHE_STATUS$READY){
+
+        download.file(url, version$path, quiet = TRUE)
+        omnipath_cache_download_ready(version)
+
+    }
+
+    version$path %>%
+    gzfile() %>%
     read_lines() %>%
     `[`(-2) %>%
-    read_tsv(col_types = cols()) %>%
-    select(from = source, to = target) %>%
-    mutate(source = dataset)
+    read_tsv(col_types = cols())
 
 }
