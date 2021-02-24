@@ -30,7 +30,7 @@
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom readr cols col_character col_number
-#' @importFrom dplyr separate_rows
+#' @importFrom tidyr separate_rows
 guide2pharma_download <- function(){
 
     'omnipath.guide2pharma_url' %>%

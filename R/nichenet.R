@@ -399,10 +399,30 @@ nichenet_signaling_network_inbiomap <- function(...){
 }
 
 
+#' Ligand-receptor network from Guide to Pharmacology
+#'
+#' Downloads ligand-receptor interactions from the Guide to Pharmacology
+#' database and converts it to a format suitable for NicheNet.
+#'
 #' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter mutate select distinct
 #' @seealso \code{\link{nichenet_lr_network}}
 nichenet_lr_network_guide2pharma <- function(){
 
-
+    guide2pharma_download() %>%
+    filter(
+        target_species == 'Human' &
+        ligand_species == 'Human'
+    ) %>%
+    select(
+        from = ligand_gene_symbol,
+        to = target_gene_symbol
+    ) %>%
+    distinct() %>%
+    mutate(
+        source = 'pharmacology',
+        database = 'guide2pharmacology'
+    )
 
 }
