@@ -20,6 +20,31 @@
 #
 
 
+#' Retrieves an URL from options and inserts variable parameters
+#'
+#' @param url_key Character: name of the option containing the URL
+#' @param url_key_param List: variables to insert into the `url_key`.
+#' @param url_param List: variables to insert into the URL string (which is
+#' returned from the options).
+#'
+#' @importFrom magrittr %>%
+url_parser <- function(
+    url_key,
+    url_key_param = list(),
+    url_param = list()
+){
+
+    url_key %>%
+    c(url_key_param) %>%
+    do.call(what = sprintf) %>%
+    options() %>%
+    `[[`(1) %>%
+    c(url_param) %>%
+    do.call(what = sprintf)
+
+}
+
+
 #' Generic method to download a table
 #'
 #' Downloads a table which can be read by a function from the \code{readr}
@@ -46,14 +71,11 @@ generic_downloader <- function(
         reader_param$col_types <- cols()
     }
 
-    url <-
-        url_key %>%
-        c(url_key_param) %>%
-        do.call(what = sprintf) %>%
-        options() %>%
-        `[[`(1) %>%
-        c(url_param) %>%
-        do.call(what = sprintf)
+    url <- url_parser(
+        url_key = url_key,
+        url_key_param = url_key_param,
+        url_param = url_param
+    )
 
     result <- omnipath_cache_load(url = url)
 
@@ -68,5 +90,47 @@ generic_downloader <- function(
     }
 
     return(result)
+
+}
+
+
+#' Generic method to download an excel worksheet
+#'
+#' Downloads an xls or xlsx file and extracts a worksheet as a data frame.
+#'
+#' @param url_key Character: name of the option containing the URL
+#' @param sheet Character or integer, passed to \code{read_excel}.
+#' @param url_key_param List: variables to insert into the `url_key`.
+#' @param url_param List: variables to insert into the URL string (which is
+#' returned from the options).
+#' @param ext Character: the file extension, either xls or xlsx.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom readxl read_excel
+#' @importFrom
+xls_downloader <- function(
+    url_key,
+    sheet = NULL,
+    url_key_param = list(),
+    url_param = list(),
+    ext = 'xlsx'
+){
+
+    url <- url_parser(
+        url_key = url_key,
+        url_key_param = url_key_param,
+        url_param = url_param
+    )
+
+    version <- omnipath_cache_latest_or_new(url = url, ext = ext)
+
+    if(version$status != CACHE_STATUS$READY){
+
+        download.file(url = url, destfile = version$path, quiet = TRUE)
+        omnipath_cache_download_ready(version)
+
+    }
+
+    read_excel(version$path, sheet = sheet)
 
 }
