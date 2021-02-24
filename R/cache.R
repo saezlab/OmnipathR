@@ -345,6 +345,8 @@ omnipath_cache_remove <- cache_locked %@% function(
 
     }
 
+    invisible(.omnipath_cache)
+
 }
 
 
@@ -426,7 +428,7 @@ omnipath_cache_wipe <- cache_locked %@% function(){
     file.remove()
 
     .omnipath_cache <<- list()
-    return(invisible(NULL))
+    invisible(NULL)
 
 }
 
@@ -475,6 +477,7 @@ omnipath_cache_autoclean <- function(){
         autoclean = FALSE
     )
     omnipath_cache_clean()
+    invisible(.omnipath_cache)
 
 }
 
@@ -571,10 +574,13 @@ omnipath_cache_latest_or_new <- function(
     if(is.null(version)){
 
         version <-
-            omnipath_cache_new_version %>%
-            cache_locked()(record$key)
+            cache_locked(
+                omnipath_cache_new_version
+            )(record$key)
 
     }
+
+    version <- .omnipath_cache[[record$key]]$versions[[version]]
 
     return(version)
 
@@ -775,6 +781,7 @@ omnipath_cache_move_in <- function(
 omnipath_cache_download_ready <- function(version, key = NULL){
 
     key <- `if`(is.null(key), omnipath_cache_key_from_version(version), key)
+    version <- `if`(is.list(version), version$number, version)
 
     omnipath_cache_update_status(
         key = key,
@@ -877,6 +884,7 @@ omnipath_cache_update_status <- cache_locked %@% function(
 
 #' Adds a new version item to an existing cache record
 #'
+#' @return Character: key of the version item.
 omnipath_cache_new_version <- function(key, version = NULL){
 
     version <- `if`(
@@ -933,7 +941,12 @@ omnipath_cache_next_version <- function(key){
 #' @export
 omnipath_cache_latest_version <- function(record){
 
-    omnipath_cache_filter_versions(record = record, latest = TRUE)
+    omnipath_cache_filter_versions(record = record, latest = TRUE) %>%
+    {`if`(
+        length(.) == 0,
+        NULL,
+        .
+    )}
 
 }
 
