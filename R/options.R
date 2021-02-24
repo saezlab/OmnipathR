@@ -90,6 +90,9 @@
     omnipath.bioplex_HCT116_1.0_url = paste0(
         'https://bioplex.hms.harvard.edu/data/',
         'BioPlex_HCT116_Network_5.5K_Dec_2019.tsv'
+    ),
+    omnipath.guide2pharma_url = paste0(
+        'https://www.guidetopharmacology.org/DATA/interactions.tsv'
     )
 )
 
