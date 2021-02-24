@@ -27,21 +27,9 @@
 #' @importFrom logger log_info
 bioplex_download <- function(version){
 
-    url <-
+    result <-
         'omnipath.bioplex_%s_url' %>%
-        sprintf(version) %>%
-        options() %>%
-        `[[`(1)
-
-    result <- omnipath_cache_load(url = url)
-
-    if(is.null(result)){
-
-        result <- url %>% read_tsv(col_types = cols())
-
-        omnipath_cache_save(data = result, url = url)
-
-    }
+        generic_downloader(url_key_param = list(version))
 
     names(result) <- c(
         'GeneA',
