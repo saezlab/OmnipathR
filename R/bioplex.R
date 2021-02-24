@@ -33,18 +33,15 @@ bioplex_download <- function(version){
         options() %>%
         `[[`(1)
 
-    from_cache <- omnipath_cache_load(url = url)
+    result <- omnipath_cache_load(url = url)
 
-    if(!is.null(from_cache)){
+    if(is.null(result)){
 
-        logger::log_info('Loaded from cache: %s', url)
-        return(from_cache)
+        result <- url %>% read_tsv(col_types = cols())
+
+        omnipath_cache_save(data = result, url = url)
 
     }
-
-    result <- url %>% read_tsv(col_types = cols())
-
-    omnipath_cache_save(data = result, url = url)
 
     names(result) <- c(
         'GeneA',
@@ -119,5 +116,60 @@ bioplex3 <- function(){
 bioplex_hct116_1 <- function(){
 
     bioplex_download(version = 'HCT116_1.0')
+
+}
+
+
+#' Downloads all BioPlex interaction datasets
+#'
+#' BioPlex provides four interaction datasets: version 1.0, 2.0, 3.0 and
+#' HCT116 version 1.0. This function downloads all of them, merges them to
+#' one data frame, removes the duplicates (based on unique pairs of UniProt
+#' IDs) and separates the isoform numbers from the UniProt IDs.
+#' More details at https://bioplex.hms.harvard.edu/interactions.php
+#'
+#' @param unique Logical. Collapse the duplicate interactions into single
+#'     rows or keep them as they are. In case of merging duplicate records
+#'     the maximum p value will be choosen for each record.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate first summarize_all group_by bind_rows
+#' @importFrom tidyr separate
+#' @export
+#' @seealso \code{\link{bioplex1}, \link{bioplex2}, \link{bioplex3},
+#' \link{bioplex_hct116_1}}
+bioplex_all <- function(unique = TRUE){
+
+    bind_rows(
+        bioplex1(),
+        bioplex2(),
+        bioplex3(),
+        bioplex_hct116_1()
+    ) %>%
+    {`if`(
+        unique,
+        group_by(., UniprotA, UniprotB) %>%
+        mutate(
+            p_wrong = max(p_wrong),
+            p_no_interaction = max(p_no_interaction),
+            p_interaction = max(p_interaction)
+        ) %>%
+        summarize_all(first),
+        .
+    )} %>%
+    separate(
+        UniprotA,
+        into = c('UniprotA', 'IsoformA'),
+        sep = '-',
+        fill = 'right',
+        convert = TRUE
+    ) %>%
+    separate(
+        UniprotB,
+        into = c('UniprotB', 'IsoformB'),
+        sep = '-',
+        fill = 'right',
+        convert = TRUE
+    )
 
 }
