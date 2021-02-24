@@ -83,16 +83,39 @@ nichenet_signaling_network <- function(
 #' resources.
 #'
 #' @param omnipath List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_omnipath}}
+#'     \code{\link{nichenet_lr_network_omnipath}}
 #' @param guide2pharma List with paramaters to be passed to
 #'     \code{\link{nichenet_lr_network_guide2pharma}}
+#' @param ramilowski List with paramaters to be passed to
+#'     \code{\link{nichenet_lr_network_ramilowski}}
 #' @export
 #'
 #' @seealso \code{\link{nichenet_lr_network_omnipath},
-#'     \link{nichenet_lr_network_guide2pharma}}
+#'     \link{nichenet_lr_network_guide2pharma},
+#'     \link{nichenet_lr_network_ramilowski}}
 nichenet_lr_network <- function(
     omnipath = list(),
-    guide2pharma = NULL
+    guide2pharma = NULL,
+    ramilowski = NULL
+){
+
+
+
+}
+
+
+#' Builds a NicheNet gene regulatory network
+#'
+#' Builds gene regulatory network prior knowledge for NicheNet using multiple
+#' resources.
+#'
+#' @param omnipath List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_omnipath}}
+#' @export
+#'
+#' @seealso \code{\link{nichenet_gr_network_omnipath}}
+nichenet_gr_network <- function(
+    omnipath = list()
 ){
 
 
