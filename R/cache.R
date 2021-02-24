@@ -598,7 +598,7 @@ omnipath_cache_load <- function(
                 ),
                 path
             )
-            log_fatal(msg)
+            logger::log_fatal(msg)
             stop(msg)
         }
 
