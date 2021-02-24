@@ -48,16 +48,21 @@ generic_downloader <- function(
 
     url <-
         url_key %>%
-        do.call(sprintf, c(., url_key_param)) %>%
+        c(url_key_param) %>%
+        do.call(what = sprintf) %>%
         options() %>%
         `[[`(1) %>%
-        do.call(sprintf, url_param)
+        c(url_param) %>%
+        do.call(what = sprintf)
 
     result <- omnipath_cache_load(url = url)
 
     if(is.null(result)){
 
-        result <- url %>% do.call(reader, reader_param)
+        result <-
+            url %>%
+            c(reader_param) %>%
+            do.call(what = reader)
 
         omnipath_cache_save(data = result, url = url)
 
