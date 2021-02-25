@@ -103,7 +103,12 @@
     omnipath.trrust_url = paste0(
         'https://www.grnpedia.org/trrust/data/trrust_rawdata.%s.tsv'
     ),
-    omnipath.htridb_url = 'https://rescued.omnipathdb.org/HTRIdb.csv'
+    omnipath.htridb_url = 'https://rescued.omnipathdb.org/HTRIdb.csv',
+    omnipath.remap_dorothea_url = paste0(
+        'https://github.com/saezlab/dorothea/raw/master/inst/extdata/',
+        'networks/chip_seq/remap/network.rds'
+    ),
+    omnipath.zenodo_url = 'https://zenodo.org/record/%s/files/%s?download=1'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'
