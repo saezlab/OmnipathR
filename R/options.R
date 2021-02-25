@@ -108,7 +108,11 @@
         'https://github.com/saezlab/dorothea/raw/master/inst/extdata/',
         'networks/chip_seq/remap/network.rds'
     ),
-    omnipath.zenodo_url = 'https://zenodo.org/record/%s/files/%s?download=1'
+    omnipath.zenodo_url = 'https://zenodo.org/record/%s/files/%s?download=1',
+    omnipath.tfcensus_url = paste0(
+        'https://static-content.springer.com/esm/art%%3A10.1038%%2Fnrg2538/',
+        'MediaObjects/41576_2009_BFnrg2538_MOESM6_ESM.txt'
+    )
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'
