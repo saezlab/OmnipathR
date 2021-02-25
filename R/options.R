@@ -102,7 +102,8 @@
     omnipath.regnetwork_url = 'http://www.regnetworkweb.org/download/%s.zip',
     omnipath.trrust_url = paste0(
         'https://www.grnpedia.org/trrust/data/trrust_rawdata.%s.tsv'
-    )
+    ),
+    omnipath.htridb_url = 'https://rescued.omnipathdb.org/HTRIdb.csv'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'
