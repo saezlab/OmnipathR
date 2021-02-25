@@ -76,6 +76,7 @@ remap_dorothea_download <- function(){
 #' @return Data frame with TF-target relationships.
 #'
 #' @export
+#' @importFrom readr read_tsv cols
 #' @seealso \code{\link{remap_dorothea_download}, \link{remap_filtered}}
 remap_tf_target_download <- function(){
 
@@ -92,8 +93,72 @@ remap_tf_target_download <- function(){
                 'target_genesymbol',
                 'target_ensembl',
                 'score'
-            )
+            ),
+            col_types = cols(),
+            progress = FALSE
         )
     )
+
+}
+
+
+#' Downloads TF-target interactions from ReMap
+#'
+#' Downloads the ReMap TF-target interactions as processed by Garcia-Alonso
+#' et al. (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title) and
+#' filters them based on a score threshold, the top targets and whether the
+#' TF is included in the TF census (Vaquerizas et al. 2009). The code for
+#' filtering is adapted from DoRothEA, written by Christian Holland.
+#'
+#' @param score Numeric: a minimum score between 0 and 1000, records with
+#'     lower scores will be excluded. If NULL no filtering performed.
+#' @param top_targets Numeric: the number of top scoring targets for each
+#'     TF. Essentially the maximum number of targets per TF. If NULL the
+#'     number of targets is not restricted.
+#' @param only_known_tfs Logical: whether to exclude TFs which are not in
+#'     TF census.
+#'
+#' @return Data frame with TF-target relationships.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter group_by slice_max mutate ungroup arrange
+#' @seealso \code{\link{remap_tf_target_download}, \link{remap_filtered}
+#'     \link{tfcensus_download}}
+remap_filtered <- function(
+    score = 100,
+    top_targets = 500,
+    only_known_tfs = TRUE
+){
+
+    score_threshold <- score
+
+    remap_tf_target_download() %>%
+    {`if`(
+        is.null(score_threshold),
+        .,
+        filter(., score >= score_threshold)
+    )} %>%
+    {`if`(
+        only_known_tfs,
+        inner_join(
+            .,
+            tfcensus_download() %>%
+            select(source_genesymbol = `HGNC symbol`),
+            by = 'source_genesymbol'
+        ),
+        .
+    )} %>%
+    {`if`(
+        is.null(top_targets),
+        .,
+        group_by(., source_genesymbol) %>%
+        slice_max(score, n = top_targets) %>%
+        mutate(min_score = min(score)) %>%
+        filter(score > min_score) %>%
+        ungroup() %>%
+        select(source_genesymbol, target_genesymbol) %>%
+        arrange(source_genesymbol, target_genesymbol)
+    )}
 
 }
