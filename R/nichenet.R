@@ -291,6 +291,50 @@ nichenet_signaling_network_harmonizome <- function(
 }
 
 
+#' NicheNet gene regulatory network from Harmonizome
+#'
+#' Builds gene regulatory network prior knowledge for NicheNet using
+#' Harmonizome
+#'
+#' @param datasets The datasets to use. For possible values please refer to
+#'     default value and the Harmonizome webpage.
+#' @importFrom magrittr %>%
+#' @importFrom dplyr rename
+#' @export
+nichenet_gr_network_harmonizome <- function(
+    datasets = c(
+        'cheappi',
+        'encodetfppi',
+        'jasparpwm',
+        'transfac',
+        'transfacpwm',
+        'motifmap',
+        'geotf',
+        'geokinase',
+        'geogene'
+    ),
+    ...
+){
+
+    dataset_names <- list(
+        cheappi = 'CHEA',
+        encodetfppi = 'ENCODE',
+        jaspar = 'JASPAR',
+        transfac = 'TRANSFAC_CUR',
+        transfacpwm = 'TRANSFAC',
+        motifmap = 'MOTIFMAP',
+        geotf = 'GEO_TF',
+        geokinase = 'GEO_KINASE',
+        geogene = 'GEO_GENE',
+        msigdbonc = 'MSIGDB_GENE'
+    )
+
+    harmonizome_nichenet(datasets, dataset_names) %>%
+    rename(from = to, to = from)
+
+}
+
+
 #' Combines multiple Harmonizome datasets and converts them to NicheNet format
 #'
 #' @importFrom dplyr mutate bind_rows
@@ -313,14 +357,34 @@ harmonizome_nichenet <- function(datasets, dataset_names){
 
 #' Processes a table downloaded from Harmonizome to NicheNet format
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang sym
 #' @importFrom dplyr select mutate
+#' @importFrom stringr str_split_fixed
 #' @seealso \code{\link{harmonizome_download}, \link{harmonizome_nichenet}}
 harmonizome_nichenet_process <- function(dataset){
 
+    target_desc_col <- c('geotf', 'geokinase', 'geogene')
+    to_col <- `if`(
+        dataset %in% target_desc_col,
+        sym('target_desc'),
+        sym('target')
+    )
+    target_proc <- list(
+        geotf = toupper,
+        msigdbonc = function(x){
+            x %>% str_split_fixed('[._]', 2) %>% `[`(,1)
+        }
+    )
+
     dataset %>%
     harmonizome_download() %>%
-    select(from = source, to = target) %>%
+    select(from = source, to = !!to_col) %>%
+    {`if`(
+        dataset %in% names(target_proc),
+        mutate(., to = target_proc[[dataset]](to)),
+        .
+    )} %>%
     mutate(source = dataset)
 
 }

@@ -50,6 +50,6 @@ harmonizome_download <- function(dataset){
     gzfile() %>%
     read_lines() %>%
     `[`(-2) %>%
-    read_tsv(col_types = cols())
+    read_tsv(col_types = cols(), progress = FALSE)
 
 }
