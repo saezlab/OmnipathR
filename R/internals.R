@@ -215,8 +215,8 @@ zip_extractor <- function(
 
     zip_data <- zip_downloader(
         url_key = url_key,
-        url_key_param = NULL,
-        url_param = NULL
+        url_key_param = url_key_param,
+        url_param = url_param
     )
 
     if(!(path %in% zip_data$files$Name)){
@@ -240,13 +240,13 @@ zip_extractor <- function(
 
         return(con)
 
-    }else(
+    }else{
 
         reader_param %<>% c(list(con), .)
         result <- do.call(reader, reader_param)
         base::close(con)
         return(result)
 
-    )
+    }
 
 }

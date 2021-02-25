@@ -76,8 +76,24 @@ remap_dorothea_download <- function(){
 #' @return Data frame with TF-target relationships.
 #'
 #' @export
+#' @seealso \code{\link{remap_dorothea_download}, \link{remap_filtered}}
 remap_tf_target_download <- function(){
 
-
+    zenodo_download(
+        zenodo_record = 3713238,
+        zenodo_fname = 'tf_target_sources.zip',
+        path = (
+            'tf_target_sources/chip_seq/remap/gene_tf_pairs_genesymbol.txt'
+        ),
+        reader = read_tsv,
+        reader_param = list(
+            col_names = c(
+                'source_genesymbol',
+                'target_genesymbol',
+                'target_ensembl',
+                'score'
+            )
+        )
+    )
 
 }

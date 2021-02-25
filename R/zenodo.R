@@ -48,7 +48,7 @@ zenodo_download <- function(
     zenodo_record = NULL,
     zenodo_fname = NULL,
     url_param = list(),
-    url_key_param = list(),
+    url_key_param = list()
 ){
 
     if(
@@ -59,13 +59,14 @@ zenodo_download <- function(
 
         url_key <- 'omnipath.zenodo_url'
         url_param <- list(
-            as_character(zenodo_record),
+            as.character(zenodo_record),
             zenodo_fname
         )
 
     }
 
     zip_extractor(
+        path = path,
         url_key = url_key,
         url_key_param = url_key_param,
         url_param = url_param,
