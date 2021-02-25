@@ -634,3 +634,28 @@ nichenet_gr_network_regnetwork <- function(){
     )
 
 }
+
+
+#' NicheNet gene regulatory network from TRRUST
+#'
+#' Builds a gene regulatory network using data from the TRRUST database
+#' and converts it to a format suitable for NicheNet.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select mutate distinct
+#' @seealso \code{\link{trrust_download}}
+nichenet_gr_network_trrust <- function(){
+
+    trrust_download() %>%
+    select(
+        from = source_genesymbol,
+        to = target_genesymbol
+    ) %>%
+    distinct() %>%
+    mutate(
+        source = 'trrust',
+        database = 'trrust'
+    )
+
+}
