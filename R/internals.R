@@ -134,3 +134,45 @@ xls_downloader <- function(
     read_excel(version$path, sheet = sheet)
 
 }
+
+
+#' Generic method to download a zip archive
+#'
+#' Downloads a zip file or retrieves it from the cache. Returns the path
+#' to the zip file and the list of paths in the archive.
+#'
+#' @importFrom utils unzip
+zip_downloader <- function(
+    url_key,
+    url_key_param = NULL
+    url_param = NULL
+){
+
+    url <- url_parser(
+        url_key = url_key,
+        url_key_param = url_key_param,
+        url_param = url_param
+    )
+
+    version <- omnipath_cache_latest_or_new(url = url, ext = 'zip')
+
+    if(version$status != CACHE_STATUS$READY){
+
+        download.file(url = url, destfile = version$path, quiet = TRUE)
+        omnipath_cache_download_ready(version)
+
+    }
+
+    list(
+        path = version$path,
+        files = unzip(version$path, list = TRUE)
+    )
+
+}
+
+
+zip_extractor <- function(
+
+){
+
+}
