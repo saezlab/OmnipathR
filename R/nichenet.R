@@ -506,7 +506,7 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' @return Data frame with ligand-receptor interactions in NicheNet format.
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter mutate select distinct
+#' @importFrom dplyr filter
 #' @seealso \code{\link{nichenet_lr_network}}
 nichenet_lr_network_guide2pharma <- function(){
 
@@ -515,14 +515,11 @@ nichenet_lr_network_guide2pharma <- function(){
         target_species == 'Human' &
         ligand_species == 'Human'
     ) %>%
-    select(
-        from = ligand_gene_symbol,
-        to = target_gene_symbol
-    ) %>%
-    distinct() %>%
-    mutate(
+    nichenet_common_postprocess(
         source = 'pharmacology',
-        database = 'guide2pharmacology'
+        database = 'guide2pharmacology',
+        from_col = ligand_gene_symbol,
+        to_col = target_gene_symbol
     )
 
 }
@@ -542,7 +539,7 @@ nichenet_lr_network_guide2pharma <- function(){
 #' @return Data frame with ligand-receptor interactions in NicheNet format.
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter mutate select distinct
+#' @importFrom dplyr filter
 #' @seealso \code{\link{nichenet_lr_network}}
 nichenet_lr_network_ramilowski <- function(
     evidences = c('literature supported', 'putative')
@@ -550,14 +547,11 @@ nichenet_lr_network_ramilowski <- function(
 
     ramilowski_download() %>%
     filter(Pair.Evidence %in% evidences) %>%
-    select(
-        from = Ligand.ApprovedSymbol,
-        to = Receptor.ApprovedSymbol
-    ) %>%
-    distinct() %>%
-    mutate(
+    nichenet_common_postprocess(
         source = 'ramilowski_known',
-        database = 'ramilowski'
+        database = 'ramilowski',
+        from_col = Ligand.ApprovedSymbol,
+        to_col = Receptor.ApprovedSymbol
     )
 
 }
@@ -614,7 +608,7 @@ nichenet_gr_network_harmonizome <- function(
 #'
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter select mutate distinct
+#' @importFrom dplyr filter
 #' @seealso \code{\link{regnetwork_download}}
 nichenet_gr_network_regnetwork <- function(){
 
@@ -623,12 +617,7 @@ nichenet_gr_network_regnetwork <- function(){
         source_type == 'protein' &
         target_type == 'protein'
     ) %>%
-    select(
-        from = source_genesymbol,
-        to = target_genesymbol
-    ) %>%
-    distinct() %>%
-    mutate(
+    nichenet_common_postprocess(
         source = 'regnetwork_source',
         database = 'regnetwork'
     )
@@ -643,19 +632,43 @@ nichenet_gr_network_regnetwork <- function(){
 #'
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom dplyr select mutate distinct
 #' @seealso \code{\link{trrust_download}}
 nichenet_gr_network_trrust <- function(){
 
     trrust_download() %>%
+    nichenet_common_postprocess(
+        source = 'trrust',
+        database = 'trrust'
+    )
+
+}
+
+
+#' Common postprocessing from building a NicheNet format network table
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang !! enquo
+#' @importFrom dplyr select distinct mutate
+nichenet_common_postprocess <- function(
+    data,
+    source,
+    database,
+    from_col = source_genesymbol,
+    to_col = target_genesymbol
+){
+
+    from_col <- enquo(from_col)
+    to_col <- enquo(to_col)
+
+    data %>%
     select(
-        from = source_genesymbol,
-        to = target_genesymbol
+        from = !!from_col,
+        to = !!to_col
     ) %>%
     distinct() %>%
     mutate(
-        source = 'trrust',
-        database = 'trrust'
+        source = source,
+        database = database
     )
 
 }
