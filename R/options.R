@@ -98,7 +98,8 @@
         'https://static-content.springer.com/esm/',
         'art%%3A10.1038%%2Fncomms8866/MediaObjects/',
         '41467_2015_BFncomms8866_MOESM611_ESM.xlsx'
-    )
+    ),
+    omnipath.regnetwork_url = 'http://www.regnetworkweb.org/download/%s.zip'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'

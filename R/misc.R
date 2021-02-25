@@ -139,3 +139,12 @@ file_add_extension <- function(fname, ext){
     )
 
 }
+
+
+#' Closes a connection when the parent call exits
+close_on_exit <- function(con, envir = parent.frame()){
+
+    assign('con', con, envir)
+    do.call('on.exit', list(quote(close(con))), envir = envir)
+
+}
