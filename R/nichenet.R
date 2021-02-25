@@ -291,50 +291,6 @@ nichenet_signaling_network_harmonizome <- function(
 }
 
 
-#' NicheNet gene regulatory network from Harmonizome
-#'
-#' Builds gene regulatory network prior knowledge for NicheNet using
-#' Harmonizome
-#'
-#' @param datasets The datasets to use. For possible values please refer to
-#'     default value and the Harmonizome webpage.
-#' @importFrom magrittr %>%
-#' @importFrom dplyr rename
-#' @export
-nichenet_gr_network_harmonizome <- function(
-    datasets = c(
-        'cheappi',
-        'encodetfppi',
-        'jasparpwm',
-        'transfac',
-        'transfacpwm',
-        'motifmap',
-        'geotf',
-        'geokinase',
-        'geogene'
-    ),
-    ...
-){
-
-    dataset_names <- list(
-        cheappi = 'CHEA',
-        encodetfppi = 'ENCODE',
-        jaspar = 'JASPAR',
-        transfac = 'TRANSFAC_CUR',
-        transfacpwm = 'TRANSFAC',
-        motifmap = 'MOTIFMAP',
-        geotf = 'GEO_TF',
-        geokinase = 'GEO_KINASE',
-        geogene = 'GEO_GENE',
-        msigdbonc = 'MSIGDB_GENE'
-    )
-
-    harmonizome_nichenet(datasets, dataset_names) %>%
-    rename(from = to, to = from)
-
-}
-
-
 #' Combines multiple Harmonizome datasets and converts them to NicheNet format
 #'
 #' @importFrom dplyr mutate bind_rows
@@ -602,6 +558,79 @@ nichenet_lr_network_ramilowski <- function(
     mutate(
         source = 'ramilowski_known',
         database = 'ramilowski'
+    )
+
+}
+
+
+#' NicheNet gene regulatory network from Harmonizome
+#'
+#' Builds gene regulatory network prior knowledge for NicheNet using
+#' Harmonizome
+#'
+#' @param datasets The datasets to use. For possible values please refer to
+#'     default value and the Harmonizome webpage.
+#' @importFrom magrittr %>%
+#' @importFrom dplyr rename
+#' @export
+nichenet_gr_network_harmonizome <- function(
+    datasets = c(
+        'cheappi',
+        'encodetfppi',
+        'jasparpwm',
+        'transfac',
+        'transfacpwm',
+        'motifmap',
+        'geotf',
+        'geokinase',
+        'geogene'
+    ),
+    ...
+){
+
+    dataset_names <- list(
+        cheappi = 'CHEA',
+        encodetfppi = 'ENCODE',
+        jaspar = 'JASPAR',
+        transfac = 'TRANSFAC_CUR',
+        transfacpwm = 'TRANSFAC',
+        motifmap = 'MOTIFMAP',
+        geotf = 'GEO_TF',
+        geokinase = 'GEO_KINASE',
+        geogene = 'GEO_GENE',
+        msigdbonc = 'MSIGDB_GENE'
+    )
+
+    harmonizome_nichenet(datasets, dataset_names) %>%
+    rename(from = to, to = from)
+
+}
+
+
+#' NicheNet gene regulatory network from RegNetwork
+#'
+#' Builds a gene regulatory network using data from the RegNetwork database
+#' and converts it to a format suitable for NicheNet.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter select mutate distinct
+#' @seealso \code{\link{regnetwork_download}}
+nichenet_gr_network_regnetwork <- function(){
+
+    regnetwork_download() %>%
+    filter(
+        source_type == 'protein' &
+        target_type == 'protein'
+    ) %>%
+    select(
+        from = source_genesymbol,
+        to = target_genesymbol
+    ) %>%
+    distinct() %>%
+    mutate(
+        source = 'regnetwork_source',
+        database = 'regnetwork'
     )
 
 }
