@@ -141,11 +141,18 @@ xls_downloader <- function(
 #' Downloads a zip file or retrieves it from the cache. Returns the path
 #' to the zip file and the list of paths in the archive.
 #'
+#' @param url_key Character: name of the option containing the URL
+#' @param url_key_param List: variables to insert into the `url_key`.
+#' @param url_param List: variables to insert into the URL string (which is
+#' returned from the options).
+#'
 #' @importFrom utils unzip
+#' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
 zip_downloader <- function(
     url_key,
-    url_key_param = NULL
-    url_param = NULL
+    url_key_param = list(),
+    url_param = list(),
+    curl_verbose = FALSE
 ){
 
     url <- url_parser(
@@ -158,21 +165,88 @@ zip_downloader <- function(
 
     if(version$status != CACHE_STATUS$READY){
 
-        download.file(url = url, destfile = version$path, quiet = TRUE)
+        # downloading the data
+        curl_handle <- getCurlHandle()
+        response <- CFILE(version$path, mode = 'wb')
+        opt_set <- curlSetOpt(
+            curl = curl_handle,
+            url = url,
+            verbose = curl_verbose,
+            writedata = response@ref
+        )
+        success <- curlPerform(curl = curl_handle)
+        RCurl::close(response)
         omnipath_cache_download_ready(version)
 
     }
 
     list(
         path = version$path,
+        url = url,
         files = unzip(version$path, list = TRUE)
     )
 
 }
 
 
+#' Generic method to download a zip archive and extract one file
+#'
+#' @param url_key Character: name of the option containing the URL
+#' @param path Character: path to the file within the archive.
+#' @param url_key_param List: variables to insert into the `url_key`.
+#' @param url_param List: variables to insert into the URL string (which is
+#' returned from the options).
+#' @param reader Optional, a function to read the connection.
+#' @param reader_param List: arguments for the reader function.
+#'
+#' @return A connection to the extracted file or a
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom logger log_fatal
+#' @seealso \code{\link{zip_downloader}}
 zip_extractor <- function(
-
+    url_key,
+    path,
+    url_key_param = list(),
+    url_param = list(),
+    reader = NULL,
+    reader_param = list()
 ){
+
+    zip_data <- zip_downloader(
+        url_key = url_key,
+        url_key_param = NULL,
+        url_param = NULL
+    )
+
+    if(!(path %in% zip_data$files$Name)){
+
+        msg <- sprintf(
+            'Path `%s` not found in zip file `%s` (local file at `%s`)',
+            path,
+            zip_data$url,
+            zip_data$path
+        )
+        logger::log_fatal(msg)
+        stop(msg)
+
+    }
+
+    con <-
+        zip_data$path %>%
+        unz(path, open = 'rb')
+
+    if(is.null(reader)){
+
+        return(con)
+
+    }else(
+
+        reader_param %<>% c(list(con), .)
+        result <- do.call(reader, reader_param)
+        base::close(con)
+        return(result)
+
+    )
 
 }
