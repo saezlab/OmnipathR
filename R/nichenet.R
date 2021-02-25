@@ -644,6 +644,27 @@ nichenet_gr_network_trrust <- function(){
 }
 
 
+#' NicheNet gene regulatory network from HTRIdb
+#'
+#' Builds a gene regulatory network using data from the HTRIdb database
+#' and converts it to a format suitable for NicheNet.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @seealso \code{\link{htridb_download}}
+nichenet_gr_network_htridb <- function(){
+
+    htridb_download() %>%
+    nichenet_common_postprocess(
+        source = 'HTRIDB',
+        database = 'HTRIDB',
+        from_col = SYMBOL_TF,
+        to_col = SYMBOL_TG
+    )
+
+}
+
+
 #' Common postprocessing from building a NicheNet format network table
 #'
 #' @importFrom magrittr %>%
