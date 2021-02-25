@@ -115,7 +115,11 @@ nichenet_lr_network <- function(
 #'
 #' @seealso \code{\link{nichenet_gr_network_omnipath}}
 nichenet_gr_network <- function(
-    omnipath = list()
+    omnipath = list(),
+    harmonizome = list(),
+    regnetwork = list(),
+    htridb = list(),
+    remap = list()
 ){
 
 
@@ -660,6 +664,41 @@ nichenet_gr_network_htridb <- function(){
         database = 'HTRIDB',
         from_col = SYMBOL_TF,
         to_col = SYMBOL_TG
+    )
+
+}
+
+
+#' NicheNet gene regulatory network from ReMap
+#'
+#' Builds a gene regulatory network using data from the ReMap database
+#' and converts it to a format suitable for NicheNet.
+#'
+#' @param score Numeric: a minimum score between 0 and 1000, records with
+#'     lower scores will be excluded. If NULL no filtering performed.
+#' @param top_targets Numeric: the number of top scoring targets for each
+#'     TF. Essentially the maximum number of targets per TF. If NULL the
+#'     number of targets is not restricted.
+#' @param only_known_tfs Logical: whether to exclude TFs which are not in
+#'     TF census.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @seealso \code{\link{remap_filtered}}
+nichenet_gr_network_remap <- function(
+    score = 100,
+    top_targets = 500,
+    only_known_tfs = TRUE
+){
+
+    remap_filtered(
+        score = score,
+        top_targets = top_targets,
+        only_known_tfs = only_known_tfs
+    ) %>%
+    nichenet_common_postprocess(
+        source = 'Remap_5',
+        database = 'Remap'
     )
 
 }
