@@ -882,6 +882,51 @@ omnipath_cache_update_status <- cache_locked %@% function(
 }
 
 
+#' Sets the file extension for a cache record
+#'
+#' @param key Character: key for a cache item, alternatively a version entry.
+#' @param ext Character: the file extension, e.g. "zip".
+#'
+#' @export
+#' @importFrom magrittr %>% %<>%
+#' @importFrom purrr map
+#' @importFrom tools file_path_sans_ext
+omnipath_cache_set_ext <- cache_locked %@% function(key, ext){
+
+    if(is.list(key)){
+
+        key %<>% omnipath_cache_key_from_version
+
+    }
+
+    if((key %in% names(.omnipath_cache))){
+
+        .omnipath_cache[[key]]$ext <- ext
+
+        .omnipath_cache[[key]]$versions %<>%
+            map(
+                function(version){
+
+                    old_path <- version$path
+
+                    version$path %<>%
+                        file_path_sans_ext(compression = TRUE) %>%
+                        paste(ext, sep = '.')
+
+                    file.rename(old_path, version$path)
+
+                    return(version)
+
+                }
+            )
+
+    }
+
+    .omnipath_cache <<- .omnipath_cache
+
+}
+
+
 #' Adds a new version item to an existing cache record
 #'
 #' @return Character: key of the version item.
