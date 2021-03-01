@@ -783,23 +783,16 @@ nichenet_gr_network_pathwaycommons <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate filter relocate
-#' @importFrom readr cols
 nichenet_pathwaycommons_common <- function(interaction_types, label){
 
-    generic_downloader(
-        url_key = 'omnipath.pathwaycommons_url',
-        reader_param = list(
-            col_names = c('from', 'source', 'to'),
-            col_types = cols()
-        )
-    ) %>%
+    pathwaycommons_download() %>%
     filter(
-        source %in% interaction_types
+        type %in% interaction_types
     ) %>%
     mutate(
         source = sprintf(
             'pathwaycommons_%s',
-            gsub('-', '_', source, fixed = TRUE)
+            gsub('-', '_', type, fixed = TRUE)
         ),
         database = sprintf('pathwaycommons_%s', label)
     ) %>%
