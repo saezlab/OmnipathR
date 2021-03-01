@@ -72,7 +72,9 @@ nichenet_signaling_network <- function(
     inweb = list()
 ){
 
-
+    as.list(environment()) %>%
+    `[[<-`('network_type', 'signaling') %>%
+    do.call(nichenet_network, .)
 
 }
 
@@ -99,7 +101,9 @@ nichenet_lr_network <- function(
     ramilowski = list()
 ){
 
-
+    as.list(environment()) %>%
+    `[[<-`('network_type', 'lr') %>%
+    do.call(nichenet_network, .)
 
 }
 
@@ -124,7 +128,40 @@ nichenet_gr_network <- function(
     pathwaycommons = list()
 ){
 
+    as.list(environment()) %>%
+    `[[<-`('network_type', 'gr') %>%
+    do.call(nichenet_network, .)
 
+}
+
+
+#' Common method to build NicheNet network prior knowledge
+#'
+#' @param network_type Character: type of the interactions, either
+#'     "signaling", "lr" (ligand-receptor) or "gr" (gene regulatory).
+#' @param ... Argument names are the name of the resources to download (all
+#'     lowercase), while their values are lists of arguments to the resource
+#'     specific nichenet import methods (an empty list if no arguments should
+#'     be overridden). If the value is NULL the resource will be omitted.
+#'
+#' @return A data frame with interactions suitable for use with NicheNet.
+#'
+#' @importFrom purrr map2
+#' @importFrom magrittr %>%
+#' @importFrom dplyr bind_rows
+nichenet_network <- function(network_type, ...){
+
+    list(...) %>%
+    map2(
+        names(.),
+        function(args, resource){
+            resource %>%
+            sprintf('nichenet_%s_network_%s', network_type, .) %>%
+            get() %>%
+            do.call(args)
+        }
+    ) %>%
+    bind_rows()
 
 }
 
