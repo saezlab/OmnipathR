@@ -425,12 +425,19 @@ nichenet_signaling_network_cpdb <- function(...){
 #' Builds signaling network prior knowledge for NicheNet from the EVEX
 #' database.
 #'
+#' @param top_confidence Double, between 0 and 1. Threshold based on the
+#' quantile of the confidence score.
+#' @param indirect Logical: whether to include indirect interactions.
+#'
 #' @importFrom magrittr %>% `n'est pas`
 #' @importFrom dplyt select mutate filter
 #' @export
 #'
 #' @seealso \code{\link{evex}}
-nichenet_signaling_network_evex <- function(...){
+nichenet_signaling_network_evex <- function(
+    top_confidence = .75,
+    indirect = FALSE
+){
 
     categories <- list(
         Binding = 'binding',
@@ -438,15 +445,20 @@ nichenet_signaling_network_evex <- function(...){
         Regulation_of_phosphorylation = 'phosphorylation'
     )
 
-    evex() %>%
+    evex_download() %>%
+    filter(confidence > quantile(confidence, top_confidence)) %>%
     select(
         from = source_genesymbol,
         to = target_genesymbol,
         coarse_type,
         refined_type
     ) %>%
+    {`if`(
+        indirect,
+        .,
+        filter(., coarse_type != 'Indirect_regulation')
+    )} %>%
     filter(
-        coarse_type != 'Indirect_regulation' &
         `n'est pas`(refined_type %in% c(
             # these belong to transcriptional regulation
             'Regulation of expression',
@@ -699,6 +711,50 @@ nichenet_gr_network_remap <- function(
     nichenet_common_postprocess(
         source = 'Remap_5',
         database = 'Remap'
+    )
+
+}
+
+
+#' NicheNet gene regulatory network from EVEX
+#'
+#' Builds a gene regulatory network using data from the EVEX database
+#' and converts it to a format suitable for NicheNet.
+#'
+#' @return Data frame of interactions in NicheNet format.
+#'
+#' @param top_confidence Double, between 0 and 1. Threshold based on the
+#' quantile of the confidence score.
+#' @param indirect Logical: whether to include indirect interactions.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter select mutate
+nichenet_gr_network_evex <- function(
+    top_confidence = .75,
+    indirect = FALSE,
+    regulation_of_expression = FALSE
+){
+
+    gr_types <- `if`(
+        regulation_of_expression,
+        c('Regulation of expression', 'Regulation of transcription'),
+        'Regulation of transcription'
+    )
+
+    evex_download() %>%
+    filter(confidence > quantile(confidence, top_confidence)) %>%
+    {`if`(
+        indirect,
+        .,
+        filter(., coarse_type != 'Indirect_regulation')
+    )} %>%
+    filter(
+        refined_type %in% gr_types
+    ) %>%
+    nichenet_common_postprocess(
+        source = 'evex_regulation_expression',
+        database = 'evex_expression'
     )
 
 }
