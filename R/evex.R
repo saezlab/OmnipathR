@@ -32,8 +32,8 @@
 #' @export
 #'
 #' @examples
-#' evex_interactions <- evex()
-evex <- function(...){
+#' evex_interactions <- evex_download()
+evex_download <- function(...){
 
     tmp_tgz <- tempfile(fileext = '.tar.gz')
     tmpdir_ex <- tempdir()

@@ -146,9 +146,10 @@ xls_downloader <- function(
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #'
-#' @importFrom utils unzip
+#' @importFrom utils unzip untar
 #' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
-zip_downloader <- function(
+#' @importFrom wand get_content_type
+archive_downloader <- function(
     url_key,
     url_key_param = list(),
     url_param = list(),
@@ -161,7 +162,7 @@ zip_downloader <- function(
         url_param = url_param
     )
 
-    version <- omnipath_cache_latest_or_new(url = url, ext = 'zip')
+    version <- omnipath_cache_latest_or_new(url = url)
 
     if(version$status != CACHE_STATUS$READY){
 
@@ -177,13 +178,23 @@ zip_downloader <- function(
         success <- curlPerform(curl = curl_handle)
         RCurl::close(response)
         omnipath_cache_download_ready(version)
+        key <- omnipath_cache_key_from_version(version)
+        content_type <- get_content_type(version$path)
+        ext <- `if`('application/zip' %in% content_type, 'zip', 'tar.gz')
+        omnipath_cache_set_ext(key, ext)
+        version <- omnipath_cache_latest_or_new(url = url)
 
     }
+
+    key <- omnipath_cache_key_from_version(version)
+    record <- .omnipath_cache[[key]]
+    extractor <- `if`(record$ext == 'zip', unzip, untar)
 
     list(
         path = version$path,
         url = url,
-        files = unzip(version$path, list = TRUE)
+        files = extractor(version$path, list = TRUE),
+        ext = record$ext
     )
 
 }
@@ -192,7 +203,8 @@ zip_downloader <- function(
 #' Generic method to download a zip archive and extract one file
 #'
 #' @param url_key Character: name of the option containing the URL
-#' @param path Character: path to the file within the archive.
+#' @param path Character: path to the file within the archive. If NULL, the
+#' first file will be extracted (not recommended).
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
@@ -203,38 +215,53 @@ zip_downloader <- function(
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom logger log_fatal
-#' @seealso \code{\link{zip_downloader}}
-zip_extractor <- function(
+#' @seealso \code{\link{archive_downloader}}
+archive_extractor <- function(
     url_key,
-    path,
+    path = NULL,
     url_key_param = list(),
     url_param = list(),
     reader = NULL,
     reader_param = list()
 ){
 
-    zip_data <- zip_downloader(
+    archive_data <- archive_downloader(
         url_key = url_key,
         url_key_param = url_key_param,
         url_param = url_param
     )
 
-    if(!(path %in% zip_data$files$Name)){
+    if(!(path %in% archive_data$files$Name)){
 
         msg <- sprintf(
-            'Path `%s` not found in zip file `%s` (local file at `%s`)',
+            'Path `%s` not found in archive `%s` (local file at `%s`)',
             path,
-            zip_data$url,
-            zip_data$path
+            archive_data$url,
+            archive_data$path
         )
         logger::log_fatal(msg)
         stop(msg)
 
     }
 
-    con <-
-        zip_data$path %>%
-        unz(path, open = 'rb')
+    # fallback to the first file
+    path <- `if`(is.null(path), archive_data$files$Name[1], path)
+
+    if(archive_data$ext == 'zip'){
+
+        con <-
+            archive_data$path %>%
+            unz(path, open = 'rb')
+
+    }else{
+
+        archive_data$path %>% untar(files = path, exdir = tempdir())
+        con <-
+            tempdir() %>%
+            file.path(basename(path)) %>%
+            file()
+
+    }
 
     if(is.null(reader)){
 

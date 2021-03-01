@@ -65,7 +65,7 @@ zenodo_download <- function(
 
     }
 
-    zip_extractor(
+    archive_extractor(
         path = path,
         url_key = url_key,
         url_key_param = url_key_param,
