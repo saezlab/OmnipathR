@@ -231,7 +231,7 @@ archive_extractor <- function(
         url_param = url_param
     )
 
-    if(!(path %in% archive_data$files$Name)){
+    if(!(path %in% paths_in_archive(archive_data))){
 
         msg <- sprintf(
             'Path `%s` not found in archive `%s` (local file at `%s`)',
@@ -245,7 +245,7 @@ archive_extractor <- function(
     }
 
     # fallback to the first file
-    path <- `if`(is.null(path), archive_data$files$Name[1], path)
+    path <- `if`(is.null(path), paths_in_archive(archive_data)[1], path)
 
     if(archive_data$ext == 'zip'){
 
@@ -259,7 +259,7 @@ archive_extractor <- function(
         con <-
             tempdir() %>%
             file.path(basename(path)) %>%
-            file()
+            file(open = 'rb')
 
     }
 
@@ -275,5 +275,24 @@ archive_extractor <- function(
         return(result)
 
     }
+
+}
+
+
+#' Workaround for the different APIs of `unzip` and `untar`
+#'
+#' @return Character vector of paths in the archive.
+#'
+#' @param archive_data List: as returned by the
+#' \code{\link{archive_downloader}} function.
+#'
+#' @seealso \code{\link{archive_downloader}}
+paths_in_archive <- function(archive_data){
+
+    `if`(
+        'Name' %in% names(archive_data$files),
+        archive_data$files$Name,
+        archive_data$files
+    )
 
 }

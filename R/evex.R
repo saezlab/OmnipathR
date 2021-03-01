@@ -35,32 +35,30 @@
 #' evex_interactions <- evex_download()
 evex_download <- function(...){
 
-    tmp_tgz <- tempfile(fileext = '.tar.gz')
-    tmpdir_ex <- tempdir()
+    relations <- archive_extractor(
+        url_key = 'omnipath.evex_url',
+        path = 'EVEX_relations_9606.tab',
+        reader = read_tsv,
+        reader_param = list(
+            col_types = cols(
+                source_entrezgene_id = col_character(),
+                target_entrezgene_id = col_character()
+            ),
+            progress = FALSE
+        )
+    )
 
-    on.exit({
-        unlink(tmpdir_ex)
-        closeAllConnections()
-    })
+    articles <- archive_extractor(
+        url_key = 'omnipath.evex_url',
+        path = 'EVEX_articles_9606.tab',
+        reader = read_tsv,
+        reader_param = list(
+            col_types = cols(),
+            progress = FALSE
+        )
+    )
 
-    'omnipath.evex_url' %>%
-    options() %>%
-    as.character() %>%
-    download.file(destfile = tmp_tgz, quiet = TRUE)
-
-    tmp_tgz %>%
-    untar(exdir = tmpdir_ex)
-    unlink(tmp_tgz)
-
-    tmpdir_ex %>%
-    file.path('EVEX_relations_9606.tab') %>%
-    read_tsv(
-        col_types = cols(
-            source_entrezgene_id = col_character(),
-            target_entrezgene_id = col_character()
-        ),
-        progress = FALSE
-    ) %>%
+    relations %>%
     translate_ids(
         source_entrezgene_id,
         source_genesymbol,
@@ -76,9 +74,7 @@ evex_download <- function(...){
         uploadlists = FALSE
     ) %>%
     left_join(
-        tmpdir_ex %>%
-        file.path('EVEX_articles_9606.tab') %>%
-        read_tsv(col_types = cols(), progress = FALSE) %>%
+        articles %>%
         rename(references = article_id),
         by = 'general_event_id'
     ) %>%

@@ -46,7 +46,8 @@ Depends:
     rappdirs,
     yaml,
     digest,
-    wand
+    wand,
+    tools
 Imports:
     igraph,
     dplyr,
