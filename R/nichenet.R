@@ -20,7 +20,7 @@
 #
 
 
-#' Build NicheNet prior knowledge
+#' Builds NicheNet prior knowledge
 #'
 #' Builds all prior knowledge data required by NicheNet. For this it calls
 #' a multitude of methods to download and combine data from various
@@ -29,18 +29,32 @@
 #'
 #' @param signaling_network A list of parameters for building the signaling
 #'     network, passed to \code{\link{nichenet_signaling_network}}
+#' @param lr_network A list of parameters for building the ligand-receptor
+#'     network, passed to \code{\link{nichenet_lr_network}}
+#' @param gr_network A list of parameters for building the gene regulatory
+#'     network, passed to \code{\link{nichenet_gr_network}}
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map2
 #' @export
 #'
-#' @seealso \code{\link{nichenet_signaling_network}}
+#' @seealso \code{\link{nichenet_signaling_network},
+#' \link{nichenet_lr_network}, \link{nichenet_gr_network}}
 nichenet_prior_knowledge <- function(
-    signaling_network = list()
+    signaling_network = list(),
+    lr_network = list(),
+    gr_network = list()
 ){
 
-    list(
-        signaling_network = do.call(
-            nichenet_signaling_network,
-            signaling_network
-        )
+    as.list(environment()) %>%
+    map2(
+        names(.),
+        function(args, network_type){
+            network_type %>%
+            sprintf('nichenet_%s', .) %>%
+            get() %>%
+            do.call(args)
+        }
     )
 
 }
