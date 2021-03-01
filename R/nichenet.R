@@ -64,12 +64,12 @@ nichenet_prior_knowledge <- function(
 #'     \link{nichenet_signaling_network_harmonizome}}
 nichenet_signaling_network <- function(
     omnipath = list(),
-    pathwaycommons = NULL,
-    harmonizome = NULL,
-    vinayagam = NULL,
-    cpdb = NULL,
-    evex = NULL,
-    inweb = NULL
+    pathwaycommons = list(),
+    harmonizome = list(),
+    vinayagam = list(),
+    cpdb = list(),
+    evex = list(),
+    inweb = list()
 ){
 
 
@@ -95,8 +95,8 @@ nichenet_signaling_network <- function(
 #'     \link{nichenet_lr_network_ramilowski}}
 nichenet_lr_network <- function(
     omnipath = list(),
-    guide2pharma = NULL,
-    ramilowski = NULL
+    guide2pharma = list(),
+    ramilowski = list()
 ){
 
 
@@ -119,7 +119,9 @@ nichenet_gr_network <- function(
     harmonizome = list(),
     regnetwork = list(),
     htridb = list(),
-    remap = list()
+    remap = list(),
+    evex = list(),
+    pathwaycommons = list()
 ){
 
 
@@ -233,9 +235,7 @@ omnipath_interactions_postprocess <- function(interactions){
 #' @param interaction_types Character vector with PathwayCommons interaction
 #'     types. Please refer to the default value and the PathwayCommons
 #'     webpage.
-#' @importFrom magrittr %>%
-#' @importFrom dplyr mutate filter
-#' @importFrom readr read_tsv cols
+#'
 #' @export
 nichenet_signaling_network_pathwaycommons <- function(
     interaction_types = c(
@@ -249,20 +249,9 @@ nichenet_signaling_network_pathwaycommons <- function(
     ...
 ){
 
-    options('omnipath.pathwaycommons_url') %>%
-    read_tsv(
-        col_names = c('from', 'source', 'to'),
-        col_types = cols()
-    ) %>%
-    filter(
-        source %in% interaction_types
-    ) %>%
-    mutate(
-        source = sprintf(
-            'pathwaycommons_%s',
-            gsub('-', '_', source, fixed = TRUE)
-        ),
-        database = 'pathwaycommons_signaling'
+    nichenet_pathwaycommons_common(
+        interaction_types = interaction_types,
+        label = 'signaling'
     )
 
 }
@@ -756,6 +745,65 @@ nichenet_gr_network_evex <- function(
         source = 'evex_regulation_expression',
         database = 'evex_expression'
     )
+
+}
+
+
+#' NicheNet gene regulatory network from PathwayCommons
+#'
+#' Builds gene regulation prior knowledge for NicheNet using PathwayCommons.
+#'
+#' @param interaction_types Character vector with PathwayCommons interaction
+#'     types. Please refer to the default value and the PathwayCommons
+#'     webpage.
+#'
+#' @export
+nichenet_gr_network_pathwaycommons <- function(
+    interaction_types = 'controls-expression-of',
+    ...
+){
+
+    nichenet_pathwaycommons_common(
+        interaction_types = interaction_types,
+        label = 'expression'
+    )
+
+}
+
+
+#' Retrieves interactions from PathwayCommons and converts them to NicheNet
+#' format
+#'
+#' @param interaction_types Character vector with PathwayCommons interaction
+#'     types. Please refer to the default value and the PathwayCommons
+#'     webpage.
+#' @param label Character: suffix for the NicheNet `database` field:
+#'     "signaling" for the signaling network and "expression" for gene
+#'     regulatory network.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate filter relocate
+#' @importFrom readr cols
+nichenet_pathwaycommons_common <- function(interaction_types, label){
+
+    generic_downloader(
+        url_key = 'omnipath.pathwaycommons_url',
+        reader_param = list(
+            col_names = c('from', 'source', 'to'),
+            col_types = cols()
+        )
+    ) %>%
+    filter(
+        source %in% interaction_types
+    ) %>%
+    mutate(
+        source = sprintf(
+            'pathwaycommons_%s',
+            gsub('-', '_', source, fixed = TRUE)
+        ),
+        database = sprintf('pathwaycommons_%s', label)
+    ) %>%
+    relocate(from, to)
 
 }
 
