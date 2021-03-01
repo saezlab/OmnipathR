@@ -46,7 +46,8 @@ nichenet_prior_knowledge <- function(
     gr_network = list()
 ){
 
-    as.list(environment()) %>%
+    environment() %>%
+    as.list() %>%
     map2(
         names(.),
         function(args, network_type){
@@ -71,11 +72,25 @@ nichenet_prior_knowledge <- function(
 #'     \code{\link{nichenet_signaling_network_pathwaycommons}}
 #' @param harmonizome List with paramaters to be passed to
 #'     \code{\link{nichenet_signaling_network_harmonizome}}
+#' @param vinayagam List with paramaters to be passed to
+#'     \code{\link{nichenet_signaling_network_vinayagam}}
+#' @param cpdb List with paramaters to be passed to
+#'     \code{\link{nichenet_signaling_network_cpdb}}
+#' @param evex List with paramaters to be passed to
+#'     \code{\link{nichenet_signaling_network_evex}}
+#' @param inbiomap List with paramaters to be passed to
+#'     \code{\link{nichenet_signaling_network_inbiomap}}
+#'
+#' @importFrom magrittr %>%
 #' @export
 #'
 #' @seealso \code{\link{nichenet_signaling_network_omnipath},
 #'     \link{nichenet_signaling_network_pathwaycommons},
-#'     \link{nichenet_signaling_network_harmonizome}}
+#'     \link{nichenet_signaling_network_harmonizome},
+#'     \link{nichenet_signaling_network_vinayagam},
+#'     \link{nichenet_signaling_network_cpdb},
+#'     \link{nichenet_signaling_network_evex},
+#'     \link{nichenet_signaling_network_inbiomap}}
 nichenet_signaling_network <- function(
     omnipath = list(),
     pathwaycommons = list(),
@@ -83,10 +98,11 @@ nichenet_signaling_network <- function(
     vinayagam = list(),
     cpdb = list(),
     evex = list(),
-    inweb = list()
+    inbiomap = list()
 ){
 
-    as.list(environment()) %>%
+    environment() %>%
+    as.list() %>%
     `[[<-`('network_type', 'signaling') %>%
     do.call(nichenet_network, .)
 
@@ -104,6 +120,8 @@ nichenet_signaling_network <- function(
 #'     \code{\link{nichenet_lr_network_guide2pharma}}
 #' @param ramilowski List with paramaters to be passed to
 #'     \code{\link{nichenet_lr_network_ramilowski}}
+#'
+#' @importFrom magrittr %>%
 #' @export
 #'
 #' @seealso \code{\link{nichenet_lr_network_omnipath},
@@ -115,7 +133,8 @@ nichenet_lr_network <- function(
     ramilowski = list()
 ){
 
-    as.list(environment()) %>%
+    environment() %>%
+    as.list() %>%
     `[[<-`('network_type', 'lr') %>%
     do.call(nichenet_network, .)
 
@@ -129,9 +148,29 @@ nichenet_lr_network <- function(
 #'
 #' @param omnipath List with paramaters to be passed to
 #'     \code{\link{nichenet_gr_network_omnipath}}
+#' @param harmonizome List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_harmonizome}}
+#' @param regnetwork List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_regnetwork}}
+#' @param htridb List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_htridb}}
+#' @param remap List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_remap}}
+#' @param evex List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_evex}}
+#' @param pathwaycommons List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_pathwaycommons}}
+#'
+#' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_gr_network_omnipath}}
+#' @seealso \code{\link{nichenet_gr_network_omnipath},
+#'     \link{nichenet_gr_network_harmonizome},
+#'     \link{nichenet_gr_network_regnetwork},
+#'     \link{nichenet_gr_network_htridb},
+#'     \link{nichenet_gr_network_remap},
+#'     \link{nichenet_gr_network_evex},
+#'     \link{nichenet_gr_network_pathwaycommons}}
 nichenet_gr_network <- function(
     omnipath = list(),
     harmonizome = list(),
@@ -142,7 +181,8 @@ nichenet_gr_network <- function(
     pathwaycommons = list()
 ){
 
-    as.list(environment()) %>%
+    environment() %>%
+    as.list() %>%
     `[[<-`('network_type', 'gr') %>%
     do.call(nichenet_network, .)
 
