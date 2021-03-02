@@ -508,7 +508,6 @@ omnipath_cache_get <- function(
         payload = payload
     )
 
-
     if(!(key %in% names(.omnipath_cache)) && create){
 
         if(is.null(url)){
@@ -1206,7 +1205,8 @@ omnipath_cache_key <- function(url, post = NULL, payload = NULL){
 
     url %>%
     omnipath_url_to_list(post, payload) %>%
-    pmap_chr(digest::sha1_digest)
+    pmap(list) %>%
+    map_chr(digest::sha1_digest)
 
 }
 
@@ -1247,8 +1247,8 @@ omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
     if(length(url) != length(post) && !is.null(post)){
         post %<>% list
     }
-    if(length(url) != length(payload) && !is.null(post)){
-        post %<>% list
+    if(length(url) != length(payload) && !is.null(payload)){
+        payload %<>% list
     }
 
     post %<>% null_list
