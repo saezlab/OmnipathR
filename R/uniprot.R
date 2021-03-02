@@ -46,17 +46,34 @@
 #' )
 uniprot_id_mapping_table <- function(identifiers, from, to){
 
-    POST(
-        url = 'https://www.uniprot.org/uploadlists/',
-        body = list(
-            from = from,
-            to = to,
-            format = 'tab',
-            query = paste(identifiers, collapse = ' ')
+    url <- 'https://www.uniprot.org/uploadlists/'
+    post <- list(
+        from = from,
+        to = to,
+        format = 'tab',
+        query = paste(identifiers, collapse = ' ')
+    )
+
+    version <- omnipath_cache_latest_or_new(
+        url = url,
+        post = post,
+        ext = 'rds'
+    )
+
+    if(version$status != CACHE_STATUS$READY){
+
+        POST(url = url, body = post) %>%
+        content(encoding = 'ASCII') %>%
+        read_tsv(col_types = cols()) %>%
+        omnipath_cache_save(
+            url = url,
+            post = post,
+            version = version$number
         )
-    ) %>%
-    content(encoding = 'ASCII') %>%
-    read_tsv(col_types = cols())
+
+    }
+
+    omnipath_cache_load(url = url, post = post)
 
 }
 
@@ -158,12 +175,11 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
         sprintf(' AND reviewed:%s', `if`(reviewed, 'yes', 'no'))
     )
 
-    'omnipath.all_uniprots_url' %>%
-    options() %>%
-    as.character() %>%
-    sprintf(fields, organism, reviewed) %>%
-    URLencode() %>%
-    read_tsv(col_types = cols(), progress = FALSE)
+    generic_downloader(
+        url_key = 'omnipath.all_uniprots_url',
+        url_param = list(fields, organism, reviewed),
+        reader_param = list(progress = FALSE)
+    )
 
 }
 
