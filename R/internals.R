@@ -28,6 +28,7 @@
 #' returned from the options).
 #'
 #' @importFrom magrittr %>%
+#' @importFrom utils URLencode
 url_parser <- function(
     url_key,
     url_key_param = list(),
@@ -40,7 +41,8 @@ url_parser <- function(
     options() %>%
     `[[`(1) %>%
     c(url_param) %>%
-    do.call(what = sprintf)
+    do.call(what = sprintf) %>%
+    URLencode()
 
 }
 
