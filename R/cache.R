@@ -1144,6 +1144,9 @@ omnipath_cache_record <- function(
 
     if(is.null(ext)) ext <- file_extension(url)
 
+    post %<>% map(char_shorten)
+    payload %<>% char_shorten(250)
+
     list(
         key = key,
         url = url,
@@ -1151,6 +1154,23 @@ omnipath_cache_record <- function(
         payload = payload,
         ext = ext,
         versions = list()
+    )
+
+}
+
+
+#' In a character vector, shortens values longer than maxlen and adds a note
+#' about the truncation and the original length
+char_shorten <- function(value, maxlen = 50){
+
+    ifelse(
+        is.character(value) & nchar(value) > maxlen,
+        sprintf(
+            '%s... (truncated, full length: %d)',
+            substr(value, 0, maxlen),
+            nchar(value)
+        ),
+        value
     )
 
 }
