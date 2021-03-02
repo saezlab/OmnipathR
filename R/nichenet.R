@@ -437,39 +437,14 @@ harmonizome_nichenet_process <- function(dataset){
 #'
 #' Find out more at https://doi.org/10.1126/scisignal.2001699
 #'
-#' @importFrom dplyr %>% select mutate
-#' @importFrom readxl read_xls
+#' @importFrom magrittr %>%
 #' @export
 nichenet_signaling_network_vinayagam <- function(...){
 
-    tmp_zip <- tempfile(fileext = '.zip')
-    tmp_xls <- tempfile(fileext = '.xls')
-    xls_con <- file(tmp_xls, open = 'wb')
-
-    on.exit(unlink(tmp_xls))
-
-    'omnipath.vinayagam_url' %>%
-    options() %>%
-    as.character() %>%
-    download.file(destfile = tmp_zip, quiet = TRUE)
-
-    xls_unz_con <- unz(tmp_zip, '2001699_Tables_S1_S2_S6.xls', open = 'rb')
-
-    xls_unz_con %>%
-    readBin(raw(), n = 6000000) %>%
-    writeBin(xls_con, useBytes = TRUE)
-
-    close(xls_unz_con)
-    close(xls_con)
-    unlink(tmp_zip)
-
-    tmp_xls %>%
-    read_xls(sheet = 'S6', progress = FALSE) %>%
-    select(
-        from = `Input-node Gene Symbol`,
-        to = `Output-node Gene Symbol`
-    ) %>%
-    mutate(
+    vinayagam_download() %>%
+    nichenet_common_postprocess(
+        from_col = `Input-node Gene Symbol`,
+        to_col = `Output-node Gene Symbol`,
         source = 'vinayagam_ppi',
         database = 'vinayagam'
     )
