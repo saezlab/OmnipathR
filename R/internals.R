@@ -67,7 +67,10 @@ generic_downloader <- function(
     reader_param = list(col_types = cols())
 ){
 
-    if(!('col_types' %in% names(reader_param))){
+    if(
+        !('col_types' %in% names(reader_param)) &&
+        'col_types' %in% names(formals(reader))
+    ){
         reader_param$col_types <- cols()
     }
 

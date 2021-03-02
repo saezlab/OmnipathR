@@ -920,3 +920,26 @@ nichenet_common_postprocess <- function(
     )
 
 }
+
+
+#' Expression data from ligand-receptor perturbation experiments used by
+#' NicheNet
+#'
+#' NicheNet uses expression data from a collection of published ligand or
+#' receptor KO or perturbation experiments to build its model. This function
+#' retrieves the original expression data, deposited in Zenodo
+#' (https://zenodo.org/record/3260758).
+#'
+#' @return Nested list, each element contains a data frame of processed
+#'     expression data and key variables about the experiment.
+#'
+#' @export
+nichenet_expression_data <- function(){
+
+    generic_downloader(
+        url_key = 'omnipath.nichenet_expression_url',
+        reader = url_rds,
+        reader_param = list()
+    )
+
+}

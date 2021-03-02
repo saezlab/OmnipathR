@@ -148,3 +148,18 @@ close_on_exit <- function(con, envir = parent.frame()){
     do.call('on.exit', list(quote(close(con))), envir = envir)
 
 }
+
+
+#' Reads RDS from an URL
+#'
+#' Unfortunately the APIs of R built in functions and packages are very
+#' diverse, for example, readRDS can not understand if an URL is passed to it.
+#'
+#' @importFrom magrittr %>%
+url_rds <- function(URL){
+
+    URL %>%
+    url %>%
+    readRDS
+
+}

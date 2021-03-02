@@ -64,5 +64,6 @@ Suggests:
     knitr,
     rmarkdown,
     ggplot2,
-    ggraph
+    ggraph,
+    nichenetr
 RoxygenNote: 7.1.1

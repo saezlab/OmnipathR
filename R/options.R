@@ -112,6 +112,9 @@
     omnipath.tfcensus_url = paste0(
         'https://static-content.springer.com/esm/art%%3A10.1038%%2Fnrg2538/',
         'MediaObjects/41576_2009_BFnrg2538_MOESM6_ESM.txt'
+    ),
+    omnipath.nichenet_expression_url = paste0(
+        'https://zenodo.org/record/3260758/files/expression_settings.rds'
     )
 )
 
