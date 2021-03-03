@@ -71,11 +71,11 @@
         'organism:%d%s&compress=no'
     ),
     omnipath.inbiomap_url = paste0(
-        'https://inbio-discover.intomics.com/api/data/map_public/',
+        'https://inbio-discover.com/api/data/map_public/',
         '2016_09_12/inBio_Map_core_2016_09_12.tar.gz'
     ),
     omnipath.inbiomap_login_url = paste0(
-        'https://inbio-discover.intomics.com/api/login_guest'
+        'https://inbio-discover.com/api/login_guest'
     ),
     omnipath.bioplex_1.0_url = paste0(
         'https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v2.tsv'
