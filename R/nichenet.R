@@ -200,12 +200,13 @@ nichenet_gr_network <- function(
 #'
 #' @return A data frame with interactions suitable for use with NicheNet.
 #'
-#' @importFrom purrr map2
+#' @importFrom purrr map2 discard
 #' @importFrom magrittr %>%
 #' @importFrom dplyr bind_rows
 nichenet_network <- function(network_type, ...){
 
     list(...) %>%
+    discard(is.null) %>%
     map2(
         names(.),
         function(args, resource){
@@ -214,8 +215,7 @@ nichenet_network <- function(network_type, ...){
             get() %>%
             do.call(args)
         }
-    ) %>%
-    bind_rows()
+    )
 
 }
 
@@ -237,7 +237,7 @@ nichenet_signaling_network_omnipath <- function(
     ...
 ){
 
-    args <- as.list(...)
+    args <- list(...)
     args$exclude %<>% union('ligrecextra')
     args$entity_types <- 'protein'
 
@@ -282,12 +282,12 @@ nichenet_lr_network_omnipath <- function(
 #' @export
 #'
 #' @seealso
-nichenet_signaling_network_omnipath <- function(
+nichenet_gr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
 ){
 
-    args <- as.list(...)
+    args <- list(...)
     args$exclude %<>% union('ligrecextra')
     args$entity_types <- 'protein'
 
@@ -357,15 +357,15 @@ nichenet_signaling_network_pathwaycommons <- function(
 #' @export
 nichenet_signaling_network_harmonizome <- function(
     datasets = c(
-        'phosphosite',
+        'phosphositeplus',
         'kea',
-        'depod',
+        'depod'
     ),
     ...
 ){
 
     dataset_names <- list(
-        phosphosite = 'PhosphoSite',
+        phosphositeplus = 'PhosphoSite',
         kea = 'KEA',
         depod = 'DEPOD'
     )
@@ -438,6 +438,7 @@ harmonizome_nichenet_process <- function(dataset){
 #' Find out more at https://doi.org/10.1126/scisignal.2001699
 #'
 #' @importFrom magrittr %>%
+#' @importFrom dplyr mutate select rename distinct
 #' @export
 nichenet_signaling_network_vinayagam <- function(...){
 
@@ -460,9 +461,7 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' @export
 nichenet_signaling_network_cpdb <- function(...){
 
-    consensuspathdb() %>%
-    select(from = genesymbol_a, to = genesymbol_b) %>%
-    distinct() %>%
+    consensuspathdb_download(...) %>%
     mutate(
         source = sprintf(
             'cpdb_%s',
@@ -470,7 +469,9 @@ nichenet_signaling_network_cpdb <- function(...){
         ),
         database = 'cpdb'
     ) %>%
-    select(-in_complex)
+    select(-in_complex) %>%
+    rename(from = genesymbol_a, to = genesymbol_b) %>%
+    distinct()
 
 }
 
@@ -558,10 +559,10 @@ nichenet_signaling_network_evex <- function(
 #' @seealso \code{\link{nichenet_signaling_network}, \link{inbiomap}}
 nichenet_signaling_network_inbiomap <- function(...){
 
-    inbiomap(...) %>%
-    select(
-        from = genesymbol_a,
-        to = genesymbol_b,
+    inbiomap_download(...) %>%
+    nichenet_common_postprocess(
+        from_col = genesymbol_a,
+        to_col = genesymbol_b,
         source = 'inweb_interaction',
         database = 'inweb_inbiomap'
     )
