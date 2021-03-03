@@ -58,23 +58,26 @@ url_parser <- function(
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param reader_param List: options for the reader function.
+#' @param resource Character: the name of the resource
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_tsv cols
 generic_downloader <- function(
     url_key,
     reader = read_tsv,
     url_key_param = list(),
     url_param = list(),
-    reader_param = list(col_types = cols())
+    reader_param = list(col_types = cols()),
+    resource = NULL
 ){
 
-    if(
-        !('col_types' %in% names(reader_param)) &&
-        'col_types' %in% names(formals(reader))
-    ){
-        reader_param$col_types <- cols()
-    }
+    reader_param %<>% add_defaults(
+        reader,
+        list(
+            col_types = cols(),
+            progress = FALSE
+        )
+    )
 
     url <- url_parser(
         url_key = url_key,
@@ -94,7 +97,8 @@ generic_downloader <- function(
 
     }
 
-    return(result)
+    result %>%
+    source_attrs(resource, url)
 
 }
 
@@ -327,5 +331,30 @@ paths_in_archive <- function(archive_data){
         archive_data$files$Name,
         archive_data$files
     )
+
+}
+
+
+#' Assigns attributes to a data frame about its sources
+#'
+#' @param data A data frame (or other object).
+#' @param resource Character: the name of the resource.
+#' @param url Character: the download URL.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom httr parse_url
+source_attrs <- function(data, resource, url){
+
+    domain <- parse_url(url)$hostname
+    source <- `if`(
+        is.null(resource),
+        domain,
+        sprintf('%s (%s)', resource, domain)
+    )
+
+    data %>%
+    `attr<-`('resource', resource) %>%
+    `attr<-`('url', url) %>%
+    `attr<-`('source', source)
 
 }
