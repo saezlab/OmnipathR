@@ -29,11 +29,11 @@
 #' @param .verbose Logical. Perform CURL requests in verbose mode for
 #'     debugging purposes.
 #'
-#' @importsFrom magrittr %>%
-#' @importsFrom RCurl basicHeaderGatherer basicTextGatherer CFILE
-#' @importsFrom RCurl getCurlHandle curlSetOpt curlPerform close
-#' @importsFrom jsonlite parse_json
-#' @importsFrom readr read_tsv cols
+#' @importFrom magrittr %>%
+#' @importFrom RCurl basicHeaderGatherer basicTextGatherer CFILE
+#' @importFrom RCurl getCurlHandle curlSetOpt curlPerform close
+#' @importFrom jsonlite parse_json
+#' @importFrom readr read_tsv cols
 #' @export
 #'
 #' @return A data frame (tibble) with the extracted interaction table.
@@ -41,84 +41,66 @@
 #' @seealso \code{\link{inbiomap}}
 #'
 #' @examples
-#' inbiomap_psimitab <- inbiomap()
-inbiomap_raw <- function(.verbose = FALSE){
+#' inbiomap_psimitab <- inbiomap_raw()
+inbiomap_raw <- function(curl_verbose = FALSE){
 
-    tmp_tgz <- tempfile(fileext = '.tar.gz')
-    tmpdir_ex <- tempdir()
+    url <- 'omnipath.inbiomap_url' %>% url_parser
+    version <- omnipath_cache_latest_or_new(url = url, create = FALSE)
+    token <- 'none'
 
-    on.exit({
-        closeAllConnections()
-        unlink(tmp_tgz)
-        unlink(tmpdir_ex)
-    })
+    if(is.null(version) || version$status != CACHE_STATUS$READY){
 
-    # acquiring an access token
-    resp_headers <- basicHeaderGatherer()
-    login_response <- basicTextGatherer()
-    payload <- '{"ref":""}'
-    login_curl <- getCurlHandle()
-    opt_set <- curlSetOpt(
-        curl = login_curl,
-        writefunction = login_response$update,
-        headerfunction = resp_headers$update,
-        verbose = .verbose,
-        post = TRUE,
-        postfields = payload,
-        httpheader = 'Content-Type: application/json;charset=utf-8',
-        url = {
-            'omnipath.inbiomap_login_url' %>%
-            options() %>%
-            as.character()
-        }
-    )
-    success <- curlPerform(curl = login_curl)
-    token <- (login_response$value() %>% parse_json())$token
+        # acquiring an access token
+        resp_headers <- basicHeaderGatherer()
+        login_response <- basicTextGatherer()
+        payload <- '{"ref":""}'
+        login_curl <- getCurlHandle()
+        opt_set <- curlSetOpt(
+            curl = login_curl,
+            writefunction = login_response$update,
+            headerfunction = resp_headers$update,
+            verbose = curl_verbose,
+            post = TRUE,
+            postfields = payload,
+            followlocation = TRUE,
+            httpheader = 'Content-Type: application/json;charset=utf-8',
+            url = 'omnipath.inbiomap_login_url' %>% url_parser
+        )
+        success <- curlPerform(curl = login_curl)
+        token <- (login_response$value() %>% parse_json())$token
 
-    # downloading the data
-    main_curl <- getCurlHandle()
-    main_response <- CFILE(tmp_tgz, mode = 'wb')
-    opt_set <- curlSetOpt(
-        curl = main_curl,
-        verbose = .verbose,
-        httpheader = sprintf('Cookie: access_token=%s', token),
-        url = {
-            'omnipath.inbiomap_url' %>%
-            options() %>%
-            as.character()
-        },
-        writedata = main_response@ref
-    )
-    success <- curlPerform(curl = main_curl)
-    RCurl::close(main_response)
+    }
 
-    # extracting the archive
-    tmp_tgz %>%
-    untar(exdir = tmpdir_ex)
-
-    tmpdir_ex %>%
-    file.path('InBio_Map_core_2016_09_12', 'core.psimitab') %>%
-    read_tsv(
-        col_types = cols(),
-        col_names = c(
-            'id_a',
-            'id_b',
-            'id_alt_a',
-            'id_alt_b',
-            'synonyms_a',
-            'synonyms_b',
-            'detection_methods',
-            'ref_first_authors',
-            'references',
-            'organism_a',
-            'organism_b',
-            'interaction_types',
-            'databases',
-            'database_ids',
-            'score',
-            'complex_expansion'
+    # doing the actual download or reading from the cache
+    archive_extractor(
+        url_key = 'omnipath.inbiomap_url',
+        path = 'InBio_Map_core_2016_09_12/core.psimitab',
+        reader = read_tsv,
+        reader_param = list(
+            col_types = cols(),
+            col_names = c(
+                'id_a',
+                'id_b',
+                'id_alt_a',
+                'id_alt_b',
+                'synonyms_a',
+                'synonyms_b',
+                'detection_methods',
+                'ref_first_authors',
+                'references',
+                'organism_a',
+                'organism_b',
+                'interaction_types',
+                'databases',
+                'database_ids',
+                'score',
+                'complex_expansion'
+            ),
+            progress = FALSE
         ),
-        progress = FALSE
+        curl_verbose = curl_verbose,
+        # this is passed to curlSetOpt
+        httpheader = sprintf('Cookie: access_token=%s', token)
     )
 
 }
@@ -129,9 +111,9 @@ inbiomap_raw <- function(.verbose = FALSE){
 #' Downloads the data by \code{\link{inbiomap_raw}}, extracts the
 #' UniProt IDs, Gene Symbols and scores and removes the irrelevant columns.
 #'
-#' @importsFrom magrittr %>%
-#' @importsFrom dplyr mutate select
-#' @importsFrom tidyr separate
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate select
+#' @importFrom tidyr separate
 #' @export
 #'
 #' @return A data frame (tibble) of interactions.
