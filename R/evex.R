@@ -28,8 +28,11 @@
 #' @param min_confidence Numeric: a threshold for confidence scores. EVEX
 #'     confidence scores span roughly from -3 to 3. By providing a numeric
 #'     value in this range the lower confidence interactions can be removed.
+#'     If NULL no filtering performed.
 #' @param remove_negatives Logical: remove the records with the "negation"
 #'     attribute set.
+#' @param top_confidence Confidence cutoff as quantile (a number between
+#'     0 and 1). If NULL no filtering performed.
 #'
 #' @importsFrom magrittr %>% %T>%
 #' @importsFrom readr read_tsv cols
@@ -41,7 +44,8 @@
 #' evex_interactions <- evex_download()
 evex_download <- function(
     min_confidence = NULL,
-    remove_negatives = TRUE
+    remove_negatives = TRUE,
+    top_confidence = NULL
 ){
 
     relations <- archive_extractor(
@@ -73,6 +77,11 @@ evex_download <- function(
         remove_negatives,
         filter(., negation == 0),
         .
+    )} %>%
+    {`if`(
+        is.null(top_confidence),
+        .,
+        filter(., confidence > quantile(confidence, top_confidence))
     )} %>%
     {`if`(
         is.null(min_confidence),

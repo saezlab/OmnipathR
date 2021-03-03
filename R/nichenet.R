@@ -203,6 +203,7 @@ nichenet_gr_network <- function(
 #' @importFrom purrr map2 discard
 #' @importFrom magrittr %>%
 #' @importFrom dplyr bind_rows
+#' @importFrom tibble as_tibble
 nichenet_network <- function(network_type, ...){
 
     list(...) %>%
@@ -215,7 +216,9 @@ nichenet_network <- function(network_type, ...){
             get() %>%
             do.call(args)
         }
-    )
+    ) %>%
+    bind_rows %>%
+    as_tibble
 
 }
 
@@ -469,8 +472,8 @@ nichenet_signaling_network_cpdb <- function(...){
         ),
         database = 'cpdb'
     ) %>%
-    select(-in_complex) %>%
     rename(from = genesymbol_a, to = genesymbol_b) %>%
+    select(from, to, source, database) %>%
     distinct()
 
 }
@@ -492,7 +495,8 @@ nichenet_signaling_network_cpdb <- function(...){
 #' @seealso \code{\link{evex}}
 nichenet_signaling_network_evex <- function(
     top_confidence = .75,
-    indirect = FALSE
+    indirect = FALSE,
+    ...
 ){
 
     categories <- list(
@@ -501,8 +505,7 @@ nichenet_signaling_network_evex <- function(
         Regulation_of_phosphorylation = 'phosphorylation'
     )
 
-    evex_download() %>%
-    filter(confidence > quantile(confidence, top_confidence)) %>%
+    evex_download(top_confidence = top_confidence, ...) %>%
     select(
         from = source_genesymbol,
         to = target_genesymbol,
@@ -849,7 +852,7 @@ nichenet_gr_network_pathwaycommons <- function(
 #'     regulatory network.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate filter relocate
+#' @importFrom dplyr mutate filter relocate select
 nichenet_pathwaycommons_common <- function(interaction_types, label){
 
     pathwaycommons_download() %>%
@@ -863,7 +866,8 @@ nichenet_pathwaycommons_common <- function(interaction_types, label){
         ),
         database = sprintf('pathwaycommons_%s', label)
     ) %>%
-    relocate(from, to)
+    relocate(from, to) %>%
+    select(-type)
 
 }
 

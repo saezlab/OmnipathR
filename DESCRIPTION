@@ -51,7 +51,8 @@ Depends:
     httr,
     stringr,
     readxl,
-    rlang
+    rlang,
+    tibble
 Imports:
     igraph,
     dplyr,
