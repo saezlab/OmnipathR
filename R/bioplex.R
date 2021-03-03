@@ -22,14 +22,16 @@
 
 #' @param version Character: either 1.0, 2.0, 3.0 or HCT116_1.0
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
-#' @importFrom logger log_info
 bioplex_download <- function(version){
 
     result <-
         'omnipath.bioplex_%s_url' %>%
-        generic_downloader(url_key_param = list(version))
+        generic_downloader(
+            url_key_param = list(version),
+            resource = sprintf('BioPlex %s', version)
+        )
 
     names(result) <- c(
         'GeneA',
@@ -43,7 +45,7 @@ bioplex_download <- function(version){
         'p_interaction'
     )
 
-    return(result)
+    result %T>% load_success
 
 }
 
