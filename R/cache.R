@@ -307,8 +307,7 @@ omnipath_cache_remove <- cache_locked %@% function(
             `[`(., .omnipath_cache %>% names %>% setdiff(key)),
             `[`(., key)
         )
-    )} %T>%
-    print() %>%
+    )} %>%
     map(
         omnipath_cache_remove_versions,
         max_age = max_age,
@@ -659,7 +658,7 @@ omnipath_cache_load <- function(
 
         data <- readRDS(path)
         logger::log_trace('Loaded data from RDS `%s`.', path)
-        return(data)
+        return(data %>% origin_cache)
 
     }else{
         logger::log_info('No version is available for key `%s`.', key)
@@ -1337,5 +1336,21 @@ omnipath_write_cache_db <- function(){
     .omnipath_cache %>%
     jsonlite::toJSON(pretty = TRUE, null = 'null') %>%
     write(omnipath_cache_db_path())
+
+}
+
+
+#' Adds an attribute about cache origin
+#'
+#' Creates the attribute `origin` for a data frame (or other object) and
+#' assigns the value "cache".
+#'
+#' @param data Data frame or any kind of object.
+#'
+#' @importFrom magrittr %>%
+origin_cache <- function(data){
+
+    data %>%
+    `attr<-`('origin', 'cache')
 
 }
