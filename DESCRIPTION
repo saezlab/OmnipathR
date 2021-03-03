@@ -47,7 +47,9 @@ Depends:
     yaml,
     digest,
     wand,
-    tools
+    tools,
+    httr,
+    stringr
 Imports:
     igraph,
     dplyr,
