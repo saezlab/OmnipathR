@@ -178,7 +178,7 @@ load_success <- function(data){
     sprintf(
         attr(data, 'source'),
         `if`(from_cache, '', 'down'),
-        data %>% nrow,
+        data %>% {if_null(nrow(.), length(.))},
         `if`(from_cache, ' from cache', '')
     ) %>%
     logger::log_success()
@@ -236,5 +236,17 @@ copy_attrs <- function(to, from, names){
         },
         .init = to
     )
+
+}
+
+
+#' Returns `value1` if it's not NULL otherwise `value2`
+#'
+#' @importFrom magrittr %>%
+if_null <- function(value1, value2){
+
+    value1 %>%
+    is.null %>%
+    `if`(value2, value1)
 
 }
