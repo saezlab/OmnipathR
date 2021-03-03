@@ -77,6 +77,7 @@ remap_dorothea_download <- function(){
 #'
 #' @export
 #' @importFrom readr read_tsv cols
+#' @importFrom magrittr %T>%
 #' @seealso \code{\link{remap_dorothea_download}, \link{remap_filtered}}
 remap_tf_target_download <- function(){
 
@@ -96,8 +97,10 @@ remap_tf_target_download <- function(){
             ),
             col_types = cols(),
             progress = FALSE
-        )
-    )
+        ),
+        resource = 'ReMap'
+    ) %T>%
+    load_success()
 
 }
 

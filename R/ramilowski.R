@@ -20,11 +20,21 @@
 #
 
 
+#' Downloads ligand-receptor interactions from Ramilowski et al. 2015
+#'
+#' Curated ligand-receptor pairs from Supplementary Table 2 of the article
+#' "A draft network of ligand-receptor mediated multicellular signaling in
+#' human" (https://www.nature.com/articles/ncomms8866).
+#'
+#' @export
+#' @importFrom magrittr %T>%
 ramilowski_download <- function(){
 
     xls_downloader(
         url_key = 'omnipath.ramilowski_url',
-        sheet = 'All.Pairs'
-    )
+        sheet = 'All.Pairs',
+        resource = 'Ramilowski et al. 2015'
+    ) %T>%
+    load_success()
 
 }

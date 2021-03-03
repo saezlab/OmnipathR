@@ -29,7 +29,7 @@
 #'     section of the Harmonizome webpage.
 #' @importFrom dplyr mutate select
 #' @importFrom readr read_tsv read_lines
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @export
 harmonizome_download <- function(dataset){
 
@@ -39,7 +39,9 @@ harmonizome_download <- function(dataset){
 
     version <- omnipath_cache_latest_or_new(url = url)
 
-    if(version$status != CACHE_STATUS$READY){
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
 
         download.file(url, version$path, quiet = TRUE)
         omnipath_cache_download_ready(version)
@@ -50,6 +52,9 @@ harmonizome_download <- function(dataset){
     gzfile() %>%
     read_lines() %>%
     `[`(-2) %>%
-    read_tsv(col_types = cols(), progress = FALSE)
+    read_tsv(col_types = cols(), progress = FALSE) %>%
+    source_attrs('Harmonizome', url) %>%
+    origin_cache(from_cache) %T>%
+    load_success()
 
 }

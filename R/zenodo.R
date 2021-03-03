@@ -35,6 +35,7 @@
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param url_key_param List: variables to insert into the `url_key`.
+#' @param ... Passed to \code{\link{archive_extractor}}.
 #'
 #' @return A connection
 #'
@@ -48,7 +49,8 @@ zenodo_download <- function(
     zenodo_record = NULL,
     zenodo_fname = NULL,
     url_param = list(),
-    url_key_param = list()
+    url_key_param = list(),
+    ...
 ){
 
     if(
@@ -71,7 +73,8 @@ zenodo_download <- function(
         url_key_param = url_key_param,
         url_param = url_param,
         reader = reader,
-        reader_param = reader_param
+        reader_param = reader_param,
+        ...
     )
 
 }

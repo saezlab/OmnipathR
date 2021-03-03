@@ -27,6 +27,7 @@
 #' (http://www.nature.com/nrg/journal/v10/n4/index.html).
 #'
 #' @export
+#' @importFrom magrittr %T>%
 tfcensus_download <- function(){
 
     suppressWarnings(
@@ -34,8 +35,10 @@ tfcensus_download <- function(){
             url_key = 'omnipath.tfcensus_url',
             reader_param = list(
                 skip = 11
-            )
+            ),
+            resource = 'TF census'
         )
-    )
+    ) %T>%
+    load_success()
 
 }

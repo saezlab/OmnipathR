@@ -43,7 +43,7 @@
 #' @importFrom tidyr separate_rows
 #' @importFrom dplyr mutate select inner_join left_join pull filter rename
 #' @importFrom dplyr group_by ungroup
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom stringr str_count
 #' @export
 consensuspathdb_download <- function(
@@ -51,7 +51,7 @@ consensuspathdb_download <- function(
     min_score = .9
 ){
 
-    cpdb_raw <-  consensuspathdb_raw_table()
+    cpdb_raw <- consensuspathdb_raw_table()
 
     uniprot_genesymbol <- cpdb_raw %>%
         separate_rows(participants, sep = '[,\\.]') %>%
@@ -80,7 +80,8 @@ consensuspathdb_download <- function(
     left_join(uniprot_genesymbol, by = c('uniprot_a' = 'From')) %>%
     rename(genesymbol_a = To) %>%
     left_join(uniprot_genesymbol, by = c('uniprot_b' = 'From')) %>%
-    rename(genesymbol_b = To)
+    rename(genesymbol_b = To) %T>%
+    load_success()
 
 }
 
@@ -103,7 +104,8 @@ consensuspathdb_raw_table <- function(){
             ),
             skip = 2,
             progress = FALSE
-        )
+        ),
+        resource = 'ConsensusPathDB'
     )
 
 }

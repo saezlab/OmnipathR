@@ -25,14 +25,16 @@
 #' Retrieves the Supplementary Table S6 from Vinayagam et al. 2011.
 #' Find out more at https://doi.org/10.1126/scisignal.2001699
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom readxl read_xls
 #' @importFrom utils unzip
 #' @export
 vinayagam_download <- function(){
 
     'omnipath.vinayagam_url' %>%
-    archive_downloader() %>%
+    archive_downloader() %T>%
+    {assign('from_cache', .$from_cache, envir = parent.frame(6))} %T>%
+    {assign('url', .$url, envir = parent.frame(6))} %>%
     `$`('path') %>%
     unzip(
         files = '2001699_Tables_S1_S2_S6.xls',
@@ -42,6 +44,9 @@ vinayagam_download <- function(){
     read_xls(
         sheet = 'S6',
         progress = FALSE
-    )
+    ) %>%
+    origin_cache(from_cache) %>%
+    source_attrs('Vinayagam et al. 2011', url = url) %T>%
+    load_success()
 
 }

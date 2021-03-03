@@ -25,7 +25,7 @@
 #' (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
 #' combines the interactions and references into a single data frame.
 #'
-#' @importsFrom magrittr %>%
+#' @importsFrom magrittr %>% %T>%
 #' @importsFrom readr read_tsv cols
 #' @importsFrom dplyr left_join mutate group_by summarize_all first ungroup
 #' @importsFrom dplyr rename
@@ -45,7 +45,8 @@ evex_download <- function(...){
                 target_entrezgene_id = col_character()
             ),
             progress = FALSE
-        )
+        ),
+        resource = 'EVEX'
     )
 
     articles <- archive_extractor(
@@ -82,6 +83,7 @@ evex_download <- function(...){
     group_by(general_event_id) %>%
     mutate(references = paste(references, sep = ',')) %>%
     summarize_all(first) %>%
-    ungroup()
+    ungroup() %T>%
+    load_success()
 
 }

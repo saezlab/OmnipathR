@@ -40,7 +40,9 @@ regnetwork_download <- function(organism = 'human'){
 
     version <- omnipath_cache_latest_or_new(url = url)
 
-    if(version$status != CACHE_STATUS$READY){
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
 
 
         url %>% download.file(destfile = version$path, quiet = TRUE)
@@ -71,7 +73,10 @@ regnetwork_download <- function(organism = 'human'){
     mutate(
         source_type = mirna_or_protein(source_entrez),
         target_type = mirna_or_protein(target_entrez)
-    )
+    ) %>%
+    origin_cache(from_cache) %>%
+    source_attrs('RegNetwork', url) %T>%
+    load_success()
 
 }
 

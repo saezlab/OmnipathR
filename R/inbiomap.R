@@ -23,13 +23,13 @@
 #' Downloads network data from InWeb InBioMap
 #'
 #' Downloads the data from
-#' https://inbio-discover.intomics.com/map.html#downloads in tar.gz format,
+#' https://inbio-discover.com/map.html#downloads in tar.gz format,
 #' extracts the PSI MITAB table and returns it as a data frame.
 #'
 #' @param .verbose Logical. Perform CURL requests in verbose mode for
 #'     debugging purposes.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom RCurl basicHeaderGatherer basicTextGatherer CFILE
 #' @importFrom RCurl getCurlHandle curlSetOpt curlPerform close
 #' @importFrom jsonlite parse_json
@@ -100,8 +100,10 @@ inbiomap_raw <- function(curl_verbose = FALSE){
         ),
         curl_verbose = curl_verbose,
         # this is passed to curlSetOpt
-        httpheader = sprintf('Cookie: access_token=%s', token)
-    )
+        httpheader = sprintf('Cookie: access_token=%s', token),
+        resource = 'InWeb InBioMap'
+    ) %T>%
+    load_success()
 
 }
 

@@ -30,7 +30,7 @@
 #' @return A data frame of TF-target interactions.
 #'
 #' @export
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr mutate recode separate_rows
 trrust_download <- function(organism = 'human'){
 
@@ -44,7 +44,8 @@ trrust_download <- function(organism = 'human'){
                 'effect',
                 'reference'
             )
-        )
+        ),
+        resource = 'TRRUST'
     ) %>%
     mutate(
         effect = recode(
@@ -57,6 +58,7 @@ trrust_download <- function(organism = 'human'){
     separate_rows(
         reference,
         sep = ';'
-    )
+    ) %T>%
+    load_success()
 
 }

@@ -28,7 +28,7 @@
 #' @return A tibble (data frame) of interactions as it is provided by the
 #' database
 #' @export
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom readr cols col_character col_number
 #' @importFrom tidyr separate_rows
 guide2pharma_download <- function(){
@@ -46,9 +46,11 @@ guide2pharma_download <- function(){
                 target_ligand_uniprot = col_character(),
                 target_ligand_ensembl_gene_id = col_character()
             )
-        )
+        ),
+        resource = 'Guide to Pharmacology (IUPHAR/BPS)'
     ) %>%
-    separate_rows(ligand_gene_symbol, sep = '[|]') %>%
-    separate_rows(target_gene_symbol, sep = '[|]')
+    separate_rows(ligand_gene_symbol, sep = '\\|') %>%
+    separate_rows(target_gene_symbol, sep = '\\|') %T>%
+    load_success()
 
 }

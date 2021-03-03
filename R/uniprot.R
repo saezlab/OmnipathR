@@ -60,7 +60,9 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
         ext = 'rds'
     )
 
-    if(version$status != CACHE_STATUS$READY){
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
 
         POST(url = url, body = post) %>%
         content(encoding = 'ASCII') %>%
@@ -73,7 +75,10 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 
     }
 
-    omnipath_cache_load(url = url, post = post)
+    omnipath_cache_load(url = url, post = post) %>%
+    origin_cache(from_cache) %>%
+    source_attrs('UniProt', url) %T>%
+    load_success()
 
 }
 
@@ -159,7 +164,7 @@ translate_ids <- function(
 #'     9606 for human).
 #'
 #' @importsFrom readr read_tsv cols
-#' @importsFrom magrittr %>%
+#' @importsFrom magrittr %>% %T>%
 #' @export
 #'
 #' @examples
@@ -178,8 +183,10 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     generic_downloader(
         url_key = 'omnipath.all_uniprots_url',
         url_param = list(fields, organism, reviewed),
-        reader_param = list(progress = FALSE)
-    )
+        reader_param = list(progress = FALSE),
+        resource = 'UniProt'
+    ) %T>%
+    load_success()
 
 }
 

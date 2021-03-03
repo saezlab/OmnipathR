@@ -29,6 +29,7 @@
 #'
 #' @export
 #' @importFrom readr cols col_skip
+#' @importFrom magrittr %T>%
 htridb_download <- function(){
 
     suppressWarnings(
@@ -40,8 +41,10 @@ htridb_download <- function(){
                 col_types = cols(
                     X8 = col_skip()
                 )
-            )
+            ),
+            resource = 'HTRIdb'
         )
-    )
+    ) %T>%
+    load_success()
 
 }
