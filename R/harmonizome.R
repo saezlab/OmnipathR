@@ -50,7 +50,7 @@ harmonizome_download <- function(dataset){
 
     version$path %>%
     gzfile() %>%
-    read_lines() %>%
+    read_lines(progress = FALSE) %>%
     `[`(-2) %>%
     read_tsv(col_types = cols(), progress = FALSE) %>%
     source_attrs('Harmonizome', url) %>%

@@ -34,7 +34,7 @@
 #' @param gr_network A list of parameters for building the gene regulatory
 #'     network, passed to \code{\link{nichenet_gr_network}}
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom purrr map2
 #' @export
 #'
@@ -47,7 +47,8 @@ nichenet_prior_knowledge <- function(
 ){
 
     environment() %>%
-    as.list() %>%
+    as.list() %T>%
+    {logger::log_success('Building NicheNet prior knowledge')} %>%
     map2(
         names(.),
         function(args, network_type){
@@ -56,7 +57,8 @@ nichenet_prior_knowledge <- function(
             get() %>%
             do.call(args)
         }
-    )
+    ) %T>%
+    {logger::log_success('Finished building NicheNet prior knowledge')}
 
 }
 
@@ -206,8 +208,18 @@ nichenet_gr_network <- function(
 #' @importFrom tibble as_tibble
 nichenet_network <- function(network_type, ...){
 
+    network_types <- list(
+        signaling = 'signaling',
+        lr = 'ligand-receptor',
+        gr = 'gene regulatory'
+    )
+
     list(...) %>%
-    discard(is.null) %>%
+    discard(is.null) %T>%
+    {logger::log_success(
+        'Starting to build NicheNet %s network',
+        network_types[[network_type]]
+    )} %>%
     map2(
         names(.),
         function(args, resource){
@@ -218,7 +230,12 @@ nichenet_network <- function(network_type, ...){
         }
     ) %>%
     bind_rows %>%
-    as_tibble
+    as_tibble  %T>%
+    {logger::log_success(
+        'Finished building NicheNet %s network: %d records total',
+        network_types[[network_type]],
+        nrow(.)
+    )}
 
 }
 
