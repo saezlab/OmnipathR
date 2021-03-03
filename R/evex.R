@@ -25,15 +25,24 @@
 #' (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
 #' combines the interactions and references into a single data frame.
 #'
+#' @param min_confidence Numeric: a threshold for confidence scores. EVEX
+#'     confidence scores span roughly from -3 to 3. By providing a numeric
+#'     value in this range the lower confidence interactions can be removed.
+#' @param remove_negatives Logical: remove the records with the "negation"
+#'     attribute set.
+#'
 #' @importsFrom magrittr %>% %T>%
 #' @importsFrom readr read_tsv cols
 #' @importsFrom dplyr left_join mutate group_by summarize_all first ungroup
-#' @importsFrom dplyr rename
+#' @importsFrom dplyr rename filter
 #' @export
 #'
 #' @examples
 #' evex_interactions <- evex_download()
-evex_download <- function(...){
+evex_download <- function(
+    min_confidence = NULL,
+    remove_negatives = TRUE
+){
 
     relations <- archive_extractor(
         url_key = 'omnipath.evex_url',
@@ -60,6 +69,16 @@ evex_download <- function(...){
     )
 
     relations %>%
+    {`if`(
+        remove_negatives,
+        filter(., negation == 0),
+        .
+    )} %>%
+    {`if`(
+        is.null(min_confidence),
+        .,
+        filter(., confidence >= min_confidence)
+    )} %>%
     translate_ids(
         source_entrezgene_id,
         source_genesymbol,
@@ -83,7 +102,8 @@ evex_download <- function(...){
     group_by(general_event_id) %>%
     mutate(references = paste(references, sep = ',')) %>%
     summarize_all(first) %>%
-    ungroup() %T>%
+    ungroup() %>%
+    copy_source_attrs(relations) %T>%
     load_success()
 
 }
