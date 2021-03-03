@@ -49,7 +49,9 @@ Depends:
     wand,
     tools,
     httr,
-    stringr
+    stringr,
+    readxl,
+    rlang
 Imports:
     igraph,
     dplyr,
