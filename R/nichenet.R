@@ -302,12 +302,15 @@ nichenet_gr_network_omnipath <- function(
 
 #' Processes OmniPath interactions table into NicheNet format
 #'
-#' @importFrom dplyr select mutate distinct
+#' @importFrom dplyr select mutate distinct separate_rows
 #' @importFrom magrittr %>%
 omnipath_interactions_postprocess <- function(interactions){
 
     interactions %>%
     select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
+    # expanding complexes
+    separate_rows(from, sep = '_') %>%
+    separate_rows(to, sep = '_') %>%
     mutate(
         source = ifelse(
             is_directed,
