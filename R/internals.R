@@ -150,6 +150,12 @@ xls_downloader <- function(
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
+#' @param cache_by_url Logical: at the cache handling consider only the URL,
+#'     and ignore the POST parameters or the data payload. This is useful if
+#'     the download requires an access token which varies at each download
+#'     but at reading from the cache no need for token.
+#' @param ... Additional options for cURL. Passed to
+#'     `curlSetOpt`.
 #'
 #' @importFrom utils unzip untar
 #' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
@@ -158,7 +164,10 @@ archive_downloader <- function(
     url_key,
     url_key_param = list(),
     url_param = list(),
-    curl_verbose = FALSE
+    post = NULL,
+    curl_verbose = FALSE,
+    cache_by_url = NULL,
+    ...
 ){
 
     url <- url_parser(
@@ -167,7 +176,13 @@ archive_downloader <- function(
         url_param = url_param
     )
 
-    version <- omnipath_cache_latest_or_new(url = url)
+    cache_url <- `if`(is.null(cache_by_url), url, cache_by_url)
+    cache_post <- `if`(is.null(cache_by_url), post, NULL)
+
+    version <- omnipath_cache_latest_or_new(
+        url = cache_url,
+        post = cache_post
+    )
 
     if(version$status != CACHE_STATUS$READY){
 
@@ -178,7 +193,8 @@ archive_downloader <- function(
             curl = curl_handle,
             url = url,
             verbose = curl_verbose,
-            writedata = response@ref
+            writedata = response@ref,
+            ...
         )
         success <- curlPerform(curl = curl_handle)
         RCurl::close(response)
@@ -197,7 +213,7 @@ archive_downloader <- function(
 
     list(
         path = version$path,
-        url = url,
+        url = cache_url,
         files = extractor(version$path, list = TRUE),
         ext = record$ext
     )
@@ -209,12 +225,18 @@ archive_downloader <- function(
 #'
 #' @param url_key Character: name of the option containing the URL
 #' @param path Character: path to the file within the archive. If NULL, the
-#' first file will be extracted (not recommended).
+#'     first file will be extracted (not recommended).
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
-#' returned from the options).
+#'     returned from the options).
+#' @param post List: POST parameters. If NULL, a GET query is performed.
 #' @param reader Optional, a function to read the connection.
 #' @param reader_param List: arguments for the reader function.
+#' @param cache_by_url Character: at the cache handling use this URL instead
+#'     of the one provided in `url` and ignore the POST parameters or the
+#'     data payload. This is useful if the download requires an access token
+#'     which varies at each download but at reading from the cache no need
+#'     for token.
 #'
 #' @return A connection to the extracted file or a
 #'
@@ -226,15 +248,24 @@ archive_extractor <- function(
     path = NULL,
     url_key_param = list(),
     url_param = list(),
+    post = NULL,
     reader = NULL,
-    reader_param = list()
+    reader_param = list(),
+    cache_by_url = NULL,
+    ...
 ){
 
     archive_data <- archive_downloader(
         url_key = url_key,
         url_key_param = url_key_param,
-        url_param = url_param
+        url_param = url_param,
+        post = post,
+        cache_by_url = cache_by_url,
+        ...
     )
+
+    # fallback to the first file
+    path <- `if`(is.null(path), paths_in_archive(archive_data)[1], path)
 
     if(!(path %in% paths_in_archive(archive_data))){
 
@@ -249,9 +280,6 @@ archive_extractor <- function(
 
     }
 
-    # fallback to the first file
-    path <- `if`(is.null(path), paths_in_archive(archive_data)[1], path)
-
     if(archive_data$ext == 'zip'){
 
         con <-
@@ -263,7 +291,7 @@ archive_extractor <- function(
         archive_data$path %>% untar(files = path, exdir = tempdir())
         con <-
             tempdir() %>%
-            file.path(basename(path)) %>%
+            file.path(path) %>%
             file(open = 'rb')
 
     }
