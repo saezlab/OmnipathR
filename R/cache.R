@@ -549,6 +549,8 @@ omnipath_cache_get <- function(
 #' @param url URL pointing to the resource
 #' @param post HTTP POST parameters as a list
 #' @param payload HTTP data payload
+#' @param create Logical: whether to create and return a new version. If
+#'     FALSE only the latest existing valid version is returned, if available.
 #' @return A cache version item.
 #' @export
 omnipath_cache_latest_or_new <- function(
@@ -556,6 +558,7 @@ omnipath_cache_latest_or_new <- function(
     url = NULL,
     post = NULL,
     payload = NULL,
+    create = TRUE,
     ...
 ){
 
@@ -570,7 +573,7 @@ omnipath_cache_latest_or_new <- function(
 
     version <- omnipath_cache_latest_version(record)
 
-    if(is.null(version)){
+    if(is.null(version) && create){
 
         version <-
             cache_locked(
@@ -579,7 +582,11 @@ omnipath_cache_latest_or_new <- function(
 
     }
 
-    version <- .omnipath_cache[[record$key]]$versions[[version]]
+    if(!is.null(version)){
+
+        version <- .omnipath_cache[[record$key]]$versions[[version]]
+
+    }
 
     return(version)
 
