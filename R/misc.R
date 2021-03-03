@@ -197,15 +197,18 @@ load_success <- function(data){
 #' @importFrom magrittr %>%
 add_defaults <- function(param, fun, defaults){
 
+    this_env <- environment()
+
     defaults %>%
     walk2(
         names(.),
-        function(key, value){
+        function(value, key){
             if(
                 !(key %in% names(param)) &&
                 key %in% names(formals(fun))
             ){
                 param[[key]] <- value
+                assign('param', param, this_env)
             }
         }
     )
