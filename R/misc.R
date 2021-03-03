@@ -163,3 +163,53 @@ url_rds <- function(URL){
     readRDS
 
 }
+
+
+#' Issues a log message about successful loading of a dataset
+#'
+#' @param data A data frame.
+#'
+#' @importFrom magrittr %>%
+load_success <- function(data){
+
+    from_cache <- data %>% attr('origin') %>% {!is.null(.) && . == 'cache'}
+
+    '%s: %sloaded %d records%s' %>%
+    sprintf(
+        attr(data, 'source'),
+        `if`(from_cache, '', 'down'),
+        data %>% nrow,
+        `if`(from_cache, ' from cache', '')
+    ) %>%
+    logger::log_success()
+
+}
+
+
+#' Adds default parameters to a list of function arguments
+#'
+#' @param list The actual parameters typically provided by the user.
+#' @param fun The function the parameters will be passed to.
+#' @param defaults Named list with the default arguments which should be
+#'     added to `param` if they are suitable for `fun` and if they haven't
+#'     been overridden by `param`.
+#'
+#' @importFrom magrittr %>%
+add_defaults <- function(param, fun, defaults){
+
+    defaults %>%
+    walk2(
+        names(.),
+        function(key, value){
+            if(
+                !(key %in% names(param)) &&
+                key %in% names(formals(fun))
+            ){
+                param[[key]] <- value
+            }
+        }
+    )
+
+    return(param)
+
+}
