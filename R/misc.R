@@ -213,3 +213,25 @@ add_defaults <- function(param, fun, defaults){
     return(param)
 
 }
+
+
+#' Copies attributes from one object to another
+#'
+#' @param to The object to copy the attribute to.
+#' @param from The object to copy the attribute from.
+#' @param names Character: the names of the attributes
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr reduce
+copy_attrs <- function(to, from, names){
+
+    names %>%
+    reduce(
+        function(target, name){
+            target %>%
+            `attr<-`(name, attr(from, name))
+        },
+        .init = to
+    )
+
+}

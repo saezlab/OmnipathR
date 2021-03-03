@@ -322,7 +322,7 @@ archive_extractor <- function(
 
         result %>%
         origin_cache(archive_data$from_cache) %>%
-        source_attrs(resouce, archive_data$url)
+        source_attrs(resource, archive_data$url)
 
     }
 
@@ -369,5 +369,19 @@ source_attrs <- function(data, resource, url){
     `attr<-`('resource', resource) %>%
     `attr<-`('url', url) %>%
     `attr<-`('source', source)
+
+}
+
+
+#' Copies attributes about its sources from one object to another
+#'
+#' @param to The object to copy attributes to.
+#' @param from The object to copy attributes from.
+#'
+#' @importFrom magrittr %>%
+copy_source_attrs <- function(to, from){
+
+    to %>%
+    copy_attrs(from, c('source', 'resource', 'url', 'origin'))
 
 }

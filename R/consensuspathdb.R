@@ -80,7 +80,8 @@ consensuspathdb_download <- function(
     left_join(uniprot_genesymbol, by = c('uniprot_a' = 'From')) %>%
     rename(genesymbol_a = To) %>%
     left_join(uniprot_genesymbol, by = c('uniprot_b' = 'From')) %>%
-    rename(genesymbol_b = To) %T>%
+    rename(genesymbol_b = To) %>%
+    copy_source_attrs(cpdb_raw) %T>%
     load_success()
 
 }
