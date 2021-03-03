@@ -55,11 +55,7 @@ Depends:
     tibble
 Imports:
     igraph,
-    dplyr,
     stats,
-    rlang,
-    tidyr,
-    readr,
     logger
 Suggests:
     dnet,
