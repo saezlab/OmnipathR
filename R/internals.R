@@ -58,7 +58,7 @@ url_parser <- function(
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param reader_param List: options for the reader function.
-#' @param resource Character: the name of the resource
+#' @param resource Character: name of the resource.
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_tsv cols
@@ -122,7 +122,8 @@ xls_downloader <- function(
     sheet = NULL,
     url_key_param = list(),
     url_param = list(),
-    ext = 'xlsx'
+    ext = 'xlsx',
+    resource = NULL
 ){
 
     url <- url_parser(
@@ -133,14 +134,18 @@ xls_downloader <- function(
 
     version <- omnipath_cache_latest_or_new(url = url, ext = ext)
 
-    if(version$status != CACHE_STATUS$READY){
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
 
         download.file(url = url, destfile = version$path, quiet = TRUE)
         omnipath_cache_download_ready(version)
 
     }
 
-    read_excel(version$path, sheet = sheet)
+    read_excel(version$path, sheet = sheet) %>%
+    origin_cache(from_cache) %>%
+    source_attrs(resource, url)
 
 }
 
@@ -188,7 +193,9 @@ archive_downloader <- function(
         post = cache_post
     )
 
-    if(version$status != CACHE_STATUS$READY){
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
 
         # downloading the data
         curl_handle <- getCurlHandle()
@@ -219,13 +226,14 @@ archive_downloader <- function(
         path = version$path,
         url = cache_url,
         files = extractor(version$path, list = TRUE),
-        ext = record$ext
+        ext = record$ext,
+        from_cache = from_cache
     )
 
 }
 
 
-#' Generic method to download a zip archive and extract one file
+#' Generic method to download an archive and extract one file
 #'
 #' @param url_key Character: name of the option containing the URL
 #' @param path Character: path to the file within the archive. If NULL, the
@@ -241,6 +249,7 @@ archive_downloader <- function(
 #'     data payload. This is useful if the download requires an access token
 #'     which varies at each download but at reading from the cache no need
 #'     for token.
+#' @param resource Character: name of the resource.
 #'
 #' @return A connection to the extracted file or a
 #'
@@ -256,6 +265,7 @@ archive_extractor <- function(
     reader = NULL,
     reader_param = list(),
     cache_by_url = NULL,
+    resource = NULL,
     ...
 ){
 
@@ -309,7 +319,10 @@ archive_extractor <- function(
         reader_param %<>% c(list(con), .)
         result <- do.call(reader, reader_param)
         base::close(con)
-        return(result)
+
+        result %>%
+        origin_cache(archive_data$from_cache) %>%
+        source_attrs(resouce, archive_data$url)
 
     }
 

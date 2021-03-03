@@ -1348,9 +1348,9 @@ omnipath_write_cache_db <- function(){
 #' @param data Data frame or any kind of object.
 #'
 #' @importFrom magrittr %>%
-origin_cache <- function(data){
+origin_cache <- function(data, from_cache = TRUE){
 
     data %>%
-    `attr<-`('origin', 'cache')
+    {`if`(from_cache, `attr<-`(., 'origin', 'cache'), .)}
 
 }
