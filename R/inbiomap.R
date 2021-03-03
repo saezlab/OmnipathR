@@ -121,8 +121,8 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @seealso \code{\link{inbiomap_raw}}
 #'
 #' @examples
-#' inbiomap_interactions <- inbiomap()
-inbiomap <- function(...){
+#' inbiomap_interactions <- inbiomap_download()
+inbiomap_download <- function(...){
 
     .extract_id <- function(x){
 
