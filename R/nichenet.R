@@ -20,14 +20,24 @@
 #
 
 
-#' Builds NicheNet prior knowledge
+#' Executes the full NicheNet pipeline
 #'
 #' Builds all prior knowledge data required by NicheNet. For this it calls
 #' a multitude of methods to download and combine data from various
 #' databases according to the settings. The content of the prior knowledge
 #' data is highly customizable, see the documentation of the related
-#' functions.
+#' functions. After the prior knowledge is ready, it performs parameter
+#' optimization to build a NicheNet model. This results a weighted ligand-
+#' target matrix. Then, considering the expressed genes from user provided
+#' data, a gene set of interest and background genes, it executes the
+#' NicheNet ligand activity analysis.
 #'
+#' @param only_omnipath Logical: use only OmniPath for network knowledge.
+#'     This is a simple switch for convenience, further options are available
+#'     by the other arguments. By default we use all available resources.
+#'     The networks can be customized on a resource by resource basis, as
+#'     well as providing custom parameters for individual resources, using
+#'     the parameters `signaling_network`, `lr_network` and `gr_network`.
 #' @param signaling_network A list of parameters for building the signaling
 #'     network, passed to \code{\link{nichenet_signaling_network}}
 #' @param lr_network A list of parameters for building the ligand-receptor
@@ -52,7 +62,8 @@
 #'     \link{nichenet_signaling_network},
 #'     \link{nichenet_lr_network},
 #'     \link{nichenet_gr_network}}
-nichenet_prior_knowledge <- function(
+nichenet_main <- function(
+    only_omnipath = FALSE,
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
@@ -78,6 +89,9 @@ nichenet_prior_knowledge <- function(
 
     expression <- nichenet_expression_data() %>%
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
+
+    logger::log_success('Finished building NicheNet prior knowledge')
+    logger::log_success('Building NicheNet model.')
 
     networks %>%
     nichenet_optimization(
@@ -123,10 +137,8 @@ nichenet_prior_knowledge <- function(
     do.call(what = nichenet_ligand_target_matrix) %>%
     c(
         list(optimized_parameters = optimized_parameters)
-    )
-
-
-    logger::log_success('Finished building NicheNet prior knowledge')
+    ) %T>%
+    {logger::log_success('Finished building NicheNet model.')}
 
 }
 
