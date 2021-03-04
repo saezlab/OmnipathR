@@ -46,7 +46,7 @@
 #'     and final outputs from NicheNet methods.
 #'
 #' @export
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #'
 #' @seealso \code{\link{nichenet_networks},
 #'     \link{nichenet_signaling_network},
@@ -62,6 +62,8 @@ nichenet_prior_knowledge <- function(
     construct_ligand_target_matrix_param = list(),
     results_dir = NULL
 ){
+
+    top_env <- environment()
 
     results_dir %>%
     if_null(options('omnipath.nichenet_results_dir')) %>%
@@ -84,8 +86,33 @@ nichenet_prior_knowledge <- function(
             make_multi_objective_function_param,
         objective_function_param = objective_function_param,
         mlrmbo_optimization_param = mlrmbo_optimization_param
+    ) %T>%
+    assign(x = 'optimization_results', value = ., envir = top_env) %>%
+    nichenet_build_model(networks = networks, weighted = FALSE) %>%
+    c(
+        list(
+            lr_network = networks$lr_network
+            construct_ligand_target_matrix_param =
+                construct_ligand_target_matrix_param,
+            weighted = FALSE
+        )
+    ) %T>%
+    assign(
+        x = 'optimized_parameters',
+        value = .$optimized_parameters,
+        envir = top_env
     ) %>%
-    nichenet_build_model(networks = networks) %>%
+    do.call(what = nichenet_ligand_target_matrix) %>%
+    # second run with weights
+    {nichenet_build_model(
+        networks = networks,
+        optimization_results = optimization_results
+    )} %T>%
+    assign(
+        x = 'weighted_networks',
+        value = .$weighted_networks,
+        envir = top_env
+    ) %>%
     c(
         list(
             lr_network = networks$lr_network
@@ -93,7 +120,11 @@ nichenet_prior_knowledge <- function(
                 construct_ligand_target_matrix_param
         )
     ) %>%
-    do.call(what = nichenet_ligand_target_matrix)
+    do.call(what = nichenet_ligand_target_matrix) %>%
+    c(
+        list(optimized_parameters = optimized_parameters)
+    )
+
 
     logger::log_success('Finished building NicheNet prior knowledge')
 
@@ -272,16 +303,22 @@ nichenet_optimization <- function(
 #' @param networks A list with NicheNet format signaling, ligand-receptor
 #'     and gene regulatory networks as produced by
 #'     \code{\link{nichenet_networks}}.
+#' @param weighted Logical: whether to use the optimized weights.
 #'
 #' @export
 #' @importFrom purrr map
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr pull
-nichenet_build_model <- function(optimization_results, networks){
+nichenet_build_model <- function(
+    optimization_results,
+    networks,
+    weighted = TRUE
+){
 
     # all resources with initial weights of 1
-    resource_weights <- networks %>%
+    resource_weights <-
+        networks %>%
         map(list('source', unique)) %>%
         unlist %>%
         unique %>%
@@ -298,7 +335,12 @@ nichenet_build_model <- function(optimization_results, networks){
 
     weighted_networks_rds_path <-
         nichenet_results_dir() %>%
-        file.path('weighted_networks.rds')
+        file.path(
+            sprintf(
+                'weighted_networks%s.rds',
+                `if`(weighted, '_weighted', '')
+            )
+        )
 
     logger::success('Creating weighted networks.')
 
@@ -306,7 +348,11 @@ nichenet_build_model <- function(optimization_results, networks){
         lr_network = networks$lr_network,
         sig_network = networks$signaling_network,
         gr_network = networks$gr_network,
-        source_weights_df = resource_weights
+        source_weights_df = `if`(
+            weighted,
+            optimization_results$source_weight_df
+            resource_weights
+        )
     ) %T>%
     {logger::success('Applying hub corrections.')} %>%
     nichenetr::apply_hub_corrections(
@@ -345,6 +391,7 @@ nichenet_ligand_target_matrix <- function(
     weighted_networks,
     lr_network,
     optimized_parameters,
+    weighted = TRUE,
     construct_ligand_target_matrix_param = list()
 ){
 
@@ -352,7 +399,12 @@ nichenet_ligand_target_matrix <- function(
 
     ligand_target_matrix_rds_path <-
         nichenet_results_dir() %>%
-        file.path('ligand_target_matrix.rds')
+        file.path(
+            sprintf(
+                'ligand_target_matrix%s.rds',
+                `if`(weighted, '_weighted', '')
+            )
+        )
 
     construct_ligand_target_matrix_param %>%
     add_defaults(
@@ -371,7 +423,12 @@ nichenet_ligand_target_matrix <- function(
     {logger::success(
         'Created ligand-target matrix, saved to `%s`.',
         ligand_target_matrix_rds_path
-    )}
+    )} %>%
+    list(
+        ligand_target_matrix = .,
+        weighted_networks = weighted_networks
+    )
+
 
 }
 
