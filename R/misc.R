@@ -129,7 +129,7 @@ file_extension <- function(name){
 }
 
 
-#' Adds an extension
+#' Adds an extension to a path or file name
 file_add_extension <- function(fname, ext){
 
     ifelse(

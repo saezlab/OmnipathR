@@ -25,7 +25,222 @@
 #' Builds all prior knowledge data required by NicheNet. For this it calls
 #' a multitude of methods to download and combine data from various
 #' databases according to the settings. The content of the prior knowledge
-#' data is highly customizable, see more in Details.
+#' data is highly customizable, see the documentation of the related
+#' functions.
+#'
+#' @param signaling_network A list of parameters for building the signaling
+#'     network, passed to \code{\link{nichenet_signaling_network}}
+#' @param lr_network A list of parameters for building the ligand-receptor
+#'     network, passed to \code{\link{nichenet_lr_network}}
+#' @param gr_network A list of parameters for building the gene regulatory
+#'     network, passed to \code{\link{nichenet_gr_network}}
+#' @param results_dir Character: path to the directory to save intermediate
+#'     and final outputs from NicheNet methods.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#'
+#' @seealso \code{\link{nichenet_networks},
+#'     \link{nichenet_signaling_network},
+#'     \link{nichenet_lr_network},
+#'     \link{nichenet_gr_network}}
+nichenet_prior_knowledge <- function(
+    signaling_network = list(),
+    lr_network = list(),
+    gr_network = list(),
+    results_dir = NULL
+){
+
+    results_dir %>%
+    if_null(options('omnipath.nichenet_results_dir')) %>%
+    options(omnipath.nichenet_results_dir = .)
+
+    logger::log_success('Building NicheNet prior knowledge')
+    networks <- nichenet_networks(
+        signaling_network = signaling_network,
+        lr_network = lr_network,
+        gr_network = gr_network
+    )
+
+    expression <- nichenet_expression_data() %>%
+        nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
+
+    optimization_results <- networks %>%
+        nichenet_optimization(expression = expression)
+
+    logger::log_success('Finished building NicheNet prior knowledge')
+
+}
+
+
+#' Removes experiments with orphan ligands
+#'
+#' Removes from the expression data the perturbation experiments involving
+#' ligands without connections.
+#'
+#' @param expression Expression data as returned by
+#'     \code{\link{nichenet_expression_data}}.
+#' @param lr_network A NicheNet format ligand-recptor network data frame as
+#'     produced by \code{\link{nichenet_lr_network}}.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom purrr keep
+nichenet_remove_orphan_ligands <- function(expression, lr_network){
+
+    all_ligands <- networks$lr_network$from %>% unique
+
+    keep(
+        function(record){
+            all(record$from %in% all_ligands)
+        }
+    )
+
+}
+
+
+#' Optimizes NicheNet model parameters
+#'
+#' Optimize NicheNet method parameters, i.e. PageRank parameters and source
+#' weights, basedon a collection of experiments where the effect of a ligand
+#' on gene expression was measured.
+#'
+#' @param networks A list with NicheNet format signaling, ligand-receptor
+#'     and gene regulatory networks as produced by
+#'     \code{\link{nichenet_networks}}.
+#' @param ... Override parameters for
+#'     \code{nichenetr::mlrmbo_optimization}.
+#'
+#' @export
+#' @importFrom magrittr %>% %T>%
+#' @importFrom purrr map
+#' @importFrom dplyr mutate
+nichenet_optimization <- function(networks, expression, ...){
+
+    resources <-
+        networks %>%
+        map(list('source', unique)) %>%
+        unlist %>%
+        unique
+
+    n_resources <- resources %>% length
+
+    mof_topology_correction <- smoof::makeMultiObjectiveFunction(
+        name = 'nichenet_optimization',
+        description = paste(
+            'Data source weight and hyperparameter optimization:'
+            'expensive black-box function'
+        ),
+        fn = nichenetr::model_evaluation_optimization,
+        par.set = ParamHelpers::makeParamSet(
+            ParamHelpers::makeNumericVectorParam(
+                'source_weights',
+                len = n_resources,
+                lower = 0,
+                upper = 1,
+                tunable = FALSE
+            ),
+            ParamHelpers::makeNumericVectorParam(
+                'lr_sig_hub',
+                len = 1,
+                lower = 0,
+                upper = 1,
+                tunable = TRUE
+            ),
+            ParamHelpers::makeNumericVectorParam(
+                'gr_hub',
+                len = 1,
+                lower = 0,
+                upper = 1,
+                tunable = TRUE
+            ),
+            ParamHelpers::makeNumericVectorParam(
+                'ltf_cutoff',
+                len = 1,
+                lower = 0.9,
+                upper = 0.999,
+                tunable = TRUE
+            ),
+            ParamHelpers::makeNumericVectorParam(
+                'damping_factor',
+                len = 1,
+                lower = 0.01,
+                upper = 0.99,
+                tunable =TRUE
+            )
+        ),
+        has.simple.signature = FALSE,
+        n.objectives = 4,
+        noisy = FALSE,
+        minimize = rep(FALSE, 4)
+    )
+
+    obj_fun_param <- list(
+        source_names = resources,
+        algorithm = 'PPR',
+        correct_topology = FALSE,
+        lr_network = networks$lr_network,
+        sig_network = networks$signaling_network,
+        gr_network = networks$gr_network,
+        settings = expression %>% map(
+            nichenetr::convert_expression_settings_evaluation
+        ),
+        secondary_targets = FALSE,
+        remove_direct_links = 'no',
+        cutoff_method = 'quantile'
+    )
+
+    nichenetr::mlrmbo_optimization(
+        obj_fun = mof_topology_correction,
+        niter = 8,
+        ncores = 8,
+        nstart = 160,
+        additional_arguments = obj_fun_param
+    ) %T>%
+    saveRDS(
+        nichenet_results_dir() %>%
+        file.path('optimization_results.rds')
+    )
+
+}
+
+
+
+#' @importFrom tibble tibble
+nichenet_build_model <- function(networks){
+
+    # all resources with initial weights of 1
+    resource_weights <- networks %>%
+        map(list('source', unique)) %>%
+        unlist %>%
+        unique %>%
+        {tibble(source = .)} %>%
+        mutate(weight = 1)
+
+}
+
+
+#' Path to the current NicheNet results directory
+#'
+#' Path to the directory to save intermediate and final outputs from NicheNet
+#' methods.
+#'
+#' @export
+#' @importFrom magrittr %>%
+nichenet_results_dir <- function(){
+
+    'omnipath.nichenet_results_dir' %>% options
+
+}
+
+
+#' Builds NicheNet network prior knowledge
+#'
+#' Builds network knowledge required by NicheNet. For this it calls
+#' a multitude of methods to download and combine data from various
+#' databases according to the settings. The content of the prior knowledge
+#' data is highly customizable, see the documentation of the related
+#' functions.
 #'
 #' @param signaling_network A list of parameters for building the signaling
 #'     network, passed to \code{\link{nichenet_signaling_network}}
@@ -40,7 +255,7 @@
 #'
 #' @seealso \code{\link{nichenet_signaling_network},
 #' \link{nichenet_lr_network}, \link{nichenet_gr_network}}
-nichenet_prior_knowledge <- function(
+nichenet_networks <- function(
     signaling_network = list(),
     lr_network = list(),
     gr_network = list()
@@ -48,7 +263,7 @@ nichenet_prior_knowledge <- function(
 
     environment() %>%
     as.list() %T>%
-    {logger::log_success('Building NicheNet prior knowledge')} %>%
+    {logger::log_success('Building NicheNet network knowledge')} %>%
     map2(
         names(.),
         function(args, network_type){
@@ -58,7 +273,7 @@ nichenet_prior_knowledge <- function(
             do.call(args)
         }
     ) %T>%
-    {logger::log_success('Finished building NicheNet prior knowledge')}
+    {logger::log_success('Finished building NicheNet network knowledge')}
 
 }
 
@@ -204,7 +419,7 @@ nichenet_gr_network <- function(
 #'
 #' @importFrom purrr map2 discard
 #' @importFrom magrittr %>%
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
 nichenet_network <- function(network_type, ...){
 
@@ -230,7 +445,9 @@ nichenet_network <- function(network_type, ...){
         }
     ) %>%
     bind_rows %>%
-    as_tibble  %T>%
+    filter(from != to) %>%
+    filter(!is.na(from) & !is.na(to)) %>%
+    as_tibble %T>%
     {logger::log_success(
         'Finished building NicheNet %s network: %d records total',
         network_types[[network_type]],
@@ -262,7 +479,7 @@ nichenet_signaling_network_omnipath <- function(
     args$entity_types <- 'protein'
 
     do.call(import_post_translational_interactions, args) %>%
-    omnipath_interactions_postprocess()
+    omnipath_interactions_postprocess(type = 'signaling')
 
 }
 
@@ -285,7 +502,7 @@ nichenet_lr_network_omnipath <- function(
 ){
 
     import_intercell_network(...) %>%
-    omnipath_interactions_postprocess()
+    omnipath_interactions_postprocess(type = 'lr')
 
 }
 
@@ -312,7 +529,7 @@ nichenet_gr_network_omnipath <- function(
     args$entity_types <- 'protein'
 
     do.call(import_transcriptional_interactions, args) %>%
-    omnipath_interactions_postprocess()
+    omnipath_interactions_postprocess(type = 'gr')
 
 }
 
@@ -321,7 +538,7 @@ nichenet_gr_network_omnipath <- function(
 #'
 #' @importFrom dplyr select mutate distinct separate_rows
 #' @importFrom magrittr %>%
-omnipath_interactions_postprocess <- function(interactions){
+omnipath_interactions_postprocess <- function(interactions, type){
 
     interactions %>%
     select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
@@ -329,10 +546,10 @@ omnipath_interactions_postprocess <- function(interactions){
     separate_rows(from, sep = '_') %>%
     separate_rows(to, sep = '_') %>%
     mutate(
-        source = ifelse(
-            is_directed,
-            'omnipath_directed',
-            'omnipath_undirected'
+        source = sprintf(
+            'omnipath_%sdirected_%s',
+            ifelse(is_directed, '', 'un')
+            type
         ),
         database = 'omnipath'
     ) %>%
@@ -933,6 +1150,7 @@ nichenet_common_postprocess <- function(
 #' @return Nested list, each element contains a data frame of processed
 #'     expression data and key variables about the experiment.
 #'
+#' @importFrom magrittr %T>%
 #' @export
 nichenet_expression_data <- function(){
 
@@ -941,6 +1159,7 @@ nichenet_expression_data <- function(){
         reader = url_rds,
         reader_param = list(),
         resource = 'NicheNet expression data'
-    )
+    ) %T>%
+    load_success()
 
 }

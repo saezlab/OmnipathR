@@ -66,5 +66,7 @@ Suggests:
     rmarkdown,
     ggplot2,
     ggraph,
-    nichenetr
+    nichenetr,
+    smoof,
+    ParamHelpers
 RoxygenNote: 7.1.1

@@ -115,7 +115,8 @@
     ),
     omnipath.nichenet_expression_url = paste0(
         'https://zenodo.org/record/3260758/files/expression_settings.rds'
-    )
+    ),
+    omnipath.nichenet_results_dir = 'nichenet_results'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'
