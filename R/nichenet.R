@@ -66,7 +66,8 @@ nichenet_prior_knowledge <- function(
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
 
     optimization_results <- networks %>%
-        nichenet_optimization(expression = expression)
+        nichenet_optimization(expression = expression) %>%
+        nichenet_build_model(networks = networks)
 
     logger::log_success('Finished building NicheNet prior knowledge')
 
@@ -205,9 +206,20 @@ nichenet_optimization <- function(networks, expression, ...){
 }
 
 
-
+#' Construct a NicheNet ligand-target model
+#'
+#' @param optimization_results The outcome of NicheNet parameter optimization
+#'     as produced by \code{\link{nichenet_optimization}}.
+#' @param networks A list with NicheNet format signaling, ligand-receptor
+#'     and gene regulatory networks as produced by
+#'     \code{\link{nichenet_networks}}.
+#'
+#' @export
+#' @importFrom purrr map
 #' @importFrom tibble tibble
-nichenet_build_model <- function(networks){
+#' @importFrom magrittr %>% %T>%
+#' @importFrom dplyr pull
+nichenet_build_model <- function(optimization_results, networks){
 
     # all resources with initial weights of 1
     resource_weights <- networks %>%
@@ -216,6 +228,55 @@ nichenet_build_model <- function(networks){
         unique %>%
         {tibble(source = .)} %>%
         mutate(weight = 1)
+
+    optimized_parameters <-
+        optimization_results %>%
+        nichenetr::process_mlrmbo_nichenet_optimization(
+            source_names = resource_weights %>% pull(source) %>% unique
+        )
+
+    nichenetr::construct_weighted_networks(
+        lr_network = networks$lr_network,
+        sig_network = networks$signaling_network,
+        gr_network = networks$gr_network,
+        source_weights_df = resource_weights
+    ) %>%
+    nichenetr::apply_hub_corrections(
+        lr_sig_hub = optimized_parameters$lr_sig_hub,
+        gr_hub = optimized_parameters$gr_hub
+    ) %T>%
+    saveRDS(
+        nichenet_results_dir() %>%
+        file.path('weighted_networks.rds')
+    )
+
+}
+
+
+#' Creates a NicheNet ligand-target matrix
+#'
+#' @export
+#' @importFrom dplyr pull
+#' @importFrom magrittr %>% %T>%
+nichenet_ligand_target_matrix <- function(
+    weighted_networks,
+    lr_network,
+    optimized_parameters
+){
+
+    ligands <- lr_network %>% pull(from) %>% unique %>% as.list
+
+    weighted_networks %>%
+    nichenetr::construct_ligand_target_matrix(
+        ligands = ligands,
+        algorithm = 'PPR',
+        damping_factor = optimized_parameters$damping_factor,
+        ltf_cutoff = optimized_parameters$ltf_cutoff
+    ) %T>%
+    saveRDS(
+        nichenet_results_dir() %>%
+        file.path('ligand_target_matrix.rds')
+    )
 
 }
 
