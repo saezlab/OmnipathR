@@ -34,6 +34,14 @@
 #'     network, passed to \code{\link{nichenet_lr_network}}
 #' @param gr_network A list of parameters for building the gene regulatory
 #'     network, passed to \code{\link{nichenet_gr_network}}
+#' @param make_multi_objective_function_param Override parameters for
+#'     \code{smoof::makeMultiObjectiveFunction}.
+#' @param objective_function_param Override additional arguments passed to
+#'     the objective function.
+#' @param mlrmbo_optimization_param Override arguments for
+#'     \code{nichenetr::mlrmbo_optimization}.
+#' @param construct_ligand_target_matrix_param Override parameters for
+#'     \code{nichenetr::construct_ligand_target_matrix}.
 #' @param results_dir Character: path to the directory to save intermediate
 #'     and final outputs from NicheNet methods.
 #'
@@ -48,6 +56,10 @@ nichenet_prior_knowledge <- function(
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
+    make_multi_objective_function_param = list(),
+    objective_function_param = list(),
+    mlrmbo_optimization_param = list(),
+    construct_ligand_target_matrix_param = list(),
     results_dir = NULL
 ){
 
@@ -65,9 +77,23 @@ nichenet_prior_knowledge <- function(
     expression <- nichenet_expression_data() %>%
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
 
-    optimization_results <- networks %>%
-        nichenet_optimization(expression = expression) %>%
-        nichenet_build_model(networks = networks)
+    networks %>%
+    nichenet_optimization(
+        expression = expression,
+        make_multi_objective_function_param =
+            make_multi_objective_function_param,
+        objective_function_param = objective_function_param,
+        mlrmbo_optimization_param = mlrmbo_optimization_param
+    ) %>%
+    nichenet_build_model(networks = networks) %>%
+    c(
+        list(
+            lr_network = networks$lr_network
+            construct_ligand_target_matrix_param =
+                construct_ligand_target_matrix_param
+        )
+    ) %>%
+    do.call(what = nichenet_ligand_target_matrix)
 
     logger::log_success('Finished building NicheNet prior knowledge')
 
@@ -109,14 +135,24 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 #' @param networks A list with NicheNet format signaling, ligand-receptor
 #'     and gene regulatory networks as produced by
 #'     \code{\link{nichenet_networks}}.
-#' @param ... Override parameters for
+#' @param make_multi_objective_function_param Override parameters for
+#'     \code{smoof::makeMultiObjectiveFunction}.
+#' @param objective_function_param Override additional arguments passed to
+#'     the objective function.
+#' @param mlrmbo_optimization_param Override arguments for
 #'     \code{nichenetr::mlrmbo_optimization}.
 #'
 #' @export
-#' @importFrom magrittr %>% %T>%
+#' @importFrom magrittr %>% %T>% %<>%
 #' @importFrom purrr map
 #' @importFrom dplyr mutate
-nichenet_optimization <- function(networks, expression, ...){
+nichenet_optimization <- function(
+    networks,
+    expression,
+    make_multi_objective_function_param = list(),
+    objective_function_param = list(),
+    mlrmbo_optimization_param = list()
+){
 
     resources <-
         networks %>%
@@ -126,82 +162,105 @@ nichenet_optimization <- function(networks, expression, ...){
 
     n_resources <- resources %>% length
 
-    mof_topology_correction <- smoof::makeMultiObjectiveFunction(
-        name = 'nichenet_optimization',
-        description = paste(
-            'Data source weight and hyperparameter optimization:'
-            'expensive black-box function'
-        ),
-        fn = nichenetr::model_evaluation_optimization,
-        par.set = ParamHelpers::makeParamSet(
-            ParamHelpers::makeNumericVectorParam(
-                'source_weights',
-                len = n_resources,
-                lower = 0,
-                upper = 1,
-                tunable = FALSE
-            ),
-            ParamHelpers::makeNumericVectorParam(
-                'lr_sig_hub',
-                len = 1,
-                lower = 0,
-                upper = 1,
-                tunable = TRUE
-            ),
-            ParamHelpers::makeNumericVectorParam(
-                'gr_hub',
-                len = 1,
-                lower = 0,
-                upper = 1,
-                tunable = TRUE
-            ),
-            ParamHelpers::makeNumericVectorParam(
-                'ltf_cutoff',
-                len = 1,
-                lower = 0.9,
-                upper = 0.999,
-                tunable = TRUE
-            ),
-            ParamHelpers::makeNumericVectorParam(
-                'damping_factor',
-                len = 1,
-                lower = 0.01,
-                upper = 0.99,
-                tunable =TRUE
-            )
-        ),
-        has.simple.signature = FALSE,
-        n.objectives = 4,
-        noisy = FALSE,
-        minimize = rep(FALSE, 4)
-    )
-
-    obj_fun_param <- list(
-        source_names = resources,
-        algorithm = 'PPR',
-        correct_topology = FALSE,
-        lr_network = networks$lr_network,
-        sig_network = networks$signaling_network,
-        gr_network = networks$gr_network,
-        settings = expression %>% map(
-            nichenetr::convert_expression_settings_evaluation
-        ),
-        secondary_targets = FALSE,
-        remove_direct_links = 'no',
-        cutoff_method = 'quantile'
-    )
-
-    nichenetr::mlrmbo_optimization(
-        obj_fun = mof_topology_correction,
-        niter = 8,
-        ncores = 8,
-        nstart = 160,
-        additional_arguments = obj_fun_param
-    ) %T>%
-    saveRDS(
+    optimization_results_rds_path <-
         nichenet_results_dir() %>%
         file.path('optimization_results.rds')
-    )
+
+    mof_topology_correction <-
+        make_multi_objective_function_param %>%
+        add_defaults(
+            fun = smoof::makeMultiObjectiveFunction,
+            defaults = list(
+                name = 'nichenet_optimization',
+                description = paste(
+                    'Data source weight and hyperparameter optimization:'
+                    'expensive black-box function'
+                ),
+                fn = nichenetr::model_evaluation_optimization,
+                par.set = ParamHelpers::makeParamSet(
+                    ParamHelpers::makeNumericVectorParam(
+                        'source_weights',
+                        len = n_resources,
+                        lower = 0,
+                        upper = 1,
+                        tunable = FALSE
+                    ),
+                    ParamHelpers::makeNumericVectorParam(
+                        'lr_sig_hub',
+                        len = 1,
+                        lower = 0,
+                        upper = 1,
+                        tunable = TRUE
+                    ),
+                    ParamHelpers::makeNumericVectorParam(
+                        'gr_hub',
+                        len = 1,
+                        lower = 0,
+                        upper = 1,
+                        tunable = TRUE
+                    ),
+                    ParamHelpers::makeNumericVectorParam(
+                        'ltf_cutoff',
+                        len = 1,
+                        lower = 0.9,
+                        upper = 0.999,
+                        tunable = TRUE
+                    ),
+                    ParamHelpers::makeNumericVectorParam(
+                        'damping_factor',
+                        len = 1,
+                        lower = 0.01,
+                        upper = 0.99,
+                        tunable =TRUE
+                    )
+                ),
+                has.simple.signature = FALSE,
+                n.objectives = 4,
+                noisy = FALSE,
+                minimize = rep(FALSE, 4)
+            )
+        ) %>%
+        do.call(what = smoof::makeMultiObjectiveFunction)
+
+    objective_function_param %<>%
+        add_defaults(
+            fun = mof_topology_correction,
+            defaults = list(
+                source_names = resources,
+                algorithm = 'PPR',
+                correct_topology = FALSE,
+                lr_network = networks$lr_network,
+                sig_network = networks$signaling_network,
+                gr_network = networks$gr_network,
+                settings = expression %>% map(
+                    nichenetr::convert_expression_settings_evaluation
+                ),
+                secondary_targets = FALSE,
+                remove_direct_links = 'no',
+                cutoff_method = 'quantile'
+            )
+        )
+
+    mlrmbo_optimization_param %>%
+    add_defaults(
+        fun = list(
+            obj_fun = mof_topology_correction,
+            niter = 8,
+            ncores = 8,
+            nstart = 160,
+            additional_arguments = objective_function_param
+        )
+    ) %T>%
+    {logger::success('Running multi-objective model-based optimization')} %>%
+    do.call(what = nichenetr::mlrmbo_optimization) %T>%
+    saveRDS(optimization_results_rds_path) %T>%
+    {logger::success(
+        paste0(
+            'Multi-objective model-based optimization ready, ',
+            'saved results to `%s`.'
+        ),
+        optimization_results_rds_path
+    )}
 
 }
 
@@ -230,24 +289,38 @@ nichenet_build_model <- function(optimization_results, networks){
         mutate(weight = 1)
 
     optimized_parameters <-
-        optimization_results %>%
+        optimization_results %T>%
+        {logger::success('Processing MLRMBO parameters.')} %>%
         nichenetr::process_mlrmbo_nichenet_optimization(
             source_names = resource_weights %>% pull(source) %>% unique
-        )
+        ) %T>%
+        {logger::success('Finished processing MLRMBO parameters.')}
+
+    weighted_networks_rds_path <-
+        nichenet_results_dir() %>%
+        file.path('weighted_networks.rds')
+
+    logger::success('Creating weighted networks.')
 
     nichenetr::construct_weighted_networks(
         lr_network = networks$lr_network,
         sig_network = networks$signaling_network,
         gr_network = networks$gr_network,
         source_weights_df = resource_weights
-    ) %>%
+    ) %T>%
+    {logger::success('Applying hub corrections.')} %>%
     nichenetr::apply_hub_corrections(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub
     ) %T>%
-    saveRDS(
-        nichenet_results_dir() %>%
-        file.path('weighted_networks.rds')
+    saveRDS(weighted_networks_rds_path) %T>%
+    {logger::success(
+        'Created weighted networks, saved to `%s`.',
+        weighted_networks_rds_path
+    )} %>%
+    list(
+        weighted_networks = .,
+        optimized_parameters = optimized_parameters
     )
 
 }
@@ -255,28 +328,50 @@ nichenet_build_model <- function(optimization_results, networks){
 
 #' Creates a NicheNet ligand-target matrix
 #'
+#' @param weighted_networks Weighted networks as provided by
+#'     \code{\link{nichenet_build_model}}
+#' @param optimization_results The outcome of NicheNet parameter optimization
+#'     as produced by \code{\link{nichenet_optimization}}.
+#' @param networks A list with NicheNet format signaling, ligand-receptor
+#'     and gene regulatory networks as produced by
+#'     \code{\link{nichenet_networks}}.
+#' @param construct_ligand_target_matrix_param Override parameters for
+#'     \code{nichenetr::construct_ligand_target_matrix}.
+#'
 #' @export
 #' @importFrom dplyr pull
 #' @importFrom magrittr %>% %T>%
 nichenet_ligand_target_matrix <- function(
     weighted_networks,
     lr_network,
-    optimized_parameters
+    optimized_parameters,
+    construct_ligand_target_matrix_param = list()
 ){
 
     ligands <- lr_network %>% pull(from) %>% unique %>% as.list
 
-    weighted_networks %>%
-    nichenetr::construct_ligand_target_matrix(
-        ligands = ligands,
-        algorithm = 'PPR',
-        damping_factor = optimized_parameters$damping_factor,
-        ltf_cutoff = optimized_parameters$ltf_cutoff
-    ) %T>%
-    saveRDS(
+    ligand_target_matrix_rds_path <-
         nichenet_results_dir() %>%
         file.path('ligand_target_matrix.rds')
-    )
+
+    construct_ligand_target_matrix_param %>%
+    add_defaults(
+        fun = nichenetr::construct_ligand_target_matrix,
+        defaults = list(
+            weighted_networks = weighted_networks,
+            ligands = ligands,
+            algorithm = 'PPR',
+            damping_factor = optimized_parameters$damping_factor,
+            ltf_cutoff = optimized_parameters$ltf_cutoff
+        )
+    ) %T>%
+    {logger::success('Creating ligand-target matrix.')} %>%
+    do.call(what = nichenetr::construct_ligand_target_matrix) %T>%
+    saveRDS(ligand_target_matrix_rds_path) %T>%
+    {logger::success(
+        'Created ligand-target matrix, saved to `%s`.',
+        ligand_target_matrix_rds_path
+    )}
 
 }
 
