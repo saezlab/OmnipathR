@@ -67,6 +67,7 @@ Suggests:
     ggplot2,
     ggraph,
     nichenetr,
+    mlrMBO,
     smoof,
     ParamHelpers
 RoxygenNote: 7.1.1

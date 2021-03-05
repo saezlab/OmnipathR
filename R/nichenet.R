@@ -181,7 +181,7 @@ nichenet_main <- function(
         ),
         .
     ) %T>%
-    {logger::success('Completed NicheNet pipeline.')}
+    {logger::log_success('Completed NicheNet pipeline.')}
 
 }
 
@@ -203,6 +203,7 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 
     all_ligands <- networks$lr_network$from %>% unique
 
+    expression %>%
     keep(
         function(record){
             all(record$from %in% all_ligands)
@@ -329,7 +330,9 @@ nichenet_optimization <- function(
 
     mlrmbo_optimization_param %>%
     add_defaults(
-        fun = list(
+        fun = nichenetr::mlrmbo_optimization,
+        defaults = list(
+            run_id = 1,
             obj_fun = mof_topology_correction,
             niter = 8,
             ncores = 8,
@@ -337,10 +340,12 @@ nichenet_optimization <- function(
             additional_arguments = objective_function_param
         )
     ) %T>%
-    {logger::success('Running multi-objective model-based optimization')} %>%
+    {logger::log_success(
+        'Running multi-objective model-based optimization'
+    )} %>%
     do.call(what = nichenetr::mlrmbo_optimization) %T>%
     saveRDS(optimization_results_rds_path) %T>%
-    {logger::success(
+    {logger::log_success(
         paste0(
             'Multi-objective model-based optimization ready, ',
             'saved results to `%s`.'
@@ -382,11 +387,11 @@ nichenet_build_model <- function(
 
     optimized_parameters <-
         optimization_results %T>%
-        {logger::success('Processing MLRMBO parameters.')} %>%
+        {logger::log_success('Processing MLRMBO parameters.')} %>%
         nichenetr::process_mlrmbo_nichenet_optimization(
             source_names = resource_weights %>% pull(source) %>% unique
         ) %T>%
-        {logger::success('Finished processing MLRMBO parameters.')}
+        {logger::log_success('Finished processing MLRMBO parameters.')}
 
     weighted_networks_rds_path <-
         nichenet_results_dir() %>%
@@ -397,7 +402,7 @@ nichenet_build_model <- function(
             )
         )
 
-    logger::success('Creating weighted networks.')
+    logger::log_success('Creating weighted networks.')
 
     nichenetr::construct_weighted_networks(
         lr_network = networks$lr_network,
@@ -409,13 +414,13 @@ nichenet_build_model <- function(
             resource_weights
         )
     ) %T>%
-    {logger::success('Applying hub corrections.')} %>%
+    {logger::log_success('Applying hub corrections.')} %>%
     nichenetr::apply_hub_corrections(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub
     ) %T>%
     saveRDS(weighted_networks_rds_path) %T>%
-    {logger::success(
+    {logger::log_success(
         'Created weighted networks, saved to `%s`.',
         weighted_networks_rds_path
     )} %>%
@@ -472,10 +477,10 @@ nichenet_ligand_target_matrix <- function(
             ltf_cutoff = optimized_parameters$ltf_cutoff
         )
     ) %T>%
-    {logger::success('Creating ligand-target matrix.')} %>%
+    {logger::log_success('Creating ligand-target matrix.')} %>%
     do.call(what = nichenetr::construct_ligand_target_matrix) %T>%
     saveRDS(ligand_target_matrix_rds_path) %T>%
-    {logger::success(
+    {logger::log_success(
         'Created ligand-target matrix, saved to `%s`.',
         ligand_target_matrix_rds_path
     )}
@@ -512,7 +517,7 @@ nichenet_ligand_activies <- function(
     n_top_targets = 250
 ){
 
-    logger::success('Running ligand activity analysis.')
+    logger::log_success('Running ligand activity analysis.')
 
     ligand_activites_rds_path <-
         nichenet_results_dir() %>%
@@ -550,7 +555,7 @@ nichenet_ligand_activies <- function(
         ligand_target_links = nichenet_ligand_target_links(.)
     ) %T>%
     {saveRDS(.$ligand_activities, ligand_activites_rds_path)} %T>%
-    {logger::success(
+    {logger::log_success(
         'Finished running ligand activity analysis, saved to `%s`.',
         ligand_activites_rds_path
     )}
@@ -851,7 +856,6 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
     map2(
         names(.),
         function(args, resource){
-            args$only_omnipath <- only_omnipath
             resource %>%
             sprintf('nichenet_%s_network_%s', network_type, .) %>%
             get() %>%
@@ -975,7 +979,7 @@ omnipath_interactions_postprocess <- function(interactions, type){
             ifelse(is_directed, '', 'un'),
             type
         ),
-        database = 'omnipath'
+        database = sprintf('omnipath_%s', type)
     ) %>%
     distinct() %>%
     select(-is_directed)
