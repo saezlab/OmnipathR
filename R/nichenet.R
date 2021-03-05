@@ -92,22 +92,19 @@ nichenet_main <- function(
     if_null(options('omnipath.nichenet_results_dir')) %>%
     options(omnipath.nichenet_results_dir = .)
 
-    logger::log_success('Building NicheNet prior knowledge')
-
-    if(only_omnipath){
-
-    }
+    logger::log_success('Building NicheNet prior knowledge.')
 
     networks <- nichenet_networks(
         signaling_network = signaling_network,
         lr_network = lr_network,
-        gr_network = gr_network
+        gr_network = gr_network,
+        only_omnipath = only_omnipath
     )
 
     expression <- nichenet_expression_data() %>%
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
 
-    logger::log_success('Finished building NicheNet prior knowledge')
+    logger::log_success('Finished building NicheNet prior knowledge.')
     logger::log_success('Building NicheNet model.')
 
     networks %>%
@@ -122,7 +119,7 @@ nichenet_main <- function(
     nichenet_build_model(networks = networks, weighted = FALSE) %>%
     c(
         list(
-            lr_network = networks$lr_network
+            lr_network = networks$lr_network,
             construct_ligand_target_matrix_param =
                 construct_ligand_target_matrix_param,
             weighted = FALSE
@@ -146,7 +143,7 @@ nichenet_main <- function(
     ) %>%
     c(
         list(
-            lr_network = networks$lr_network
+            lr_network = networks$lr_network,
             construct_ligand_target_matrix_param =
                 construct_ligand_target_matrix_param
         )
@@ -252,7 +249,7 @@ nichenet_optimization <- function(
             defaults = list(
                 name = 'nichenet_optimization',
                 description = paste(
-                    'Data source weight and hyperparameter optimization:'
+                    'Data source weight and hyperparameter optimization:',
                     'expensive black-box function'
                 ),
                 fn = nichenetr::model_evaluation_optimization,
@@ -398,7 +395,7 @@ nichenet_build_model <- function(
         gr_network = networks$gr_network,
         source_weights_df = `if`(
             weighted,
-            optimization_results$source_weight_df
+            optimization_results$source_weight_df,
             resource_weights
         )
     ) %T>%
@@ -555,6 +552,8 @@ nichenet_results_dir <- function(){
 #'     network, passed to \code{\link{nichenet_lr_network}}
 #' @param gr_network A list of parameters for building the gene regulatory
 #'     network, passed to \code{\link{nichenet_gr_network}}
+#' @param only_omnipath Logical: a shortcut to use only OmniPath as network
+#'     resource.
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom purrr map2
@@ -565,15 +564,18 @@ nichenet_results_dir <- function(){
 nichenet_networks <- function(
     signaling_network = list(),
     lr_network = list(),
-    gr_network = list()
+    gr_network = list(),
+    only_omnipath = FALSE
 ){
 
     environment() %>%
     as.list() %T>%
     {logger::log_success('Building NicheNet network knowledge')} %>%
+    discard(names(.) == 'only_omnipath') %>%
     map2(
         names(.),
         function(args, network_type){
+            args$only_omnipath <- only_omnipath
             network_type %>%
             sprintf('nichenet_%s', .) %>%
             get() %>%
@@ -591,19 +593,21 @@ nichenet_networks <- function(
 #' resources.
 #'
 #' @param omnipath List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_omnipath}}
+#'     \code{\link{nichenet_signaling_network_omnipath}}.
 #' @param pathwaycommons List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_pathwaycommons}}
+#'     \code{\link{nichenet_signaling_network_pathwaycommons}}.
 #' @param harmonizome List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_harmonizome}}
+#'     \code{\link{nichenet_signaling_network_harmonizome}}.
 #' @param vinayagam List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_vinayagam}}
+#'     \code{\link{nichenet_signaling_network_vinayagam}}.
 #' @param cpdb List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_cpdb}}
+#'     \code{\link{nichenet_signaling_network_cpdb}}.
 #' @param evex List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_evex}}
+#'     \code{\link{nichenet_signaling_network_evex}}.
 #' @param inbiomap List with paramaters to be passed to
-#'     \code{\link{nichenet_signaling_network_inbiomap}}
+#'     \code{\link{nichenet_signaling_network_inbiomap}}.
+#' @param only_omnipath Logical: a shortcut to use only OmniPath as network
+#'     resource.
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -622,7 +626,8 @@ nichenet_signaling_network <- function(
     vinayagam = list(),
     cpdb = list(),
     evex = list(),
-    inbiomap = list()
+    inbiomap = list(),
+    only_omnipath = FALSE
 ){
 
     environment() %>%
@@ -639,11 +644,13 @@ nichenet_signaling_network <- function(
 #' resources.
 #'
 #' @param omnipath List with paramaters to be passed to
-#'     \code{\link{nichenet_lr_network_omnipath}}
+#'     \code{\link{nichenet_lr_network_omnipath}}.
 #' @param guide2pharma List with paramaters to be passed to
-#'     \code{\link{nichenet_lr_network_guide2pharma}}
+#'     \code{\link{nichenet_lr_network_guide2pharma}}.
 #' @param ramilowski List with paramaters to be passed to
-#'     \code{\link{nichenet_lr_network_ramilowski}}
+#'     \code{\link{nichenet_lr_network_ramilowski}}.
+#' @param only_omnipath Logical: a shortcut to use only OmniPath as network
+#'     resource.
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -654,7 +661,8 @@ nichenet_signaling_network <- function(
 nichenet_lr_network <- function(
     omnipath = list(),
     guide2pharma = list(),
-    ramilowski = list()
+    ramilowski = list(),
+    only_omnipath = FALSE
 ){
 
     environment() %>%
@@ -671,19 +679,21 @@ nichenet_lr_network <- function(
 #' resources.
 #'
 #' @param omnipath List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_omnipath}}
+#'     \code{\link{nichenet_gr_network_omnipath}}.
 #' @param harmonizome List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_harmonizome}}
+#'     \code{\link{nichenet_gr_network_harmonizome}}.
 #' @param regnetwork List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_regnetwork}}
+#'     \code{\link{nichenet_gr_network_regnetwork}}.
 #' @param htridb List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_htridb}}
+#'     \code{\link{nichenet_gr_network_htridb}}.
 #' @param remap List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_remap}}
+#'     \code{\link{nichenet_gr_network_remap}}.
 #' @param evex List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_evex}}
+#'     \code{\link{nichenet_gr_network_evex}}.
 #' @param pathwaycommons List with paramaters to be passed to
-#'     \code{\link{nichenet_gr_network_pathwaycommons}}
+#'     \code{\link{nichenet_gr_network_pathwaycommons}}.
+#' @param only_omnipath Logical: a shortcut to use only OmniPath as network
+#'     resource.
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -702,7 +712,8 @@ nichenet_gr_network <- function(
     htridb = list(),
     remap = list(),
     evex = list(),
-    pathwaycommons = list()
+    pathwaycommons = list(),
+    only_omnipath = FALSE
 ){
 
     environment() %>%
@@ -717,6 +728,8 @@ nichenet_gr_network <- function(
 #'
 #' @param network_type Character: type of the interactions, either
 #'     "signaling", "lr" (ligand-receptor) or "gr" (gene regulatory).
+#' @param only_omnipath Logical: a shortcut to use only OmniPath as network
+#'     resource.
 #' @param ... Argument names are the name of the resources to download (all
 #'     lowercase), while their values are lists of arguments to the resource
 #'     specific nichenet import methods (an empty list if no arguments should
@@ -724,11 +737,11 @@ nichenet_gr_network <- function(
 #'
 #' @return A data frame with interactions suitable for use with NicheNet.
 #'
-#' @importFrom purrr map2 discard
+#' @importFrom purrr map2 discard keep
 #' @importFrom magrittr %>%
 #' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
-nichenet_network <- function(network_type, ...){
+nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
 
     network_types <- list(
         signaling = 'signaling',
@@ -737,7 +750,20 @@ nichenet_network <- function(network_type, ...){
     )
 
     list(...) %>%
-    discard(is.null) %T>%
+    {`if`(
+        length(.) == 0,
+        sprintf('nichenet_%s_network', network_type) %>%
+        get() %>%
+        formals() %>%
+        discard(names(.) == 'only_omnipath'),
+        .
+    )} %>%
+    discard(is.null) %>%
+    {`if`(
+        only_omnipath,
+        keep(., names(.) == 'omnipath'),
+        .
+    )} %T>%
     {logger::log_success(
         'Starting to build NicheNet %s network',
         network_types[[network_type]]
@@ -745,11 +771,22 @@ nichenet_network <- function(network_type, ...){
     map2(
         names(.),
         function(args, resource){
+            args$only_omnipath <- only_omnipath
             resource %>%
             sprintf('nichenet_%s_network_%s', network_type, .) %>%
             get() %>%
             do.call(args)
         }
+    ) %>%
+    # add an empty tibble just to avoid error in case of using no resources
+    c(
+        list(
+            character() %>%
+            list() %>%
+            rep(4) %>%
+            setNames(c('from', 'to', 'source', 'database')) %>%
+            do.call(what = tibble)
+        )
     ) %>%
     bind_rows %>%
     filter(from != to) %>%
@@ -855,7 +892,7 @@ omnipath_interactions_postprocess <- function(interactions, type){
     mutate(
         source = sprintf(
             'omnipath_%sdirected_%s',
-            ifelse(is_directed, '', 'un')
+            ifelse(is_directed, '', 'un'),
             type
         ),
         database = 'omnipath'
