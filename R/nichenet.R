@@ -38,6 +38,14 @@
 #'     The networks can be customized on a resource by resource basis, as
 #'     well as providing custom parameters for individual resources, using
 #'     the parameters `signaling_network`, `lr_network` and `gr_network`.
+#' @param expressed_genes_transmitter Character vector with the gene symbols
+#'     of the genes expressed in the cells transmitting the signal.
+#' @param expressed_genes_receiver Character vector with the gene symbols
+#'     of the genes expressed in the cells receiving the signal.
+#' @param genes_of_interest Character vector with the gene symbols of the
+#'     genes of interest.
+#' @param background_genes Character vector with the gene symbols of the
+#'     genes to be used as background.
 #' @param signaling_network A list of parameters for building the signaling
 #'     network, passed to \code{\link{nichenet_signaling_network}}
 #' @param lr_network A list of parameters for building the ligand-receptor
@@ -64,6 +72,10 @@
 #'     \link{nichenet_gr_network}}
 nichenet_main <- function(
     only_omnipath = FALSE,
+    expressed_genes_transmitter = NULL,
+    expressed_genes_receiver = NULL,
+    genes_of_interest = NULL,
+    background_genes = NULL,
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
@@ -81,6 +93,11 @@ nichenet_main <- function(
     options(omnipath.nichenet_results_dir = .)
 
     logger::log_success('Building NicheNet prior knowledge')
+
+    if(only_omnipath){
+
+    }
+
     networks <- nichenet_networks(
         signaling_network = signaling_network,
         lr_network = lr_network,
@@ -134,11 +151,30 @@ nichenet_main <- function(
                 construct_ligand_target_matrix_param
         )
     ) %>%
-    do.call(what = nichenet_ligand_target_matrix) %>%
-    c(
-        list(optimized_parameters = optimized_parameters)
-    ) %T>%
-    {logger::log_success('Finished building NicheNet model.')}
+    do.call(what = nichenet_ligand_target_matrix) %T>%
+    assign(x = 'ligand_target_matrix', ., envir = top_env) %T>%
+    {logger::log_success('Finished building NicheNet model.')} %>%
+    list(
+        ligand_target_matrix = .,
+        expressed_genes_transmitter = expressed_genes_transmitter,
+        expressed_genes_receiver = expressed_genes_receiver,
+        genes_of_interest = genes_of_interest,
+        background_genes = background_genes
+    ) %>%
+    {`if`(
+        any(map_lgl(., is.null)),
+        NULL,
+        do.call(nichenet_ligand_activies, .)
+    )} %T>%
+    assign(x = 'ligand_activities', value = ., envir = top_env) %>%
+    {list(
+        networks = networks,
+        expression = expression,
+        optimized_parameters = optimized_parameters,
+        weighted_networks = weighted_networks,
+        ligand_target_matrix = ligand_target_matrix,
+        ligand_activities = ligand_activities
+    )}
 
 }
 
@@ -435,12 +471,58 @@ nichenet_ligand_target_matrix <- function(
     {logger::success(
         'Created ligand-target matrix, saved to `%s`.',
         ligand_target_matrix_rds_path
-    )} %>%
-    list(
-        ligand_target_matrix = .,
-        weighted_networks = weighted_networks
-    )
+    )}
 
+}
+
+
+#' Calls the NicheNet ligand activity analysis
+#'
+#' @export
+#' @importFrom magrittr %>% %<>% %T>%
+#' @importFrom dplyr pull unique
+nichenet_ligand_activies <- function(
+    ligand_target_matrix,
+    lr_network,
+    expressed_genes_transmitter,
+    expressed_genes_receiver,
+    genes_of_interest,
+    background_genes = NULL
+){
+
+    logger::success('Running ligand activity analysis.')
+
+    ligand_activites_rds_path <-
+        nichenet_results_dir() %>%
+        file.path('ligand_activities.rds')
+
+    genes_of_interest %<>%
+    intersect(rownames(ligand_target_matrix))
+
+    background_genes %<>%
+        if_null(
+            expressed_genes_receiver %>%
+            intersect(rownames(ligand_target_matrix))
+            # shouldn't we also remove the genes of interest?
+        )
+
+    lr_network %<>%
+        filter(
+            from %in% expressed_genes_transmitter &
+            to %in% expressed_genes_receiver
+        )
+
+    nichenetr::predict_ligand_activities(
+        geneset = genes_of_interest,
+        background_expressed_genes = background_genes,
+        ligand_target_matrix = ligand_target_matrix,
+        potential_ligands = lr_network %>% pull(from) %>% unique
+    ) %T>%
+    saveRDS(ligand_activites_rds_path) %T>%
+    {logger::success(
+        'Finished running ligand activity analysis, saved to `%s`.',
+        ligand_activites_rds_path
+    )}
 
 }
 
