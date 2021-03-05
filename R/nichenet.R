@@ -43,9 +43,15 @@
 #' @param expressed_genes_receiver Character vector with the gene symbols
 #'     of the genes expressed in the cells receiving the signal.
 #' @param genes_of_interest Character vector with the gene symbols of the
-#'     genes of interest.
+#'     genes of interest. These are the genes in the receiver cell population
+#'     that are potentially affected by ligands expressed by interacting
+#'     cells (e.g. genes differentially expressed upon cell-cell interaction).
 #' @param background_genes Character vector with the gene symbols of the
 #'     genes to be used as background.
+#' @param n_top_ligands How many of the top ligands to include in the
+#'     ligand-target table.
+#' @param n_top_targets How many of the top targets (for each of the top
+#'     ligands) to consider in the ligand-target table.
 #' @param signaling_network A list of parameters for building the signaling
 #'     network, passed to \code{\link{nichenet_signaling_network}}
 #' @param lr_network A list of parameters for building the ligand-receptor
@@ -76,6 +82,8 @@ nichenet_main <- function(
     expressed_genes_receiver = NULL,
     genes_of_interest = NULL,
     background_genes = NULL,
+    n_top_ligands = 42,
+    n_top_targets = 250,
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
@@ -160,18 +168,20 @@ nichenet_main <- function(
     ) %>%
     {`if`(
         any(map_lgl(., is.null)),
-        NULL,
+        list(ligand_activities = NULL, ligand_target_links = NULL),
         do.call(nichenet_ligand_activies, .)
-    )} %T>%
-    assign(x = 'ligand_activities', value = ., envir = top_env) %>%
-    {list(
-        networks = networks,
-        expression = expression,
-        optimized_parameters = optimized_parameters,
-        weighted_networks = weighted_networks,
-        ligand_target_matrix = ligand_target_matrix,
-        ligand_activities = ligand_activities
-    )}
+    )} %>%
+    c(
+        list(
+            networks = networks,
+            expression = expression,
+            optimized_parameters = optimized_parameters,
+            weighted_networks = weighted_networks,
+            ligand_target_matrix = ligand_target_matrix
+        ),
+        .
+    ) %T>%
+    {logger::success('Completed NicheNet pipeline.')}
 
 }
 
@@ -475,16 +485,31 @@ nichenet_ligand_target_matrix <- function(
 
 #' Calls the NicheNet ligand activity analysis
 #'
+#' @param expressed_genes_transmitter Character vector with the gene symbols
+#'     of the genes expressed in the cells transmitting the signal.
+#' @param expressed_genes_receiver Character vector with the gene symbols
+#'     of the genes expressed in the cells receiving the signal.
+#' @param genes_of_interest Character vector with the gene symbols of the
+#'     genes of interest. These are the genes in the receiver cell population
+#'     that are potentially affected by ligands expressed by interacting
+#'     cells (e.g. genes differentially expressed upon cell-cell interaction).
+#' @param background_genes Character vector with the gene symbols of the
+#'     genes to be used as background.
+#' @param n_top_ligands How many of the top ligands to include in the
+#'     ligand-target table.
+#'
 #' @export
 #' @importFrom magrittr %>% %<>% %T>%
-#' @importFrom dplyr pull unique
+#' @importFrom dplyr pull filter arrange
 nichenet_ligand_activies <- function(
     ligand_target_matrix,
     lr_network,
     expressed_genes_transmitter,
     expressed_genes_receiver,
     genes_of_interest,
-    background_genes = NULL
+    background_genes = NULL,
+    n_top_ligands = 42,
+    n_top_targets = 250
 ){
 
     logger::success('Running ligand activity analysis.')
@@ -493,8 +518,18 @@ nichenet_ligand_activies <- function(
         nichenet_results_dir() %>%
         file.path('ligand_activities.rds')
 
+    potential_ligands <-
+        lr_network %>%
+        filter(
+            from %in% expressed_genes_transmitter &
+            to %in% expressed_genes_receiver
+        ) %>%
+        pull(from) %>%
+        unique
+
     genes_of_interest %<>%
-    intersect(rownames(ligand_target_matrix))
+        intersect(rownames(ligand_target_matrix)) %>%
+        setdiff(potential_ligands)
 
     background_genes %<>%
         if_null(
@@ -503,23 +538,68 @@ nichenet_ligand_activies <- function(
             # shouldn't we also remove the genes of interest?
         )
 
-    lr_network %<>%
-        filter(
-            from %in% expressed_genes_transmitter &
-            to %in% expressed_genes_receiver
-        )
-
     nichenetr::predict_ligand_activities(
         geneset = genes_of_interest,
         background_expressed_genes = background_genes,
         ligand_target_matrix = ligand_target_matrix,
-        potential_ligands = lr_network %>% pull(from) %>% unique
+        potential_ligands = potential_ligands
+    ) %>%
+    arrange(-pearson) %>%
+    list(
+        ligand_activities = .,
+        ligand_target_links = nichenet_ligand_target_links(.)
     ) %T>%
-    saveRDS(ligand_activites_rds_path) %T>%
+    {saveRDS(.$ligand_activities, ligand_activites_rds_path)} %T>%
     {logger::success(
         'Finished running ligand activity analysis, saved to `%s`.',
         ligand_activites_rds_path
     )}
+
+}
+
+
+#' Compiles a table with weighted ligand-target links
+#'
+#' A wrapper around \code{nichenetr::get_weighted_ligand_target_links} to
+#' compile a data frame with weighted links from the top ligands to their
+#' top targets.
+#'
+#' @param ligand_activities Ligand activity table as produced by
+#'     \code{nichenetr::predict_ligand_activities}.
+#' @param ligand_target_matrix Ligand-target matrix as produced by
+#'     \code{nichenetr::construct_ligand_target_matrix} or the wrapper
+#'     around it in the current package:
+#'     \code{\link{nichenet_ligand_target_matrix}}.
+#' @param genes_of_interest Character vector with the gene symbols of the
+#'     genes of interest. These are the genes in the receiver cell population
+#'     that are potentially affected by ligands expressed by interacting
+#'     cells (e.g. genes differentially expressed upon cell-cell interaction).
+#' @param background_genes Character vector with the gene symbols of the
+#'     genes to be used as background.
+#' @param n_top_ligands How many of the top ligands to include in the
+#'     ligand-target table.
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr top_n arrange
+#' @importFrom purrr map
+nichenet_ligand_target_links <- function(
+    ligand_activities,
+    ligand_target_matrix,
+    genes_of_interest,
+    n_top_ligands = 42,
+    n_top_targets = 250
+){
+
+    ligand_activities %>%
+    arrange(-pearson)
+    top_n(pearson, n_top_ligands) %>%
+    map(
+        nichenetr::get_weighted_ligand_target_links,
+        geneset = genes_of_interest,
+        ligand_target_matrix = ligand_target_matrix,
+        n = n_top_targets
+    )
 
 }
 
