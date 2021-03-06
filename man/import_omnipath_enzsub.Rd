@@ -15,10 +15,6 @@ import_omnipath_enzsub(
   references_by_resource = TRUE,
   ...
 )
-
-import_Omnipath_PTMS(...)
-
-import_OmniPath_PTMS(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}
@@ -40,7 +36,7 @@ the query type. If FALSE, only the fields defined by the user in the
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
-\item{...}{Passed to \code{import_omnipath_enzsub}.}
+\item{...}{optional additional arguments}
 }
 \value{
 A data frame containing the information about ptms

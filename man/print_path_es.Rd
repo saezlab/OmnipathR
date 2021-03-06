@@ -2,19 +2,14 @@
 % Please edit documentation in R/print_interactions.R
 \name{print_path_es}
 \alias{print_path_es}
-\alias{printPath_es}
 \title{print network paths given by edge sequence}
 \usage{
 print_path_es(edgeSeq, G)
-
-printPath_es(...)
 }
 \arguments{
 \item{edgeSeq}{edge sequence}
 
 \item{G}{igraph object (from ptms or any interaction dataset)}
-
-\item{...}{Passed to \code{print_path_es}.}
 }
 \value{
 Interactions displayed in a nice format

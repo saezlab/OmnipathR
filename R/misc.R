@@ -24,6 +24,8 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang enquo quo_get_expr quo_text is_symbol
+#'
+#' @noRd
 .nse_ensure_str <- function(arg){
 
     enquo(arg) %>%
@@ -51,6 +53,8 @@
 
 
 #' Inserts an element to a list if the value is not null.
+#'
+#' @noRd
 insert_if_not_null <- function(l, ...){
 
     elements <- list(...)
@@ -77,6 +81,7 @@ insert_if_not_null <- function(l, ...){
 #'
 #' @return A list
 #'
+#' @noRd
 ensure_list <- function(value){
 
     `if`(
@@ -91,6 +96,7 @@ ensure_list <- function(value){
 #' Returns NULL if `value` is a list with a single NULL element otherwise
 #' the value itself
 #'
+#' @noRd
 list_null <- function(value){
 
     `if`(
@@ -105,6 +111,8 @@ list_null <- function(value){
 #' Returns the extension of a file name
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 file_extension <- function(name){
 
     name %>%
@@ -130,6 +138,8 @@ file_extension <- function(name){
 
 
 #' Adds an extension to a path or file name
+#'
+#' @noRd
 file_add_extension <- function(fname, ext){
 
     ifelse(
@@ -142,6 +152,8 @@ file_add_extension <- function(fname, ext){
 
 
 #' Closes a connection when the parent call exits
+#'
+#' @noRd
 close_on_exit <- function(con, envir = parent.frame()){
 
     assign('con', con, envir)
@@ -156,6 +168,8 @@ close_on_exit <- function(con, envir = parent.frame()){
 #' diverse, for example, readRDS can not understand if an URL is passed to it.
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 url_rds <- function(URL){
 
     URL %>%
@@ -170,6 +184,8 @@ url_rds <- function(URL){
 #' @param data A data frame.
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 load_success <- function(data){
 
     from_cache <- data %>% attr('origin') %>% {!is.null(.) && . == 'cache'}
@@ -195,6 +211,8 @@ load_success <- function(data){
 #'     been overridden by `param`.
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 add_defaults <- function(param, fun, defaults){
 
     this_env <- environment()
@@ -226,6 +244,8 @@ add_defaults <- function(param, fun, defaults){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom purrr reduce
+#'
+#' @noRd
 copy_attrs <- function(to, from, names){
 
     names %>%
@@ -243,6 +263,8 @@ copy_attrs <- function(to, from, names){
 #' Returns `value1` if it's not NULL otherwise `value2`
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 if_null <- function(value1, value2){
 
     value1 %>%

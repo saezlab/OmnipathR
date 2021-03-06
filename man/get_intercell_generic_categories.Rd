@@ -2,16 +2,10 @@
 % Please edit documentation in R/omnipath.R
 \name{get_intercell_generic_categories}
 \alias{get_intercell_generic_categories}
-\alias{get_intercell_classes}
 \title{Retrieves a list of the generic categories in the intercell database
 of OmniPath}
 \usage{
 get_intercell_generic_categories()
-
-get_intercell_classes(...)
-}
-\arguments{
-\item{...}{Passed to \code{get_intercell_generic_categories}.}
 }
 \value{
 character vector with the different intercell main classes

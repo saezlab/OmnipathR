@@ -35,6 +35,7 @@ PROTECTED_FILES <- c('cache.lock', 'cache.json')
 #' Sets up the cache once the module is loaded or after the cachedir option
 #' has been changed
 #'
+#' @noRd
 omnipath_init_cache <- function(){
 
     cachedir <- omnipath_default_cachedir()
@@ -52,6 +53,8 @@ omnipath_init_cache <- function(){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rappdirs user_cache_dir
+#'
+#' @noRd
 omnipath_default_cachedir <- function(){
 
     user_cache_dir() %>%
@@ -65,6 +68,8 @@ omnipath_default_cachedir <- function(){
 #' Sets up a new cache directory
 #'
 #' @importFrom jsonlite toJSON
+#'
+#' @noRd
 omnipath_new_cachedir <- function(path){
 
     if(!omnipath_is_cachedir(path)){
@@ -85,6 +90,8 @@ omnipath_new_cachedir <- function(path){
 
 
 #' Tells if a directory looks like an OmnipathR cache directory
+#'
+#' @noRd
 omnipath_is_cachedir <- function(path){
 
     dir.exists(path) && file.exists(file.path(path, 'cache.json'))
@@ -93,6 +100,8 @@ omnipath_is_cachedir <- function(path){
 
 
 #' Determines the path of the cache directory according to the settings
+#'
+#' @noRd
 omnipath_get_cachedir <- function(){
 
     cachedir <- options('omnipath.cachedir')[[1]]
@@ -110,6 +119,8 @@ omnipath_get_cachedir <- function(){
 
 #' Creates a lock file in the cache directory in order to avoid simulatneous
 #' reading and writing of the cache file database
+#'
+#' @noRd
 omnipath_lock_cache_db <- function(){
 
 
@@ -155,6 +166,8 @@ omnipath_unlock_cache_db <- function(){
 #' Tells the path to the cache lock file
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 omnipath_cache_lock_path <- function(){
 
     omnipath_get_cachedir() %>%
@@ -166,6 +179,8 @@ omnipath_cache_lock_path <- function(){
 #' Tells the path to the cache database
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 omnipath_cache_db_path <- function(){
 
     omnipath_get_cachedir() %>%
@@ -175,6 +190,8 @@ omnipath_cache_db_path <- function(){
 
 
 #' Throws a fatal error about locked cache.
+#'
+#' @noRd
 omnipath_locked_cache_error <- function(){
 
     msg <- sprintf(
@@ -193,6 +210,8 @@ omnipath_locked_cache_error <- function(){
 
 
 #' Executes a function with locking the cache database
+#'
+#' @noRd
 cache_locked <- decorator %@% function(FUN){
 
     function(...){
@@ -362,6 +381,8 @@ omnipath_cache_remove <- cache_locked %@% function(
 #' @return A cache record with the version items removed
 #'
 #' @importFrom magrittr %<>%
+#'
+#' @noRd
 omnipath_cache_remove_versions <- function(
     record,
     max_age = NULL,
@@ -390,6 +411,8 @@ omnipath_cache_remove_versions <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom purrr map keep
+#'
+#' @noRd
 omnipath_cache_clean_db <- cache_locked %@% function(){
 
     .omnipath_cache <<-
@@ -437,6 +460,7 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 #'
 #' @importFrom purrr map_chr map
 #' @importFrom magrittr %>%
+#' @export
 omnipath_cache_clean <- function(){
 
     files_in_db <-
@@ -801,6 +825,8 @@ omnipath_cache_download_ready <- function(version, key = NULL){
 #' From a cache version item extracts the cache record key
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 omnipath_cache_key_from_version <- function(version){
 
     version$path %>%
@@ -822,6 +848,7 @@ omnipath_cache_key_from_version <- function(version){
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom logger log_info log_warn
+#' @export
 omnipath_cache_update_status <- cache_locked %@% function(
     key,
     version,
@@ -934,6 +961,8 @@ omnipath_cache_set_ext <- cache_locked %@% function(key, ext){
 #' Adds a new version item to an existing cache record
 #'
 #' @return Character: key of the version item.
+#'
+#' @noRd
 omnipath_cache_new_version <- function(key, version = NULL){
 
     version <- `if`(
@@ -964,6 +993,8 @@ omnipath_cache_new_version <- function(key, version = NULL){
 #' @return The next version number as character
 #' @importFrom purrr map
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 omnipath_cache_next_version <- function(key){
 
     .omnipath_cache[[key]]$versions %>%
@@ -1069,6 +1100,8 @@ omnipath_cache_filter_versions <- function(
 #' @return Logical vector same length as `versions`
 #'
 #' @importFrom purrr map_lgl
+#'
+#' @noRd
 which_dl_finished <- function(versions, t, op = `>=`){
 
     map_lgl(
@@ -1085,6 +1118,8 @@ which_dl_finished <- function(versions, t, op = `>=`){
 #' Adds a new item to the cache or updates an existing one
 #'
 #' @importFrom RCurl merge.list
+#'
+#' @noRd
 omnipath_cache_add <- cache_locked %@% function(record, new = FALSE){
 
     if(record$key %in% .omnipath_cache && !new){
@@ -1109,6 +1144,8 @@ omnipath_cache_add <- cache_locked %@% function(record, new = FALSE){
 #' Returns the key if either the key or the URL is available
 #'
 #' @importFrom logger log_fatal
+#'
+#' @noRd
 omnipath_cache_ensure_key <- function(
     key = NULL,
     url = NULL,
@@ -1139,6 +1176,8 @@ omnipath_cache_ensure_key <- function(
 #' metadata such as download date
 #'
 #' @importFrom magrittr %>% %<>%
+#'
+#' @noRd
 omnipath_cache_record <- function(
         key,
         url,
@@ -1166,6 +1205,8 @@ omnipath_cache_record <- function(
 
 #' In a character vector, shortens values longer than maxlen and adds a note
 #' about the truncation and the original length
+#'
+#' @noRd
 char_shorten <- function(value, maxlen = 50){
 
     ifelse(
@@ -1186,6 +1227,8 @@ char_shorten <- function(value, maxlen = 50){
 #' @return A version item
 #'
 #' @importFrom magrittr %>% %<>%
+#'
+#' @noRd
 omnipath_cache_version <- function(
         record,
         version = '1',
@@ -1247,6 +1290,8 @@ omnipath_cache_key <- function(url, post = NULL, payload = NULL){
 #' @return List of 3 lists or vectors: url, post and payload
 #' @importFrom magrittr %<>% %>%
 #' @importFrom purrr pmap_chr map map_lgl
+#'
+#' @noRd
 omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
 
     null_list <- function(value){
@@ -1287,6 +1332,8 @@ omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
 #' Reads the cache DB contents from the disk to the memory
 #'
 #' @importFrom jsonlite fromJSON
+#'
+#' @noRd
 omnipath_read_cache_db <- function(){
 
     .omnipath_cache <<-
@@ -1300,6 +1347,8 @@ omnipath_read_cache_db <- function(){
 #' Converts the timestamps read from JSON to POSIXct objects
 #'
 #' @importFrom magrittr %<>%
+#'
+#' @noRd
 omnipath_cache_timestamps <- function(cache_db){
 
     to_posixt <- function(value){
@@ -1330,6 +1379,8 @@ omnipath_cache_timestamps <- function(cache_db){
 #'
 #' @importFrom jsonlite toJSON
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 omnipath_write_cache_db <- function(){
 
     .omnipath_cache %>%
@@ -1347,6 +1398,8 @@ omnipath_write_cache_db <- function(){
 #' @param data Data frame or any kind of object.
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 origin_cache <- function(data, from_cache = TRUE){
 
     data %>%

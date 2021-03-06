@@ -185,7 +185,9 @@ print_path_es <- function(edgeSeq,G){
 }
 
 
-# convert vertex sequence to named sequence to find unique
+#' Convert vertex sequence to named sequence to find unique
+#'
+#' @noRd
 unique_nodeSeq <- function(nodeSeq_list){
 # takes a list of nodeSequences converts them to names and takes the unique
 # paths
@@ -201,9 +203,8 @@ unique_nodeSeq <- function(nodeSeq_list){
     unique(name_path)
 }
 
-####
 
-#' print networks paths given by node sequence
+#' Print networks paths given by node sequence
 #'
 #' Prints the interactions in the path in a nice format.
 #'
@@ -258,6 +259,8 @@ print_path_vs <- function(nodeSeq,G){
 #' @rdname print_path_vs
 #' @param ... Passed to \code{print_path_vs}.
 #' @export
+#'
+#' @noRd
 printPath_vs <- function(...){
     .Deprecated("print_path_vs")
     print_path_vs(...)
@@ -268,6 +271,8 @@ printPath_vs <- function(...){
 #' @rdname print_path_es
 #' @param ... Passed to \code{print_path_es}.
 #' @export
+#'
+#' @noRd
 printPath_es <- function(...){
     .Deprecated("print_path_es")
     print_path_es(...)

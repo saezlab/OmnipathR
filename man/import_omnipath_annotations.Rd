@@ -13,10 +13,6 @@ import_omnipath_annotations(
   wide = FALSE,
   ...
 )
-
-import_Omnipath_annotations(...)
-
-import_OmniPath_annotations(...)
 }
 \arguments{
 \item{cache_file}{Path to an earlier data file}
@@ -34,7 +30,7 @@ See \code{\link{get_annotation_resources}} for possible values.}
 corresponds more or less to the original resource. If the data comes from
 more than one resource a list of wide tables will be returned.}
 
-\item{...}{Passed to \code{import_omnipath_annotations}.}
+\item{...}{Additional arguments.}
 }
 \value{
 A data.frame containing different gene/complex annotations

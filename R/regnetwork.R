@@ -86,6 +86,8 @@ regnetwork_download <- function(organism = 'human'){
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_delim cols col_character
 #' @importFrom dplyr mutate recode
+#'
+#' @export
 regnetwork_directions <- function(organism = 'human'){
 
     url <-
@@ -134,6 +136,8 @@ regnetwork_directions <- function(organism = 'human'){
 
 #' For a vector of miRBase IDs and various other IDs mixed, returns a vector
 #' of molecule types "mirna" and "protein"
+#'
+#' @noRd
 mirna_or_protein <- function(ids){
 
     ifelse(

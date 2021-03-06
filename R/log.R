@@ -20,6 +20,8 @@
 #
 
 #' Ensures that `level` is a `loglevel` class object, converts if necessary
+#'
+#' @noRd
 ensure_loglevel <- function(level){
 
     `if`(
@@ -33,6 +35,8 @@ ensure_loglevel <- function(level){
 
 #' Returns the log level threshold for console messages, according to the
 #' current settings
+#'
+#' @noRd
 omnipath_console_loglevel <- function(){
 
     ensure_loglevel(options('omnipath.console_loglevel')[[1]])

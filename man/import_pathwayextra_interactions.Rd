@@ -14,8 +14,6 @@ import_pathwayextra_interactions(
   references_by_resource = TRUE,
   ...
 )
-
-import_PathwayExtra_Interactions(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}
@@ -37,7 +35,7 @@ the query type. If FALSE, only the fields defined by the user in the
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
-\item{...}{Passed to \code{import_pathwayextra_interactions}.}
+\item{...}{optional additional arguments}
 }
 \value{
 A dataframe containing activity flow interactions between proteins

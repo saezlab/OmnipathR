@@ -24,10 +24,6 @@ import_omnipath_intercell(
   causality = NULL,
   ...
 )
-
-import_Omnipath_intercell(...)
-
-import_OmniPath_intercell(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}
@@ -74,7 +70,7 @@ transmembrane proteins}
 \item{causality}{`transmitter` (trans), `receiver` (rec) or `both` (both
 short or long notation can be used)}
 
-\item{...}{Passed to \code{import_omnipath_intercell}.}
+\item{...}{Additional optional arguments}
 }
 \value{
 A dataframe cotaining information about roles in intercellular

@@ -6,13 +6,9 @@
 \title{Retrieves a list of enzyme-substrate resources available in OmniPath}
 \usage{
 get_enzsub_resources(dataset = NULL)
-
-get_ptms_databases(...)
 }
 \arguments{
 \item{dataset}{ignored for this query type}
-
-\item{...}{Passed to \code{get_enzsub_resources}.}
 }
 \value{
 character vector with the names of the enzyme-substrate resources

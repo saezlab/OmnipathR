@@ -29,6 +29,8 @@
 #'
 #' @seealso \code{\link{bioplex1}, \link{bioplex2}, \link{bioplex3},
 #'     \link{bioplex_hct116_1}}
+#'
+#' @noRd
 bioplex_download <- function(version){
 
     result <-

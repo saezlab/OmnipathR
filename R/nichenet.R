@@ -970,6 +970,8 @@ nichenet_gr_network_omnipath <- function(
 #' @importFrom dplyr select mutate distinct
 #' @importFrom tidyr separate_rows
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 omnipath_interactions_postprocess <- function(interactions, type){
 
     interactions %>%
@@ -1054,6 +1056,8 @@ nichenet_signaling_network_harmonizome <- function(
 #' @importFrom magrittr %>%
 #' @seealso \code{\link{harmonizome_download},
 #'     \link{harmonizome_nichenet_process}}
+#'
+#' @noRd
 harmonizome_nichenet <- function(datasets, dataset_names){
 
     datasets %>%
@@ -1074,6 +1078,8 @@ harmonizome_nichenet <- function(datasets, dataset_names){
 #' @importFrom dplyr select mutate
 #' @importFrom stringr str_split_fixed
 #' @seealso \code{\link{harmonizome_download}, \link{harmonizome_nichenet}}
+#'
+#' @noRd
 harmonizome_nichenet_process <- function(dataset){
 
     target_desc_col <- c('geotf', 'geokinase', 'geogene')
@@ -1522,6 +1528,8 @@ nichenet_gr_network_pathwaycommons <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate filter relocate select
+#'
+#' @noRd
 nichenet_pathwaycommons_common <- function(interaction_types, label){
 
     pathwaycommons_download() %>%
@@ -1546,6 +1554,8 @@ nichenet_pathwaycommons_common <- function(interaction_types, label){
 #' @importFrom magrittr %>%
 #' @importFrom rlang !! enquo
 #' @importFrom dplyr select distinct mutate
+#'
+#' @noRd
 nichenet_common_postprocess <- function(
     data,
     source,

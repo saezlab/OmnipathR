@@ -29,6 +29,8 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom utils URLencode
+#'
+#' @noRd
 url_parser <- function(
     url_key,
     url_key_param = list(),
@@ -62,6 +64,8 @@ url_parser <- function(
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_tsv cols
+#'
+#' @noRd
 generic_downloader <- function(
     url_key,
     reader = read_tsv,
@@ -116,6 +120,8 @@ generic_downloader <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom readxl read_excel
+#'
+#' @noRd
 xls_downloader <- function(
     url_key,
     sheet = NULL,
@@ -168,6 +174,8 @@ xls_downloader <- function(
 #' @importFrom utils unzip untar
 #' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
 #' @importFrom wand get_content_type
+#'
+#' @noRd
 archive_downloader <- function(
     url_key,
     url_key_param = list(),
@@ -255,6 +263,8 @@ archive_downloader <- function(
 #' @importFrom magrittr %>% %<>%
 #' @importFrom logger log_fatal
 #' @seealso \code{\link{archive_downloader}}
+#'
+#' @noRd
 archive_extractor <- function(
     url_key,
     path = NULL,
@@ -336,6 +346,8 @@ archive_extractor <- function(
 #' \code{\link{archive_downloader}} function.
 #'
 #' @seealso \code{\link{archive_downloader}}
+#'
+#' @noRd
 paths_in_archive <- function(archive_data){
 
     `if`(
@@ -355,6 +367,8 @@ paths_in_archive <- function(archive_data){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom httr parse_url
+#'
+#' @noRd
 source_attrs <- function(data, resource, url){
 
     domain <- parse_url(url)$hostname
@@ -378,6 +392,8 @@ source_attrs <- function(data, resource, url){
 #' @param from The object to copy attributes from.
 #'
 #' @importFrom magrittr %>%
+#'
+#' @noRd
 copy_source_attrs <- function(to, from){
 
     to %>%

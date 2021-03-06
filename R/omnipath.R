@@ -115,11 +115,14 @@ utils::globalVariables(
     entity_type = 'entity_types'
 )
 
-## Downloads data from the OmniPath web service
-## Generic method for retrieval of a table and creating a data frame.
-## All methods specific for certain query types or datasets use this function
-## to manage the download.
-## Not exported.
+#' Downloads data from the OmniPath web service
+#'
+#' Generic method for retrieval of a table and creating a data frame.
+#' All methods specific for certain query types or datasets use this function
+#' to manage the download.
+#' Not exported.
+#'
+#' @noRd
 import_omnipath <- function(
     query_type,
     organism = 9606,
@@ -219,10 +222,12 @@ import_omnipath <- function(
 }
 
 
-## Check the arguments of \link{import_omnipath}, corrects some easy to
-## confuse or deprecated synonyms and selects the message printed by
-## the download function.
-## Not exported.
+#' Checks the arguments of \link{import_omnipath}, corrects some easy to
+#' confuse or deprecated synonyms and selects the message printed by
+#' the download function.
+#' Not exported.
+#'
+#' @noRd
 omnipath_check_param <- function(param){
 
     # mapping query type synonyms
@@ -321,9 +326,11 @@ omnipath_check_param <- function(param){
 }
 
 
-## Constructs the URL by creating a base URL according to the query type and
-## adding all user or package defined query string parameters.
-## Not exported.
+#' Constructs the URL by creating a base URL according to the query type and
+#' adding all user or package defined query string parameters.
+#' Not exported.
+#'
+#' @noRd
 omnipath_url <- function(param){
 
     baseurl <- options('omnipath.url')
@@ -342,8 +349,10 @@ omnipath_url <- function(param){
 }
 
 
-## Appends a query string parameter to the URL.
-## Not exported, used internally for assembling the URLs.
+#' Appends a query string parameter to the URL.
+#' Not exported, used internally for assembling the URLs.
+#'
+#' @noRd
 omnipath_url_add_param <- function(url, name, values = NULL){
 
     values <- `if`(
@@ -377,9 +386,11 @@ omnipath_url_add_param <- function(url, name, values = NULL){
 }
 
 
-## Checks whether the response is real data or an error message.
-## In case of error stops the execution and prints the URL and the message
-## from the server.
+#' Checks whether the response is real data or an error message.
+#' In case of error stops the execution and prints the URL and the message
+#' from the server.
+#'
+#' @noRd
 omnipath_check_result <- function(result, url){
 
     if(length(result) == 1){
@@ -395,9 +406,11 @@ omnipath_check_result <- function(result, url){
 
 }
 
-## Makes sure the boolean variables, listed in argument `logicals`, are of
-## R logical type. Converts various string and numeric representations.
-## Checks only for TRUE values, whatever does not match remains FALSE.
+#' Makes sure the boolean variables, listed in argument `logicals`, are of
+#' R logical type. Converts various string and numeric representations.
+#' Checks only for TRUE values, whatever does not match remains FALSE.
+#'
+#' @noRd
 cast_logicals <- function(data, logicals = NULL){
 
     true_values <- c('True', '1', 'TRUE', 'T', 'yes', 'YES', 'Y', 'y')
@@ -415,8 +428,10 @@ cast_logicals <- function(data, logicals = NULL){
 }
 
 
-## Removes the resource labels from references (PubMed IDs) in the
-## interactions and enzyme-substrate data frames.
+#' Removes the resource labels from references (PubMed IDs) in the
+#' interactions and enzyme-substrate data frames.
+#'
+#' @noRd
 strip_resource_labels <- function(
     data,
     references_by_resource = FALSE,
@@ -450,8 +465,10 @@ strip_resource_labels <- function(
 }
 
 
-## For a character vector splits each element and re-joins sorted unique
-## values.
+#' For a character vector splits each element and re-joins sorted unique
+#' values.
+#'
+#' @noRd
 split_unique_join <- function(
     x,
     sep = ';',
@@ -479,8 +496,10 @@ split_unique_join <- function(
 }
 
 
-## For a character vector splits each element and applies a method for
-## each sub vector.
+#' For a character vector splits each element and applies a method for
+#' each sub vector.
+#'
+#' @noRd
 split_apply <- function(
     x,
     method,
@@ -496,8 +515,10 @@ split_apply <- function(
 }
 
 
-## For an interactions or enzyme-substrate data frame adds a column
-## `n_resources` with the number of resources for each record.
+#' For an interactions or enzyme-substrate data frame adds a column
+#' `n_resources` with the number of resources for each record.
+#'
+#' @noRd
 count_resources <- function(data, only_primary = TRUE){
 
     data[['n_resources']] <- split_apply(
@@ -517,8 +538,10 @@ count_resources <- function(data, only_primary = TRUE){
 }
 
 
-## For an interactions or enzyme-substrate data frame adds a column
-## `n_references` with the number of references for each record.
+#' For an interactions or enzyme-substrate data frame adds a column
+#' `n_references` with the number of references for each record.
+#'
+#' @noRd
 count_references <- function(data){
 
     data[['n_references']] <- strip_resource_labels(
@@ -533,8 +556,10 @@ count_references <- function(data){
 
 }
 
-## For each undirected interaction adds a duplicate with the source and
-## target nodes swapped
+#' For each undirected interaction adds a duplicate with the source and
+#' target nodes swapped.
+#'
+#' @noRd
 swap_undirected <- function(data){
 
     data <- data %>%
@@ -626,14 +651,20 @@ import_omnipath_enzsub <- function(
 #' @rdname import_omnipath_enzsub
 #' @param ... Passed to \code{import_omnipath_enzsub}.
 #' @export
+#'
+#' @noRd
 import_Omnipath_PTMS <- function(...){
     .Deprecated("import_omnipath_enzsub")
     import_omnipath_enzsub(...)
-} 
+}
+
+
 # Aliases (old names) to be Deprecated
 #' @rdname import_omnipath_enzsub
 #' @param ... Passed to \code{import_omnipath_enzsub}.
 #' @export
+#'
+#' @noRd
 import_OmniPath_PTMS <- function(...){
     .Deprecated("import_omnipath_enzsub")
     import_omnipath_enzsub(...)
@@ -663,10 +694,13 @@ get_enzsub_resources <- function(dataset = NULL){
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname get_enzsub_resources
 #' @param ... Passed to \code{get_enzsub_resources}.
 #' @export
+#'
+#' @noRd
 get_ptms_databases <- function(...){
     .Deprecated("get_enzsub_resources")
     get_enzsub_resources(...)
@@ -751,15 +785,20 @@ import_omnipath_interactions <- function(
 #' @rdname import_omnipath_interactions
 #' @param ... Passed to \code{import_omnipath_interactions}.
 #' @export
+#'
+#' @noRd
 import_Omnipath_Interactions <- function(...){
     .Deprecated("import_omnipath_interactions")
     import_omnipath_interactions(...)
 }
-    
+
+
 # Aliases (old names) to be deprecated
 #' @rdname import_omnipath_interactions
 #' @param ... Passed to \code{import_omnipath_interactions}.
 #' @export
+#'
+#' @noRd
 import_OmniPath_Interactions <- function(...){
     .Deprecated("import_omnipath_interactions")
     import_omnipath_interactions(...)
@@ -830,15 +869,19 @@ import_pathwayextra_interactions <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #'
 #' @rdname import_pathwayextra_interactions
 #' @param ... Passed to \code{import_pathwayextra_interactions}.
 #' @export
+#'
+#' @noRd
 import_PathwayExtra_Interactions <- function(...){
     .Deprecated("import_pathwayextra_interactions")
     import_pathwayextra_interactions(...)
 }
+
 
 #' Imports interactions from the `kinase extra` dataset of OmniPath
 #'
@@ -904,14 +947,18 @@ import_kinaseextra_interactions <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_kinaseextra_interactions
 #' @param ... Passed to \code{import_kinaseextra_interactions}.
 #' @export
+#'
+#' @noRd
 import_KinaseExtra_Interactions <- function(...){
     .Deprecated("import_kinaseextra_interactions")
     import_kinaseextra_interactions(...)
 }
+
 
 #' Imports interactions from the `ligrec extra` dataset of OmniPath
 #'
@@ -976,14 +1023,18 @@ import_ligrecextra_interactions <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_ligrecextra_interactions
 #' @param ... Passed to \code{import_ligrecextra_interactions}.
 #' @export
+#'
+#' @noRd
 import_LigrecExtra_Interactions <- function(...){
     .Deprecated("import_ligrecextra_interactions")
     import_ligrecextra_interactions(...)
 }
+
 
 #' Imports all post-translational interactions from OmniPath
 #'
@@ -1107,22 +1158,29 @@ import_dorothea_interactions <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_dorothea_interactions
 #' @param ... Passed to \code{import_dorothea_interactions}.
 #' @export
+#'
+#' @noRd
 import_TFregulons_Interactions <- function(...){
     .Deprecated("import_dorothea_interactions")
     import_dorothea_interactions(...)
 }
 
+
 #' @rdname import_dorothea_interactions
 #' @param ... Passed to \code{import_dorothea_interactions}.
 #' @export
+#'
+#' @noRd
 import_tfregulons_interactions <- function(...){
     .Deprecated("import_dorothea_interactions")
     import_dorothea_interactions(...)
 }
+
 
 #' Imports interactions from the TF-target dataset of OmniPath
 #'
@@ -1185,6 +1243,7 @@ import_tf_target_interactions <- function(
     return(result)
 
 }
+
 
 #' Imports all TF-target interactions from OmniPath
 #'
@@ -1254,6 +1313,7 @@ import_transcriptional_interactions <- function(
 
 }
 
+
 #' Imports interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
@@ -1314,14 +1374,18 @@ import_mirnatarget_interactions <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_mirnatarget_interactions
 #' @param ... Passed to \code{import_mirnatarget_interactions}.
 #' @export
+#'
+#' @noRd
 import_miRNAtarget_Interactions <- function(...){
     .Deprecated("import_mirnatarget_interactions")
     import_mirnatarget_interactions(...)
 }
+
 
 #' Imports interactions from the TF-miRNA dataset of OmniPath
 #'
@@ -1526,6 +1590,7 @@ import_all_interactions <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_all_interactions
 #' @param ... Passed to \code{import_all_interactions}.
@@ -1571,10 +1636,13 @@ get_interaction_resources <- function(dataset = NULL){
 #' @rdname get_interaction_resources
 #' @param ... Passed to \code{get_interaction_resources}.
 #' @export
+#'
+#' @noRd
 get_interaction_databases <- function(...){
     .Deprecated("get_interaction_resources")
     get_interaction_resources(...)
 }
+
 
 #' Retrieve the available resources for a given query type
 #'
@@ -1685,22 +1753,29 @@ import_omnipath_complexes <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_omnipath_complexes
 #' @param ... Passed to \code{import_omnipath_complexes}.
 #' @export
+#'
+#' @noRd
 import_Omnipath_complexes <- function(...){
     .Deprecated("import_omnipath_complexes")
     import_omnipath_complexes(...)
 }
 
+
 #' @rdname import_omnipath_complexes
 #' @param ... Passed to \code{import_omnipath_complexes}.
 #' @export
+#'
+#' @noRd
 import_OmniPath_complexes <- function(...){
     .Deprecated("import_omnipath_complexes")
     import_omnipath_complexes(...)    
 }
+
 
 #' Retrieve a list of complex resources available in Omnipath
 #'
@@ -1723,10 +1798,13 @@ get_complex_resources <- function(dataset = NULL){
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname get_complex_resources
 #' @param ... Passed to \code{import_omnipath_enzsub}.
 #' @export
+#'
+#' @noRd
 get_complexes_databases <- function(...){
     .Deprecated("get_complex_resources")
     get_complex_resources(...)
@@ -1892,17 +1970,24 @@ import_omnipath_annotations <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_omnipath_annotations
 #' @param ... Passed to \code{import_omnipath_annotations}.
 #' @export
+#'
+#' @noRd
 import_Omnipath_annotations <- function(...){
     .Deprecated("import_omnipath_annotations")
     import_omnipath_annotations(...)
 }
+
+
 #' @rdname import_omnipath_annotations
 #' @param ... Passed to \code{import_omnipath_annotations}.
 #' @export
+#'
+#' @noRd
 import_OmniPath_annotations <- function(...){
     .Deprecated("import_omnipath_annotations")
     import_omnipath_annotations(...)
@@ -1932,10 +2017,13 @@ get_annotation_resources <- function(dataset = NULL, ...){
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname get_annotation_resources
 #' @param ... Passed to \code{get_annotation_resources}.
 #' @export
+#'
+#' @noRd
 get_annotation_databases <- function(...){
     .Deprecated("get_annotation_resources")
     get_annotation_resources(...)
@@ -2083,21 +2171,29 @@ import_omnipath_intercell <- function(
 
 }
 
+
 # Aliases (old names) to be deprecated
 #' @rdname import_omnipath_intercell
 #' @param ... Passed to \code{import_omnipath_intercell}.
 #' @export
+#'
+#' @noRd
 import_Omnipath_intercell <- function(...){
     .Deprecated("import_omnipath_intercell")
     import_omnipath_intercell(...)
 }
+
+
 #' @rdname import_omnipath_intercell
 #' @param ... Passed to \code{import_omnipath_intercell}.
 #' @export
+#'
+#' @noRd
 import_OmniPath_intercell <- function(...){
     .Deprecated("import_omnipath_intercell")
     import_omnipath_intercell(...)
 }
+
 
 #' Retrieves a list of intercellular communication resources available in
 #' OmniPath
@@ -2362,6 +2458,8 @@ get_intercell_generic_categories <- function(){
 #' @rdname get_intercell_generic_categories
 #' @param ... Passed to \code{get_intercell_generic_categories}.
 #' @export
+#'
+#' @noRd
 get_intercell_classes <- function(...){
     .Deprecated("get_intercell_generic_categories")
     get_intercell_generic_categories(...)
@@ -2375,8 +2473,21 @@ get_intercell_classes <- function(...){
 ## interactions, complexes and annotations according to the databases passed
 ## to the main functions
 
-## Filtering Interactions, PTMs and complexes
-#TODO: actually this we could export as it might be useful for users
+#' Filters OmniPath data by resources
+#'
+#' Keeps only those records which are supported by any of the resources of
+#' interest.
+#'
+#' @param data A data frame downloaded from the OmniPath web service
+#'     (interactions, enzyme-substrate or complexes).
+#' @param resources Character vector with resource names to keep.
+#'
+#' @return The data frame filtered.
+#'
+#' @importFrom logger log_success
+#' @export
+#'
+#' @aliases filter_sources
 filter_by_resource <- function(data, resources = NULL){
 
     if(!is.null(resources)){
@@ -2389,7 +2500,7 @@ filter_by_resource <- function(data, resources = NULL){
 
             if(field %in% names(data)){
 
-                data <-data[
+                data <- data[
                     which(
                         unlist(lapply(
                             strsplit(data[[field]], ';'),
@@ -2407,11 +2518,9 @@ filter_by_resource <- function(data, resources = NULL){
 
         after <- nrow(data)
 
-        message(
-            sprintf(
-                'Filtering by resources: removed %d records.',
-                before - after
-            )
+        logger::log_success(
+            'Filtering by resources: removed %d records.',
+            before - after
         )
 
     }
@@ -2419,14 +2528,29 @@ filter_by_resource <- function(data, resources = NULL){
     return(data)
 }
 
-# synonym (old name)
-filter_sources <- filter_by_resource
+
+#' Alias for old function name.
+#' @param ... Passed to \code{filter_by_resource}.
+#'
+#' @noRd
+filter_sources <- function(...){
+    .Deprecated("filter_by_resource")
+    filter_by_resource(...)
+}
 
 
 ## Filtering intercell records according to the categories and/or classes
 ## selected
 #TODO: actually this we could export as it might be useful for users
 ## Filters an intercell data table according to various criteria
+#' Filters intercell annotations
+#'
+#' Filters a data frame retrieved by \code{\link{import_omnipath_intercell}}.
+#'
+#' @importFrom dplyr recode rename_all
+#' @importFrom magrittr %>%
+#'
+#' @noRd
 filter_intercell <- function(
     data,
     categories = NULL,
@@ -2531,6 +2655,8 @@ filter_intercell <- function(
 #' It tries to retrieve the resource one or several times before failing.
 #'
 #' @importFrom logger log_level log_info
+#'
+#' @noRd
 omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
 
     op <- options(timeout = 600)

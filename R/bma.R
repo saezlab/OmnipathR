@@ -23,6 +23,7 @@
 #  Author: Ben Hall
 #
 
+
 #' Ends a function where something has gone wrong, printing information about the error
 #' @param a string with information about why the error occurred
 #' @noRd
@@ -31,6 +32,7 @@ wrong_input <- function(reason){
     logger::log_warn(reason)
     return(NULL)
 }
+
 
 #' Returns a formatted string describing a BMA interaction between variables
 #'
@@ -45,6 +47,7 @@ bma_relationship <- function(id, from, to, type){
     return(rel)
 }
 
+
 #' Returns a formatted string describing the model parameters of a BMA
 #' variable
 #'
@@ -58,6 +61,7 @@ bma_variable_model <- function(id, name, granularity, formula = ""){
     )
     return(var)
 }
+
 
 #' Returns a formatted string describing the layout parameters of a BMA
 #' variable
@@ -89,6 +93,7 @@ bma_formula <- function(inhibitor, granularity, upstream){
     return(f)
 }
 
+
 #' Returns a string describing the evidence behind an interaction
 #'
 #' Contains all interaction types with a simple descriptor and PMIDs
@@ -103,6 +108,7 @@ bma_description <- function(e, incoming = ""){
     incoming <- ifelse(incoming == "", "", paste("", incoming, "", sep = " "))
     return(sprintf("%s%s-PMID:%s.", incoming, sign, refs))
     }
+
 
 #' Prints a BMA motif to the screen from a sequence of edges, which can be
 #' copy/pasted into the BMA canvas
@@ -196,6 +202,7 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
     cat(result)
 
 }
+
 
 #' Prints a BMA motif to the screen from a sequence of nodes, which can be
 #' copy/pasted into the BMA canvas

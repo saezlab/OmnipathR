@@ -7,13 +7,11 @@
 of OmniPath}
 \usage{
 get_annotation_resources(dataset = NULL, ...)
-
-get_annotation_databases(...)
 }
 \arguments{
 \item{dataset}{ignored for this query type}
 
-\item{...}{Passed to \code{get_annotation_resources}.}
+\item{...}{optional additional arguments}
 }
 \value{
 character vector with the names of the annotation resources

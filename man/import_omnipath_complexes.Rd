@@ -7,10 +7,6 @@
 \title{Imports protein complexes from OmniPath}
 \usage{
 import_omnipath_complexes(cache_file = NULL, resources = NULL, ...)
-
-import_Omnipath_complexes(...)
-
-import_OmniPath_complexes(...)
 }
 \arguments{
 \item{cache_file}{path to an earlier data file}
@@ -18,7 +14,7 @@ import_OmniPath_complexes(...)
 \item{resources}{complexes not reported in these databases are
 removed. See \code{\link{get_complexes_databases}} for more information.}
 
-\item{...}{Passed to \code{import_omnipath_complexes}.}
+\item{...}{optional additional arguments}
 }
 \value{
 A dataframe containing information about complexes
