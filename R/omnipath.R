@@ -1196,7 +1196,8 @@ import_tf_target_interactions <- function(
 #' @return A dataframe containing TF-target interactions
 #' @export
 #' @importFrom utils read.table
-#' @importFrom dplyr %>% mutate select
+#' @importFrom dplyr mutate select
+#' @importFrom magrittr %>%
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -2149,26 +2150,26 @@ get_intercell_resources <- function(dataset = NULL){
 #' @importFrom magrittr %>%
 #'
 #' @param cache_file path to an earlier data file; if exists, will be loaded
-#' as it is, the further arguments have no effect; if does not exists, the
-#' result will be dumped into this file.
-#' @param interactions_param a list with arguments for an interactions query: 
-#' \code{\link{import_omnipath_interactions}, 
-#' \link{import_pathwayextra_interactions},
-#' \link{import_kinaseextra_interactions},
-#' \link{import_ligrecextra_interactions}}
+#'     as it is, the further arguments have no effect; if does not exists, the
+#'     result will be dumped into this file.
+#' @param interactions_param a list with arguments for an interactions query:
+#'     \code{\link{import_omnipath_interactions},
+#'     \link{import_pathwayextra_interactions},
+#'     \link{import_kinaseextra_interactions},
+#'     \link{import_ligrecextra_interactions}}
 #' @param transmitter_param a list with arguments for
-#' \code{\link{import_omnipath_intercell}}, to define the transmitter side
-#' of intercellular connections
+#'     \code{\link{import_omnipath_intercell}}, to define the transmitter side
+#'     of intercellular connections
 #' @param receiver_param a list with arguments for
-#' \code{\link{import_omnipath_intercell}}, to define the receiver side
-#' of intercellular connections
+#'     \code{\link{import_omnipath_intercell}}, to define the receiver side
+#'     of intercellular connections
 #' @param resources A character vector of resources to be applied to
-#' both the interactions and the annotations. For example, \code{resources =
-#' 'CellChatDB' will download the transmitters and receivers defined by
-#' CellChatDB, connected by connections from CellChatDB.
+#'     both the interactions and the annotations. For example, \code{resources
+#'     = 'CellChatDB'} will download the transmitters and receivers defined by
+#'     CellChatDB, connected by connections from CellChatDB.
 #' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
-#' annotations will be used instead of the more generic *transmitter* and
-#' *receiver* categories.
+#'     annotations will be used instead of the more generic *transmitter* and
+#'     *receiver* categories.
 #'
 #' @examples
 #' intercellNetwork <- import_intercell_network(

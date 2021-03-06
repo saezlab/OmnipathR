@@ -20,10 +20,15 @@
 #
 
 
+#' Downloads a BioPlex interaction dataset
+#'
 #' @param version Character: either 1.0, 2.0, 3.0 or HCT116_1.0
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
+#'
+#' @seealso \code{\link{bioplex1}, \link{bioplex2}, \link{bioplex3},
+#'     \link{bioplex_hct116_1}}
 bioplex_download <- function(version){
 
     result <-

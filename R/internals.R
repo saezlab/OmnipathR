@@ -116,7 +116,6 @@ generic_downloader <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom readxl read_excel
-#' @importFrom
 xls_downloader <- function(
     url_key,
     sheet = NULL,

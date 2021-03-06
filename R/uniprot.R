@@ -35,9 +35,9 @@
 #' identifier type abbreviations used in the UniProt API, please refer to
 #' the table here: https://www.uniprot.org/help/api_idmapping
 #'
-#' @importsFrom readr read_tsv cols
-#' @importsFrom httr POST
-#' @importsFrom magrittr %>%
+#' @importFrom readr read_tsv cols
+#' @importFrom httr POST
+#' @importFrom magrittr %>%
 #' @export
 #'
 #' @examples
@@ -110,9 +110,9 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' in the original data frame yields multiple rows in the returned data
 #' frame.
 #'
-#' @importsFrom rlang !! enquo := quo_text
-#' @importsFrom magrittr %>%
-#' @importsFrom dplyr pull left_join inner_join rename
+#' @importFrom rlang !! enquo := quo_text
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull left_join inner_join rename
 #' @export
 #'
 #' @examples
@@ -163,8 +163,8 @@ translate_ids <- function(
 #' @param organism Integer, NCBI Taxonomy ID of the organism (by default
 #'     9606 for human).
 #'
-#' @importsFrom readr read_tsv cols
-#' @importsFrom magrittr %>% %T>%
+#' @importFrom readr read_tsv cols
+#' @importFrom magrittr %>% %T>%
 #' @export
 #'
 #' @examples
@@ -210,10 +210,10 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' uniprot_entry (UniProtKB AC, e.g. EGFR_HUMAN), protein_name (full name of
 #' the protein), uniprot (UniProtKB ID, e.g. P00533).
 #'
-#' @importsFrom magrittr %>%
-#' @importsFrom dplyr mutate rename
-#' @importsFrom tidyr separate_rows
-#' @importsFrom rlang !! enquo
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate rename
+#' @importFrom tidyr separate_rows
+#' @importFrom rlang !! enquo
 #' @export
 #'
 #' @examples

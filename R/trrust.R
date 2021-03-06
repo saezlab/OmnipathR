@@ -31,7 +31,8 @@
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%
-#' @importFrom dplyr mutate recode separate_rows
+#' @importFrom dplyr mutate recode
+#' @importFrom tidyr separate_rows
 trrust_download <- function(organism = 'human'){
 
     generic_downloader(

@@ -618,7 +618,10 @@ nichenet_ligand_target_links <- function(
 #' @importFrom magrittr %>%
 nichenet_results_dir <- function(){
 
-    'omnipath.nichenet_results_dir' %>% options
+    'omnipath.nichenet_results_dir' %>%
+    options %>%
+    `[[`(1) %>%
+    dir.create(showWarnings = FALSE, recursive = TRUE)
 
 }
 
@@ -964,7 +967,8 @@ nichenet_gr_network_omnipath <- function(
 
 #' Processes OmniPath interactions table into NicheNet format
 #'
-#' @importFrom dplyr select mutate distinct separate_rows
+#' @importFrom dplyr select mutate distinct
+#' @importFrom tidyr separate_rows
 #' @importFrom magrittr %>%
 omnipath_interactions_postprocess <- function(interactions, type){
 
@@ -1153,8 +1157,8 @@ nichenet_signaling_network_cpdb <- function(...){
 #' quantile of the confidence score.
 #' @param indirect Logical: whether to include indirect interactions.
 #'
-#' @importFrom magrittr %>% `n'est pas`
-#' @importFrom dplyt select mutate filter
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select mutate filter
 #' @export
 #'
 #' @seealso \code{\link{evex}}
@@ -1183,7 +1187,7 @@ nichenet_signaling_network_evex <- function(
         filter(., coarse_type != 'Indirect_regulation')
     )} %>%
     filter(
-        `n'est pas`(refined_type %in% c(
+        !(refined_type %in% c(
             # these belong to transcriptional regulation
             'Regulation of expression',
             'Regulation of transcription',

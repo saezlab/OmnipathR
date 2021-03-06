@@ -34,10 +34,10 @@
 #' @param top_confidence Confidence cutoff as quantile (a number between
 #'     0 and 1). If NULL no filtering performed.
 #'
-#' @importsFrom magrittr %>% %T>%
-#' @importsFrom readr read_tsv cols
-#' @importsFrom dplyr left_join mutate group_by summarize_all first ungroup
-#' @importsFrom dplyr rename filter
+#' @importFrom magrittr %>% %T>%
+#' @importFrom readr read_tsv cols
+#' @importFrom dplyr left_join mutate group_by summarize_all first ungroup
+#' @importFrom dplyr rename filter
 #' @export
 #'
 #' @examples

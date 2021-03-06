@@ -25,10 +25,10 @@
 
 #' Ends a function where something has gone wrong, printing information about the error
 #' @param a string with information about why the error occurred
-#' @NoRd
-#' @importFrom logger log_warning
+#' @noRd
+#' @importFrom logger log_warn
 wrong_input <- function(reason){
-    logger::log_warning(reason)
+    logger::log_warn(reason)
     return(NULL)
 }
 
@@ -36,7 +36,7 @@ wrong_input <- function(reason){
 #'
 #' @param a unique id, variable ids describing the source and targets, and
 #' the edge description
-#' @NoRd
+#' @noRd
 bma_relationship <- function(id, from, to, type){
     rel <- sprintf(
         '{"Id":%d, "FromVariable":%d, "ToVariable":%d, "Type":"%s"}',
@@ -50,7 +50,7 @@ bma_relationship <- function(id, from, to, type){
 #'
 #' @param a unique id, human readable name (e.g. JAG1), unique variable id,
 #' granularity (number of levels) and the formula
-#' @NoRd
+#' @noRd
 bma_variable_model <- function(id, name, granularity, formula = ""){
     var <- sprintf(
         '{"Name":"%s", "Id":%d, "RangeFrom":0, "RangeTo":%d, "Formula":"%s"}',
@@ -64,7 +64,7 @@ bma_variable_model <- function(id, name, granularity, formula = ""){
 #'
 #' @param a unique id, human readable name (e.g. JAG1), granularity (number
 #' of levels) and the update formula
-#' @NoRd
+#' @noRd
 bma_variable_layout <- function(id, name, x, y, description = "") {
     var <- sprintf(
         paste0(
@@ -83,7 +83,7 @@ bma_variable_layout <- function(id, name, x, y, description = "") {
 #' ranularity - activity of upstream inhibitor
 #' @param bool stating whether the interaciton is an inhibition, granularity
 #' of variables (number of levels), and source of interaction
-#' @NoRd
+#' @noRd
 bma_formula <- function(inhibitor, granularity, upstream){
     f <- ifelse(inhibitor, sprintf("%d-var(%s)", granularity, upstream), "")
     return(f)
@@ -94,7 +94,7 @@ bma_formula <- function(inhibitor, granularity, upstream){
 #' Contains all interaction types with a simple descriptor and PMIDs
 #' @param takes an edge from omnipath "e", and optionally the name of the
 #' upstream variable ("incoming")
-#' @NoRd
+#' @noRd
 bma_description <- function(e, incoming = ""){
     sign <- ifelse(e$is_stimulation == 1,
             ifelse(e$is_inhibition == 1, "Mixed", "Activator"),
@@ -203,12 +203,12 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' Intended to parallel print_path_vs
 #' @param takes an sequence of nodes, and a granularity
 #' @export
-#' @importFrom logger log_warning
+#' @importFrom logger log_warn
 #' @importFrom igraph E
 bma_motif_vs <- function(node_seq, G){
 
     if(length(node_seq) == 0){
-        logger::log_warning("BMA motif: empty path")
+        logger::log_warn("BMA motif: empty path")
         return(invisible(NULL))
     }
     node_seq_names <- unique_node_seq(node_seq)

@@ -44,7 +44,7 @@
     if(dir.exists(dir_path)){
         logger::log_debug('Created directory `%s`', dir_path)
     }else{
-        logger::log_warning('Failed to create directory `%s`', dir_path)
+        logger::log_warn('Failed to create directory `%s`', dir_path)
     }
 
 }

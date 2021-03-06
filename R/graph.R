@@ -36,7 +36,8 @@ ptms_graph = function(ptms){
 #' @return An igraph object
 #' @export
 #' @import igraph
-#' @importFrom dplyr %>% select group_by summarise ungroup
+#' @importFrom dplyr select group_by summarise ungroup
+#' @importFrom magrittr %>%
 #' @param interactions data.frame created by 
 #' \code{\link{import_omnipath_interactions}},
 #' \code{\link{import_pathwayextra_interactions}}, 

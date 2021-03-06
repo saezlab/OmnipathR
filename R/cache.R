@@ -461,13 +461,10 @@ omnipath_cache_clean <- function(){
 #'
 #' Removes the old versions, the failed downloads and the files in the cache
 #' directory which are missing from the database. For more flexible
-#' operations use \link{\code{omnipath_cache_remove}} and
-#' \link{\code{omnipath_cache_clean}}.
+#' operations use \code{\link{omnipath_cache_remove}} and
+#' \code{\link{omnipath_cache_clean}}.
 #'
 #' @export
-#'
-#' Removes the items from the cache directory which are unknown by the cache
-#' database
 omnipath_cache_autoclean <- function(){
 
     omnipath_cache_remove(
@@ -487,9 +484,11 @@ omnipath_cache_autoclean <- function(){
 #' @param url URL pointing to the resource
 #' @param post HTTP POST parameters as a list
 #' @param payload HTTP data payload
-#' @oaram create Create a new entry if doesn't exist yet
+#' @param create Create a new entry if doesn't exist yet
+#'
 #' @return Cache record: an existing record if the entry already exists,
-#' otherwise a newly created and inserted record
+#'     otherwise a newly created and inserted record
+#'
 #' @export
 omnipath_cache_get <- function(
     key = NULL,
@@ -599,7 +598,7 @@ omnipath_cache_latest_or_new <- function(
 #' @param key Key of the cache item
 #' @param url URL of the downloaded resource
 #' @param post HTTP POST parameters as a list
-#' @patam payload HTTP data payload
+#' @param payload HTTP data payload
 #' @param version Version of the cache item. If does not exist or NULL, the
 #' latest version will be retrieved
 #'
@@ -677,7 +676,7 @@ omnipath_cache_load <- function(
 #' @param key Key of the cache item
 #' @param url URL of the downloaded resource
 #' @param post HTTP POST parameters as a list
-#' @patam payload HTTP data payload
+#' @param payload HTTP data payload
 #' @param version Version of the cache item. If does not exist a new version
 #' item will be created
 #'
@@ -728,7 +727,7 @@ omnipath_cache_save <- function(
 #' @param key Key of the cache item
 #' @param url URL of the downloaded resource
 #' @param post HTTP POST parameters as a list
-#' @patam payload HTTP data payload
+#' @param payload HTTP data payload
 #' @param version Version of the cache item. If does not exist a new version
 #' item will be created
 #' @param keep_original Whether to keep or remove the original file
@@ -822,7 +821,7 @@ omnipath_cache_key_from_version <- function(version){
 #' if NULL the value remains unchanged
 #'
 #' @importFrom magrittr %<>% %>%
-#' @importFrom logger log_info log_warning
+#' @importFrom logger log_info log_warn
 omnipath_cache_update_status <- cache_locked %@% function(
     key,
     version,
@@ -875,7 +874,7 @@ omnipath_cache_update_status <- cache_locked %@% function(
 
     }else{
 
-        logger::log_warning(
+        logger::log_warn(
             'Failed to update cache: key `%s` does not exist.',
             key
         )
@@ -1287,7 +1286,7 @@ omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
 
 #' Reads the cache DB contents from the disk to the memory
 #'
-#' @importFrom jsonlite
+#' @importFrom jsonlite fromJSON
 omnipath_read_cache_db <- function(){
 
     .omnipath_cache <<-
