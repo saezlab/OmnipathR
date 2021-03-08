@@ -32,9 +32,8 @@ biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
 Encoding: UTF-8
 VignetteBuilder: knitr
 Depends:
-    R(>= 4.0),
-    graphics,
-    methods,
+    R(>= 4.0)
+Imports:
     utils,
     jsonlite,
     progress,
@@ -53,8 +52,7 @@ Depends:
     stringr,
     readxl,
     rlang,
-    tibble
-Imports:
+    tibble,
     igraph,
     stats,
     logger

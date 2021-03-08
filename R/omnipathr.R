@@ -36,6 +36,7 @@
 #' visualize the data.
 #'
 #' @examples
+#' \donttest{
 #' # Download post-translational modifications:
 #' ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 #'
@@ -69,6 +70,7 @@
 #'     )$res,
 #'     ptms_g
 #' )
+#' }
 #'
 #' @author Alberto Valdeolivas <\email{alvaldeolivas@@gmail}> and
 #' Denes Turei <\email{turei.denes@@gmail.com}> and Attila Gabor
@@ -76,7 +78,6 @@
 #'
 #' @docType package
 #' @name OmnipathR
-#' @import methods
 #' @import logger
 NULL
 
