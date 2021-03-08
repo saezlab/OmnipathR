@@ -602,21 +602,23 @@ swap_undirected <- function(data){
 #' removed. See \code{\link{get_ptms_databases}} for more information
 #' @param organism PTMs are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param fields The user can define here the fields to be added. If used, set 
-#' the next argument, `default_fields`, to FALSE. 
+#' @param fields The user can define here the fields to be added. If used, set
+#' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param ... optional additional arguments 
+#' @param ... Optional additional arguments.
 #'
 #' @examples
+#' \donttest{
 #' ptms = import_omnipath_enzsub(
 #'     resources = c('PhosphoSite', 'SIGNOR'),
 #'     organism = 9606
 #' )
+#' }
 #'
 #' @seealso \code{\link{get_ptms_databases},
 #'   \link{import_omnipath_interactions}}
@@ -682,7 +684,9 @@ import_OmniPath_PTMS <- function(...){
 #' @importFrom utils read.table
 #'
 #' @examples
+#' \donttest{
 #' get_enzsub_resources()
+#' }
 #'
 #' @seealso  \code{\link{get_resources},
 #' \link{import_omnipath_enzsub}}
@@ -745,10 +749,12 @@ get_ptms_databases <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions = import_omnipath_interactions(
 #'     resources = c('SignaLink3'),
 #'     organism = 9606
 #' )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -833,11 +839,13 @@ import_OmniPath_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_pathwayextra_interactions(
 #'         resources = c('BioGRID', 'IntAct'),
 #'         organism = 9606
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -908,14 +916,16 @@ import_PathwayExtra_Interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param ... optional additional arguments 
+#' @param ... Optional additional arguments.
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'    import_kinaseextra_interactions(
 #'        resources = c('PhosphoPoint', 'PhosphoSite'),
 #'        organism = 9606
 #'    )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -988,10 +998,12 @@ import_KinaseExtra_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <- import_ligrecextra_interactions(
 #'     resources = c('HPRD', 'Guide2Pharma'),
 #'     organism = 9606
 #' )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1054,10 +1066,12 @@ import_LigrecExtra_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_post_translational_interactions(
 #'         resources = c('BioGRID')
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1121,10 +1135,12 @@ import_post_translational_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <- import_dorothea_interactions(
 #'     resources = c('DoRothEA_A', 'ARACNe-GTEx_DoRothEA'),
 #'     organism = 9606
 #' )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1207,13 +1223,15 @@ import_tfregulons_interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param ... optional additional arguments 
+#' @param ... Optional additional arguments
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_tf_target_interactions(
 #'         resources = c('DoRothEA_A', 'SIGNOR')
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1273,10 +1291,12 @@ import_tf_target_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_transcriptional_interactions(
 #'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA_A')
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1339,10 +1359,12 @@ import_transcriptional_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_mirnatarget_interactions(
 #'         resources = c('miRTarBase', 'miRecords')
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1412,10 +1434,12 @@ import_miRNAtarget_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_tf_mirna_interactions(
 #'         resources = c('TransmiR')
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1471,10 +1495,12 @@ import_tf_mirna_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <-
 #'     import_lncrna_mrna_interactions(
 #'         resources = c('ncRDeathDB')
 #'     )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources},
 #'   \link{import_all_interactions}}
@@ -1545,10 +1571,12 @@ import_lncrna_mrna_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' interactions <- import_all_interactions(
 #'     resources = c('HPRD', 'BioGRID'),
 #'     organism = 9606
 #' )
+#' }
 #'
 #' @seealso \code{\link{get_interaction_resources}}
 #'
@@ -1615,7 +1643,9 @@ import_AllInteractions <- function(...){
 #' @importFrom utils read.table
 #'
 #' @examples
+#' \donttest{
 #' get_interaction_resources()
+#' }
 #'
 #' @seealso \code{\link{get_resources},
 #' \link{import_all_interactions},
@@ -1664,7 +1694,9 @@ get_interaction_databases <- function(...){
 #' @import jsonlite
 #' 
 #' @examples
+#' \donttest{
 #' get_resources(query_type = 'interactions')
+#' }
 get_resources <- function(
     query_type,
     datasets = NULL,
@@ -1729,9 +1761,11 @@ get_resources <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' complexes = import_omnipath_complexes(
 #'     resources = c('CORUM', 'hu.MAP')
 #' )
+#' }
 #'
 #' @seealso \code{\link{get_complexes_databases}}
 #'
@@ -1786,7 +1820,9 @@ import_OmniPath_complexes <- function(...){
 #' @importFrom utils read.csv
 #'
 #' @examples
+#' \donttest{
 #' get_complex_resources()
+#' }
 #'
 #' @seealso \code{\link{get_resources},
 #' \link{import_omnipath_complexes}}
@@ -1847,11 +1883,15 @@ get_complexes_databases <- function(...){
 #' corresponds more or less to the original resource. If the data comes from
 #' more than one resource a list of wide tables will be returned.
 #' @param ... Additional arguments.
+#'
 #' @examples
+#' \donttest{
 #' annotations = import_omnipath_annotations(
 #'     proteins = c('TP53', 'LMNA'),
 #'     resources = c('HPA_subcellular')
 #' )
+#' }
+#'
 #' @seealso \code{\link{get_annotation_databases}}
 #'
 #' @aliases import_Omnipath_annotations import_OmniPath_annotations
@@ -2005,7 +2045,9 @@ import_OmniPath_annotations <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
+#' \donttest{
 #' get_annotation_resources()
+#' }
 #'
 #' @seealso \code{\link{get_resources},
 #' \link{import_omnipath_annotations}}
@@ -2047,6 +2089,9 @@ get_annotation_databases <- function(...){
 #' @param annotations A data frame of annotations downloaded from the
 #' OmniPath web service.
 pivot_annotations <- function(annotations){
+
+    # NSE vs. R CMD check workaround
+    record_id <- NULL
 
     if(annotations %>% pull(source) %>% unique %>% length %>% `>`(1)){
 
@@ -2124,7 +2169,9 @@ pivot_annotations <- function(annotations){
 #' @param ... Additional optional arguments 
 #'
 #' @examples
+#' \donttest{
 #' intercell = import_omnipath_intercell(categories = c('ecm'))
+#' }
 #'
 #' @seealso \code{\link{get_intercell_categories},
 #' \link{get_intercell_generic_categories}, \link{import_intercell_network}}
@@ -2206,7 +2253,9 @@ import_OmniPath_intercell <- function(...){
 #' @param dataset ignored at this query type
 #'
 #' @examples
+#' \donttest{
 #' get_intercell_resources()
+#' }
 #'
 #' @seealso \code{\link{get_resources},
 #' \link{import_omnipath_intercell}}
@@ -2249,10 +2298,10 @@ get_intercell_resources <- function(dataset = NULL){
 #'     as it is, the further arguments have no effect; if does not exists, the
 #'     result will be dumped into this file.
 #' @param interactions_param a list with arguments for an interactions query:
-#'     \code{\link{import_omnipath_interactions},
-#'     \link{import_pathwayextra_interactions},
-#'     \link{import_kinaseextra_interactions},
-#'     \link{import_ligrecextra_interactions}}
+#'     \code{\link{import_omnipath_interactions}},
+#'     \code{\link{import_pathwayextra_interactions}},
+#'     \code{\link{import_kinaseextra_interactions}},
+#'     \code{\link{import_ligrecextra_interactions}}
 #' @param transmitter_param a list with arguments for
 #'     \code{\link{import_omnipath_intercell}}, to define the transmitter side
 #'     of intercellular connections
@@ -2263,23 +2312,29 @@ get_intercell_resources <- function(dataset = NULL){
 #'     both the interactions and the annotations. For example, \code{resources
 #'     = 'CellChatDB'} will download the transmitters and receivers defined by
 #'     CellChatDB, connected by connections from CellChatDB.
+#' @param entity_types Character, possible values are "protein", "complex" or
+#'     both.
 #' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
 #'     annotations will be used instead of the more generic *transmitter* and
 #'     *receiver* categories.
+#' @param ... Ignored.
 #'
 #' @examples
+#' \donttest{
 #' intercellNetwork <- import_intercell_network(
 #'    interactions_param = list(datasets = 'ligrecextra'),
 #'    receiver_param = list(categories = c('receptor', 'transporter')),
-#'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme')))
+#'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
+#' )
+#' }
 #'
-#' @seealso \code{\link{get_intercell_categories},
-#' \link{get_intercell_generic_categories},
-#' \link{import_omnipath_intercell},
-#' \link{import_omnipath_interactions},
-#' \link{import_pathwayextra_interactions},
-#' \link{import_kinaseextra_interactions},
-#' \link{import_ligrecextra_interactions}}
+#' @seealso \code{\link{get_intercell_categories}},
+#'     \code{\link{get_intercell_generic_categories}},
+#'     \code{\link{import_omnipath_intercell}},
+#'     \code{\link{import_omnipath_interactions}},
+#'     \code{\link{import_pathwayextra_interactions}},
+#'     \code{\link{import_kinaseextra_interactions}},
+#'     \code{\link{import_ligrecextra_interactions}}
 import_intercell_network <- function(
     cache_file = NULL,
     interactions_param = list(),
@@ -2415,11 +2470,14 @@ import_intercell_network <- function(
 #'
 #' @return character vector with the different intercell categories
 #' @export
-#' @importFrom utils read.csv
+#'
 #' @examples
+#' \donttest{
 #' get_intercell_categories()
+#' }
+#'
 #' @seealso \code{\link{import_omnipath_intercell},
-#' \link{get_intercell_classes}}
+#'     \link{get_intercell_generic_categories}}
 get_intercell_categories <- function(){
 
     return(
@@ -2439,11 +2497,16 @@ get_intercell_categories <- function(){
 #'
 #' @return character vector with the different intercell main classes
 #' @export
-#' @importFrom utils read.csv
+#'
 #' @examples
+#' \donttest{
 #' get_intercell_generic_categories()
+#' }
+#'
 #' @seealso \code{\link{import_omnipath_intercell},
-#' \link{get_intercell_categories}}
+#'     \link{get_intercell_categories}}
+#'
+#' @aliases get_intercell_classes
 get_intercell_generic_categories <- function(){
 
     return(

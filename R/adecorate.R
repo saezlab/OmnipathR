@@ -24,12 +24,17 @@
 #  License: Apache-2.0
 #
 
-`%@%` = function (decorator, f) UseMethod('%@%')
+#' @noRd
+`%@%` <- function (decorator, f) UseMethod('%@%')
 
-`%@%.default` = function (decorator, f)
+
+#' @noRd
+`%@%.default` <- function (decorator, f)
     stop(deparse(substitute(decorator)), ' is not a decorator')
 
-`%@%.decorator` = function (decorator, f) {
+
+#' @noRd
+`%@%.decorator` <- function (decorator, f) {
     pretty_decorators = as.list(match.call())[-1]
     # Patch delayed decorator.
     if (! is.null({pretty_patched = attr(decorator, 'calls')}))
@@ -42,13 +47,20 @@
         prettify(decorator(f), f, pretty_decorators[-length(pretty_decorators)])
 }
 
-decorator = function (f)
+
+#' @noRd
+decorator <- function (f)
     structure(f, class = 'decorator')
 
-decorator = decorator(decorator)
 
-print.decorated = function (x, useSource = TRUE, ...) {
-    bare = function (f) {
+decorator <- decorator(decorator)
+
+
+#' @importFrom utils capture.output
+#' @noRd
+print.decorated <- function (x, useSource = TRUE, ...) {
+
+    bare <- function (f) {
         bare = unclass(f)
         attr(bare, 'decorators') = NULL
         bare
@@ -72,17 +84,23 @@ registerS3method(
     environment(print.decorated)
 )
 
-prettify = function (f, original, decorator_calls) {
+
+#' @noRd
+prettify <- function (f, original, decorator_calls) {
     attr(f, 'srcref') = pretty_code(original)
     attr(f, 'decorators') = decorator_calls
     class(f) = c(class(f), 'decorated')
     f
 }
 
-pretty_code = function (f) {
+
+#' @noRd
+pretty_code <- function (f) {
     srcref = attr(f, 'srcref')
     if (is.null(srcref)) body(f) else srcref
 }
 
-.delayed_decorate = function (d1, d2, decorator_calls)
+
+#' @noRd
+.delayed_decorate <- function (d1, d2, decorator_calls)
     structure(decorator(function (f) d1(d2(f))), calls = decorator_calls)

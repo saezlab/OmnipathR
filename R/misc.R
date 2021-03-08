@@ -96,6 +96,8 @@ ensure_list <- function(value){
 #' Returns NULL if `value` is a list with a single NULL element otherwise
 #' the value itself
 #'
+#' @importFrom utils tail
+#'
 #' @noRd
 list_null <- function(value){
 
@@ -211,6 +213,7 @@ load_success <- function(data){
 #'     been overridden by `param`.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom purrr walk2
 #'
 #' @noRd
 add_defaults <- function(param, fun, defaults){
@@ -270,5 +273,22 @@ if_null <- function(value1, value2){
     value1 %>%
     is.null %>%
     `if`(value2, value1)
+
+}
+
+
+#' Workaround against R CMD check notes about using `:::`
+#'
+#' @importFrom rlang enquo !!
+#'
+#' @noRd
+`%:::%` <- function(pkg, fun){
+
+    pkg <- .nse_ensure_str(!!enquo(pkg))
+    fun <- .nse_ensure_str(!!enquo(fun))
+
+    print(pkg)
+
+    get(fun, envir = asNamespace(pkg), inherits = FALSE)
 
 }

@@ -18,7 +18,9 @@ Get the names of the enzyme-substrate relationship resources available
 in \url{https://omnipath.org/enzsub}
 }
 \examples{
+\donttest{
 get_enzsub_resources()
+}
 
 }
 \seealso{

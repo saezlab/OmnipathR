@@ -2,6 +2,7 @@
 % Please edit documentation in R/print_interactions.R
 \name{print_path_vs}
 \alias{print_path_vs}
+\alias{printPath_vs}
 \title{Print networks paths given by node sequence}
 \usage{
 print_path_vs(nodeSeq, G)
@@ -18,6 +19,7 @@ Interactions displayed in a nice format
 Prints the interactions in the path in a nice format.
 }
 \examples{
+\donttest{
 interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 OPI_g = interaction_graph(interactions = interactions )
 print_path_vs(
@@ -38,6 +40,8 @@ print_path_vs(
     )$res,
     ptms_g
 )
+}
+
 }
 \seealso{
 \code{\link{print_path_es}}

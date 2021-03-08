@@ -34,7 +34,7 @@ the query type. If FALSE, only the fields defined by the user in the
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
-\item{...}{optional additional arguments}
+\item{...}{Optional additional arguments}
 }
 \value{
 A dataframe containing TF-target interactions
@@ -48,10 +48,12 @@ interactions. Note: this is not the only TF-target dataset in OmniPath,
 TF-miRNA gene interactions.
 }
 \examples{
+\donttest{
 interactions <-
     import_tf_target_interactions(
         resources = c('DoRothEA_A', 'SIGNOR')
     )
+}
 
 }
 \seealso{

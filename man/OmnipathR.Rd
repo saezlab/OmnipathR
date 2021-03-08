@@ -18,6 +18,7 @@ The package also provides some utility functions to filter, analyse and
 visualize the data.
 }
 \examples{
+\donttest{
 # Download post-translational modifications:
 ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
 
@@ -51,6 +52,7 @@ print_path_vs(
     )$res,
     ptms_g
 )
+}
 
 }
 \author{

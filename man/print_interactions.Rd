@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_interactions.R
 \name{print_interactions}
 \alias{print_interactions}
-\title{print interactions}
+\title{Print OmniPath interactions}
 \usage{
 print_interactions(interDF, writeRefs = FALSE)
 }
@@ -23,12 +23,14 @@ following functions: \code{\link{import_omnipath_enzsub}},
 Interactions displayed in a nice format
 }
 \description{
-prints the interactions/ptms in a nice format
+Prints the interactions or enzyme-substrate relationships in a nice format.
 }
 \examples{
+\donttest{
 ptms = import_omnipath_enzsub()
 print_interactions(head(ptms))
 print_interactions(tail(ptms),writeRefs=TRUE)
 print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
-  substrate_genesymbol=="MAPK3"))
+    substrate_genesymbol=="MAPK3"))
+}
 }

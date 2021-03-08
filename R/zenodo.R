@@ -35,7 +35,7 @@
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param url_key_param List: variables to insert into the `url_key`.
-#' @param ... Passed to \code{\link{archive_extractor}}.
+#' @param ... Passed to \code{archive_extractor}.
 #'
 #' @return A connection
 #'

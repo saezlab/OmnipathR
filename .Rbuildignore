@@ -20,5 +20,7 @@
 ^nichenet_original_data.*$
 ^.Rd2pdf.*$
 ^vignettes/figure/.*$
+vignettes/figure
 ^vignettes/Rplots.pdf$
 ^[^/]\.pdf$
+^nichenet_results

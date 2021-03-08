@@ -51,7 +51,10 @@ omnipath_console_loglevel <- function(){
 #' @seealso \code{\link{omnipath_log}}
 omnipath_logfile <- function(){
 
-    logger:::get_logger_definitions(
+    # NSE vs. R CMD check workaround
+    get_logger_definitions <- NULL
+
+    (logger%:::%get_logger_definitions)(
         namespace = 'OmnipathR'
     )$default$appender %>%
     environment() %>%
@@ -83,16 +86,19 @@ omnipath_log <- function(){
 #' @importFrom magrittr %<>% %>%
 omnipath_set_loglevel <- function(level, target = 'logfile'){
 
+    # NSE vs. R CMD check workaround
+    namespaces <- NULL
+
     level %<>% ensure_loglevel
     i_logger <- target %>% `==`(c('logfile', 'console')) %>% which
 
-    omnipathr_loggers <- logger:::namespaces$OmnipathR
+    omnipathr_loggers <- (logger%:::%namespaces)$OmnipathR
     omnipathr_loggers[[i_logger]]$threshold <- level
 
     assign(
         'OmnipathR',
         omnipathr_loggers,
-        envir <- logger:::namespaces
+        envir <- logger%:::%namespaces
     )
 
 }
@@ -125,7 +131,7 @@ omnipath_set_console_loglevel <- function(level){
 #'
 #' @export
 #' @seealso \code{\link{omnipath_set_console_loglevel}}
-omnipath_set_console_loglevel <- function(level){
+omnipath_set_logfile_loglevel <- function(level){
 
     omnipath_set_loglevel(level = level, target = 'logfile')
 

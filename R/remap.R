@@ -39,6 +39,7 @@
 #' @return Data frame with TF-target relationships.
 #'
 #' @export
+#' @importFrom utils download.file
 #' @seealso \code{\link{remap_tf_target_download}}
 remap_dorothea_download <- function(){
 
@@ -133,6 +134,9 @@ remap_filtered <- function(
     top_targets = 500,
     only_known_tfs = TRUE
 ){
+
+    # NSE vs. R CMD check workaround
+    `HGNC symbol` <- min_score <- NULL
 
     score_threshold <- score
 

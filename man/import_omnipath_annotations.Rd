@@ -53,10 +53,13 @@ https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv
 using any standard R or readr method.
 }
 \examples{
+\donttest{
 annotations = import_omnipath_annotations(
     proteins = c('TP53', 'LMNA'),
     resources = c('HPA_subcellular')
 )
+}
+
 }
 \seealso{
 \code{\link{get_annotation_databases}}

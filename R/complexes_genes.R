@@ -28,22 +28,28 @@
 #' all the genes in input set participate together.
 #'
 #' @param complexes complexes data frame (obtained using
-#'    \code{\link{import_omnipath_complexes}})
+#'     \code{\link{import_omnipath_complexes}})
 #' @param select_genes vector containing the genes for whom complexes will be
-#' retrieved (hgnc format).
+#'     retrieved (hgnc format).
 #' @param total_match [default=FALSE] logical indicating if the user wants to
-#' get all the complexes where any of the input genes participate (FALSE) or
-#' to get only the complexes where all the input genes participate together
-#' (TRUE)
+#'     get all the complexes where any of the input genes participate (FALSE)
+#'     or to get only the complexes where all the input genes participate
+#'     together (TRUE).
+#'
 #' @export
-#' @return data.frame of complexes
+#'
+#' @return Data frame of complexes
+#'
 #' @examples
+#' \donttest{
 #' complexes <- import_omnipath_complexes(
 #'     filter_databases = c("CORUM", "hu.MAP")
 #' )
 #' query_genes = c("LMNA","BANF1")
-#' complexes_query_genes = get_complex_genes(complexes,query_genes)
-#' @seealso \code{\link{import_omnipath_complexes}})
+#' complexes_query_genes <- get_complex_genes(complexes,query_genes)
+#' }
+#'
+#' @seealso \code{\link{import_omnipath_complexes}}
 get_complex_genes <- function(complexes = import_Omnipath_complexes(),
     select_genes, total_match = FALSE){
 

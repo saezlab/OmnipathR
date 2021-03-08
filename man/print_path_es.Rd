@@ -2,7 +2,8 @@
 % Please edit documentation in R/print_interactions.R
 \name{print_path_es}
 \alias{print_path_es}
-\title{print network paths given by edge sequence}
+\alias{printPath_es}
+\title{Prints network paths in an edge sequence}
 \usage{
 print_path_es(edgeSeq, G)
 }
@@ -15,13 +16,16 @@ print_path_es(edgeSeq, G)
 Interactions displayed in a nice format
 }
 \description{
-Prints the interactions in the path in a nice format.
+Pretty prints the interactions in a path.
 }
 \examples{
+\donttest{
 interactions = import_omnipath_interactions(resources=c("SignaLink3"))
 OPI_g = interaction_graph(interactions = interactions )
 print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
     output = 'epath')$epath[[1]],OPI_g)
+}
+
 }
 \seealso{
 \code{\link{print_path_vs}}

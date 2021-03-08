@@ -39,15 +39,22 @@
 #' @importFrom readr read_tsv cols
 #' @importFrom dplyr left_join mutate group_by summarize_all first ungroup
 #' @importFrom dplyr rename filter
+#' @importFrom stats quantile
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' evex_interactions <- evex_download()
+#' }
 evex_download <- function(
     min_confidence = NULL,
     remove_negatives = TRUE,
     top_confidence = NULL
 ){
+
+    # NSE vs. R CMD check workaround
+    negation <- confidence <- source_entrezgene_id <- target_entrezgene_id <-
+        article_id <- general_event_id <- NULL
 
     relations <- archive_extractor(
         url_key = 'omnipath.evex_url',

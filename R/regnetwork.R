@@ -32,7 +32,11 @@
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr left_join mutate select
 #' @importFrom readr read_tsv cols col_character
+#' @importFrom utils download.file
 regnetwork_download <- function(organism = 'human'){
+
+    # NSE vs. R CMD check workaround
+    source_entrez <- target_entrez <- NULL
 
     url <-
         'omnipath.regnetwork_url' %>%
@@ -83,12 +87,18 @@ regnetwork_download <- function(organism = 'human'){
 
 #' Transcription factor effects from RegNetwork
 #'
+#' @param organism Character: either human or mouse.
+#'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_delim cols col_character
 #' @importFrom dplyr mutate recode
+#' @importFrom utils download.file
 #'
 #' @export
 regnetwork_directions <- function(organism = 'human'){
+
+    # NSE vs. R CMD check workaround
+    effect <- NULL
 
     url <-
         'omnipath.regnetwork_url' %>%

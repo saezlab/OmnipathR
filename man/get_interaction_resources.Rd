@@ -21,7 +21,9 @@ Gets the names of the resources from
 \url{https://omnipath.org/interactions}.
 }
 \examples{
+\donttest{
 get_interaction_resources()
+}
 
 }
 \seealso{

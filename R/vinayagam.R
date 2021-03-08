@@ -31,6 +31,9 @@
 #' @export
 vinayagam_download <- function(){
 
+    # NSE vs. R CMD check workaround
+    from_cache <- url <- NULL
+
     'omnipath.vinayagam_url' %>%
     archive_downloader() %T>%
     {assign('from_cache', .$from_cache, envir = parent.frame(6))} %T>%

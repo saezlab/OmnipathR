@@ -26,7 +26,7 @@
 #' https://inbio-discover.com/map.html#downloads in tar.gz format,
 #' extracts the PSI MITAB table and returns it as a data frame.
 #'
-#' @param .verbose Logical. Perform CURL requests in verbose mode for
+#' @param curl_verbose Logical. Perform CURL requests in verbose mode for
 #'     debugging purposes.
 #'
 #' @importFrom magrittr %>% %T>%
@@ -38,10 +38,12 @@
 #'
 #' @return A data frame (tibble) with the extracted interaction table.
 #'
-#' @seealso \code{\link{inbiomap}}
+#' @seealso \code{\link{inbiomap_download}}
 #'
 #' @examples
+#' \donttest{
 #' inbiomap_psimitab <- inbiomap_raw()
+#' }
 inbiomap_raw <- function(curl_verbose = FALSE){
 
     url <- 'omnipath.inbiomap_url' %>% url_parser
@@ -113,6 +115,8 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' Downloads the data by \code{\link{inbiomap_raw}}, extracts the
 #' UniProt IDs, Gene Symbols and scores and removes the irrelevant columns.
 #'
+#' @param ... Passed to \code{\link{inbiomap_raw}}.
+#'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate select
 #' @importFrom tidyr separate
@@ -123,8 +127,15 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @seealso \code{\link{inbiomap_raw}}
 #'
 #' @examples
+#' \donttest{
 #' inbiomap_interactions <- inbiomap_download()
+#' }
 inbiomap_download <- function(...){
+
+    # NSE vs. R CMD check workaround
+    score <- id_a <- id_b <- synonyms_a <- synonyms_b <- detection_methods <-
+        score1 <- score2 <- uniprot_a <- uniprot_b <- genesymbol_a <-
+        genesymbol_b <- inferred <- NULL
 
     .extract_id <- function(x){
 

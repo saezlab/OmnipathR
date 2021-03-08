@@ -26,5 +26,7 @@ Collects the names of the resources available in OmniPath for a certain
 query type and optionally for a dataset within that.
 }
 \examples{
+\donttest{
 get_resources(query_type = 'interactions')
+}
 }

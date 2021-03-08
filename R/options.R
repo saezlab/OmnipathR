@@ -175,16 +175,6 @@ omnipath_get_config_path <- function(user = FALSE){
 }
 
 
-#' Creates the config directory if does not exist
-#'
-#' @noRd
-omnipath_ensure_config_dir <- function(){
-
-    .ensure_dir(.omnipath_config_path)
-
-}
-
-
 #' Save the current package configuration
 #'
 #' @param path Path to the config file. Directories and the file will be
@@ -207,7 +197,7 @@ omnipath_save_config <- function(
         is.null(path),
         `if`(
             local,
-            omnipath_local_config_fname(),
+            .omnipath_local_config_fname,
             omnipath_get_config_path()
         ),
         path
@@ -227,11 +217,13 @@ omnipath_save_config <- function(
 #'
 #' @param path Path to the config file.
 #' @param title Load the config under this title. One config file might
-#' contain multple configurations, each identified by a title. If the title
-#' is not available the first section of the config file will be used.
+#'     contain multple configurations, each identified by a title. If the
+#'     title is not available the first section of the config file will be
+#'     used.
 #' @param user Force to use the user level config even if a config file
-#' exists in the current directory. By default, the local config files have
-#' prioroty over the user level config.
+#'     exists in the current directory. By default, the local config files
+#'     have prioroty over the user level config.
+#' @param ... Passed to \code{yaml::yaml.load_file}.
 #'
 #' @export
 #' @importFrom yaml yaml.load_file
@@ -294,8 +286,7 @@ omnipath_load_config <- function(
 #' @return The config as a list.
 #'
 #' @export
-#' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config},
-#' \link{omnipath_get_config_path}}
+#' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config}}
 omnipath_reset_config <- function(save = NULL){
 
     .omnipath_config <<- .omnipath_options_defaults

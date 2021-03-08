@@ -18,12 +18,12 @@ get_complex_genes(
 retrieved (hgnc format).}
 
 \item{total_match}{[default=FALSE] logical indicating if the user wants to
-get all the complexes where any of the input genes participate (FALSE) or
-to get only the complexes where all the input genes participate together
-(TRUE)}
+get all the complexes where any of the input genes participate (FALSE)
+or to get only the complexes where all the input genes participate
+together (TRUE).}
 }
 \value{
-data.frame of complexes
+Data frame of complexes
 }
 \description{
 This function returns all the molecular complexes where an input set
@@ -32,12 +32,15 @@ any of the input genes participate or just retrieve these complexes where
 all the genes in input set participate together.
 }
 \examples{
+\donttest{
 complexes <- import_omnipath_complexes(
     filter_databases = c("CORUM", "hu.MAP")
 )
 query_genes = c("LMNA","BANF1")
-complexes_query_genes = get_complex_genes(complexes,query_genes)
+complexes_query_genes <- get_complex_genes(complexes,query_genes)
+}
+
 }
 \seealso{
-\code{\link{import_omnipath_complexes}})
+\code{\link{import_omnipath_complexes}}
 }

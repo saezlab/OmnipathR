@@ -21,10 +21,10 @@ as it is, the further arguments have no effect; if does not exists, the
 result will be dumped into this file.}
 
 \item{interactions_param}{a list with arguments for an interactions query:
-\code{\link{import_omnipath_interactions},
-\link{import_pathwayextra_interactions},
-\link{import_kinaseextra_interactions},
-\link{import_ligrecextra_interactions}}}
+\code{\link{import_omnipath_interactions}},
+\code{\link{import_pathwayextra_interactions}},
+\code{\link{import_kinaseextra_interactions}},
+\code{\link{import_ligrecextra_interactions}}}
 
 \item{transmitter_param}{a list with arguments for
 \code{\link{import_omnipath_intercell}}, to define the transmitter side
@@ -39,9 +39,14 @@ both the interactions and the annotations. For example, \code{resources
 = 'CellChatDB'} will download the transmitters and receivers defined by
 CellChatDB, connected by connections from CellChatDB.}
 
+\item{entity_types}{Character, possible values are "protein", "complex" or
+both.}
+
 \item{ligand_receptor}{Logical. If TRUE, only *ligand* and *receptor*
 annotations will be used instead of the more generic *transmitter* and
 *receiver* categories.}
+
+\item{...}{Ignored.}
 }
 \value{
 A dataframe containing information about protein-protein
@@ -67,18 +72,21 @@ If a cache file provided, its content will be returned without any further
 filtering.
 }
 \examples{
+\donttest{
 intercellNetwork <- import_intercell_network(
    interactions_param = list(datasets = 'ligrecextra'),
    receiver_param = list(categories = c('receptor', 'transporter')),
-   transmitter_param = list(categories = c('ligand', 'secreted_enzyme')))
+   transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
+)
+}
 
 }
 \seealso{
-\code{\link{get_intercell_categories},
-\link{get_intercell_generic_categories},
-\link{import_omnipath_intercell},
-\link{import_omnipath_interactions},
-\link{import_pathwayextra_interactions},
-\link{import_kinaseextra_interactions},
-\link{import_ligrecextra_interactions}}
+\code{\link{get_intercell_categories}},
+    \code{\link{get_intercell_generic_categories}},
+    \code{\link{import_omnipath_intercell}},
+    \code{\link{import_omnipath_interactions}},
+    \code{\link{import_pathwayextra_interactions}},
+    \code{\link{import_kinaseextra_interactions}},
+    \code{\link{import_ligrecextra_interactions}}
 }

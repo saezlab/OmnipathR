@@ -45,10 +45,12 @@ Imports the dataset from:
 which contains transcription factor-miRNA gene interactions
 }
 \examples{
+\donttest{
 interactions <-
     import_tf_mirna_interactions(
         resources = c('TransmiR')
     )
+}
 
 }
 \seealso{

@@ -25,7 +25,7 @@ removed. See \code{\link{get_ptms_databases}} for more information}
 \item{organism}{PTMs are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 
-\item{fields}{The user can define here the fields to be added. If used, set 
+\item{fields}{The user can define here the fields to be added. If used, set
 the next argument, `default_fields`, to FALSE.}
 
 \item{default_fields}{whether to include the default fields (columns) for
@@ -36,7 +36,7 @@ the query type. If FALSE, only the fields defined by the user in the
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
-\item{...}{optional additional arguments}
+\item{...}{Optional additional arguments.}
 }
 \value{
 A data frame containing the information about ptms
@@ -46,10 +46,12 @@ Imports the enzyme-substrate (more exactly, enzyme-PTM) relationship
 database from \url{https://omnipathdb.org/enzsub}
 }
 \examples{
+\donttest{
 ptms = import_omnipath_enzsub(
     resources = c('PhosphoSite', 'SIGNOR'),
     organism = 9606
 )
+}
 
 }
 \seealso{

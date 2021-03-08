@@ -238,7 +238,7 @@ cache_locked <- decorator %@% function(FUN){
 #' @return List of cache records matching the pattern.
 #'
 #' @param pattern String or regular expression.
-#' ... Passed to \code{\link{grep}}
+#' @param ... Passed to \code{\link{grep}}
 #'
 #' @importFrom purrr map_chr
 #' @export
@@ -260,19 +260,25 @@ omnipath_cache_search <- function(pattern, ...){
 #' age, or contents having a more recent version, one specific item, or
 #' wipe the entire cache.
 #'
+#' @usage omnipath_cache_remove(key = NULL, url = NULL, post = NULL,
+#'     payload = NULL, max_age = NULL, min_age = NULL, status = NULL,
+#'     only_latest = FALSE, wipe = FALSE, autoclean = TRUE)
+#'
 #' @param key The key of the cache record
 #' @param url URL pointing to the resource
 #' @param post HTTP POST parameters as a list
 #' @param payload HTTP data payload
 #' @param max_age Age of cache items in days. Remove everything that is older
-#' than this age
+#'     than this age
 #' @param min_age Age of cache items in days. Remove everything more recent
-#' than this age
+#'     than this age
 #' @param status Remove items having any of the states listed here
 #' @param only_latest Keep only the latest version
 #' @param autoclean Remove the entries about failed downloads, the files in
-#' the cache directory which are missing from the cache database, and the
-#' entries without existing files in the cache directory
+#'     the cache directory which are missing from the cache database, and the
+#'     entries without existing files in the cache directory
+#' @param wipe Logical: if TRUE, removes all files from the cache and the
+#'     cache database. Same as calling \code{\link{omnipath_cache_wipe}}.
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom purrr map keep map_lgl
@@ -438,6 +444,8 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #' After this operation the cache directory will be completely empty,
 #' except an empty cache database file.
 #'
+#' @param ... Ignored.
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @seealso \code{\link{omnipath_cache_remove}}
@@ -509,6 +517,7 @@ omnipath_cache_autoclean <- function(){
 #' @param post HTTP POST parameters as a list
 #' @param payload HTTP data payload
 #' @param create Create a new entry if doesn't exist yet
+#' @param ... Passed to \code{omnipath_cache_record}
 #'
 #' @return Cache record: an existing record if the entry already exists,
 #'     otherwise a newly created and inserted record
@@ -529,6 +538,7 @@ omnipath_cache_get <- function(
         post = post,
         payload = payload
     )
+    .omnipath_cache <- get('.omnipath_cache', envir = .GlobalEnv)
 
     if(!(key %in% names(.omnipath_cache)) && create){
 
@@ -573,6 +583,8 @@ omnipath_cache_get <- function(
 #' @param payload HTTP data payload
 #' @param create Logical: whether to create and return a new version. If
 #'     FALSE only the latest existing valid version is returned, if available.
+#' @param ... Passed to \code{omnipath_cache_get}
+#'
 #' @return A cache version item.
 #' @export
 omnipath_cache_latest_or_new <- function(
@@ -839,12 +851,15 @@ omnipath_cache_key_from_version <- function(version){
 
 #' Updates the status of an existing cache record
 #'
+#' @usage omnipath_cache_update_status(key, version, status,
+#'     dl_finished = NULL)
+#'
 #' @param key Key of the cache item
 #' @param version Version of the cache item. If does not exist a new version
-#' item will be created
+#'     item will be created
 #' @param status The updated status value
 #' @param dl_finished Timestamp for the time when download was finished,
-#' if NULL the value remains unchanged
+#'     if NULL the value remains unchanged
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom logger log_info log_warn
@@ -914,6 +929,8 @@ omnipath_cache_update_status <- cache_locked %@% function(
 
 
 #' Sets the file extension for a cache record
+#'
+#' @usage omnipath_cache_set_ext(key, ext)
 #'
 #' @param key Character: key for a cache item, alternatively a version entry.
 #' @param ext Character: the file extension, e.g. "zip".
@@ -1268,6 +1285,7 @@ omnipath_cache_version <- function(
 #'
 #' @importFrom digest sha1_digest
 #' @importFrom magrittr %>%
+#' @importFrom purrr pmap
 #' @export
 omnipath_cache_key <- function(url, post = NULL, payload = NULL){
 

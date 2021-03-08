@@ -137,6 +137,10 @@ bioplex_hct116_1 <- function(){
 #' \link{bioplex_hct116_1}}
 bioplex_all <- function(unique = TRUE){
 
+    # NSE vs. R CMD check workaround
+    UniprotA <- UniprotB <- p_wrong <- p_no_interaction <- p_interaction <-
+        NULL
+
     bind_rows(
         bioplex1(),
         bioplex2(),

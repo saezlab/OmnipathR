@@ -94,6 +94,10 @@ nichenet_main <- function(
     results_dir = NULL
 ){
 
+    # NSE vs. R CMD check workaround
+    optimization_results <- optimized_parameters <- weighted_networks <-
+        ligand_target_matrix <- NULL
+
     top_env <- environment()
 
     results_dir %>%
@@ -169,7 +173,7 @@ nichenet_main <- function(
     {`if`(
         any(map_lgl(., is.null)),
         list(ligand_activities = NULL, ligand_target_links = NULL),
-        do.call(nichenet_ligand_activies, .)
+        do.call(nichenet_ligand_activities, .)
     )} %>%
     c(
         list(
@@ -201,6 +205,9 @@ nichenet_main <- function(
 #' @importFrom purrr keep
 nichenet_remove_orphan_ligands <- function(expression, lr_network){
 
+    # NSE vs. R CMD check workaround
+    networks <- NULL
+
     all_ligands <- networks$lr_network$from %>% unique
 
     expression %>%
@@ -222,6 +229,8 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 #' @param networks A list with NicheNet format signaling, ligand-receptor
 #'     and gene regulatory networks as produced by
 #'     \code{\link{nichenet_networks}}.
+#' @param expression A list with expression data from ligand perturbation
+#'     experiments, as produced by \code{\link{nichenet_expression_data}}.
 #' @param make_multi_objective_function_param Override parameters for
 #'     \code{smoof::makeMultiObjectiveFunction}.
 #' @param objective_function_param Override additional arguments passed to
@@ -434,13 +443,14 @@ nichenet_build_model <- function(
 
 #' Creates a NicheNet ligand-target matrix
 #'
-#' @param weighted_networks Weighted networks as provided by
+#' @param weighted_networks Weighted networks as pro
+#' @param lr_network A data frame with ligand-receptor interactions, as
+#'     produced by \code{\link{nichenet_lr_network}}.vided by
 #'     \code{\link{nichenet_build_model}}
-#' @param optimization_results The outcome of NicheNet parameter optimization
-#'     as produced by \code{\link{nichenet_optimization}}.
-#' @param networks A list with NicheNet format signaling, ligand-receptor
-#'     and gene regulatory networks as produced by
-#'     \code{\link{nichenet_networks}}.
+#' @param optimized_parameters The outcome of NicheNet parameter optimization
+#'     as produced by \code{\link{nichenet_build_model}}.
+#' @param weighted Logical: wether the network sources are weighted. In this
+#'     function it only affects the output file name.
 #' @param construct_ligand_target_matrix_param Override parameters for
 #'     \code{nichenetr::construct_ligand_target_matrix}.
 #'
@@ -454,6 +464,9 @@ nichenet_ligand_target_matrix <- function(
     weighted = TRUE,
     construct_ligand_target_matrix_param = list()
 ){
+
+    # NSE vs. R CMD check workaround
+    from <- NULL
 
     ligands <- lr_network %>% pull(from) %>% unique %>% as.list
 
@@ -490,6 +503,12 @@ nichenet_ligand_target_matrix <- function(
 
 #' Calls the NicheNet ligand activity analysis
 #'
+#' @param ligand_target_matrix A matrix with rows and columns corresponding
+#'     to ligands and targets, respectively. Produced by
+#'     \code{\link{nichenet_ligand_target_matrix}} or
+#'     \code{nichenetr::construct_ligand_target_matrix}.
+#' @param lr_network A data frame with ligand-receptor interactions, as
+#'     produced by \code{\link{nichenet_lr_network}}.
 #' @param expressed_genes_transmitter Character vector with the gene symbols
 #'     of the genes expressed in the cells transmitting the signal.
 #' @param expressed_genes_receiver Character vector with the gene symbols
@@ -502,11 +521,13 @@ nichenet_ligand_target_matrix <- function(
 #'     genes to be used as background.
 #' @param n_top_ligands How many of the top ligands to include in the
 #'     ligand-target table.
+#' @param n_top_targets For each ligand, how many of the top targets to
+#'     include in the ligand-target table.
 #'
 #' @export
 #' @importFrom magrittr %>% %<>% %T>%
 #' @importFrom dplyr pull filter arrange
-nichenet_ligand_activies <- function(
+nichenet_ligand_activities <- function(
     ligand_target_matrix,
     lr_network,
     expressed_genes_transmitter,
@@ -516,6 +537,9 @@ nichenet_ligand_activies <- function(
     n_top_ligands = 42,
     n_top_targets = 250
 ){
+
+    # NSE vs. R CMD check workaround
+    from <- to <- pearson <- NULL
 
     logger::log_success('Running ligand activity analysis.')
 
@@ -579,10 +603,10 @@ nichenet_ligand_activies <- function(
 #'     genes of interest. These are the genes in the receiver cell population
 #'     that are potentially affected by ligands expressed by interacting
 #'     cells (e.g. genes differentially expressed upon cell-cell interaction).
-#' @param background_genes Character vector with the gene symbols of the
-#'     genes to be used as background.
 #' @param n_top_ligands How many of the top ligands to include in the
 #'     ligand-target table.
+#' @param n_top_targets For each ligand, how many of the top targets to
+#'     include in the ligand-target table.
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -595,6 +619,9 @@ nichenet_ligand_target_links <- function(
     n_top_ligands = 42,
     n_top_targets = 250
 ){
+
+    # NSE vs. R CMD check workaround
+    pearson <- NULL
 
     ligand_activities %>%
     arrange(-pearson)
@@ -780,19 +807,22 @@ nichenet_lr_network <- function(
 #'     \code{\link{nichenet_gr_network_evex}}.
 #' @param pathwaycommons List with paramaters to be passed to
 #'     \code{\link{nichenet_gr_network_pathwaycommons}}.
+#' @param trrust List with paramaters to be passed to
+#'     \code{\link{nichenet_gr_network_trrust}}.
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_gr_network_omnipath},
+#' @seealso \code{\link{nichenet_gr_network_evex},
 #'     \link{nichenet_gr_network_harmonizome},
-#'     \link{nichenet_gr_network_regnetwork},
 #'     \link{nichenet_gr_network_htridb},
+#'     \link{nichenet_gr_network_omnipath},
+#'     \link{nichenet_gr_network_pathwaycommons},
+#'     \link{nichenet_gr_network_regnetwork},
 #'     \link{nichenet_gr_network_remap},
-#'     \link{nichenet_gr_network_evex},
-#'     \link{nichenet_gr_network_pathwaycommons}}
+#'     \link{nichenet_gr_network_trrust}}
 nichenet_gr_network <- function(
     omnipath = list(),
     harmonizome = list(),
@@ -801,6 +831,7 @@ nichenet_gr_network <- function(
     remap = list(),
     evex = list(),
     pathwaycommons = list(),
+    trrust = list(),
     only_omnipath = FALSE
 ){
 
@@ -830,6 +861,9 @@ nichenet_gr_network <- function(
 #' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
 nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
+
+    # NSE vs. R CMD check workaround
+    from <- to <- NULL
 
     network_types <- list(
         signaling = 'signaling',
@@ -899,7 +933,7 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
-#' @seealso
+#' @seealso \code{\link{nichenet_signaling_network}}
 nichenet_signaling_network_omnipath <- function(
     min_curation_effort = 0,
     ...
@@ -926,7 +960,7 @@ nichenet_signaling_network_omnipath <- function(
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso
+#' @seealso \code{\link{nichenet_lr_network}}
 nichenet_lr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
@@ -949,7 +983,14 @@ nichenet_lr_network_omnipath <- function(
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
-#' @seealso
+#' @seealso \code{\link{nichenet_gr_network_evex},
+#'     \link{nichenet_gr_network_harmonizome},
+#'     \link{nichenet_gr_network_htridb},
+#'     \link{nichenet_gr_network_omnipath},
+#'     \link{nichenet_gr_network_pathwaycommons},
+#'     \link{nichenet_gr_network_regnetwork},
+#'     \link{nichenet_gr_network_remap},
+#'     \link{nichenet_gr_network_trrust}}
 nichenet_gr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
@@ -973,6 +1014,9 @@ nichenet_gr_network_omnipath <- function(
 #'
 #' @noRd
 omnipath_interactions_postprocess <- function(interactions, type){
+
+    # NSE vs. R CMD check workaround
+    from <- to <- NULL
 
     interactions %>%
     select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%
@@ -1000,6 +1044,7 @@ omnipath_interactions_postprocess <- function(interactions, type){
 #' @param interaction_types Character vector with PathwayCommons interaction
 #'     types. Please refer to the default value and the PathwayCommons
 #'     webpage.
+#' @param ... Ignored.
 #'
 #' @export
 nichenet_signaling_network_pathwaycommons <- function(
@@ -1028,6 +1073,8 @@ nichenet_signaling_network_pathwaycommons <- function(
 #'
 #' @param datasets The datasets to use. For possible values please refer to
 #'     default value and the Harmonizome webpage.
+#' @param ... Ignored.
+#'
 #' @export
 nichenet_signaling_network_harmonizome <- function(
     datasets = c(
@@ -1082,6 +1129,9 @@ harmonizome_nichenet <- function(datasets, dataset_names){
 #' @noRd
 harmonizome_nichenet_process <- function(dataset){
 
+    # NSE vs. R CMD check workaround
+    to <- NULL
+
     target_desc_col <- c('geotf', 'geokinase', 'geogene')
     to_col <- `if`(
         dataset %in% target_desc_col,
@@ -1111,14 +1161,18 @@ harmonizome_nichenet_process <- function(dataset){
 #' NicheNet signaling network from Vinayagam
 #'
 #' Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
-#' Supplementary Table S6
+#' Supplementary Table S6. Find out more at
+#' https://doi.org/10.1126/scisignal.2001699
 #'
-#' Find out more at https://doi.org/10.1126/scisignal.2001699
+#' @param ... Ignored.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate select rename distinct
 #' @export
 nichenet_signaling_network_vinayagam <- function(...){
+
+    # NSE vs. R CMD check workaround
+    `Input-node Gene Symbol` <- `Output-node Gene Symbol` <- NULL
 
     vinayagam_download() %>%
     nichenet_common_postprocess(
@@ -1134,10 +1188,15 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
 #' (CPDB)
 #'
+#' @param ... Ignored.
+#'
 #' @importFrom dplyr select mutate distinct
 #' @importFrom magrittr %>%
 #' @export
 nichenet_signaling_network_cpdb <- function(...){
+
+    # NSE vs. R CMD check workaround
+    in_complex <- genesymbol_a <- genesymbol_b <- from <- to <- NULL
 
     consensuspathdb_download(...) %>%
     mutate(
@@ -1162,17 +1221,21 @@ nichenet_signaling_network_cpdb <- function(...){
 #' @param top_confidence Double, between 0 and 1. Threshold based on the
 #' quantile of the confidence score.
 #' @param indirect Logical: whether to include indirect interactions.
+#' @param ... Ignored.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select mutate filter
 #' @export
 #'
-#' @seealso \code{\link{evex}}
+#' @seealso \code{\link{evex_download}}
 nichenet_signaling_network_evex <- function(
     top_confidence = .75,
     indirect = FALSE,
     ...
 ){
+
+    # NSE vs. R CMD check workaround
+    coarse_type <- refined_type <- NULL
 
     categories <- list(
         Binding = 'binding',
@@ -1230,12 +1293,17 @@ nichenet_signaling_network_evex <- function(
 #' Builds signaling network prior knowledge for NicheNet from the InWeb
 #' InBioMap database.
 #'
+#' @param ... Ignored.
+#'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
 #' @export
 #'
-#' @seealso \code{\link{nichenet_signaling_network}, \link{inbiomap}}
+#' @seealso \code{\link{nichenet_signaling_network}, \link{inbiomap_download}}
 nichenet_signaling_network_inbiomap <- function(...){
+
+    # NSE vs. R CMD check workaround
+    genesymbol_a <- genesymbol_b <- NULL
 
     inbiomap_download(...) %>%
     nichenet_common_postprocess(
@@ -1259,6 +1327,10 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' @importFrom dplyr filter
 #' @seealso \code{\link{nichenet_lr_network}}
 nichenet_lr_network_guide2pharma <- function(){
+
+    # NSE vs. R CMD check workaround
+    target_species <- ligand_species <- ligand_gene_symbol <-
+        target_gene_symbol <- NULL
 
     guide2pharma_download() %>%
     filter(
@@ -1295,6 +1367,9 @@ nichenet_lr_network_ramilowski <- function(
     evidences = c('literature supported', 'putative')
 ){
 
+    # NSE vs. R CMD check workaround
+    Pair.Evidence <- Ligand.ApprovedSymbol <- Receptor.ApprovedSymbol <- NULL
+
     ramilowski_download() %>%
     filter(Pair.Evidence %in% evidences) %>%
     nichenet_common_postprocess(
@@ -1314,6 +1389,8 @@ nichenet_lr_network_ramilowski <- function(
 #'
 #' @param datasets The datasets to use. For possible values please refer to
 #'     default value and the Harmonizome webpage.
+#' @param ... Ignored.
+#'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr rename
 #' @export
@@ -1331,6 +1408,9 @@ nichenet_gr_network_harmonizome <- function(
     ),
     ...
 ){
+
+    # NSE vs. R CMD check workaround
+    to <- from <- NULL
 
     dataset_names <- list(
         cheappi = 'CHEA',
@@ -1361,6 +1441,9 @@ nichenet_gr_network_harmonizome <- function(
 #' @importFrom dplyr filter
 #' @seealso \code{\link{regnetwork_download}}
 nichenet_gr_network_regnetwork <- function(){
+
+    # NSE vs. R CMD check workaround
+    source_type <- target_type <- NULL
 
     regnetwork_download() %>%
     filter(
@@ -1403,6 +1486,9 @@ nichenet_gr_network_trrust <- function(){
 #' @importFrom magrittr %>%
 #' @seealso \code{\link{htridb_download}}
 nichenet_gr_network_htridb <- function(){
+
+    # NSE vs. R CMD check workaround
+    SYMBOL_TF <- SYMBOL_TG <- NULL
 
     htridb_download() %>%
     nichenet_common_postprocess(
@@ -1460,15 +1546,21 @@ nichenet_gr_network_remap <- function(
 #' @param top_confidence Double, between 0 and 1. Threshold based on the
 #' quantile of the confidence score.
 #' @param indirect Logical: whether to include indirect interactions.
+#' @param regulation_of_expression Logical: whether to include also the
+#'     "regulation of expression" type interactions.
 #'
 #' @export
 #' @importFrom magrittr %>%
+#' @importFrom stats quantile
 #' @importFrom dplyr filter select mutate
 nichenet_gr_network_evex <- function(
     top_confidence = .75,
     indirect = FALSE,
     regulation_of_expression = FALSE
 ){
+
+    # NSE vs. R CMD check workaround
+    confidence <- coarse_type <- refined_type <- NULL
 
     gr_types <- `if`(
         regulation_of_expression,
@@ -1501,6 +1593,7 @@ nichenet_gr_network_evex <- function(
 #' @param interaction_types Character vector with PathwayCommons interaction
 #'     types. Please refer to the default value and the PathwayCommons
 #'     webpage.
+#' @param ... Ignored.
 #'
 #' @export
 nichenet_gr_network_pathwaycommons <- function(
@@ -1531,6 +1624,9 @@ nichenet_gr_network_pathwaycommons <- function(
 #'
 #' @noRd
 nichenet_pathwaycommons_common <- function(interaction_types, label){
+
+    # NSE vs. R CMD check workaround
+    type <- from <- to <- NULL
 
     pathwaycommons_download() %>%
     filter(

@@ -45,10 +45,12 @@ Imports the dataset from:
 which contains lncRNA-mRNA interactions
 }
 \examples{
+\donttest{
 interactions <-
     import_lncrna_mrna_interactions(
         resources = c('ncRDeathDB')
     )
+}
 
 }
 \seealso{

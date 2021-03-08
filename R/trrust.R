@@ -35,6 +35,9 @@
 #' @importFrom tidyr separate_rows
 trrust_download <- function(organism = 'human'){
 
+    # NSE vs. R CMD check workaround
+    effect <- reference <- NULL
+
     generic_downloader(
         url_key = 'omnipath.trrust_url',
         url_param = list(organism),

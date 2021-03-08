@@ -16,8 +16,10 @@ An igraph object
 transforms the ptms interactions data.frame to igraph object
 }
 \examples{
+\donttest{
 ptms = import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
-ptms_g = ptms_graph(ptms = ptms )
+ptms_g = ptms_graph(ptms = ptms)
+}
 }
 \seealso{
 \code{\link{import_omnipath_enzsub}}

@@ -49,10 +49,12 @@ The ligand-receptor interactions supported by literature references
 are part of the `omnipath` dataset.
 }
 \examples{
+\donttest{
 interactions <- import_ligrecextra_interactions(
     resources = c('HPRD', 'Guide2Pharma'),
     organism = 9606
 )
+}
 
 }
 \seealso{

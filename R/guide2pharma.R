@@ -33,6 +33,9 @@
 #' @importFrom tidyr separate_rows
 guide2pharma_download <- function(){
 
+    # NSE vs. R CMD check workaround
+    ligand_gene_symbol <- target_gene_symbol <- NULL
+
     'omnipath.guide2pharma_url' %>%
     generic_downloader(
         reader_param = list(

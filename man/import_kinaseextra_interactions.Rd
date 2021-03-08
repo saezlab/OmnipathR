@@ -35,7 +35,7 @@ the query type. If FALSE, only the fields defined by the user in the
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
-\item{...}{optional additional arguments}
+\item{...}{Optional additional arguments.}
 }
 \value{
 A dataframe containing enzyme-substrate interactions without
@@ -49,11 +49,13 @@ The enzyme-substrate interactions supported by literature references
 are part of the `omnipath` dataset.
 }
 \examples{
+\donttest{
 interactions <-
    import_kinaseextra_interactions(
        resources = c('PhosphoPoint', 'PhosphoSite'),
        organism = 9606
    )
+}
 
 }
 \seealso{

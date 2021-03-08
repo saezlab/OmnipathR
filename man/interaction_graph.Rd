@@ -20,18 +20,21 @@ interaction_graph(interactions = interactions)
 An igraph object
 }
 \description{
-transforms the interactions data.frame to an igraph object
+Transforms the interactions data frame to an igraph graph object.
 }
 \examples{
+\donttest{
 interactions = import_omnipath_interactions(resources=c('SignaLink3'))
 OPI_g = interaction_graph(interactions)
 }
+
+}
 \seealso{
 \code{\link{import_omnipath_interactions}},
-\code{\link{import_pathwayextra_interactions}},
-\code{\link{import_kinaseextra_interactions}},
-\code{\link{import_ligrecextra_interactions}},
-\code{\link{import_dorothea_interactions}},
-\code{\link{import_mirnatarget_interactions}} or
-\code{\link{import_all_interactions}}
+    \code{\link{import_pathwayextra_interactions}},
+    \code{\link{import_kinaseextra_interactions}},
+    \code{\link{import_ligrecextra_interactions}},
+    \code{\link{import_dorothea_interactions}},
+    \code{\link{import_mirnatarget_interactions}} or
+    \code{\link{import_all_interactions}}
 }

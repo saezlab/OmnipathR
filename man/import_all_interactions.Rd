@@ -67,10 +67,12 @@ tf_mirna: TF-miRNA interactions
 lncrna_mrna: lncRNA-mRNA interactions
 }
 \examples{
+\donttest{
 interactions <- import_all_interactions(
     resources = c('HPRD', 'BioGRID'),
     organism = 9606
 )
+}
 
 }
 \seealso{

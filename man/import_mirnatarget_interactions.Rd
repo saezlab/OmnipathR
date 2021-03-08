@@ -46,10 +46,12 @@ Imports the dataset from:
 which contains miRNA-mRNA interactions.
 }
 \examples{
+\donttest{
 interactions <-
     import_mirnatarget_interactions(
         resources = c('miRTarBase', 'miRecords')
     )
+}
 
 }
 \seealso{

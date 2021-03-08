@@ -30,6 +30,7 @@
 #' @importFrom dplyr mutate select
 #' @importFrom readr read_tsv read_lines
 #' @importFrom magrittr %>% %T>%
+#' @importFrom utils download.file
 #' @export
 harmonizome_download <- function(dataset){
 

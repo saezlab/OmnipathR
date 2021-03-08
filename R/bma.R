@@ -114,13 +114,17 @@ bma_description <- function(e, incoming = ""){
 #' copy/pasted into the BMA canvas
 #'
 #' Intended to parallel print_path_es
-#' @param takes an sequence of edges, a graph, and a granularity
+#' @param edge_seq An igraph edge sequence.
+#' @param G An igraph graph object.
+#' @param granularity Numeric: granularity value.
 #' @export
 #' @importFrom igraph tail_of head_of
 bma_motif_es <- function(edge_seq, G, granularity = 2){
+
     if(length(edge_seq) == 0) {
         wrong_input("BMA motif: empty path")
     }
+
     #Process-
     ## Create list of variables
     ## Create layout of variables
@@ -208,7 +212,8 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' copy/pasted into the BMA canvas
 #'
 #' Intended to parallel print_path_vs
-#' @param takes an sequence of nodes, and a granularity
+#' @param node_seq An igraph node sequence.
+#' @param G An igraph graph object.
 #' @export
 #' @importFrom logger log_warn
 #' @importFrom igraph E

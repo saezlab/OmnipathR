@@ -41,10 +41,15 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' uniprot_genesymbol <- uniprot_id_mapping_table(
 #'     c('P00533', 'P23771'), 'ID', 'GENENAME'
 #' )
+#' }
 uniprot_id_mapping_table <- function(identifiers, from, to){
+
+    # NSE vs. R CMD check workaround
+    content <- NULL
 
     url <- 'https://www.uniprot.org/uploadlists/'
     post <- list(
@@ -96,10 +101,11 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' @param to Identifier type for `to_col`. See Details for possible values.
 #' @param uploadlists Whether to use the `uploadlists` service from UniProt
 #'     or the plain query interface (implemented in
-#'     \code{\link{all_uniprots_id_mapping_table}} in this package).
+#'     \code{\link{uniprot_full_id_mapping_table}} in this package).
 #' @param keep_untranslated Keep the records where the source identifier
 #'     could not be translated. At these records the target identifier will
 #'     be NA.
+#' @param ... Passed to \code{\link{uniprot_full_id_mapping_table}}.
 #'
 #' @details
 #' This function uses the uploadlists service of UniProt to obtain identifier
@@ -116,7 +122,9 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' d <- translate_ids(d, uniprot_id, genesymbol, 'ID', 'GENENAME')
+#' }
 #'
 #' @seealso \code{\link{uniprot_id_mapping_table}}
 translate_ids <- function(
@@ -125,6 +133,9 @@ translate_ids <- function(
     keep_untranslated = TRUE,
     ...
 ){
+
+    # NSE vs. R CMD check workaround
+    To <- NULL
 
     from_col <- enquo(from_col)
     to_col <- enquo(to_col)
@@ -153,11 +164,13 @@ translate_ids <- function(
 }
 
 
-#' Retrieves a table from UniProt with all proteins for a certain organism
+#' A table with all UniProt IDs
+#'
+#' Retrieves a table from UniProt with all proteins for a certain organism.
 #'
 #' @param fields Character vector of fields as defined by UniProt. For
 #'     possible values please refer to
-#'     https://www.uniprot.org/help/uniprotkb%5Fcolumn%5Fnames
+#'     https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames
 #' @param reviewed Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
 #'     both (NULL).
 #' @param organism Integer, NCBI Taxonomy ID of the organism (by default
@@ -168,7 +181,9 @@ translate_ids <- function(
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' human_swissprot_ac <- all_uniprots(fields = 'entry name')
+#' }
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 
     on.exit(closeAllConnections())
@@ -217,13 +232,18 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' @export
 #'
 #' @examples
-#' uniprot_entrez <- all_uniprots_id_mapping_table(to = 'entrez')
+#' \donttest{
+#' uniprot_entrez <- uniprot_full_id_mapping_table(to = 'entrez')
+#' }
 uniprot_full_id_mapping_table <- function(
     to,
     from = 'id',
     reviewed = TRUE,
     organism = 9606
 ){
+
+    # NSE vs. R CMD check workaround
+    From <- To <- NULL
 
     id_types = list(
         entrez = c('database', 'GeneID'),

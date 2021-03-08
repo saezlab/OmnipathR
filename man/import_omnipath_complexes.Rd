@@ -24,9 +24,11 @@ Imports the complexes stored in Omnipath database from
 \url{https://omnipathdb.org/complexes}.
 }
 \examples{
+\donttest{
 complexes = import_omnipath_complexes(
     resources = c('CORUM', 'hu.MAP')
 )
+}
 
 }
 \seealso{

@@ -42,7 +42,7 @@
 #' @importFrom readr read_tsv
 #' @importFrom tidyr separate_rows
 #' @importFrom dplyr mutate select inner_join left_join pull filter rename
-#' @importFrom dplyr group_by ungroup
+#' @importFrom dplyr group_by ungroup n
 #' @importFrom magrittr %>% %T>%
 #' @importFrom stringr str_count
 #' @export
@@ -50,6 +50,10 @@ consensuspathdb_download <- function(
     complex_max_size = 4,
     min_score = .9
 ){
+
+    # NSE vs. R CMD check workaround
+    participants <- confidence <- uniprot_a <- uniprot_b <- record_id <-
+        in_complex <- To <- NULL
 
     cpdb_raw <- consensuspathdb_raw_table()
 

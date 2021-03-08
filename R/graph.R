@@ -1,3 +1,24 @@
+#!/usr/bin/env Rscript
+
+#
+#  This file is part of the `OmnipathR` R package
+#
+#  Copyright
+#  2018-2021
+#  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
+#
+#  File author(s): Alberto Valdeolivas
+#                  Dénes Türei (turei.denes@gmail.com)
+#                  Attila Gábor
+#
+#  Distributed under the MIT (Expat) License.
+#  See accompanying file `LICENSE` or find a copy at
+#      https://directory.fsf.org/wiki/License:Expat
+#
+#  Website: https://saezlab.github.io/omnipathr
+#  Git repo: https://github.com/saezlab/OmnipathR
+#
+
 
 #' Post-translational modifications (PTMs) graph
 #'
@@ -10,10 +31,12 @@
 #' @importFrom rlang .data
 #' @param ptms data.frame created by \code{\link{import_omnipath_enzsub}}
 #' @examples
+#' \donttest{
 #' ptms = import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
-#' ptms_g = ptms_graph(ptms = ptms )
+#' ptms_g = ptms_graph(ptms = ptms)
+#' }
 #' @seealso  \code{\link{import_omnipath_enzsub}}
-ptms_graph = function(ptms){
+ptms_graph <- function(ptms){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.
     # This might cause issue when a gene name encodes multiple uniprot IDs.
@@ -29,33 +52,40 @@ ptms_graph = function(ptms){
     return(output_graph)
 }
 
+
 #' Build Omnipath interaction graph
 #'
-#' transforms the interactions data.frame to an igraph object
+#' Transforms the interactions data frame to an igraph graph object.
+#'
+#' @param interactions data.frame created by
+#'     \code{\link{import_omnipath_interactions}},
+#'     \code{\link{import_pathwayextra_interactions}},
+#'     \code{\link{import_kinaseextra_interactions}},
+#'     \code{\link{import_ligrecextra_interactions}},
+#'     \code{\link{import_dorothea_interactions}},
+#'     \code{\link{import_mirnatarget_interactions}} or
+#'     \code{\link{import_all_interactions}}
 #'
 #' @return An igraph object
+#'
 #' @export
 #' @import igraph
 #' @importFrom dplyr select group_by summarise ungroup
 #' @importFrom magrittr %>%
-#' @param interactions data.frame created by
-#' \code{\link{import_omnipath_interactions}},
-#' \code{\link{import_pathwayextra_interactions}},
-#' \code{\link{import_kinaseextra_interactions}},
-#' \code{\link{import_ligrecextra_interactions}},
-#' \code{\link{import_dorothea_interactions}},
-#' \code{\link{import_mirnatarget_interactions}} or
-#' \code{\link{import_all_interactions}}
+#'
 #' @examples
+#' \donttest{
 #' interactions = import_omnipath_interactions(resources=c('SignaLink3'))
 #' OPI_g = interaction_graph(interactions)
+#' }
+#'
 #' @seealso \code{\link{import_omnipath_interactions}},
-#' \code{\link{import_pathwayextra_interactions}},
-#' \code{\link{import_kinaseextra_interactions}},
-#' \code{\link{import_ligrecextra_interactions}},
-#' \code{\link{import_dorothea_interactions}},
-#' \code{\link{import_mirnatarget_interactions}} or
-#' \code{\link{import_all_interactions}}
+#'     \code{\link{import_pathwayextra_interactions}},
+#'     \code{\link{import_kinaseextra_interactions}},
+#'     \code{\link{import_ligrecextra_interactions}},
+#'     \code{\link{import_dorothea_interactions}},
+#'     \code{\link{import_mirnatarget_interactions}} or
+#'     \code{\link{import_all_interactions}}
 interaction_graph <- function(interactions = interactions){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.
@@ -163,6 +193,7 @@ format_graph_edges <- function(df_interact, flag){
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' interactions <- import_omnipath_interactions()
 #' graph <- interaction_graph(interaction)
 #' paths <- find_all_paths(
@@ -170,6 +201,7 @@ format_graph_edges <- function(df_interact, flag){
 #'     c('AKT1', 'ULK1'),
 #'     attr = 'name'
 #' )
+#' }
 #'
 #' @seealso \code{\link{interaction_graph}, \link{ptms_graph}}
 find_all_paths <- function(
@@ -179,8 +211,7 @@ find_all_paths <- function(
         attr = NULL,
         mode = 'OUT',
         maxlen = 2,
-        progress = TRUE,
-        ...
+        progress = TRUE
     ){
 
         find_all_paths_aux <- function(start, end, path = NULL){
