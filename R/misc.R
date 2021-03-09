@@ -153,6 +153,42 @@ file_add_extension <- function(fname, ext){
 }
 
 
+#' Converts any path to absolute path
+#'
+#' This function is used to convert relative file paths to absolute file paths
+#' without checking if the file exists as \code{tools::file_path_as_absolute}
+#' does. Modified from
+#' https://github.com/sbfnk/RBi/blob/master/R/absolute_path.R
+#'
+#' @param filename name of a file, absolute or relative to a folder
+#' @param dirname name of a folder where the file is supposed to be
+#'
+#' @return a character string containing the absolute path
+#'
+#' @noRd
+absolute_path <- function(path, winslash = '\\'){
+
+    if(
+        (
+            .Platform$OS.type == 'unix' &&
+            substr(path, 1, 1) %in% c('/', '~')
+        ) || (
+            .Platform$OS.type == 'windows' &&
+            grepl('^[A-z]:[\\\\/]', path)
+        )
+    ){
+        # the path is already absolute
+        result <- normalizePath(filename, winslash, FALSE)
+    } else {
+        # prepending the current directory to make it absolute
+        result <- file.path(normalizePath(getwd(), winslash), path)
+    }
+
+    return(result)
+
+}
+
+
 #' Closes a connection when the parent call exits
 #'
 #' @noRd
@@ -286,8 +322,6 @@ if_null <- function(value1, value2){
 
     pkg <- .nse_ensure_str(!!enquo(pkg))
     fun <- .nse_ensure_str(!!enquo(fun))
-
-    print(pkg)
 
     get(fun, envir = asNamespace(pkg), inherits = FALSE)
 
