@@ -185,6 +185,14 @@ omnipath_get_config_path <- function(user = FALSE){
 #' a user level config file. When loading, the config in the current directory
 #' has prioroty over the user level config.
 #'
+#' @examples
+#' \donttest{
+#' # after this, all downloads will default to commercial licenses
+#' # i.e. the resources that allow only academic use will be excluded:
+#' options(omnipath.license = 'commercial')
+#' omnipath_save_config()
+#' }
+#'
 #' @export
 #' @importFrom yaml write_yaml
 omnipath_save_config <- function(
@@ -224,6 +232,12 @@ omnipath_save_config <- function(
 #'     exists in the current directory. By default, the local config files
 #'     have prioroty over the user level config.
 #' @param ... Passed to \code{yaml::yaml.load_file}.
+#'
+#' @examples
+#' \donttest{
+#' # load the config from a custom config file:
+#' omnipath_load_config(path = 'my_custom_omnipath_config.yml')
+#' }
 #'
 #' @export
 #' @importFrom yaml yaml.load_file
@@ -282,6 +296,13 @@ omnipath_load_config <- function(
 #' @param save If a path, the restored config will be also saved
 #' to this file. If TRUE, the config will be saved to the current default
 #' config path (see `omnipath_get_config_path()`).
+#'
+#' @examples
+#' \donttest{
+#' # restore the defaults and write them to the default config file:
+#' omnipath_reset_config()
+#' omnipath_save_config()
+#' }
 #'
 #' @return The config as a list.
 #'

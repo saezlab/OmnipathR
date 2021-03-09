@@ -24,6 +24,8 @@ get_enzsub_resources()
 
 }
 \seealso{
-\code{\link{get_resources},
-\link{import_omnipath_enzsub}}
+\itemize{
+    \item{\code{\link{get_resources}}}
+    \item{\code{\link{import_omnipath_enzsub}}}
+}
 }

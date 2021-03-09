@@ -27,6 +27,23 @@
 #'
 #' @return A tibble (data frame) of interactions as it is provided by the
 #' database
+#'
+#' @examples
+#' \donttest{
+#' g2p_data <- guide2pharma_download()
+#' g2p_data
+#' # # A tibble: 21,586 x 38
+#' #    target target_id target_gene_sym. target_uniprot target_ensembl_.
+#' #    <chr>      <dbl> <chr>            <chr>          <chr>
+#' #  1 12S-L.      1387 ALOX12           P18054         ENSG00000108839
+#' #  2 15-LO.      1388 ALOX15           P16050         ENSG00000161905
+#' #  3 15-LO.      1388 ALOX15           P16050         ENSG00000161905
+#' #  4 15-LO.      1388 ALOX15           P16050         ENSG00000161905
+#' # # . with 21,576 more rows, and 33 more variables: target_ligand <chr>,
+#' # #   target_ligand_id <chr>, target_ligand_gene_symbol <chr>,
+#' # ... (truncated)
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr cols col_character col_number

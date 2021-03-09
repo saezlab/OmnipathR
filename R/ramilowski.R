@@ -26,6 +26,11 @@
 #' "A draft network of ligand-receptor mediated multicellular signaling in
 #' human" (https://www.nature.com/articles/ncomms8866).
 #'
+#' @examples
+#' \donttest{
+#'    rami_interactions <- ramilowski_download()
+#' }
+#'
 #' @export
 #' @importFrom magrittr %T>%
 ramilowski_download <- function(){

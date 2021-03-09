@@ -39,6 +39,29 @@
 #'     value, a minimum score of 0.9 retains approx. the top 30% of the
 #'     interactions.
 #'
+#' @examples
+#' \donttest{
+#' cpdb_data <- consensuspathdb_download(
+#'     complex_max_size = 1,
+#'     min_score = .98
+#' )
+#' nrow(cpdb_data)
+#' # [1] 252302
+#' colnames(cpdb_data)
+#' # [1] "databases"  "references" "uniprot_a"    "confidence"   "record_id"
+#' # [6] "uniprot_b"  "in_complex" "genesymbol_a" "genesymbol_b"
+#' cpdb_data
+#' # # A tibble: 252,302 x 9
+#' #    databases references uniprot_a confidence record_id uniprot_b in_com
+#' #    <chr>     <chr>      <chr>          <dbl>     <int> <chr>     <lgl>
+#' #  1 Reactome  NA         SUMF2_HU.      1             1 SUMF1_HU. TRUE
+#' #  2 Reactome  NA         SUMF1_HU.      1             1 SUMF2_HU. TRUE
+#' #  3 DIP,Reac. 22210847,. STIM1_HU.      0.998         2 TRPC1_HU. TRUE
+#' #  4 DIP,Reac. 22210847,. TRPC1_HU.      0.998         2 STIM1_HU. TRUE
+#' # # . with 252,292 more rows, and 2 more variables: genesymbol_a <chr>,
+#' # #   genesymbol_b <chr
+#' }
+#'
 #' @importFrom readr read_tsv
 #' @importFrom tidyr separate_rows
 #' @importFrom dplyr mutate select inner_join left_join pull filter rename
@@ -92,6 +115,11 @@ consensuspathdb_download <- function(
 
 
 #' Downloads interaction data from ConsensusPathDB
+#'
+#' @examples
+#' \donttest{
+#' cpdb_raw <- consensuspathdb_raw_table()
+#' }
 #'
 #' @importFrom readr read_tsv cols
 #' @importFrom magrittr %>%

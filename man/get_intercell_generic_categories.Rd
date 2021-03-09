@@ -22,6 +22,8 @@ get_intercell_generic_categories()
 
 }
 \seealso{
-\code{\link{import_omnipath_intercell},
-    \link{get_intercell_categories}}
+\itemize{
+    \item{\code{\link{import_omnipath_intercell}}}
+    \item{\code{\link{get_intercell_categories}}}
+}
 }

@@ -123,6 +123,7 @@ file_extension <- function(name){
     `[`(1) %>%
     strsplit('\\.') %>%
     `[[`(1) %>%
+    grep('^[[:alnum:]]+$', ., value = TRUE) %>%
     tail(
         `if`(
             length(.) > 1 && nchar(tail(., 1)) < 5,

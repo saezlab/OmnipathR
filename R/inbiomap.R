@@ -129,6 +129,16 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @examples
 #' \donttest{
 #' inbiomap_interactions <- inbiomap_download()
+#' inbiomap_interactions
+#' # # A tibble: 625,641 x 7
+#' #    uniprot_a uniprot_b genesymbol_a genesymbol_b inferred score1 score2
+#' #    <chr>     <chr>     <chr>        <chr>        <lgl>     <dbl>  <dbl>
+#' #  1 A0A5B9    P01892    TRBC2        HLA-A        FALSE     0.417 0.458
+#' #  2 A0AUZ9    Q96CV9    KANSL1L      OPTN         FALSE     0.155 0.0761
+#' #  3 A0AV02    P24941    SLC12A8      CDK2         TRUE      0.156 0.0783
+#' #  4 A0AV02    Q00526    SLC12A8      CDK3         TRUE      0.157 0.0821
+#' #  5 A0AV96    P0CG48    RBM47        UBC          FALSE     0.144 0.0494
+#' # # . with 625,631 more rows
 #' }
 inbiomap_download <- function(...){
 

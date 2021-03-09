@@ -26,6 +26,22 @@
 #' function retrieves Supplementary Table 2 from the article
 #' (http://www.nature.com/nrg/journal/v10/n4/index.html).
 #'
+#' @examples
+#' \donttest{
+#' tfcensus <- tfcensus_download()
+#' tfcensus
+#' # # A tibble: 1,987 x 7
+#' #    Class `Ensembl ID` `IPI ID` `Interpro DBD` `Interpro DNA-b.
+#' #    <chr> <chr>        <chr>    <chr>          <chr>
+#' #  1 a     ENSG0000000. IPI0021. NA             IPR001289
+#' #  2 a     ENSG0000000. IPI0004. IPR000047;IPR. NA
+#' #  3 a     ENSG0000000. IPI0001. IPR001356;IPR. NA
+#' #  4 a     ENSG0000000. IPI0029. IPR000910;IPR. NA
+#' #  5 a     ENSG0000000. IPI0001. IPR007087;IPR. IPR006794
+#' # # . with 1,977 more rows, and 2 more variables: `HGNC symbol` <chr>,
+#' # # `Tissue-specificity` <chr>
+#' }
+#'
 #' @export
 #' @importFrom magrittr %T>%
 tfcensus_download <- function(){

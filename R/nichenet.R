@@ -69,13 +69,31 @@
 #' @param results_dir Character: path to the directory to save intermediate
 #'     and final outputs from NicheNet methods.
 #'
+#' @examples
+#' \donttest{
+#' nichenet_results <- nichenet_main(
+#'     # altering some network resource parameters, the rest
+#'     # of the resources will be loaded according to the defaults
+#'     signaling_network = list(
+#'         cpdb = NULL, # this resource will be excluded
+#'         evex = list(min_confidence = 1.0) # override some parameters
+#'     ),
+#'     gr_network = list(only_omnipath = TRUE),
+#'     n_top_ligands = 20,
+#'     # override the default number of CPU cores to use
+#'     mlrbo_optimization_param = list(ncores = 4)
+#' )
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>% %T>%
 #'
-#' @seealso \code{\link{nichenet_networks},
-#'     \link{nichenet_signaling_network},
-#'     \link{nichenet_lr_network},
-#'     \link{nichenet_gr_network}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_networks}}}
+#'     \item{\code{\link{nichenet_signaling_network}}}
+#'     \item{\code{\link{nichenet_lr_network}}}
+#'     \item{\code{\link{nichenet_gr_network}}}
+#' }
 nichenet_main <- function(
     only_omnipath = FALSE,
     expressed_genes_transmitter = NULL,
@@ -200,6 +218,16 @@ nichenet_main <- function(
 #' @param lr_network A NicheNet format ligand-recptor network data frame as
 #'     produced by \code{\link{nichenet_lr_network}}.
 #'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' expression <- nichenet_expression_data()
+#' expression <- nichenet_remove_orphan_ligands(
+#'     expression,
+#'     networks$lr_network
+#' )
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom purrr keep
@@ -237,6 +265,13 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 #'     the objective function.
 #' @param mlrmbo_optimization_param Override arguments for
 #'     \code{nichenetr::mlrmbo_optimization}.
+#'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' expression <- nichenet_expression_data()
+#' optimization_results <- nichenet_optimization(networks, expression)
+#' }
 #'
 #' @export
 #' @importFrom magrittr %>% %T>% %<>%
@@ -374,6 +409,14 @@ nichenet_optimization <- function(
 #'     \code{\link{nichenet_networks}}.
 #' @param weighted Logical: whether to use the optimized weights.
 #'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' expression <- nichenet_expression_data()
+#' optimization_results <- nichenet_optimization(networks, expression)
+#' nichenet_model <- nichenet_build_model(optimization_results, networks)
+#' }
+#'
 #' @export
 #' @importFrom purrr map
 #' @importFrom tibble tibble
@@ -454,6 +497,19 @@ nichenet_build_model <- function(
 #' @param construct_ligand_target_matrix_param Override parameters for
 #'     \code{nichenetr::construct_ligand_target_matrix}.
 #'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' expression <- nichenet_expression_data()
+#' optimization_results <- nichenet_optimization(networks, expression)
+#' nichenet_model <- nichenet_build_model(optimization_results, networks)
+#' lt_matrix <- nichenet_ligand_target_matrix(
+#'     nichenet_model£weighted_networks,
+#'     networks$lr_network,
+#'     nichenet_model$optimized_parameters
+#' )
+#' }
+#'
 #' @export
 #' @importFrom dplyr pull
 #' @importFrom magrittr %>% %T>%
@@ -523,6 +579,28 @@ nichenet_ligand_target_matrix <- function(
 #'     ligand-target table.
 #' @param n_top_targets For each ligand, how many of the top targets to
 #'     include in the ligand-target table.
+#'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' expression <- nichenet_expression_data()
+#' optimization_results <- nichenet_optimization(networks, expression)
+#' nichenet_model <- nichenet_build_model(optimization_results, networks)
+#' lt_matrix <- nichenet_ligand_target_matrix(
+#'     nichenet_model£weighted_networks,
+#'     networks$lr_network,
+#'     nichenet_model$optimized_parameters
+#' )
+#' ligand_activities <- nichenet_ligand_activities(
+#'     ligand_target_matrix = lt_matrix,
+#'     lr_network = networks$lr_network,
+#'     # the rest of the parameters should come
+#'     # from your transcriptomics data:
+#'     expressed_genes_transmitter = expressed_genes_transmitter,
+#'     expressed_genes_receiver = expressed_genes_receiver,
+#'     genes_of_interest = genes_of_interest
+#' )
+#' }
 #'
 #' @export
 #' @importFrom magrittr %>% %<>% %T>%
@@ -608,6 +686,35 @@ nichenet_ligand_activities <- function(
 #' @param n_top_targets For each ligand, how many of the top targets to
 #'     include in the ligand-target table.
 #'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' expression <- nichenet_expression_data()
+#' optimization_results <- nichenet_optimization(networks, expression)
+#' nichenet_model <- nichenet_build_model(optimization_results, networks)
+#' lt_matrix <- nichenet_ligand_target_matrix(
+#'     nichenet_model£weighted_networks,
+#'     networks$lr_network,
+#'     nichenet_model$optimized_parameters
+#' )
+#' ligand_activities <- nichenet_ligand_activities(
+#'     ligand_target_matrix = lt_matrix,
+#'     lr_network = networks$lr_network,
+#'     # the rest of the parameters should come
+#'     # from your transcriptomics data:
+#'     expressed_genes_transmitter = expressed_genes_transmitter,
+#'     expressed_genes_receiver = expressed_genes_receiver,
+#'     genes_of_interest = genes_of_interest
+#' )
+#' lt_links <- nichenet_ligand_target_links(
+#'     ligand_activities = ligand_activities,
+#'     ligand_target_matrix = lt_matrix,
+#'     genes_of_interest = genes_of_interest,
+#'     n_top_ligands = 20,
+#'     n_top_targets = 100
+#' )
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr top_n arrange
@@ -641,13 +748,19 @@ nichenet_ligand_target_links <- function(
 #' Path to the directory to save intermediate and final outputs from NicheNet
 #' methods.
 #'
+#' @examples
+#' \donttest{
+#' nichenet_results_dir()
+#' # [1] "nichenet_results"
+#' }
+#'
 #' @export
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 nichenet_results_dir <- function(){
 
     'omnipath.nichenet_results_dir' %>%
     options %>%
-    `[[`(1) %>%
+    `[[`(1) %T>%
     dir.create(showWarnings = FALSE, recursive = TRUE)
 
 }
@@ -670,12 +783,37 @@ nichenet_results_dir <- function(){
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks()
+#' networks$gr_network %>% dplyr::sample_n(10)
+#' # # A tibble: 10 x 4
+#' #    from    to       source               database
+#' #    <chr>   <chr>    <chr>                <chr>
+#' #  1 MAX     ALG3     harmonizome_ENCODE   harmonizome
+#' #  2 MAX     IMPDH1   harmonizome_ENCODE   harmonizome
+#' #  3 SMAD5   LCP1     Remap_5              Remap
+#' #  4 HNF4A   TNFRSF19 harmonizome_CHEA     harmonizome
+#' #  5 SMC3    FAP      harmonizome_ENCODE   harmonizome
+#' #  6 E2F6    HIST1H1B harmonizome_ENCODE   harmonizome
+#' #  7 TFAP2C  MAT2B    harmonizome_ENCODE   harmonizome
+#' #  8 USF1    TBX4     harmonizome_TRANSFAC harmonizome
+#' #  9 MIR133B FETUB    harmonizome_TRANSFAC harmonizome
+#' # 10 SP4     HNRNPH2  harmonizome_ENCODE   harmonizome
+#'
+#' # use only OmniPath:
+#' omnipath_networks <- nichenet_networks(only_omnipath = TRUE)
+#' }
+#'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom purrr map2
 #' @export
 #'
-#' @seealso \code{\link{nichenet_signaling_network},
-#' \link{nichenet_lr_network}, \link{nichenet_gr_network}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_signaling_network}}}
+#'     \item{\code{\link{nichenet_lr_network}}}
+#'     \item{\code{\link{nichenet_gr_network}}}
+#' }
 nichenet_networks <- function(
     signaling_network = list(),
     lr_network = list(),
@@ -690,7 +828,9 @@ nichenet_networks <- function(
     map2(
         names(.),
         function(args, network_type){
-            args$only_omnipath <- only_omnipath
+            if(!('only_omnipath' %in% names(args))){
+                args$only_omnipath <- only_omnipath
+            }
             network_type %>%
             sprintf('nichenet_%s', .) %>%
             get() %>%
@@ -724,16 +864,36 @@ nichenet_networks <- function(
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
+#' @examples
+#' \donttest{
+#' # load everything with the default parameters:
+#' sig_network <- nichenet_signaling_network()
+#'
+#' # override parameters for some resources:
+#' sig_network <- nichenet_signaling_network(
+#'     omnipath = list(resources = c('SIGNOR', 'SignaLink3', 'SPIKE')),
+#'     patwaycommons = NULL,
+#'     harmonizome = list(datasets = c('phosphositeplus', 'depod')),
+#'     cpdb = list(complex_max_size = 1, min_score = .98),
+#'     evex = list(min_confidence = 1.5)
+#' )
+#'
+#' # use only OmniPath:
+#' sig_network_omnipath <- nichenet_signaling_network(only_omnipath = TRUE)
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_signaling_network_omnipath},
-#'     \link{nichenet_signaling_network_pathwaycommons},
-#'     \link{nichenet_signaling_network_harmonizome},
-#'     \link{nichenet_signaling_network_vinayagam},
-#'     \link{nichenet_signaling_network_cpdb},
-#'     \link{nichenet_signaling_network_evex},
-#'     \link{nichenet_signaling_network_inbiomap}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_signaling_network_omnipath}}}
+#'     \item{\code{\link{nichenet_signaling_network_pathwaycommons}}}
+#'     \item{\code{\link{nichenet_signaling_network_harmonizome}}}
+#'     \item{\code{\link{nichenet_signaling_network_vinayagam}}}
+#'     \item{\code{\link{nichenet_signaling_network_cpdb}}}
+#'     \item{\code{\link{nichenet_signaling_network_evex}}}
+#'     \item{\code{\link{nichenet_signaling_network_inbiomap}}}
+#' }
 nichenet_signaling_network <- function(
     omnipath = list(),
     pathwaycommons = list(),
@@ -767,12 +927,26 @@ nichenet_signaling_network <- function(
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
+#' @examples
+#' \donttest{
+#' # load everything with the default parameters:
+#' lr_network <- nichenet_lr_network()
+#'
+#' # don't use Ramilowski:
+#' lr_network <- nichenet_lr_network(ramilowski = NULL)
+#'
+#' # use only OmniPath:
+#' lr_network_omnipath <- nichenet_lr_network(only_omnipath = TRUE)
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_lr_network_omnipath},
-#'     \link{nichenet_lr_network_guide2pharma},
-#'     \link{nichenet_lr_network_ramilowski}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_lr_network_omnipath}}}
+#'     \item{\code{\link{nichenet_lr_network_guide2pharma}}}
+#'     \item{\code{\link{nichenet_lr_network_ramilowski}}}
+#' }
 nichenet_lr_network <- function(
     omnipath = list(),
     guide2pharma = list(),
@@ -812,17 +986,34 @@ nichenet_lr_network <- function(
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
+#' @examples
+#' \donttest{
+#' # load everything with the default parameters:
+#' gr_network <- nichenet_gr_network()
+#'
+#' # less targets from ReMap, not using RegNetwork:
+#' gr_network <- nichenet_gr_network(
+#'     remap = list(top_targets = 200),
+#'     regnetwork = NULL,
+#' )
+#'
+#' # use only OmniPath:
+#' gr_network_omnipath <- nichenet_gr_network(only_omnipath = TRUE)
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_gr_network_evex},
-#'     \link{nichenet_gr_network_harmonizome},
-#'     \link{nichenet_gr_network_htridb},
-#'     \link{nichenet_gr_network_omnipath},
-#'     \link{nichenet_gr_network_pathwaycommons},
-#'     \link{nichenet_gr_network_regnetwork},
-#'     \link{nichenet_gr_network_remap},
-#'     \link{nichenet_gr_network_trrust}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_gr_network_evex}}}
+# #'     \item{\code{\link{nichenet_gr_network_harmonizome}}}
+#'     \item{\code{\link{nichenet_gr_network_htridb}}}
+#'     \item{\code{\link{nichenet_gr_network_omnipath}}}
+#'     \item{\code{\link{nichenet_gr_network_pathwaycommons}}}
+#'     \item{\code{\link{nichenet_gr_network_regnetwork}}}
+#'     \item{\code{\link{nichenet_gr_network_remap}}}
+#'     \item{\code{\link{nichenet_gr_network_trrust}}}
+#' }
 nichenet_gr_network <- function(
     omnipath = list(),
     harmonizome = list(),
@@ -855,6 +1046,12 @@ nichenet_gr_network <- function(
 #'     be overridden). If the value is NULL the resource will be omitted.
 #'
 #' @return A data frame with interactions suitable for use with NicheNet.
+#'
+#' @examples
+#' \donttest{
+#' # load the ligand-receptor network with the default parameters:
+#' lr_network <- nichenet_network(network_type = 'lr')
+#' }
 #'
 #' @importFrom purrr map2 discard keep
 #' @importFrom magrittr %>%
@@ -922,18 +1119,31 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
 }
 
 
-#' Builds signaling network prior knowledge for NicheNet using OmniPath
+#' Builds signaling network for NicheNet using OmniPath
 #'
+#' Retrieves network prior knowledge from OmniPath and provides it in
+#' a format suitable for NicheNet.
 #' This method never downloads the `ligrecextra` dataset because the
 #' ligand-receptor interactions are supposed to come from \code{
 #' \link{nichenet_lr_network_omnipath}}.
 #'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_post_translational_interactions}}
+#'
+#' @examples
+#' \donttest{
+#' # use interactions with at least 2 evidences (reference or database)
+#' op_signaling_network <- nichenet_signaling_network_omnipath(
+#'     min_curation_effort = 2
+#' )
+#' }
+#'
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_signaling_network}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_signaling_network}}}
+#' }
 nichenet_signaling_network_omnipath <- function(
     min_curation_effort = 0,
     ...
@@ -949,18 +1159,40 @@ nichenet_signaling_network_omnipath <- function(
 }
 
 
-#' Builds ligand-receptor network prior knowledge for NicheNet using OmniPath
+#' Builds ligand-receptor network for NicheNet using OmniPath
 #'
+#' Retrieves network prior knowledge from OmniPath and provides it in
+#' a format suitable for NicheNet.
 #' This method never downloads the `ligrecextra` dataset because the
 #' ligand-receptor interactions are supposed to come from \code{
 #' \link{nichenet_lr_network_omnipath}}.
 #'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_intercell_network}}
+#'
+#' @examples
+#' \donttest{
+#' # use only ligand-receptor interactions (not for example ECM-adhesion):
+#' op_lr_network <- nichenet_lr_network_omnipath(ligand_receptor = TRUE)
+#'
+#' # use only CellPhoneDB and Guide to Pharmacology:
+#' op_lr_network <- nichenet_lr_network_omnipath(
+#'     resources = c('CellPhoneDB', 'Guide2Pharma')
+#' )
+#'
+#' # only interactions where the receiver is a transporter:
+#' op_lr_network <- nichenet_lr_network_omnipath(
+#'     receiver_param = list(parent = 'transporter')
+#' )
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_lr_network}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_lr_network}}}
+#'     \item{\code{\link{import_intercell_network}}}
+#' }
 nichenet_lr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
@@ -972,14 +1204,25 @@ nichenet_lr_network_omnipath <- function(
 }
 
 
-#' Builds gene regulatory network prior knowledge for NicheNet using OmniPath
+#' Builds gene regulatory network for NicheNet using OmniPath
 #'
+#' Retrieves network prior knowledge from OmniPath and provides it in
+#' a format suitable for NicheNet.
 #' This method never downloads the `ligrecextra` dataset because the
 #' ligand-receptor interactions are supposed to come from \code{
 #' \link{nichenet_lr_network_omnipath}}.
 #'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_transcriptional_interactions}}
+#'
+#' @examples
+#' \donttest{
+#' # use interactions up to confidence level "C" from DoRothEA:
+#' op_gr_network <- nichenet_gr_network_omnipath(
+#'     dorothea_levels = c('A', 'B', 'C')
+#' )
+#' }
+#'
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
@@ -1046,6 +1289,14 @@ omnipath_interactions_postprocess <- function(interactions, type){
 #'     webpage.
 #' @param ... Ignored.
 #'
+#' @examples
+#' \donttest{
+#' # use only the "controls-transport-of" interactions:
+#' pc_signaling_network <- nichenet_signaling_network_pathwaycommons(
+#'     interaction_types = 'controls-transport-of'
+#' )
+#' }
+#'
 #' @export
 nichenet_signaling_network_pathwaycommons <- function(
     interaction_types = c(
@@ -1074,6 +1325,14 @@ nichenet_signaling_network_pathwaycommons <- function(
 #' @param datasets The datasets to use. For possible values please refer to
 #'     default value and the Harmonizome webpage.
 #' @param ... Ignored.
+#'
+#' @examples
+#' \donttest{
+#' # use only KEA and PhosphoSite:
+#' hz_signaling_network <- nichenet_signaling_network_harmonizome(
+#'     datasets = c('kea', 'phosphositeplus')
+#' )
+#' }
 #'
 #' @export
 nichenet_signaling_network_harmonizome <- function(
@@ -1166,6 +1425,11 @@ harmonizome_nichenet_process <- function(dataset){
 #'
 #' @param ... Ignored.
 #'
+#' @examples
+#' \donttest{
+#' vi_signaling_network <- nichenet_signaling_network_vinayagam()
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate select rename distinct
 #' @export
@@ -1190,9 +1454,20 @@ nichenet_signaling_network_vinayagam <- function(...){
 #'
 #' @param ... Ignored.
 #'
+#' @examples
+#' \donttest{
+#' # use some parameters stricter than default:
+#' cpdb_signaling_network <- nichenet_signaling_network_cpdb(
+#'     complex_max_size = 2,
+#'     min_score = .99
+#' )
+#' }
+#'
 #' @importFrom dplyr select mutate distinct
 #' @importFrom magrittr %>%
 #' @export
+#' @seealso \code{\link{nichenet_signaling_network},
+#'     \link{consensuspathdb_download}}
 nichenet_signaling_network_cpdb <- function(...){
 
     # NSE vs. R CMD check workaround
@@ -1219,15 +1494,25 @@ nichenet_signaling_network_cpdb <- function(...){
 #' database.
 #'
 #' @param top_confidence Double, between 0 and 1. Threshold based on the
-#' quantile of the confidence score.
+#'     quantile of the confidence score.
 #' @param indirect Logical: whether to include indirect interactions.
 #' @param ... Ignored.
+#'
+#' @examples
+#' \donttest{
+#' ev_signaling_network <- nichenet_signaling_network_evex(
+#'     top_confidence = .9
+#' )
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select mutate filter
 #' @export
 #'
-#' @seealso \code{\link{evex_download}}
+#' @seealso \itemize{
+#'     \item{\code{\link{evex_download}}}
+#'     \item{\code{\link{nichenet_signaling_network}}}
+#' }
 nichenet_signaling_network_evex <- function(
     top_confidence = .75,
     indirect = FALSE,
@@ -1295,6 +1580,11 @@ nichenet_signaling_network_evex <- function(
 #'
 #' @param ... Ignored.
 #'
+#' @examples
+#' \donttest{
+#' ib_signaling_network <- nichenet_signaling_network_inbiomap()
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
 #' @export
@@ -1322,10 +1612,16 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' database and converts it to a format suitable for NicheNet.
 #'
 #' @return Data frame with ligand-receptor interactions in NicheNet format.
+#'
+#' @examples
+#' \donttest{
+#' g2p_lr_network <- nichenet_lr_network_guide2pharma()
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter
-#' @seealso \code{\link{nichenet_lr_network}}
+#' @seealso \code{\link{nichenet_lr_network}, \link{guide2pharma_download}}
 nichenet_lr_network_guide2pharma <- function(){
 
     # NSE vs. R CMD check workaround
@@ -1356,13 +1652,25 @@ nichenet_lr_network_guide2pharma <- function(){
 #' table to a format suitable for NicheNet.
 #'
 #' @param evidences Character: evidence types, "literature supported",
-#' "putative" or both.
+#'     "putative" or both.
 #'
 #' @return Data frame with ligand-receptor interactions in NicheNet format.
+#'
+#' @examples
+#' \donttest{
+#' # use only the literature supported data:
+#' rami_lr_network <- nichenet_lr_network_ramilowski(
+#'     evidences = 'literature supported'
+#' )
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter
-#' @seealso \code{\link{nichenet_lr_network}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_lr_network}}}
+#'     \item{\code{\link{ramilowski_download}}}
+#' }
 nichenet_lr_network_ramilowski <- function(
     evidences = c('literature supported', 'putative')
 ){
@@ -1391,9 +1699,21 @@ nichenet_lr_network_ramilowski <- function(
 #'     default value and the Harmonizome webpage.
 #' @param ... Ignored.
 #'
+#' @examples
+#' \donttest{
+#' # use only JASPAR and TRANSFAC:
+#' hz_gr_network <- nichenet_gr_network_harmonizome(
+#'     datasets = c('jasparpwm', 'transfac', 'transfacpwm')
+#' )
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr rename
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_gr_network}}}
+#'     \item{\code{\link{harmonizome_download}}}
+#' }
 nichenet_gr_network_harmonizome <- function(
     datasets = c(
         'cheappi',
@@ -1436,10 +1756,18 @@ nichenet_gr_network_harmonizome <- function(
 #' Builds a gene regulatory network using data from the RegNetwork database
 #' and converts it to a format suitable for NicheNet.
 #'
+#' @examples
+#' \donttest{
+#' regn_gr_network <- nichenet_gr_network_regnetwork()
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter
-#' @seealso \code{\link{regnetwork_download}}
+#' @seealso \itemize{
+#'     \item{\code{\link{regnetwork_download}}}
+#'     \item{\code{\link{nichenet_gr_network}}}
+#' }
 nichenet_gr_network_regnetwork <- function(){
 
     # NSE vs. R CMD check workaround
@@ -1463,9 +1791,17 @@ nichenet_gr_network_regnetwork <- function(){
 #' Builds a gene regulatory network using data from the TRRUST database
 #' and converts it to a format suitable for NicheNet.
 #'
+#' @examples
+#' \donttest{
+#' trrust_gr_network <- nichenet_gr_network_trrust()
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
-#' @seealso \code{\link{trrust_download}}
+#' @seealso \itemize{
+#'     \item{\code{\link{trrust_download}}}
+#'     \item{\code{\link{nichenet_gr_network}}}
+#' }
 nichenet_gr_network_trrust <- function(){
 
     trrust_download() %>%
@@ -1482,9 +1818,14 @@ nichenet_gr_network_trrust <- function(){
 #' Builds a gene regulatory network using data from the HTRIdb database
 #' and converts it to a format suitable for NicheNet.
 #'
+#' @examples
+#' \donttest{
+#' htri_gr_network <- nichenet_gr_network_htridb()
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
-#' @seealso \code{\link{htridb_download}}
+#' @seealso \code{\link{htridb_download}, \link{nichenet_gr_network}}
 nichenet_gr_network_htridb <- function(){
 
     # NSE vs. R CMD check workaround
@@ -1514,9 +1855,18 @@ nichenet_gr_network_htridb <- function(){
 #' @param only_known_tfs Logical: whether to exclude TFs which are not in
 #'     TF census.
 #'
+#' @examples
+#' \donttest{
+#' # use only max. top 100 targets for each TF:
+#' remap_gr_network <- nichenet_gr_network_remap(top_targets = 100)
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
-#' @seealso \code{\link{remap_filtered}}
+#' @seealso \itemize{
+#'     \item{\code{\link{remap_filtered}}}
+#'     \item{\code{\link{nichenet_gr_network}}}
+#' }
 nichenet_gr_network_remap <- function(
     score = 100,
     top_targets = 500,
@@ -1549,10 +1899,20 @@ nichenet_gr_network_remap <- function(
 #' @param regulation_of_expression Logical: whether to include also the
 #'     "regulation of expression" type interactions.
 #'
+#' @examples
+#' \donttest{
+#' # use only the 10% with the highest confidence:
+#' evex_gr_network <- nichenet_gr_network_evex(top_confidence = .9)
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom stats quantile
 #' @importFrom dplyr filter select mutate
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_gr_network}}}
+#'     \item{\code{\link{evex_download}}}
+#' }
 nichenet_gr_network_evex <- function(
     top_confidence = .75,
     indirect = FALSE,
@@ -1595,7 +1955,16 @@ nichenet_gr_network_evex <- function(
 #'     webpage.
 #' @param ... Ignored.
 #'
+#' @examples
+#' \donttest{
+#' pc_gr_network <- nichenet_gr_network_pathwaycommons()
+#' }
+#'
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_gr_network}}}
+#'     \item{\code{\link{pathwaycommons_download}}}
+#' }
 nichenet_gr_network_pathwaycommons <- function(
     interaction_types = 'controls-expression-of',
     ...
@@ -1687,6 +2056,19 @@ nichenet_common_postprocess <- function(
 #'
 #' @return Nested list, each element contains a data frame of processed
 #'     expression data and key variables about the experiment.
+#'
+#' @examples
+#' \donttest{
+#' exp_data <- nichenet_expression_data()
+#' names(exp_data) %>% head()
+#' # [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"
+#' # [5] "spectrum_Tnf"  "spectrum_Ifng"
+#' exp_data %>% head() %>% purrr::map_chr('from')
+#' #     bmp4_tgfb     tgfb_bmp4   nodal_Nodal  spectrum_Il4  spectrum_Tnf
+#' #       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"
+#' # spectrum_Ifng
+#' #       "IFNG"
+#' }
 #'
 #' @importFrom magrittr %T>%
 #' @export

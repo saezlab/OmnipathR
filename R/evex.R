@@ -45,6 +45,18 @@
 #' @examples
 #' \donttest{
 #' evex_interactions <- evex_download()
+#' evex_interactions
+#' # # A tibble: 368,297 x 13
+#' #   general_event_id source_entrezge. target_entrezge. confidence negation
+#' #               <dbl> <chr>            <chr>                 <dbl>    <dbl>
+#' # 1               98 8651             6774                 -1.45         0
+#' # 2              100 8431             6774                 -1.45         0
+#' # 3              205 6261             6263                  0.370        0
+#' # 4              435 1044             1045                 -1.09         0
+#' # . with 368,287 more rows, and 8 more variables: speculation <dbl>,
+#' #   coarse_type <chr>, coarse_polarity <chr>, refined_type <chr>,
+#' #   refined_polarity <chr>, source_genesymbol <chr>,
+#' #   target_genesymbol <chr>, references <chr>
 #' }
 evex_download <- function(
     min_confidence = NULL,

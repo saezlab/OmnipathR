@@ -27,11 +27,14 @@ get_interaction_resources()
 
 }
 \seealso{
-\code{\link{get_resources},
-\link{import_all_interactions},
-\link{import_omnipath_interactions}, \link{import_pathwayextra_interactions},
-\link{import_kinaseextra_interactions},
-\link{import_ligrecextra_interactions},
-\link{import_mirnatarget_interactions},
-\link{import_dorothea_interactions}}
+\itemize{
+    \item{\code{\link{get_resources}}}
+    \item{\code{\link{import_all_interactions}}}
+    \item{\code{\link{import_omnipath_interactions}}}
+    \item{\code{\link{import_pathwayextra_interactions}}}
+    \item{\code{\link{import_kinaseextra_interactions}}}
+    \item{\code{\link{import_ligrecextra_interactions}}}
+    \item{\code{\link{import_mirnatarget_interactions}}}
+    \item{\code{\link{import_dorothea_interactions}}}
+}
 }

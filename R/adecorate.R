@@ -66,7 +66,13 @@ print.decorated <- function (x, useSource = TRUE, ...) {
         bare
     }
 
-    fun_def = capture.output(print.function(bare(x), useSource = useSource, ...))
+    fun_def <- capture.output(
+        print.function(
+            bare(x),
+            useSource = useSource,
+            ...
+        )
+    )
     for (decorator in attr(x, 'decorators'))
         cat(deparse(decorator), '%@%\n')
     cat(fun_def, sep = '\n')

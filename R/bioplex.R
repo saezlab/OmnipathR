@@ -64,7 +64,24 @@ bioplex_download <- function(version){
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
 #' @export
-#' @seealso \code{\link{bioplex2}, \link{bioplex3}, \link{bioplex_hct116_1}}
+#'
+#' @examples
+#' \donttest{
+#' bioplex_interactions <- bioplex1()
+#' bioplex_interactions %>% nrow
+#' # [1] 23744
+#' bioplex_interactions %>% colnames
+#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' [9] "p_interaction"
+#' }
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{bioplex2}}}
+#'     \item{\code{\link{bioplex3}}}
+#'     \item{\code{\link{bioplex_hct116_1}}}
+#'     \item{\code{\link{bioplex_all}}}
+#' }
 bioplex1 <- function(){
 
     bioplex_download(version = '1.0')
@@ -79,7 +96,24 @@ bioplex1 <- function(){
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
 #' @export
-#' @seealso \code{\link{bioplex1}, \link{bioplex3}, \link{bioplex_hct116_1}}
+#'
+#' @examples
+#' \donttest{
+#' bioplex_interactions <- bioplex2()
+#' bioplex_interactions %>% nrow
+#' # [1] 56553
+#' bioplex_interactions %>% colnames
+#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' [9] "p_interaction"
+#' }
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{bioplex1}}}
+#'     \item{\code{\link{bioplex3}}}
+#'     \item{\code{\link{bioplex_hct116_1}}}
+#'     \item{\code{\link{bioplex_all}}}
+#' }
 bioplex2 <- function(){
 
     bioplex_download(version = '2.0')
@@ -94,7 +128,24 @@ bioplex2 <- function(){
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
 #' @export
-#' @seealso \code{\link{bioplex1}, \link{bioplex2}, \link{bioplex_hct116_1}}
+#'
+#' @examples
+#' \donttest{
+#' bioplex_interactions <- bioplex3()
+#' bioplex_interactions %>% nrow
+#' # [1] 118162
+#' bioplex_interactions %>% colnames
+#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' [9] "p_interaction"
+#' }
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{bioplex1}}}
+#'     \item{\code{\link{bioplex2}}}
+#'     \item{\code{\link{bioplex_hct116_1}}}
+#'     \item{\code{\link{bioplex_all}}}
+#' }
 bioplex3 <- function(){
 
     bioplex_download(version = '3.0')
@@ -109,7 +160,24 @@ bioplex3 <- function(){
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
 #' @export
-#' @seealso \code{\link{bioplex1}, \link{bioplex2}, \link{bioplex3}}
+#'
+#' @examples
+#' \donttest{
+#' bioplex_interactions <- bioplex_hct116_1()
+#' bioplex_interactions %>% nrow
+#' # [1] 70966
+#' bioplex_interactions %>% colnames
+#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' [9] "p_interaction"
+#' }
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{bioplex1}}}
+#'     \item{\code{\link{bioplex2}}}
+#'     \item{\code{\link{bioplex3}}}
+#'     \item{\code{\link{bioplex_all}}}
+#' }
 bioplex_hct116_1 <- function(){
 
     bioplex_download(version = 'HCT116_1.0')
@@ -133,8 +201,34 @@ bioplex_hct116_1 <- function(){
 #' @importFrom dplyr mutate first summarize_all group_by bind_rows
 #' @importFrom tidyr separate
 #' @export
-#' @seealso \code{\link{bioplex1}, \link{bioplex2}, \link{bioplex3},
-#' \link{bioplex_hct116_1}}
+#'
+#' @examples
+#' \donttest{
+#' bioplex_interactions <- bioplex_all()
+#' bioplex_interactions
+#' # # A tibble: 195,538 x 11
+#' #    UniprotA IsoformA UniprotB IsoformB GeneA GeneB SymbolA SymbolB
+#' #    <chr>       <int> <chr>       <int> <dbl> <dbl> <chr>   <chr>
+#' #  1 A0AV02          2 Q5K4L6         NA 84561 11000 SLC12A8 SLC27A3
+#' #  2 A0AV02          2 Q8N5V2         NA 84561 25791 SLC12A8 NGEF
+#' #  3 A0AV02          2 Q9H6S3         NA 84561 64787 SLC12A8 EPS8L2
+#' #  4 A0AV96          2 O00425          2 54502 10643 RBM47   IGF2BP3
+#' #  5 A0AV96          2 O00443         NA 54502  5286 RBM47   PIK3C2A
+#' #  6 A0AV96          2 O43426         NA 54502  8867 RBM47   SYNJ1
+#' #  7 A0AV96          2 O75127         NA 54502 26024 RBM47   PTCD1
+#' #  8 A0AV96          2 O95208          2 54502 22905 RBM47   EPN2
+#' #  9 A0AV96          2 O95900         NA 54502 26995 RBM47   TRUB2
+#' # 10 A0AV96          2 P07910          2 54502  3183 RBM47   HNRNPC
+#' # # . with 195,528 more rows, and 3 more variables: p_wrong <dbl>,
+#' # #   p_no_interaction <dbl>, p_interaction <dbl>
+#' }
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{bioplex1}}}
+#'     \item{\code{\link{bioplex2}}}
+#'     \item{\code{\link{bioplex3}}}
+#'     \item{\code{\link{bioplex_hct116_1}}}
+#' }
 bioplex_all <- function(unique = TRUE){
 
     # NSE vs. R CMD check workaround

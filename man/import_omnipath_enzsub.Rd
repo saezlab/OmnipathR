@@ -55,6 +55,8 @@ ptms = import_omnipath_enzsub(
 
 }
 \seealso{
-\code{\link{get_ptms_databases},
-  \link{import_omnipath_interactions}}
+\itemize{
+    \item{\code{\link{get_ptms_databases}}}
+    \item{\code{\link{import_omnipath_interactions}}}
+}
 }

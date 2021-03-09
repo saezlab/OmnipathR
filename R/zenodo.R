@@ -35,7 +35,31 @@
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param url_key_param List: variables to insert into the `url_key`.
-#' @param ... Passed to \code{archive_extractor}.
+#' @param ... Passed to \code{archive_extractor}
+#'
+#' @examples
+#' \donttest{
+#' # an example from the OmnipathR::remap_tf_target_download function:
+#' remap_dorothea <- zenodo_download(
+#'     zenodo_record = 3713238,
+#'     zenodo_fname = 'tf_target_sources.zip',
+#'     path = (
+#'         'tf_target_sources/chip_seq/remap/gene_tf_pairs_genesymbol.txt'
+#'     ),
+#'     reader = read_tsv,
+#'     reader_param = list(
+#'         col_names = c(
+#'             'source_genesymbol',
+#'             'target_genesymbol',
+#'             'target_ensembl',
+#'             'score'
+#'         ),
+#'         col_types = cols(),
+#'         progress = FALSE
+#'     ),
+#'   resource = 'ReMap'
+#' )
+#' }
 #'
 #' @return A connection
 #'

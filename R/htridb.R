@@ -27,6 +27,21 @@
 #' the data is distributed by the OmniPath rescued data repository
 #' (https://rescued.omnipathdb.org/).
 #'
+#' @examples
+#' \donttest{
+#' htridb_data <- htridb_download()
+#' htridb_data
+#' # # A tibble: 18,630 x 7
+#' #      OID GENEID_TF SYMBOL_TF GENEID_TG SYMBOL_TG TECHNIQUE
+#' #    <dbl>     <dbl> <chr>         <dbl> <chr>     <chr>
+#' #  1 32399       142 PARP1           675 BRCA2     Electrophoretic Mobi.
+#' #  2 32399       142 PARP1           675 BRCA2     Chromatin Immunoprec.
+#' #  3 28907       196 AHR            1543 CYP1A1    Chromatin Immunoprec.
+#' #  4 29466       196 AHR            1543 CYP1A1    Electrophoretic Mobi.
+#' #  5 28911       196 AHR            1543 CYP1A1    Chromatin Immunoprec.
+#' # # . with 18,620 more rows, and 1 more variable: PUBMED_ID <chr>
+#' }
+#'
 #' @export
 #' @importFrom readr cols col_skip
 #' @importFrom magrittr %T>%

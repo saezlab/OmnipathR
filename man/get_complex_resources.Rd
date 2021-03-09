@@ -23,6 +23,8 @@ get_complex_resources()
 
 }
 \seealso{
-\code{\link{get_resources},
-\link{import_omnipath_complexes}}
+\itemize{
+    \item{\code{\link{get_resources}}}
+    \item{\code{\link{import_omnipath_complexes}}}
+}
 }

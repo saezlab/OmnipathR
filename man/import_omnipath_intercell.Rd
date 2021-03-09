@@ -89,6 +89,9 @@ intercell = import_omnipath_intercell(categories = c('ecm'))
 
 }
 \seealso{
-\code{\link{get_intercell_categories},
-\link{get_intercell_generic_categories}, \link{import_intercell_network}}
+\itemize{
+    \item{\code{\link{get_intercell_categories}}}
+    \item{\code{\link{get_intercell_generic_categories}}}
+    \item{\code{\link{import_intercell_network}}}
+}
 }

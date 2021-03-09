@@ -82,11 +82,13 @@ intercellNetwork <- import_intercell_network(
 
 }
 \seealso{
-\code{\link{get_intercell_categories}},
-    \code{\link{get_intercell_generic_categories}},
-    \code{\link{import_omnipath_intercell}},
-    \code{\link{import_omnipath_interactions}},
-    \code{\link{import_pathwayextra_interactions}},
-    \code{\link{import_kinaseextra_interactions}},
-    \code{\link{import_ligrecextra_interactions}}
+\itemize{
+    \item{\code{\link{get_intercell_categories}}}
+    \item{\code{\link{get_intercell_generic_categories}}}
+    \item{\code{\link{import_omnipath_intercell}}}
+    \item{\code{\link{import_omnipath_interactions}}}
+    \item{\code{\link{import_pathwayextra_interactions}}}
+    \item{\code{\link{import_kinaseextra_interactions}}}
+    \item{\code{\link{import_ligrecextra_interactions}}}
+}
 }

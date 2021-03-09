@@ -29,6 +29,23 @@
 #'
 #' @return A data frame of TF-target interactions.
 #'
+#' @examples
+#' \donttest{
+#' trrust_interactions <- trrust_download()
+#' trrust_interactions
+#' # # A tibble: 11,698 x 4
+#' #    source_genesymbol target_genesymbol effect reference
+#' #    <chr>             <chr>              <dbl> <chr>
+#' #  1 AATF              BAX                   -1 22909821
+#' #  2 AATF              CDKN1A                 0 17157788
+#' #  3 AATF              KLK3                   0 23146908
+#' #  4 AATF              MYC                    1 20549547
+#' #  5 AATF              TP53                   0 17157788
+#' #  6 ABL1              BAX                    1 11753601
+#' #  7 ABL1              BCL2                  -1 11753601
+#' # # . with 11,688 more rows
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr mutate recode

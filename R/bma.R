@@ -24,7 +24,11 @@
 #
 
 
-#' Ends a function where something has gone wrong, printing information about the error
+#' Prints a warning
+#'
+#' Ends a function where something has gone wrong, printing information
+#' about the error.
+#'
 #' @param a string with information about why the error occurred
 #' @noRd
 #' @importFrom logger log_warn

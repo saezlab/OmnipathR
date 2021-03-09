@@ -620,8 +620,10 @@ swap_undirected <- function(data){
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_ptms_databases},
-#'   \link{import_omnipath_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_ptms_databases}}}
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#' }
 #'
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
 import_omnipath_enzsub <- function(
@@ -688,8 +690,10 @@ import_OmniPath_PTMS <- function(...){
 #' get_enzsub_resources()
 #' }
 #'
-#' @seealso  \code{\link{get_resources},
-#' \link{import_omnipath_enzsub}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_resources}}}
+#'     \item{\code{\link{import_omnipath_enzsub}}}
+#' }
 #'
 #' @aliases get_ptms_databases
 get_enzsub_resources <- function(dataset = NULL){
@@ -756,8 +760,10 @@ get_ptms_databases <- function(...){
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
 import_omnipath_interactions <- function(
@@ -847,8 +853,10 @@ import_OmniPath_Interactions <- function(...){
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 #'
 #' @aliases import_PathwayExtra_Interactions
 import_pathwayextra_interactions <- function(
@@ -927,8 +935,10 @@ import_PathwayExtra_Interactions <- function(...){
 #'    )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 #'
 #' @aliases import_KinaseExtra_Interactions
 import_kinaseextra_interactions <- function(
@@ -1005,8 +1015,10 @@ import_KinaseExtra_Interactions <- function(...){
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 #'
 #' @aliases import_LigrecExtra_Interactions
 import_ligrecextra_interactions <- function(
@@ -1073,8 +1085,10 @@ import_LigrecExtra_Interactions <- function(...){
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 import_post_translational_interactions <- function(
     resources = NULL,
     organism = 9606,
@@ -1142,8 +1156,10 @@ import_post_translational_interactions <- function(
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 #'
 #' @aliases import_TFregulons_Interactions import_tfregulons_interactions
 import_dorothea_interactions <- function(
@@ -1233,9 +1249,10 @@ import_tfregulons_interactions <- function(...){
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
-#'
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 import_tf_target_interactions <- function(
     cache_file = NULL,
     resources = NULL, 
@@ -1298,8 +1315,10 @@ import_tf_target_interactions <- function(
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 import_transcriptional_interactions <- function(
     resources = NULL, 
     organism = 9606,
@@ -1366,8 +1385,10 @@ import_transcriptional_interactions <- function(
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'    \item{\code{\link{get_interaction_resources}}}
+#'    \item{\code{\link{import_all_interactions}}}
+#' }
 #'
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
@@ -1441,8 +1462,10 @@ import_miRNAtarget_Interactions <- function(...){
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 import_tf_mirna_interactions <- function(
     cache_file = NULL,
     resources = NULL,
@@ -1502,8 +1525,10 @@ import_tf_mirna_interactions <- function(
 #'     )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources},
-#'   \link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 import_lncrna_mrna_interactions <- function(
     cache_file = NULL,
     resources = NULL,
@@ -1578,7 +1603,7 @@ import_lncrna_mrna_interactions <- function(
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_interaction_resources}}
+#' @seealso \itemize{\item{\code{\link{get_interaction_resources}}}}
 #'
 #' @aliases import_AllInteractions
 import_all_interactions <- function(
@@ -1647,13 +1672,16 @@ import_AllInteractions <- function(...){
 #' get_interaction_resources()
 #' }
 #'
-#' @seealso \code{\link{get_resources},
-#' \link{import_all_interactions},
-#' \link{import_omnipath_interactions}, \link{import_pathwayextra_interactions},
-#' \link{import_kinaseextra_interactions},
-#' \link{import_ligrecextra_interactions},
-#' \link{import_mirnatarget_interactions},
-#' \link{import_dorothea_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{import_pathwayextra_interactions}}}
+#'     \item{\code{\link{import_kinaseextra_interactions}}}
+#'     \item{\code{\link{import_ligrecextra_interactions}}}
+#'     \item{\code{\link{import_mirnatarget_interactions}}}
+#'     \item{\code{\link{import_dorothea_interactions}}}
+#' }
 #'
 #' @aliases get_interaction_databases
 get_interaction_resources <- function(dataset = NULL){
@@ -1767,7 +1795,7 @@ get_resources <- function(
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_complexes_databases}}
+#' @seealso \itemize{\item{\code{\link{get_complexes_databases}}}}
 #'
 #' @aliases import_Omnipath_complexes import_OmniPath_complexes
 import_omnipath_complexes <- function(
@@ -1824,8 +1852,10 @@ import_OmniPath_complexes <- function(...){
 #' get_complex_resources()
 #' }
 #'
-#' @seealso \code{\link{get_resources},
-#' \link{import_omnipath_complexes}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_resources}}}
+#'     \item{\code{\link{import_omnipath_complexes}}}
+#' }
 #'
 #' @aliases get_complexes_databases
 get_complex_resources <- function(dataset = NULL){
@@ -1892,7 +1922,7 @@ get_complexes_databases <- function(...){
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_annotation_databases}}
+#' @seealso \itemize{\item{\code{\link{get_annotation_databases}}}}
 #'
 #' @aliases import_Omnipath_annotations import_OmniPath_annotations
 import_omnipath_annotations <- function(
@@ -2049,8 +2079,10 @@ import_OmniPath_annotations <- function(...){
 #' get_annotation_resources()
 #' }
 #'
-#' @seealso \code{\link{get_resources},
-#' \link{import_omnipath_annotations}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_resources}}}
+#'     \item{\code{\link{import_omnipath_annotations}}}
+#' }
 #'
 #' @aliases get_annotation_databases
 get_annotation_resources <- function(dataset = NULL, ...){
@@ -2173,8 +2205,11 @@ pivot_annotations <- function(annotations){
 #' intercell = import_omnipath_intercell(categories = c('ecm'))
 #' }
 #'
-#' @seealso \code{\link{get_intercell_categories},
-#' \link{get_intercell_generic_categories}, \link{import_intercell_network}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_intercell_categories}}}
+#'     \item{\code{\link{get_intercell_generic_categories}}}
+#'     \item{\code{\link{import_intercell_network}}}
+#' }
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
@@ -2257,8 +2292,10 @@ import_OmniPath_intercell <- function(...){
 #' get_intercell_resources()
 #' }
 #'
-#' @seealso \code{\link{get_resources},
-#' \link{import_omnipath_intercell}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_resources}}}
+#'     \item{\code{\link{import_omnipath_intercell}}}
+#' }
 get_intercell_resources <- function(dataset = NULL){
 
     return(get_resources(query_type = 'intercell', datasets = dataset))
@@ -2328,13 +2365,15 @@ get_intercell_resources <- function(dataset = NULL){
 #' )
 #' }
 #'
-#' @seealso \code{\link{get_intercell_categories}},
-#'     \code{\link{get_intercell_generic_categories}},
-#'     \code{\link{import_omnipath_intercell}},
-#'     \code{\link{import_omnipath_interactions}},
-#'     \code{\link{import_pathwayextra_interactions}},
-#'     \code{\link{import_kinaseextra_interactions}},
-#'     \code{\link{import_ligrecextra_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_intercell_categories}}}
+#'     \item{\code{\link{get_intercell_generic_categories}}}
+#'     \item{\code{\link{import_omnipath_intercell}}}
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{import_pathwayextra_interactions}}}
+#'     \item{\code{\link{import_kinaseextra_interactions}}}
+#'     \item{\code{\link{import_ligrecextra_interactions}}}
+#' }
 import_intercell_network <- function(
     cache_file = NULL,
     interactions_param = list(),
@@ -2476,8 +2515,10 @@ import_intercell_network <- function(
 #' get_intercell_categories()
 #' }
 #'
-#' @seealso \code{\link{import_omnipath_intercell},
-#'     \link{get_intercell_generic_categories}}
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_intercell}}}
+#'     \item{\code{\link{get_intercell_generic_categories}}}
+#' }
 get_intercell_categories <- function(){
 
     return(
@@ -2503,8 +2544,10 @@ get_intercell_categories <- function(){
 #' get_intercell_generic_categories()
 #' }
 #'
-#' @seealso \code{\link{import_omnipath_intercell},
-#'     \link{get_intercell_categories}}
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_intercell}}}
+#'     \item{\code{\link{get_intercell_categories}}}
+#' }
 #'
 #' @aliases get_intercell_classes
 get_intercell_generic_categories <- function(){

@@ -32,5 +32,5 @@ complexes = import_omnipath_complexes(
 
 }
 \seealso{
-\code{\link{get_complexes_databases}}
+\itemize{\item{\code{\link{get_complexes_databases}}}}
 }

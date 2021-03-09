@@ -62,5 +62,5 @@ annotations = import_omnipath_annotations(
 
 }
 \seealso{
-\code{\link{get_annotation_databases}}
+\itemize{\item{\code{\link{get_annotation_databases}}}}
 }

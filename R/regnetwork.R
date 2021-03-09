@@ -28,6 +28,12 @@
 #' @param organism Character: either human or mouse.
 #'
 #' @return Data frame with interactions
+#'
+#' @examples
+#' \donttest{
+#' regn_interactions <- regnetwork_download()
+#' }
+#'
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr left_join mutate select
@@ -88,6 +94,11 @@ regnetwork_download <- function(organism = 'human'){
 #' Transcription factor effects from RegNetwork
 #'
 #' @param organism Character: either human or mouse.
+#'
+#' @examples
+#' \donttest{
+#' regn_dir <- regnetwork_directions()
+#' }
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_delim cols col_character

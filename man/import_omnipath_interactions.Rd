@@ -64,6 +64,8 @@ interactions = import_omnipath_interactions(
 
 }
 \seealso{
-\code{\link{get_interaction_resources},
-  \link{import_all_interactions}}
+\itemize{
+    \item{\code{\link{get_interaction_resources}}}
+    \item{\code{\link{import_all_interactions}}}
+}
 }
