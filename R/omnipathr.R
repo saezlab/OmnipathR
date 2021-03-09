@@ -30,8 +30,8 @@
 #'
 #' And a number of other resources, such as BioPlex, ConsensusPathDB, EVEX,
 #' Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb, InWeb InBioMap,
-#' Ramilowski et al. 2015, RegNetwork, ReMap, TF census, TRRUST and
-#' Vinayagam et al. 2011.
+#' Pathway Commons, Ramilowski et al. 2015, RegNetwork, ReMap, TF census,
+#' TRRUST and Vinayagam et al. 2011.
 #'
 #' The OmniPath web service implements a very simple REST style API. This
 #' package make requests by the HTTP protocol to retreive the data. Hence,

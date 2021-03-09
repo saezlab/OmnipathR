@@ -504,7 +504,7 @@ nichenet_build_model <- function(
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
 #' lt_matrix <- nichenet_ligand_target_matrix(
-#'     nichenet_model£weighted_networks,
+#'     nichenet_model$weighted_networks,
 #'     networks$lr_network,
 #'     nichenet_model$optimized_parameters
 #' )
@@ -587,7 +587,7 @@ nichenet_ligand_target_matrix <- function(
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
 #' lt_matrix <- nichenet_ligand_target_matrix(
-#'     nichenet_model£weighted_networks,
+#'     nichenet_model$weighted_networks,
 #'     networks$lr_network,
 #'     nichenet_model$optimized_parameters
 #' )
@@ -693,7 +693,7 @@ nichenet_ligand_activities <- function(
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
 #' lt_matrix <- nichenet_ligand_target_matrix(
-#'     nichenet_model£weighted_networks,
+#'     nichenet_model$weighted_networks,
 #'     networks$lr_network,
 #'     nichenet_model$optimized_parameters
 #' )

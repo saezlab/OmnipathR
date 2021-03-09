@@ -76,9 +76,9 @@ omnipath_new_cachedir <- function(path){
 
         logger::log_info('Setting up new cache directory `%s`.', path)
         dir.create(path, showWarnings = FALSE, recursive = TRUE)
-        .omnipath_cache <<- list()
+        omnipath.env$cache <- list()
         write(
-            jsonlite::toJSON(.omnipath_cache, pretty = TRUE, null = 'null'),
+            jsonlite::toJSON(omnipath.env$cache, pretty = TRUE, null = 'null'),
             file.path(path, 'cache.json')
         )
 
@@ -256,11 +256,11 @@ cache_locked <- decorator %@% function(FUN){
 #' @export
 omnipath_cache_search <- function(pattern, ...){
 
-    .omnipath_cache %>%
+    omnipath.env$cache %>%
     map_chr('url') %>%
     grep(pattern = pattern, ...) %>%
-    `[`(names(.omnipath_cache), .) %>%
-    `[`(.omnipath_cache, .)
+    `[`(names(omnipath.env$cache), .) %>%
+    `[`(omnipath.env$cache, .)
 
 
 }
@@ -330,7 +330,7 @@ omnipath_cache_remove <- function(
     autoclean = TRUE
 ){
 
-    do.call(.omnipath_cache_remove, as.list(environment()))
+    do.call(omnipath.env$cache_remove, as.list(environment()))
 
 }
 
@@ -347,7 +347,7 @@ omnipath_cache_remove <- function(
 #' @importFrom purrr map keep map_lgl
 #'
 #' @noRd
-.omnipath_cache_remove <- cache_locked %@% function(
+omnipath.env$cache_remove <- cache_locked %@% function(
     key = NULL,
     url = NULL,
     post = NULL,
@@ -362,7 +362,7 @@ omnipath_cache_remove <- function(
 
     if(wipe){
 
-        .omnipath_cache <<- list()
+        omnipath.env$cache <- list()
         omnipath_cache_clean()
         return(invisible(NULL))
 
@@ -380,7 +380,7 @@ omnipath_cache_remove <- function(
     key %<>% list_null
     url %<>% list_null
 
-    .omnipath_cache %<>%
+    omnipath.env$cache %<>%
     {`if`(
         is.null(key),
         .,
@@ -391,7 +391,7 @@ omnipath_cache_remove <- function(
                 is.null(status) &&
                 !only_latest
             ),
-            `[`(., .omnipath_cache %>% names %>% setdiff(key)),
+            `[`(., omnipath.env$cache %>% names %>% setdiff(key)),
             `[`(., key)
         )
     )} %>%
@@ -406,7 +406,7 @@ omnipath_cache_remove <- function(
         is.null(key),
         .,
         map(
-            .omnipath_cache,
+            omnipath.env$cache,
             function(record){
                 `if`(
                     record$key %in% names(.),
@@ -417,7 +417,7 @@ omnipath_cache_remove <- function(
         )
     )}
 
-    .omnipath_cache <<- .omnipath_cache
+    # omnipath.env$cache <- omnipath.env$cache
 
     if(autoclean){
 
@@ -431,7 +431,7 @@ omnipath_cache_remove <- function(
 
     }
 
-    invisible(.omnipath_cache)
+    invisible(omnipath.env$cache)
 
 }
 
@@ -483,8 +483,8 @@ omnipath_cache_remove_versions <- function(
 #' @noRd
 omnipath_cache_clean_db <- cache_locked %@% function(){
 
-    .omnipath_cache <<-
-        .omnipath_cache %>%
+    omnipath.env$cache <<-
+        omnipath.env$cache %>%
         map(
             function(record){
                 record$versions %<>%
@@ -512,7 +512,7 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #' \donttest{
 #' omnipath_cache_wipe()
 #' # the cache is completely empty:
-#' print(.omnipath_cache)
+#' print(omnipath.env$cache)
 #' # list()
 #' list.files(omnipath_get_cachedir())
 #' # [1] "cache.json"
@@ -530,7 +530,7 @@ omnipath_cache_wipe <- cache_locked %@% function(){
     file.path(omnipath_get_cachedir(), .) %>%
     file.remove()
 
-    .omnipath_cache <<- list()
+    omnipath.env$cache <- list()
     invisible(NULL)
 
 }
@@ -550,7 +550,7 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 omnipath_cache_clean <- function(){
 
     files_in_db <-
-        .omnipath_cache %>%
+        omnipath.env$cache %>%
         map(~map_chr(.x$versions, 'path')) %>%
         unlist() %>%
         basename()
@@ -577,7 +577,6 @@ omnipath_cache_clean <- function(){
 #' @examples
 #' \donttest{
 #' omnipath_cache_autoclean()
-#' )
 #' }
 #'
 #' @export
@@ -589,7 +588,7 @@ omnipath_cache_autoclean <- function(){
         autoclean = FALSE
     )
     omnipath_cache_clean()
-    invisible(.omnipath_cache)
+    invisible(omnipath.env$cache)
 
 }
 
@@ -613,7 +612,6 @@ omnipath_cache_autoclean <- function(){
 #' # [1] "41346a00fb20d2a9df03aa70cf4d50bf88ab154a"
 #' record$url
 #' # [1] "https://bioconductor.org/"
-#' )
 #' }
 #'
 #' @export
@@ -632,9 +630,9 @@ omnipath_cache_get <- function(
         post = post,
         payload = payload
     )
-    .omnipath_cache <- get('.omnipath_cache', envir = .GlobalEnv)
+    # omnipath.env$cache <- get('omnipath.env$cache', envir = .GlobalEnv)
 
-    if(!(key %in% names(.omnipath_cache)) && create){
+    if(!(key %in% names(omnipath.env$cache)) && create){
 
         if(is.null(url)){
 
@@ -652,13 +650,13 @@ omnipath_cache_get <- function(
             ...
         )
         omnipath_cache_add(record, new = TRUE)
-        .omnipath_cache <- get('.omnipath_cache', envir = .GlobalEnv)
+        # omnipath.env$cache <- get('omnipath.env$cache', envir = .GlobalEnv)
 
     }
 
     record <- `if`(
-        key %in% names(.omnipath_cache),
-        .omnipath_cache[[key]],
+        key %in% names(omnipath.env$cache),
+        omnipath.env$cache[[key]],
         NULL
     )
 
@@ -729,7 +727,7 @@ omnipath_cache_latest_or_new <- function(
 
     if(!is.null(version)){
 
-        version <- .omnipath_cache[[record$key]]$versions[[version]]
+        version <- omnipath.env$cache[[record$key]]$versions[[version]]
 
     }
 
@@ -883,7 +881,7 @@ omnipath_cache_save <- function(
         status = CACHE_STATUS$STARTED
     )
 
-    target_path <- .omnipath_cache[[key]]$versions[[version]]$path
+    target_path <- omnipath.env$cache[[key]]$versions[[version]]$path
 
     saveRDS(data, target_path)
     logger::log_trace('Exported RDS to `%s`.', target_path)
@@ -941,7 +939,7 @@ omnipath_cache_move_in <- function(
         status = CACHE_STATUS$STARTED
     )
 
-    target_path <- .omnipath_cache[[key]]$versions[[version]]$path
+    target_path <- omnipath.env$cache[[key]]$versions[[version]]$path
 
     file.copy(path, target_path)
     logger::log_trace('Copied `%s` to `%s`.', path, target_path)
@@ -1049,7 +1047,7 @@ omnipath_cache_update_status <- function(
     dl_finished = NULL
 ){
 
-    do.call(.omnipath_cache_update_status, as.list(environment()))
+    do.call(omnipath.env$cache_update_status, as.list(environment()))
 
 }
 
@@ -1066,7 +1064,7 @@ omnipath_cache_update_status <- function(
 #' @importFrom logger log_info log_warn
 #'
 #' @noRd
-.omnipath_cache_update_status <- cache_locked %@% function(
+omnipath.env$cache_update_status <- cache_locked %@% function(
     key,
     version,
     status,
@@ -1080,33 +1078,33 @@ omnipath_cache_update_status <- function(
             as.character(.)
         )}
 
-    if(key %in% names(.omnipath_cache)){
+    if(key %in% names(omnipath.env$cache)){
 
         if(
             is.null(version) ||
-            !(version %in% names(.omnipath_cache[[key]]$versions))
+            !(version %in% names(omnipath.env$cache[[key]]$versions))
         ){
 
             version <- omnipath_cache_new_version(key, version = version)
 
         }
 
-        old_status <- .omnipath_cache[[key]]$versions[[version]]$status
-        .omnipath_cache[[key]]$versions[[version]]$status <- status
+        old_status <- omnipath.env$cache[[key]]$versions[[version]]$status
+        omnipath.env$cache[[key]]$versions[[version]]$status <- status
 
         if(
             old_status != CACHE_STATUS$STARTED &&
             status == CACHE_STATUS$STARTED
         ){
-            .omnipath_cache[[key]]$versions[[version]]$dl_started <-
+            omnipath.env$cache[[key]]$versions[[version]]$dl_started <-
                 Sys.time()
         }
 
         if(!is.null(dl_finished)){
-            .omnipath_cache[[key]]$versions[[version]]$dl_finished <-
+            omnipath.env$cache[[key]]$versions[[version]]$dl_finished <-
                 dl_finished
         }
-        .omnipath_cache <<- .omnipath_cache
+        # omnipath.env$cache <- omnipath.env$cache
 
         logger::log_info(
             'Cache item `%s` version %s: status changed from `%s` to `%s`.',
@@ -1147,7 +1145,7 @@ omnipath_cache_update_status <- function(
 #' @export
 omnipath_cache_set_ext <- function(key, ext){
 
-    do.call(.omnipath_cache_set_ext, as.list(environment()))
+    do.call(omnipath.env$cache_set_ext, as.list(environment()))
 
 }
 
@@ -1165,7 +1163,7 @@ omnipath_cache_set_ext <- function(key, ext){
 #' @importFrom tools file_path_sans_ext
 #'
 #' @noRd
-.omnipath_cache_set_ext <- cache_locked %@% function(key, ext){
+omnipath.env$cache_set_ext <- cache_locked %@% function(key, ext){
 
     if(is.list(key)){
 
@@ -1173,11 +1171,11 @@ omnipath_cache_set_ext <- function(key, ext){
 
     }
 
-    if((key %in% names(.omnipath_cache))){
+    if((key %in% names(omnipath.env$cache))){
 
-        .omnipath_cache[[key]]$ext <- ext
+        omnipath.env$cache[[key]]$ext <- ext
 
-        .omnipath_cache[[key]]$versions %<>%
+        omnipath.env$cache[[key]]$versions %<>%
             map(
                 function(version){
 
@@ -1196,7 +1194,7 @@ omnipath_cache_set_ext <- function(key, ext){
 
     }
 
-    .omnipath_cache <<- .omnipath_cache
+    # omnipath.env$cache <- omnipath.env$cache
 
 }
 
@@ -1214,7 +1212,7 @@ omnipath_cache_new_version <- function(key, version = NULL){
         version
     )
 
-    record <- .omnipath_cache[[key]]
+    record <- omnipath.env$cache[[key]]
 
     new_version <- omnipath_cache_version(
         record,
@@ -1223,8 +1221,8 @@ omnipath_cache_new_version <- function(key, version = NULL){
         status = CACHE_STATUS$UNKNOWN
     )
 
-    .omnipath_cache[[key]]$versions[[version]] <- new_version
-    .omnipath_cache <<- .omnipath_cache
+    omnipath.env$cache[[key]]$versions[[version]] <- new_version
+    # omnipath.env$cache <- omnipath.env$cache
 
     invisible(version)
 
@@ -1240,7 +1238,7 @@ omnipath_cache_new_version <- function(key, version = NULL){
 #' @noRd
 omnipath_cache_next_version <- function(key){
 
-    .omnipath_cache[[key]]$versions %>%
+    omnipath.env$cache[[key]]$versions %>%
     purrr::map(
         function(version){
             version$number
@@ -1372,21 +1370,21 @@ which_dl_finished <- function(versions, t, op = `>=`){
 #' @noRd
 omnipath_cache_add <- cache_locked %@% function(record, new = FALSE){
 
-    if(record$key %in% .omnipath_cache && !new){
+    if(record$key %in% omnipath.env$cache && !new){
 
-        .omnipath_cache[[record$key]]$versions <-
+        omnipath.env$cache[[record$key]]$versions <-
             RCurl::merge.list(
-                .omnipath_cache[[record$key]]$versions,
+                omnipath.env$cache[[record$key]]$versions,
                 record$versions
             )
 
     }else{
 
-        .omnipath_cache[[record$key]] <- record
+        omnipath.env$cache[[record$key]] <- record
 
     }
 
-    .omnipath_cache <<- .omnipath_cache
+    # omnipath.env$cache <- omnipath.env$cache
 
 }
 
@@ -1597,7 +1595,7 @@ omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
 #' @noRd
 omnipath_read_cache_db <- function(){
 
-    .omnipath_cache <<-
+    omnipath.env$cache <<-
         omnipath_cache_db_path() %>%
         jsonlite::fromJSON() %>%
         omnipath_cache_timestamps()
@@ -1644,7 +1642,7 @@ omnipath_cache_timestamps <- function(cache_db){
 #' @noRd
 omnipath_write_cache_db <- function(){
 
-    .omnipath_cache %>%
+    omnipath.env$cache %>%
     jsonlite::toJSON(pretty = TRUE, null = 'null') %>%
     write(omnipath_cache_db_path())
 

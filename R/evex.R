@@ -43,7 +43,6 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' evex_interactions <- evex_download()
 #' evex_interactions
 #' # # A tibble: 368,297 x 13
@@ -57,7 +56,7 @@
 #' #   coarse_type <chr>, coarse_polarity <chr>, refined_type <chr>,
 #' #   refined_polarity <chr>, source_genesymbol <chr>,
 #' #   target_genesymbol <chr>, references <chr>
-#' }
+#'
 evex_download <- function(
     min_confidence = NULL,
     remove_negatives = TRUE,

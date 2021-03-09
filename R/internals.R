@@ -227,7 +227,7 @@ archive_downloader <- function(
     }
 
     key <- omnipath_cache_key_from_version(version)
-    record <- .omnipath_cache[[key]]
+    record <- omnipath.env$cache[[key]]
     extractor <- `if`(record$ext == 'zip', unzip, untar)
 
     list(
