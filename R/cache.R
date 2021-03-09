@@ -153,12 +153,15 @@ omnipath_lock_cache_db <- function(){
 #' might not happen if the process crashes during such an operation. In
 #' this case you can manually call this function.
 #'
+#' @return Logical: returns TRUE if the cache was locked and now is
+#'     unlocked; FALSE if it was not locked.
+#'
 #' @importFrom magrittr %>%
 #' @export
 omnipath_unlock_cache_db <- function(){
 
     omnipath_cache_lock_path() %>%
-    file.remove()
+    {suppressWarnings(file.remove(.))}
 
 }
 
@@ -558,6 +561,7 @@ omnipath_cache_get <- function(
             ...
         )
         omnipath_cache_add(record, new = TRUE)
+        .omnipath_cache <- get('.omnipath_cache', envir = .GlobalEnv)
 
     }
 
@@ -683,7 +687,7 @@ omnipath_cache_load <- function(
             msg <- sprintf(
                 paste0(
                     'Missing cache file: `%s`. Please run ',
-                    '`omnipath_clean_cache_db()` and try again.'
+                    '`omnipath_cache_clean_db()` and try again.'
                 ),
                 path
             )
