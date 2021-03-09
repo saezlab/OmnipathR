@@ -283,12 +283,40 @@ omnipath_cache_search <- function(pattern, ...){
 #' @param wipe Logical: if TRUE, removes all files from the cache and the
 #'     cache database. Same as calling \code{\link{omnipath_cache_wipe}}.
 #'
-#' @importFrom magrittr %<>% %>%
-#' @importFrom purrr map keep map_lgl
 #' @export
 #' @seealso \code{\link{omnipath_cache_wipe}, \link{omnipath_cache_clean},
 #' \link{omnipath_cache_autoclean}}
-omnipath_cache_remove <- cache_locked %@% function(
+omnipath_cache_remove <- function(
+    key = NULL,
+    url = NULL,
+    post = NULL,
+    payload = NULL,
+    max_age = NULL,
+    min_age = NULL,
+    status = NULL,
+    only_latest = FALSE,
+    wipe = FALSE,
+    autoclean = TRUE
+){
+
+    do.call(.omnipath_cache_remove, as.list(environment()))
+
+}
+
+
+#' Workaround due to missing R CMD check option for ignoring codoc mismatches.
+#'
+#' We want to suppress warnings like "Codoc mismatches from documentation
+#' object" because these are only a byproduct of the function is wrapped into
+#' a decorator. Would be nicer if Roxygen and R CMD check had an option to
+#' ignore certain arguments in the codoc mismatch check but unfortunately
+#' they don't have.
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom purrr map keep map_lgl
+#'
+#' @noRd
+.omnipath_cache_remove <- cache_locked %@% function(
     key = NULL,
     url = NULL,
     post = NULL,
@@ -865,10 +893,32 @@ omnipath_cache_key_from_version <- function(version){
 #' @param dl_finished Timestamp for the time when download was finished,
 #'     if NULL the value remains unchanged
 #'
+#' @export
+omnipath_cache_update_status <- function(
+    key,
+    version,
+    status,
+    dl_finished = NULL
+){
+
+    do.call(.omnipath_cache_update_status, as.list(environment()))
+
+}
+
+
+#' Workaround due to missing R CMD check option for ignoring codoc mismatches.
+#'
+#' We want to suppress warnings like "Codoc mismatches from documentation
+#' object" because these are only a byproduct of the function is wrapped into
+#' a decorator. Would be nicer if Roxygen and R CMD check had an option to
+#' ignore certain arguments in the codoc mismatch check but unfortunately
+#' they don't have.
+#'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom logger log_info log_warn
-#' @export
-omnipath_cache_update_status <- cache_locked %@% function(
+#'
+#' @noRd
+.omnipath_cache_update_status <- cache_locked %@% function(
     key,
     version,
     status,
@@ -940,10 +990,27 @@ omnipath_cache_update_status <- cache_locked %@% function(
 #' @param ext Character: the file extension, e.g. "zip".
 #'
 #' @export
+omnipath_cache_set_ext <- function(key, ext){
+
+    do.call(.omnipath_cache_set_ext, as.list(environment()))
+
+}
+
+
+#' Workaround due to missing R CMD check option for ignoring codoc mismatches.
+#'
+#' We want to suppress warnings like "Codoc mismatches from documentation
+#' object" because these are only a byproduct of the function is wrapped into
+#' a decorator. Would be nicer if Roxygen and R CMD check had an option to
+#' ignore certain arguments in the codoc mismatch check but unfortunately
+#' they don't have.
+#'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map
 #' @importFrom tools file_path_sans_ext
-omnipath_cache_set_ext <- cache_locked %@% function(key, ext){
+#'
+#' @noRd
+.omnipath_cache_set_ext <- cache_locked %@% function(key, ext){
 
     if(is.list(key)){
 

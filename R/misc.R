@@ -178,7 +178,7 @@ absolute_path <- function(path, winslash = '\\'){
         )
     ){
         # the path is already absolute
-        result <- normalizePath(filename, winslash, FALSE)
+        result <- normalizePath(path, winslash, FALSE)
     } else {
         # prepending the current directory to make it absolute
         result <- file.path(normalizePath(getwd(), winslash), path)
