@@ -71,9 +71,9 @@ bioplex_download <- function(version){
 #' bioplex_interactions %>% nrow
 #' # [1] 23744
 #' bioplex_interactions %>% colnames
-#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
-#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
-#' [9] "p_interaction"
+#' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' # [9] "p_interaction"
 #' }
 #'
 #' @seealso \itemize{
@@ -103,9 +103,9 @@ bioplex1 <- function(){
 #' bioplex_interactions %>% nrow
 #' # [1] 56553
 #' bioplex_interactions %>% colnames
-#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
-#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
-#' [9] "p_interaction"
+#' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' # [9] "p_interaction"
 #' }
 #'
 #' @seealso \itemize{
@@ -135,9 +135,9 @@ bioplex2 <- function(){
 #' bioplex_interactions %>% nrow
 #' # [1] 118162
 #' bioplex_interactions %>% colnames
-#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
-#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
-#' [9] "p_interaction"
+#' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' # [9] "p_interaction"
 #' }
 #'
 #' @seealso \itemize{
@@ -167,9 +167,9 @@ bioplex3 <- function(){
 #' bioplex_interactions %>% nrow
 #' # [1] 70966
 #' bioplex_interactions %>% colnames
-#' [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
-#' [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
-#' [9] "p_interaction"
+#' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
+#' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
+#' # [9] "p_interaction"
 #' }
 #'
 #' @seealso \itemize{
