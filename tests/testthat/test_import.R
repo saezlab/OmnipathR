@@ -22,8 +22,13 @@
 
 library(OmnipathR)
 library(dplyr)
+library(magrittr)
 library(tidyr)
 library(jsonlite)
+library(logger)
+
+# not to interfere with testthat's console display
+omnipath_set_console_loglevel(logger::FATAL)
 
 ################################################################################
 ## Test of the functions fetching Omnipath Webserver
@@ -120,7 +125,7 @@ can_jsonlite_download <- function(){
     tryCatch(
         as.logical(
             length(
-                fromJSON('https://omnipathdb.org/resources')
+                jsonlite::fromJSON('https://omnipathdb.org/resources')
             )
         ),
         error = function(...){FALSE}
@@ -128,6 +133,19 @@ can_jsonlite_download <- function(){
 
 }
 
+
+#' Test if we can send a log message
+test_log <- function(){
+
+    test_that(
+        'Testing logger',
+        expect_error(logger::log_info('From tests with love!'), NA)
+    )
+
+}
+
+
+test_log()
 
 ## Here we build a list with parameters that we later iterate through
 ## in order to test all the various download methods.
@@ -148,6 +166,10 @@ test_items <- list(
 
 if(can_we_download_anything_at_all() && can_jsonlite_download()){
 
+    top_env <- environment()
+
+    omnipath_cache_clean_db()
+
     for(item in names(test_items)){
 
         resource_col <- list(
@@ -158,7 +180,8 @@ if(can_we_download_anything_at_all() && can_jsonlite_download()){
             intercell = 'database'
         )
 
-        method <- get(sprintf('import_%s', item))
+        method_name <- sprintf('import_%s', item)
+        method <- get(method_name)
         dataset <- `if`(
             'datasets' %in% names(test_items[[item]]),
             test_items[[item]]$datasets,
@@ -173,10 +196,20 @@ if(can_we_download_anything_at_all() && can_jsonlite_download()){
             top = 5
         )
 
-        response <- method(resources = resources)
+        test_that(
+            sprintf('Testing `%s`', method_name),
+            expect_error(
+                assign(
+                    'response',
+                    method(resources = resources),
+                    envir = top_env
+                ),
+                NA
+            )
+        )
 
         if(query_type %in% c('enzsub', 'interactions', 'complexes')){
-            response <- response %>% separate_rows(sources, sep = ';')
+            response %<>% separate_rows(sources, sep = ';')
         }
 
         resources_in_response <- response %>%
