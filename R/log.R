@@ -98,8 +98,10 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
     assign(
         'OmnipathR',
         omnipathr_loggers,
-        envir <- logger%:::%namespaces
+        envir = logger%:::%namespaces
     )
+
+    invisible(NULL)
 
 }
 

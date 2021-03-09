@@ -354,18 +354,20 @@ omnipath_options_to_config <- function(){
 
 #' Setting up the logfile and logging parameters.
 #'
+#' @importFrom magrittr %>% %T>%
+#' @importFrom rlang %||%
+#'
 #' @noRd
 omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
-    log_path <- `if`(
-        is.null(options('omnipath.logfile')[[1]]),
+    log_path <-
+        options('omnipath.logfile')[[1]] %||%
         file.path(
             'omnipathr-log',
             sprintf('omnipathr-%s.log', format(Sys.time(), "%Y%m%d-%H%M"))
-        ),
-        options('omnipath.logfile')[[1]]
-    )
-    dir.create(dirname(log_path), showWarnings = FALSE, recursive = TRUE)
+        ) %>%
+        absolute_path() %T>%
+        {dir.create(dirname(.), showWarnings = FALSE, recursive = TRUE)}
 
     for(idx in 1:2){
         # 1 = logfile

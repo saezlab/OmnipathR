@@ -24,3 +24,4 @@ vignettes/figure
 ^vignettes/Rplots.pdf$
 ^[^/]\.pdf$
 ^nichenet_results
+.*/testdir.*$
