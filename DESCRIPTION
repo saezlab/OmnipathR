@@ -21,8 +21,17 @@ Authors@R: c(
         role = "aut",
         comment = c(ORCID = "0000-0002-0776-1182")))
 Description: A client for the OmniPath web service
-    (https://www.omnipathdb.org). It also includes functions to transform
-    and pretty print some of the downloaded data.
+    (https://www.omnipathdb.org) and many other resources.
+    It also includes functions to transform and pretty print
+    some of the downloaded data, functions to access a number
+    of other resources such as BioPlex, ConsensusPathDB, EVEX,
+    Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
+    InWeb InBioMap, Ramilowski et al. 2015, RegNetwork, ReMap,
+    TF census, TRRUST and Vinayagam et al. 2011. Furthermore,
+    OmnipathR features a close integration with the NicheNet
+    method for ligand activity prediction from transcriptomics
+    data, and its R implementation nichenetr (available in
+    CRAN).
 License: MIT + file LICENSE
 URL: https://saezlab.github.io/OmnipathR/
 BugReports: https://github.com/saezlab/OmnipathR/issues

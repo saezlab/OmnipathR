@@ -28,12 +28,20 @@
 #'
 #' \url{https://omnipathdb.org/}
 #'
-#' The web service implements a very simple REST style API. This package make
-#' requests by the HTTP protocol to retreive the data. Hence, fast Internet
-#' access is required for a propser use of OmnipathR.
+#' And a number of other resources, such as BioPlex, ConsensusPathDB, EVEX,
+#' Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb, InWeb InBioMap,
+#' Ramilowski et al. 2015, RegNetwork, ReMap, TF census, TRRUST and
+#' Vinayagam et al. 2011.
+#'
+#' The OmniPath web service implements a very simple REST style API. This
+#' package make requests by the HTTP protocol to retreive the data. Hence,
+#' fast Internet access is required for a propser use of OmnipathR.
 #'
 #' The package also provides some utility functions to filter, analyse and
-#' visualize the data.
+#' visualize the data. Furthermore, OmnipathR features a close integration
+#' with the NicheNet method for ligand activity prediction from
+#' transcriptomics data, and its R implementation nichenetr (available in
+#' CRAN).
 #'
 #' @examples
 #' \donttest{
