@@ -1136,8 +1136,9 @@ import_post_translational_interactions <- function(
 #'
 #' @examples
 #' interactions <- import_dorothea_interactions(
-#'     resources = c('DoRothEA_A', 'ARACNe-GTEx_DoRothEA'),
-#'     organism = 9606
+#'     resources = c('DoRothEA', 'ARACNe-GTEx_DoRothEA'),
+#'     organism = 9606,
+#'     dorothea_levels = c('A', 'B', 'C')
 #' )
 #'
 #' @seealso \itemize{
@@ -1228,7 +1229,7 @@ import_tfregulons_interactions <- function(...){
 #' @examples
 #' interactions <-
 #'     import_tf_target_interactions(
-#'         resources = c('DoRothEA_A', 'SIGNOR')
+#'         resources = c('DoRothEA', 'SIGNOR')
 #'     )
 #'
 #' @seealso \itemize{
@@ -1292,7 +1293,7 @@ import_tf_target_interactions <- function(
 #' @examples
 #' interactions <-
 #'     import_transcriptional_interactions(
-#'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA_A')
+#'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
 #'     )
 #'
 #' @seealso \itemize{
