@@ -24,6 +24,8 @@
 #'
 #' @param version Character: either 1.0, 2.0, 3.0 or HCT116_1.0
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
 #'
@@ -63,13 +65,15 @@ bioplex_download <- function(version){
 #' using 2,594 baits.
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @export
 #'
 #' @examples
 #' bioplex_interactions <- bioplex1()
-#' bioplex_interactions %>% nrow
+#' nrow(bioplex_interactions)
 #' # [1] 23744
-#' bioplex_interactions %>% colnames
+#' colnames(bioplex_interactions)
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
@@ -93,13 +97,15 @@ bioplex1 <- function(){
 #' using 5,891 baits.
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @export
 #'
 #' @examples
 #' bioplex_interactions <- bioplex2()
-#' bioplex_interactions %>% nrow
+#' nrow(bioplex_interactions)
 #' # [1] 56553
-#' bioplex_interactions %>% colnames
+#' colnames(bioplex_interactions)
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
@@ -123,13 +129,15 @@ bioplex2 <- function(){
 #' using 10,128 baits.
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @export
 #'
 #' @examples
 #' bioplex_interactions <- bioplex3()
-#' bioplex_interactions %>% nrow
+#' nrow(bioplex_interactions)
 #' # [1] 118162
-#' bioplex_interactions %>% colnames
+#' colnames(bioplex_interactions)
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
@@ -157,9 +165,9 @@ bioplex3 <- function(){
 #'
 #' @examples
 #' bioplex_interactions <- bioplex_hct116_1()
-#' bioplex_interactions %>% nrow
+#' nrow(bioplex_interactions)
 #' # [1] 70966
-#' bioplex_interactions %>% colnames
+#' colnames(bioplex_interactions)
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
@@ -188,6 +196,8 @@ bioplex_hct116_1 <- function(){
 #' @param unique Logical. Collapse the duplicate interactions into single
 #'     rows or keep them as they are. In case of merging duplicate records
 #'     the maximum p value will be choosen for each record.
+#'
+#' @return Data frame (tibble) with interactions.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate first summarize_all group_by bind_rows
