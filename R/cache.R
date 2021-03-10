@@ -483,7 +483,7 @@ omnipath_cache_remove_versions <- function(
 #' @noRd
 omnipath_cache_clean_db <- cache_locked %@% function(){
 
-    omnipath.env$cache <<-
+    omnipath.env$cache <-
         omnipath.env$cache %>%
         map(
             function(record){
@@ -1595,7 +1595,7 @@ omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
 #' @noRd
 omnipath_read_cache_db <- function(){
 
-    omnipath.env$cache <<-
+    omnipath.env$cache <-
         omnipath_cache_db_path() %>%
         jsonlite::fromJSON() %>%
         omnipath_cache_timestamps()
