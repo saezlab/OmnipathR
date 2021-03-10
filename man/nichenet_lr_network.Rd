@@ -24,6 +24,10 @@ nichenet_lr_network(
 \item{only_omnipath}{Logical: a shortcut to use only OmniPath as network
 resource.}
 }
+\value{
+A network data frame (tibble) with ligand-receptor interactions
+    suitable for use with NicheNet.
+}
 \description{
 Builds ligand-receptor network prior knowledge for NicheNet using multiple
 resources.

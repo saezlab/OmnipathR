@@ -6,6 +6,9 @@
 \usage{
 htridb_download()
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 HTRIdb (https://www.lbbc.ibb.unesp.br/htri/) is a database of literature
 curated human TF-target interactions. As the database is recently offline,

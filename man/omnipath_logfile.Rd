@@ -6,6 +6,9 @@
 \usage{
 omnipath_logfile()
 }
+\value{
+Character: path to the current logfile.
+}
 \description{
 Returns the path to the current OmnipathR log file
 }

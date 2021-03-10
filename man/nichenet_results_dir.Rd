@@ -6,6 +6,9 @@
 \usage{
 nichenet_results_dir()
 }
+\value{
+Character: path to the NicheNet results directory.
+}
 \description{
 Path to the directory to save intermediate and final outputs from NicheNet
 methods.

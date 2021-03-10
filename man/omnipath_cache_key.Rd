@@ -17,7 +17,7 @@ parameters.}
 vector is longer than 1. NULL for queries without data.}
 }
 \value{
-Character vector of cache record keys
+Character vector of cache record keys.
 }
 \description{
 Generates a hash which identifies an element in the cache database

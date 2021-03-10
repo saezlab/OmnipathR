@@ -6,6 +6,9 @@
 \usage{
 tfcensus_download()
 }
+\value{
+A data frame (tibble) listing transcription factors.
+}
 \description{
 Vaquerizas et al. published in 2009 a list of transcription factors. This
 function retrieves Supplementary Table 2 from the article

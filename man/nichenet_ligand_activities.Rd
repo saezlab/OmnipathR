@@ -44,6 +44,12 @@ ligand-target table.}
 \item{n_top_targets}{For each ligand, how many of the top targets to
 include in the ligand-target table.}
 }
+\value{
+A named list with `ligand_activities` (a tibble giving several
+    ligand activity scores; following columns in the tibble: $test_ligand,
+    $auroc, $aupr and $pearson) and `ligand_target_links` (a tibble with
+    columns ligand, target and weight (i.e. regulatory potential score)).
+}
 \description{
 Calls the NicheNet ligand activity analysis
 }

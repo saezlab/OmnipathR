@@ -6,6 +6,9 @@
 \usage{
 bioplex3()
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 This dataset contains ~120,000 interactions detected in HEK293T cells
 using 10,128 baits.

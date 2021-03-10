@@ -16,6 +16,10 @@ and gene regulatory networks as produced by
 
 \item{weighted}{Logical: whether to use the optimized weights.}
 }
+\value{
+A named list with two elements: `weighted_networks` and
+    `optimized_parameters`.
+}
 \description{
 Construct a NicheNet ligand-target model
 }

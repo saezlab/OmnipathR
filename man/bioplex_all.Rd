@@ -11,6 +11,9 @@ bioplex_all(unique = TRUE)
 rows or keep them as they are. In case of merging duplicate records
 the maximum p value will be choosen for each record.}
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 BioPlex provides four interaction datasets: version 1.0, 2.0, 3.0 and
 HCT116 version 1.0. This function downloads all of them, merges them to

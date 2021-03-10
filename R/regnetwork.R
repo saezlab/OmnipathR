@@ -23,16 +23,27 @@
 #' Interactions from RegNetwork
 #'
 #' Downloads transcriptional and post-transcriptional regulatory interactions
-#' from the RegNetwork database (http://www.regnetworkweb.org/).
+#' from the RegNetwork database (http://www.regnetworkweb.org/). The
+#' information about effect signs (stimulation or inhibition), provided by
+#' \code{\link{regnetwork_directions}} are included in the result.
 #'
 #' @param organism Character: either human or mouse.
 #'
-#' @return Data frame with interactions
+#' @return Data frame with interactions.
 #'
 #' @examples
-#' \donttest{
 #' regn_interactions <- regnetwork_download()
-#' }
+#' regn_interactions
+#' # # A tibble: 372,778 x 7
+#' #    source_genesymb. source_entrez target_genesymb. target_entrez
+#' #    <chr>            <chr>         <chr>            <chr>
+#' #  1 USF1             7391          S100A6           6277
+#' #  2 USF1             7391          DUSP1            1843
+#' #  3 USF1             7391          C4A              720
+#' #  4 USF1             7391          ABCA1            19
+#' #  5 TP53             7157          TP73             7161
+#' # # . with 372,768 more rows, and 3 more variables: effect <dbl>,
+#' # #   source_type <chr>, target_type <chr>
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%
@@ -95,8 +106,20 @@ regnetwork_download <- function(organism = 'human'){
 #'
 #' @param organism Character: either human or mouse.
 #'
+#' @return A data frame (tibble) of TF-target interactions with effect signs.
+#'
 #' @examples
 #' regn_dir <- regnetwork_directions()
+#' regn_dir
+#' # # A tibble: 3,954 x 5
+#' #    source_genesymb. source_entrez target_genesymb. target_entrez
+#' #    <chr>            <chr>         <chr>            <chr>
+#' #  1 AHR              196           CDKN1B           1027
+#' #  2 APLNR            187           PIK3C3           5289
+#' #  3 APLNR            187           PIK3R4           30849
+#' #  4 AR               367           KLK3             354
+#' #  5 ARNT             405           ALDOA            226
+#' # # . with 3,944 more rows, and 1 more variable: effect <dbl>
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_delim cols col_character

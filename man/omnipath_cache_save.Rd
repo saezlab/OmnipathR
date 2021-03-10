@@ -29,6 +29,8 @@ item will be created}
 }
 \value{
 Returns invisibly the data itself.
+
+Invisibly returns the `data`.
 }
 \description{
 Exports the object in RDS format, creates new cache record if necessary.

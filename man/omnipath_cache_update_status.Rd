@@ -18,6 +18,10 @@ item will be created}
 \item{dl_finished}{Timestamp for the time when download was finished,
 if NULL the value remains unchanged}
 }
+\value{
+Character: invisibly returns the version number of the cache
+    version item.
+}
 \description{
 Updates the status of an existing cache record
 }

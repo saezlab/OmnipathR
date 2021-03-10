@@ -6,6 +6,9 @@
 \usage{
 consensuspathdb_raw_table()
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 Downloads interaction data from ConsensusPathDB
 }

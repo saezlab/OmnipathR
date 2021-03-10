@@ -20,6 +20,9 @@ have prioroty over the user level config.}
 
 \item{...}{Passed to \code{yaml::yaml.load_file}.}
 }
+\value{
+Invisibly returns the config as a list.
+}
 \description{
 Load the package configuration from a config file
 }

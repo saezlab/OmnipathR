@@ -13,6 +13,9 @@ nichenet_remove_orphan_ligands(expression, lr_network)
 \item{lr_network}{A NicheNet format ligand-recptor network data frame as
 produced by \code{\link{nichenet_lr_network}}.}
 }
+\value{
+The same list as `expression` with certain elements removed.
+}
 \description{
 Removes from the expression data the perturbation experiments involving
 ligands without connections.

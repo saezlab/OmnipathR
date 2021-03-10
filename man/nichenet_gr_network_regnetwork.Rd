@@ -6,6 +6,9 @@
 \usage{
 nichenet_gr_network_regnetwork()
 }
+\value{
+Data frame with gene regulatory interactions in NicheNet format.
+}
 \description{
 Builds a gene regulatory network using data from the RegNetwork database
 and converts it to a format suitable for NicheNet.

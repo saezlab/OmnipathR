@@ -17,7 +17,7 @@ interaction_graph(interactions = interactions)
 \code{\link{import_all_interactions}}}
 }
 \value{
-An igraph object
+An igraph graph object.
 }
 \description{
 Transforms the interactions data frame to an igraph graph object.

@@ -238,10 +238,10 @@ cache_locked <- decorator %@% function(FUN){
 #'
 #' Searches the cache records by matching the URL against a string or regexp.
 #'
-#' @return List of cache records matching the pattern.
-#'
 #' @param pattern String or regular expression.
 #' @param ... Passed to \code{\link{grep}}
+#'
+#' @return List of cache records matching the pattern.
 #'
 #' @examples
 #' \donttest{
@@ -292,6 +292,8 @@ omnipath_cache_search <- function(pattern, ...){
 #' @param wipe Logical: if TRUE, removes all files from the cache and the
 #'     cache database. Same as calling \code{\link{omnipath_cache_wipe}}.
 #'
+#' @return Invisibly returns the cache database (list of cache records).
+#'
 #' @examples
 #' \donttest{
 #' # remove all cache data from the BioPlex database
@@ -329,7 +331,7 @@ omnipath_cache_remove <- function(
     autoclean = TRUE
 ){
 
-    do.call(omnipath.env$cache_remove, as.list(environment()))
+    do.call(.omnipath_cache_remove, as.list(environment()))
 
 }
 
@@ -346,7 +348,7 @@ omnipath_cache_remove <- function(
 #' @importFrom purrr map keep map_lgl
 #'
 #' @noRd
-omnipath.env$cache_remove <- cache_locked %@% function(
+.omnipath_cache_remove <- cache_locked %@% function(
     key = NULL,
     url = NULL,
     post = NULL,
@@ -445,7 +447,7 @@ omnipath.env$cache_remove <- cache_locked %@% function(
 #' @param status Remove items having any of the states listed here
 #' @param only_latest Keep only the latest version
 #'
-#' @return A cache record with the version items removed
+#' @return A cache record with the version items removed.
 #'
 #' @importFrom magrittr %<>%
 #'
@@ -507,6 +509,8 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #'
 #' @param ... Ignored.
 #'
+#' @return NULL
+#'
 #' @examples
 #' \donttest{
 #' omnipath_cache_wipe()
@@ -537,6 +541,8 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 
 #' Removes the items from the cache directory which are unknown by the cache
 #' database
+#'
+#' @return NULL
 #'
 #' @examples
 #' \donttest{
@@ -572,6 +578,8 @@ omnipath_cache_clean <- function(){
 #' directory which are missing from the database. For more flexible
 #' operations use \code{\link{omnipath_cache_remove}} and
 #' \code{\link{omnipath_cache_clean}}.
+#'
+#' @return Invisibl returns the cache database (list of cache records).
 #'
 #' @examples
 #' \donttest{
@@ -746,6 +754,8 @@ omnipath_cache_latest_or_new <- function(
 #' @param version Version of the cache item. If does not exist or NULL, the
 #'     latest version will be retrieved
 #'
+#' @return Object loaded from the cache RDS file.
+#'
 #' @examples
 #' \donttest{
 #' # works only if you have already this item in the cache
@@ -839,6 +849,8 @@ omnipath_cache_load <- function(
 #' @param version Version of the cache item. If does not exist a new version
 #' item will be created
 #'
+#' @return Invisibly returns the `data`.
+#'
 #' @examples
 #' \donttest{
 #' mydata <- data.frame(a = c(1, 2, 3), b = c('a', 'b', 'c'))
@@ -905,6 +917,9 @@ omnipath_cache_save <- function(
 #'     item will be created
 #' @param keep_original Whether to keep or remove the original file
 #'
+#' @return Character: invisibly returns the version number of the cache
+#'     version item.
+#'
 #' @examples
 #' \donttest{
 #' omnipath_cache_move_in('some/file.zip', url = 'the_download_address')
@@ -959,6 +974,9 @@ omnipath_cache_move_in <- function(
 #' @param key Key of the cache item
 #' @param version Version of the cache item. If does not exist a new version
 #' item will be created
+#'
+#' @return Character: invisibly returns the version number of the cache
+#'     version item.
 #'
 #' @examples
 #' \donttest{
@@ -1025,6 +1043,9 @@ omnipath_cache_key_from_version <- function(version){
 #' @param dl_finished Timestamp for the time when download was finished,
 #'     if NULL the value remains unchanged
 #'
+#' @return Character: invisibly returns the version number of the cache
+#'     version item.
+#'
 #' @examples
 #' \donttest{
 #' my_url <- 'https://bioconductor.org/'
@@ -1046,7 +1067,7 @@ omnipath_cache_update_status <- function(
     dl_finished = NULL
 ){
 
-    do.call(omnipath.env$cache_update_status, as.list(environment()))
+    do.call(.omnipath_cache_update_status, as.list(environment()))
 
 }
 
@@ -1063,7 +1084,7 @@ omnipath_cache_update_status <- function(
 #' @importFrom logger log_info log_warn
 #'
 #' @noRd
-omnipath.env$cache_update_status <- cache_locked %@% function(
+.omnipath_cache_update_status <- cache_locked %@% function(
     key,
     version,
     status,
@@ -1144,7 +1165,7 @@ omnipath.env$cache_update_status <- cache_locked %@% function(
 #' @export
 omnipath_cache_set_ext <- function(key, ext){
 
-    do.call(omnipath.env$cache_set_ext, as.list(environment()))
+    do.call(.omnipath_cache_set_ext, as.list(environment()))
 
 }
 
@@ -1157,12 +1178,14 @@ omnipath_cache_set_ext <- function(key, ext){
 #' ignore certain arguments in the codoc mismatch check but unfortunately
 #' they don't have.
 #'
+#' @return NULL
+#'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map
 #' @importFrom tools file_path_sans_ext
 #'
 #' @noRd
-omnipath.env$cache_set_ext <- cache_locked %@% function(key, ext){
+.omnipath_cache_set_ext <- cache_locked %@% function(key, ext){
 
     if(is.list(key)){
 
@@ -1254,9 +1277,10 @@ omnipath_cache_next_version <- function(key){
 
 #' Finds the most recent version in a cache record
 #'
-#' @return Character: the version ID with the most recent download finished
-#' time
 #' @param record A cache record
+#'
+#' @return Character: the version ID with the most recent download finished
+#'     time
 #'
 #' @export
 omnipath_cache_latest_version <- function(record){
@@ -1274,14 +1298,15 @@ omnipath_cache_latest_version <- function(record){
 #'
 #' Filters the versions based on multiple conditions: their age and status
 #'
-#' @return Character vector with version IDs, NA if no version satisfies the
-#' conditions
 #' @param record A cache record
 #' @param latest Return the most recent version
 #' @param max_age The maximum age in days (e.g. 5: 5 days old or more recent)
 #' @param min_age The minimum age in days (e.g. 5: 5 days old or older)
 #' @param status Character vector with status codes. By default only the
 #' versions with `ready` (completed download) status are selected
+#'
+#' @return Character vector with version IDs, NA if no version satisfies the
+#'     conditions
 #'
 #' @examples
 #' \donttest{
@@ -1512,14 +1537,14 @@ omnipath_cache_version <- function(
 #' @param payload HTTP data payload. List with multiple items if the url
 #'     vector is longer than 1. NULL for queries without data.
 #'
+#' @return Character vector of cache record keys.
+#'
 #' @examples
 #' \donttest{
 #' my_url <- 'https://bioconductor.org/'
 #' omnipath_cache_key(my_url)
 #' # [1] "41346a00fb20d2a9df03aa70cf4d50bf88ab154a"
 #' }
-#'
-#' @return Character vector of cache record keys
 #'
 #' @importFrom digest sha1_digest
 #' @importFrom magrittr %>%

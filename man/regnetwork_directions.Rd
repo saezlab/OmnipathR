@@ -9,10 +9,23 @@ regnetwork_directions(organism = "human")
 \arguments{
 \item{organism}{Character: either human or mouse.}
 }
+\value{
+A data frame (tibble) of TF-target interactions with effect signs.
+}
 \description{
 Transcription factor effects from RegNetwork
 }
 \examples{
 regn_dir <- regnetwork_directions()
+regn_dir
+# # A tibble: 3,954 x 5
+#    source_genesymb. source_entrez target_genesymb. target_entrez
+#    <chr>            <chr>         <chr>            <chr>
+#  1 AHR              196           CDKN1B           1027
+#  2 APLNR            187           PIK3C3           5289
+#  3 APLNR            187           PIK3R4           30849
+#  4 AR               367           KLK3             354
+#  5 ARNT             405           ALDOA            226
+# # . with 3,944 more rows, and 1 more variable: effect <dbl>
 
 }

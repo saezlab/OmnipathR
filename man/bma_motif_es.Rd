@@ -2,8 +2,7 @@
 % Please edit documentation in R/bma.R
 \name{bma_motif_es}
 \alias{bma_motif_es}
-\title{Prints a BMA motif to the screen from a sequence of edges, which can be
-copy/pasted into the BMA canvas}
+\title{BMA motifs from a sequence of edges}
 \usage{
 bma_motif_es(edge_seq, G, granularity = 2)
 }
@@ -14,6 +13,15 @@ bma_motif_es(edge_seq, G, granularity = 2)
 
 \item{granularity}{Numeric: granularity value.}
 }
+\value{
+Character: BMA motifs as a single string.
+}
 \description{
-Intended to parallel print_path_es
+These motifs can be added to a BMA canvas.
+}
+\examples{
+interactions <- import_omnipath_interactions(resources = 'ARN')
+graph <- interaction_graph(interactions)
+motifs <- bma_motif_es(igraph::E(graph)[1], graph)
+
 }

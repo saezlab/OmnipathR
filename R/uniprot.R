@@ -29,6 +29,9 @@
 #' @param to Identifier type to be retrieved from UniProt. See Details for
 #'     possible values.
 #'
+#' @return A data frame (tibble) with columns `From` and `To`, the
+#'     identifiers provided and the corresponding target IDs, respectively.
+#'
 #' @details
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
@@ -44,6 +47,12 @@
 #' uniprot_genesymbol <- uniprot_id_mapping_table(
 #'     c('P00533', 'P23771'), 'ID', 'GENENAME'
 #' )
+#' uniprot_genesymbol
+#' # # A tibble: 2 x 2
+#' #   From   To
+#' #   <chr>  <chr>
+#' # 1 P00533 EGFR
+#' # 2 P23771 GATA3
 uniprot_id_mapping_table <- function(identifiers, from, to){
 
     # NSE vs. R CMD check workaround
@@ -107,6 +116,8 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #'     could not be translated. At these records the target identifier will
 #'     be NA.
 #' @param ... Passed to \code{\link{uniprot_full_id_mapping_table}}.
+#'
+#' @return The data frame `d` a new column added with the translated IDs.
 #'
 #' @details
 #' This function uses the uploadlists service of UniProt to obtain identifier
@@ -221,6 +232,9 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' @param organism Integer, NCBI Taxonomy ID of the organism (by default
 #'     9606 for human).
 #'
+#' @return A data frame (tibble) with columns `From` and `To`, UniProt IDs
+#'     and the corresponding foreign IDs, respectively.
+#'
 #' @details
 #' For both source and target ID type, this function accepts column codes
 #' used by UniProt and some simple shortcuts defined here. For the UniProt
@@ -239,6 +253,16 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #'
 #' @examples
 #' uniprot_entrez <- uniprot_full_id_mapping_table(to = 'entrez')
+#' uniprot_entrez
+#' # # A tibble: 20,723 x 2
+#' #    From   To
+#' #    <chr>  <chr>
+#' #  1 Q96R72 NA
+#' #  2 Q9UKL2 23538
+#' #  3 Q9H205 144125
+#' #  4 Q8NGN2 219873
+#' #  5 Q8NGC1 390439
+#' # # . with 20,713 more rows
 uniprot_full_id_mapping_table <- function(
     to,
     from = 'id',

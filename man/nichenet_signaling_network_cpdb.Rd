@@ -10,6 +10,10 @@ nichenet_signaling_network_cpdb(...)
 \arguments{
 \item{...}{Ignored.}
 }
+\value{
+A network data frame (tibble) with signaling interactions
+    suitable for use with NicheNet.
+}
 \description{
 Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
 (CPDB)

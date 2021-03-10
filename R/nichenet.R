@@ -69,6 +69,10 @@
 #' @param results_dir Character: path to the directory to save intermediate
 #'     and final outputs from NicheNet methods.
 #'
+#' @return A named list with the intermediate and final outputs of the
+#'     pipeline: `networks`, `expression`, `optimized_parameters`,
+#'     `weighted_networks` and `ligand_target_matrix`.
+#'
 #' @examples
 #' \donttest{
 #' nichenet_results <- nichenet_main(
@@ -218,6 +222,8 @@ nichenet_main <- function(
 #' @param lr_network A NicheNet format ligand-recptor network data frame as
 #'     produced by \code{\link{nichenet_lr_network}}.
 #'
+#' @return The same list as `expression` with certain elements removed.
+#'
 #' @examples
 #' \donttest{
 #' networks <- nichenet_networks()
@@ -265,6 +271,10 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 #'     the objective function.
 #' @param mlrmbo_optimization_param Override arguments for
 #'     \code{nichenetr::mlrmbo_optimization}.
+#'
+#' @return A result object from the function ‘mlrMBO::mbo’. Among other
+#'     things, this contains the optimal parameter settings, the output
+#'     corresponding to every input etc.
 #'
 #' @examples
 #' \donttest{
@@ -409,6 +419,9 @@ nichenet_optimization <- function(
 #'     \code{\link{nichenet_networks}}.
 #' @param weighted Logical: whether to use the optimized weights.
 #'
+#' @return A named list with two elements: `weighted_networks` and
+#'     `optimized_parameters`.
+#'
 #' @examples
 #' \donttest{
 #' networks <- nichenet_networks()
@@ -497,6 +510,8 @@ nichenet_build_model <- function(
 #' @param construct_ligand_target_matrix_param Override parameters for
 #'     \code{nichenetr::construct_ligand_target_matrix}.
 #'
+#' @return A matrix containing ligand-target probability scores.
+#'
 #' @examples
 #' \donttest{
 #' networks <- nichenet_networks()
@@ -579,6 +594,11 @@ nichenet_ligand_target_matrix <- function(
 #'     ligand-target table.
 #' @param n_top_targets For each ligand, how many of the top targets to
 #'     include in the ligand-target table.
+#'
+#' @return A named list with `ligand_activities` (a tibble giving several
+#'     ligand activity scores; following columns in the tibble: $test_ligand,
+#'     $auroc, $aupr and $pearson) and `ligand_target_links` (a tibble with
+#'     columns ligand, target and weight (i.e. regulatory potential score)).
 #'
 #' @examples
 #' \donttest{
@@ -686,6 +706,9 @@ nichenet_ligand_activities <- function(
 #' @param n_top_targets For each ligand, how many of the top targets to
 #'     include in the ligand-target table.
 #'
+#' @return A tibble with columns ligand, target and weight (i.e. regulatory
+#'     potential score).
+#'
 #' @examples
 #' \donttest{
 #' networks <- nichenet_networks()
@@ -748,6 +771,8 @@ nichenet_ligand_target_links <- function(
 #' Path to the directory to save intermediate and final outputs from NicheNet
 #' methods.
 #'
+#' @return Character: path to the NicheNet results directory.
+#'
 #' @examples
 #' nichenet_results_dir()
 #' # [1] "nichenet_results"
@@ -780,6 +805,10 @@ nichenet_results_dir <- function(){
 #'     network, passed to \code{\link{nichenet_gr_network}}
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#'
+#' @return A named list with three network data frames (tibbles): the
+#'     signaling, the ligand-receptor (lr) and the gene regulatory (gr)
+#'     networks.
 #'
 #' @examples
 #' \donttest{
@@ -862,6 +891,9 @@ nichenet_networks <- function(
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
+#'
 #' @examples
 #' # load everything with the default parameters:
 #' sig_network <- nichenet_signaling_network()
@@ -923,6 +955,9 @@ nichenet_signaling_network <- function(
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
 #'
+#' @return A network data frame (tibble) with ligand-receptor interactions
+#'     suitable for use with NicheNet.
+#'
 #' @examples
 #' # load everything with the default parameters:
 #' lr_network <- nichenet_lr_network()
@@ -979,6 +1014,9 @@ nichenet_lr_network <- function(
 #'     \code{\link{nichenet_gr_network_trrust}}.
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#'
+#' @return A network data frame (tibble) with gene regulatory interactions
+#'     suitable for use with NicheNet.
 #'
 #' @examples
 #' \donttest{
@@ -1039,7 +1077,8 @@ nichenet_gr_network <- function(
 #'     specific nichenet import methods (an empty list if no arguments should
 #'     be overridden). If the value is NULL the resource will be omitted.
 #'
-#' @return A data frame with interactions suitable for use with NicheNet.
+#' @return A data frame (tibble) with interactions suitable for use with
+#'     NicheNet.
 #'
 #' @examples
 #' \donttest{
@@ -1123,6 +1162,9 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
 #' ligand-receptor interactions are supposed to come from \code{
 #' \link{nichenet_lr_network_omnipath}}.
 #'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
+#'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_post_translational_interactions}}
 #'
@@ -1163,6 +1205,9 @@ nichenet_signaling_network_omnipath <- function(
 #'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_intercell_network}}
+#'
+#' @return A network data frame (tibble) with ligand-receptor interactions
+#'     suitable for use with NicheNet.
 #'
 #' @examples
 #' # use only ligand-receptor interactions (not for example ECM-adhesion):
@@ -1206,6 +1251,9 @@ nichenet_lr_network_omnipath <- function(
 #'
 #' @param min_curation_effort Lower threshold for curation effort
 #' @param ... Passed to \code{\link{import_transcriptional_interactions}}
+#'
+#' @return A network data frame (tibble) with gene regulatory interactions
+#'     suitable for use with NicheNet.
 #'
 #' @examples
 #' # use interactions up to confidence level "C" from DoRothEA:
@@ -1279,6 +1327,9 @@ omnipath_interactions_postprocess <- function(interactions, type){
 #'     webpage.
 #' @param ... Ignored.
 #'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
+#'
 #' @examples
 #' # use only the "controls-transport-of" interactions:
 #' pc_signaling_network <- nichenet_signaling_network_pathwaycommons(
@@ -1314,6 +1365,9 @@ nichenet_signaling_network_pathwaycommons <- function(
 #'     default value and the Harmonizome webpage.
 #' @param ... Ignored.
 #'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
+#'
 #' @examples
 #' # use only KEA and PhosphoSite:
 #' hz_signaling_network <- nichenet_signaling_network_harmonizome(
@@ -1342,6 +1396,9 @@ nichenet_signaling_network_harmonizome <- function(
 
 
 #' Combines multiple Harmonizome datasets and converts them to NicheNet format
+#'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
 #'
 #' @importFrom dplyr mutate bind_rows
 #' @importFrom purrr map
@@ -1411,6 +1468,9 @@ harmonizome_nichenet_process <- function(dataset){
 #'
 #' @param ... Ignored.
 #'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
+#'
 #' @examples
 #' vi_signaling_network <- nichenet_signaling_network_vinayagam()
 #'
@@ -1437,6 +1497,9 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' (CPDB)
 #'
 #' @param ... Ignored.
+#'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
 #'
 #' @examples
 #' # use some parameters stricter than default:
@@ -1479,6 +1542,9 @@ nichenet_signaling_network_cpdb <- function(...){
 #'     quantile of the confidence score.
 #' @param indirect Logical: whether to include indirect interactions.
 #' @param ... Ignored.
+#'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
 #'
 #' @examples
 #' ev_signaling_network <- nichenet_signaling_network_evex(
@@ -1559,6 +1625,9 @@ nichenet_signaling_network_evex <- function(
 #' InBioMap database.
 #'
 #' @param ... Ignored.
+#'
+#' @return A network data frame (tibble) with signaling interactions
+#'     suitable for use with NicheNet.
 #'
 #' @examples
 #' ib_signaling_network <- nichenet_signaling_network_inbiomap()
@@ -1673,6 +1742,8 @@ nichenet_lr_network_ramilowski <- function(
 #'     default value and the Harmonizome webpage.
 #' @param ... Ignored.
 #'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
+#'
 #' @examples
 #' # use only JASPAR and TRANSFAC:
 #' hz_gr_network <- nichenet_gr_network_harmonizome(
@@ -1728,6 +1799,8 @@ nichenet_gr_network_harmonizome <- function(
 #' Builds a gene regulatory network using data from the RegNetwork database
 #' and converts it to a format suitable for NicheNet.
 #'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
+#'
 #' @examples
 #' regn_gr_network <- nichenet_gr_network_regnetwork()
 #'
@@ -1760,6 +1833,8 @@ nichenet_gr_network_regnetwork <- function(){
 #'
 #' Builds a gene regulatory network using data from the TRRUST database
 #' and converts it to a format suitable for NicheNet.
+#'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
 #'
 #' @examples
 #' trrust_gr_network <- nichenet_gr_network_trrust()
@@ -1813,6 +1888,8 @@ nichenet_gr_network_htridb <- function(){
 #' Builds a gene regulatory network using data from the ReMap database
 #' and converts it to a format suitable for NicheNet.
 #'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
+#'
 #' @param score Numeric: a minimum score between 0 and 1000, records with
 #'     lower scores will be excluded. If NULL no filtering performed.
 #' @param top_targets Numeric: the number of top scoring targets for each
@@ -1864,6 +1941,8 @@ nichenet_gr_network_remap <- function(
 #' @param indirect Logical: whether to include indirect interactions.
 #' @param regulation_of_expression Logical: whether to include also the
 #'     "regulation of expression" type interactions.
+#'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
 #'
 #' @examples
 #' # use only the 10% with the highest confidence:
@@ -1919,6 +1998,8 @@ nichenet_gr_network_evex <- function(
 #'     webpage.
 #' @param ... Ignored.
 #'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
+#'
 #' @examples
 #' pc_gr_network <- nichenet_gr_network_pathwaycommons()
 #'
@@ -1949,6 +2030,8 @@ nichenet_gr_network_pathwaycommons <- function(
 #' @param label Character: suffix for the NicheNet `database` field:
 #'     "signaling" for the signaling network and "expression" for gene
 #'     regulatory network.
+#'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate filter relocate select

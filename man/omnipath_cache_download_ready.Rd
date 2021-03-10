@@ -12,6 +12,10 @@ item will be created}
 
 \item{key}{Key of the cache item}
 }
+\value{
+Character: invisibly returns the version number of the cache
+    version item.
+}
 \description{
 Sets the download status to ready for a cache item
 }

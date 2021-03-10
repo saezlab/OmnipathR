@@ -221,7 +221,10 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' #     },
 #' #     {
 #' #         "Name":"ATG13",
+#' #         ...
+#' #     }],
 #' # ... (truncated)
+#' # }}
 #'
 #' @importFrom magrittr %>%
 #' @export

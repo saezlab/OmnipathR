@@ -16,6 +16,9 @@ webpage.}
 
 \item{...}{Ignored.}
 }
+\value{
+Data frame with gene regulatory interactions in NicheNet format.
+}
 \description{
 Builds gene regulation prior knowledge for NicheNet using PathwayCommons.
 }

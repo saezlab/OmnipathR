@@ -28,6 +28,9 @@ function it only affects the output file name.}
 \item{construct_ligand_target_matrix_param}{Override parameters for
 \code{nichenetr::construct_ligand_target_matrix}.}
 }
+\value{
+A matrix containing ligand-target probability scores.
+}
 \description{
 Creates a NicheNet ligand-target matrix
 }

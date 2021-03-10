@@ -22,6 +22,10 @@ both (NULL).}
 \item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
 9606 for human).}
 }
+\value{
+A data frame (tibble) with columns `From` and `To`, UniProt IDs
+    and the corresponding foreign IDs, respectively.
+}
 \description{
 Creates an ID translation table from UniProt data
 }
@@ -37,4 +41,14 @@ the protein), uniprot (UniProtKB ID, e.g. P00533).
 }
 \examples{
 uniprot_entrez <- uniprot_full_id_mapping_table(to = 'entrez')
+uniprot_entrez
+# # A tibble: 20,723 x 2
+#    From   To
+#    <chr>  <chr>
+#  1 Q96R72 NA
+#  2 Q9UKL2 23538
+#  3 Q9H205 144125
+#  4 Q8NGN2 219873
+#  5 Q8NGC1 390439
+# # . with 20,713 more rows
 }

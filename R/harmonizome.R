@@ -28,6 +28,8 @@
 #' @param dataset The dataset part of the URL. Please refer to the download
 #'     section of the Harmonizome webpage.
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @examples
 #' harmonizome_data <- harmonizome_download('phosphositeplus')
 #' harmonizome_data

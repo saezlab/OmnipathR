@@ -21,6 +21,9 @@ number of targets is not restricted.}
 \item{only_known_tfs}{Logical: whether to exclude TFs which are not in
 TF census.}
 }
+\value{
+Data frame with gene regulatory interactions in NicheNet format.
+}
 \description{
 Builds a gene regulatory network using data from the ReMap database
 and converts it to a format suitable for NicheNet.

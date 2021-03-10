@@ -32,6 +32,10 @@ ligand-target table.}
 \item{n_top_targets}{For each ligand, how many of the top targets to
 include in the ligand-target table.}
 }
+\value{
+A tibble with columns ligand, target and weight (i.e. regulatory
+    potential score).
+}
 \description{
 A wrapper around \code{nichenetr::get_weighted_ligand_target_links} to
 compile a data frame with weighted links from the top ligands to their

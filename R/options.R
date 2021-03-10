@@ -214,7 +214,7 @@ omnipath_save_config <- function(
 
     omnipath_options_to_config()
     this_config <- list()
-    this_config[[title]] <- .omnipath_config
+    this_config[[title]] <- omnipath.env$config
 
     write_yaml(this_config, file = path)
 
@@ -232,6 +232,8 @@ omnipath_save_config <- function(
 #'     exists in the current directory. By default, the local config files
 #'     have prioroty over the user level config.
 #' @param ... Passed to \code{yaml::yaml.load_file}.
+#'
+#' @return Invisibly returns the config as a list.
 #'
 #' @examples
 #' \donttest{
@@ -285,7 +287,7 @@ omnipath_load_config <- function(
         .omnipath_options_defaults
     )
 
-    .omnipath_config <<- this_config
+    omnipath.env$config <- this_config
     omnipath_config_to_options()
 
 }
@@ -310,7 +312,7 @@ omnipath_load_config <- function(
 #' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config}}
 omnipath_reset_config <- function(save = NULL){
 
-    .omnipath_config <<- .omnipath_options_defaults
+    omnipath.env$config <- .omnipath_options_defaults
     omnipath_config_to_options()
 
     if(!is.null(save)){
@@ -322,7 +324,7 @@ omnipath_reset_config <- function(save = NULL){
         omnipath_save_config(path)
     }
 
-    invisible(.omnipath_config)
+    invisible(omnipath.env$config)
 
 }
 
@@ -345,16 +347,16 @@ omnipath_init_config <- function(user = FALSE){
 }
 
 
-#' Loads the settings from .omnipath_config to options
+#' Loads the settings from omnipath.env$config to options
 #'
 #' @noRd
 omnipath_config_to_options <- function(){
 
-    do.call(options, .omnipath_config)
+    do.call(options, omnipath.env$config)
 
 }
 
-#' Copies OmnipathR settings from options to .omnipath_config
+#' Copies OmnipathR settings from options to omnipath.env$config
 #'
 #' @importFrom RCurl merge.list
 #'
@@ -365,9 +367,9 @@ omnipath_options_to_config <- function(){
         options,
         as.list(names(.omnipath_options_defaults))
     )
-    .omnipath_config <<- merge.list(
+    omnipath.env$config <- merge.list(
         from_options,
-        .omnipath_config
+        omnipath.env$config
     )
 
 }

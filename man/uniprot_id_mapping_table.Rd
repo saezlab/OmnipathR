@@ -16,6 +16,10 @@ values.}
 \item{to}{Identifier type to be retrieved from UniProt. See Details for
 possible values.}
 }
+\value{
+A data frame (tibble) with columns `From` and `To`, the
+    identifiers provided and the corresponding target IDs, respectively.
+}
 \description{
 Retrieves an identifier translation table from the UniProt uploadlists
 service
@@ -30,4 +34,10 @@ the table here: https://www.uniprot.org/help/api_idmapping
 uniprot_genesymbol <- uniprot_id_mapping_table(
     c('P00533', 'P23771'), 'ID', 'GENENAME'
 )
+uniprot_genesymbol
+# # A tibble: 2 x 2
+#   From   To
+#   <chr>  <chr>
+# 1 P00533 EGFR
+# 2 P23771 GATA3
 }

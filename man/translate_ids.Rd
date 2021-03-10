@@ -40,6 +40,9 @@ be NA.}
 
 \item{...}{Passed to \code{\link{uniprot_full_id_mapping_table}}.}
 }
+\value{
+The data frame `d` a new column added with the translated IDs.
+}
 \description{
 Translates a column of identifiers in a data frame by creating another
 column with the target identifiers

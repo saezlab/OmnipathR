@@ -40,6 +40,10 @@ nichenet_signaling_network(
 \item{only_omnipath}{Logical: a shortcut to use only OmniPath as network
 resource.}
 }
+\value{
+A network data frame (tibble) with signaling interactions
+    suitable for use with NicheNet.
+}
 \description{
 Builds signaling network prior knowledge for NicheNet using multiple
 resources.

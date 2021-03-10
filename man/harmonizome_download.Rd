@@ -10,6 +10,9 @@ harmonizome_download(dataset)
 \item{dataset}{The dataset part of the URL. Please refer to the download
 section of the Harmonizome webpage.}
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 Downloads a single network dataset from Harmonizome
 https://maayanlab.cloud/Harmonizome

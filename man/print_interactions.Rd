@@ -19,18 +19,18 @@ following functions: \code{\link{import_omnipath_enzsub}},
 
 \item{writeRefs}{[FALSE] writes also the PubMed IDs if available}
 }
-\value{
-Interactions displayed in a nice format
-}
 \description{
 Prints the interactions or enzyme-substrate relationships in a nice format.
 }
 \examples{
-\donttest{
 ptms = import_omnipath_enzsub()
 print_interactions(head(ptms))
-print_interactions(tail(ptms),writeRefs=TRUE)
-print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
-    substrate_genesymbol=="MAPK3"))
-}
+print_interactions(tail(ptms), writeRefs = TRUE)
+print_interactions(
+    dplyr::filter(
+        ptms,
+        enzyme_genesymbol == 'MAP2K1',
+        substrate_genesymbol == 'MAPK3'
+    )
+)
 }

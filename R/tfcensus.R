@@ -26,6 +26,8 @@
 #' function retrieves Supplementary Table 2 from the article
 #' (http://www.nature.com/nrg/journal/v10/n4/index.html).
 #'
+#' @return A data frame (tibble) listing transcription factors.
+#'
 #' @examples
 #' tfcensus <- tfcensus_download()
 #' tfcensus

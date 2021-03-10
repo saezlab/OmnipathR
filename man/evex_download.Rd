@@ -22,6 +22,9 @@ attribute set.}
 \item{top_confidence}{Confidence cutoff as quantile (a number between
 0 and 1). If NULL no filtering performed.}
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 Downloads interactions from EVEX, a versatile text mining resource
 (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and

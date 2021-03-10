@@ -39,6 +39,8 @@
 #'     value, a minimum score of 0.9 retains approx. the top 30% of the
 #'     interactions.
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @examples
 #' cpdb_data <- consensuspathdb_download(
 #'     complex_max_size = 1,
@@ -113,6 +115,8 @@ consensuspathdb_download <- function(
 
 
 #' Downloads interaction data from ConsensusPathDB
+#'
+#' @return Data frame (tibble) with interactions.
 #'
 #' @examples
 #' cpdb_raw <- consensuspathdb_raw_table()

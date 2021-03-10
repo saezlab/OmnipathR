@@ -24,6 +24,11 @@ network, passed to \code{\link{nichenet_gr_network}}}
 \item{only_omnipath}{Logical: a shortcut to use only OmniPath as network
 resource.}
 }
+\value{
+A named list with three network data frames (tibbles): the
+    signaling, the ligand-receptor (lr) and the gene regulatory (gr)
+    networks.
+}
 \description{
 Builds network knowledge required by NicheNet. For this it calls
 a multitude of methods to download and combine data from various

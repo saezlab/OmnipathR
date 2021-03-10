@@ -6,6 +6,9 @@
 \usage{
 vinayagam_download()
 }
+\value{
+A data frame (tibble) with interactions.
+}
 \description{
 Retrieves the Supplementary Table S6 from Vinayagam et al. 2011.
 Find out more at https://doi.org/10.1126/scisignal.2001699

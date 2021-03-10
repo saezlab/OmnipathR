@@ -11,6 +11,10 @@ nichenet_lr_network_omnipath(min_curation_effort = 0, ...)
 
 \item{...}{Passed to \code{\link{import_intercell_network}}}
 }
+\value{
+A network data frame (tibble) with ligand-receptor interactions
+    suitable for use with NicheNet.
+}
 \description{
 Retrieves network prior knowledge from OmniPath and provides it in
 a format suitable for NicheNet.

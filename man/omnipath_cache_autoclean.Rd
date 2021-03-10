@@ -6,6 +6,9 @@
 \usage{
 omnipath_cache_autoclean()
 }
+\value{
+Invisibl returns the cache database (list of cache records).
+}
 \description{
 Removes the old versions, the failed downloads and the files in the cache
 directory which are missing from the database. For more flexible

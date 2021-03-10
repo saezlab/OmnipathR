@@ -44,6 +44,10 @@ nichenet_gr_network(
 \item{only_omnipath}{Logical: a shortcut to use only OmniPath as network
 resource.}
 }
+\value{
+A network data frame (tibble) with gene regulatory interactions
+    suitable for use with NicheNet.
+}
 \description{
 Builds gene regulatory network prior knowledge for NicheNet using multiple
 resources.

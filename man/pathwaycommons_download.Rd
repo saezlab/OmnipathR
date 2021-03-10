@@ -6,10 +6,27 @@
 \usage{
 pathwaycommons_download()
 }
+\value{
+A data frame (tibble) with interactions.
+}
 \description{
 PathwayCommons (http://www.pathwaycommons.org/) provides molecular
 interactions from a number of databases, in either BioPAX or SIF (simple
 interaction format). This function retrieves all interactions in SIF
 format. The data is limited to the interacting pair and the type of the
 interaction.
+}
+\examples{
+pc_interactions <- pathwaycommons_download()
+ pc_interactions
+# # A tibble: 1,884,849 x 3
+#    from  type                        to
+#    <chr> <chr>                       <chr>
+#  1 A1BG  controls-expression-of      A2M
+#  2 A1BG  interacts-with              ABCC6
+#  3 A1BG  interacts-with              ACE2
+#  4 A1BG  interacts-with              ADAM10
+#  5 A1BG  interacts-with              ADAM17
+# # . with 1,884,839 more rows
+
 }

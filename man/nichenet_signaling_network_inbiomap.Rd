@@ -9,6 +9,10 @@ nichenet_signaling_network_inbiomap(...)
 \arguments{
 \item{...}{Ignored.}
 }
+\value{
+A network data frame (tibble) with signaling interactions
+    suitable for use with NicheNet.
+}
 \description{
 Builds signaling network prior knowledge for NicheNet from the InWeb
 InBioMap database.

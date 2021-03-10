@@ -74,6 +74,11 @@ the objective function.}
 \item{results_dir}{Character: path to the directory to save intermediate
 and final outputs from NicheNet methods.}
 }
+\value{
+A named list with the intermediate and final outputs of the
+    pipeline: `networks`, `expression`, `optimized_parameters`,
+    `weighted_networks` and `ligand_target_matrix`.
+}
 \description{
 Builds all prior knowledge data required by NicheNet. For this it calls
 a multitude of methods to download and combine data from various

@@ -30,6 +30,10 @@ item will be created}
 
 \item{keep_original}{Whether to keep or remove the original file}
 }
+\value{
+Character: invisibly returns the version number of the cache
+    version item.
+}
 \description{
 Either the key or the URL (with POST and payload) must be provided.
 }

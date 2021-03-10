@@ -34,6 +34,9 @@ cache database. Same as calling \code{\link{omnipath_cache_wipe}}.}
 the cache directory which are missing from the cache database, and the
 entries without existing files in the cache directory}
 }
+\value{
+Invisibly returns the cache database (list of cache records).
+}
 \description{
 According to the parameters, it can remove contents older than a certain
 age, or contents having a more recent version, one specific item, or

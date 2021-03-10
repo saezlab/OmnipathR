@@ -16,6 +16,9 @@ default value and the Harmonizome webpage.}
 
 \item{...}{Ignored.}
 }
+\value{
+Data frame with gene regulatory interactions in NicheNet format.
+}
 \description{
 Builds gene regulatory network prior knowledge for NicheNet using
 Harmonizome

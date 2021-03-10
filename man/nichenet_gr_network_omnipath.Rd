@@ -11,6 +11,10 @@ nichenet_gr_network_omnipath(min_curation_effort = 0, ...)
 
 \item{...}{Passed to \code{\link{import_transcriptional_interactions}}}
 }
+\value{
+A network data frame (tibble) with gene regulatory interactions
+    suitable for use with NicheNet.
+}
 \description{
 Retrieves network prior knowledge from OmniPath and provides it in
 a format suitable for NicheNet.

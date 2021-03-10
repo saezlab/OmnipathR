@@ -21,6 +21,8 @@ quantile of the confidence score.}
 }
 \value{
 Data frame of interactions in NicheNet format.
+
+Data frame with gene regulatory interactions in NicheNet format.
 }
 \description{
 Builds a gene regulatory network using data from the EVEX database

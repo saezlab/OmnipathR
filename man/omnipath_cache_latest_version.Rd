@@ -11,7 +11,7 @@ omnipath_cache_latest_version(record)
 }
 \value{
 Character: the version ID with the most recent download finished
-time
+    time
 }
 \description{
 Finds the most recent version in a cache record

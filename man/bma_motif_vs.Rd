@@ -12,6 +12,22 @@ bma_motif_vs(node_seq, G)
 
 \item{G}{An igraph graph object.}
 }
+\value{
+Character: BMA motifs as a single string.
+}
 \description{
 Intended to parallel print_path_vs
+}
+\examples{
+interactions <- import_omnipath_interactions(resources = 'ARN')
+graph <- interaction_graph(interactions)
+bma_string <- bma_motif_vs(
+    igraph::all_shortest_paths(
+        graph,
+        from = 'ULK1',
+        to = 'ATG13'
+    )$res,
+    graph
+)
+
 }

@@ -17,6 +17,9 @@ both (NULL).}
 \item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
 9606 for human).}
 }
+\value{
+Data frame (tibble) with the requested UniProt entries and fields.
+}
 \description{
 Retrieves a table from UniProt with all proteins for a certain organism.
 }

@@ -29,6 +29,11 @@ the objective function.}
 \item{mlrmbo_optimization_param}{Override arguments for
 \code{nichenetr::mlrmbo_optimization}.}
 }
+\value{
+A result object from the function ‘mlrMBO::mbo’. Among other
+    things, this contains the optimal parameter settings, the output
+    corresponding to every input etc.
+}
 \description{
 Optimize NicheNet method parameters, i.e. PageRank parameters and source
 weights, basedon a collection of experiments where the effect of a ligand

@@ -46,6 +46,8 @@ omnipath_console_loglevel <- function(){
 
 #' Returns the path to the current OmnipathR log file
 #'
+#' @return Character: path to the current logfile.
+#'
 #' @examples
 #' omnipath_logfile()
 #' # [1] "/home/denes/omnipathr/omnipathr-log/omnipathr-20210309-1642.log"
@@ -70,6 +72,8 @@ omnipath_logfile <- function(){
 
 #' Browse the current OmnipathR log file
 #'
+#' @return NULL
+#'
 #' @examples
 #' \donttest{
 #' omnipath_log()
@@ -91,6 +95,8 @@ omnipath_log <- function(){
 #'
 #' @param level Character or class `loglevel`. The desired log level.
 #' @param target Character, either 'logfile' or 'console'
+#'
+#' @return NULL
 #'
 #' @examples
 #' omnipath_set_loglevel(logger::FATAL, target = 'console')
@@ -127,6 +133,8 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
 #'
 #' @param level Character or class `loglevel`. The desired log level.
 #'
+#' @return NULL
+#'
 #' @examples
 #' omnipath_set_console_loglevel('warn')
 #' # or:
@@ -148,6 +156,8 @@ omnipath_set_console_loglevel <- function(level){
 #' by the config file, with the omnipath.loglevel key.
 #'
 #' @param level Character or class `loglevel`. The desired log level.
+#'
+#' @return NULL
 #'
 #' @examples
 #' omnipath_set_logfile_loglevel('info')

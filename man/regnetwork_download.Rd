@@ -10,15 +10,26 @@ regnetwork_download(organism = "human")
 \item{organism}{Character: either human or mouse.}
 }
 \value{
-Data frame with interactions
+Data frame with interactions.
 }
 \description{
 Downloads transcriptional and post-transcriptional regulatory interactions
-from the RegNetwork database (http://www.regnetworkweb.org/).
+from the RegNetwork database (http://www.regnetworkweb.org/). The
+information about effect signs (stimulation or inhibition), provided by
+\code{\link{regnetwork_directions}} are included in the result.
 }
 \examples{
-\donttest{
 regn_interactions <- regnetwork_download()
-}
+regn_interactions
+# # A tibble: 372,778 x 7
+#    source_genesymb. source_entrez target_genesymb. target_entrez
+#    <chr>            <chr>         <chr>            <chr>
+#  1 USF1             7391          S100A6           6277
+#  2 USF1             7391          DUSP1            1843
+#  3 USF1             7391          C4A              720
+#  4 USF1             7391          ABCA1            19
+#  5 TP53             7157          TP73             7161
+# # . with 372,768 more rows, and 3 more variables: effect <dbl>,
+# #   source_type <chr>, target_type <chr>
 
 }

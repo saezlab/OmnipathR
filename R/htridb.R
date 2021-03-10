@@ -27,6 +27,8 @@
 #' the data is distributed by the OmniPath rescued data repository
 #' (https://rescued.omnipathdb.org/).
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @examples
 #' htridb_data <- htridb_download()
 #' htridb_data

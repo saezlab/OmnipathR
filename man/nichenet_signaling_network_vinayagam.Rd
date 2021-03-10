@@ -9,6 +9,10 @@ nichenet_signaling_network_vinayagam(...)
 \arguments{
 \item{...}{Ignored.}
 }
+\value{
+A network data frame (tibble) with signaling interactions
+    suitable for use with NicheNet.
+}
 \description{
 Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
 Supplementary Table S6. Find out more at

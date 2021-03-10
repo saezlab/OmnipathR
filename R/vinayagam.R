@@ -25,6 +25,8 @@
 #' Retrieves the Supplementary Table S6 from Vinayagam et al. 2011.
 #' Find out more at https://doi.org/10.1126/scisignal.2001699
 #'
+#' @return A data frame (tibble) with interactions.
+#'
 #' @examples
 #' vinayagam_interactions <- vinayagam_download()
 #' vinayagam_interactions

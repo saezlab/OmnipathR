@@ -24,6 +24,9 @@ latest version will be retrieved}
 
 \item{payload}{HTTP data payload}
 }
+\value{
+Object loaded from the cache RDS file.
+}
 \description{
 Loads the object from RDS format.
 }

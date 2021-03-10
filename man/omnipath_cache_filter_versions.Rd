@@ -26,7 +26,7 @@ versions with `ready` (completed download) status are selected}
 }
 \value{
 Character vector with version IDs, NA if no version satisfies the
-conditions
+    conditions
 }
 \description{
 Filters the versions based on multiple conditions: their age and status
