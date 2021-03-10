@@ -48,12 +48,10 @@ interactions. Note: this is not the only TF-target dataset in OmniPath,
 TF-miRNA gene interactions.
 }
 \examples{
-\donttest{
 interactions <-
     import_tf_target_interactions(
-        resources = c('DoRothEA_A', 'SIGNOR')
+        resources = c('DoRothEA', 'SIGNOR')
     )
-}
 
 }
 \seealso{

@@ -83,9 +83,7 @@ on the roles in inter-cellular signaling. E.g. if a protein is
 a ligand, a receptor, an extracellular matrix (ECM) component, etc.
 }
 \examples{
-\donttest{
-intercell = import_omnipath_intercell(categories = c('ecm'))
-}
+intercell <- import_omnipath_intercell(categories = 'ecm')
 
 }
 \seealso{

@@ -869,7 +869,7 @@ nichenet_networks <- function(
 #' # override parameters for some resources:
 #' sig_network <- nichenet_signaling_network(
 #'     omnipath = list(resources = c('SIGNOR', 'SignaLink3', 'SPIKE')),
-#'     patwaycommons = NULL,
+#'     pathwaycommons = NULL,
 #'     harmonizome = list(datasets = c('phosphositeplus', 'depod')),
 #'     cpdb = list(complex_max_size = 1, min_score = .98),
 #'     evex = list(min_confidence = 1.5)
@@ -1042,13 +1042,17 @@ nichenet_gr_network <- function(
 #' @return A data frame with interactions suitable for use with NicheNet.
 #'
 #' @examples
+#' \donttest{
 #' # load the ligand-receptor network with the default parameters:
 #' lr_network <- nichenet_network(network_type = 'lr')
+#' }
 #'
 #' @importFrom purrr map2 discard keep
 #' @importFrom magrittr %>%
 #' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
+#'
+#' @noRd
 nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
 
     # NSE vs. R CMD check workaround
@@ -1557,7 +1561,6 @@ nichenet_signaling_network_evex <- function(
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' ib_signaling_network <- nichenet_signaling_network_inbiomap()
 #'
 #' @importFrom magrittr %>%

@@ -49,13 +49,11 @@ The activity flow interactions supported by literature references
 are part of the `omnipath` dataset.
 }
 \examples{
-\donttest{
 interactions <-
     import_pathwayextra_interactions(
         resources = c('BioGRID', 'IntAct'),
         organism = 9606
     )
-}
 
 }
 \seealso{

@@ -20,9 +20,7 @@ character vector with the names of the annotation resources
 Get the names of the resources from \url{https://omnipath.org/annotations}.
 }
 \examples{
-\donttest{
 get_annotation_resources()
-}
 
 }
 \seealso{

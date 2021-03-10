@@ -72,13 +72,11 @@ If a cache file provided, its content will be returned without any further
 filtering.
 }
 \examples{
-\donttest{
 intercellNetwork <- import_intercell_network(
    interactions_param = list(datasets = 'ligrecextra'),
    receiver_param = list(categories = c('receptor', 'transporter')),
    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
 )
-}
 
 }
 \seealso{

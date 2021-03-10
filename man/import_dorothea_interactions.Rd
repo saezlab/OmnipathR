@@ -57,12 +57,11 @@ which contains transcription factor (TF)-target interactions from DoRothEA
 \url{https://github.com/saezlab/DoRothEA}
 }
 \examples{
-\donttest{
 interactions <- import_dorothea_interactions(
-    resources = c('DoRothEA_A', 'ARACNe-GTEx_DoRothEA'),
-    organism = 9606
+    resources = c('DoRothEA', 'ARACNe-GTEx_DoRothEA'),
+    organism = 9606,
+    dorothea_levels = c('A', 'B', 'C')
 )
-}
 
 }
 \seealso{

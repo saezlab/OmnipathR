@@ -25,11 +25,9 @@ Enzyme-substrate data does not contain sign (activation/inhibition), we
 generate this information based on the interaction network.
 }
 \examples{
-\donttest{
-ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
-interactions = import_omnipath_interactions()
-ptms = get_signed_ptms(ptms,interactions)
-}
+ptms <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
+interactions <- import_omnipath_interactions()
+ptms <- get_signed_ptms(ptms,interactions)
 
 }
 \seealso{

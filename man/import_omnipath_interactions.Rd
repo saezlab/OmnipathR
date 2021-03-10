@@ -55,12 +55,10 @@ This part of the interaction database compiled a similar way as it has
 been presented in the first paper describing OmniPath (Turei et al. 2016).
 }
 \examples{
-\donttest{
 interactions = import_omnipath_interactions(
     resources = c('SignaLink3'),
     organism = 9606
 )
-}
 
 }
 \seealso{

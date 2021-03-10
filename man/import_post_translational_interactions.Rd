@@ -34,12 +34,10 @@ A dataframe containing post-translational interactions
 Imports the dataset from all post-translational datasets of OmniPath.
 }
 \examples{
-\donttest{
 interactions <-
     import_post_translational_interactions(
         resources = c('BioGRID')
     )
-}
 
 }
 \seealso{

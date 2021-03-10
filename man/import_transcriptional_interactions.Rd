@@ -42,12 +42,10 @@ which contains transcription factor-target protein coding gene
 interactions.
 }
 \examples{
-\donttest{
 interactions <-
     import_transcriptional_interactions(
-        resources = c('PAZAR', 'ORegAnno', 'DoRothEA_A')
+        resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
     )
-}
 
 }
 \seealso{

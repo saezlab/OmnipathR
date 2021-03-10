@@ -17,9 +17,7 @@ character vector with the names of the databases
 get the names of the resources from \url{https://omnipath.org/complexes}
 }
 \examples{
-\donttest{
 get_complex_resources()
-}
 
 }
 \seealso{

@@ -17,9 +17,7 @@ character vector with the names of the databases
 Retrieves a list of the databases from \url{https://omnipath.org/intercell}.
 }
 \examples{
-\donttest{
 get_intercell_resources()
-}
 
 }
 \seealso{

@@ -13,9 +13,7 @@ character vector with the different intercell categories
 Retrieves a list of categories from \url{https://omnipath.org/intercell}.
 }
 \examples{
-\donttest{
 get_intercell_categories()
-}
 
 }
 \seealso{

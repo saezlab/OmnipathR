@@ -16,9 +16,7 @@ Retrieves a list of the generic categories from
 \url{https://omnipath.org/intercell}.
 }
 \examples{
-\donttest{
 get_intercell_generic_categories()
-}
 
 }
 \seealso{
