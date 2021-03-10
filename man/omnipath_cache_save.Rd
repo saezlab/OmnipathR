@@ -49,6 +49,12 @@ attr(from_cache, 'origin')
 # [1] "cache"
 }
 
+# basic example of saving and loading to and from the cache:
+bioc_url <- 'https://bioconductor.org/'
+bioc_html <- readChar(url(bioc_url), nchars = 99999)
+omnipath_cache_save(bioc_html, url = bioc_url)
+bioc_html <- omnipath_cache_load(url = bioc_url)
+
 }
 \seealso{
 \code{\link{omnipath_cache_move_in}}

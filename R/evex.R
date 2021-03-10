@@ -26,6 +26,13 @@
 #' (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
 #' combines the interactions and references into a single data frame.
 #'
+#' @usage
+#' evex_download(
+#'     min_confidence = NULL,
+#'     remove_negatives = TRUE,
+#'     top_confidence = NULL
+#' )
+#'
 #' @param min_confidence Numeric: a threshold for confidence scores. EVEX
 #'     confidence scores span roughly from -3 to 3. By providing a numeric
 #'     value in this range the lower confidence interactions can be removed.
@@ -58,7 +65,6 @@
 #' #   coarse_type <chr>, coarse_polarity <chr>, refined_type <chr>,
 #' #   refined_polarity <chr>, source_genesymbol <chr>,
 #' #   target_genesymbol <chr>, references <chr>
-#'
 evex_download <- function(
     min_confidence = NULL,
     remove_negatives = TRUE,

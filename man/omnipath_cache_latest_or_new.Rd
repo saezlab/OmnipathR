@@ -25,7 +25,7 @@ omnipath_cache_latest_or_new(
 \item{create}{Logical: whether to create and return a new version. If
 FALSE only the latest existing valid version is returned, if available.}
 
-\item{...}{Passed to \code{omnipath_cache_get}}
+\item{...}{Passed to \code{\link{omnipath_cache_get}}}
 }
 \value{
 A cache version item.
@@ -48,5 +48,10 @@ latest_bioplex$dl_finished
 latest_bioplex$path
 # [1] "/home/denes/.cache/OmnipathR/378e0def2ac97985f629-1.rds"
 }
+
+# create an example cache record
+bioc_url <- 'https://bioconductor.org/'
+version <- omnipath_cache_latest_or_new(url = bioc_url)
+omnipath_cache_remove(url = bioc_url) # cleaning up
 
 }

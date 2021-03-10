@@ -21,13 +21,8 @@ Removes from the expression data the perturbation experiments involving
 ligands without connections.
 }
 \examples{
-\donttest{
-networks <- nichenet_networks()
+lr_network <- nichenet_lr_network()
 expression <- nichenet_expression_data()
-expression <- nichenet_remove_orphan_ligands(
-    expression,
-    networks$lr_network
-)
-}
+expression <- nichenet_remove_orphan_ligands(expression, lr_network)
 
 }

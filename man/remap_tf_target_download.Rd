@@ -41,5 +41,8 @@ remap_interactions
 
 }
 \seealso{
-\code{\link{remap_dorothea_download}, \link{remap_filtered}}
+\itemize{
+    \item{\code{\link{remap_dorothea_download}}}
+    \item{\code{\link{remap_filtered}}}
+}
 }

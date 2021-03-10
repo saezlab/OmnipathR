@@ -41,13 +41,11 @@
 #' @return Data frame of complexes
 #'
 #' @examples
-#' \donttest{
 #' complexes <- import_omnipath_complexes(
 #'     filter_databases = c("CORUM", "hu.MAP")
 #' )
-#' query_genes = c("LMNA","BANF1")
-#' complexes_query_genes <- get_complex_genes(complexes,query_genes)
-#' }
+#' query_genes <- c("LMNA", "BANF1")
+#' complexes_query_genes <- get_complex_genes(complexes, query_genes)
 #'
 #' @seealso \code{\link{import_omnipath_complexes}}
 get_complex_genes <- function(complexes = import_Omnipath_complexes(),

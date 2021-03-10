@@ -32,10 +32,15 @@ Character vector with version IDs, NA if no version satisfies the
 Filters the versions based on multiple conditions: their age and status
 }
 \examples{
-\donttest{
+# creating an example cache record
+bioc_url <- 'https://bioconductor.org/'
+version <- omnipath_cache_latest_or_new(url = bioc_url)
+download.file(bioc_url, destfile = version$path)
+omnipath_cache_download_ready(version)
 record <- dplyr::first(omnipath_cache_search('biocond'))
+
 # only the versions with status "ready"
 version_numbers <- omnipath_cache_filter_versions(status = 'ready')
-}
+omnipath_cache_remove(url = bioc_url) # cleaning up
 
 }

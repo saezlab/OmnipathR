@@ -1814,15 +1814,16 @@ get_complexes_databases <- function(...){
 #' @importFrom utils read.csv
 #'
 #' @param proteins Vector containing the genes or proteins for whom
-#' annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
-#' miRBase IDs). It is also possible to donwload annotations for protein
-#' complexes. To do so, write 'COMPLEX:' right before the genesymbols of
-#' the genes integrating the complex. Check the vignette for examples.
+#'     annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
+#'     miRBase IDs). It is also possible to donwload annotations for protein
+#'     complexes. To do so, write 'COMPLEX:' right before the genesymbols of
+#'     the genes integrating the complex. Check the vignette for examples.
 #' @param resources Load the annotations only from these databases.
-#' See \code{\link{get_annotation_resources}} for possible values.
+#'     See \code{\link{get_annotation_resources}} for possible values.
 #' @param wide Convert the annotation table to wide format, which
-#' corresponds more or less to the original resource. If the data comes from
-#' more than one resource a list of wide tables will be returned.
+#'     corresponds more or less to the original resource. If the data comes
+#'     from more than one resource a list of wide tables will be returned.
+#'     See examples at \code{\link{pivot_annotations}}.
 #' @param ... Additional arguments.
 #'
 #' @examples
@@ -1831,7 +1832,10 @@ get_complexes_databases <- function(...){
 #'     resources = c('HPA_subcellular')
 #' )
 #'
-#' @seealso \itemize{\item{\code{\link{get_annotation_databases}}}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_annotation_databases}}}
+#'     \item{\code{\link{pivot_annotations}}}
+#' }
 #'
 #' @aliases import_Omnipath_annotations import_OmniPath_annotations
 import_omnipath_annotations <- function(
@@ -1853,7 +1857,8 @@ import_omnipath_annotations <- function(
             paste(
                 'Downloading the entire annotations database is not allowed',
                 'by default because of its huge size (>1GB). If you really',
-                'want to do this use the `force_full_download` parameter.',
+                'want to do that, you find static files at',
+                'https://archive.omnipathdb.org/.',
                 'However we recommend to query a set of proteins or a few',
                 'resources, depending on your interest.'
             )
@@ -2002,18 +2007,57 @@ get_annotation_databases <- function(...){
 #'
 #' Use this method to reconstitute the annotation tables into the format of
 #' the original resources. With the `wide=TRUE` option
-#' \code{import_omnipath_annotations} applies this function to the downloaded
-#' data.
+#' \code{\link{import_omnipath_annotations}} applies this function to the
+#' downloaded data.
 #'
-#' @return A wide format tibble if the provided data contains annotations
-#' from one resource, otherwise a list of wide format tibbles.
-#' @export
-#' @importFrom tidyr pivot_wider
-#' @importFrom dplyr select
-#' @importFrom dplyr pull
-#' @importFrom dplyr group_split
 #' @param annotations A data frame of annotations downloaded from the
-#' OmniPath web service.
+#'    OmniPath web service by \code{\link{import_omnipath_annotations}}.
+#'
+#' @return A wide format data frame (tibble) if the provided data contains
+#' annotations from one resource, otherwise a list of wide format tibbles.
+#'
+#' @examples
+#' # single resource: the result is a data frame
+#' disgenet <- import_omnipath_annotations(resources = 'DisGeNet')
+#' disgenet <- pivot_annotations(disgenet)
+#' disgenet
+#' # # A tibble: 119,551 x 10
+#' #    uniprot genesymbol entity_type disease score dsi   dpi   nof_pmids
+#' #    <chr>   <chr>      <chr>       <chr>   <chr> <chr> <chr> <chr>
+#' #  1 P04217  A1BG       protein     Schizo… 0.3   0.857 0.172 1
+#' #  2 P04217  A1BG       protein     Hepato… 0.3   0.857 0.172 1
+#' #  3 P01023  A2M        protein     alpha-… 0.31  0.564 0.724 0
+#' #  4 P01023  A2M        protein     Fibros… 0.3   0.564 0.724 1
+#' #  5 P01023  A2M        protein     Hepato… 0.3   0.564 0.724 1
+#' # # . with 119,541 more rows, and 2 more variables: nof_snps <chr>,
+#' # #   source <chr>
+#'
+#' # multiple resources: the result is a list
+#' annotations <- import_omnipath_annotations(
+#'     resources = c('DisGeNet', 'SignaLink_function', 'DGIdb', 'kinase.com')
+#' )
+#' annotations <- pivot_annotations(annotations)
+#' names(annotations)
+#' # [1] "DGIdb"              "DisGeNet"           "kinase.com"
+#' # [4] "SignaLink_function"
+#' annotations$kinase.com
+#' # # A tibble: 825 x 6
+#' #    uniprot genesymbol entity_type group family subfamily
+#' #    <chr>   <chr>      <chr>       <chr> <chr>  <chr>
+#' #  1 P31749  AKT1       protein     AGC   Akt    NA
+#' #  2 P31751  AKT2       protein     AGC   Akt    NA
+#' #  3 Q9Y243  AKT3       protein     AGC   Akt    NA
+#' #  4 O14578  CIT        protein     AGC   DMPK   CRIK
+#' #  5 Q09013  DMPK       protein     AGC   DMPK   GEK
+#' # # . with 815 more rows
+#'
+#' @export
+#' @importFrom magrittr %>%
+#' @importFrom tidyr pivot_wider
+#' @importFrom dplyr select pull group_split
+#' @importFrom purrr map
+#'
+#' @seealso \code{\link{import_omnipath_annotations}}
 pivot_annotations <- function(annotations){
 
     # NSE vs. R CMD check workaround
@@ -2024,7 +2068,7 @@ pivot_annotations <- function(annotations){
         annotations %>%
         group_split(source) %>%
         setNames(annotations %>% pull(source) %>% unique %>% sort) %>%
-        lapply(pivot_annotations)
+        map(pivot_annotations)
 
     }else{
 

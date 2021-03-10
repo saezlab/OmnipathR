@@ -5,37 +5,37 @@
 \title{All paths between two groups of vertices}
 \usage{
 find_all_paths(
-  graph,
-  start,
-  end,
-  attr = NULL,
-  mode = "OUT",
-  maxlen = 2,
-  progress = TRUE
+    graph,
+    start,
+    end,
+    attr = NULL,
+    mode = 'OUT',
+    maxlen = 2,
+    progress = TRUE
 )
 }
 \arguments{
-\item{graph}{graph An igraph graph object.}
+\item{graph}{An igraph graph object.}
 
-\item{start}{integer Numeric or character vector with the indices or names
+\item{start}{Integer or character vector with the indices or names
 of one or more start vertices.}
 
-\item{end}{integer Numeric or character vector with the indices or names
+\item{end}{Integer or character vector with the indices or names
 of one or more end vertices.}
 
-\item{attr}{character Name of the vertex attribute to identify the
+\item{attr}{Character: name of the vertex attribute to identify the
 vertices by. Necessary if `start` and `end` are not igraph vertex ids
 but for example vertex names or labels.}
 
-\item{mode}{character IN, OUT or ALL. Default is OUT.}
+\item{mode}{Character: IN, OUT or ALL. Default is OUT.}
 
-\item{maxlen}{integer Maximum length of paths in steps, i.e. if maxlen = 3,
-then the longest path may consist of 3 edges and 4 nodes.}
+\item{maxlen}{Integer: maximum length of paths in steps, i.e. if
+maxlen = 3, then the longest path may consist of 3 edges and 4 nodes.}
 
-\item{progress}{logical Show a progress bar. Default is FALSE.}
+\item{progress}{Logical: show a progress bar. Default is FALSE.}
 }
 \value{
-List of vertex paths
+List of vertex paths, each path is a character or integer vector.
 }
 \description{
 Finds all paths up to length `maxlen` between specified groups of
@@ -44,17 +44,18 @@ vertices. This function is needed only becaues igraph`s
 path up to a defined length.
 }
 \examples{
-\donttest{
 interactions <- import_omnipath_interactions()
-graph <- interaction_graph(interaction)
+graph <- interaction_graph(interactions)
 paths <- find_all_paths(
     c('EGFR', 'STAT3'),
     c('AKT1', 'ULK1'),
     attr = 'name'
 )
-}
 
 }
 \seealso{
-\code{\link{interaction_graph}, \link{ptms_graph}}
+\itemize{
+    \item{\code{\link{interaction_graph}}}
+    \item{\code{\link{ptms_graph}}}
+}
 }

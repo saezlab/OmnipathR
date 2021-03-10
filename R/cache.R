@@ -156,6 +156,9 @@ omnipath_lock_cache_db <- function(){
 #' @return Logical: returns TRUE if the cache was locked and now is
 #'     unlocked; FALSE if it was not locked.
 #'
+#' @examples
+#' omnipath_unlock_cache_db()
+#'
 #' @importFrom magrittr %>%
 #' @export
 omnipath_unlock_cache_db <- function(){
@@ -244,13 +247,11 @@ cache_locked <- decorator %@% function(FUN){
 #' @return List of cache records matching the pattern.
 #'
 #' @examples
-#' \donttest{
 #' # find all cache records from the BioPlex database
 #' bioplex_cache_records <- omnipath_cache_search(
 #'     'bioplex',
 #'     ignore.case = TRUE
 #' )
-#' }
 #'
 #' @importFrom purrr map_chr
 #' @export
@@ -314,10 +315,20 @@ omnipath_cache_search <- function(pattern, ...){
 #' omnipath_cache_remove(only_latest = TRUE)
 #' }
 #'
+#' bioc_url <- 'https://bioconductor.org/'
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
+#' download.file(bioc_url, version$path)
+#' omnipath_cache_download_ready(version)
+#' key <- omnipath_cache_key_from_version(version)
+#' omnipath_cache_remove(key = key)
+#'
 #'
 #' @export
-#' @seealso \code{\link{omnipath_cache_wipe}, \link{omnipath_cache_clean},
-#' \link{omnipath_cache_autoclean}}
+#' @seealso \itemize{
+#'     \item{\code{\link{omnipath_cache_wipe}}}
+#'     \item{\code{\link{omnipath_cache_clean}}}
+#'     \item{\code{\link{omnipath_cache_autoclean}}}
+#' }
 omnipath_cache_remove <- function(
     key = NULL,
     url = NULL,
@@ -478,10 +489,15 @@ omnipath_cache_remove_versions <- function(
 
 #' Removes the cache database entries without existing files
 #'
+#' @return NULL
+#'
+#' @examples
+#' omnipath_cache_clean_db()
+#'
 #' @importFrom magrittr %>%
 #' @importFrom purrr map keep
 #'
-#' @noRd
+#' @export
 omnipath_cache_clean_db <- cache_locked %@% function(){
 
     omnipath.env$cache <-
@@ -545,9 +561,7 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 #' @return NULL
 #'
 #' @examples
-#' \donttest{
 #' omnipath_cache_clean()
-#' }
 #'
 #' @importFrom purrr map_chr map
 #' @importFrom magrittr %>%
@@ -607,19 +621,23 @@ omnipath_cache_autoclean <- function(){
 #' @param post HTTP POST parameters as a list
 #' @param payload HTTP data payload
 #' @param create Create a new entry if doesn't exist yet
-#' @param ... Passed to \code{omnipath_cache_record}
+#' @param ... Passed to \code{\link{omnipath_cache_record}}
 #'
 #' @return Cache record: an existing record if the entry already exists,
 #'     otherwise a newly created and inserted record
 #'
 #' @examples
-#' \donttest{
-#' record <- omnipath_cache_get(url = 'https://bioconductor.org/')
+#' # create an example cache record
+#' bioc_url <- 'https://bioconductor.org/'
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
+#'
+#' # retrieve the cache record
+#' record <- omnipath_cache_get(url = bioc_url)
 #' record$key
 #' # [1] "41346a00fb20d2a9df03aa70cf4d50bf88ab154a"
 #' record$url
 #' # [1] "https://bioconductor.org/"
-#' }
 #'
 #' @export
 omnipath_cache_get <- function(
@@ -683,7 +701,7 @@ omnipath_cache_get <- function(
 #' @param payload HTTP data payload
 #' @param create Logical: whether to create and return a new version. If
 #'     FALSE only the latest existing valid version is returned, if available.
-#' @param ... Passed to \code{omnipath_cache_get}
+#' @param ... Passed to \code{\link{omnipath_cache_get}}
 #'
 #' @return A cache version item.
 #'
@@ -701,6 +719,11 @@ omnipath_cache_get <- function(
 #' latest_bioplex$path
 #' # [1] "/home/denes/.cache/OmnipathR/378e0def2ac97985f629-1.rds"
 #' }
+#'
+#' # create an example cache record
+#' bioc_url <- 'https://bioconductor.org/'
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @export
 omnipath_cache_latest_or_new <- function(
@@ -770,6 +793,12 @@ omnipath_cache_latest_or_new <- function(
 #' attr(intercell_data, 'origin')
 #' # [1] "cache"
 #' }
+#'
+#' # basic example of saving and loading to and from the cache:
+#' bioc_url <- 'https://bioconductor.org/'
+#' bioc_html <- readChar(url(bioc_url), nchars = 99999)
+#' omnipath_cache_save(bioc_html, url = bioc_url)
+#' bioc_html <- omnipath_cache_load(url = bioc_url)
 #'
 #' @importFrom logger log_info log_trace log_fatal
 #' @export
@@ -865,6 +894,12 @@ omnipath_cache_load <- function(
 #' # [1] "cache"
 #' }
 #'
+#' # basic example of saving and loading to and from the cache:
+#' bioc_url <- 'https://bioconductor.org/'
+#' bioc_html <- readChar(url(bioc_url), nchars = 99999)
+#' omnipath_cache_save(bioc_html, url = bioc_url)
+#' bioc_html <- omnipath_cache_load(url = bioc_url)
+#'
 #' @importFrom logger log_info
 #' @export
 #' @seealso \code{\link{omnipath_cache_move_in}}
@@ -925,6 +960,14 @@ omnipath_cache_save <- function(
 #' omnipath_cache_move_in('some/file.zip', url = 'the_download_address')
 #' }
 #'
+#' # basic example of moving a file to the cache:
+#'
+#' bioc_url <- 'https://bioconductor.org/'
+#' html_file <- tempfile(fileext = '.html')
+#' download.file(bioc_url, html_file)
+#' omnipath_cache_move_in(path = html_file, url = bioc_url)
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
+#'
 #' @importFrom logger log_info
 #' @export
 #' @seealso \code{\link{omnipath_cache_save}}
@@ -979,24 +1022,23 @@ omnipath_cache_move_in <- function(
 #'     version item.
 #'
 #' @examples
-#' \donttest{
-#' my_url <- 'https://bioconductor.org/'
+#' bioc_url <- 'https://bioconductor.org/'
 #' # request a new version item (or retrieve the latest)
-#' new_version <- omnipath_cache_latest_or_new(url = my_url)
+#' new_version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' # check if the version item is not a finished download
 #' new_version$status
 #' # [1] "unknown"
 #' # download the file
-#' download.file(url = my_url, destfile = new_version$path)
+#' download.file(url = bioc_url, destfile = new_version$path)
 #' # report to the cache database that the download is ready
 #' omnipath_cache_download_ready(new_version)
 #' # now the status is ready:
-#' version <- omnipath_cache_latest_or_new(url = my_url)
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' version$status
 #' # "ready"
 #' version$dl_finished
 #' # [1] "2021-03-09 16:48:38 CET"
-#' }
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @importFrom rlang %||%
 #' @export
@@ -1047,9 +1089,8 @@ omnipath_cache_key_from_version <- function(version){
 #'     version item.
 #'
 #' @examples
-#' \donttest{
-#' my_url <- 'https://bioconductor.org/'
-#' latest_version <- omnipath_cache_latest_or_new(url = my_url)
+#' bioc_url <- 'https://bioconductor.org/'
+#' latest_version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' key <- omnipath_cache_key_from_version(latest_version)
 #' omnipath_cache_update_status(
 #'     key = key,
@@ -1057,7 +1098,7 @@ omnipath_cache_key_from_version <- function(version){
 #'     status = 'ready',
 #'     dl_finished = Sys.time()
 #' )
-#' }
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @export
 omnipath_cache_update_status <- function(
@@ -1156,11 +1197,20 @@ omnipath_cache_update_status <- function(
 #' @param ext Character: the file extension, e.g. "zip".
 #'
 #' @examples
-#' \donttest{
-#' my_url <- 'https://bioconductor.org/'
-#' key <- omnipath_cache_key(url = my_url)
+#' bioc_url <- 'https://bioconductor.org/'
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
+#' version$path
+#' [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1"
+#' download.file(bioc_url, destfile = version$path)
+#' key <- omnipath_cache_key(url = bioc_url)
 #' omnipath_cache_set_ext(key = key, ext = 'html')
-#' }
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
+#' version$path
+#' [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1.html"
+#' record <- omnipath_cache_get(url = bioc_url)
+#' record$ext
+#' [1] "html"
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @export
 omnipath_cache_set_ext <- function(key, ext){
@@ -1309,11 +1359,16 @@ omnipath_cache_latest_version <- function(record){
 #'     conditions
 #'
 #' @examples
-#' \donttest{
+#' # creating an example cache record
+#' bioc_url <- 'https://bioconductor.org/'
+#' version <- omnipath_cache_latest_or_new(url = bioc_url)
+#' download.file(bioc_url, destfile = version$path)
+#' omnipath_cache_download_ready(version)
 #' record <- dplyr::first(omnipath_cache_search('biocond'))
+#'
 #' # only the versions with status "ready"
 #' version_numbers <- omnipath_cache_filter_versions(status = 'ready')
-#' }
+#' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom purrr map map_chr
@@ -1540,11 +1595,9 @@ omnipath_cache_version <- function(
 #' @return Character vector of cache record keys.
 #'
 #' @examples
-#' \donttest{
-#' my_url <- 'https://bioconductor.org/'
-#' omnipath_cache_key(my_url)
+#' bioc_url <- 'https://bioconductor.org/'
+#' omnipath_cache_key(bioc_url)
 #' # [1] "41346a00fb20d2a9df03aa70cf4d50bf88ab154a"
-#' }
 #'
 #' @importFrom digest sha1_digest
 #' @importFrom magrittr %>%

@@ -25,4 +25,14 @@ Retrieves a table from UniProt with all proteins for a certain organism.
 }
 \examples{
 human_swissprot_ac <- all_uniprots(fields = 'entry name')
+human_swissprot_ac
+# # A tibble: 20,396 x 1
+#    `Entry name`
+#    <chr>
+#  1 OR4K3_HUMAN
+#  2 O52A1_HUMAN
+#  3 O2AG1_HUMAN
+#  4 O10S1_HUMAN
+#  5 O11G2_HUMAN
+# # . with 20,386 more rows
 }

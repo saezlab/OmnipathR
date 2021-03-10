@@ -12,8 +12,6 @@ Removes the items from the cache directory which are unknown by the cache
 database
 }
 \examples{
-\donttest{
 omnipath_cache_clean()
-}
 
 }

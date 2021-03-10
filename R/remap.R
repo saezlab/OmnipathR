@@ -108,7 +108,10 @@ remap_dorothea_download <- function(){
 #' @export
 #' @importFrom readr read_tsv cols
 #' @importFrom magrittr %T>%
-#' @seealso \code{\link{remap_dorothea_download}, \link{remap_filtered}}
+#' @seealso \itemize{
+#'     \item{\code{\link{remap_dorothea_download}}}
+#'     \item{\code{\link{remap_filtered}}}
+#' }
 remap_tf_target_download <- function(){
 
     zenodo_download(
@@ -175,8 +178,11 @@ remap_tf_target_download <- function(){
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter group_by slice_max mutate ungroup arrange
-#' @seealso \code{\link{remap_tf_target_download}, \link{remap_filtered}
-#'     \link{tfcensus_download}}
+#' @seealso \itemize{
+#'     \item{\code{\link{remap_tf_target_download}}}
+#'     \item{\code{\link{remap_filtered}}}
+#'     \item{\code{\link{tfcensus_download}}}
+#' }
 remap_filtered <- function(
     score = 100,
     top_targets = 500,

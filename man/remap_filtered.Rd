@@ -48,6 +48,9 @@ remap_interactions
 
 }
 \seealso{
-\code{\link{remap_tf_target_download}, \link{remap_filtered}
-    \link{tfcensus_download}}
+\itemize{
+    \item{\code{\link{remap_tf_target_download}}}
+    \item{\code{\link{remap_filtered}}}
+    \item{\code{\link{tfcensus_download}}}
+}
 }

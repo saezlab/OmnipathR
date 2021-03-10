@@ -62,10 +62,10 @@ gr_network <- nichenet_gr_network(
     remap = list(top_targets = 200),
     regnetwork = NULL,
 )
+}
 
 # use only OmniPath:
 gr_network_omnipath <- nichenet_gr_network(only_omnipath = TRUE)
-}
 
 }
 \seealso{

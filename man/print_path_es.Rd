@@ -30,5 +30,7 @@ print_path_es(
 
 }
 \seealso{
-\code{\link{print_path_vs}}
+\itemize{
+    \item{\code{\link{print_path_vs}}}
+}
 }

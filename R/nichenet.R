@@ -225,14 +225,9 @@ nichenet_main <- function(
 #' @return The same list as `expression` with certain elements removed.
 #'
 #' @examples
-#' \donttest{
-#' networks <- nichenet_networks()
+#' lr_network <- nichenet_lr_network()
 #' expression <- nichenet_expression_data()
-#' expression <- nichenet_remove_orphan_ligands(
-#'     expression,
-#'     networks$lr_network
-#' )
-#' }
+#' expression <- nichenet_remove_orphan_ligands(expression, lr_network)
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -827,10 +822,10 @@ nichenet_results_dir <- function(){
 #' #  8 USF1    TBX4     harmonizome_TRANSFAC harmonizome
 #' #  9 MIR133B FETUB    harmonizome_TRANSFAC harmonizome
 #' # 10 SP4     HNRNPH2  harmonizome_ENCODE   harmonizome
+#' }
 #'
 #' # use only OmniPath:
 #' omnipath_networks <- nichenet_networks(only_omnipath = TRUE)
-#' }
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom purrr map2
@@ -1028,10 +1023,10 @@ nichenet_lr_network <- function(
 #'     remap = list(top_targets = 200),
 #'     regnetwork = NULL,
 #' )
+#' }
 #'
 #' # use only OmniPath:
 #' gr_network_omnipath <- nichenet_gr_network(only_omnipath = TRUE)
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -1264,14 +1259,16 @@ nichenet_lr_network_omnipath <- function(
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
-#' @seealso \code{\link{nichenet_gr_network_evex},
-#'     \link{nichenet_gr_network_harmonizome},
-#'     \link{nichenet_gr_network_htridb},
-#'     \link{nichenet_gr_network_omnipath},
-#'     \link{nichenet_gr_network_pathwaycommons},
-#'     \link{nichenet_gr_network_regnetwork},
-#'     \link{nichenet_gr_network_remap},
-#'     \link{nichenet_gr_network_trrust}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_gr_network_evex}}}
+#'     \item{\code{\link{nichenet_gr_network_harmonizome}}}
+#'     \item{\code{\link{nichenet_gr_network_htridb}}}
+#'     \item{\code{\link{nichenet_gr_network_omnipath}}}
+#'     \item{\code{\link{nichenet_gr_network_pathwaycommons}}}
+#'     \item{\code{\link{nichenet_gr_network_regnetwork}}}
+#'     \item{\code{\link{nichenet_gr_network_remap}}}
+#'     \item{\code{\link{nichenet_gr_network_trrust}}}
+#' }
 nichenet_gr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
@@ -2103,7 +2100,6 @@ nichenet_common_postprocess <- function(
 #'     expression data and key variables about the experiment.
 #'
 #' @examples
-#' \donttest{
 #' exp_data <- nichenet_expression_data()
 #' head(names(exp_data))
 #' # [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"
@@ -2113,7 +2109,6 @@ nichenet_common_postprocess <- function(
 #' #       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"
 #' # spectrum_Ifng
 #' #       "IFNG"
-#' }
 #'
 #' @importFrom magrittr %T>%
 #' @export

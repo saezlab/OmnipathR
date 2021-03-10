@@ -24,8 +24,9 @@ the genes integrating the complex. Check the vignette for examples.}
 See \code{\link{get_annotation_resources}} for possible values.}
 
 \item{wide}{Convert the annotation table to wide format, which
-corresponds more or less to the original resource. If the data comes from
-more than one resource a list of wide tables will be returned.}
+corresponds more or less to the original resource. If the data comes
+from more than one resource a list of wide tables will be returned.
+See examples at \code{\link{pivot_annotations}}.}
 
 \item{...}{Additional arguments.}
 }
@@ -57,5 +58,8 @@ annotations <- import_omnipath_annotations(
 
 }
 \seealso{
-\itemize{\item{\code{\link{get_annotation_databases}}}}
+\itemize{
+    \item{\code{\link{get_annotation_databases}}}
+    \item{\code{\link{pivot_annotations}}}
+}
 }

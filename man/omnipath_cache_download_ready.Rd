@@ -20,23 +20,22 @@ Character: invisibly returns the version number of the cache
 Sets the download status to ready for a cache item
 }
 \examples{
-\donttest{
-my_url <- 'https://bioconductor.org/'
+bioc_url <- 'https://bioconductor.org/'
 # request a new version item (or retrieve the latest)
-new_version <- omnipath_cache_latest_or_new(url = my_url)
+new_version <- omnipath_cache_latest_or_new(url = bioc_url)
 # check if the version item is not a finished download
 new_version$status
 # [1] "unknown"
 # download the file
-download.file(url = my_url, destfile = new_version$path)
+download.file(url = bioc_url, destfile = new_version$path)
 # report to the cache database that the download is ready
 omnipath_cache_download_ready(new_version)
 # now the status is ready:
-version <- omnipath_cache_latest_or_new(url = my_url)
+version <- omnipath_cache_latest_or_new(url = bioc_url)
 version$status
 # "ready"
 version$dl_finished
 # [1] "2021-03-09 16:48:38 CET"
-}
+omnipath_cache_remove(url = bioc_url) # cleaning up
 
 }

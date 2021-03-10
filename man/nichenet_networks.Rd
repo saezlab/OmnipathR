@@ -53,10 +53,10 @@ dplyr::sample_n(networks$gr_network, 10)
 #  8 USF1    TBX4     harmonizome_TRANSFAC harmonizome
 #  9 MIR133B FETUB    harmonizome_TRANSFAC harmonizome
 # 10 SP4     HNRNPH2  harmonizome_ENCODE   harmonizome
+}
 
 # use only OmniPath:
 omnipath_networks <- nichenet_networks(only_omnipath = TRUE)
-}
 
 }
 \seealso{

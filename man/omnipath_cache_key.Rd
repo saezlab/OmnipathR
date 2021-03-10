@@ -23,10 +23,8 @@ Character vector of cache record keys.
 Generates a hash which identifies an element in the cache database
 }
 \examples{
-\donttest{
-my_url <- 'https://bioconductor.org/'
-omnipath_cache_key(my_url)
+bioc_url <- 'https://bioconductor.org/'
+omnipath_cache_key(bioc_url)
 # [1] "41346a00fb20d2a9df03aa70cf4d50bf88ab154a"
-}
 
 }

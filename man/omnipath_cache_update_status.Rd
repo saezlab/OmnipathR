@@ -26,9 +26,8 @@ Character: invisibly returns the version number of the cache
 Updates the status of an existing cache record
 }
 \examples{
-\donttest{
-my_url <- 'https://bioconductor.org/'
-latest_version <- omnipath_cache_latest_or_new(url = my_url)
+bioc_url <- 'https://bioconductor.org/'
+latest_version <- omnipath_cache_latest_or_new(url = bioc_url)
 key <- omnipath_cache_key_from_version(latest_version)
 omnipath_cache_update_status(
     key = key,
@@ -36,6 +35,6 @@ omnipath_cache_update_status(
     status = 'ready',
     dl_finished = Sys.time()
 )
-}
+omnipath_cache_remove(url = bioc_url) # cleaning up
 
 }

@@ -20,37 +20,61 @@
 #
 
 
-#' Post-translational modifications (PTMs) graph
+#' Enzyme-substrate graph
 #'
-#' transforms the ptms interactions data.frame to igraph object
+#' Transforms the a data frame with enzyme-substrate relationships
+#' (obtained by \code{\link{import_omnipath_enzsub}}) to an igraph
+#' graph object.
 #'
-#' @return An igraph object
-#' @export
-#' @import igraph
-#' @importFrom magrittr %>%
-#' @importFrom dplyr select group_by summarise ungroup
-#' @importFrom rlang .data
-#' @param ptms data.frame created by \code{\link{import_omnipath_enzsub}}
+#' @param enzsub Data frame created by \code{\link{import_omnipath_enzsub}}
+#'
+#' @return An igraph directed graph object.
+#'
 #' @examples
-#' \donttest{
-#' ptms = import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
-#' ptms_g = ptms_graph(ptms = ptms)
-#' }
-#' @seealso  \code{\link{import_omnipath_enzsub}}
-ptms_graph <- function(ptms){
+#' enzsub <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
+#' enzsub_g <- enzsub_graph(enzsub = enzsub)
+#'
+#' @export
+#' @importFrom magrittr %>%
+#'
+#' @seealso \code{\link{import_omnipath_enzsub}}
+#' @aliases ptms_graph
+enzsub_graph <- function(enzsub){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.
     # This might cause issue when a gene name encodes multiple uniprot IDs.
 
     # We check that the input dataframe contain the required columns.
-    if (!all(c('enzyme', 'substrate', 'enzyme_genesymbol',
-        'substrate_genesymbol','sources') %in% colnames(ptms))) {
-    stop('The input data frame does not contain the required columns')
+    if(!all(
+        c(
+            'enzyme', 'substrate', 'enzyme_genesymbol',
+            'substrate_genesymbol','sources'
+        ) %in% colnames(enzsub)
+        )
+    ){
+        stop('The input data frame does not contain the required columns')
     }
 
-    # We give the proper format to the edges by calling to the function below
-    output_graph <- format_graph_edges(ptms,flag = 'ptms_dataset')
-    return(output_graph)
+    enzsub %>%
+    # We give the proper format to the edges
+    # by calling to the function below
+    format_graph_edges(flag = 'enzsub_dataset')
+
+}
+
+
+# Aliases (old names) to be deprecated
+#' @rdname enzsub_graph
+#' @param ... Passed to \code{enzsub_graph}.
+#' @export
+#' @importFrom rlang %||%
+#'
+#' @noRd
+ptms_graph <- function(...){
+    .Deprecated('enzsub_graph')
+    args <- list(...)
+    enzsub <- args$enzsub %||% args$ptms
+    enzsub_graph(enzsub)
 }
 
 
@@ -58,50 +82,57 @@ ptms_graph <- function(ptms){
 #'
 #' Transforms the interactions data frame to an igraph graph object.
 #'
-#' @param interactions data.frame created by
-#'     \code{\link{import_omnipath_interactions}},
-#'     \code{\link{import_pathwayextra_interactions}},
-#'     \code{\link{import_kinaseextra_interactions}},
-#'     \code{\link{import_ligrecextra_interactions}},
-#'     \code{\link{import_dorothea_interactions}},
-#'     \code{\link{import_mirnatarget_interactions}} or
-#'     \code{\link{import_all_interactions}}
+#' @param interactions data.frame created by \itemize{
+#'     \item{\code{\link{import_omnipath_enzsub}}}
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{import_pathwayextra_interactions}}}
+#'     \item{\code{\link{import_kinaseextra_interactions}}}
+#'     \item{\code{\link{import_ligrecextra_interactions}}}
+#'     \item{\code{\link{import_post_translationsl_interactions}}}
+#'     \item{\code{\link{import_dorothea_interactions}}}
+#'     \item{\code{\link{import_tf_target_interactions}}}
+#'     \item{\code{\link{import_transcriptional_interactions}}}
+#'     \item{\code{\link{import_mirnatarget_interactions}}}
+#'     \item{\code{\link{import_all_interactions}}}}
 #'
 #' @return An igraph graph object.
 #'
 #' @export
-#' @import igraph
 #' @importFrom dplyr select group_by summarise ungroup
 #' @importFrom magrittr %>%
 #'
 #' @examples
-#' \donttest{
-#' interactions = import_omnipath_interactions(resources=c('SignaLink3'))
-#' OPI_g = interaction_graph(interactions)
-#' }
+#' interactions <- import_omnipath_interactions(resources = c('SignaLink3'))
+#' g <- interaction_graph(interactions)
 #'
-#' @seealso \code{\link{import_omnipath_interactions}},
-#'     \code{\link{import_pathwayextra_interactions}},
-#'     \code{\link{import_kinaseextra_interactions}},
-#'     \code{\link{import_ligrecextra_interactions}},
-#'     \code{\link{import_dorothea_interactions}},
-#'     \code{\link{import_mirnatarget_interactions}} or
-#'     \code{\link{import_all_interactions}}
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{import_pathwayextra_interactions}}}
+#'     \item{\code{\link{import_kinaseextra_interactions}}}
+#'     \item{\code{\link{import_ligrecextra_interactions}}}
+#'     \item{\code{\link{import_dorothea_interactions}}}
+#'     \item{\code{\link{import_mirnatarget_interactions}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#' }
 interaction_graph <- function(interactions = interactions){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.
     # This might cause issue when a gene name encodes multiple uniprot IDs.
 
     # We check that the input dataframe contain the required columns.
-    if (!all(c('source', 'target', 'source_genesymbol','target_genesymbol',
-        'sources') %in% colnames(interactions))) {
+    if (!all(
+        c(
+            'source', 'target', 'source_genesymbol','target_genesymbol',
+            'sources'
+        ) %in% colnames(interactions)
+        )
+    ){
         stop('The input data frame does not contain the required columns')
     }
 
     # We give the proper format to the edges by calling to the function below
-    output_graph <-
-        format_graph_edges(interactions,flag = 'interactions_dataset')
-    return(output_graph)
+    format_graph_edges(interactions, flag = 'interactions_dataset')
+
 }
 
 
@@ -111,6 +142,7 @@ interaction_graph <- function(interactions = interactions){
 #' indicating if we are dealing with the interactions dataset or the PTMs
 #' dataset.
 #'
+#' @importFrom igraph graph_from_data_frame E
 #' @importFrom dplyr select
 #'
 #' @noRd
@@ -119,14 +151,19 @@ format_graph_edges <- function(df_interact, flag){
     if(flag == 'ptms_dataset'){
         # keep only edge attributes
         edges <- df_interact %>%
-            dplyr::select(- c(.data$enzyme, .data$substrate))
+            dplyr::select(-c(.data$enzyme, .data$substrate))
 
         # build vertices: gene_names and gene_uniprotIDs
         nodesA <-
-            dplyr::select(df_interact, c(.data$enzyme_genesymbol, .data$enzyme))
+            dplyr::select(
+                df_interact,
+                c(.data$enzyme_genesymbol, .data$enzyme)
+            )
         nodesB <-
-            dplyr::select(df_interact, c(.data$substrate_genesymbol,
-            .data$substrate))
+            dplyr::select(
+                df_interact,
+                c(.data$substrate_genesymbol, .data$substrate)
+            )
     }else{
         if(flag == 'interactions_dataset'){
             # keep only edge attributes
@@ -144,7 +181,7 @@ format_graph_edges <- function(df_interact, flag){
         }
     }
 
-    colnames(nodesA) = colnames(nodesB) = c('genesymbol', 'up_id')
+    colnames(nodesA) <- colnames(nodesB) <- c('genesymbol', 'up_id')
     nodes <- rbind(nodesA,nodesB)
     nodes <- unique(nodes)
     nodes <- nodes %>% dplyr::group_by(.data$genesymbol) %>%
@@ -153,12 +190,18 @@ format_graph_edges <- function(df_interact, flag){
 
     op_dfs <- list(edges = edges, nodes = nodes)
     directed <- TRUE
-    op_g <- igraph::graph_from_data_frame(d = op_dfs$edges,directed = directed,
-        vertices = op_dfs$nodes)
+    op_g <- igraph::graph_from_data_frame(
+        d = op_dfs$edges,
+        directed = directed,
+        vertices = op_dfs$nodes
+    )
 
-    igraph::E(op_g)$sources    <- strsplit(igraph::E(op_g)$sources,    ';')
+    igraph::E(op_g)$sources <- strsplit(igraph::E(op_g)$sources, ';')
+
     if('references' %in% colnames(df_interact)){
-        igraph::E(op_g)$references <- strsplit(igraph::E(op_g)$references, ';')
+        igraph::E(op_g)$references <- strsplit(
+            igraph::E(op_g)$references, ';'
+        )
     }
 
     return(op_g)
@@ -172,39 +215,51 @@ format_graph_edges <- function(df_interact, flag){
 #' `all_shortest_paths` finds only the shortest, not any
 #' path up to a defined length.
 #'
-#' @param graph graph An igraph graph object.
-#' @param start integer Numeric or character vector with the indices or names
-#' of one or more start vertices.
-#' @param end integer Numeric or character vector with the indices or names
-#' of one or more end vertices.
-#' @param attr character Name of the vertex attribute to identify the
-#' vertices by. Necessary if `start` and `end` are not igraph vertex ids
-#' but for example vertex names or labels.
-#' @param mode character IN, OUT or ALL. Default is OUT.
-#' @param maxlen integer Maximum length of paths in steps, i.e. if maxlen = 3,
-#' then the longest path may consist of 3 edges and 4 nodes.
-#' @param progress logical Show a progress bar. Default is FALSE.
+#' @usage
+#' find_all_paths(
+#'     graph,
+#'     start,
+#'     end,
+#'     attr = NULL,
+#'     mode = 'OUT',
+#'     maxlen = 2,
+#'     progress = TRUE
+#' )
 #'
-#' @return List of vertex paths
+#' @param graph An igraph graph object.
+#' @param start Integer or character vector with the indices or names
+#'     of one or more start vertices.
+#' @param end Integer or character vector with the indices or names
+#'     of one or more end vertices.
+#' @param attr Character: name of the vertex attribute to identify the
+#'     vertices by. Necessary if `start` and `end` are not igraph vertex ids
+#'     but for example vertex names or labels.
+#' @param mode Character: IN, OUT or ALL. Default is OUT.
+#' @param maxlen Integer: maximum length of paths in steps, i.e. if
+#'     maxlen = 3, then the longest path may consist of 3 edges and 4 nodes.
+#' @param progress Logical: show a progress bar. Default is FALSE.
 #'
-#' @importFrom igraph ego vertex_attr vertex_attr_names
+#' @return List of vertex paths, each path is a character or integer vector.
+#'
+#' @importFrom igraph ego vertex_attr vertex_attr_names vcount
 #' @importFrom purrr map cross2 map2 transpose
 #' @importFrom magrittr %>% %<>%
 #' @importFrom progress progress_bar
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' interactions <- import_omnipath_interactions()
-#' graph <- interaction_graph(interaction)
+#' graph <- interaction_graph(interactions)
 #' paths <- find_all_paths(
 #'     c('EGFR', 'STAT3'),
 #'     c('AKT1', 'ULK1'),
 #'     attr = 'name'
 #' )
-#' }
 #'
-#' @seealso \code{\link{interaction_graph}, \link{ptms_graph}}
+#' @seealso \itemize{
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{ptms_graph}}}
+#' }
 find_all_paths <- function(
         graph,
         start,
@@ -235,7 +290,6 @@ find_all_paths <- function(
             return(paths)
 
         }
-
 
         adjlist <- graph %>% ego(mode = mode) %>% map(as.numeric)
 

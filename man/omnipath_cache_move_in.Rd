@@ -42,6 +42,14 @@ Either the key or the URL (with POST and payload) must be provided.
 omnipath_cache_move_in('some/file.zip', url = 'the_download_address')
 }
 
+# basic example of moving a file to the cache:
+
+bioc_url <- 'https://bioconductor.org/'
+html_file <- tempfile(fileext = '.html')
+download.file(bioc_url, html_file)
+omnipath_cache_move_in(path = html_file, url = bioc_url)
+omnipath_cache_remove(url = bioc_url) # cleaning up
+
 }
 \seealso{
 \code{\link{omnipath_cache_save}}

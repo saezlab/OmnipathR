@@ -30,12 +30,14 @@ op_gr_network <- nichenet_gr_network_omnipath(
 
 }
 \seealso{
-\code{\link{nichenet_gr_network_evex},
-    \link{nichenet_gr_network_harmonizome},
-    \link{nichenet_gr_network_htridb},
-    \link{nichenet_gr_network_omnipath},
-    \link{nichenet_gr_network_pathwaycommons},
-    \link{nichenet_gr_network_regnetwork},
-    \link{nichenet_gr_network_remap},
-    \link{nichenet_gr_network_trrust}}
+\itemize{
+    \item{\code{\link{nichenet_gr_network_evex}}}
+    \item{\code{\link{nichenet_gr_network_harmonizome}}}
+    \item{\code{\link{nichenet_gr_network_htridb}}}
+    \item{\code{\link{nichenet_gr_network_omnipath}}}
+    \item{\code{\link{nichenet_gr_network_pathwaycommons}}}
+    \item{\code{\link{nichenet_gr_network_regnetwork}}}
+    \item{\code{\link{nichenet_gr_network_remap}}}
+    \item{\code{\link{nichenet_gr_network_trrust}}}
+}
 }

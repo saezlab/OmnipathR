@@ -5,9 +5,9 @@
 \title{Interactions from the EVEX database}
 \usage{
 evex_download(
-  min_confidence = NULL,
-  remove_negatives = TRUE,
-  top_confidence = NULL
+    min_confidence = NULL,
+    remove_negatives = TRUE,
+    top_confidence = NULL
 )
 }
 \arguments{
@@ -44,5 +44,4 @@ evex_interactions
 #   coarse_type <chr>, coarse_polarity <chr>, refined_type <chr>,
 #   refined_polarity <chr>, source_genesymbol <chr>,
 #   target_genesymbol <chr>, references <chr>
-
 }

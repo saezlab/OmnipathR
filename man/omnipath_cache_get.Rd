@@ -24,7 +24,7 @@ omnipath_cache_get(
 
 \item{create}{Create a new entry if doesn't exist yet}
 
-\item{...}{Passed to \code{omnipath_cache_record}}
+\item{...}{Passed to \code{\link{omnipath_cache_record}}}
 }
 \value{
 Cache record: an existing record if the entry already exists,
@@ -34,12 +34,16 @@ Cache record: an existing record if the entry already exists,
 Retrieves one item from the cache directory
 }
 \examples{
-\donttest{
-record <- omnipath_cache_get(url = 'https://bioconductor.org/')
+# create an example cache record
+bioc_url <- 'https://bioconductor.org/'
+version <- omnipath_cache_latest_or_new(url = bioc_url)
+omnipath_cache_remove(url = bioc_url) # cleaning up
+
+# retrieve the cache record
+record <- omnipath_cache_get(url = bioc_url)
 record$key
 # [1] "41346a00fb20d2a9df03aa70cf4d50bf88ab154a"
 record$url
 # [1] "https://bioconductor.org/"
-}
 
 }

@@ -16,3 +16,7 @@ It's supposed to be removed after each read and write operation. This
 might not happen if the process crashes during such an operation. In
 this case you can manually call this function.
 }
+\examples{
+omnipath_unlock_cache_db()
+
+}

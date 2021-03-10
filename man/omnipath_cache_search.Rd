@@ -18,12 +18,10 @@ List of cache records matching the pattern.
 Searches the cache records by matching the URL against a string or regexp.
 }
 \examples{
-\donttest{
 # find all cache records from the BioPlex database
 bioplex_cache_records <- omnipath_cache_search(
     'bioplex',
     ignore.case = TRUE
 )
-}
 
 }
