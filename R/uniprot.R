@@ -182,6 +182,8 @@ translate_ids <- function(
 #' @param organism Integer, NCBI Taxonomy ID of the organism (by default
 #'     9606 for human).
 #'
+#' @return Data frame (tibble) with the requested UniProt entries and fields.
+#'
 #' @importFrom readr read_tsv cols
 #' @importFrom magrittr %>% %T>%
 #' @export

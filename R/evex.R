@@ -35,6 +35,8 @@
 #' @param top_confidence Confidence cutoff as quantile (a number between
 #'     0 and 1). If NULL no filtering performed.
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
 #' @importFrom dplyr left_join mutate group_by summarize_all first ungroup
