@@ -42,12 +42,11 @@ wipe the entire cache.
 \examples{
 \donttest{
 # remove all cache data from the BioPlex database
-omnipath_cache_search(
+cache_records <- omnipath_cache_search(
     'bioplex',
     ignore.case = TRUE
-) \%>\%
-names \%>\%
-omnipath_cache_remove
+)
+omnipath_cache_remove(names(cache_records))
 
 # remove a record by its URL
 regnetwork_url <- 'http://www.regnetworkweb.org/download/human.zip'

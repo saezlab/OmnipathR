@@ -33,7 +33,7 @@ Filters the versions based on multiple conditions: their age and status
 }
 \examples{
 \donttest{
-record <- omnipath_cache_search('biocond') \%>\% dplyr::first
+record <- dplyr::first(omnipath_cache_search('biocond'))
 # only the versions with status "ready"
 version_numbers <- omnipath_cache_filter_versions(status = 'ready')
 }

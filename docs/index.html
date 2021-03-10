@@ -19,8 +19,17 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="OmniPath web service client">
 <meta property="og:description" content="A client for the OmniPath web service
-    (https://www.omnipathdb.org). It also includes functions to transform
-    and pretty print some of the downloaded data.">
+    (https://www.omnipathdb.org) and many other resources.
+    It also includes functions to transform and pretty print
+    some of the downloaded data, functions to access a number
+    of other resources such as BioPlex, ConsensusPathDB, EVEX,
+    Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
+    InWeb InBioMap, Pathway Commons, Ramilowski et al. 2015,
+    RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al.
+    2011. Furthermore, OmnipathR features a close integration
+    with the NicheNet method for ligand activity prediction
+    from transcriptomics data, and its R implementation
+    `nichenetr` (available in CRAN).">
 <meta property="og:image" content="https://saezlab.github.io/OmnipathR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -46,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.99.0</span>
       </span>
     </div>
 
@@ -54,7 +63,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -83,19 +92,19 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -152,13 +161,16 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>First of all, you need a current version of <code>R</code> (<a href="https://r-project.org" class="uri">https://r-project.org</a>). <em>OmnipathR</em> is a freely available package deposited on <em>Bioconductor</em> and <em>Github</em>: (<a href="https://bioconductor.org/" class="uri">https://bioconductor.org/</a>, <a href="https://github.com/saezlab/OmnipathR" class="uri">https://github.com/saezlab/OmnipathR</a>).</p>
 <p>You can install it by running the following commands on a <code>R</code> console:</p>
-<pre class="{r}"><code>if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+<pre class="{r}"><code>if (!requireNamespace('BiocManager', quietly = TRUE))
+    install.packages('BiocManager')
 
 ## Last release in Bioconductor
-BiocManager::install("OmnipathR")
+BiocManager::install('OmnipathR', version = '3.12')
 ## Development version with the lastest updates
-BiocManager::install(version='devel')</code></pre>
+BiocManager::install('OmnipathR', version = 'devel')</code></pre>
+<p>Sometimes it’s easier to install directly from github:</p>
+<pre class="{r}"><code><a href="https://devtools.r-lib.org/">require(devtools)
+install_github('saezlab/OmnipathR')</a></code></pre>
 </div>
 <div id="getting-started-and-some-usage-examples" class="section level2">
 <h2 class="hasAnchor">
@@ -170,17 +182,17 @@ BiocManager::install(version='devel')</code></pre>
 <p>In addition, we provide here some examples for a quick start:</p>
 <pre class="{r}"><code><a href="https://saezlab.github.io/OmnipathR/">library(OmnipathR)</a></code></pre>
 <p>Download human protein-protein interactions from the specified resources:</p>
-<pre class="{r}"><code>interactions &lt;- 
-  import_omnipath_interactions(resources=c("SignaLink3","PhosphoSite", 
-  "SIGNOR"))</code></pre>
+<pre class="{r}"><code>interactions &lt;- import_omnipath_interactions(
+    resources = c('SignaLink3', 'PhosphoSite', 'SIGNOR')
+)</code></pre>
 <p>Download human enzyme-PTM relationships from the specified resources:</p>
-<pre class="{r}"><code>enzsub &lt;- import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))</code></pre>
+<pre class="{r}"><code>enzsub &lt;- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))</code></pre>
 <p>Convert both data frames into networks (<code>igraph</code> objects)</p>
 <pre class="{r}"><code>ptms_g = ptms_graph(ptms = enzsub)
 OPI_g = interaction_graph(interactions = interactions)</code></pre>
 <p>Print some interactions in a nice format:</p>
 <pre class="{r}"><code>print_interactions(head(interactions))
-          
+
           source interaction         target n_resources n_references
 4    SRC (P12931)  ==( + )==&gt; TRPV1 (Q8NER1)           9            6
 2  PRKG1 (Q13976)  ==( - )==&gt; TRPC6 (Q9Y210)           7            5
@@ -189,17 +201,17 @@ OPI_g = interaction_graph(interactions = interactions)</code></pre>
 6  PTPN1 (P18031)  ==( - )==&gt; TRPV6 (Q9H1D0)           3            2
 3 PRKACA (P17612)  ==( + )==&gt; TRPV1 (Q8NER1)           6            1</code></pre>
 <p>Find interactions between a specific kinase and a specific substrate:</p>
-<pre class="{r}"><code>print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
-  substrate_genesymbol=="MAPK3"))
-  
+<pre class="{r}"><code>print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
+  substrate_genesymbol=='MAPK3'))
+
            enzyme interaction           substrate    modification n_resources
 1 MAP2K1 (Q02750)       ====&gt; MAPK3_Y204 (P27361) phosphorylation           8
 2 MAP2K1 (Q02750)       ====&gt; MAPK3_T202 (P27361) phosphorylation           8
 3 MAP2K1 (Q02750)       ====&gt; MAPK3_Y210 (P27361) phosphorylation           2
 4 MAP2K1 (Q02750)       ====&gt; MAPK3_T207 (P27361) phosphorylation           2
-           </code></pre>
+</code></pre>
 <p>Find shortest paths on the directed network between proteins:</p>
-<pre class="{r}"><code>print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
+<pre class="{r}"><code>print_path_es(shortest_paths(OPI_g,from = 'TYRO3',to = 'STAT3',
     output = 'epath')$epath[[1]],OPI_g)
 
            source interaction          target n_resources n_references
@@ -207,7 +219,7 @@ OPI_g = interaction_graph(interactions = interactions)</code></pre>
 2   AKT1 (P31749)  ==( - )==&gt; DAB2IP (Q5VWQ8)           3            1
 3 DAB2IP (Q5VWQ8)  ==( - )==&gt;  STAT3 (P40763)           1            1</code></pre>
 <p>Find all shortest paths between proteins:</p>
-<pre class="{r}"><code>print_path_vs(all_shortest_paths(OPI_g,from = "DYRK2",to = "MAPKAPK2")$res,OPI_g)
+<pre class="{r}"><code>print_path_vs(all_shortest_paths(OPI_g,from = 'DYRK2',to = 'MAPKAPK2')$res,OPI_g)
 Pathway 1: DYRK2 -&gt; TBK1 -&gt; NFKB1 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2
 Pathway 2: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2
 Pathway 3: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2
@@ -216,10 +228,40 @@ Pathway 5: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 .....</code></pre>
 </div>
+<div id="alternatives" class="section level2">
+<h2 class="hasAnchor">
+<a href="#alternatives" class="anchor"></a>Alternatives</h2>
+<div id="python" class="section level3">
+<h3 class="hasAnchor">
+<a href="#python" class="anchor"></a>Python</h3>
+<p>A similar web service client is available for Python:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>saezlab<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
+</div>
+<div id="cytoscape" class="section level3">
+<h3 class="hasAnchor">
+<a href="#cytoscape" class="anchor"></a>Cytoscape</h3>
+<p>The OmniPath Cytoscape app provides access to the interactions, enzyme-PTM relationships and some of the annotations:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>apps.cytoscape.org<span class="sc">/</span>apps<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
+</div>
+<div id="customization" class="section level3">
+<h3 class="hasAnchor">
+<a href="#customization" class="anchor"></a>Customization</h3>
+<p>The <a href="https://github.com/saezlab/pypath"><em>pypath</em></a> Python module is a tool for building the OmniPath databases in a fully customizable way. We recommend to use pypath if you want to:</p>
+<ul>
+<li>Tailor the database building to your needs</li>
+<li>Include resources not available in the public web service</li>
+<li>Use the rich Python APIs available for the database objects</li>
+<li>Make sure the data from the original sources is the most up-to-date</li>
+<li>Use the methods in <code>pypath.inputs</code> to download data from resources</li>
+<li>Use the various extra tools in <code>pypath.utils</code>, e.g. for identifier translation, homology translation, querying Gene Ontology, working with protein sequences, processing BioPAX, etc.</li>
+</ul>
+<p>With <em>pypath</em> it’s also possible to run your own web service and serve your custom databases to the <em>OmnipathR</em> R client and the <em>omnipath</em> Python cient.</p>
+</div>
+</div>
 <div id="feedbacks-bug-reports-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#feedbacks-bug-reports-features" class="anchor"></a>Feedbacks, bug reports, features</h2>
-<p>Feedbacks and bugreports are always very welcomed!</p>
+<p>Feedbacks and bugreports are always very welcome!</p>
 <p>Please use the Github issue page to report bugs or for questions:</p>
 <p><a href="https://github.com/saezlab/OmnipathR/issues" class="uri">https://github.com/saezlab/OmnipathR/issues</a></p>
 <p>Many thanks for using <em>OmnipathR</em>!</p>
@@ -259,7 +301,7 @@ Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 <ul class="list-unstyled">
 <li>Alberto Valdeolivas <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-5482-9023" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Denes Turei <br><small class="roles"> Maintainer, author </small> <a href="https://orcid.org/0000-0002-7249-9379" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Attila Gabor <br><small class="roles"> Author </small>  </li>
+<li>Attila Gabor <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0776-1182" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 

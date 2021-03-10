@@ -13,9 +13,9 @@ More details at https://bioplex.hms.harvard.edu/interactions.php
 }
 \examples{
 bioplex_interactions <- bioplex_hct116_1()
-bioplex_interactions \%>\% nrow
+nrow(bioplex_interactions)
 # [1] 70966
-bioplex_interactions \%>\% colnames
+colnames(bioplex_interactions)
 # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 # [9] "p_interaction"

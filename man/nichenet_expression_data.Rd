@@ -20,10 +20,10 @@ retrieves the original expression data, deposited in Zenodo
 \examples{
 \donttest{
 exp_data <- nichenet_expression_data()
-names(exp_data) \%>\% head()
+head(names(exp_data))
 # [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"
 # [5] "spectrum_Tnf"  "spectrum_Ifng"
-exp_data \%>\% head() \%>\% purrr::map_chr('from')
+purrr::map_chr(head(exp_data), 'from')
 #     bmp4_tgfb     tgfb_bmp4   nodal_Nodal  spectrum_Il4  spectrum_Tnf
 #       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"
 # spectrum_Ifng

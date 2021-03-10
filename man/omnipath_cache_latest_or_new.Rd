@@ -39,10 +39,10 @@ the record doesn't exist or no valid version available, creates a new one.
 # retrieve the latest version of the first cache record
 # found by the search keyword "bioplex"
 latest_bioplex <-
-    omnipath_cache_search('bioplex') \%>\%
-    names \%>\%
-    first \%>\%
-    omnipath_cache_latest_or_new
+    omnipath_cache_latest_or_new(
+        names(omnipath_cache_search('bioplex'))[1]
+    )
+
 latest_bioplex$dl_finished
 # [1] "2021-03-09 14:28:50 CET"
 latest_bioplex$path

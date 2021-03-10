@@ -34,7 +34,7 @@ functions.
 \examples{
 \donttest{
 networks <- nichenet_networks()
-networks$gr_network \%>\% dplyr::sample_n(10)
+dplyr::sample_n(networks$gr_network, 10)
 # # A tibble: 10 x 4
 #    from    to       source               database
 #    <chr>   <chr>    <chr>                <chr>
