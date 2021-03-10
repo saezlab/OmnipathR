@@ -49,6 +49,9 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
     # NSE vs. R CMD check workaround
     content <- NULL
 
+    from <- .nse_ensure_str(!!enquo(from))
+    to <- .nse_ensure_str(!!enquo(to))
+
     url <- 'https://www.uniprot.org/uploadlists/'
     post <- list(
         from = from,
@@ -120,7 +123,14 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' @export
 #'
 #' @examples
+#' d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
 #' d <- translate_ids(d, uniprot_id, genesymbol, 'ID', 'GENENAME')
+#' d
+#' #   uniprot_id  genesymbol
+#' # 1     P00533  EGFR_HUMAN
+#' # 2     Q9ULV1  FZD4_HUMAN
+#' # 3     P43897  EFTS_HUMAN
+#' # 4     Q9Y2P5 S27A5_HUMAN
 #'
 #' @seealso \code{\link{uniprot_id_mapping_table}}
 translate_ids <- function(
