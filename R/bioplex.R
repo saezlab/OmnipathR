@@ -66,7 +66,6 @@ bioplex_download <- function(version){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' bioplex_interactions <- bioplex1()
 #' bioplex_interactions %>% nrow
 #' # [1] 23744
@@ -74,7 +73,6 @@ bioplex_download <- function(version){
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{bioplex2}}}
@@ -98,7 +96,6 @@ bioplex1 <- function(){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' bioplex_interactions <- bioplex2()
 #' bioplex_interactions %>% nrow
 #' # [1] 56553
@@ -106,7 +103,6 @@ bioplex1 <- function(){
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{bioplex1}}}
@@ -130,7 +126,6 @@ bioplex2 <- function(){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' bioplex_interactions <- bioplex3()
 #' bioplex_interactions %>% nrow
 #' # [1] 118162
@@ -138,7 +133,6 @@ bioplex2 <- function(){
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{bioplex1}}}
@@ -162,7 +156,6 @@ bioplex3 <- function(){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' bioplex_interactions <- bioplex_hct116_1()
 #' bioplex_interactions %>% nrow
 #' # [1] 70966
@@ -170,7 +163,6 @@ bioplex3 <- function(){
 #' # [1] "GeneA"         "GeneB"        "UniprotA"   "UniprotB"
 #' # [5] "SymbolA"       "SymbolB"      "p_wrong"    "p_no_interaction"
 #' # [9] "p_interaction"
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{bioplex1}}}
@@ -203,7 +195,6 @@ bioplex_hct116_1 <- function(){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' bioplex_interactions <- bioplex_all()
 #' bioplex_interactions
 #' # # A tibble: 195,538 x 11
@@ -221,7 +212,6 @@ bioplex_hct116_1 <- function(){
 #' # 10 A0AV96          2 P07910          2 54502  3183 RBM47   HNRNPC
 #' # # . with 195,528 more rows, and 3 more variables: p_wrong <dbl>,
 #' # #   p_no_interaction <dbl>, p_interaction <dbl>
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{bioplex1}}}

@@ -749,10 +749,8 @@ nichenet_ligand_target_links <- function(
 #' methods.
 #'
 #' @examples
-#' \donttest{
 #' nichenet_results_dir()
 #' # [1] "nichenet_results"
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%
@@ -865,7 +863,6 @@ nichenet_networks <- function(
 #'     resource.
 #'
 #' @examples
-#' \donttest{
 #' # load everything with the default parameters:
 #' sig_network <- nichenet_signaling_network()
 #'
@@ -880,7 +877,6 @@ nichenet_networks <- function(
 #'
 #' # use only OmniPath:
 #' sig_network_omnipath <- nichenet_signaling_network(only_omnipath = TRUE)
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -928,7 +924,6 @@ nichenet_signaling_network <- function(
 #'     resource.
 #'
 #' @examples
-#' \donttest{
 #' # load everything with the default parameters:
 #' lr_network <- nichenet_lr_network()
 #'
@@ -937,7 +932,6 @@ nichenet_signaling_network <- function(
 #'
 #' # use only OmniPath:
 #' lr_network_omnipath <- nichenet_lr_network(only_omnipath = TRUE)
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -1048,10 +1042,8 @@ nichenet_gr_network <- function(
 #' @return A data frame with interactions suitable for use with NicheNet.
 #'
 #' @examples
-#' \donttest{
 #' # load the ligand-receptor network with the default parameters:
 #' lr_network <- nichenet_network(network_type = 'lr')
-#' }
 #'
 #' @importFrom purrr map2 discard keep
 #' @importFrom magrittr %>%
@@ -1131,12 +1123,10 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
 #' @param ... Passed to \code{\link{import_post_translational_interactions}}
 #'
 #' @examples
-#' \donttest{
 #' # use interactions with at least 2 evidences (reference or database)
 #' op_signaling_network <- nichenet_signaling_network_omnipath(
 #'     min_curation_effort = 2
 #' )
-#' }
 #'
 #' @importFrom magrittr %>% %<>%
 #' @export
@@ -1171,7 +1161,6 @@ nichenet_signaling_network_omnipath <- function(
 #' @param ... Passed to \code{\link{import_intercell_network}}
 #'
 #' @examples
-#' \donttest{
 #' # use only ligand-receptor interactions (not for example ECM-adhesion):
 #' op_lr_network <- nichenet_lr_network_omnipath(ligand_receptor = TRUE)
 #'
@@ -1184,7 +1173,6 @@ nichenet_signaling_network_omnipath <- function(
 #' op_lr_network <- nichenet_lr_network_omnipath(
 #'     receiver_param = list(parent = 'transporter')
 #' )
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @export
@@ -1216,12 +1204,10 @@ nichenet_lr_network_omnipath <- function(
 #' @param ... Passed to \code{\link{import_transcriptional_interactions}}
 #'
 #' @examples
-#' \donttest{
 #' # use interactions up to confidence level "C" from DoRothEA:
 #' op_gr_network <- nichenet_gr_network_omnipath(
 #'     dorothea_levels = c('A', 'B', 'C')
 #' )
-#' }
 #'
 #' @importFrom magrittr %>% %<>%
 #' @export
@@ -1290,12 +1276,10 @@ omnipath_interactions_postprocess <- function(interactions, type){
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' # use only the "controls-transport-of" interactions:
 #' pc_signaling_network <- nichenet_signaling_network_pathwaycommons(
 #'     interaction_types = 'controls-transport-of'
 #' )
-#' }
 #'
 #' @export
 nichenet_signaling_network_pathwaycommons <- function(
@@ -1327,12 +1311,10 @@ nichenet_signaling_network_pathwaycommons <- function(
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' # use only KEA and PhosphoSite:
 #' hz_signaling_network <- nichenet_signaling_network_harmonizome(
 #'     datasets = c('kea', 'phosphositeplus')
 #' )
-#' }
 #'
 #' @export
 nichenet_signaling_network_harmonizome <- function(
@@ -1426,9 +1408,7 @@ harmonizome_nichenet_process <- function(dataset){
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' vi_signaling_network <- nichenet_signaling_network_vinayagam()
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate select rename distinct
@@ -1455,13 +1435,11 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' # use some parameters stricter than default:
 #' cpdb_signaling_network <- nichenet_signaling_network_cpdb(
 #'     complex_max_size = 2,
 #'     min_score = .99
 #' )
-#' }
 #'
 #' @importFrom dplyr select mutate distinct
 #' @importFrom magrittr %>%
@@ -1499,11 +1477,9 @@ nichenet_signaling_network_cpdb <- function(...){
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' ev_signaling_network <- nichenet_signaling_network_evex(
 #'     top_confidence = .9
 #' )
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select mutate filter
@@ -1583,7 +1559,6 @@ nichenet_signaling_network_evex <- function(
 #' @examples
 #' \donttest{
 #' ib_signaling_network <- nichenet_signaling_network_inbiomap()
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
@@ -1614,9 +1589,7 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' @return Data frame with ligand-receptor interactions in NicheNet format.
 #'
 #' @examples
-#' \donttest{
 #' g2p_lr_network <- nichenet_lr_network_guide2pharma()
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -1657,12 +1630,10 @@ nichenet_lr_network_guide2pharma <- function(){
 #' @return Data frame with ligand-receptor interactions in NicheNet format.
 #'
 #' @examples
-#' \donttest{
 #' # use only the literature supported data:
 #' rami_lr_network <- nichenet_lr_network_ramilowski(
 #'     evidences = 'literature supported'
 #' )
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -1700,12 +1671,10 @@ nichenet_lr_network_ramilowski <- function(
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' # use only JASPAR and TRANSFAC:
 #' hz_gr_network <- nichenet_gr_network_harmonizome(
 #'     datasets = c('jasparpwm', 'transfac', 'transfacpwm')
 #' )
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr rename
@@ -1757,9 +1726,7 @@ nichenet_gr_network_harmonizome <- function(
 #' and converts it to a format suitable for NicheNet.
 #'
 #' @examples
-#' \donttest{
 #' regn_gr_network <- nichenet_gr_network_regnetwork()
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -1792,9 +1759,7 @@ nichenet_gr_network_regnetwork <- function(){
 #' and converts it to a format suitable for NicheNet.
 #'
 #' @examples
-#' \donttest{
 #' trrust_gr_network <- nichenet_gr_network_trrust()
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -1819,9 +1784,7 @@ nichenet_gr_network_trrust <- function(){
 #' and converts it to a format suitable for NicheNet.
 #'
 #' @examples
-#' \donttest{
 #' htri_gr_network <- nichenet_gr_network_htridb()
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -1900,10 +1863,8 @@ nichenet_gr_network_remap <- function(
 #'     "regulation of expression" type interactions.
 #'
 #' @examples
-#' \donttest{
 #' # use only the 10% with the highest confidence:
 #' evex_gr_network <- nichenet_gr_network_evex(top_confidence = .9)
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -1956,9 +1917,7 @@ nichenet_gr_network_evex <- function(
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' pc_gr_network <- nichenet_gr_network_pathwaycommons()
-#' }
 #'
 #' @export
 #' @seealso \itemize{

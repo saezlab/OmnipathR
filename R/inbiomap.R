@@ -41,9 +41,7 @@
 #' @seealso \code{\link{inbiomap_download}}
 #'
 #' @examples
-#' \donttest{
 #' inbiomap_psimitab <- inbiomap_raw()
-#' }
 inbiomap_raw <- function(curl_verbose = FALSE){
 
     url <- 'omnipath.inbiomap_url' %>% url_parser
@@ -127,7 +125,6 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @seealso \code{\link{inbiomap_raw}}
 #'
 #' @examples
-#' \donttest{
 #' inbiomap_interactions <- inbiomap_download()
 #' inbiomap_interactions
 #' # # A tibble: 625,641 x 7
@@ -139,7 +136,6 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' #  4 A0AV02    Q00526    SLC12A8      CDK3         TRUE      0.157 0.0821
 #' #  5 A0AV96    P0CG48    RBM47        UBC          FALSE     0.144 0.0494
 #' # # . with 625,631 more rows
-#' }
 inbiomap_download <- function(...){
 
     # NSE vs. R CMD check workaround

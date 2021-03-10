@@ -41,11 +41,9 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' uniprot_genesymbol <- uniprot_id_mapping_table(
 #'     c('P00533', 'P23771'), 'ID', 'GENENAME'
 #' )
-#' }
 uniprot_id_mapping_table <- function(identifiers, from, to){
 
     # NSE vs. R CMD check workaround
@@ -122,9 +120,7 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' d <- translate_ids(d, uniprot_id, genesymbol, 'ID', 'GENENAME')
-#' }
 #'
 #' @seealso \code{\link{uniprot_id_mapping_table}}
 translate_ids <- function(
@@ -181,9 +177,7 @@ translate_ids <- function(
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' human_swissprot_ac <- all_uniprots(fields = 'entry name')
-#' }
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 
     on.exit(closeAllConnections())
@@ -232,9 +226,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' uniprot_entrez <- uniprot_full_id_mapping_table(to = 'entrez')
-#' }
 uniprot_full_id_mapping_table <- function(
     to,
     from = 'id',

@@ -30,7 +30,6 @@
 #' @return A data frame of TF-target interactions.
 #'
 #' @examples
-#' \donttest{
 #' trrust_interactions <- trrust_download()
 #' trrust_interactions
 #' # # A tibble: 11,698 x 4
@@ -44,7 +43,6 @@
 #' #  6 ABL1              BAX                    1 11753601
 #' #  7 ABL1              BCL2                  -1 11753601
 #' # # . with 11,688 more rows
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%

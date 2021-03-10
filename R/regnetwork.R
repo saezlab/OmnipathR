@@ -96,9 +96,7 @@ regnetwork_download <- function(organism = 'human'){
 #' @param organism Character: either human or mouse.
 #'
 #' @examples
-#' \donttest{
 #' regn_dir <- regnetwork_directions()
-#' }
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_delim cols col_character

@@ -27,9 +27,7 @@
 #' human" (https://www.nature.com/articles/ncomms8866).
 #'
 #' @examples
-#' \donttest{
-#'    rami_interactions <- ramilowski_download()
-#' }
+#' rami_interactions <- ramilowski_download()
 #'
 #' @export
 #' @importFrom magrittr %T>%

@@ -40,7 +40,6 @@
 #'     interactions.
 #'
 #' @examples
-#' \donttest{
 #' cpdb_data <- consensuspathdb_download(
 #'     complex_max_size = 1,
 #'     min_score = .98
@@ -60,7 +59,6 @@
 #' #  4 DIP,Reac. 22210847,. TRPC1_HU.      0.998         2 STIM1_HU. TRUE
 #' # # . with 252,292 more rows, and 2 more variables: genesymbol_a <chr>,
 #' # #   genesymbol_b <chr
-#' }
 #'
 #' @importFrom readr read_tsv
 #' @importFrom tidyr separate_rows
@@ -117,9 +115,7 @@ consensuspathdb_download <- function(
 #' Downloads interaction data from ConsensusPathDB
 #'
 #' @examples
-#' \donttest{
 #' cpdb_raw <- consensuspathdb_raw_table()
-#' }
 #'
 #' @importFrom readr read_tsv cols
 #' @importFrom magrittr %>%

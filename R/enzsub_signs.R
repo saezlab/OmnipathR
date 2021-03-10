@@ -36,11 +36,9 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
-#' interactions = import_omnipath_interactions()
-#' ptms = get_signed_ptms(ptms,interactions)
-#' }
+#' ptms <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
+#' interactions <- import_omnipath_interactions()
+#' ptms <- get_signed_ptms(ptms,interactions)
 #'
 #' @seealso \code{\link{import_omnipath_enzsub}}
 #'     \code{\link{import_omnipath_interactions}}

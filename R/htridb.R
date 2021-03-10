@@ -28,7 +28,6 @@
 #' (https://rescued.omnipathdb.org/).
 #'
 #' @examples
-#' \donttest{
 #' htridb_data <- htridb_download()
 #' htridb_data
 #' # # A tibble: 18,630 x 7
@@ -40,7 +39,6 @@
 #' #  4 29466       196 AHR            1543 CYP1A1    Electrophoretic Mobi.
 #' #  5 28911       196 AHR            1543 CYP1A1    Chromatin Immunoprec.
 #' # # . with 18,620 more rows, and 1 more variable: PUBMED_ID <chr>
-#' }
 #'
 #' @export
 #' @importFrom readr cols col_skip

@@ -47,10 +47,8 @@ omnipath_console_loglevel <- function(){
 #' Returns the path to the current OmnipathR log file
 #'
 #' @examples
-#' \donttest{
 #' omnipath_logfile()
 #' # [1] "/home/denes/omnipathr/omnipathr-log/omnipathr-20210309-1642.log"
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -95,9 +93,7 @@ omnipath_log <- function(){
 #' @param target Character, either 'logfile' or 'console'
 #'
 #' @examples
-#' \donttest{
 #' omnipath_set_loglevel(logger::FATAL, target = 'console')
-#' }
 #'
 #' @export
 #' @importFrom magrittr %<>% %>%
@@ -132,11 +128,9 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
 #' @param level Character or class `loglevel`. The desired log level.
 #'
 #' @examples
-#' \donttest{
 #' omnipath_set_console_loglevel('warn')
 #' # or:
 #' omnipath_set_console_loglevel(logger::WARN)
-#' }
 #'
 #' @export
 #' @seealso \code{\link{omnipath_set_logfile_loglevel}}
@@ -156,11 +150,9 @@ omnipath_set_console_loglevel <- function(level){
 #' @param level Character or class `loglevel`. The desired log level.
 #'
 #' @examples
-#' \donttest{
 #' omnipath_set_logfile_loglevel('info')
 #' # or:
 #' omnipath_set_logfile_loglevel(logger::INFO)
-#' }
 #'
 #' @export
 #' @seealso \code{\link{omnipath_set_console_loglevel}}

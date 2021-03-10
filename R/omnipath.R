@@ -613,12 +613,10 @@ swap_undirected <- function(data){
 #' @param ... Optional additional arguments.
 #'
 #' @examples
-#' \donttest{
 #' ptms = import_omnipath_enzsub(
 #'     resources = c('PhosphoSite', 'SIGNOR'),
 #'     organism = 9606
 #' )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_ptms_databases}}}
@@ -686,9 +684,7 @@ import_OmniPath_PTMS <- function(...){
 #' @importFrom utils read.table
 #'
 #' @examples
-#' \donttest{
 #' get_enzsub_resources()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -753,12 +749,10 @@ get_ptms_databases <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions = import_omnipath_interactions(
 #'     resources = c('SignaLink3'),
 #'     organism = 9606
 #' )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -845,13 +839,11 @@ import_OmniPath_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_pathwayextra_interactions(
 #'         resources = c('BioGRID', 'IntAct'),
 #'         organism = 9606
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -927,13 +919,11 @@ import_PathwayExtra_Interactions <- function(...){
 #' @param ... Optional additional arguments.
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'    import_kinaseextra_interactions(
 #'        resources = c('PhosphoPoint', 'PhosphoSite'),
 #'        organism = 9606
 #'    )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1008,12 +998,10 @@ import_KinaseExtra_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <- import_ligrecextra_interactions(
 #'     resources = c('HPRD', 'Guide2Pharma'),
 #'     organism = 9606
 #' )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1078,12 +1066,10 @@ import_LigrecExtra_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_post_translational_interactions(
 #'         resources = c('BioGRID')
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1149,12 +1135,10 @@ import_post_translational_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <- import_dorothea_interactions(
 #'     resources = c('DoRothEA_A', 'ARACNe-GTEx_DoRothEA'),
 #'     organism = 9606
 #' )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1242,12 +1226,10 @@ import_tfregulons_interactions <- function(...){
 #' @param ... Optional additional arguments
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_tf_target_interactions(
 #'         resources = c('DoRothEA_A', 'SIGNOR')
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1308,12 +1290,10 @@ import_tf_target_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_transcriptional_interactions(
 #'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA_A')
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1378,12 +1358,10 @@ import_transcriptional_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_mirnatarget_interactions(
 #'         resources = c('miRTarBase', 'miRecords')
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'    \item{\code{\link{get_interaction_resources}}}
@@ -1455,12 +1433,10 @@ import_miRNAtarget_Interactions <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_tf_mirna_interactions(
 #'         resources = c('TransmiR')
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1518,12 +1494,10 @@ import_tf_mirna_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <-
 #'     import_lncrna_mrna_interactions(
 #'         resources = c('ncRDeathDB')
 #'     )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1596,12 +1570,10 @@ import_lncrna_mrna_interactions <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' interactions <- import_all_interactions(
 #'     resources = c('HPRD', 'BioGRID'),
 #'     organism = 9606
 #' )
-#' }
 #'
 #' @seealso \itemize{\item{\code{\link{get_interaction_resources}}}}
 #'
@@ -1668,9 +1640,7 @@ import_AllInteractions <- function(...){
 #' @importFrom utils read.table
 #'
 #' @examples
-#' \donttest{
 #' get_interaction_resources()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -1720,11 +1690,9 @@ get_interaction_databases <- function(...){
 #' @export
 #'
 #' @import jsonlite
-#' 
+#'
 #' @examples
-#' \donttest{
 #' get_resources(query_type = 'interactions')
-#' }
 get_resources <- function(
     query_type,
     datasets = NULL,
@@ -1789,11 +1757,9 @@ get_resources <- function(
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' complexes = import_omnipath_complexes(
 #'     resources = c('CORUM', 'hu.MAP')
 #' )
-#' }
 #'
 #' @seealso \itemize{\item{\code{\link{get_complexes_databases}}}}
 #'
@@ -1848,9 +1814,7 @@ import_OmniPath_complexes <- function(...){
 #' @importFrom utils read.csv
 #'
 #' @examples
-#' \donttest{
 #' get_complex_resources()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -1915,12 +1879,10 @@ get_complexes_databases <- function(...){
 #' @param ... Additional arguments.
 #'
 #' @examples
-#' \donttest{
-#' annotations = import_omnipath_annotations(
+#' annotations <- import_omnipath_annotations(
 #'     proteins = c('TP53', 'LMNA'),
 #'     resources = c('HPA_subcellular')
 #' )
-#' }
 #'
 #' @seealso \itemize{\item{\code{\link{get_annotation_databases}}}}
 #'
@@ -2075,9 +2037,7 @@ import_OmniPath_annotations <- function(...){
 #' @param ... optional additional arguments 
 #'
 #' @examples
-#' \donttest{
 #' get_annotation_resources()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -2201,9 +2161,7 @@ pivot_annotations <- function(annotations){
 #' @param ... Additional optional arguments 
 #'
 #' @examples
-#' \donttest{
-#' intercell = import_omnipath_intercell(categories = c('ecm'))
-#' }
+#' intercell <- import_omnipath_intercell(categories = 'ecm')
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_intercell_categories}}}
@@ -2288,9 +2246,7 @@ import_OmniPath_intercell <- function(...){
 #' @param dataset ignored at this query type
 #'
 #' @examples
-#' \donttest{
 #' get_intercell_resources()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -2357,13 +2313,11 @@ get_intercell_resources <- function(dataset = NULL){
 #' @param ... Ignored.
 #'
 #' @examples
-#' \donttest{
 #' intercellNetwork <- import_intercell_network(
 #'    interactions_param = list(datasets = 'ligrecextra'),
 #'    receiver_param = list(categories = c('receptor', 'transporter')),
 #'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
 #' )
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_intercell_categories}}}
@@ -2511,9 +2465,7 @@ import_intercell_network <- function(
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' get_intercell_categories()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{import_omnipath_intercell}}}
@@ -2540,9 +2492,7 @@ get_intercell_categories <- function(){
 #' @export
 #'
 #' @examples
-#' \donttest{
 #' get_intercell_generic_categories()
-#' }
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{import_omnipath_intercell}}}

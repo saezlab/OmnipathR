@@ -92,7 +92,6 @@ remap_dorothea_download <- function(){
 #' @return Data frame with TF-target relationships.
 #'
 #' @examples
-#' \donttest{
 #' remap_interactions <- remap_tf_target_download()
 #' remap_interactions
 #' # # A tibble: 9,546,470 x 4
@@ -104,7 +103,6 @@ remap_dorothea_download <- function(){
 #' #  4 AR                PDE4D             ENSG00000113448.18  1000
 #' #  5 ARID1A            PLEC              ENSG00000178209.14  1000
 #' # # . with 9,546,460 more rows
-#' }
 #'
 #'
 #' @export
@@ -156,7 +154,6 @@ remap_tf_target_download <- function(){
 #' @return Data frame with TF-target relationships.
 #'
 #' @examples
-#' \donttest{
 #' remap_interactions <- remap_filtered()
 #' nrow(remap_interactions)
 #' # [1] 145680
@@ -172,7 +169,6 @@ remap_tf_target_download <- function(){
 #' #  4 ADNP              AC007792.1
 #' #  5 ADNP              AC011288.2
 #' # # . with 30,320 more rows
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%

@@ -29,7 +29,6 @@
 #'     section of the Harmonizome webpage.
 #'
 #' @examples
-#' \donttest{
 #' harmonizome_data <- harmonizome_download('phosphositeplus')
 #' harmonizome_data
 #' # # A tibble: 6,013 x 7
@@ -40,7 +39,6 @@
 #' #  3 TP53     na               7157 SMG1   na              23049      1
 #' #  4 UPF1     na               5976 SMG1   na              23049      1
 #' # # . with 6,003 more rows
-#' }
 #'
 #' @importFrom dplyr mutate select
 #' @importFrom readr read_tsv read_lines

@@ -26,7 +26,6 @@
 #' Find out more at https://doi.org/10.1126/scisignal.2001699
 #'
 #' @examples
-#' \donttest{
 #' vinayagam_interactions <- vinayagam_download()
 #' vinayagam_interactions
 #' # # A tibble: 34,814 x 5
@@ -39,7 +38,6 @@
 #' #  5 STAT2                        6773 COPS4                       51138
 #' # # . with 34,804 more rows, and 1 more variable:
 #' # # `Edge direction score` <dbl>
-#' }
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readxl read_xls

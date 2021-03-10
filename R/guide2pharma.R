@@ -29,7 +29,6 @@
 #' database
 #'
 #' @examples
-#' \donttest{
 #' g2p_data <- guide2pharma_download()
 #' g2p_data
 #' # # A tibble: 21,586 x 38
@@ -42,7 +41,6 @@
 #' # # . with 21,576 more rows, and 33 more variables: target_ligand <chr>,
 #' # #   target_ligand_id <chr>, target_ligand_gene_symbol <chr>,
 #' # ... (truncated)
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%
