@@ -53,7 +53,6 @@ utils::globalVariables(
     select_organism = 'organisms',
     filter_databases = 'resources',
     databases = 'resources',
-    from_cache_file = 'cache_file',
     select_genes = 'proteins'
 )
 
@@ -128,7 +127,6 @@ import_omnipath <- function(
     organism = 9606,
     resources = NULL,
     datasets = NULL,
-    cache_file = NULL,
     genesymbols = 'yes',
     fields = NULL,
     default_fields = TRUE,
@@ -145,53 +143,38 @@ import_omnipath <- function(
     param <- c(as.list(environment()), list(...))
     param <- omnipath_check_param(param)
 
-    if(!is.null(cache_file) && file.exists(cache_file)){
-        loaded <- load(cache_file)
-        if(length(loaded) > 0){
-            result <- get(loaded[1])
-        }else{
-            stop(sprintf('Cache file `%s` yielded no data.', cache_file))
-        }
-        result <- filter_by_resource(result, resources = resources)
-        msg <- 'Loaded %d %s from cache.'
-    }else{
+    url <- omnipath_url(param)
+    download_args_defaults <- list(
+        URL = url
+    )
+    dataframe_defaults <- list(
+        FUN = read.table,
+        header = TRUE,
+        sep = '\t',
+        stringsAsFactors = FALSE,
+        quote = ''
+    )
+    json_defaults <- list(
+        FUN = jsonlite::fromJSON
+    )
+    download_args <- modifyList(
+        `if`(
+            !is.null(param$format) && param$format == 'json',
+            json_defaults,
+            dataframe_defaults
+        ),
+        download_args
+    )
+    download_args <- modifyList(
+        download_args_defaults,
+        download_args
+    )
 
-        url <- omnipath_url(param)
-        download_args_defaults <- list(
-            URL = url
-        )
-        dataframe_defaults <- list(
-            FUN = read.table,
-            header = TRUE,
-            sep = '\t',
-            stringsAsFactors = FALSE,
-            quote = ''
-        )
-        json_defaults <- list(
-            FUN = jsonlite::fromJSON
-        )
-        download_args <- modifyList(
-            `if`(
-                !is.null(param$format) && param$format == 'json',
-                json_defaults,
-                dataframe_defaults
-            ),
-            download_args
-        )
-        download_args <- modifyList(
-            download_args_defaults,
-            download_args
-        )
+    result <- do.call(omnipath_download, download_args)
 
-        result <- do.call(omnipath_download, download_args)
+    omnipath_check_result(result, url)
 
-        omnipath_check_result(result, url)
-        if(!is.null(cache_file)){
-            save(result, file = cache_file)
-        }
-        msg <- 'Downloaded %d %s.'
-
-    }
+    msg <- 'Downloaded %d %s.'
 
     result <- cast_logicals(result, logicals)
     result <- strip_resource_labels(result, references_by_resource)
@@ -597,7 +580,6 @@ swap_undirected <- function(data){
 #' @return A data frame containing the information about ptms
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources PTMs not reported in these databases are
 #' removed. See \code{\link{get_ptms_databases}} for more information
 #' @param organism PTMs are available for human, mouse and rat.
@@ -625,7 +607,6 @@ swap_undirected <- function(data){
 #'
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
 import_omnipath_enzsub <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL,
@@ -636,7 +617,6 @@ import_omnipath_enzsub <- function(
 
     result <- import_omnipath(
         query_type = 'enzsub',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         fields = fields,
@@ -728,7 +708,6 @@ get_ptms_databases <- function(...){
 #' @export
 #' @importFrom utils read.table
 #'
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -761,7 +740,6 @@ get_ptms_databases <- function(...){
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
 import_omnipath_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     datasets = 'omnipath',
@@ -773,7 +751,6 @@ import_omnipath_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = datasets,
@@ -823,7 +800,6 @@ import_OmniPath_Interactions <- function(...){
 #' without literature reference
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -852,7 +828,6 @@ import_OmniPath_Interactions <- function(...){
 #'
 #' @aliases import_PathwayExtra_Interactions
 import_pathwayextra_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL,
@@ -863,7 +838,6 @@ import_pathwayextra_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'pathwayextra',
@@ -903,7 +877,6 @@ import_PathwayExtra_Interactions <- function(...){
 #' literature reference
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -932,7 +905,6 @@ import_PathwayExtra_Interactions <- function(...){
 #'
 #' @aliases import_KinaseExtra_Interactions
 import_kinaseextra_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL, 
@@ -943,7 +915,6 @@ import_kinaseextra_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'kinaseextra',
@@ -982,7 +953,6 @@ import_KinaseExtra_Interactions <- function(...){
 #' the ones without literature references
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1010,7 +980,6 @@ import_KinaseExtra_Interactions <- function(...){
 #'
 #' @aliases import_LigrecExtra_Interactions
 import_ligrecextra_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL,
@@ -1021,7 +990,6 @@ import_ligrecextra_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'ligrecextra',
@@ -1113,7 +1081,6 @@ import_post_translational_interactions <- function(
 #' @export
 #' @importFrom utils read.table
 #'
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1125,7 +1092,7 @@ import_post_translational_interactions <- function(
 #' By default we take A and B level interactions (\code{c(A, B)}).
 #' It is to note that E interactions are not available in OmnipathR.
 #' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE. 
+#' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
 #' the query type. If FALSE, only the fields defined by the user in the
 #' `fields` argument will be added.
@@ -1148,8 +1115,7 @@ import_post_translational_interactions <- function(
 #'
 #' @aliases import_TFregulons_Interactions import_tfregulons_interactions
 import_dorothea_interactions <- function(
-    cache_file = NULL,
-    resources = NULL, 
+    resources = NULL,
     organism = 9606,
     dorothea_levels = c('A', 'B'),
     fields = NULL,
@@ -1160,7 +1126,6 @@ import_dorothea_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         dorothea_levels = dorothea_levels,
@@ -1211,7 +1176,6 @@ import_tfregulons_interactions <- function(...){
 #' @return A dataframe containing TF-target interactions
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1237,7 +1201,6 @@ import_tfregulons_interactions <- function(...){
 #'     \item{\code{\link{import_all_interactions}}}
 #' }
 import_tf_target_interactions <- function(
-    cache_file = NULL,
     resources = NULL, 
     organism = 9606,
     fields = NULL,
@@ -1248,7 +1211,6 @@ import_tf_target_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'tf_target',
@@ -1343,7 +1305,6 @@ import_transcriptional_interactions <- function(
 #' @return A dataframe containing miRNA-mRNA interactions
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1371,7 +1332,6 @@ import_transcriptional_interactions <- function(
 #'
 #' @aliases import_miRNAtarget_Interactions
 import_mirnatarget_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL,
@@ -1382,7 +1342,6 @@ import_mirnatarget_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'mirnatarget',
@@ -1418,7 +1377,6 @@ import_miRNAtarget_Interactions <- function(...){
 #' @return A dataframe containing TF-miRNA interactions
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1444,7 +1402,6 @@ import_miRNAtarget_Interactions <- function(...){
 #'     \item{\code{\link{import_all_interactions}}}
 #' }
 import_tf_mirna_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL, 
@@ -1455,7 +1412,6 @@ import_tf_mirna_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'tf_mirna',
@@ -1479,7 +1435,6 @@ import_tf_mirna_interactions <- function(
 #' @return A dataframe containing lncRNA-mRNA interactions
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1505,7 +1460,6 @@ import_tf_mirna_interactions <- function(
 #'     \item{\code{\link{import_all_interactions}}}
 #' }
 import_lncrna_mrna_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     fields = NULL,
@@ -1516,7 +1470,6 @@ import_lncrna_mrna_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         datasets = 'lncrna_mrna',
@@ -1550,7 +1503,6 @@ import_lncrna_mrna_interactions <- function(
 #' @return A dataframe containing all the datasets in the interactions query
 #' @export
 #' @importFrom utils read.table
-#' @param cache_file path to an earlier data file
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1580,7 +1532,6 @@ import_lncrna_mrna_interactions <- function(
 #'
 #' @aliases import_AllInteractions
 import_all_interactions <- function(
-    cache_file = NULL,
     resources = NULL,
     organism = 9606,
     dorothea_levels = c('A', 'B'),
@@ -1601,7 +1552,6 @@ import_all_interactions <- function(
 
     result <- import_omnipath(
         query_type = 'interactions',
-        cache_file = cache_file,
         resources = resources,
         organism = organism,
         dorothea_levels = dorothea_levels,
@@ -1752,7 +1702,6 @@ get_resources <- function(
 #' @export
 #' @importFrom utils read.table
 #'
-#' @param cache_file path to an earlier data file
 #' @param resources complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
 #' @param ... optional additional arguments 
@@ -1766,14 +1715,12 @@ get_resources <- function(
 #'
 #' @aliases import_Omnipath_complexes import_OmniPath_complexes
 import_omnipath_complexes <- function(
-    cache_file = NULL,
     resources = NULL,
     ...
 ){
 
     result <- import_omnipath(
         query_type = 'complexes',
-        cache_file = cache_file,
         resources = resources,
         ...
     )
@@ -1866,7 +1813,6 @@ get_complexes_databases <- function(...){
 #' @export
 #' @importFrom utils read.csv
 #'
-#' @param cache_file Path to an earlier data file
 #' @param proteins Vector containing the genes or proteins for whom
 #' annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
 #' miRBase IDs). It is also possible to donwload annotations for protein
@@ -1889,7 +1835,6 @@ get_complexes_databases <- function(...){
 #'
 #' @aliases import_Omnipath_annotations import_OmniPath_annotations
 import_omnipath_annotations <- function(
-    cache_file = NULL,
     proteins = NULL,
     resources = NULL,
     wide = FALSE,
@@ -1900,7 +1845,6 @@ import_omnipath_annotations <- function(
     proteins <- c(proteins, list(...)$select_genes)
 
     if(
-        is.null(cache_file) &&
         is.null(proteins) &&
         is.null(resources)
     ){
@@ -1917,19 +1861,12 @@ import_omnipath_annotations <- function(
 
     }
 
-    if(
-        (
-            !is.null(cache_file) &&
-            file.exists(cache_file)
-        ) ||
-        length(proteins) < 600
-    ){
+    if(length(proteins) < 600){
 
         result <- import_omnipath(
             query_type = 'annotations',
             proteins = proteins,
             resources = resources,
-            cache_file = cache_file,
             ...
         )
 
@@ -1981,10 +1918,6 @@ import_omnipath_annotations <- function(
         cat(' ready.\n')
 
         result <- do.call(rbind, parts)
-
-        if(!is.null(cache_file)){
-            save(result, cache_file)
-        }
 
         logger::log_success(
             'Downloaded %d annotation records.',
@@ -2130,7 +2063,6 @@ pivot_annotations <- function(annotations){
 #' @export
 #' @importFrom utils read.csv
 #' @importFrom stats setNames
-#' @param cache_file path to an earlier data file
 #' @param categories vector containing the categories to be retrieved.
 #' All the genes belonging to those categories will be returned. For further
 #' information about the categories see \code{\link{get_intercell_categories}}
@@ -2172,7 +2104,6 @@ pivot_annotations <- function(annotations){
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
-    cache_file = NULL,
     categories = NULL,
     resources = NULL,
     parent = NULL,
@@ -2190,7 +2121,6 @@ import_omnipath_intercell <- function(
     ...
 ){
 
-    from_cache <- !is.null(cache_file) && file.exists(cache_file)
     args <- c(as.list(environment()), list(...))
     args$query_type <- 'intercell'
     args$logicals <- c(
@@ -2202,11 +2132,6 @@ import_omnipath_intercell <- function(
     )
 
     result <- do.call(import_omnipath, args)
-
-    if(from_cache){
-        args$data <- result
-        result <- do.call(filter_intercell, args)
-    }
 
     return(result)
 
@@ -2288,9 +2213,6 @@ get_intercell_resources <- function(dataset = NULL){
 #' summarize_all first
 #' @importFrom magrittr %>%
 #'
-#' @param cache_file path to an earlier data file; if exists, will be loaded
-#'     as it is, the further arguments have no effect; if does not exists, the
-#'     result will be dumped into this file.
 #' @param interactions_param a list with arguments for an interactions query:
 #'     \code{\link{import_omnipath_interactions}},
 #'     \code{\link{import_pathwayextra_interactions}},
@@ -2330,7 +2252,6 @@ get_intercell_resources <- function(dataset = NULL){
 #'     \item{\code{\link{import_ligrecextra_interactions}}}
 #' }
 import_intercell_network <- function(
-    cache_file = NULL,
     interactions_param = list(),
     transmitter_param = list(),
     receiver_param = list(),
@@ -2340,120 +2261,100 @@ import_intercell_network <- function(
     ...
 ){
 
-    result <- NULL
+    interactions_param <- list(
+            query_type = 'interactions',
+            datasets = c(
+                'omnipath',
+                'pathwayextra',
+                'kinaseextra',
+                'ligrecextra'
+            )
+        ) %>%
+        insert_if_not_null(
+            resources = resources,
+            entity_types = entity_types
+        ) %>%
+        modifyList(interactions_param)
 
-    if(!is.null(cache_file) && file.exists(cache_file)){
-        loaded <- load(cache_file)
-        if(length(loaded) > 0){
-            result <- get(loaded[1])
-        }
-    }
+    interactions <- do.call(
+        import_omnipath,
+        interactions_param
+    )
+    interactions <- swap_undirected(interactions)
 
-    if(is.null(result)){
+    transmitter_param <- list(
+            causality = 'trans',
+            scope = 'generic'
+        ) %>%
+        insert_if_not_null(
+            resources = resources,
+            entity_types = entity_types
+        ) %>%
+        {`if`(
+            ligand_receptor,
+            `[[<-`(., 'parent', 'ligand'),
+            .
+        )} %>%
+        modifyList(transmitter_param)
 
-        interactions_param <- list(
-                query_type = 'interactions',
-                datasets = c(
-                    'omnipath',
-                    'pathwayextra',
-                    'kinaseextra',
-                    'ligrecextra'
-                )
-            ) %>%
-            insert_if_not_null(
-                resources = resources,
-                entity_types = entity_types
-            ) %>%
-            modifyList(interactions_param)
+    receiver_param <- list(
+            causality = 'rec',
+            scope = 'generic'
+        ) %>%
+        insert_if_not_null(
+            resources = resources,
+            entity_types = entity_types
+        ) %>%
+        {`if`(
+            ligand_receptor,
+            `[[<-`(., 'parent', 'receptor'),
+            .
+        )} %>%
+        modifyList(receiver_param)
 
-        interactions <- do.call(
-            import_omnipath,
-            interactions_param
+    intracell <- c('intracellular_intercellular_related', 'intracellular')
+    transmitters <-
+        do.call(import_omnipath_intercell, transmitter_param) %>%
+        dplyr::filter(!parent %in% intracell) %>%
+        dplyr::rename(category_source = source)
+    receivers <-
+        do.call(import_omnipath_intercell, receiver_param) %>%
+        dplyr::filter(!parent %in% intracell) %>%
+        dplyr::rename(category_source = source)
+
+    interactions %>%
+    dplyr::inner_join(
+        transmitters,
+        by = c('source' = 'uniprot')
+    ) %>%
+    dplyr::group_by(
+        category, parent, source, target
+    ) %>%
+    dplyr::mutate(
+        database = paste(database, collapse = ';')
+    ) %>%
+    dplyr::summarize_all(first) %>%
+    dplyr::inner_join(
+        receivers,
+        by = c('target' = 'uniprot'),
+        suffix = c('_intercell_source', '_intercell_target')
+    ) %>%
+    dplyr::group_by(
+        category_intercell_source,
+        parent_intercell_source,
+        source,
+        target,
+        category_intercell_target,
+        parent_intercell_target
+    ) %>%
+    dplyr::mutate(
+        database_intercell_target = paste(
+            database_intercell_target,
+            collapse = ';'
         )
-        interactions <- swap_undirected(interactions)
-
-        transmitter_param <- list(
-                causality = 'trans',
-                scope = 'generic'
-            ) %>%
-            insert_if_not_null(
-                resources = resources,
-                entity_types = entity_types
-            ) %>%
-            {`if`(
-                ligand_receptor,
-                `[[<-`(., 'parent', 'ligand'),
-                .
-            )} %>%
-            modifyList(transmitter_param)
-
-        receiver_param <- list(
-                causality = 'rec',
-                scope = 'generic'
-            ) %>%
-            insert_if_not_null(
-                resources = resources,
-                entity_types = entity_types
-            ) %>%
-            {`if`(
-                ligand_receptor,
-                `[[<-`(., 'parent', 'receptor'),
-                .
-            )} %>%
-            modifyList(receiver_param)
-
-        intracell <- c('intracellular_intercellular_related', 'intracellular')
-        transmitters <-
-            do.call(import_omnipath_intercell, transmitter_param) %>%
-            dplyr::filter(!parent %in% intracell) %>%
-            dplyr::rename(category_source = source)
-        receivers <-
-            do.call(import_omnipath_intercell, receiver_param) %>%
-            dplyr::filter(!parent %in% intracell) %>%
-            dplyr::rename(category_source = source)
-
-        result <-
-            interactions %>%
-            dplyr::inner_join(
-                transmitters,
-                by = c('source' = 'uniprot')
-            ) %>%
-            dplyr::group_by(
-                category, parent, source, target
-            ) %>%
-            dplyr::mutate(
-                database = paste(database, collapse = ';')
-            ) %>%
-            dplyr::summarize_all(first) %>%
-            dplyr::inner_join(
-                receivers,
-                by = c('target' = 'uniprot'),
-                suffix = c('_intercell_source', '_intercell_target')
-            ) %>%
-            dplyr::group_by(
-                category_intercell_source,
-                parent_intercell_source,
-                source,
-                target,
-                category_intercell_target,
-                parent_intercell_target
-            ) %>%
-            dplyr::mutate(
-                database_intercell_target = paste(
-                    database_intercell_target,
-                    collapse = ';'
-                )
-            ) %>%
-            dplyr::summarize_all(first) %>%
-            dplyr::ungroup()
-
-        if(!is.null(cache_file)){
-            save(result, cache_file)
-        }
-
-    }
-
-    return(result)
+    ) %>%
+    dplyr::summarize_all(first) %>%
+    dplyr::ungroup()
 
 }
 

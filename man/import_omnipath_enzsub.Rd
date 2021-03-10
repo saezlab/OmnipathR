@@ -7,7 +7,6 @@
 \title{Imports enzyme-substrate relationships from OmniPath}
 \usage{
 import_omnipath_enzsub(
-  cache_file = NULL,
   resources = NULL,
   organism = 9606,
   fields = NULL,
@@ -17,8 +16,6 @@ import_omnipath_enzsub(
 )
 }
 \arguments{
-\item{cache_file}{path to an earlier data file}
-
 \item{resources}{PTMs not reported in these databases are
 removed. See \code{\link{get_ptms_databases}} for more information}
 

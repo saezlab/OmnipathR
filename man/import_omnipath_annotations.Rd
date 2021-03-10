@@ -7,7 +7,6 @@
 \title{Imports annotations from OmniPath}
 \usage{
 import_omnipath_annotations(
-  cache_file = NULL,
   proteins = NULL,
   resources = NULL,
   wide = FALSE,
@@ -15,8 +14,6 @@ import_omnipath_annotations(
 )
 }
 \arguments{
-\item{cache_file}{Path to an earlier data file}
-
 \item{proteins}{Vector containing the genes or proteins for whom
 annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
 miRBase IDs). It is also possible to donwload annotations for protein

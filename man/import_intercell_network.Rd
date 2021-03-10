@@ -5,7 +5,6 @@
 \title{Imports an intercellular network combining annotations and interactions}
 \usage{
 import_intercell_network(
-  cache_file = NULL,
   interactions_param = list(),
   transmitter_param = list(),
   receiver_param = list(),
@@ -16,10 +15,6 @@ import_intercell_network(
 )
 }
 \arguments{
-\item{cache_file}{path to an earlier data file; if exists, will be loaded
-as it is, the further arguments have no effect; if does not exists, the
-result will be dumped into this file.}
-
 \item{interactions_param}{a list with arguments for an interactions query:
 \code{\link{import_omnipath_interactions}},
 \code{\link{import_pathwayextra_interactions}},

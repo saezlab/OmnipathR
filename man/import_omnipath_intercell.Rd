@@ -7,7 +7,6 @@
 \title{Imports OmniPath intercell annotations}
 \usage{
 import_omnipath_intercell(
-  cache_file = NULL,
   categories = NULL,
   resources = NULL,
   parent = NULL,
@@ -26,8 +25,6 @@ import_omnipath_intercell(
 )
 }
 \arguments{
-\item{cache_file}{path to an earlier data file}
-
 \item{categories}{vector containing the categories to be retrieved.
 All the genes belonging to those categories will be returned. For further
 information about the categories see \code{\link{get_intercell_categories}}}

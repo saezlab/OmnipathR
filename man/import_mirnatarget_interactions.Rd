@@ -6,7 +6,6 @@
 \title{Imports interactions from the miRNA-target dataset of OmniPath}
 \usage{
 import_mirnatarget_interactions(
-  cache_file = NULL,
   resources = NULL,
   organism = 9606,
   fields = NULL,
@@ -16,8 +15,6 @@ import_mirnatarget_interactions(
 )
 }
 \arguments{
-\item{cache_file}{path to an earlier data file}
-
 \item{resources}{interactions not reported in these databases are
 removed. See \code{\link{get_interaction_resources}} for more information.}
 

@@ -6,7 +6,6 @@
 \title{Imports all interaction datasets available in OmniPath}
 \usage{
 import_all_interactions(
-  cache_file = NULL,
   resources = NULL,
   organism = 9606,
   dorothea_levels = c("A", "B"),
@@ -20,8 +19,6 @@ import_all_interactions(
 import_AllInteractions(...)
 }
 \arguments{
-\item{cache_file}{path to an earlier data file}
-
 \item{resources}{interactions not reported in these databases are
 removed. See \code{\link{get_interaction_resources}} for more information.}
 

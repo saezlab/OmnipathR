@@ -6,11 +6,9 @@
 \alias{import_OmniPath_complexes}
 \title{Imports protein complexes from OmniPath}
 \usage{
-import_omnipath_complexes(cache_file = NULL, resources = NULL, ...)
+import_omnipath_complexes(resources = NULL, ...)
 }
 \arguments{
-\item{cache_file}{path to an earlier data file}
-
 \item{resources}{complexes not reported in these databases are
 removed. See \code{\link{get_complexes_databases}} for more information.}
 
