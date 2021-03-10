@@ -295,12 +295,11 @@ omnipath_cache_search <- function(pattern, ...){
 #' @examples
 #' \donttest{
 #' # remove all cache data from the BioPlex database
-#' omnipath_cache_search(
+#' cache_records <- omnipath_cache_search(
 #'     'bioplex',
 #'     ignore.case = TRUE
-#' ) %>%
-#' names %>%
-#' omnipath_cache_remove
+#' )
+#' omnipath_cache_remove(names(cache_records))
 #'
 #' # remove a record by its URL
 #' regnetwork_url <- 'http://www.regnetworkweb.org/download/human.zip'
@@ -685,10 +684,10 @@ omnipath_cache_get <- function(
 #' # retrieve the latest version of the first cache record
 #' # found by the search keyword "bioplex"
 #' latest_bioplex <-
-#'     omnipath_cache_search('bioplex') %>%
-#'     names %>%
-#'     first %>%
-#'     omnipath_cache_latest_or_new
+#'     omnipath_cache_latest_or_new(
+#'         names(omnipath_cache_search('bioplex'))[1]
+#'     )
+#'
 #' latest_bioplex$dl_finished
 #' # [1] "2021-03-09 14:28:50 CET"
 #' latest_bioplex$path
@@ -1286,7 +1285,7 @@ omnipath_cache_latest_version <- function(record){
 #'
 #' @examples
 #' \donttest{
-#' record <- omnipath_cache_search('biocond') %>% dplyr::first
+#' record <- dplyr::first(omnipath_cache_search('biocond'))
 #' # only the versions with status "ready"
 #' version_numbers <- omnipath_cache_filter_versions(status = 'ready')
 #' }

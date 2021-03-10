@@ -27,7 +27,8 @@
 #' @return An igraph object
 #' @export
 #' @import igraph
-#' @importFrom dplyr %>% select group_by summarise ungroup
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select group_by summarise ungroup
 #' @importFrom rlang .data
 #' @param ptms data.frame created by \code{\link{import_omnipath_enzsub}}
 #' @examples
@@ -66,7 +67,7 @@ ptms_graph <- function(ptms){
 #'     \code{\link{import_mirnatarget_interactions}} or
 #'     \code{\link{import_all_interactions}}
 #'
-#' @return An igraph object
+#' @return An igraph graph object.
 #'
 #' @export
 #' @import igraph
