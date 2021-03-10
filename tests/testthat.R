@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2020
+#  2018-2021
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -23,4 +23,4 @@
 library(testthat)
 library(OmnipathR)
 
-test_check("OmnipathR")
+test_check('OmnipathR')

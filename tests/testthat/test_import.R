@@ -30,39 +30,9 @@ library(logger)
 # not to interfere with testthat's console display
 omnipath_set_console_loglevel(logger::FATAL)
 
-################################################################################
-## Test of the functions fetching Omnipath Webserver
-################################################################################
 
-########## ########## ########## ##########
-########## Resource Queries      ##########   
-########## ########## ########## ##########
-## This function is convenient for appropriate resource retrieval. Following:
-## http://bioconductor.org/developers/how-to/web-query/
-## It tries to retrieve the resource one or several times before failing.
-omnipath_download <- function(URL, FUN, ..., N.TRIES=1L) {
-  N.TRIES <- as.integer(N.TRIES)
-  stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
-  
-  while (N.TRIES > 0L) {
-    result <- tryCatch(FUN(URL, ...), error=identity)
-    if (!inherits(result, "error"))
-      break
-    N.TRIES <- N.TRIES - 1L
-  }
-  
-  if (N.TRIES == 0L) {
-    stop("'omnipath_download()' failed:",
-         "\n  URL: ", URL,
-         "\n  error: ", conditionMessage(result))
-  }
-  
-  return(result) 
-}
-
-
-## Retrieves a list of resources for a certain query type and dataset.
-## We test each query with downloading only a few resources.
+#' Retrieves a list of resources for a certain query type and dataset.
+#' We test each query with downloading only a few resources.
 get_resources_test <- function(
         query_type,
         dataset = NULL,
@@ -106,6 +76,8 @@ get_resources_test <- function(
 }
 
 
+#' We want to avoid that tests fail just because some generic, system
+#' level problem with network or HTTP(S) connections.
 can_we_download_anything_at_all <- function(){
 
     tryCatch(
@@ -120,6 +92,7 @@ can_we_download_anything_at_all <- function(){
 }
 
 
+#' Try also with jsonlite
 can_jsonlite_download <- function(){
 
     tryCatch(
@@ -147,8 +120,8 @@ test_log <- function(){
 
 test_log()
 
-## Here we build a list with parameters that we later iterate through
-## in order to test all the various download methods.
+# Here we build a list with parameters that we later iterate through
+# in order to test all the various download methods.
 test_items <- list(
     omnipath_complexes = NULL,
     omnipath_enzsub = NULL,
