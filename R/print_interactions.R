@@ -37,24 +37,27 @@
 #'
 #' @export
 #'
-#' @return Interactions displayed in a nice format
+#' @return NULL
 #'
 #' @examples
-#' \donttest{
 #' ptms = import_omnipath_enzsub()
 #' print_interactions(head(ptms))
-#' print_interactions(tail(ptms),writeRefs=TRUE)
-#' print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
-#'     substrate_genesymbol=="MAPK3"))
-#' }
+#' print_interactions(tail(ptms), writeRefs = TRUE)
+#' print_interactions(
+#'     dplyr::filter(
+#'         ptms,
+#'         enzyme_genesymbol == 'MAP2K1',
+#'         substrate_genesymbol == 'MAPK3'
+#'     )
+#' )
 print_interactions <- function(interDF, writeRefs=FALSE){
 
-    if(nrow(interDF)==0) {
-        message("No interactions")
+    if(nrow(interDF) == 0){
+        message('No interactions')
         return(invisible(NULL))
     }
 
-    if("enzyme" %in% colnames(interDF)){  #PTMS
+    if('enzyme' %in% colnames(interDF)){  #PTMS
         interDF <-
             interDF[
                 order(
@@ -64,55 +67,55 @@ print_interactions <- function(interDF, writeRefs=FALSE){
                 ),
             ]
         interDF$enzyme <-
-            paste0(interDF$enzyme_genesymbol, " (", interDF$enzyme ,")")
-        interDF$substrate <-paste0(interDF$substrate_genesymbol,"_",
-            interDF$residue_type,interDF$residue_offset," (",
-            interDF$substrate,")")
+            paste0(interDF$enzyme_genesymbol, ' (', interDF$enzyme ,')')
+        interDF$substrate <-paste0(interDF$substrate_genesymbol,'_',
+            interDF$residue_type,interDF$residue_offset,' (',
+            interDF$substrate,')')
 
-        signs <- ifelse(interDF$is_stimulation==1,
-            ifelse(interDF$is_inhibition==1,"(+/-)","( + )"),
-            ifelse(interDF$is_inhibition==1,"( - )","( ? )"))
-        interDF$interaction <- paste0("==", signs,"==>")
+        signs <- ifelse(interDF$is_stimulation == 1,
+            ifelse(interDF$is_inhibition == 1,'(+/-)','( + )'),
+            ifelse(interDF$is_inhibition == 1,'( - )','( ? )'))
+        interDF$interaction <- paste0('==', signs, '==>')
         if(writeRefs){
-            interDF[,c('enzyme',"interaction","substrate","modification",
-            "n_resources","n_references","references")]
-        } else {
-            interDF[,c('enzyme',"interaction","substrate","modification",
-            "n_resources")]
+            interDF[,c('enzyme', 'interaction', 'substrate', 'modification',
+            'n_resources', 'n_references', 'references')]
+        }else{
+            interDF[,c('enzyme', 'interaction', 'substrate', 'modification',
+            'n_resources')]
         }
-    } else {
-        if ("n_references" %in% colnames(interDF)){
+    }else{
+        if ('n_references' %in% colnames(interDF)){
             interDF <-
                 interDF[order(interDF$n_references,interDF$n_resources,
                 decreasing = TRUE),]
-        } else {
+        }else{
             interDF <- interDF[order(interDF$n_resources,decreasing = TRUE),]
         }
-        interDF$source <- paste0(interDF$source_genesymbol, " (",
-            interDF$source ,")")
-        interDF$target <- paste0(interDF$target_genesymbol, " (",
-            interDF$target ,")")
+        interDF$source <- paste0(interDF$source_genesymbol, ' (',
+            interDF$source, ')')
+        interDF$target <- paste0(interDF$target_genesymbol, ' (',
+            interDF$target, ')')
 
-        signs <- ifelse(interDF$is_stimulation==1,
-            ifelse(interDF$is_inhibition==1,"(+/-)","( + )"),
-            ifelse(interDF$is_inhibition==1,"( - )","( ? )"))
+        signs <- ifelse(interDF$is_stimulation == 1,
+            ifelse(interDF$is_inhibition == 1,'(+/-)','( + )'),
+            ifelse(interDF$is_inhibition == 1,'( - )','( ? )'))
 
-        direction <- ifelse(interDF$is_directed==1, ">","")
-        interDF$interaction <- paste0("==", signs,"==",direction)
+        direction <- ifelse(interDF$is_directed == 1, '>','')
+        interDF$interaction <- paste0(' == ', signs, ' == ', direction)
 
         if(writeRefs){
-            if ("n_references" %in% colnames(interDF)){
-                interDF[,c('source',"interaction","target","n_resources",
-                "n_references","references")]
-            } else {
-                interDF[,c('source',"interaction","target","n_resources")]
+            if ('n_references' %in% colnames(interDF)){
+                interDF[,c('source','interaction','target','n_resources',
+                'n_references','references')]
+            }else{
+                interDF[,c('source','interaction','target','n_resources')]
             }
-        } else {
-            if ("n_references" %in% colnames(interDF)){
-                interDF[,c('source',"interaction","target","n_resources",
-                "n_references")]
-            } else {
-                interDF[,c('source',"interaction","target","n_resources")]
+        }else{
+            if ('n_references' %in% colnames(interDF)){
+                interDF[,c('source','interaction','target','n_resources',
+                'n_references')]
+            }else{
+                interDF[,c('source','interaction','target','n_resources')]
             }
         }
     }
@@ -128,68 +131,73 @@ print_interactions <- function(interDF, writeRefs=FALSE){
 #' @import igraph
 #' @export
 #'
-#' @return Interactions displayed in a nice format
+#' @return NULL
 #'
 #' @examples
-#' \donttest{
-#' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
-#' OPI_g = interaction_graph(interactions = interactions )
-#' print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
-#'     output = 'epath')$epath[[1]],OPI_g)
-#' }
+#' interactions <- import_omnipath_interactions(resources = c('SignaLink3'))
+#' OPI_g <- interaction_graph(interactions = interactions)
+#' print_path_es(
+#'     shortest_paths(
+#'         OPI_g,
+#'         from = 'TYRO3',
+#'         to = 'STAT3',
+#'         output = 'epath'
+#'     )$epath[[1]],
+#'     OPI_g
+#' )
 #'
 #' @seealso \code{\link{print_path_vs}}
 #' @aliases printPath_es
-print_path_es <- function(edgeSeq,G){
+print_path_es <- function(edgeSeq, G){
 
-    if(length(edgeSeq)==0) {
-        message("Empty path")
+    if(length(edgeSeq) == 0){
+        message('Empty path')
         return(NULL)
     }
-    signs <- ifelse(edgeSeq$is_stimulation==1,
-        ifelse(edgeSeq$is_inhibition==1,"(+/-)","( + )"),
-        ifelse(edgeSeq$is_inhibition==1,"( - )","( ? )"))
-    interaction <- paste0("==", signs,"==>")
+    signs <- ifelse(edgeSeq$is_stimulation == 1,
+        ifelse(edgeSeq$is_inhibition == 1,'(+/-)','( + )'),
+        ifelse(edgeSeq$is_inhibition == 1,'( - )','( ? )'))
+    interaction <- paste0('==', signs,'==>')
 
     if(! is.null(edgeSeq$residue_type)){
         edgeSeq$residue_type
         if(! is.null(edgeSeq$n_references)){
             df <- data.frame(
-                source = paste(tail_of(G, edgeSeq)$name," (",
-                tail_of(G, edgeSeq)$up_ids,")",sep = ""),
+                source = paste(tail_of(G, edgeSeq)$name,' (',
+                tail_of(G, edgeSeq)$up_ids,')',sep = ''),
                 interaction = interaction,
-                target = paste(paste0(head_of(G, edgeSeq)$name, "_",
-                edgeSeq$residue_type,edgeSeq$residue_offset)," (",
-                head_of(G, edgeSeq)$up_ids,")",sep = ""),
+                target = paste(paste0(head_of(G, edgeSeq)$name, '_',
+                edgeSeq$residue_type,edgeSeq$residue_offset),' (',
+                head_of(G, edgeSeq)$up_ids,')',sep = ''),
                 n_resources = edgeSeq$n_resources,
                 n_references = edgeSeq$n_references
             )
-        } else {
-            df <- data.frame(source = paste(tail_of(G, edgeSeq)$name," (",
-            tail_of(G, edgeSeq)$up_ids,")",sep = ""),interaction = interaction,
-            target = paste(paste0(head_of(G, edgeSeq)$name, "_",
-            edgeSeq$residue_type , edgeSeq$residue_offset)," (",
-            head_of(G, edgeSeq)$up_ids,")",sep = ""),
+        }else{
+            df <- data.frame(source = paste(tail_of(G, edgeSeq)$name,' (',
+            tail_of(G, edgeSeq)$up_ids,')',sep = ''),interaction = interaction,
+            target = paste(paste0(head_of(G, edgeSeq)$name, '_',
+            edgeSeq$residue_type , edgeSeq$residue_offset),' (',
+            head_of(G, edgeSeq)$up_ids,')',sep = ''),
             n_resources = edgeSeq$n_resources)
         }
-    } else {
+    }else{
         if(! is.null(edgeSeq$n_references)){
             df <- data.frame(
-                source = paste(tail_of(G, edgeSeq)$name," (",
-                tail_of(G, edgeSeq)$up_ids,")",sep = ""),
+                source = paste(tail_of(G, edgeSeq)$name,' (',
+                tail_of(G, edgeSeq)$up_ids,')',sep = ''),
                 interaction = interaction,
-                target = paste(head_of(G, edgeSeq)$name," (",
-                head_of(G, edgeSeq)$up_ids,")",sep = ""),
+                target = paste(head_of(G, edgeSeq)$name,' (',
+                head_of(G, edgeSeq)$up_ids,')',sep = ''),
                 n_resources = edgeSeq$n_resources,
                 n_references = edgeSeq$n_references
             )
-        } else {
+        }else{
             df <- data.frame(
-                source = paste(tail_of(G, edgeSeq)$name," (",
-                tail_of(G, edgeSeq)$up_ids,")",sep = ""),
+                source = paste(tail_of(G, edgeSeq)$name,' (',
+                tail_of(G, edgeSeq)$up_ids,')',sep = ''),
                 interaction = interaction,
-                target = paste(head_of(G, edgeSeq)$name," (",
-                head_of(G, edgeSeq)$up_ids,")",sep = ""),
+                target = paste(head_of(G, edgeSeq)$name,' (',
+                head_of(G, edgeSeq)$up_ids,')',sep = ''),
                 n_resources = edgeSeq$n_resources
             )
         }
@@ -200,20 +208,18 @@ print_path_es <- function(edgeSeq,G){
 
 #' Convert vertex sequence to named sequence to find unique
 #'
+#' Takes a list of nodeSequences converts them to names and takes the unique
+#' paths.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
 #' @noRd
 unique_node_seq <- function(nodeSeq_list){
-# takes a list of nodeSequences converts them to names and takes the unique
-# paths
-    name_path <- list()
-    for(i in seq(nodeSeq_list)){
-        path1 <- nodeSeq_list[[i]]
-        name_seq <- c()
-        for(j in seq(path1)){
-            name_seq <- c(name_seq, path1[j]$name)
-        }
-        name_path[[i]] <- name_seq
-    }
-    unique(name_path)
+
+    nodeSeq_list %>%
+    map(names) %>%
+    unique
+
 }
 
 
@@ -227,44 +233,42 @@ unique_node_seq <- function(nodeSeq_list){
 #' @import igraph
 #' @export
 #'
-#' @return Interactions displayed in a nice format
+#' @return NULL
 #'
 #' @examples
-#' \donttest{
-#' interactions = import_omnipath_interactions(resources=c("SignaLink3"))
-#' OPI_g = interaction_graph(interactions = interactions )
+#' interactions <- import_omnipath_interactions(resources=c('SignaLink3'))
+#' OPI_g <- interaction_graph(interactions = interactions)
 #' print_path_vs(
 #'     all_shortest_paths(
 #'         OPI_g,
-#'         from = "TYRO3",
-#'         to = "STAT3"
+#'         from = 'TYRO3',
+#'         to = 'STAT3'
 #'     )$vpath,
 #'     OPI_g
 #' )
-#' ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
-#' ptms_g = ptms_graph(ptms)
+#' ptms <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
+#' ptms_g <- ptms_graph(ptms)
 #' print_path_vs(
 #'     all_shortest_paths(
 #'         ptms_g,
-#'         from = "SRC",
-#'         to = "STAT1"
+#'         from = 'SRC',
+#'         to = 'STAT1'
 #'     )$res,
 #'     ptms_g
 #' )
-#' }
 #'
 #' @seealso \code{\link{print_path_es}}
 #' @aliases printPath_vs
-print_path_vs <- function(nodeSeq,G){
+print_path_vs <- function(nodeSeq, G){
 
-    if(length(nodeSeq)==0){
-        message("Empty path")
+    if(length(nodeSeq) == 0){
+        message('Empty path')
         return(invisible(NULL))
     }
     nodeSeq_names <- unique_node_seq(nodeSeq)
     for(i in seq(nodeSeq_names)){
-        message(paste0("Pathway ", i, ": ",
-            paste(nodeSeq_names[[i]],collapse = " -> ")))
+        message(paste0('Pathway ', i, ': ',
+            paste(nodeSeq_names[[i]],collapse = ' -> ')))
         edgeSet <- c()
         for(j in 2:length(nodeSeq_names[[i]])){
             edgeSet <- c(edgeSet, E(G)[nodeSeq_names[[i]][[j-1]]  %->%
@@ -282,7 +286,7 @@ print_path_vs <- function(nodeSeq,G){
 #'
 #' @noRd
 printPath_vs <- function(...){
-    .Deprecated("print_path_vs")
+    .Deprecated('print_path_vs')
     print_path_vs(...)
 }
 
@@ -294,6 +298,6 @@ printPath_vs <- function(...){
 #'
 #' @noRd
 printPath_es <- function(...){
-    .Deprecated("print_path_es")
+    .Deprecated('print_path_es')
     print_path_es(...)
 }

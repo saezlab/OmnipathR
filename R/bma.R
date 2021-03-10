@@ -56,7 +56,8 @@ bma_relationship <- function(id, from, to, type){
 #' variable
 #'
 #' @param a unique id, human readable name (e.g. JAG1), unique variable id,
-#' granularity (number of levels) and the formula
+#'     granularity (number of levels) and the formula
+#'
 #' @noRd
 bma_variable_model <- function(id, name, granularity, formula = ""){
     var <- sprintf(
@@ -89,8 +90,10 @@ bma_variable_layout <- function(id, name, x, y, description = "") {
 #'
 #' @return Returns either empty string (interpreted as default function), or
 #' ranularity - activity of upstream inhibitor
+#'
 #' @param bool stating whether the interaciton is an inhibition, granularity
-#' of variables (number of levels), and source of interaction
+#'     of variables (number of levels), and source of interaction
+#'
 #' @noRd
 bma_formula <- function(inhibitor, granularity, upstream){
     f <- ifelse(inhibitor, sprintf("%d-var(%s)", granularity, upstream), "")
@@ -101,8 +104,10 @@ bma_formula <- function(inhibitor, granularity, upstream){
 #' Returns a string describing the evidence behind an interaction
 #'
 #' Contains all interaction types with a simple descriptor and PMIDs
+#'
 #' @param takes an edge from omnipath "e", and optionally the name of the
-#' upstream variable ("incoming")
+#'     upstream variable ("incoming")
+#'
 #' @noRd
 bma_description <- function(e, incoming = ""){
     sign <- ifelse(e$is_stimulation == 1,
@@ -114,13 +119,21 @@ bma_description <- function(e, incoming = ""){
     }
 
 
-#' Prints a BMA motif to the screen from a sequence of edges, which can be
-#' copy/pasted into the BMA canvas
+#' BMA motifs from a sequence of edges
 #'
-#' Intended to parallel print_path_es
+#' These motifs can be added to a BMA canvas.
+#'
 #' @param edge_seq An igraph edge sequence.
 #' @param G An igraph graph object.
 #' @param granularity Numeric: granularity value.
+#'
+#' @return Character: BMA motifs as a single string.
+#'
+#' @examples
+#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' graph <- interaction_graph(interactions)
+#' motifs <- bma_motif_es(igraph::E(graph)[1], graph)
+#'
 #' @export
 #' @importFrom igraph tail_of head_of
 bma_motif_es <- function(edge_seq, G, granularity = 2){
@@ -129,35 +142,6 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
         wrong_input("BMA motif: empty path")
     }
 
-    #Process-
-    ## Create list of variables
-    ## Create layout of variables
-    ## Create list of links
-    ## Print format as follows (x is a string, xN is an integer, xF is a float)
-    ### {"Model":     {"Name": "Omnipath motif",
-    ###              "Variables": [{"Name":"x", "Id":xN, "RangeFrom" = 0,
-    ###                             "RangeTo" = granularity}, ...]
-    ###             "Relationships": [{"Id":xN, "FromVariable":xN,
-    ###                            "ToVariable":xN, "Type":"Activator"}, ...]
-    ###         }
-    ###  "Layout":     {"Variables": [{"Id":xN, "Name":"x", "Type":"Constant",
-    ###                                "ContainerId":0, "PositionX":xF,
-    ###                                "PositionY":xF, "CellX":0, "CellY":0,
-    ###                                "Angle":0, "Description":""}, ...]
-    ###            "Containers":[]
-    ###            }
-    ### }
-
-    #Code for identifying sign
-    #signs <- ifelse(edge_seq$is_stimulation == 1,
-    #    ifelse(edge_seq$is_inhibition == 1, "( + /-)", "( + )"),
-    #    ifelse(edge_seq$is_inhibition == 1, "( - )", "( ? )"))
-    #interaction <- paste0(" == ", signs, " == >")
-
-    #relationships <- ifelse(edge_seq$is_stimulation == 1,
-    #    ifelse(edge_seq$is_inhibition == 1, "Activator", "Activator"),
-    #    ifelse(edge_seq$is_inhibition == 1, "Inhibitor",
-    #    return(wrongInput("\nUnsigned input graph\n")))
     sources <- tail_of(G, edge_seq)$name
     variable_names <- c(sources, head_of(G, edge_seq)$name[length(edge_seq)])
     var_num <- length(variable_names)
@@ -197,7 +181,8 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
     ymod <- ifelse(i %% 2 == 0, 50, -50)
     y <- y + ymod
     }
-    result <- sprintf(
+
+    sprintf(
         paste0(
             '{"Model": {"Name": "Omnipath motif", "Variables":[%s], ',
             '"Relationships":[%s]}, "Layout":{"Variables":[%s], ',
@@ -207,7 +192,44 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
         paste(relationships, sep = '', collapse = ', '),
         paste(positions, sep = '', collapse = ', ')
     )
-    cat(result)
+
+}
+
+
+#' Prints BMA motifs to the screen from a sequence of edges
+#'
+#' The motifs can be copy-pasted into a BMA canvas.
+#'
+#' @param edge_seq An igraph edge sequence.
+#' @param G An igraph graph object.
+#' @param granularity Numeric: granularity value.
+#'
+#' @return NULL
+#'
+#' @examples
+#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' graph <- interaction_graph(interactions)
+#' print_bma_motif_es(igraph::E(graph)[1], graph)
+#' # {"Model": {
+#' #     "Name": "Omnipath motif",
+#' #     "Variables":[{
+#' #         "Name":"ULK1",
+#' #         "Id":1,
+#' #         "RangeFrom":0,
+#' #         "RangeTo":2,
+#' #         "Formula":""
+#' #     },
+#' #     {
+#' #         "Name":"ATG13",
+#' # ... (truncated)
+#'
+#' @importFrom magrittr %>%
+#' @export
+print_bma_motif_es <- function(edge_seq, G, granularity = 2){
+
+    edge_seq %>%
+    bma_motif_es(G, granularity = granularity) %>%
+    cat
 
 }
 
@@ -216,10 +238,28 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' copy/pasted into the BMA canvas
 #'
 #' Intended to parallel print_path_vs
+#'
 #' @param node_seq An igraph node sequence.
 #' @param G An igraph graph object.
+#'
+#' @return Character: BMA motifs as a single string.
+#'
+#' @examples
+#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' graph <- interaction_graph(interactions)
+#' bma_string <- bma_motif_vs(
+#'     igraph::all_shortest_paths(
+#'         graph,
+#'         from = 'ULK1',
+#'         to = 'ATG13'
+#'     )$res,
+#'     graph
+#' )
+#'
 #' @export
 #' @importFrom logger log_warn
+#' @importFrom purrr map2
+#' @importFrom magrittr %>%
 #' @importFrom igraph E
 bma_motif_vs <- function(node_seq, G){
 
@@ -227,19 +267,58 @@ bma_motif_vs <- function(node_seq, G){
         logger::log_warn("BMA motif: empty path")
         return(invisible(NULL))
     }
-    node_seq_names <- unique_node_seq(node_seq)
-    for(i in seq(node_seq_names)){
-        print(
-            paste0(
-                "pathway ", i, ": ",
-                paste(node_seq_names[[i]], collapse = " -> ")
+
+    node_seq %>%
+    unique_node_seq() %>%
+    map2(
+        seq(.),
+        function(node_names, i){
+
+            edge_set <- c()
+            for(j in 2:length(node_names)){
+                edge_set <- c(edge_set, E(G)[node_names[[j-1]]  %->%
+                    node_names[[j]]])
+            }
+
+            sprintf(
+                "pathway %d: %s\n%s",
+                i,
+                paste(node_names[[i]], collapse = " -> "),
+                bma_motif_es(E(G)[edge_set], G)
             )
-        )
-        edge_set <- c()
-        for(j in 2:length(node_seq_names[[i]])){
-            edge_set <- c(edge_set, E(G)[node_seq_names[[i]][[j-1]]  %->%
-                node_seq_names[[i]][[j]]])
         }
-        bma_motif_es(E(G)[edge_set], G)
-    }
+    ) %>%
+    paste(sep = '\n')
+
+}
+
+
+#' Prints BMA motifs to the screen from a sequence of nodes
+#'
+#' The motifs can be copy-pasted into a BMA canvas.
+#'
+#' @param node_seq An igraph node sequence.
+#' @param G An igraph graph object.
+#'
+#' @return NULL
+#'
+#' @examples
+#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' graph <- interaction_graph(interactions)
+#' print_bma_motif_vs(
+#'     igraph::all_shortest_paths(
+#'         graph,
+#'         from = 'ULK1',
+#'         to = 'ATG13'
+#'     )$res,
+#'     graph
+#' )
+#'
+#' @export
+print_bma_motif_vs <- function(node_seq, G){
+
+    node_seq %>%
+    bma_motif_vs(G) %>%
+    cat
+
 }
