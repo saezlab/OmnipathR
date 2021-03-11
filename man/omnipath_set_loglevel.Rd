@@ -11,6 +11,9 @@ omnipath_set_loglevel(level, target = "logfile")
 
 \item{target}{Character, either 'logfile' or 'console'}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Sets the log level for the package logger
 }

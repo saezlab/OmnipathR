@@ -20,3 +20,8 @@ The data frame filtered.
 Keeps only those records which are supported by any of the resources of
 interest.
 }
+\examples{
+interactions <- import_omnipath_interactions()
+signor <- filter_by_resource(interactions, resources = 'SIGNOR')
+
+}

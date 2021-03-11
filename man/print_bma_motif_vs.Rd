@@ -11,6 +11,9 @@ print_bma_motif_vs(node_seq, G)
 
 \item{G}{An igraph graph object.}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 The motifs can be copy-pasted into a BMA canvas.
 }

@@ -489,7 +489,7 @@ omnipath_cache_remove_versions <- function(
 
 #' Removes the cache database entries without existing files
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' omnipath_cache_clean_db()
@@ -525,7 +525,7 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #'
 #' @param ... Ignored.
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' \donttest{
@@ -558,7 +558,7 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 #' Removes the items from the cache directory which are unknown by the cache
 #' database
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' omnipath_cache_clean()
@@ -1196,6 +1196,8 @@ omnipath_cache_update_status <- function(
 #' @param key Character: key for a cache item, alternatively a version entry.
 #' @param ext Character: the file extension, e.g. "zip".
 #'
+#' @return Returns `NULL`.
+#'
 #' @examples
 #' bioc_url <- 'https://bioconductor.org/'
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
@@ -1228,7 +1230,7 @@ omnipath_cache_set_ext <- function(key, ext){
 #' ignore certain arguments in the codoc mismatch check but unfortunately
 #' they don't have.
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map
@@ -1265,8 +1267,6 @@ omnipath_cache_set_ext <- function(key, ext){
             )
 
     }
-
-    # omnipath.env$cache <- omnipath.env$cache
 
 }
 

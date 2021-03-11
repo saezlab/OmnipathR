@@ -17,6 +17,9 @@ contain multple configurations, each identified by a title.}
 a user level config file. When loading, the config in the current directory
 has prioroty over the user level config.}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Save the current package configuration
 }

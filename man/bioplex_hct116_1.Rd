@@ -6,6 +6,9 @@
 \usage{
 bioplex_hct116_1()
 }
+\value{
+Data frame (tibble) with interactions.
+}
 \description{
 This dataset contains ~71,000 interactions detected in HCT116 cells
 using 5,522 baits.

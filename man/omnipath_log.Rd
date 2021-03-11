@@ -6,6 +6,9 @@
 \usage{
 omnipath_log()
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Browse the current OmnipathR log file
 }

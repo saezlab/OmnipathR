@@ -161,6 +161,8 @@ bioplex3 <- function(){
 #' using 5,522 baits.
 #' More details at https://bioplex.hms.harvard.edu/interactions.php
 #'
+#' @return Data frame (tibble) with interactions.
+#'
 #' @export
 #'
 #' @examples

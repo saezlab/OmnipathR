@@ -11,6 +11,9 @@ omnipath_cache_set_ext(key, ext)
 
 \item{ext}{Character: the file extension, e.g. "zip".}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Sets the file extension for a cache record
 }

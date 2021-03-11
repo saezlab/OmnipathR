@@ -9,6 +9,9 @@ omnipath_cache_wipe(...)
 \arguments{
 \item{...}{Ignored.}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 After this operation the cache directory will be completely empty,
 except an empty cache database file.

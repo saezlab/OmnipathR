@@ -204,7 +204,7 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' @param G An igraph graph object.
 #' @param granularity Numeric: granularity value.
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' interactions <- import_omnipath_interactions(resources = 'ARN')
@@ -303,7 +303,7 @@ bma_motif_vs <- function(node_seq, G){
 #' @param node_seq An igraph node sequence.
 #' @param G An igraph graph object.
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' interactions <- import_omnipath_interactions(resources = 'ARN')

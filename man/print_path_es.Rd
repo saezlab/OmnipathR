@@ -12,6 +12,9 @@ print_path_es(edgeSeq, G)
 
 \item{G}{igraph object (from ptms or any interaction dataset)}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Pretty prints the interactions in a path.
 }

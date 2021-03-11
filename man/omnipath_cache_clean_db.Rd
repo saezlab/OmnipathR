@@ -6,6 +6,9 @@
 \usage{
 omnipath_cache_clean_db(...)
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Removes the cache database entries without existing files
 }

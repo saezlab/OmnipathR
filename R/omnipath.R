@@ -2527,6 +2527,10 @@ get_intercell_classes <- function(...){
 #'
 #' @return The data frame filtered.
 #'
+#' @examples
+#' interactions <- import_omnipath_interactions()
+#' signor <- filter_by_resource(interactions, resources = 'SIGNOR')
+#'
 #' @importFrom logger log_success
 #' @export
 #'

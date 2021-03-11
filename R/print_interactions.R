@@ -41,7 +41,7 @@
 #'
 #' @export
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' enzsub <- import_omnipath_enzsub()
@@ -143,7 +143,7 @@ print_interactions <- function(interDF, writeRefs=FALSE){
 #' @param edgeSeq edge sequence
 #' @param G igraph object (from ptms or any interaction dataset)
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @importFrom igraph tail_of head_of
 #' @export
@@ -287,7 +287,7 @@ unique_node_seq <- function(nodeSeq_list){
 #' @importFrom igraph E %->%
 #' @export
 #'
-#' @return NULL
+#' @return Returns `NULL`.
 #'
 #' @examples
 #' interactions <- import_omnipath_interactions(resources=c('SignaLink3'))

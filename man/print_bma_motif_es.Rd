@@ -13,6 +13,9 @@ print_bma_motif_es(edge_seq, G, granularity = 2)
 
 \item{granularity}{Numeric: granularity value.}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 The motifs can be copy-pasted into a BMA canvas.
 }

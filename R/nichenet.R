@@ -418,9 +418,9 @@ nichenet_optimization <- function(
 #'     `optimized_parameters`.
 #'
 #' @examples
-#' \donttest{
 #' networks <- nichenet_networks()
 #' expression <- nichenet_expression_data()
+#' \donttest{
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
 #' }
@@ -1857,6 +1857,8 @@ nichenet_gr_network_trrust <- function(){
 #'
 #' Builds a gene regulatory network using data from the HTRIdb database
 #' and converts it to a format suitable for NicheNet.
+#'
+#' @return Data frame with gene regulatory interactions in NicheNet format.
 #'
 #' @examples
 #' htri_gr_network <- nichenet_gr_network_htridb()

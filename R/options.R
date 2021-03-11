@@ -185,6 +185,8 @@ omnipath_get_config_path <- function(user = FALSE){
 #' a user level config file. When loading, the config in the current directory
 #' has prioroty over the user level config.
 #'
+#' @return Returns `NULL`.
+#'
 #' @examples
 #' \donttest{
 #' # after this, all downloads will default to commercial licenses

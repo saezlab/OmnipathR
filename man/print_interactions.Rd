@@ -23,6 +23,9 @@ following functions: \itemize{
 
 \item{writeRefs}{[FALSE] writes also the PubMed IDs if available}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Prints the interactions or enzyme-substrate relationships in a nice format.
 }

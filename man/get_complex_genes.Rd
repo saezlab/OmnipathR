@@ -5,7 +5,7 @@
 \title{Get all the molecular complexes for a given gene(s)}
 \usage{
 get_complex_genes(
-  complexes = import_Omnipath_complexes(),
+  complexes = import_omnipath_complexes(),
   select_genes,
   total_match = FALSE
 )

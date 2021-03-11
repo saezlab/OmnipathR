@@ -7,6 +7,9 @@ database}
 \usage{
 omnipath_cache_clean()
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Removes the items from the cache directory which are unknown by the cache
 database

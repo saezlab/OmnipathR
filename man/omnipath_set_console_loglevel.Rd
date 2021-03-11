@@ -9,6 +9,9 @@ omnipath_set_console_loglevel(level)
 \arguments{
 \item{level}{Character or class `loglevel`. The desired log level.}
 }
+\value{
+Returns `NULL`.
+}
 \description{
 Use this method to change during a session which messages you want to be
 printed on the console. Before loading the package, you can set it also by
