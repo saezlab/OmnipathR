@@ -47,8 +47,9 @@ path up to a defined length.
 interactions <- import_omnipath_interactions()
 graph <- interaction_graph(interactions)
 paths <- find_all_paths(
-    c('EGFR', 'STAT3'),
-    c('AKT1', 'ULK1'),
+    graph = graph,
+    start = c('EGFR', 'STAT3'),
+    end = c('AKT1', 'ULK1'),
     attr = 'name'
 )
 
@@ -56,6 +57,6 @@ paths <- find_all_paths(
 \seealso{
 \itemize{
     \item{\code{\link{interaction_graph}}}
-    \item{\code{\link{ptms_graph}}}
+    \item{\code{\link{enzsub_graph}}}
 }
 }

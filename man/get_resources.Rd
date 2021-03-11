@@ -11,12 +11,12 @@ get_resources(query_type, datasets = NULL, generic_categories = NULL)
 `complexes`, `annotations` or `intercell`}
 
 \item{datasets}{currently within the `interactions` query type only,
-multiple datasets are available: `omnipath`, `kinaseextra`, `pathwayextra`,
-`ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
-`lncrna_mrna`}
+multiple datasets are available: `omnipath`, `kinaseextra`,
+`pathwayextra`, `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`,
+`mirnatarget` and `lncrna_mrna`.}
 
 \item{generic_categories}{for the `intercell` query type, restrict the
-search for some generic categories e.g. `ligand` or `receptor`}
+search for some generic categories e.g. `ligand` or `receptor`.}
 }
 \value{
 a character vector with resource names

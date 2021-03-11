@@ -43,7 +43,7 @@ Imports the enzyme-substrate (more exactly, enzyme-PTM) relationship
 database from \url{https://omnipathdb.org/enzsub}
 }
 \examples{
-ptms = import_omnipath_enzsub(
+enzsub <- import_omnipath_enzsub(
     resources = c('PhosphoSite', 'SIGNOR'),
     organism = 9606
 )
@@ -51,7 +51,9 @@ ptms = import_omnipath_enzsub(
 }
 \seealso{
 \itemize{
-    \item{\code{\link{get_ptms_databases}}}
+    \item{\code{\link{get_enzsub_resources}}}
     \item{\code{\link{import_omnipath_interactions}}}
+    \item{\code{\link{enzsub_graph}}}
+    \item{\code{\link{print_interactions}}}
 }
 }

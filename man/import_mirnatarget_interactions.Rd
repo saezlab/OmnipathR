@@ -51,7 +51,9 @@ interactions <-
 }
 \seealso{
 \itemize{
-   \item{\code{\link{get_interaction_resources}}}
-   \item{\code{\link{import_all_interactions}}}
+    \item{\code{\link{get_interaction_resources}}}
+    \item{\code{\link{import_all_interactions}}}
+    \item{\code{\link{interaction_graph}}}
+    \item{\code{\link{print_interactions}}}
 }
 }

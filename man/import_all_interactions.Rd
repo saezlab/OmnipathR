@@ -71,5 +71,9 @@ interactions <- import_all_interactions(
 
 }
 \seealso{
-\itemize{\item{\code{\link{get_interaction_resources}}}}
+\itemize{
+    \item{\code{\link{get_interaction_resources}}}
+    \item{\code{\link{interaction_graph}}}
+    \item{\code{\link{print_interactions}}}
+}
 }

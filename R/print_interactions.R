@@ -301,7 +301,7 @@ unique_node_seq <- function(nodeSeq_list){
 #'     OPI_g
 #' )
 #' ptms <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
-#' ptms_g <- ptms_graph(ptms)
+#' ptms_g <- enzsub_graph(ptms)
 #' print_path_vs(
 #'     all_shortest_paths(
 #'         ptms_g,

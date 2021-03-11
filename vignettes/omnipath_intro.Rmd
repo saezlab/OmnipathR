@@ -408,32 +408,37 @@ build a graph using this information, and to retrieve PTMs from mouse or rat.
 ## We check the different PTMs databases
 get_enzsub_resources()
 
-## We query and store the ptms into a dataframe. No filtering by
-## databases in this case.
-ptms <- import_omnipath_enzsub()
+## We query and store the enzyme-PTM interactions into a dataframe.
+## No filtering by databases in this case.
+enzsub <- import_omnipath_enzsub()
 
 ## We can select and print the reactions between a specific kinase and
 ## a specific substrate
-print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
-    substrate_genesymbol=="MAPK3"))
+print_interactions(dplyr::filter(
+    enzsub,
+    enzyme_genesymbol == "MAP2K1",
+    substrate_genesymbol == "MAPK3"
+))
 
-## In the previous results, we can see that ptms does not contain sign
-## (activation/inhibition). We can generate this information based on the
-## protein-protein OmniPath interaction dataset.
+## In the previous results, we can see that enzyme-PTM relationships do not
+## contain sign (activation/inhibition). We can generate this information
+## based on the protein-protein OmniPath interaction dataset.
 interactions <- import_omnipath_interactions()
-ptms <- get_signed_ptms(ptms, interactions)
+enzsub <- get_signed_ptms(enzsub, interactions)
 
 ## We select again the same kinase and substrate. Now we have information
-## about inhibition or activation when we print the ptms
-print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
+## about inhibition or activation when we print the enzyme-PTM relationships
+print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
     substrate_genesymbol=="MAPK3"))
 
-## We can also transform the ptms into a graph.
-ptms_g <- ptms_graph(ptms = ptms)
+## We can also transform the enzyme-PTM relationships into a graph.
+enzsub_g <- enzsub_graph(enzsub = enzsub)
 
 ## We download PTMs for mouse
-ptms <- import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"),
-    organism=10090)
+enzsub <- import_omnipath_enzsub(
+    resources = c("PhosphoSite", "SIGNOR"),
+    organism = 10090
+)
 ```
 
 ## Complexes

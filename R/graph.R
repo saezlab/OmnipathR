@@ -38,7 +38,7 @@
 #' @importFrom magrittr %>%
 #'
 #' @seealso \code{\link{import_omnipath_enzsub}}
-#' @aliases ptms_graph
+#' @aliases enzsub_graph
 enzsub_graph <- function(enzsub){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.
@@ -148,7 +148,7 @@ interaction_graph <- function(interactions = interactions){
 #' @noRd
 format_graph_edges <- function(df_interact, flag){
 
-    if(flag == 'ptms_dataset'){
+    if(flag == 'enzsub_dataset'){
         # keep only edge attributes
         edges <- df_interact %>%
             dplyr::select(-c(.data$enzyme, .data$substrate))
@@ -251,88 +251,89 @@ format_graph_edges <- function(df_interact, flag){
 #' interactions <- import_omnipath_interactions()
 #' graph <- interaction_graph(interactions)
 #' paths <- find_all_paths(
-#'     c('EGFR', 'STAT3'),
-#'     c('AKT1', 'ULK1'),
+#'     graph = graph,
+#'     start = c('EGFR', 'STAT3'),
+#'     end = c('AKT1', 'ULK1'),
 #'     attr = 'name'
 #' )
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{ptms_graph}}}
+#'     \item{\code{\link{enzsub_graph}}}
 #' }
 find_all_paths <- function(
-        graph,
-        start,
-        end,
-        attr = NULL,
-        mode = 'OUT',
-        maxlen = 2,
-        progress = TRUE
-    ){
+    graph,
+    start,
+    end,
+    attr = NULL,
+    mode = 'OUT',
+    maxlen = 2,
+    progress = TRUE
+){
 
-        find_all_paths_aux <- function(start, end, path = NULL){
+    find_all_paths_aux <- function(start, end, path = NULL){
 
-            path %<>% append(start)
+        path %<>% append(start)
 
-            if(start == end) return(list(path))
+        if(start == end) return(list(path))
 
-            paths <- list()
+        paths <- list()
 
-            if(length(path) <= maxlen){
+        if(length(path) <= maxlen){
 
-                paths <- adjlist[[start]] %>%
-                    setdiff(path) %>%
-                    map(find_all_paths_aux, end = end, path = path) %>%
-                    unlist(recursive = FALSE)
-
-            }
-
-            return(paths)
-
-        }
-
-        adjlist <- graph %>% ego(mode = mode) %>% map(as.numeric)
-
-        if(!is.null(attr)){
-
-            if(!attr %in% vertex_attr_names(graph)){
-
-                stop(sprintf('No such vertex attribute: `%s`.', attr))
-
-            }
-
-            attr_to_id <- graph %>%
-                vertex_attr(attr) %>%
-                setNames(graph %>% vcount %>% seq, .)
-            start <- attr_to_id[start]
-            end <- attr_to_id[end]
-
-        }
-
-        if(progress){
-            pbar <- progress_bar$new(
-                format = 'Finding paths [:bar] :percent eta: :eta',
-                total = length(start * length(end))
-            )
-            fun <- {pbar$tick(); find_all_paths_aux}
-        }else{
-            fun <- find_all_paths_aux
-        }
-
-        paths <- cross2(start, end) %>%
-            transpose() %>%
-            c(fun) %>%
-            do.call(map2, .) %>%
-            unlist(recursive = FALSE)
-
-        if(!is.null(attr)){
-
-            paths %<>% map(
-                function(path){vertex_attr(graph, attr)[path]}
-            )
+            paths <- adjlist[[start]] %>%
+                setdiff(path) %>%
+                map(find_all_paths_aux, end = end, path = path) %>%
+                unlist(recursive = FALSE)
 
         }
 
         return(paths)
+
+    }
+
+    adjlist <- graph %>% ego(mode = mode) %>% map(as.numeric)
+
+    if(!is.null(attr)){
+
+        if(!attr %in% vertex_attr_names(graph)){
+
+            stop(sprintf('No such vertex attribute: `%s`.', attr))
+
+        }
+
+        attr_to_id <- graph %>%
+            vertex_attr(attr) %>%
+            setNames(graph %>% vcount %>% seq, .)
+        start <- attr_to_id[start]
+        end <- attr_to_id[end]
+
+    }
+
+    if(progress){
+        pbar <- progress_bar$new(
+            format = 'Finding paths [:bar] :percent eta: :eta',
+            total = length(start * length(end))
+        )
+        fun <- {pbar$tick(); find_all_paths_aux}
+    }else{
+        fun <- find_all_paths_aux
+    }
+
+    paths <- cross2(start, end) %>%
+        transpose() %>%
+        c(fun) %>%
+        do.call(map2, .) %>%
+        unlist(recursive = FALSE)
+
+    if(!is.null(attr)){
+
+        paths %<>% map(
+            function(path){vertex_attr(graph, attr)[path]}
+        )
+
+    }
+
+    return(paths)
 
 }

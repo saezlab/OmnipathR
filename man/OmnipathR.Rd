@@ -28,14 +28,14 @@ CRAN).
 \examples{
 \donttest{
 # Download post-translational modifications:
-ptms = import_omnipath_enzsub(resources=c("PhosphoSite", "SIGNOR"))
+enzsub <- import_omnipath_enzsub(resources = c("PhosphoSite", "SIGNOR"))
 
 # Download protein-protein interactions
-interactions = import_omnipath_interactions(resources=c("SignaLink3"))
+interactions <- import_omnipath_interactions(resources = c("SignaLink3"))
 
 # Convert to igraph objects:
-ptms_g = ptms_graph(ptms = ptms )
-OPI_g = interaction_graph(interactions = interactions )
+enzsub_g <- enzsub_graph(enzsub = enzsub)
+OPI_g <- interaction_graph(interactions = interactions )
 
 # Print some interactions:
 print_interactions(head(ptms))
@@ -48,17 +48,17 @@ print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",
    substrate_genesymbol=="MAPK3"))
 
 # find shortest paths on the directed network between proteins
-print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
-   output = 'epath')$epath[[1]],OPI_g)
+print_path_es(shortest_paths(OPI_g, from = "TYRO3", to = "STAT3",
+   output = 'epath')$epath[[1]], OPI_g)
 
 # find all shortest paths between proteins
 print_path_vs(
     all_shortest_paths(
-        ptms_g,
+        enzsub_g,
         from = "SRC",
         to = "STAT1"
     )$res,
-    ptms_g
+    enzsub_g
 )
 }
 
