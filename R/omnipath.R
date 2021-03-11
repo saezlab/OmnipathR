@@ -121,6 +121,9 @@ utils::globalVariables(
 #' to manage the download.
 #' Not exported.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom tibble as_tibble
+#'
 #' @noRd
 import_omnipath <- function(
     query_type,
@@ -181,6 +184,9 @@ import_omnipath <- function(
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result <- count_references(result)
         result <- count_resources(result)
+    }
+    if(is.data.frame(result)){
+        result %<>% as_tibble
     }
 
     loglevel <- `if`(
@@ -578,8 +584,7 @@ swap_undirected <- function(data){
 #' database from \url{https://omnipathdb.org/enzsub}
 #'
 #' @return A data frame containing the information about ptms
-#' @export
-#' @importFrom utils read.table
+#'
 #' @param resources PTMs not reported in these databases are
 #' removed. See \code{\link{get_ptms_databases}} for more information
 #' @param organism PTMs are available for human, mouse and rat.
@@ -595,14 +600,18 @@ swap_undirected <- function(data){
 #' @param ... Optional additional arguments.
 #'
 #' @examples
-#' ptms = import_omnipath_enzsub(
+#' enzsub <- import_omnipath_enzsub(
 #'     resources = c('PhosphoSite', 'SIGNOR'),
 #'     organism = 9606
 #' )
 #'
+#' @export
+#'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_ptms_databases}}}
+#'     \item{\code{\link{get_enzsub_resources}}}
 #'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{enzsub_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
@@ -736,6 +745,8 @@ get_ptms_databases <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
@@ -824,6 +835,8 @@ import_OmniPath_Interactions <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_PathwayExtra_Interactions
@@ -901,6 +914,8 @@ import_PathwayExtra_Interactions <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_KinaseExtra_Interactions
@@ -976,6 +991,8 @@ import_KinaseExtra_Interactions <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_LigrecExtra_Interactions
@@ -1042,6 +1059,8 @@ import_LigrecExtra_Interactions <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 import_post_translational_interactions <- function(
     resources = NULL,
@@ -1111,6 +1130,8 @@ import_post_translational_interactions <- function(
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_TFregulons_Interactions import_tfregulons_interactions
@@ -1199,9 +1220,11 @@ import_tfregulons_interactions <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 import_tf_target_interactions <- function(
-    resources = NULL, 
+    resources = NULL,
     organism = 9606,
     fields = NULL,
     default_fields = TRUE,
@@ -1261,6 +1284,8 @@ import_tf_target_interactions <- function(
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 import_transcriptional_interactions <- function(
     resources = NULL, 
@@ -1326,8 +1351,10 @@ import_transcriptional_interactions <- function(
 #'     )
 #'
 #' @seealso \itemize{
-#'    \item{\code{\link{get_interaction_resources}}}
-#'    \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 #'
 #' @aliases import_miRNAtarget_Interactions
@@ -1400,6 +1427,8 @@ import_miRNAtarget_Interactions <- function(...){
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 import_tf_mirna_interactions <- function(
     resources = NULL,
@@ -1458,6 +1487,8 @@ import_tf_mirna_interactions <- function(
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
 #' }
 import_lncrna_mrna_interactions <- function(
     resources = NULL,
@@ -1528,7 +1559,11 @@ import_lncrna_mrna_interactions <- function(
 #'     organism = 9606
 #' )
 #'
-#' @seealso \itemize{\item{\code{\link{get_interaction_resources}}}}
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
+#' }
 #'
 #' @aliases import_AllInteractions
 import_all_interactions <- function(
@@ -1629,18 +1664,18 @@ get_interaction_databases <- function(...){
 #' query type and optionally for a dataset within that.
 #'
 #' @param query_type one of the query types `interactions`, `enz_sub`,
-#' `complexes`, `annotations` or `intercell`
+#'     `complexes`, `annotations` or `intercell`
 #' @param datasets currently within the `interactions` query type only,
-#' multiple datasets are available: `omnipath`, `kinaseextra`, `pathwayextra`,
-#' `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
-#' `lncrna_mrna`
+#'     multiple datasets are available: `omnipath`, `kinaseextra`,
+#'     `pathwayextra`, `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`,
+#'     `mirnatarget` and `lncrna_mrna`.
 #' @param generic_categories for the `intercell` query type, restrict the
-#' search for some generic categories e.g. `ligand` or `receptor`
+#'     search for some generic categories e.g. `ligand` or `receptor`.
 #'
 #' @return a character vector with resource names
-#' @export
 #'
-#' @import jsonlite
+#' @export
+#' @importFrom jsonlite fromJSON
 #'
 #' @examples
 #' get_resources(query_type = 'interactions')
