@@ -1,5 +1,5 @@
 ---
-title: "OmnipathR: utility functions to work with OmniPath in R"
+title: "OmnipathR: an R client for the OmniPath web service"
 author:
 - name: Alberto Valdeolivas
   affiliation: Institute for Computational Biomedicine, Heidelberg University
@@ -16,20 +16,21 @@ output:
   BiocStyle::html_document
 bibliography: Bioc.bib
 abstract: |
-    This vignette describes how to use the `r Biocpkg("OmnipathR")` package to
-    retrieve information from the OmniPath database: <https://omnipathdb.org/>.
-    In addition, it includes some utility functions to filter, analyse and
-    visualize the data.
+    This vignette describes how to use the `r Biocpkg("OmnipathR")`
+    package to retrieve information from the OmniPath database:
+    <https://omnipathdb.org/>.
+    In addition, it includes some utility functions to filter
+    analyse and visualize the data.
 vignette: |
-  %\VignetteIndexEntry{OmnipathR: utility functions to work with OmniPath in R}
+  %\VignetteIndexEntry{OmnipathR: an R client for the OmniPath web service}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 # Introduction
 
-`r Biocpkg("OmnipathR")` is an _R_ package built to provide easy access to the
-data stored in the OmniPath webservice [@Turei2016]:
+`r Biocpkg("OmnipathR")` is an _R_ package built to provide easy access to
+the data stored in the OmniPath webservice [@Turei2016]:
 
 <http://omnipathdb.org/>
 
@@ -42,7 +43,8 @@ access is required for a proper use of `r Biocpkg("OmnipathR")`.
 
 `r Biocpkg("OmnipathR")` can retrieve five different types of data:
 
-* **Interactions**: protein-protein interactions organized in different datasets:
+* **Interactions**: protein-protein interactions organized in different
+datasets:
     + **omnipath**: the OmniPath data as defined in the original
     publication [@Turei2016] and collected from different databases.
     + **pathwayextra**: activity flow interactions without literature
@@ -69,11 +71,11 @@ in OmniPath are Phospho.ELM [@Dinkel2010] and PhosphoSitePlus
 such as: CORUM [@Giurgiu2018] or Hu.map [@Drew2017].
 
 * **Annotations**: it provides a large variety of data regarding
-different annotations about proteins and complexes. These data come from dozens
-of databases covering different topics such as: The Topology Data Bank of
-Transmembrane Proteins (TOPDB) [@Dobson2014] or ExoCarta [@Keerthikumar2016],
-a database collecting the proteins that were identified in exosomes in multiple
-organisms.
+different annotations about proteins and complexes. These data come from
+dozens of databases covering different topics such as: The Topology Data Bank
+of Transmembrane Proteins (TOPDB) [@Dobson2014] or ExoCarta
+[@Keerthikumar2016], a database collecting the proteins that were identified
+in exosomes in multiple organisms.
 
 * **Intercell**: it provides information on the roles in
 inter-cellular signaling. For instance. if a protein is a ligand, a receptor,
@@ -89,7 +91,10 @@ integrated in Omnipath, please visit:
 + <http://omnipathdb.org/>
 + <http://omnipathdb.org/info>
 
-```{r, fig1, dpi=300, fig.width=10, fig.height=10, fig.cap="Overview of the resources featured in OmniPath. Causal resources (including activity-flow and enzyme-substrate resources) can provide direction (*) or sign and direction (+) of interactions.", echo=FALSE}
+```{r, fig1, dpi=300, fig.width=10, fig.height=10,
+fig.cap="Overview of the resources featured in OmniPath. Causal resources
+(including activity-flow and enzyme-substrate resources) can provide
+direction (*) or sign and direction (+) of interactions.", echo=FALSE}
 library(knitr)
 knitr::include_graphics("../man/figures/page1_1.png")
 ```

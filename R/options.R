@@ -394,7 +394,7 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
         absolute_path() %T>%
         {dir.create(dirname(.), showWarnings = FALSE, recursive = TRUE)}
 
-    for(idx in 1:2){
+    for(idx in seq(2)){
         # 1 = logfile
         # 2 = console
 
