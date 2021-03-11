@@ -126,7 +126,7 @@ omnipath_lock_cache_db <- function(){
 
     lockfile <- omnipath_cache_lock_path()
 
-    for(i in 1:options('omnipath.cache_timeout')[[1]]){
+    for(i in seq(options('omnipath.cache_timeout')[[1]])){
 
         if(file.exists(lockfile)){
 
@@ -1371,7 +1371,7 @@ omnipath_cache_latest_version <- function(record){
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @importFrom magrittr %<>% %>%
-#' @importFrom purrr map map_chr
+#' @importFrom purrr map map_chr map_lgl
 #' @export
 omnipath_cache_filter_versions <- function(
     record,
@@ -1389,7 +1389,7 @@ omnipath_cache_filter_versions <- function(
 
     version_ids <- names(record$versions)
     versions <- record$versions
-    statuses <- map_chr(versions, 'status')
+    statuses <- versions %>% map_chr('status')
     selection <- statuses %in% status
 
     if(!is.null(max_age)){
@@ -1403,17 +1403,18 @@ omnipath_cache_filter_versions <- function(
     }
 
     if(latest){
-        t_latest <- versions %>%
-            map(function(v){v$dl_finished}) %>%
-            unlist()
+        t_finished <- versions %>% map('dl_finished')
+        t_latest <-
+            t_finished %>%
+            unlist() %>%
+            which.max() %>%
+            {t_finished[[.]]}
         selection %<>% `&`(which_dl_finished(versions, t_latest, op = `==`))
     }
 
-
-    dates <- map(record$versions, function(v){v$dl_finished})
-    versions <- versions[!sapply(dates, is.null)]
-    dates %<>% unlist
-    return(names(versions[which.max(dates)]))
+    versions %>%
+    names %>%
+    `[`(selection)
 
 }
 
