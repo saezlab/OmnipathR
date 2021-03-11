@@ -19,12 +19,12 @@ Pretty prints the interactions in a path.
 interactions <- import_omnipath_interactions(resources = c('SignaLink3'))
 OPI_g <- interaction_graph(interactions = interactions)
 print_path_es(
-    shortest_paths(
+    suppressWarnings(igraph::shortest_paths(
         OPI_g,
         from = 'TYRO3',
         to = 'STAT3',
         output = 'epath'
-    )$epath[[1]],
+    ))$epath[[1]],
     OPI_g
 )
 

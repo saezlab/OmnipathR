@@ -9,7 +9,7 @@ omnipath_cache_search(pattern, ...)
 \arguments{
 \item{pattern}{String or regular expression.}
 
-\item{...}{Passed to \code{\link{grep}}}
+\item{...}{Passed to \code{grep}}
 }
 \value{
 List of cache records matching the pattern.

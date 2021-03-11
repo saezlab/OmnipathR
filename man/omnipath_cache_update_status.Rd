@@ -28,7 +28,7 @@ Updates the status of an existing cache record
 \examples{
 bioc_url <- 'https://bioconductor.org/'
 latest_version <- omnipath_cache_latest_or_new(url = bioc_url)
-key <- omnipath_cache_key_from_version(latest_version)
+key <- omnipath_cache_key(bioc_url)
 omnipath_cache_update_status(
     key = key,
     version = latest_version$number,

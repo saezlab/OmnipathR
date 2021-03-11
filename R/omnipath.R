@@ -551,6 +551,8 @@ count_references <- function(data){
 #' @noRd
 swap_undirected <- function(data){
 
+    is_directed <- NULL
+
     data <- data %>%
         dplyr::filter(is_directed == 0) %>%
         dplyr::rename(
@@ -1288,12 +1290,14 @@ import_tf_target_interactions <- function(
 #'     \item{\code{\link{print_interactions}}}
 #' }
 import_transcriptional_interactions <- function(
-    resources = NULL, 
+    resources = NULL,
     organism = 9606,
     dorothea_levels = c('A', 'B'),
     references_by_resource = TRUE,
     ...
 ){
+
+    is_directed <- NULL
 
     result <- rbind(
         import_dorothea_interactions(
@@ -2340,6 +2344,8 @@ import_intercell_network <- function(
     ...
 ){
 
+    parent <- NULL
+
     interactions_param <- list(
             query_type = 'interactions',
             datasets = c(
@@ -2586,6 +2592,7 @@ filter_sources <- function(...){
 #'
 #' @importFrom dplyr recode rename_all
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #'
 #' @noRd
 filter_intercell <- function(

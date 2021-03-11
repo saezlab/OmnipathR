@@ -66,7 +66,7 @@ bioc_url <- 'https://bioconductor.org/'
 version <- omnipath_cache_latest_or_new(url = bioc_url)
 download.file(bioc_url, version$path)
 omnipath_cache_download_ready(version)
-key <- omnipath_cache_key_from_version(version)
+key <- omnipath_cache_key(bioc_url)
 omnipath_cache_remove(key = key)
 
 

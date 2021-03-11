@@ -58,5 +58,6 @@ paths <- find_all_paths(
 \itemize{
     \item{\code{\link{interaction_graph}}}
     \item{\code{\link{enzsub_graph}}}
+    \item{\code{\link{giant_component}}}
 }
 }

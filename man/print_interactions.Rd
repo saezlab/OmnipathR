@@ -14,7 +14,7 @@ following functions: \itemize{
 \item{\code{\link{import_pathwayextra_interactions}}}
 \item{\code{\link{import_kinaseextra_interactions}}}
 \item{\code{\link{import_ligrecextra_interactions}}}
-\item{\code{\link{import_post_translationsl_interactions}}}
+\item{\code{\link{import_post_translational_interactions}}}
 \item{\code{\link{import_dorothea_interactions}}}
 \item{\code{\link{import_tf_target_interactions}}}
 \item{\code{\link{import_transcriptional_interactions}}}

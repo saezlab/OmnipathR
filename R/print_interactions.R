@@ -31,7 +31,7 @@
 #'     \item{\code{\link{import_pathwayextra_interactions}}}
 #'     \item{\code{\link{import_kinaseextra_interactions}}}
 #'     \item{\code{\link{import_ligrecextra_interactions}}}
-#'     \item{\code{\link{import_post_translationsl_interactions}}}
+#'     \item{\code{\link{import_post_translational_interactions}}}
 #'     \item{\code{\link{import_dorothea_interactions}}}
 #'     \item{\code{\link{import_tf_target_interactions}}}
 #'     \item{\code{\link{import_transcriptional_interactions}}}
@@ -152,12 +152,12 @@ print_interactions <- function(interDF, writeRefs=FALSE){
 #' interactions <- import_omnipath_interactions(resources = c('SignaLink3'))
 #' OPI_g <- interaction_graph(interactions = interactions)
 #' print_path_es(
-#'     shortest_paths(
+#'     suppressWarnings(igraph::shortest_paths(
 #'         OPI_g,
 #'         from = 'TYRO3',
 #'         to = 'STAT3',
 #'         output = 'epath'
-#'     )$epath[[1]],
+#'     ))$epath[[1]],
 #'     OPI_g
 #' )
 #'
@@ -284,7 +284,7 @@ unique_node_seq <- function(nodeSeq_list){
 #' @param nodeSeq node sequence
 #' @param G igraph object (from ptms or interactions)
 #'
-#' @importFrom igraph E
+#' @importFrom igraph E %->%
 #' @export
 #'
 #' @return NULL
@@ -293,22 +293,22 @@ unique_node_seq <- function(nodeSeq_list){
 #' interactions <- import_omnipath_interactions(resources=c('SignaLink3'))
 #' OPI_g <- interaction_graph(interactions = interactions)
 #' print_path_vs(
-#'     all_shortest_paths(
+#'     igraph::all_shortest_paths(
 #'         OPI_g,
 #'         from = 'TYRO3',
 #'         to = 'STAT3'
 #'     )$vpath,
 #'     OPI_g
 #' )
-#' ptms <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
-#' ptms_g <- enzsub_graph(ptms)
+#' enzsub <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
+#' enzsub_g <- enzsub_graph(ptms)
 #' print_path_vs(
-#'     all_shortest_paths(
-#'         ptms_g,
+#'     igraph::all_shortest_paths(
+#'         enzsub_g,
 #'         from = 'SRC',
 #'         to = 'STAT1'
 #'     )$res,
-#'     ptms_g
+#'     enzsub_g
 #' )
 #'
 #' @seealso \code{\link{print_path_es}}

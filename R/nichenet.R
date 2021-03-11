@@ -1294,7 +1294,7 @@ nichenet_gr_network_omnipath <- function(
 omnipath_interactions_postprocess <- function(interactions, type){
 
     # NSE vs. R CMD check workaround
-    from <- to <- NULL
+    from <- to <- is_directed <- NULL
 
     interactions %>%
     select(from = source_genesymbol, to = target_genesymbol, is_directed) %>%

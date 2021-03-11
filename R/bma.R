@@ -263,7 +263,7 @@ print_bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' @importFrom logger log_warn
 #' @importFrom purrr map2
 #' @importFrom magrittr %>%
-#' @importFrom igraph E
+#' @importFrom igraph E %->%
 bma_motif_vs <- function(node_seq, G){
 
     if(length(node_seq) == 0){

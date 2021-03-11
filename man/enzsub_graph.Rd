@@ -23,5 +23,9 @@ enzsub_g <- enzsub_graph(enzsub = enzsub)
 
 }
 \seealso{
-\code{\link{import_omnipath_enzsub}}
+\itemize{
+    \item{\code{\link{import_omnipath_enzsub}}}
+    \item{\code{\link{giant_component}}}
+    \item{\code{\link{find_all_paths}}}
+}
 }

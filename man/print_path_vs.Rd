@@ -19,22 +19,22 @@ Prints the interactions in the path in a nice format.
 interactions <- import_omnipath_interactions(resources=c('SignaLink3'))
 OPI_g <- interaction_graph(interactions = interactions)
 print_path_vs(
-    all_shortest_paths(
+    igraph::all_shortest_paths(
         OPI_g,
         from = 'TYRO3',
         to = 'STAT3'
     )$vpath,
     OPI_g
 )
-ptms <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
-ptms_g <- enzsub_graph(ptms)
+enzsub <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
+enzsub_g <- enzsub_graph(ptms)
 print_path_vs(
-    all_shortest_paths(
-        ptms_g,
+    igraph::all_shortest_paths(
+        enzsub_g,
         from = 'SRC',
         to = 'STAT1'
     )$res,
-    ptms_g
+    enzsub_g
 )
 
 }

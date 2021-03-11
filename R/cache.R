@@ -242,7 +242,7 @@ cache_locked <- decorator %@% function(FUN){
 #' Searches the cache records by matching the URL against a string or regexp.
 #'
 #' @param pattern String or regular expression.
-#' @param ... Passed to \code{\link{grep}}
+#' @param ... Passed to \code{grep}
 #'
 #' @return List of cache records matching the pattern.
 #'
@@ -319,7 +319,7 @@ omnipath_cache_search <- function(pattern, ...){
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' download.file(bioc_url, version$path)
 #' omnipath_cache_download_ready(version)
-#' key <- omnipath_cache_key_from_version(version)
+#' key <- omnipath_cache_key(bioc_url)
 #' omnipath_cache_remove(key = key)
 #'
 #'
@@ -1091,7 +1091,7 @@ omnipath_cache_key_from_version <- function(version){
 #' @examples
 #' bioc_url <- 'https://bioconductor.org/'
 #' latest_version <- omnipath_cache_latest_or_new(url = bioc_url)
-#' key <- omnipath_cache_key_from_version(latest_version)
+#' key <- omnipath_cache_key(bioc_url)
 #' omnipath_cache_update_status(
 #'     key = key,
 #'     version = latest_version$number,
@@ -1200,16 +1200,16 @@ omnipath_cache_update_status <- function(
 #' bioc_url <- 'https://bioconductor.org/'
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' version$path
-#' [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1"
+#' # [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1"
 #' download.file(bioc_url, destfile = version$path)
 #' key <- omnipath_cache_key(url = bioc_url)
 #' omnipath_cache_set_ext(key = key, ext = 'html')
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' version$path
-#' [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1.html"
+#' # [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1.html"
 #' record <- omnipath_cache_get(url = bioc_url)
 #' record$ext
-#' [1] "html"
+#' # [1] "html"
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @export
@@ -1367,7 +1367,7 @@ omnipath_cache_latest_version <- function(record){
 #' record <- dplyr::first(omnipath_cache_search('biocond'))
 #'
 #' # only the versions with status "ready"
-#' version_numbers <- omnipath_cache_filter_versions(status = 'ready')
+#' version_numbers <- omnipath_cache_filter_versions(record, status = 'ready')
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @importFrom magrittr %<>% %>%

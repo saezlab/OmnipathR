@@ -40,7 +40,7 @@ omnipath_cache_download_ready(version)
 record <- dplyr::first(omnipath_cache_search('biocond'))
 
 # only the versions with status "ready"
-version_numbers <- omnipath_cache_filter_versions(status = 'ready')
+version_numbers <- omnipath_cache_filter_versions(record, status = 'ready')
 omnipath_cache_remove(url = bioc_url) # cleaning up
 
 }

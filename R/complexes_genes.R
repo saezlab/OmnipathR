@@ -48,8 +48,11 @@
 #' complexes_query_genes <- get_complex_genes(complexes, query_genes)
 #'
 #' @seealso \code{\link{import_omnipath_complexes}}
-get_complex_genes <- function(complexes = import_Omnipath_complexes(),
-    select_genes, total_match = FALSE){
+get_complex_genes <- function(
+    complexes = import_omnipath_complexes(),
+    select_genes,
+    total_match = FALSE
+){
 
     if(is.null(select_genes)){
         stop("A vector of genes should be provided")

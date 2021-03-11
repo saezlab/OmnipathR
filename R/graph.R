@@ -37,7 +37,11 @@
 #' @export
 #' @importFrom magrittr %>%
 #'
-#' @seealso \code{\link{import_omnipath_enzsub}}
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_enzsub}}}
+#'     \item{\code{\link{giant_component}}}
+#'     \item{\code{\link{find_all_paths}}}
+#' }
 #' @aliases enzsub_graph
 enzsub_graph <- function(enzsub){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
@@ -88,7 +92,7 @@ ptms_graph <- function(...){
 #'     \item{\code{\link{import_pathwayextra_interactions}}}
 #'     \item{\code{\link{import_kinaseextra_interactions}}}
 #'     \item{\code{\link{import_ligrecextra_interactions}}}
-#'     \item{\code{\link{import_post_translationsl_interactions}}}
+#'     \item{\code{\link{import_post_translational_interactions}}}
 #'     \item{\code{\link{import_dorothea_interactions}}}
 #'     \item{\code{\link{import_tf_target_interactions}}}
 #'     \item{\code{\link{import_transcriptional_interactions}}}
@@ -113,6 +117,8 @@ ptms_graph <- function(...){
 #'     \item{\code{\link{import_dorothea_interactions}}}
 #'     \item{\code{\link{import_mirnatarget_interactions}}}
 #'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{giant_component}}}
+#'     \item{\code{\link{find_all_paths}}}
 #' }
 interaction_graph <- function(interactions = interactions){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
@@ -144,6 +150,7 @@ interaction_graph <- function(interactions = interactions){
 #'
 #' @importFrom igraph graph_from_data_frame E
 #' @importFrom dplyr select
+#' @importFrom rlang .data
 #'
 #' @noRd
 format_graph_edges <- function(df_interact, flag){
@@ -260,6 +267,7 @@ format_graph_edges <- function(df_interact, flag){
 #' @seealso \itemize{
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{enzsub_graph}}}
+#'     \item{\code{\link{giant_component}}}
 #' }
 find_all_paths <- function(
     graph,
@@ -335,5 +343,30 @@ find_all_paths <- function(
     }
 
     return(paths)
+
+}
+
+
+#' Giant component of a graph
+#'
+#' For an igraph graph object returns its giant component.
+#'
+#' @param graph An igraph graph object.
+#'
+#' @return An igraph graph object containing only the giant component.
+#'
+#' @examples
+#' interactions <- import_post_translational_interactions()
+#' graph <- interaction_graph(interactions)
+#' graph_gc <- giant_component(graph)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom igraph components induced_subgraph
+#' @export
+giant_component <- function(graph){
+
+    graph %>%
+    components() %>%
+    {induced_subgraph(graph, which(.$members == which.max(.$csize)))}
 
 }
