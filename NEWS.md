@@ -1,3 +1,20 @@
+## OmnipathR v2.99.0 (2021-03-08)
+
++ Many new resources besides OmniPath:
+BioPlex, ConsensusPathDB, EVEX,
+Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
+InWeb InBioMap, Pathway Commons, Ramilowski et al. 2015,
+RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al.
+2011
++ Methods for converting network elements to Bio Model
+Analyzer (BMA) motifs
++ NicheNet workflow
++ Some igraph related methods: finding all paths up to
+certain length; extracting the giant component of a graph
++ Caching
++ Logging
++ Configuration handling
+
 ## OmnipathR v1.99.0 (2020-10-03)
 
 + New tests
