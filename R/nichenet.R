@@ -1490,10 +1490,13 @@ nichenet_signaling_network_vinayagam <- function(...){
 }
 
 
-#' Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
-#' (CPDB)
+#' Builds signaling network for NicheNet using ConsensusPathDB
 #'
-#' @param ... Ignored.
+#' Builds signaling network prior knowledge using ConsensusPathDB (CPDB)
+#' data. Note, the interactions from CPDB are not directed and many of them
+#' comes from complex expansion. Find out more at http://cpdb.molgen.mpg.de/.
+#'
+#' @param ... Passed to \code{\link{\consensuspathdb_download}}.
 #'
 #' @return A network data frame (tibble) with signaling interactions
 #'     suitable for use with NicheNet.
@@ -1508,8 +1511,10 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' @importFrom dplyr select mutate distinct
 #' @importFrom magrittr %>%
 #' @export
-#' @seealso \code{\link{nichenet_signaling_network},
-#'     \link{consensuspathdb_download}}
+#' @seealso \itemize{
+#'     \item{\code{\link{nichenet_signaling_network}}}
+#'     \item{\code{\link{consensuspathdb_download}}}
+#' }
 nichenet_signaling_network_cpdb <- function(...){
 
     # NSE vs. R CMD check workaround
