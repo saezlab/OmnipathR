@@ -488,6 +488,8 @@ split_unique_join <- function(
 #' For a character vector splits each element and applies a method for
 #' each sub vector.
 #'
+#' @importFrom purrr map
+#'
 #' @noRd
 split_apply <- function(
     x,
@@ -495,12 +497,12 @@ split_apply <- function(
     sep = ';',
     ...
 ){
-    return(
-        sapply(
-            strsplit(x, sep),
-            function(x){method(x, ...)}
-        )
-    )
+
+    x %>%
+    strsplit(sep) %>%
+    map(method, ...) %>%
+    unlist()
+
 }
 
 
