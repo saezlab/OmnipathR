@@ -327,3 +327,27 @@ if_null <- function(value1, value2){
     get(fun, envir = asNamespace(pkg), inherits = FALSE)
 
 }
+
+
+#' Calls a function without throwing error on empty vectors
+#'
+#' Many functions can not tolerate if their input vector is empty. However,
+#' especially in longer workflows, it can happen easily that we end up with
+#' an empty vector. Wrapping the call into this method provides a control
+#' over those cases and avoids error.
+#'
+#' @param v Vector, potentially empty or `NULL`.
+#' @param fun Function to call.
+#' @param .default The value to return if the vector is empty.
+#' @param ... Arguments for `fun`.
+#'
+#' @noRd
+empty_no_problem <- function(v, fun, .default = NULL, ...){
+
+    `if`(
+        is.null(v) || length(v) == 0,
+        .default,
+        fun(v, ...)
+    )
+
+}
