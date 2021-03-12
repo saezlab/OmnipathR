@@ -574,7 +574,7 @@ omnipath_cache_clean <- function(){
         omnipath.env$cache %>%
         map(~map_chr(.x$versions, 'path')) %>%
         unlist() %>%
-        basename()
+        empty_no_problem(basename)
 
     omnipath_get_cachedir() %>%
     list.files() %>%
@@ -1338,11 +1338,7 @@ omnipath_cache_next_version <- function(key){
 omnipath_cache_latest_version <- function(record){
 
     omnipath_cache_filter_versions(record = record, latest = TRUE) %>%
-    {`if`(
-        length(.) == 0,
-        NULL,
-        .
-    )}
+    empty_no_problem(identity)
 
 }
 
@@ -1408,11 +1404,7 @@ omnipath_cache_filter_versions <- function(
             versions %>%
             map('dl_finished') %>%
             unlist() %>%
-            {`if`(
-                length(.) > 0,
-                max(.),
-                NULL
-            )}
+            empty_no_problem(max)
         selection %<>% `&`(which_dl_finished(versions, t_latest, op = `==`))
     }
 
