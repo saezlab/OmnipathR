@@ -23,8 +23,8 @@
 #' Interactions from the EVEX database
 #'
 #' Downloads interactions from EVEX, a versatile text mining resource
-#' (http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
-#' combines the interactions and references into a single data frame.
+#' (\url{http://evexdb.org}). Translates the Entrez Gene IDs to Gene Symbols
+#' and combines the interactions and references into a single data frame.
 #'
 #' @usage
 #' evex_download(

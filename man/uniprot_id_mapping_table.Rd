@@ -28,7 +28,7 @@ service
 This function uses the uploadlists service of UniProt to obtain identifier
 translation tables. The possible values for `from` and `to` are the
 identifier type abbreviations used in the UniProt API, please refer to
-the table here: https://www.uniprot.org/help/api_idmapping
+the table here: \url{https://www.uniprot.org/help/api_idmapping}
 }
 \examples{
 uniprot_genesymbol <- uniprot_id_mapping_table(

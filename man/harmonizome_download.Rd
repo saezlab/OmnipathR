@@ -15,7 +15,7 @@ Data frame (tibble) with interactions.
 }
 \description{
 Downloads a single network dataset from Harmonizome
-https://maayanlab.cloud/Harmonizome
+\url{https://maayanlab.cloud/Harmonizome}.
 }
 \examples{
 harmonizome_data <- harmonizome_download('phosphositeplus')

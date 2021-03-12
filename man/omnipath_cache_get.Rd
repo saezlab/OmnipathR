@@ -24,7 +24,7 @@ omnipath_cache_get(
 
 \item{create}{Create a new entry if doesn't exist yet}
 
-\item{...}{Passed to \code{\link{omnipath_cache_record}}}
+\item{...}{Passed to \code{omnipath_cache_record} (internal function)}
 }
 \value{
 Cache record: an existing record if the entry already exists,

@@ -22,8 +22,8 @@
 
 #' Downloads TF-target interactions from TRRUST
 #'
-#' TRRUST v2 (https://www.grnpedia.org/trrust/) is a database of literature
-#' mined TF-target interactions for human and mouse.
+#' TRRUST v2 (\url{https://www.grnpedia.org/trrust/}) is a database of
+#' literature mined TF-target interactions for human and mouse.
 #'
 #' @param organism Character: either "human" or "mouse".
 #'

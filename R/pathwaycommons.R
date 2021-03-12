@@ -22,7 +22,7 @@
 
 #' Interactions from PathwayCommons
 #'
-#' PathwayCommons (http://www.pathwaycommons.org/) provides molecular
+#' PathwayCommons (\url{http://www.pathwaycommons.org/}) provides molecular
 #' interactions from a number of databases, in either BioPAX or SIF (simple
 #' interaction format). This function retrieves all interactions in SIF
 #' format. The data is limited to the interacting pair and the type of the

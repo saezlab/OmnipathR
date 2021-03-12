@@ -16,8 +16,8 @@ uniprot_full_id_mapping_table(
 
 \item{from}{Source ID type. See Details for possible values.}
 
-\item{reviewed}{Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
-both (NULL).}
+\item{reviewed}{Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
+or both (`NULL`).}
 
 \item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
 9606 for human).}

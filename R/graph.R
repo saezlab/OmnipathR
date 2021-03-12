@@ -42,7 +42,7 @@
 #'     \item{\code{\link{giant_component}}}
 #'     \item{\code{\link{find_all_paths}}}
 #' }
-#' @aliases enzsub_graph
+#' @aliases ptms_graph
 enzsub_graph <- function(enzsub){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.

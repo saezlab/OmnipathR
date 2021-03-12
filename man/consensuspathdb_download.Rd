@@ -26,8 +26,9 @@ interactions.}
 Data frame (tibble) with interactions.
 }
 \description{
-Compiles a table of binary interactions from ConsensusPathDB and
-translates the UniProtKB ACs to Gene Symbols.
+Compiles a table of binary interactions from ConsensusPathDB
+(\url{http://cpdb.molgen.mpg.de/}) and translates the UniProtKB ACs
+to Gene Symbols.
 }
 \examples{
 cpdb_data <- consensuspathdb_download(

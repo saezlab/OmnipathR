@@ -22,8 +22,9 @@
 
 #' Retrieves the ConsensusPathDB network
 #'
-#' Compiles a table of binary interactions from ConsensusPathDB and
-#' translates the UniProtKB ACs to Gene Symbols.
+#' Compiles a table of binary interactions from ConsensusPathDB
+#' (\url{http://cpdb.molgen.mpg.de/}) and translates the UniProtKB ACs
+#' to Gene Symbols.
 #'
 #' @param complex_max_size Numeric: do not expand complexes with a higher
 #'     number of elements than this. ConsensusPathDB does not contain

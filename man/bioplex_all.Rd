@@ -19,7 +19,7 @@ BioPlex provides four interaction datasets: version 1.0, 2.0, 3.0 and
 HCT116 version 1.0. This function downloads all of them, merges them to
 one data frame, removes the duplicates (based on unique pairs of UniProt
 IDs) and separates the isoform numbers from the UniProt IDs.
-More details at https://bioplex.hms.harvard.edu/interactions.php
+More details at \url{https://bioplex.hms.harvard.edu/interactions.php}.
 }
 \examples{
 bioplex_interactions <- bioplex_all()

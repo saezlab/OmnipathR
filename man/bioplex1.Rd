@@ -12,7 +12,7 @@ Data frame (tibble) with interactions.
 \description{
 This dataset contains ~24,000 interactions detected in HEK293T cells
 using 2,594 baits.
-More details at https://bioplex.hms.harvard.edu/interactions.php
+More details at \url{https://bioplex.hms.harvard.edu/interactions.php}.
 }
 \examples{
 bioplex_interactions <- bioplex1()

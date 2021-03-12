@@ -10,10 +10,10 @@ htridb_download()
 Data frame (tibble) with interactions.
 }
 \description{
-HTRIdb (https://www.lbbc.ibb.unesp.br/htri/) is a database of literature
-curated human TF-target interactions. As the database is recently offline,
-the data is distributed by the OmniPath rescued data repository
-(https://rescued.omnipathdb.org/).
+HTRIdb (\url{https://www.lbbc.ibb.unesp.br/htri/}) is a database of
+literature curated human TF-target interactions. As the database is
+recently offline, the data is distributed by the OmniPath rescued data
+repository (\url{https://rescued.omnipathdb.org/}).
 }
 \examples{
 htridb_data <- htridb_download()

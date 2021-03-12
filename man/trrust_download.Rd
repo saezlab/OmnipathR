@@ -13,8 +13,8 @@ trrust_download(organism = "human")
 A data frame of TF-target interactions.
 }
 \description{
-TRRUST v2 (https://www.grnpedia.org/trrust/) is a database of literature
-mined TF-target interactions for human and mouse.
+TRRUST v2 (\url{https://www.grnpedia.org/trrust/}) is a database of
+literature mined TF-target interactions for human and mouse.
 }
 \examples{
 trrust_interactions <- trrust_download()

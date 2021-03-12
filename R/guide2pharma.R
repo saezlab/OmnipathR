@@ -23,7 +23,7 @@
 #' Downloads interactions from the Guide to Pharmacology database
 #'
 #' Downloads ligand-receptor interactions from the Guide to Pharmacology
-#' (IUPHAR/BPS) database.
+#' (IUPHAR/BPS) database (\url{https://www.guidetopharmacology.org/}).
 #'
 #' @return A tibble (data frame) of interactions as it is provided by the
 #' database

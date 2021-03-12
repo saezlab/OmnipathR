@@ -24,7 +24,7 @@
 #'
 #' Vaquerizas et al. published in 2009 a list of transcription factors. This
 #' function retrieves Supplementary Table 2 from the article
-#' (http://www.nature.com/nrg/journal/v10/n4/index.html).
+#' (\url{http://www.nature.com/nrg/journal/v10/n4/index.html}).
 #'
 #' @return A data frame (tibble) listing transcription factors.
 #'

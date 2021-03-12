@@ -9,10 +9,10 @@ all_uniprots(fields = "id", reviewed = TRUE, organism = 9606)
 \arguments{
 \item{fields}{Character vector of fields as defined by UniProt. For
 possible values please refer to
-https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}
+\url{https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}}
 
-\item{reviewed}{Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
-both (NULL).}
+\item{reviewed}{Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
+or both (`NULL`).}
 
 \item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
 9606 for human).}

@@ -23,7 +23,7 @@
 #' Downloads network data from InWeb InBioMap
 #'
 #' Downloads the data from
-#' https://inbio-discover.com/map.html#downloads in tar.gz format,
+#' \url{https://inbio-discover.com/map.html#downloads} in tar.gz format,
 #' extracts the PSI MITAB table and returns it as a data frame.
 #'
 #' @param curl_verbose Logical. Perform CURL requests in verbose mode for

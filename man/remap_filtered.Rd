@@ -21,10 +21,10 @@ TF census.}
 Data frame with TF-target relationships.
 }
 \description{
-Downloads the ReMap TF-target interactions as processed by Garcia-Alonso
-et al. (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title) and
-filters them based on a score threshold, the top targets and whether the
-TF is included in the TF census (Vaquerizas et al. 2009). The code for
+Downloads the ReMap TF-target interactions as processed by Garcia-Alonso et
+al. (\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title})
+and filters them based on a score threshold, the top targets and whether
+the TF is included in the TF census (Vaquerizas et al. 2009). The code for
 filtering is adapted from DoRothEA, written by Christian Holland.
 }
 \examples{

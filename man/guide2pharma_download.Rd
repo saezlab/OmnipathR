@@ -12,7 +12,7 @@ database
 }
 \description{
 Downloads ligand-receptor interactions from the Guide to Pharmacology
-(IUPHAR/BPS) database.
+(IUPHAR/BPS) database (\url{https://www.guidetopharmacology.org/}).
 }
 \examples{
 g2p_data <- guide2pharma_download()

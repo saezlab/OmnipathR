@@ -63,7 +63,7 @@ bioplex_download <- function(version){
 #'
 #' This dataset contains ~24,000 interactions detected in HEK293T cells
 #' using 2,594 baits.
-#' More details at https://bioplex.hms.harvard.edu/interactions.php
+#' More details at \url{https://bioplex.hms.harvard.edu/interactions.php}.
 #'
 #' @return Data frame (tibble) with interactions.
 #'
@@ -127,7 +127,7 @@ bioplex2 <- function(){
 #'
 #' This dataset contains ~120,000 interactions detected in HEK293T cells
 #' using 10,128 baits.
-#' More details at https://bioplex.hms.harvard.edu/interactions.php
+#' More details at \url{https://bioplex.hms.harvard.edu/interactions.php}.
 #'
 #' @return Data frame (tibble) with interactions.
 #'
@@ -159,7 +159,7 @@ bioplex3 <- function(){
 #'
 #' This dataset contains ~71,000 interactions detected in HCT116 cells
 #' using 5,522 baits.
-#' More details at https://bioplex.hms.harvard.edu/interactions.php
+#' More details at \url{https://bioplex.hms.harvard.edu/interactions.php}.
 #'
 #' @return Data frame (tibble) with interactions.
 #'
@@ -193,7 +193,7 @@ bioplex_hct116_1 <- function(){
 #' HCT116 version 1.0. This function downloads all of them, merges them to
 #' one data frame, removes the duplicates (based on unique pairs of UniProt
 #' IDs) and separates the isoform numbers from the UniProt IDs.
-#' More details at https://bioplex.hms.harvard.edu/interactions.php
+#' More details at \url{https://bioplex.hms.harvard.edu/interactions.php}.
 #'
 #' @param unique Logical. Collapse the duplicate interactions into single
 #'     rows or keep them as they are. In case of merging duplicate records

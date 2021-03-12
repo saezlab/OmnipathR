@@ -15,7 +15,7 @@ A data frame (tibble) with the extracted interaction table.
 }
 \description{
 Downloads the data from
-https://inbio-discover.com/map.html#downloads in tar.gz format,
+\url{https://inbio-discover.com/map.html#downloads} in tar.gz format,
 extracts the PSI MITAB table and returns it as a data frame.
 }
 \examples{

@@ -2,21 +2,22 @@
 % Please edit documentation in R/nichenet.R
 \name{nichenet_signaling_network_cpdb}
 \alias{nichenet_signaling_network_cpdb}
-\title{Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
-(CPDB)}
+\title{Builds signaling network for NicheNet using ConsensusPathDB}
 \usage{
 nichenet_signaling_network_cpdb(...)
 }
 \arguments{
-\item{...}{Ignored.}
+\item{...}{Passed to \code{\link{consensuspathdb_download}}.}
 }
 \value{
 A network data frame (tibble) with signaling interactions
     suitable for use with NicheNet.
 }
 \description{
-Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
-(CPDB)
+Builds signaling network prior knowledge using ConsensusPathDB (CPDB)
+data. Note, the interactions from CPDB are not directed and many of them
+comes from complex expansion. Find out more at
+\url{http://cpdb.molgen.mpg.de/}.
 }
 \examples{
 # use some parameters stricter than default:
@@ -27,6 +28,8 @@ cpdb_signaling_network <- nichenet_signaling_network_cpdb(
 
 }
 \seealso{
-\code{\link{nichenet_signaling_network},
-    \link{consensuspathdb_download}}
+\itemize{
+    \item{\code{\link{nichenet_signaling_network}}}
+    \item{\code{\link{consensuspathdb_download}}}
+}
 }

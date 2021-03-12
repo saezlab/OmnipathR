@@ -12,7 +12,7 @@ A data frame (tibble) with interactions.
 \description{
 Curated ligand-receptor pairs from Supplementary Table 2 of the article
 "A draft network of ligand-receptor mediated multicellular signaling in
-human" (https://www.nature.com/articles/ncomms8866).
+human" (\url{https://www.nature.com/articles/ncomms8866}).
 }
 \examples{
 rami_interactions <- ramilowski_download()

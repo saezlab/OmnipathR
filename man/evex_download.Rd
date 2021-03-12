@@ -27,8 +27,8 @@ Data frame (tibble) with interactions.
 }
 \description{
 Downloads interactions from EVEX, a versatile text mining resource
-(http://evexdb.org). Translates the Entrez Gene IDs to Gene Symbols and
-combines the interactions and references into a single data frame.
+(\url{http://evexdb.org}). Translates the Entrez Gene IDs to Gene Symbols
+and combines the interactions and references into a single data frame.
 }
 \examples{
 evex_interactions <- evex_download()

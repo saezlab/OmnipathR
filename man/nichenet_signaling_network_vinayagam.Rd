@@ -16,7 +16,7 @@ A network data frame (tibble) with signaling interactions
 \description{
 Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
 Supplementary Table S6. Find out more at
-https://doi.org/10.1126/scisignal.2001699
+\url{https://doi.org/10.1126/scisignal.2001699}.
 }
 \examples{
 vi_signaling_network <- nichenet_signaling_network_vinayagam()

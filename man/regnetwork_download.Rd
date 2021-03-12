@@ -14,7 +14,7 @@ Data frame with interactions.
 }
 \description{
 Downloads transcriptional and post-transcriptional regulatory interactions
-from the RegNetwork database (http://www.regnetworkweb.org/). The
+from the RegNetwork database (\url{http://www.regnetworkweb.org/}). The
 information about effect signs (stimulation or inhibition), provided by
 \code{\link{regnetwork_directions}} are included in the result.
 }

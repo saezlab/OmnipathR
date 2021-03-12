@@ -6,6 +6,9 @@
 \usage{
 omnipath_cache_clean_db(...)
 }
+\arguments{
+\item{...}{Ignored.}
+}
 \value{
 Returns `NULL`.
 }

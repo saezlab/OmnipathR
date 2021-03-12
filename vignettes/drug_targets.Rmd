@@ -17,8 +17,7 @@ abstract: |
   OmniPath. Here we use data from DrugBank to find direct protein targets of
   drugs and to connect them to downstream signaling proteins using OmnipathR.
 vignette: |
-  %\VignetteIndexEntry{
-      Building protein networks around drug-targets using OmnipathR}
+  %\VignetteIndexEntry{Building networks around drug-targets using OmnipathR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 fig_width: 9

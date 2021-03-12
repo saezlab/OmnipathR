@@ -22,19 +22,20 @@
 
 #' Downloads TF-target interactions from ReMap
 #'
-#' ReMap (http://remap.univ-amu.fr/) is a database of ChIP-Seq experiments.
-#' It provides raw and merged peaks and CRMs (cis regulatory motifs) with
-#' their associations to regulators (TFs). TF-target relationships can be
-#' derived as it is written in Garcia-Alonso et al. 2019: "For ChIP-seq, we
-#' downloaded the binding peaks from ReMap and scored the interactions
-#' between each TF and each gene according to the distance between the TFBSs
-#' and the genes’ transcription start sites. We evaluated different filtering
-#' strategies that consisted of selecting only the top-scoring 100, 200, 500,
-#' and 1000 target genes for each TF."
-#' (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title).
+#' ReMap (\url{http://remap.univ-amu.fr/}) is a database of ChIP-Seq
+#' experiments. It provides raw and merged peaks and CRMs (cis regulatory
+#' motifs) with their associations to regulators (TFs). TF-target
+#' relationships can be derived as it is written in Garcia-Alonso et al.
+#' 2019: "For ChIP-seq, we downloaded the binding peaks from ReMap and scored
+#' the interactions between each TF and each gene according to the distance
+#' between the TFBSs and the genes’ transcription start sites. We evaluated
+#' different filtering strategies that consisted of selecting only the
+#' top-scoring 100, 200, 500, and 1000 target genes for each TF."
+#' (\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title}).
 #' This function returns the top TF-target relationships as used in DoRothEA:
+#' \url{
 #' https://github.com/saezlab/dorothea/blob/master/inst/scripts/02_chip_seq.R
-#' ).
+#' }).
 #'
 #' @return Data frame with TF-target relationships.
 #'
@@ -74,18 +75,18 @@ remap_dorothea_download <- function(){
 
 #' Downloads TF-target interactions from ReMap
 #'
-#' ReMap (http://remap.univ-amu.fr/) is a database of ChIP-Seq experiments.
-#' It provides raw and merged peaks and CRMs (cis regulatory motifs) with
-#' their associations to regulators (TFs). TF-target relationships can be
-#' derived as it is written in Garcia-Alonso et al. 2019: "For ChIP-seq, we
-#' downloaded the binding peaks from ReMap and scored the interactions
-#' between each TF and each gene according to the distance between the TFBSs
-#' and the genes’ transcription start sites. We evaluated different filtering
-#' strategies that consisted of selecting only the top-scoring 100, 200, 500,
-#' and 1000 target genes for each TF."
-#' (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title). This
-#' function retrieves the full processed TF-target list from the data
-#' deposited in https://zenodo.org/record/3713238.
+#' ReMap (\url{http://remap.univ-amu.fr/}) is a database of ChIP-Seq
+#' experiments. It provides raw and merged peaks and CRMs (cis regulatory
+#' motifs) with their associations to regulators (TFs). TF-target
+#' relationships can be derived as it is written in Garcia-Alonso et al.
+#' 2019: "For ChIP-seq, we downloaded the binding peaks from ReMap and scored
+#' the interactions between each TF and each gene according to the distance
+#' between the TFBSs and the genes’ transcription start sites. We evaluated
+#' different filtering strategies that consisted of selecting only the
+#' top-scoring 100, 200, 500, and 1000 target genes for each TF."
+#' (\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title}).
+#' This function retrieves the full processed TF-target list from the data
+#' deposited in \url{https://zenodo.org/record/3713238}.
 #'
 #' @return Data frame with TF-target relationships.
 #'
@@ -140,10 +141,10 @@ remap_tf_target_download <- function(){
 
 #' Downloads TF-target interactions from ReMap
 #'
-#' Downloads the ReMap TF-target interactions as processed by Garcia-Alonso
-#' et al. (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title) and
-#' filters them based on a score threshold, the top targets and whether the
-#' TF is included in the TF census (Vaquerizas et al. 2009). The code for
+#' Downloads the ReMap TF-target interactions as processed by Garcia-Alonso et
+#' al. (\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title})
+#' and filters them based on a score threshold, the top targets and whether
+#' the TF is included in the TF census (Vaquerizas et al. 2009). The code for
 #' filtering is adapted from DoRothEA, written by Christian Holland.
 #'
 #' @param score Numeric: a minimum score between 0 and 1000, records with

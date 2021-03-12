@@ -1461,7 +1461,7 @@ harmonizome_nichenet_process <- function(dataset){
 #'
 #' Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
 #' Supplementary Table S6. Find out more at
-#' https://doi.org/10.1126/scisignal.2001699
+#' \url{https://doi.org/10.1126/scisignal.2001699}.
 #'
 #' @param ... Ignored.
 #'
@@ -1494,9 +1494,10 @@ nichenet_signaling_network_vinayagam <- function(...){
 #'
 #' Builds signaling network prior knowledge using ConsensusPathDB (CPDB)
 #' data. Note, the interactions from CPDB are not directed and many of them
-#' comes from complex expansion. Find out more at http://cpdb.molgen.mpg.de/.
+#' comes from complex expansion. Find out more at
+#' \url{http://cpdb.molgen.mpg.de/}.
 #'
-#' @param ... Passed to \code{\link{\consensuspathdb_download}}.
+#' @param ... Passed to \code{\link{consensuspathdb_download}}.
 #'
 #' @return A network data frame (tibble) with signaling interactions
 #'     suitable for use with NicheNet.
@@ -1695,8 +1696,8 @@ nichenet_lr_network_guide2pharma <- function(){
 #' Downloads ligand-receptor interactions from Supplementary Table 2 of the
 #' paper 'A draft network of ligand–receptor-mediated multicellular signalling
 #' in human' (Ramilowski et al. 2015,
-#' https://www.nature.com/articles/ncomms8866). It converts the downloaded
-#' table to a format suitable for NicheNet.
+#' \url{https://www.nature.com/articles/ncomms8866}). It converts the
+#' downloaded table to a format suitable for NicheNet.
 #'
 #' @param evidences Character: evidence types, "literature supported",
 #'     "putative" or both.
@@ -2101,7 +2102,7 @@ nichenet_common_postprocess <- function(
 #' NicheNet uses expression data from a collection of published ligand or
 #' receptor KO or perturbation experiments to build its model. This function
 #' retrieves the original expression data, deposited in Zenodo
-#' (https://zenodo.org/record/3260758).
+#' (\url{https://zenodo.org/record/3260758}).
 #'
 #' @return Nested list, each element contains a data frame of processed
 #'     expression data and key variables about the experiment.

@@ -19,8 +19,8 @@ Data frame with ligand-receptor interactions in NicheNet format.
 Downloads ligand-receptor interactions from Supplementary Table 2 of the
 paper 'A draft network of ligand–receptor-mediated multicellular signalling
 in human' (Ramilowski et al. 2015,
-https://www.nature.com/articles/ncomms8866). It converts the downloaded
-table to a format suitable for NicheNet.
+\url{https://www.nature.com/articles/ncomms8866}). It converts the
+downloaded table to a format suitable for NicheNet.
 }
 \examples{
 # use only the literature supported data:

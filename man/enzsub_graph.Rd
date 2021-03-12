@@ -2,6 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{enzsub_graph}
 \alias{enzsub_graph}
+\alias{ptms_graph}
 \title{Enzyme-substrate graph}
 \usage{
 enzsub_graph(enzsub)

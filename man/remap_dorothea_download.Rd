@@ -10,19 +10,20 @@ remap_dorothea_download()
 Data frame with TF-target relationships.
 }
 \description{
-ReMap (http://remap.univ-amu.fr/) is a database of ChIP-Seq experiments.
-It provides raw and merged peaks and CRMs (cis regulatory motifs) with
-their associations to regulators (TFs). TF-target relationships can be
-derived as it is written in Garcia-Alonso et al. 2019: "For ChIP-seq, we
-downloaded the binding peaks from ReMap and scored the interactions
-between each TF and each gene according to the distance between the TFBSs
-and the genes’ transcription start sites. We evaluated different filtering
-strategies that consisted of selecting only the top-scoring 100, 200, 500,
-and 1000 target genes for each TF."
-(https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title).
+ReMap (\url{http://remap.univ-amu.fr/}) is a database of ChIP-Seq
+experiments. It provides raw and merged peaks and CRMs (cis regulatory
+motifs) with their associations to regulators (TFs). TF-target
+relationships can be derived as it is written in Garcia-Alonso et al.
+2019: "For ChIP-seq, we downloaded the binding peaks from ReMap and scored
+the interactions between each TF and each gene according to the distance
+between the TFBSs and the genes’ transcription start sites. We evaluated
+different filtering strategies that consisted of selecting only the
+top-scoring 100, 200, 500, and 1000 target genes for each TF."
+(\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title}).
 This function returns the top TF-target relationships as used in DoRothEA:
+\url{
 https://github.com/saezlab/dorothea/blob/master/inst/scripts/02_chip_seq.R
-).
+}).
 }
 \examples{
 remap_interactions <- remap_dorothea_download()

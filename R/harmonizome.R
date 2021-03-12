@@ -23,7 +23,7 @@
 #' Downloads a Harmonizome network dataset
 #'
 #' Downloads a single network dataset from Harmonizome
-#' https://maayanlab.cloud/Harmonizome
+#' \url{https://maayanlab.cloud/Harmonizome}.
 #'
 #' @param dataset The dataset part of the URL. Please refer to the download
 #'     section of the Harmonizome webpage.

@@ -36,10 +36,10 @@
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
 #' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: https://www.uniprot.org/help/api_idmapping
+#' the table here: \url{https://www.uniprot.org/help/api_idmapping}
 #'
 #' @importFrom readr read_tsv cols
-#' @importFrom httr POST
+#' @importFrom httr POST content
 #' @importFrom magrittr %>%
 #' @export
 #'
@@ -123,7 +123,7 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
 #' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: https://www.uniprot.org/help/api_idmapping
+#' the table here: \url{https://www.uniprot.org/help/api_idmapping}
 #' The mapping between identifiers can be ambiguous. In this case one row
 #' in the original data frame yields multiple rows in the returned data
 #' frame.
@@ -187,9 +187,9 @@ translate_ids <- function(
 #'
 #' @param fields Character vector of fields as defined by UniProt. For
 #'     possible values please refer to
-#'     https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames
-#' @param reviewed Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
-#'     both (NULL).
+#'     \url{https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}
+#' @param reviewed Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
+#'     or both (`NULL`).
 #' @param organism Integer, NCBI Taxonomy ID of the organism (by default
 #'     9606 for human).
 #'
@@ -237,8 +237,8 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #'
 #' @param to Target ID type. See Details for possible values.
 #' @param from Source ID type. See Details for possible values.
-#' @param reviewed Retrieve only reviewed (TRUE), only unreviewed (FALSE) or
-#'     both (NULL).
+#' @param reviewed Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
+#'     or both (`NULL`).
 #' @param organism Integer, NCBI Taxonomy ID of the organism (by default
 #'     9606 for human).
 #'

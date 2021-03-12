@@ -15,7 +15,7 @@ Nested list, each element contains a data frame of processed
 NicheNet uses expression data from a collection of published ligand or
 receptor KO or perturbation experiments to build its model. This function
 retrieves the original expression data, deposited in Zenodo
-(https://zenodo.org/record/3260758).
+(\url{https://zenodo.org/record/3260758}).
 }
 \examples{
 exp_data <- nichenet_expression_data()
