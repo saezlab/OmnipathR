@@ -489,6 +489,8 @@ omnipath_cache_remove_versions <- function(
 
 #' Removes the cache database entries without existing files
 #'
+#' @param ... Ignored.
+#'
 #' @return Returns `NULL`.
 #'
 #' @examples
@@ -621,7 +623,7 @@ omnipath_cache_autoclean <- function(){
 #' @param post HTTP POST parameters as a list
 #' @param payload HTTP data payload
 #' @param create Create a new entry if doesn't exist yet
-#' @param ... Passed to \code{\link{omnipath_cache_record}}
+#' @param ... Passed to \code{omnipath_cache_record} (internal function)
 #'
 #' @return Cache record: an existing record if the entry already exists,
 #'     otherwise a newly created and inserted record
@@ -1083,7 +1085,7 @@ omnipath_cache_key_from_version <- function(version){
 #'     item will be created
 #' @param status The updated status value
 #' @param dl_finished Timestamp for the time when download was finished,
-#'     if NULL the value remains unchanged
+#'     if `NULL` the value remains unchanged
 #'
 #' @return Character: invisibly returns the version number of the cache
 #'     version item.
@@ -1387,7 +1389,6 @@ omnipath_cache_filter_versions <- function(
 
     }
 
-    version_ids <- names(record$versions)
     versions <- record$versions
     statuses <- versions %>% map_chr('status')
     selection <- statuses %in% status
@@ -1403,12 +1404,15 @@ omnipath_cache_filter_versions <- function(
     }
 
     if(latest){
-        t_finished <- versions %>% map('dl_finished')
         t_latest <-
-            t_finished %>%
+            versions %>%
+            map('dl_finished') %>%
             unlist() %>%
-            which.max() %>%
-            {t_finished[[.]]}
+            {`if`(
+                length(.) > 0,
+                max(.),
+                NULL
+            )}
         selection %<>% `&`(which_dl_finished(versions, t_latest, op = `==`))
     }
 
