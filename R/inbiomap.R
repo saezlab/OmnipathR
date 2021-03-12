@@ -30,8 +30,8 @@
 #'     debugging purposes.
 #'
 #' @importFrom magrittr %>% %T>%
-#' @importFrom RCurl basicHeaderGatherer basicTextGatherer CFILE
-#' @importFrom RCurl getCurlHandle curlSetOpt curlPerform close
+#' @importFrom RCurl basicHeaderGatherer basicTextGatherer
+#' @importFrom RCurl getCurlHandle curlSetOpt curlPerform
 #' @importFrom jsonlite parse_json
 #' @importFrom readr read_tsv cols
 #' @export
