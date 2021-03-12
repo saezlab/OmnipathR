@@ -3,8 +3,9 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   drug_targets: drug_targets.html
+  nichenet: nichenet.html
   omnipath_intro: omnipath_intro.html
-last_built: 2021-03-10T14:48Z
+last_built: 2021-03-12T09:39Z
 urls:
   reference: https://saezlab.github.io/OmnipathR/reference
   article: https://saezlab.github.io/OmnipathR/articles

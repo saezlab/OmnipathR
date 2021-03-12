@@ -40,6 +40,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/dot-omnipath_options_defaults.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/enzsub_graph.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/evex_download.html</loc>
   </url>
   <url>
@@ -77,6 +80,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/get_signed_ptms.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/giant_component.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/guide2pharma_download.html</loc>
@@ -247,6 +253,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/omnipath_cache_clean.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/omnipath_cache_clean_db.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/omnipath_cache_download_ready.html</loc>
   </url>
   <url>
@@ -322,6 +331,12 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/pivot_annotations.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/print_bma_motif_es.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/print_bma_motif_vs.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/print_interactions.html</loc>
   </url>
   <url>
@@ -329,9 +344,6 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/print_path_vs.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/reference/ptms_graph.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/ramilowski_download.html</loc>
@@ -374,6 +386,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/articles/drug_targets.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/nichenet.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html</loc>

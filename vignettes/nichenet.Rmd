@@ -365,7 +365,7 @@ as it's shown in the OmniPath
 sessionInfo()
 ```
 
-# References
+# References {.unnumbered}
 
 [1] R Browaeys, W Saelens and Y Saeys (2020) NicheNet: modeling intercellular
 communication by linking ligands to target genes. _Nat Methods_ 17, 159–162

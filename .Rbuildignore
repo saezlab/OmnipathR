@@ -22,7 +22,10 @@
 ^vignettes/figure/.*$
 vignettes/figure
 ^vignettes/Rplots.pdf$
+^vignettes/.*pdf$
+^vignettes/.*html$
 ^[^/]\.pdf$
 ^nichenet_results
 .*/testdir.*$
 .*kate-swp$
+^omnipathr-log/.*$

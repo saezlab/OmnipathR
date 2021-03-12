@@ -115,7 +115,10 @@
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -225,8 +228,7 @@
         <td>
           <p><code><a href="bma_motif_es.html">bma_motif_es()</a></code> </p>
         </td>
-        <td><p>Prints a BMA motif to the screen from a sequence of edges, which can be
-copy/pasted into the BMA canvas</p></td>
+        <td><p>BMA motifs from a sequence of edges</p></td>
       </tr><tr>
         
         <td>
@@ -252,6 +254,12 @@ copy/pasted into the BMA canvas</p></td>
           <p><code><a href="dot-omnipath_options_defaults.html">.omnipath_options_defaults</a></code> </p>
         </td>
         <td><p>Default values for the package options</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="enzsub_graph.html">enzsub_graph()</a></code> </p>
+        </td>
+        <td><p>Enzyme-substrate graph</p></td>
       </tr><tr>
         
         <td>
@@ -333,6 +341,12 @@ OmniPath</p></td>
           <p><code><a href="get_signed_ptms.html">get_signed_ptms()</a></code> </p>
         </td>
         <td><p>Signs for enzyme-substrate interactions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="giant_component.html">giant_component()</a></code> </p>
+        </td>
+        <td><p>Giant component of a graph</p></td>
       </tr><tr>
         
         <td>
@@ -622,8 +636,7 @@ NicheNet</p></td>
         <td>
           <p><code><a href="nichenet_signaling_network_cpdb.html">nichenet_signaling_network_cpdb()</a></code> </p>
         </td>
-        <td><p>Builds signaling network prior knowledge for NicheNet using ConsensusPathDB
-(CPDB)</p></td>
+        <td><p>Builds signaling network for NicheNet using ConsensusPathDB</p></td>
       </tr><tr>
         
         <td>
@@ -673,6 +686,12 @@ NicheNet</p></td>
         </td>
         <td><p>Removes the items from the cache directory which are unknown by the cache
 database</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="omnipath_cache_clean_db.html">omnipath_cache_clean_db()</a></code> </p>
+        </td>
+        <td><p>Removes the cache database entries without existing files</p></td>
       </tr><tr>
         
         <td>
@@ -826,6 +845,18 @@ database</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="print_bma_motif_es.html">print_bma_motif_es()</a></code> </p>
+        </td>
+        <td><p>Prints BMA motifs to the screen from a sequence of edges</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print_bma_motif_vs.html">print_bma_motif_vs()</a></code> </p>
+        </td>
+        <td><p>Prints BMA motifs to the screen from a sequence of nodes</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="print_interactions.html">print_interactions()</a></code> </p>
         </td>
         <td><p>Print OmniPath interactions</p></td>
@@ -841,12 +872,6 @@ database</p></td>
           <p><code><a href="print_path_vs.html">print_path_vs()</a></code> </p>
         </td>
         <td><p>Print networks paths given by node sequence</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ptms_graph.html">ptms_graph()</a></code> </p>
-        </td>
-        <td><p>Post-translational modifications (PTMs) graph</p></td>
       </tr><tr>
         
         <td>

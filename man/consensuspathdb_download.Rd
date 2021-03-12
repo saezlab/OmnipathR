@@ -19,8 +19,8 @@ number.}
 
 \item{min_score}{Numeric: each record in ConsensusPathDB comes with a
 confidence score, expressing the amount of evidences. The default
-value, a minimum score of 0.9 retains approx. the top 30% of the
-interactions.}
+value, a minimum score of 0.9 retains approx. the top 30 percent
+of the interactions.}
 }
 \value{
 Data frame (tibble) with interactions.
