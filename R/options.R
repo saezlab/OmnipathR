@@ -265,12 +265,14 @@ omnipath_load_config <- function(
         this_config <- yaml_config[[title]]
     }else{
         title <- names(yaml_config)[1]
-        if(!is.na(title)){
+        if(!is.null(title)){
             this_config <- yaml_config[[title]]
+        }else if(length(yaml_config) > 0){
+            this_config <- yaml_config
         }
     }
 
-    if(title != 'default' && 'default' %in% yaml_config){
+    if(title != 'default' && 'default' %in% names(yaml_config)){
         this_config <- RCurl::merge.list(
             this_config,
             yaml_config[['default']]
