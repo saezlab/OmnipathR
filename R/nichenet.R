@@ -292,7 +292,7 @@ nichenet_optimization <- function(
 
     # R CMD check workaround
     nichenetr <- convert_expression_settings_evaluation <-
-        mlrmbo_optimization <- NULL
+        mlrmbo_optimization <- model_evaluation_optimization <- NULL
 
     resources <-
         networks %>%
