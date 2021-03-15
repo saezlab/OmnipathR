@@ -31,7 +31,7 @@ Description: A client for the OmniPath web service
     2011. Furthermore, OmnipathR features a close integration
     with the NicheNet method for ligand activity prediction
     from transcriptomics data, and its R implementation
-    `nichenetr` (available in CRAN).
+    `nichenetr` (available only on github).
 License: MIT + file LICENSE
 URL: https://saezlab.github.io/OmnipathR/
 BugReports: https://github.com/saezlab/OmnipathR/issues
@@ -74,7 +74,6 @@ Suggests:
     rmarkdown,
     ggplot2,
     ggraph,
-    nichenetr,
     mlrMBO,
     smoof,
     ParamHelpers
