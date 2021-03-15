@@ -85,7 +85,7 @@
 #'     gr_network = list(only_omnipath = TRUE),
 #'     n_top_ligands = 20,
 #'     # override the default number of CPU cores to use
-#'     mlrbo_optimization_param = list(ncores = 4)
+#'     mlrmbo_optimization_param = list(ncores = 4)
 #' )
 #' }
 #'
@@ -312,7 +312,7 @@ nichenet_optimization <- function(
                     'Data source weight and hyperparameter optimization:',
                     'expensive black-box function'
                 ),
-                fn = nichenetr::model_evaluation_optimization,
+                fn = nichenetr%::%model_evaluation_optimization,
                 par.set = ParamHelpers::makeParamSet(
                     ParamHelpers::makeNumericVectorParam(
                         'source_weights',
@@ -369,7 +369,7 @@ nichenet_optimization <- function(
                 sig_network = networks$signaling_network,
                 gr_network = networks$gr_network,
                 settings = expression %>% map(
-                    nichenetr::convert_expression_settings_evaluation
+                    nichenetr%::%convert_expression_settings_evaluation
                 ),
                 secondary_targets = FALSE,
                 remove_direct_links = 'no',
@@ -379,7 +379,7 @@ nichenet_optimization <- function(
 
     mlrmbo_optimization_param %>%
     add_defaults(
-        fun = nichenetr::mlrmbo_optimization,
+        fun = nichenetr%::%mlrmbo_optimization,
         defaults = list(
             run_id = 1,
             obj_fun = mof_topology_correction,
@@ -392,7 +392,7 @@ nichenet_optimization <- function(
     {logger::log_success(
         'Running multi-objective model-based optimization'
     )} %>%
-    do.call(what = nichenetr::mlrmbo_optimization) %T>%
+    do.call(what = nichenetr%::%mlrmbo_optimization) %T>%
     saveRDS(optimization_results_rds_path) %T>%
     {logger::log_success(
         paste0(
@@ -448,7 +448,7 @@ nichenet_build_model <- function(
     optimized_parameters <-
         optimization_results %T>%
         {logger::log_success('Processing MLRMBO parameters.')} %>%
-        nichenetr::process_mlrmbo_nichenet_optimization(
+        nichenetr%::%process_mlrmbo_nichenet_optimization(
             source_names = resource_weights %>% pull(source) %>% unique
         ) %T>%
         {logger::log_success('Finished processing MLRMBO parameters.')}
@@ -464,7 +464,7 @@ nichenet_build_model <- function(
 
     logger::log_success('Creating weighted networks.')
 
-    nichenetr::construct_weighted_networks(
+    nichenetr%::%construct_weighted_networks(
         lr_network = networks$lr_network,
         sig_network = networks$signaling_network,
         gr_network = networks$gr_network,
@@ -475,7 +475,7 @@ nichenet_build_model <- function(
         )
     ) %T>%
     {logger::log_success('Applying hub corrections.')} %>%
-    nichenetr::apply_hub_corrections(
+    nichenetr%::%apply_hub_corrections(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub
     ) %T>%
@@ -547,7 +547,7 @@ nichenet_ligand_target_matrix <- function(
 
     construct_ligand_target_matrix_param %>%
     add_defaults(
-        fun = nichenetr::construct_ligand_target_matrix,
+        fun = nichenetr%::%construct_ligand_target_matrix,
         defaults = list(
             weighted_networks = weighted_networks,
             ligands = ligands,
@@ -557,7 +557,7 @@ nichenet_ligand_target_matrix <- function(
         )
     ) %T>%
     {logger::log_success('Creating ligand-target matrix.')} %>%
-    do.call(what = nichenetr::construct_ligand_target_matrix) %T>%
+    do.call(what = nichenetr%::%construct_ligand_target_matrix) %T>%
     saveRDS(ligand_target_matrix_rds_path) %T>%
     {logger::log_success(
         'Created ligand-target matrix, saved to `%s`.',
@@ -660,7 +660,7 @@ nichenet_ligand_activities <- function(
             # shouldn't we also remove the genes of interest?
         )
 
-    nichenetr::predict_ligand_activities(
+    nichenetr%::%predict_ligand_activities(
         geneset = genes_of_interest,
         background_expressed_genes = background_genes,
         ligand_target_matrix = ligand_target_matrix,
@@ -752,7 +752,7 @@ nichenet_ligand_target_links <- function(
     arrange(-pearson)
     top_n(pearson, n_top_ligands) %>%
     map(
-        nichenetr::get_weighted_ligand_target_links,
+        nichenetr%::%get_weighted_ligand_target_links,
         geneset = genes_of_interest,
         ligand_target_matrix = ligand_target_matrix,
         n = n_top_targets

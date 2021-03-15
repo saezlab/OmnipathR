@@ -102,7 +102,7 @@ nichenet_results <- nichenet_main(
     gr_network = list(only_omnipath = TRUE),
     n_top_ligands = 20,
     # override the default number of CPU cores to use
-    mlrbo_optimization_param = list(ncores = 4)
+    mlrmbo_optimization_param = list(ncores = 4)
 )
 }
 

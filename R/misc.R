@@ -329,6 +329,19 @@ if_null <- function(value1, value2){
 }
 
 
+#' Workaround against R CMD check `import not declared from` warnings
+#'
+#' @noRd
+`%::%` <- function(pkg, name)
+{
+    pkg <- as.character(substitute(pkg))
+    name <- as.character(substitute(name))
+    getExportedValue(pkg, name)
+
+}
+
+
+
 #' Calls a function without throwing error on empty vectors
 #'
 #' Many functions can not tolerate if their input vector is empty. However,
