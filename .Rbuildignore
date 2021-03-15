@@ -4,8 +4,8 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^OmnipathR.Rcheck/.+$
-^OmnipathR-manual.+$
+^OmnipathR.Rcheck.*$
+^OmnipathR-manual.*$
 ^openout.+$
 .+\.Rdata
 ^[^/]+\.png$

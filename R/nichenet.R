@@ -290,6 +290,10 @@ nichenet_optimization <- function(
     mlrmbo_optimization_param = list()
 ){
 
+    # R CMD check workaround
+    nichenetr <- convert_expression_settings_evaluation <-
+        mlrmbo_optimization <- NULL
+
     resources <-
         networks %>%
         map(list('source', unique)) %>%
@@ -436,6 +440,10 @@ nichenet_build_model <- function(
     weighted = TRUE
 ){
 
+    # R CMD check workaround
+    nichenetr <- process_mlrmbo_nichenet_optimization <-
+        construct_weighted_networks <- apply_hub_corrections <- NULL
+
     # all resources with initial weights of 1
     resource_weights <-
         networks %>%
@@ -530,6 +538,9 @@ nichenet_ligand_target_matrix <- function(
     weighted = TRUE,
     construct_ligand_target_matrix_param = list()
 ){
+
+    # R CMD check workaround
+    nichenetr <- construct_ligand_target_matrix <- NULL
 
     # NSE vs. R CMD check workaround
     from <- NULL
@@ -630,6 +641,9 @@ nichenet_ligand_activities <- function(
     n_top_ligands = 42,
     n_top_targets = 250
 ){
+
+    # R CMD check workaround
+    nichenetr <- predict_ligand_activities <- NULL
 
     # NSE vs. R CMD check workaround
     from <- to <- pearson <- NULL
@@ -744,6 +758,9 @@ nichenet_ligand_target_links <- function(
     n_top_ligands = 42,
     n_top_targets = 250
 ){
+
+    # R CMD check workaround
+    nichenetr <- get_weighted_ligand_target_links <- NULL
 
     # NSE vs. R CMD check workaround
     pearson <- NULL
