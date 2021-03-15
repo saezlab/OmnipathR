@@ -28,4 +28,4 @@ vignettes/figure
 ^nichenet_results
 .*/testdir.*$
 .*kate-swp$
-^omnipathr-log/.*$
+^omnipathr-log.*$
