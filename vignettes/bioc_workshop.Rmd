@@ -1,0 +1,146 @@
+---
+title: "OmniPath Bioconductor workshop"
+author:
+  - name: Denes Turei
+    affiliation: unihd
+    email: turei.denes@gmail.com
+    correspondance: true
+  - name: Alberto Valdeolivas
+    affiliation: unihd
+  - name: Attila Gabor
+    affiliation: unihd
+  - name: Julio Saez-Rodriguez
+    affiliation: unihd
+institute:
+  - unihd: Institute for Computational Biomedicine, Heidelberg University
+package: OmnipathR
+output:
+  BiocStyle::html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+abstract: |
+  OmniPath is a database of molecular signaling knowledge, combining data
+  from more than 100 resources. It contains protein-protein and gene
+  regulatory interactions, enzyme-PTM relationships, protein complexes,
+  annotations about protein function, structure, localization and
+  intercellular communication. OmniPath focuses on networks with directed
+  interactions and effect signs (activation or inhibition) which are suitable
+  inputs for many modeling techniques. OmniPath also features a large
+  collection of proteins’ intercellular communication roles and interactions.
+  OmniPath is distributed by a web service at https://omnipathdb.org/. The
+  Bioconductor package OmnipathR is an R client with full support for all
+  features of the OmniPath web server. Apart from OmniPath, it provides
+  direct access to more than 15 further signaling databases (such as BioPlex,
+  InBioMap, EVEX, Harmonizome, etc) and contains a number of convenience
+  methods, such as igraph integration, and a close integration with the
+  NicheNet pipeline for ligand activity prediction from transcriptomics data.
+  In this demo we show the diverse data in OmniPath and the versatile and
+  convenient ways to access this data by OmnipathR.
+vignette: |
+  %\VignetteIndexEntry{OmniPath Bioconductor workshop}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+fig_width: 9
+fig_height: 7
+---
+
+# Overview
+
+## Pre-requisites
+
+No special pre-requisites apart from basic knowledge of R. OmniPath, the
+database resource in the focus of this workshop has been published in [1,2],
+however you don't need to know anything about OmniPath to benefit from the
+workshop. In the workshop we will demonstrate the [R/Bioconductor package](
+https://bioconductor.org/packages/release/bioc/html/OmnipathR.html)
+[OmnipathR](https://github.com/saezlab/OmnipathR). If you would like to try
+the examples yourself we recommend to install the latest version of the
+package before the workshop:
+
+```{r, eval=FALSE}
+library(devtools)
+install_github('saezlab/OmnipathR')
+```
+
+## Participation
+
+In the workshop we will present the design and some important features of the
+OmniPath database, so can be confident you get the most out of it. Then we
+will demonstrate further useful features of the OmnipathR package, such as
+accessing other resources, building graphs. Participants are encouraged to
+experiment with the examples and shape the contents of the workshop by asking
+questions. We are happy to recieve questions and topic suggestions *by email*
+also *before the workshop*. These could help us to adjust the contents to the
+interests of the participants.
+
+## _R_ / _Bioconductor_ packages used
+
+* OmnipathR
+* igraph
+* dplyr
+
+## Time outline
+
+Total: 45 minutes
+
+| Activity                     | Time |
+|------------------------------|------|
+| OmniPath database overview   | 5m   |
+| Network datasets             | 10m  |
+| Other OmniPath databases     | 5m   |
+| Intercellular communication  | 10m  |
+| Igraph integration           | 5m   |
+| Further resources            | 10m  |
+
+## Workshop goals and objectives
+
+In this workshop you will get familiar with the design and features of the
+OmniPath databases. For example, to know some important details about the
+datasets and parameters which help you to query the database the most
+suitable way according to your purposes. You will also learn about
+functionalities of the _OmnipathR_ package which might make your work
+easier.
+
+## Learning goals
+
+* Learn about the OmniPath database, its contents and how it can be useful
+* Get a picture about the OmnipathR package capabilities
+* Learn about the datasets and parameters of various OmniPath query types
+
+## Learning objectives
+
+* Try examples of each OmniPath query type with various parameters
+* Build igraph networks, search for paths
+* Access some further interesting resources
+
+# Workshop
+
+Here we will publish the workshop contents with code examples.
+
+# Session info {.unnumbered}
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+
+# References {.unnumbered}
+
+[1] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, O Ivanova, A Gabor,
+D Modos, T Korcsmaros and J Saez-Rodriguez (2020) Integrated intra- and
+intercellular signaling knowledge for multicellular omics analysis. _bioRxiv_
+2020.08.03.221242
+
+[2] D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath: guidelines and
+gateway for literature-curated signaling pathway resources. _Nature Methods_
+13(12)
