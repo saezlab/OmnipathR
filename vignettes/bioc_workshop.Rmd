@@ -72,7 +72,8 @@ https://saezlab.github.io/progeny/) and our causal reasoning method
 [CARNIVAL](https://saezlab.github.io/CARNIVAL/) to infer signaling mechanisms
 from transcriptomics data.
 
-One recent novelty of OmniPath is a collection of intercellular communication interactions. Apart from simply merging data from existing resources,
+One recent novelty of OmniPath is a collection of intercellular communication
+interactions. Apart from simply merging data from existing resources,
 OmniPath defines a number of intercellular communication roles, such as
 ligand, receptor, adhesion, enzyme, matrix, etc, and generalizes the terms
 _ligand_ and _receptor_ by introducing the terms _transmitter_, _receiver_
