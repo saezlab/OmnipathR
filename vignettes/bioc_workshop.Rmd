@@ -55,6 +55,31 @@ fig_width: 9
 fig_height: 7
 ---
 
+# Introduction
+
+Database knowledge is essential for omics data analysis and modeling. Despite
+being an important factor, contributing to the outcome of studies, often
+subject to little attention. With [OmniPath](https://omnipathdb.org/) our aim
+is to raise awarness of the diversity of available resources and facilitate
+access to these resources in a uniform and transparent way. OmniPath has been
+developed in a close contact to mechanistic modeling applications and
+functional omics analysis, hence it is especially suitable for these fields.
+OmniPath has been used for the analysis of various omics data. In the
+[Saez-Rodriguez group](https://saezlab.org) we often use it in a pipeline
+with our footprint based methods [DoRothEA](
+https://saezlab.github.io/dorothea/) and [PROGENy](
+https://saezlab.github.io/progeny/) and our causal reasoning method
+[CARNIVAL](https://saezlab.github.io/CARNIVAL/) to infer signaling mechanisms
+from transcriptomics data.
+
+One recent novelty of OmniPath is a collection of intercellular communication interactions. Apart from simply merging data from existing resources,
+OmniPath defines a number of intercellular communication roles, such as
+ligand, receptor, adhesion, enzyme, matrix, etc, and generalizes the terms
+_ligand_ and _receptor_ by introducing the terms _transmitter_, _receiver_
+and _mediator_. This unique knowledge base is especially adequate for the
+emerging field of cell-cell communication analysis, typically from single
+cell transcriptomics, but also from other kinds of data.
+
 # Overview
 
 ## Pre-requisites
@@ -80,9 +105,9 @@ OmniPath database, so can be confident you get the most out of it. Then we
 will demonstrate further useful features of the OmnipathR package, such as
 accessing other resources, building graphs. Participants are encouraged to
 experiment with the examples and shape the contents of the workshop by asking
-questions. We are happy to recieve questions and topic suggestions *by email*
-also *before the workshop*. These could help us to adjust the contents to the
-interests of the participants.
+questions. We are happy to recieve questions and topic suggestions **by
+email** also **before the workshop**. These could help us to adjust the
+contents to the interests of the participants.
 
 ## _R_ / _Bioconductor_ packages used
 
