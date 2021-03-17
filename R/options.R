@@ -246,6 +246,7 @@ omnipath_save_config <- function(
 #' @export
 #' @importFrom yaml yaml.load_file
 #' @importFrom RCurl merge.list
+#' @importFrom magrittr %<>%
 omnipath_load_config <- function(
         path = NULL,
         title = 'default',
@@ -269,26 +270,22 @@ omnipath_load_config <- function(
             this_config <- yaml_config[[title]]
         }else if(length(yaml_config) > 0){
             this_config <- yaml_config
+        }else{
+            this_config <- list()
         }
     }
 
     if(title != 'default' && 'default' %in% names(yaml_config)){
-        this_config <- RCurl::merge.list(
-            this_config,
-            yaml_config[['default']]
-        )
+        this_config %<>% RCurl::merge.list(yaml_config[['default']])
     }
+
+    this_config %<>% RCurl::merge.list(.omnipath_options_defaults)
 
     # ensure the `omnipath.` prefix for all parameter keys
     names(this_config) <- ifelse(
         startsWith(names(this_config), 'omnipath.'),
         names(this_config),
         sprintf('omnipath.%s', names(this_config))
-    )
-
-    this_config <- RCurl::merge.list(
-        this_config,
-        .omnipath_options_defaults
     )
 
     omnipath.env$config <- this_config

@@ -175,6 +175,7 @@ xls_downloader <- function(
 #' @importFrom utils unzip untar
 #' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
 #' @importFrom wand get_content_type
+#' @importFrom logger log_info
 #'
 #' @noRd
 archive_downloader <- function(
@@ -205,6 +206,7 @@ archive_downloader <- function(
 
     if(!from_cache){
 
+        logger::log_info('Downloading `%s`', url)
         # downloading the data
         curl_handle <- getCurlHandle()
         response <- CFILE(version$path, mode = 'wb')
@@ -367,12 +369,16 @@ paths_in_archive <- function(archive_data){
 #' @param url Character: the download URL.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom rlang %||%
 #' @importFrom httr parse_url
 #'
 #' @noRd
 source_attrs <- function(data, resource, url){
 
-    domain <- parse_url(url)$hostname
+    # NSE vs. R CMD check Workaround
+    hostname <- NULL
+
+    domain <- url %||% 'unknown domain' %>% parse_url %>% `$`(hostname)
     source <- `if`(
         is.null(resource),
         domain,

@@ -727,6 +727,8 @@ omnipath_cache_get <- function(
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
+#' @importFrom rlang %||%
+#' @importFrom logger log_info
 #' @export
 omnipath_cache_latest_or_new <- function(
     key = NULL,
@@ -748,12 +750,28 @@ omnipath_cache_latest_or_new <- function(
 
     version <- omnipath_cache_latest_version(record)
 
+    logger::log_info(
+        'Looking up in cache `%s`: key=%s, %s.',
+        url,
+        record$key,
+        `if`(
+            is.null(version),
+            'no version available',
+            sprintf('latest version=%s', version)
+        )
+    )
+
     if(is.null(version) && create){
 
         version <-
             cache_locked(
                 omnipath_cache_new_version
             )(record$key)
+
+        logger::log_info(
+            'Created new version for cache record %s: version %s.',
+            record$key, version
+        )
 
     }
 
@@ -1043,11 +1061,14 @@ omnipath_cache_move_in <- function(
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
 #' @importFrom rlang %||%
+#' @importFrom logger log_info
 #' @export
 omnipath_cache_download_ready <- function(version, key = NULL){
 
     key <- key %||% omnipath_cache_key_from_version(version)
     version <- `if`(is.list(version), version$number, version)
+
+    logger::log_info('Download ready [key=%s, version=%s]', key, version)
 
     omnipath_cache_update_status(
         key = key,
