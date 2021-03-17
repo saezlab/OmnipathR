@@ -375,6 +375,9 @@ paths_in_archive <- function(archive_data){
 #' @noRd
 source_attrs <- function(data, resource, url){
 
+    # NSE vs. R CMD check Workaround
+    hostname <- NULL
+
     domain <- url %||% 'unknown domain' %>% parse_url %>% `$`(hostname)
     source <- `if`(
         is.null(resource),
