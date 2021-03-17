@@ -48,12 +48,14 @@
 vinayagam_download <- function(){
 
     # NSE vs. R CMD check workaround
-    from_cache <- url <- NULL
+    from_cache <- vinayagam_url <- NULL
+
+    top_env <- environment()
 
     'omnipath.vinayagam_url' %>%
     archive_downloader() %T>%
-    {assign('from_cache', .$from_cache, envir = parent.frame(6))} %T>%
-    {assign('url', .$url, envir = parent.frame(6))} %>%
+    {assign('from_cache', .$from_cache, envir = top_env)} %T>%
+    {assign('vinayagam_url', .$url, envir = top_env)} %>%
     `$`('path') %>%
     unzip(
         files = '2001699_Tables_S1_S2_S6.xls',
@@ -65,7 +67,7 @@ vinayagam_download <- function(){
         progress = FALSE
     ) %>%
     origin_cache(from_cache) %>%
-    source_attrs('Vinayagam et al. 2011', url = url) %T>%
+    source_attrs('Vinayagam et al. 2011', url = vinayagam_url) %T>%
     load_success()
 
 }
