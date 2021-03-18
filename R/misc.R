@@ -364,3 +364,18 @@ empty_no_problem <- function(v, fun, .default = NULL, ...){
     )
 
 }
+
+
+#' Distinguish a list from a data frame
+#'
+#' \code{is.list} returns `TRUE` for data frames. If we want to check if
+#' an object is a list but not a data frame we need to double check.
+#'
+#' @param obj The object to check, any kind of object.
+#'
+#' @noRd
+just_a_list <- function(obj){
+
+    is.list(obj) && !is.data.frame(obj)
+
+}
