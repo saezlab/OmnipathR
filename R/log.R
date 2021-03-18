@@ -171,3 +171,37 @@ omnipath_set_logfile_loglevel <- function(level){
     omnipath_set_loglevel(level = level, target = 'logfile')
 
 }
+
+
+#' Dispatch a message to the OmnipathR logger
+#'
+#' Any package or script can easily send log messages and establish a logging
+#' facility with the fantastic `logger` package. This function serves the
+#' only purpose if you want to inject messages into the logger of OmnipathR.
+#' Otherwise we recommend to use the `logger` package directly.
+#'
+#' @param level Character, numeric or class loglevel. A log level, if
+#'     character one of the followings: "fatal", "error", "warn", "success",
+#'     "info", "trace".
+#' @param ... Arguments for string formatting, passed \code{sprintf} or
+#'     \code{str_glue}.
+#'
+#' @return Returns `NULL`.
+#'
+#' @examples
+#' omnipath_msg(
+#'     level = 'success',
+#'     'Talking to you in the name of OmnipathR, my favourite number is %d',
+#'     round(runif(1, 1, 10))
+#' )
+#'
+#' @importFrom magrittr %>%
+#' @importFrom logger log_level
+#' @export
+omnipath_msg <- function(level, ...){
+
+    level %>%
+    ensure_loglevel %>%
+    log_level(...)
+
+}
