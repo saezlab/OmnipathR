@@ -378,7 +378,11 @@ source_attrs <- function(data, resource, url){
     # NSE vs. R CMD check Workaround
     hostname <- NULL
 
-    domain <- url %||% 'unknown domain' %>% parse_url %>% `$`(hostname)
+    domain <-
+        url %||% 'unknown domain' %>%
+        parse_url %>%
+        `$`(hostname) %||% 'unknown domain'
+
     source <- `if`(
         is.null(resource),
         domain,

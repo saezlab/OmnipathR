@@ -223,6 +223,7 @@ url_rds <- function(URL){
 #' @param data A data frame.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom rlang %||%
 #'
 #' @noRd
 load_success <- function(data){
@@ -231,9 +232,9 @@ load_success <- function(data){
 
     '%s: %sloaded %d records%s' %>%
     sprintf(
-        attr(data, 'source'),
+        if_null_len0(attr(data, 'source'), 'Unknown source'),
         `if`(from_cache, '', 'down'),
-        data %>% {if_null(nrow(.), length(.))},
+        data %>% {if_null(nrow(.), length(.))} %||% 0,
         `if`(from_cache, ' from cache', '')
     ) %>%
     logger::log_success()
@@ -309,6 +310,20 @@ if_null <- function(value1, value2){
 
     value1 %>%
     is.null %>%
+    `if`(value2, value1)
+
+}
+
+
+#' Returns `value1` if it's not NULL or zero length otherwise `value2`
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+if_null_len0 <- function(value1, value2){
+
+    value1 %>%
+    {is.null(.) || length(.) == 0} %>%
     `if`(value2, value1)
 
 }
