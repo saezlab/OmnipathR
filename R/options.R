@@ -409,12 +409,12 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
         layout_format <- `if`(
             idx == 1,
             paste0(
-                '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
+                '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
                 '[{level}] [{ns}] ',
                 '{msg}'
             ),
             paste0(
-                '[{format(time, "%Y-%d-%m %H:%M:%S")}] ',
+                '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
                 '[{colorize_by_log_level(level, levelr)}] [{ns}] ',
                 '{grayscale_by_log_level(msg, levelr)}'
             )
@@ -446,6 +446,13 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
     omnipath_init_config()
     omnipath_init_log(pkgname = pkgname)
+
+    if(Sys.info()['user'] == 'biocbuild'){
+
+        omnipath_set_console_loglevel('trace')
+
+    }
+
     omnipath_init_cache()
 
     logger::log_info('Welcome to OmnipathR!')
