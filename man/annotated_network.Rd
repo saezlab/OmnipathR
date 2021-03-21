@@ -22,6 +22,10 @@ resources, only the first one will be used.}
 \item{...}{Column names selected from the annotation data frame (passed
 to \code{dplyr::select}, if empty all columns will be selected.)}
 }
+\value{
+A data frame of interactions with annotations for both interacting
+    entities.
+}
 \description{
 Annotations are often useful in a network context, e.g. one might want to
 label the interacting partners by their pathway membership. This function

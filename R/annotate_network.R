@@ -47,6 +47,9 @@
 #' @param ... Column names selected from the annotation data frame (passed
 #'     to \code{dplyr::select}, if empty all columns will be selected.)
 #'
+#' @return A data frame of interactions with annotations for both interacting
+#'     entities.
+#'
 #' @examples
 #' signalink_with_pathways <-
 #'     annotated_network('SignaLink3', 'SignaLink_pathway')
@@ -61,6 +64,9 @@ annotated_network <- function(
     annot = NULL,
     ...
 ){
+
+    # NSE vs. R CMD check workaround
+    entity_type <- uniprot <- genesymbol <- NULL
 
     annot_sel <- enexprs(...)
 
