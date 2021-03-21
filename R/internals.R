@@ -314,7 +314,7 @@ archive_extractor <- function(
 
     }
 
-    xls <- path %>% endsWith(c('xls', 'xlsx')) && extract_xls
+    xls <- path %>% endsWith(c('xls', 'xlsx')) %>% any && extract_xls
 
     if(archive_data$ext == 'zip'){
 
