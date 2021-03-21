@@ -260,11 +260,18 @@ archive_downloader <- function(
 #'     which varies at each download but at reading from the cache no need
 #'     for token.
 #' @param resource Character: name of the resource.
+#' @param extract_xls Logical: read worksheet from xls(x) file automatically.
+#' @param ... Passed to \code{\link{archive_downloader}}.
 #'
-#' @return A connection to the extracted file or a
+#' @return A connection to the extracted file or a the contents read from
+#'     the path inside the archive.
 #'
-#' @importFrom magrittr %>% %<>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom logger log_fatal
+#' @importFrom rlang %||% !!! exec
+#' @importFrom readxl read_excel
+#' @importFrom utils unzip
+#'
 #' @seealso \code{\link{archive_downloader}}
 #'
 #' @noRd
@@ -278,6 +285,7 @@ archive_extractor <- function(
     reader_param = list(),
     cache_by_url = NULL,
     resource = NULL,
+    extract_xls = TRUE,
     ...
 ){
 
@@ -306,19 +314,42 @@ archive_extractor <- function(
 
     }
 
+    xls <- path %>% endsWith(c('xls', 'xlsx')) && extract_xls
+
     if(archive_data$ext == 'zip'){
 
-        con <-
-            archive_data$path %>%
-            unz(path, open = 'rb')
+        if(xls){
+
+            con <-
+                archive_data$path %>%
+                unzip(files = path, exdir = tempdir()) %>%
+                `[`(1)
+
+            reader <- read_excel
+
+        }else{
+
+            con <-
+                archive_data$path %>%
+                unz(path, open = 'rb')
+
+        }
 
     }else{
 
         archive_data$path %>% untar(files = path, exdir = tempdir())
-        con <-
-            tempdir() %>%
-            file.path(path) %>%
-            file(open = 'rb')
+        ext_path <- tempdir() %>% file.path(path)
+
+        if(xls){
+
+            con <- ext_path
+            reader <- read_excel
+
+        }else{
+
+            con <- ext_path %>% file(open = 'rb')
+
+        }
 
     }
 
@@ -328,13 +359,11 @@ archive_extractor <- function(
 
     }else{
 
-        reader_param %<>% c(list(con), .)
-        result <- do.call(reader, reader_param)
-        base::close(con)
-
-        result %>%
+        reader %>%
+        exec(con, !!!reader_param) %>%
         origin_cache(archive_data$from_cache) %>%
-        source_attrs(resource, archive_data$url)
+        source_attrs(resource, archive_data$url) %T>%
+        {if('connection' %in% class(con)) base::close(con)}
 
     }
 
