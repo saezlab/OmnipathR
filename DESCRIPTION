@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: OmniPath web service client
-Version: 2.99.2
+Version: 2.99.4
 Authors@R: c(
     person(
         given = "Alberto",
@@ -53,6 +53,7 @@ Imports:
     dplyr,
     tidyr,
     rappdirs,
+    checkmate,
     yaml,
     digest,
     wand,
