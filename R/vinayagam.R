@@ -42,32 +42,17 @@
 #' # # `Edge direction score` <dbl>
 #'
 #' @importFrom magrittr %>% %T>%
-#' @importFrom readxl read_xls
-#' @importFrom utils unzip
 #' @export
 vinayagam_download <- function(){
 
-    # NSE vs. R CMD check workaround
-    from_cache <- vinayagam_url <- NULL
-
-    top_env <- environment()
-
     'omnipath.vinayagam_url' %>%
-    archive_downloader() %T>%
-    {assign('from_cache', .$from_cache, envir = top_env)} %T>%
-    {assign('vinayagam_url', .$url, envir = top_env)} %>%
-    `$`('path') %>%
-    unzip(
-        files = '2001699_Tables_S1_S2_S6.xls',
-        exdir = tempdir()
-    ) %>%
-    `[`(1) %>%
-    read_xls(
-        sheet = 'S6',
-        progress = FALSE
-    ) %>%
-    origin_cache(from_cache) %>%
-    source_attrs('Vinayagam et al. 2011', url = vinayagam_url) %T>%
+    archive_extractor(
+        path = '2001699_Tables_S1_S2_S6.xls',
+        reader_param = list(
+            sheet = 'S6',
+            progress = FALSE
+        )
+    ) %T>%
     load_success()
 
 }
