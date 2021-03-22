@@ -46,6 +46,15 @@ fig_width: 9
 fig_height: 7
 ---
 
+# Status
+
+The integration between NicheNet and OmniPath is a fresh development, as of
+March 2021 we are still doing some bug fixes and polishing until it will be
+stable. The network building methods are complete and functional. To use the
+features described here you will need the [latest git version of OmnipathR](
+https://github.com/saezlab/OmnipathR), which we update often as we test and
+improve the elements of the pipeline.
+
 # Introduction
 
 The OmnipathR package contains methods to build NichNet[1] format networks
