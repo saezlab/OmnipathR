@@ -205,3 +205,51 @@ omnipath_msg <- function(level, ...){
     log_level(...)
 
 }
+
+
+#' Evaluates an expression with colorout off
+#'
+#' @param ex An expression.
+#'
+#' @return The value from the evaluated expression.
+#'
+#' @noRd
+no_colorout <- function(ex){
+
+    # to satisfy R CMD check:
+    isColorOut <- noColorOut <- ColorOut <- NULL
+
+    colorout_active <- 'colorout' %in% .packages() && isColorOut()
+
+    if(colorout_active) noColorOut()
+    result <- eval(ex)
+    if(colorout_active) ColorOut()
+
+    invisible(result)
+
+}
+
+
+#' Patches logger::appender_console to not to interfere with colorout
+#'
+#' @noRd
+patch_logger <- function(){
+
+    ns <- loadNamespace('logger')
+
+    original_appender_console <- logger::appender_console
+
+    patched_appender_console <- function(...){
+
+        no_colorout(original_appender_console(...))
+
+    }
+
+    ulb <- get('unlockBinding')
+    ulb('appender_console', as.environment(ns))
+    assign('appender_console', patched_appender_console, ns)
+    # these 2 functions are the same
+    ulb('appender_stderr', as.environment(ns))
+    assign('appender_stderr', patched_appender_console, ns)
+
+}

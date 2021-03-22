@@ -445,6 +445,7 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
 .onLoad <- function(libname, pkgname){
 
     omnipath_init_config()
+    patch_logger()
     omnipath_init_log(pkgname = pkgname)
 
     if(Sys.info()['user'] == 'biocbuild'){
