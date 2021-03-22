@@ -246,10 +246,13 @@ patch_logger <- function(){
     }
 
     ulb <- get('unlockBinding')
+    lb <- get('lockBinding')
     ulb('appender_console', as.environment(ns))
     assign('appender_console', patched_appender_console, ns)
+    lb('appender_console', as.environment(ns))
     # these 2 functions are the same
     ulb('appender_stderr', as.environment(ns))
     assign('appender_stderr', patched_appender_console, ns)
+    lb('appender_stderr', as.environment(ns))
 
 }
