@@ -20,7 +20,7 @@ terms and over 156,000 annotations to hereditary diseases. See more at
 \examples{
 hpo_data <- hpo_download()
 hpo_data
-# A tibble: 231,738 x 9
+# # A tibble: 231,738 x 9
 #    entrez_gene_id entrez_gene_symb. hpo_term_id hpo_term_name
 #             <dbl> <chr>             <chr>       <chr>
 #  1           8192 CLPP              HP:0000013  Hypoplasia of the ute.

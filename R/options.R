@@ -121,6 +121,9 @@
         'https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/',
         'lastSuccessfulBuild/artifact/rare-diseases/util/annotation/',
         'genes_to_phenotype.txt'
+    ),
+    omnipath.go_annot_url = (
+        'http://geneontology.org/gene-associations/goa_%s.gaf.gz'
     )
 )
 
