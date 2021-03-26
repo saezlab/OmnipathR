@@ -63,7 +63,12 @@ remap_dorothea_download <- function(){
 
     if(version$status != CACHE_STATUS$READY){
 
-        download.file(url = url, destfile = version$path, quiet = TRUE)
+        download_base(
+            url = url,
+            fun = download.file,
+            destfile = version$path,
+            quiet = TRUE
+        )
         omnipath_cache_download_ready(version)
 
     }
