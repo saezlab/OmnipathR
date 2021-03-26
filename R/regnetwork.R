@@ -66,7 +66,12 @@ regnetwork_download <- function(organism = 'human'){
     if(!from_cache){
 
 
-        url %>% download.file(destfile = version$path, quiet = TRUE)
+        download_base(
+            url = url,
+            fun = download.file,
+            destfile = version$path,
+            quiet = TRUE
+        )
         omnipath_cache_download_ready(version)
 
     }
@@ -141,7 +146,12 @@ regnetwork_directions <- function(organism = 'human'){
     if(version$status != CACHE_STATUS$READY){
 
 
-        url %>% download.file(destfile = version$path, quiet = TRUE)
+        download_base(
+            url = url,
+            fun = download.file,
+            destfile = version$path,
+            quiet = TRUE
+        )
         omnipath_cache_download_ready(version)
 
     }

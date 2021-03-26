@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: OmniPath web service client
-Version: 2.99.5
+Version: 2.99.6
 Authors@R: c(
     person(
         given = "Alberto",
@@ -65,7 +65,8 @@ Imports:
     tibble,
     igraph,
     stats,
-    logger
+    logger,
+    tidyselect
 Suggests:
     dnet,
     gprofiler2,

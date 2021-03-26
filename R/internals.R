@@ -49,6 +49,78 @@ url_parser <- function(
 }
 
 
+#' Downloads an URL
+#'
+#' This function is convenient for appropriate resource retrieval. Following
+#' http://bioconductor.org/developers/how-to/web-query/
+#' It tries to retrieve the resource one or several times before failing.
+#'
+#' @param url Character: the URL to download.
+#' @param fun The downloader function. Should be able to accept \code{url}
+#'     as its first argument.
+#' @param ... Passed to \code{fun}.
+#'
+#' @return The output of the downloader function \code{fun}.
+#'
+#' @importFrom logger log_level log_error log_warn log_trace
+#'
+#' @noRd
+download_base <- function(url, fun, ...){
+
+    op <- options(timeout = 600)
+    on.exit(options(op))
+
+    url_loglevel <- `if`(
+        getOption('omnipath.print_urls'),
+        omnipath_console_loglevel(),
+        logger::INFO
+    )
+
+    retries <- getOption('omnipath.retry_downloads')
+
+    log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
+
+    for(attempt in seq(retries)){
+
+        log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
+
+        result <- tryCatch(fun(url, ...), error = identity)
+
+        if(inherits(result, 'error')){
+
+            msg <-
+                sprintf(
+                    'Failed to download `%s` (attempt %d/%d); error: %s',
+                    url,
+                    attempt,
+                    retries,
+                    conditionMessage(result)
+                )
+
+            if(attempt == retries){
+
+                log_error(msg)
+                stop(msg)
+
+            }else{
+
+                log_warn(msg)
+
+            }
+
+        }else{
+
+            break
+
+        }
+
+    }
+
+    return(result)
+
+}
+
+
 #' Generic method to download a table
 #'
 #' Downloads a table which can be read by a function from the \code{readr}
@@ -64,6 +136,7 @@ url_parser <- function(
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_tsv cols
+#' @importFrom rlang exec !!!
 #'
 #' @noRd
 generic_downloader <- function(
@@ -94,9 +167,7 @@ generic_downloader <- function(
     if(is.null(result)){
 
         result <-
-            url %>%
-            c(reader_param) %>%
-            do.call(what = reader) %>%
+            exec(download_base, url, reader, !!!reader_param) %>%
             omnipath_cache_save(url = url)
 
     }
@@ -144,7 +215,12 @@ xls_downloader <- function(
 
     if(!from_cache){
 
-        download.file(url = url, destfile = version$path, quiet = TRUE)
+        download_base(
+            url = url,
+            fun = download.file,
+            destfile = version$path,
+            quiet = TRUE
+        )
         omnipath_cache_download_ready(version)
 
     }
@@ -217,7 +293,11 @@ archive_downloader <- function(
             writedata = response@ref,
             ...
         )
-        success <- curlPerform(curl = curl_handle)
+        success <- download_base(
+            url = url,
+            fun = function(url, ...){curlPerform(...)},
+            curl = curl_handle
+        )
         RCurl::close(response)
         omnipath_cache_download_ready(version)
         key <- omnipath_cache_key_from_version(version)
