@@ -62,7 +62,7 @@ url_parser <- function(
 #'
 #' @return The output of the downloader function \code{fun}.
 #'
-#' @importFrom logger log_level log_error log_warn
+#' @importFrom logger log_level log_error log_warn log_trace
 #'
 #' @noRd
 download_base <- function(url, fun, ...){
@@ -81,6 +81,8 @@ download_base <- function(url, fun, ...){
     log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
 
     for(attempt in seq(retries)){
+
+        log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
 
         result <- tryCatch(fun(url, ...), error = identity)
 
@@ -286,7 +288,12 @@ archive_downloader <- function(
             writedata = response@ref,
             ...
         )
-        success <- curlPerform(curl = curl_handle)
+        success <- download_base(
+            url = url,
+            fun = function(url, ...){curlPerform(...)},
+            curl = curl_handle
+        )
+        # success <- curlPerform(curl = curl_handle)
         RCurl::close(response)
         omnipath_cache_download_ready(version)
         key <- omnipath_cache_key_from_version(version)
