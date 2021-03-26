@@ -134,6 +134,7 @@ download_base <- function(url, fun, ...){
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_tsv cols
+#' @importFrom rlang exec !!!
 #'
 #' @noRd
 generic_downloader <- function(
@@ -164,9 +165,7 @@ generic_downloader <- function(
     if(is.null(result)){
 
         result <-
-            url %>%
-            c(reader_param) %>%
-            do.call(what = reader) %>%
+            exec(download_base, url, reader, !!!reader_param) %>%
             omnipath_cache_save(url = url)
 
     }
