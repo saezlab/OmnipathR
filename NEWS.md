@@ -1,11 +1,11 @@
 ## OmnipathR v2.99.0 (2021-03-08)
 
 + Many new resources besides OmniPath:
-BioPlex, ConsensusPathDB, EVEX,
+BioPlex, ConsensusPathDB, EVEX, Gene Ontology,
 Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
-InWeb InBioMap, Pathway Commons, Ramilowski et al. 2015,
-RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al.
-2011
+Human Phenotype Ontology, InWeb InBioMap, Pathway Commons,
+Ramilowski et al. 2015, RegNetwork, ReMap, TF census,
+TRRUST and Vinayagam et al. 2011
 + Methods for converting network elements to Bio Model
 Analyzer (BMA) motifs
 + NicheNet workflow

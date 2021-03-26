@@ -49,6 +49,76 @@ url_parser <- function(
 }
 
 
+#' Downloads an URL
+#'
+#' This function is convenient for appropriate resource retrieval. Following
+#' http://bioconductor.org/developers/how-to/web-query/
+#' It tries to retrieve the resource one or several times before failing.
+#'
+#' @param url Character: the URL to download.
+#' @param fun The downloader function. Should be able to accept \code{url}
+#'     as its first argument.
+#' @param ... Passed to \code{fun}.
+#'
+#' @return The output of the downloader function \code{fun}.
+#'
+#' @importFrom logger log_level log_error log_warn
+#'
+#' @noRd
+download_base <- function(url, fun, ...){
+
+    op <- options(timeout = 600)
+    on.exit(options(op))
+
+    url_loglevel <- `if`(
+        getOption('omnipath.print_urls'),
+        omnipath_console_loglevel(),
+        logger::INFO
+    )
+
+    retries <- getOption('omnipath.retry_downloads')
+
+    log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
+
+    for(attempt in seq(retries)){
+
+        result <- tryCatch(fun(url, ...), error = identity)
+
+        if(inherits(result, 'error')){
+
+            msg <-
+                sprintf(
+                    'Failed to download `%s` (attempt %d/%d); error: %s',
+                    url,
+                    attempt,
+                    retries,
+                    conditionMessage(result)
+                )
+
+            if(attempt == retries){
+
+                log_error(msg)
+                stop(msg)
+
+            }else{
+
+                log_warn(msg)
+
+            }
+
+        }else{
+
+            break
+
+        }
+
+    }
+
+    return(result)
+
+}
+
+
 #' Generic method to download a table
 #'
 #' Downloads a table which can be read by a function from the \code{readr}

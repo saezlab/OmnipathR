@@ -148,17 +148,17 @@ import_omnipath <- function(
 
     url <- omnipath_url(param)
     download_args_defaults <- list(
-        URL = url
+        url = url
     )
     dataframe_defaults <- list(
-        FUN = read.table,
+        fun = read.table,
         header = TRUE,
         sep = '\t',
         stringsAsFactors = FALSE,
         quote = ''
     )
     json_defaults <- list(
-        FUN = jsonlite::fromJSON
+        fun = jsonlite::fromJSON
     )
     download_args <- modifyList(
         `if`(
@@ -2698,59 +2698,31 @@ filter_intercell <- function(
 }
 
 
-#' Downloads an URL
+#' Downloader dedicated to OmniPath web service URLs
 #'
-#' This function is convenient for appropriate resource retrieval. Following
-#' http://bioconductor.org/developers/how-to/web-query/
-#' It tries to retrieve the resource one or several times before failing.
+#' Just a thin wrapper around \code{download_base}.
 #'
-#' @importFrom logger log_level log_info
+#' @param url Character: the URL to download.
+#' @param fun The downloader function. Should be able to accept \code{url}
+#'     as its first argument.
+#' @param ... Passed to \code{fun}.
 #'
 #' @noRd
-omnipath_download <- function(URL, FUN, ..., N.TRIES = 1L) {
+omnipath_download <- function(url, fun, ...) {
 
-    op <- options(timeout = 600)
-    on.exit(options(op))
-
-    url_loglevel <- `if`(
-        options('omnipath.print_urls')[[1]],
-        omnipath_console_loglevel(),
-        logger::INFO
-    )
-
-
-    from_cache <- omnipath_cache_load(url = URL)
+    from_cache <- omnipath_cache_load(url = url)
 
     if(!is.null(from_cache)){
 
-        logger::log_info('Loaded from cache: %s', URL)
+        log_info('Loaded from cache: `%s`', url)
         return(from_cache)
 
     }
 
-    logger::log_level(level = url_loglevel, 'Retrieving URL: %s', URL)
+    result <- download_base(url, fun, ...)
 
-    N.TRIES <- as.integer(N.TRIES)
-    stopifnot(length(N.TRIES) == 1L, !is.na(N.TRIES))
-
-    while (N.TRIES > 0L) {
-        result <- tryCatch(FUN(URL, ...), error = identity)
-        if (!inherits(result, 'error'))
-            break
-            N.TRIES <- N.TRIES - 1L
-        }
-
-    if (N.TRIES == 0L) {
-        stop(
-            sprintf(
-                'omnipath_download() failed:\n  URL: %s\n  error: %s',
-                URL,
-                conditionMessage(result)
-            )
-        )
-    }
-
-    omnipath_cache_save(data = result, url = URL)
+    omnipath_cache_save(data = result, url = url)
 
     return(result)
+
 }
