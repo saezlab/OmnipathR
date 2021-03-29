@@ -239,20 +239,31 @@ patch_logger <- function(){
 
     original_appender_console <- logger::appender_console
 
-    patched_appender_console <- function(...){
+    patched_appender <- function(...){
 
         no_colorout(original_appender_console(...))
 
     }
 
+    patch_ns('appender_console', patched_appender, ns)
+    patch_ns('appender_stderr', patched_appender, ns)
+
+}
+
+
+#' Unlocks a binding in a namespace, changes its value and locks the
+#' binding again
+#'
+#' @noRd
+patch_ns <- function(name, patched, ns){
+
     ulb <- get('unlockBinding')
     lb <- get('lockBinding')
-    ulb('appender_console', as.environment(ns))
-    assign('appender_console', patched_appender_console, ns)
-    lb('appender_console', as.environment(ns))
-    # these 2 functions are the same
-    ulb('appender_stderr', as.environment(ns))
-    assign('appender_stderr', patched_appender_console, ns)
-    lb('appender_stderr', as.environment(ns))
+
+    if(name %in% names(ns)){
+        ulb(name, as.environment(ns))
+        assign(name, patched, ns)
+        lb(name, as.environment(ns))
+    }
 
 }
