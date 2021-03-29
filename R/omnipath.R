@@ -25,11 +25,11 @@
 ########## ########## ########## ##########
 
 utils::globalVariables(
-    c("category", "uniprot", "genesymbol", "annotations", 
+    c("category", "uniprot", "genesymbol", "annotations",
     "target", "database", "category_intercell_source", "target_genesymbol",
-    "category_intercell_target", "parent_intercell_source", 
+    "category_intercell_target", "parent_intercell_source",
     "database_intercell_target","parent_intercell_target","source_genesymbol",
-    "is_stimulation", "is_inhibition", "consensus_direction", 
+    "is_stimulation", "is_inhibition", "consensus_direction",
     "consensus_stimulation","consensus_inhibition","dip_url","sources",
     "references", "curation_effort", "dorothea_level", "n_references",
     "n_resources", "ncbi_tax_id_target", "ncbi_tax_id_source")
@@ -73,6 +73,7 @@ utils::globalVariables(
     'format',
     'directed',
     'signed',
+    'loops',
     'enzymes',
     'substrates',
     'partners',
@@ -110,9 +111,23 @@ utils::globalVariables(
     genesymbol = 'genesymbols',
     field = 'fields',
     dataset = 'datasets',
-    directed = 'directed',
-    entity_type = 'entity_types'
+    directions = 'directed',
+    entity_type = 'entity_types',
+    signs = 'signed'
 )
+
+
+.omnipath_param_misc_keys <- c(
+    'query_type',
+    'default_fields',
+    'silent',
+    'logicals',
+    'download_args',
+    'references_by_resource',
+    'add_counts',
+    'qt_message'
+)
+
 
 #' Downloads data from the OmniPath web service
 #'
@@ -319,11 +334,31 @@ omnipath_check_param <- function(param){
 #' adding all user or package defined query string parameters.
 #' Not exported.
 #'
+#' @importFrom logger log_warn
+#'
 #' @noRd
 omnipath_url <- function(param){
 
     baseurl <- options('omnipath.url')
     baseurl <- sprintf('%s%s', baseurl, param$query_type)
+
+    unknown_param <- setdiff(
+        names(param),
+        unique(c(
+            .omnipath_querystring_param,
+            names(.omnipath_querystring_synonyms),
+            .omnipath_param_misc_keys
+        ))
+    )
+
+    if(length(unknown_param) > 0L){
+
+        log_warn(
+            'Unknown parameter(s): %s.',
+            paste(unknown_param, collapse = ', ')
+        )
+
+    }
 
     url <- Reduce(
         function(url, key){
