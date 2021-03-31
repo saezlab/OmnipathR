@@ -71,6 +71,7 @@
         'query=*&format=tab&force=true&columns=%s&fil=',
         'organism:%d%s&compress=no'
     ),
+    omnipath.uniprot_uploadlists_url = 'https://www.uniprot.org/uploadlists/',
     omnipath.inbiomap_url = paste0(
         'https://inbio-discover.com/api/data/map_public/',
         '2016_09_12/inBio_Map_core_2016_09_12.tar.gz'
