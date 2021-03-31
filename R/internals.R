@@ -58,14 +58,33 @@ url_parser <- function(
 #' @param url Character: the URL to download.
 #' @param fun The downloader function. Should be able to accept \code{url}
 #'     as its first argument.
+#' @param post List with HTTP POST data. If \code{NULL}, the function
+#'     \code{fun} will execute the download and potentially the reading from
+#'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
+#'     be used to download the data and the contents will be channeled to
+#'     \code{fun} to read it.
+#' @param http_param List: further parameters for \code{httr::POST}. Used
+#'     only of \code{post} is not \code{NULL}.
+#' @param content_param List: further parameters for \code{httr::content}.
+#'     Used only of \code{post} is not \code{NULL}.
 #' @param ... Passed to \code{fun}.
 #'
 #' @return The output of the downloader function \code{fun}.
 #'
 #' @importFrom logger log_level log_error log_warn log_trace
+#' @importFrom httr POST content
+#' @importFrom magrittr %>%
+#' @importFrom rlang !!! exec
 #'
 #' @noRd
-download_base <- function(url, fun, ...){
+download_base <- function(
+    url,
+    fun,
+    post = NULL,
+    http_param = list(),
+    content_param = list(),
+    ...
+){
 
     op <- options(timeout = 600)
     on.exit(options(op))
@@ -80,11 +99,31 @@ download_base <- function(url, fun, ...){
 
     log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
 
+    if(!is.null(post)){
+
+        reader <- fun
+
+        fun <- function(url, post, ...){
+
+            exec(POST, url = url, body = post, !!!http_param) %>%
+            {exec(content, ., !!!content_param)} %>%
+            reader(...)
+
+        }
+
+    }
+
+    args <- list(...)
+    args$post <- post
+
     for(attempt in seq(retries)){
 
         log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
 
-        result <- tryCatch(fun(url, ...), error = identity)
+        result <- tryCatch(
+            exec(fun, url, !!!args),
+            error = identity
+        )
 
         if(inherits(result, 'error')){
 
@@ -133,10 +172,13 @@ download_base <- function(url, fun, ...){
 #' returned from the options).
 #' @param reader_param List: options for the reader function.
 #' @param resource Character: name of the resource.
+#' @param post List with HTTP POST parameters.
+#' @param ... Passed to \code{\link{download_base}}.
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom readr read_tsv cols
 #' @importFrom rlang exec !!!
+#' @importFrom logger log_trace
 #'
 #' @noRd
 generic_downloader <- function(
@@ -145,7 +187,9 @@ generic_downloader <- function(
     url_key_param = list(),
     url_param = list(),
     reader_param = list(col_types = cols()),
-    resource = NULL
+    resource = NULL,
+    post = NULL,
+    ...
 ){
 
     reader_param %<>% add_defaults(
@@ -162,13 +206,17 @@ generic_downloader <- function(
         url_param = url_param
     )
 
-    result <- omnipath_cache_load(url = url)
+    log_trace('Looking up in cache: `%s`.', url)
+
+    result <- omnipath_cache_load(url = url, post = post)
 
     if(is.null(result)){
 
+        log_trace('Could not find in cache, initiating download: `%s`.', url)
+
         result <-
-            exec(download_base, url, reader, !!!reader_param) %>%
-            omnipath_cache_save(url = url)
+            exec(download_base, url, reader, post, !!!reader_param, ...) %>%
+            omnipath_cache_save(url = url, post = post)
 
     }
 
