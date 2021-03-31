@@ -840,10 +840,7 @@ omnipath_cache_load <- function(
     )
 
     if(is.null(record)){
-        logger::log_info(
-            'Cache record does not exist: %s (%s)',
-            key, url
-        )
+        log_info('Cache record does not exist: %s (%s)', key, url)
         return(NULL)
     }
 
@@ -869,16 +866,20 @@ omnipath_cache_load <- function(
                 ),
                 path
             )
-            logger::log_fatal(msg)
+            log_fatal(msg)
             stop(msg)
         }
 
         data <- readRDS(path)
-        logger::log_trace('Loaded data from RDS `%s`.', path)
+        log_trace('Loaded data from RDS `%s`.', path)
         return(data %>% origin_cache)
 
     }else{
-        logger::log_info('No version is available for key `%s`.', key)
+        log_info(
+            'No version is available for key `%s` (%s).',
+            record$key,
+            url
+        )
     }
 
 }

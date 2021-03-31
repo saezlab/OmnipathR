@@ -38,9 +38,7 @@
 #' identifier type abbreviations used in the UniProt API, please refer to
 #' the table here: \url{https://www.uniprot.org/help/api_idmapping}
 #'
-#' @importFrom readr read_tsv cols
-#' @importFrom httr POST content
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %T>%
 #' @export
 #'
 #' @examples
@@ -55,13 +53,9 @@
 #' # 2 P23771 GATA3
 uniprot_id_mapping_table <- function(identifiers, from, to){
 
-    # NSE vs. R CMD check workaround
-    content <- NULL
-
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
-    url <- 'https://www.uniprot.org/uploadlists/'
     post <- list(
         from = from,
         to = to,
@@ -69,30 +63,12 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
         query = paste(identifiers, collapse = ' ')
     )
 
-    version <- omnipath_cache_latest_or_new(
-        url = url,
+    generic_downloader(
+        url_key = 'omnipath.uniprot_uploadlists_url',
         post = post,
-        ext = 'rds'
-    )
-
-    from_cache <- version$status == CACHE_STATUS$READY
-
-    if(!from_cache){
-
-        POST(url = url, body = post) %>%
-        content(encoding = 'ASCII') %>%
-        read_tsv(col_types = cols()) %>%
-        omnipath_cache_save(
-            url = url,
-            post = post,
-            version = version$number
-        )
-
-    }
-
-    omnipath_cache_load(url = url, post = post) %>%
-    origin_cache(from_cache) %>%
-    source_attrs('UniProt', url) %T>%
+        content_param = list(encoding = 'ASCII'),
+        resource = 'UniProt'
+    ) %T>%
     load_success()
 
 }
@@ -195,7 +171,6 @@ translate_ids <- function(
 #'
 #' @return Data frame (tibble) with the requested UniProt entries and fields.
 #'
-#' @importFrom readr read_tsv cols
 #' @importFrom magrittr %>% %T>%
 #' @export
 #'
@@ -212,8 +187,6 @@ translate_ids <- function(
 #' #  5 O11G2_HUMAN
 #' # # . with 20,386 more rows
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
-
-    on.exit(closeAllConnections())
 
     fields <- fields %>% paste(collapse = ',')
     reviewed <- `if`(
