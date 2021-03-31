@@ -420,12 +420,16 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
             idx == 1,
             paste0(
                 '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
-                '[{level}] [{ns}] ',
+                '[{level}]',
+                '{paste0(rep(" ", 7 - nchar(level)), collapse = "")} ',
+                '[{ns}] ',
                 '{msg}'
             ),
             paste0(
                 '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
-                '[{colorize_by_log_level(level, levelr)}] [{ns}] ',
+                '[{colorize_by_log_level(level, levelr)}]',
+                '{paste0(rep(" ", 7 - nchar(level)), collapse = "")} ',
+                '[{ns}] ',
                 '{grayscale_by_log_level(msg, levelr)}'
             )
         )
