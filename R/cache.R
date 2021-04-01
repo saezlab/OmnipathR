@@ -356,7 +356,7 @@ omnipath_cache_remove <- function(
 #' they don't have.
 #'
 #' @importFrom magrittr %<>% %>%
-#' @importFrom purrr map keep map_lgl
+#' @importFrom purrr map keep map_lgl discard
 #'
 #' @noRd
 .omnipath_cache_remove <- cache_locked %@% function(
@@ -392,20 +392,23 @@ omnipath_cache_remove <- function(
     key %<>% list_null
     url %<>% list_null
 
+    has_key <- !is.null(key)
+    has_version_filtering <- (
+        !is.null(max_age) ||
+        !is.null(min_age) ||
+        !is.null(status) ||
+        only_latest
+    )
+
     omnipath.env$cache %<>%
     {`if`(
-        is.null(key),
-        .,
+        has_key,
         `if`(
-            (
-                is.null(max_age) &&
-                is.null(min_age) &&
-                is.null(status) &&
-                !only_latest
-            ),
-            `[`(., omnipath.env$cache %>% names %>% setdiff(key)),
-            `[`(., key)
-        )
+            has_version_filtering,
+            `[`(., key %>% unlist),
+            `[`(., omnipath.env$cache %>% names %>% setdiff(key))
+        ),
+        .
     )} %>%
     map(
         omnipath_cache_remove_versions,
@@ -415,8 +418,7 @@ omnipath_cache_remove <- function(
         only_latest = only_latest
     ) %>%
     {`if`(
-        is.null(key),
-        .,
+        has_key && has_version_filtering,
         map(
             omnipath.env$cache,
             function(record){
@@ -426,10 +428,16 @@ omnipath_cache_remove <- function(
                     record
                 )
             }
-        )
-    )}
+        ),
+        .
+    )} %>%
+    discard(
+        function(record){
+            length(record$versions) == 0L
+        }
+    )
 
-    # omnipath.env$cache <- omnipath.env$cache
+    omnipath_cache_clean()
 
     if(autoclean){
 
@@ -497,7 +505,8 @@ omnipath_cache_remove_versions <- function(
 #' omnipath_cache_clean_db()
 #'
 #' @importFrom magrittr %>%
-#' @importFrom purrr map keep
+#' @importFrom purrr map keep discard
+#' @importFrom logger log_trace
 #'
 #' @export
 omnipath_cache_clean_db <- cache_locked %@% function(){
@@ -513,8 +522,18 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
                 record
             }
         ) %>%
-        keep(
-            function(record){length(record$versions) > 0}
+        discard(
+            function(record){
+                no_versions <- length(record$versions) == 0L
+                if(no_versions){
+                    log_trace(
+                        'Removing cache entry %s (%s): no files available.',
+                        record$key,
+                        record$url
+                    )
+                }
+                return(no_versions)
+            }
         )
 
 }
@@ -541,11 +560,13 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #'
 #'
 #' @export
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
+#' @importFrom logger log_success
 #' @seealso \code{\link{omnipath_cache_remove}}
 omnipath_cache_wipe <- cache_locked %@% function(){
 
-    omnipath_get_cachedir() %>%
+    omnipath_get_cachedir() %T>%
+    {log_success('Removing all cache contents from `%s`.', .)} %>%
     list.files() %>%
     setdiff(PROTECTED_FILES) %>%
     file.path(omnipath_get_cachedir(), .) %>%
@@ -565,8 +586,9 @@ omnipath_cache_wipe <- cache_locked %@% function(){
 #' @examples
 #' omnipath_cache_clean()
 #'
-#' @importFrom purrr map_chr map
+#' @importFrom purrr map_chr map walk
 #' @importFrom magrittr %>%
+#' @importFrom logger log_trace
 #' @export
 omnipath_cache_clean <- function(){
 
@@ -581,6 +603,7 @@ omnipath_cache_clean <- function(){
     setdiff(files_in_db) %>%
     setdiff(PROTECTED_FILES) %>%
     file.path(omnipath_get_cachedir(), .) %>%
+    walk(log_trace, fmt = 'Removing cache file `%s`.') %>%
     file.remove()
 
     invisible(NULL)
