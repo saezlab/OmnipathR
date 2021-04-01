@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: OmniPath web service client
-Version: 2.99.6
+Version: 2.99.7
 Authors@R: c(
     person(
         given = "Alberto",
@@ -41,7 +41,7 @@ biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
 Encoding: UTF-8
 VignetteBuilder: knitr
 Depends:
-    R(>= 4.0)
+    R(>= 4.1)
 Imports:
     utils,
     jsonlite,
