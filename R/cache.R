@@ -369,7 +369,7 @@ omnipath_cache_remove <- function(
     status = NULL,
     only_latest = FALSE,
     wipe = FALSE,
-    autoclean = TRUE
+    autoclean = FALSE
 ){
 
     if(wipe){
@@ -411,7 +411,7 @@ omnipath_cache_remove <- function(
         .
     )} %>%
     map(
-        omnipath_cache_remove_versions,
+        omnipath_cache_keep_versions,
         max_age = max_age,
         min_age = min_age,
         status = status,
@@ -463,7 +463,7 @@ omnipath_cache_remove <- function(
 #' than this age
 #' @param min_age Age of cache items in days. Remove everything more recent
 #' than this age
-#' @param status Remove items having any of the states listed here
+#' @param status Keep items having any of the states listed here
 #' @param only_latest Keep only the latest version
 #'
 #' @return A cache record with the version items removed.
@@ -471,7 +471,7 @@ omnipath_cache_remove <- function(
 #' @importFrom magrittr %<>%
 #'
 #' @noRd
-omnipath_cache_remove_versions <- function(
+omnipath_cache_keep_versions <- function(
     record,
     max_age = NULL,
     min_age = NULL,
@@ -486,7 +486,7 @@ omnipath_cache_remove_versions <- function(
                 latest = only_latest,
                 max_age = max_age,
                 min_age = min_age,
-                status = setdiff(CACHE_STATUS, status)
+                status = status
             )
         )
 
@@ -633,7 +633,6 @@ omnipath_cache_autoclean <- function(){
         status = CACHE_STATUS$READY,
         autoclean = FALSE
     )
-    omnipath_cache_clean()
     invisible(omnipath.env$cache)
 
 }
@@ -1399,7 +1398,7 @@ omnipath_cache_latest_version <- function(record){
 #' versions with `ready` (completed download) status are selected
 #'
 #' @return Character vector with version IDs, NA if no version satisfies the
-#'     conditions
+#'     conditions.
 #'
 #' @examples
 #' # creating an example cache record
@@ -1441,7 +1440,7 @@ omnipath_cache_filter_versions <- function(
 
     if(!is.null(min_age)){
         min_age <- days_ago(min_age)
-        selection %<>% `&`(which_dl_finished(versions, max_age, op = `<=`))
+        selection %<>% `&`(which_dl_finished(versions, min_age, op = `<=`))
     }
 
     if(latest){
