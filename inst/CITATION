@@ -5,22 +5,25 @@ citEntry(
         person("Alberto", "Valdeolivas"),
         person("Lejla", "Gul"),
         person("Nicolas", "Palacio-Escat"),
+        person("Michal", "Klein"),
         person("Olga", "Ivanova"),
+        person("Marton", "Olbei"),
         person("Attila", "Gabor"),
+        person("Fabian", "Theis"),
         person("Dezso", "Modos"),
         person("Tamas", " Korcsmaros"),
         person("Julio", "Saez-Rodriguez")
     ),
     title = "Integrated intra- and intercellular signaling knowledge for
         multicellular omics analysis",
-    journal = "bioRxiv",
-    year = 2020,
-    doi = "10.1101/2020.08.03.221242",
-    textVersion = "D Turei, A Valdeolivas, L Gul, N Palacio-Escat, O Ivanova,
-        A Gabor, D Modos, T Korcsmaros and J Saez-Rodriguez (2020)
-        Integrated intra- and intercellular signaling knowledge for
-        multicellular omics analysis. bioRxiv 2020.08.03.221242;
-        DOI: 10.1101/2020.08.03.221242"
+    journal = "Molecular Systems Biology",
+    year = 2021,
+    doi = "10.15252/msb.20209923",
+    textVersion = "D Turei, A Valdeolivas, L Gul, N Palacio-Escat, M Klein,
+        O Ivanova, M Olbei, A Gabor, F Theis, D Modos, T Korcsmaros and
+        J Saez-Rodriguez (2021) Integrated intra- and intercellular signaling
+        knowledge for multicellular omics analysis. Molecular Systems Biology
+        17: e9923; DOI: 10.15252/msb.20209923"
 )
 
 citEntry(
@@ -37,7 +40,7 @@ citEntry(
 
     textVersion = "D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath:
         guidelines and gateway for literature-curated signaling pathway
-        resources. Nature Methods 13 (12) PMID: 27898060"
+        resources. Nature Methods 13 (12); PMID: 27898060"
 )
 
 citEntry(
@@ -50,6 +53,6 @@ citEntry(
     title = "OmnipathR: client for the OmniPath web service",
     note = "Bioconductor Package",
     year = 2019,
-    textVersion = "A Valdeolivas, D Turei, A Gabor. 2019. “OmnipathR: client
+    textVersion = "A Valdeolivas, D Turei, A Gabor (2019) “OmnipathR: client
         for the OmniPath web service.” Bioconductor Package"
 )
