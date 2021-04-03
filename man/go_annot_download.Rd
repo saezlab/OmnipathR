@@ -4,11 +4,17 @@
 \alias{go_annot_download}
 \title{Downloads gene annotations from Gene Ontology}
 \usage{
-go_annot_download(organism = "human")
+go_annot_download(organism = "human", aspects = c("C", "F", "P"))
 }
 \arguments{
 \item{organism}{Character: either "chicken", "cow", "dog", "human", "pig"
 or "uniprot_all".}
+
+\item{aspects}{Character vector with some of the following elements:
+"C" (cellular component), "F" (molecular function) and "P" (biological
+process). Gene Ontology is three separate ontologies called as three
+aspects. By this parameter you can control which aspects to include
+in the output.}
 }
 \value{
 A tibble (data frame) of annotations as it is provided by the

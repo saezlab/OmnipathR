@@ -31,6 +31,11 @@
 #'
 #' @param organism Character: either "chicken", "cow", "dog", "human", "pig"
 #'     or "uniprot_all".
+#' @param aspects Character vector with some of the following elements:
+#'     "C" (cellular component), "F" (molecular function) and "P" (biological
+#'     process). Gene Ontology is three separate ontologies called as three
+#'     aspects. By this parameter you can control which aspects to include
+#'     in the output.
 #'
 #' @return A tibble (data frame) of annotations as it is provided by the
 #' database
@@ -56,7 +61,11 @@
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr cols col_factor col_character col_date
-go_annot_download <- function(organism = 'human'){
+#' @importFrom dplyr filter
+go_annot_download <- function(
+    organism = 'human',
+    aspects = c('C', 'F', 'P')
+){
 
     'omnipath.go_annot_url' %>%
     generic_downloader(
@@ -96,7 +105,8 @@ go_annot_download <- function(organism = 'human'){
             )
         ),
         resource = 'Gene Ontology'
-    ) %T>%
+    ) %>%
+    filter(aspect %in% aspects) %T>%
     load_success()
 
 }
