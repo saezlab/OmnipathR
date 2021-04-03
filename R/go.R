@@ -129,7 +129,7 @@ go_ontology_download <- function(
         download_to_cache(url_param = list(go_variant))
 
     path %>%
-    obo_reader(relations = relations, tables = tables) %>%
+    obo_parser(relations = relations, tables = tables) %>%
     copy_source_attrs(path, resource = 'Gene Ontology')
 
 }

@@ -69,7 +69,7 @@
 #' @importFrom purrr map_chr map2
 #' @importFrom logger log_trace
 #' @export
-obo_reader <- function(
+obo_parser <- function(
     path,
     relations = c(
         'is_a', 'part_of', 'occurs_in', 'regulates',
@@ -86,16 +86,6 @@ obo_reader <- function(
         map_chr(last) %>%
         str_sub(1, 1) %>%
         str_to_upper
-
-    }
-
-    term_value_list <- function(d){
-
-        d %>%
-        {setNames(
-            as.list(pull(., value)),
-            pull(., term)
-        )}
 
     }
 
@@ -215,5 +205,21 @@ obo_reader <- function(
         subsets = term_subset,
         obsolete = obsolete_terms
     )
+
+}
+
+
+#' Transform `term` and `value` columns of a tibble to a named list
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull
+#' @noRd
+term_value_list <- function(d){
+
+    d %>%
+    {setNames(
+        as.list(pull(., value)),
+        pull(., term)
+    )}
 
 }

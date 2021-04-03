@@ -7,7 +7,8 @@
 go_ontology_download(
   relations = c("is_a", "part_of", "occurs_in", "regulates", "positively_regulates",
     "negatively_regulates"),
-  go_variant = "go-basic"
+  go_variant = "go-basic",
+  tables = TRUE
 )
 }
 \description{
