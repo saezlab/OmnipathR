@@ -110,3 +110,25 @@ go_annot_download <- function(
     load_success()
 
 }
+
+
+#' Downloads and preprocesses the Gene Ontology tree
+#'
+#' @importFrom magrittr %>%
+go_ontology_download <- function(
+    relations = c(
+        'is_a', 'part_of', 'occurs_in', 'regulates',
+        'positively_regulates', 'negatively_regulates'
+    ),
+    go_variant = 'go-basic'
+){
+
+    path <-
+        'omnipath.go_obo_url' %>%
+        download_to_cache(url_param = list(go_variant))
+
+    path %>%
+    obo_reader(relations = relations) %>%
+    copy_source_attrs(path, resource = 'Gene Ontology')
+
+}

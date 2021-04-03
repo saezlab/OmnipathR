@@ -126,6 +126,10 @@
     ),
     omnipath.go_annot_url = (
         'http://geneontology.org/gene-associations/goa_%s.gaf.gz'
+    ),
+    omnipath.go_obo_url = 'http://purl.obolibrary.org/obo/go/%s.obo',
+    omnipath.go_subset_url = (
+        'http://current.geneontology.org/ontology/subsets/goslim_%s.obo'
     )
 )
 
