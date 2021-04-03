@@ -29,6 +29,8 @@
 #' @param relations Character vector: process only these relations.
 #' @param shorten_namespace Logical: shorten the namespace to a single
 #'     code (as usual for Gene Ontology, e.g. cellular_component = "C").
+#' @param tables Logical: return data frames (tibbles) instead of nested
+#'     lists.
 #'
 #' @return A list with the following elements: 1) "names" a list with
 #'     terms as names and names as values; 2) "namespaces" a list with
@@ -38,7 +40,26 @@
 #'     values; 4) "subsets" a list with terms as keys and character
 #'     vectors of subset names as values (or \code{NULL} if the term
 #'     does not belong to any subset); 5) "obsolete" character vector
-#'     with all the terms labeled as obsolete.
+#'     with all the terms labeled as obsolete. If the \code{tables}
+#'     parameter is \code{TRUE},
+#'
+#' @examples
+#' goslim_url <-
+#'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
+#' path <- tempfile()
+#' download.file(goslim_url, destfile = path, quiet = TRUE)
+#' obo <- obo_reader(path, tables = FALSE)
+#' unlink(path)
+#' names(obo)
+#' # [1] "names"      "namespaces" "relations"  "subsets"    "obsolete"
+#' head(obo$relations, n = 2)
+#' # $`GO:0000001`
+#' # $`GO:0000001`$is_a
+#' # [1] "GO:0048308" "GO:0048311"
+#' #
+#' # $`GO:0000002`
+#' # $`GO:0000002`$is_a
+#' # [1] "GO:0007005"
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_split_fixed str_trim str_sub
@@ -55,7 +76,7 @@ obo_reader <- function(
         'positively_regulates', 'negatively_regulates'
     ),
     shorten_namespace = TRUE,
-    tables = FALSE
+    tables = TRUE
 ){
 
     short_namespace <- function(ns){
@@ -65,6 +86,16 @@ obo_reader <- function(
         map_chr(last) %>%
         str_sub(1, 1) %>%
         str_to_upper
+
+    }
+
+    term_value_list <- function(d){
+
+        d %>%
+        {setNames(
+            as.list(pull(., value)),
+            pull(., term)
+        )}
 
     }
 
@@ -117,21 +148,22 @@ obo_reader <- function(
     term_name <-
         raw %>%
         filter(key == 'name') %>%
-        {setNames(
-            as.list(pull(., value)),
-            pull(., term)
+        {`if`(
+            tables,
+            select(., term, name = value),
+            term_value_list(.)
         )}
 
     term_namespace <-
         raw %>%
         filter(key == 'namespace') %>%
-        {setNames(
-            as.list(
-                pull(., value) %>%
-                proc_namespace
-            ),
-            pull(., term)
+        mutate(value = proc_namespace(value)) %>%
+        {`if`(
+            tables,
+            select(., term, namespace = value),
+            term_value_list(.)
         )}
+
 
     obsolete_terms <-
         raw %>%
@@ -142,11 +174,12 @@ obo_reader <- function(
     term_subset <-
         raw %>%
         filter(key == 'subset') %>%
-        group_by(term) %>%
-        summarize(value = list(value)) %>%
-        {setNames(
-            as.list(pull(., value)),
-            pull(., term)
+        {`if`(
+            tables,
+            select(., term, subset = value),
+            group_by(., term) %>%
+            summarize(value = list(value)) %>%
+            term_value_list(.)
         )}
 
     term_relations <-
@@ -165,11 +198,12 @@ obo_reader <- function(
         )} %>%
         group_by(term, key) %>%
         summarize(value = list(value), .groups = 'drop') %>%
-        chop(c('key', 'value')) %>%
-        mutate(value = map2(value, key, setNames)) %>%
-        {setNames(
-            as.list(pull(., value)),
-            pull(., term)
+        {`if`(
+            tables,
+            select(., term, relation = key, parents = value),
+            chop(., c('key', 'value')) %>%
+            mutate(value = map2(value, key, setNames)) %>%
+            term_value_list(.)
         )}
 
     log_trace('Finished processing OBO file `%s`.', path)
