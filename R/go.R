@@ -20,7 +20,7 @@
 #
 
 
-#' Downloads gene annotations from Gene Ontology
+#' Gene annotations from Gene Ontology
 #'
 #' Gene Ontology is an ontology of gene subcellular localizations, molecular
 #' functions and involvement in biological processes. Gene products across
@@ -112,21 +112,50 @@ go_annot_download <- function(
 }
 
 
-#' Downloads and preprocesses the Gene Ontology tree
+#' The Gene Ontology tree
+#'
+#' @param basic Logical: use the basic or the full version of GO. As written
+#'     on the GO home page: "the basic version of the GO is filtered such
+#'     that the graph is guaranteed to be acyclic and annotations can be
+#'     propagated up the graph. The relations included are is a, part of,
+#'     regulates, negatively regulates and positively regulates. This
+#'     version excludes relationships that cross the 3 GO hierarchies.
+#'     This version should be used with most GO-based annotation tools."
+#' @param tables In the result return data frames or nested lists. These
+#'     later can be converted to each other if necessary. However converting
+#'     from table to list is faster.
+#' @param subset Character: the GO subset (GO slim) name. GO slims are
+#'     subsets of the full GO which "give a broad overview of the ontology
+#'     content without the detail of the specific fine grained terms". This
+#'     option, if not \code{NULL}, overrides the \code{basic} parameter.
+#'     Available GO slims are: "agr" (Alliance for Genomics Resources),
+#'     "generic", "aspergillus", "candida", "drosophila", "chembl",
+#'     "metagenomic", "mouse", "plant", "pir" (Protein Information Resource),
+#'     "pombe" and "yeast".
+#' @param relations Character vector: the relations to include in the
+#'     processed data.
 #'
 #' @importFrom magrittr %>%
+#' @export
 go_ontology_download <- function(
+    basic = TRUE,
+    tables = TRUE,
+    subset = NULL,
     relations = c(
         'is_a', 'part_of', 'occurs_in', 'regulates',
         'positively_regulates', 'negatively_regulates'
-    ),
-    go_variant = 'go-basic',
-    tables = TRUE
+    )
 ){
 
+    url_key_param <- `if`(is.null(subset), 'full', 'slim')
+    url_param <- `if`(is.null(subset), `if`(basic, 'go-basic', 'go'), subset)
+
     path <-
-        'omnipath.go_obo_url' %>%
-        download_to_cache(url_param = list(go_variant))
+        'omnipath.go_%s_url' %>%
+        download_to_cache(
+            url_param = list(url_param),
+            url_key_param = list(url_key_param)
+        )
 
     path %>%
     obo_parser(relations = relations, tables = tables) %>%
