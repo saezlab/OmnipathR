@@ -315,6 +315,21 @@ if_null <- function(value1, value2){
 }
 
 
+#' Returns `value1` if it's not zero length otherwise `value2`
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+if_empty <- function(value1, value2){
+
+    value1 %>%
+    length %>%
+    `==`(0) %>%
+    `if`(value2, value1)
+
+}
+
+
 #' Returns `value1` if it's not NULL or zero length otherwise `value2`
 #'
 #' @importFrom magrittr %>%
