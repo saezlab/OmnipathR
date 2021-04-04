@@ -1,5 +1,5 @@
 {
-    "gene_ontology_basic": {
+    "go_basic": {
         "name": ["Gene Ontology (basic)"],
         "last_used": [],
         "lifetime": [],
@@ -13,7 +13,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_full": {
+    "go_full": {
         "name": ["Gene Ontology (full)"],
         "last_used": [],
         "lifetime": [],
@@ -27,7 +27,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_agr": {
+    "go_agr": {
         "name": ["Gene Ontology (AGR)"],
         "last_used": [],
         "lifetime": [],
@@ -40,7 +40,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_aspergillus": {
+    "go_aspergillus": {
         "name": ["Gene Ontology (Aspergillus)"],
         "last_used": [],
         "lifetime": [],
@@ -54,7 +54,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_slim": {
+    "go_slim": {
         "name": ["Gene Ontology (generic slim)"],
         "last_used": [],
         "lifetime": [],
@@ -68,7 +68,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_candida": {
+    "go_candida": {
         "name": ["Gene Ontology (Candida)"],
         "last_used": [],
         "lifetime": [],
@@ -82,7 +82,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_drosphila": {
+    "go_drosphila": {
         "name": ["Gene Ontology (Drosphila)"],
         "last_used": [],
         "lifetime": [],
@@ -95,7 +95,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_chembl": {
+    "go_chembl": {
         "name": ["Gene Ontology (ChEMBL)"],
         "last_used": [],
         "lifetime": [],
@@ -108,7 +108,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_metagenomic": {
+    "go_metagenomic": {
         "name": ["Gene Ontology (metagenomic)"],
         "last_used": [],
         "lifetime": [],
@@ -122,7 +122,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_plant": {
+    "go_plant": {
         "name": ["Gene Ontology (plant)"],
         "last_used": [],
         "lifetime": [],
@@ -136,7 +136,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_mouse": {
+    "go_mouse": {
         "name": ["Gene Ontology (mouse)"],
         "last_used": [],
         "lifetime": [],
@@ -149,7 +149,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_pir": {
+    "go_pir": {
         "name": ["Gene Ontology (PIR)"],
         "last_used": [],
         "lifetime": [],
@@ -163,7 +163,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_pombe": {
+    "go_pombe": {
         "name": ["Gene Ontology (Pombe)"],
         "last_used": [],
         "lifetime": [],
@@ -177,7 +177,7 @@
         "loaded": false,
         "db": []
     },
-    "gene_ontology_yeast": {
+    "go_yeast": {
         "name": ["Gene Ontology (yeast)"],
         "last_used": [],
         "lifetime": [],
