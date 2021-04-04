@@ -43,7 +43,14 @@
 #' @importFrom purrr map2
 #' @importFrom dplyr mutate
 #' @importFrom logger log_trace
+#'
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{relations_list_to_table}}}
+#'     \item{\code{\link{swap_relations}}}
+#'     \item{\code{\link{obo_parser}}}
+#' }
 relations_table_to_list <- function(relations){
 
     direction <- c('parents', 'children')
@@ -108,7 +115,14 @@ relations_table_to_list <- function(relations){
 #' @importFrom dplyr mutate
 #' @importFrom tidyr unnest_longer
 #' @importFrom logger log_trace
+#'
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{swap_relations}}}
+#'     \item{\code{\link{relations_table_to_list}}}
+#'     \item{\code{\link{obo_parser}}}
+#' }
 relations_list_to_table <- function(relations, direction = NULL){
 
     direction <-
@@ -159,7 +173,14 @@ relations_list_to_table <- function(relations, direction = NULL){
 #' @importFrom dplyr select summarize group_by
 #' @importFrom tidyr unnest
 #' @importFrom logger log_fatal log_trace
+#'
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{relations_list_to_table}}}
+#'     \item{\code{\link{relations_table_to_list}}}
+#'     \item{\code{\link{obo_parser}}}
+#' }
 swap_relations <- function(relations){
 
     dfclass <- inherits(relations, 'data.frame')

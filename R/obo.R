@@ -68,7 +68,14 @@
 #' @importFrom tidyr separate chop
 #' @importFrom purrr map_chr map2
 #' @importFrom logger log_trace
+#'
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{relations_list_to_table}}}
+#'     \item{\code{\link{relations_table_to_list}}}
+#'     \item{\code{\link{swap_relations}}}
+#' }
 obo_parser <- function(
     path,
     relations = c(
