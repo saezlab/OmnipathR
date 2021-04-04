@@ -2,7 +2,7 @@
 % Please edit documentation in R/go.R
 \name{go_annot_download}
 \alias{go_annot_download}
-\title{Downloads gene annotations from Gene Ontology}
+\title{Gene annotations from Gene Ontology}
 \usage{
 go_annot_download(organism = "human", aspects = c("C", "F", "P"))
 }

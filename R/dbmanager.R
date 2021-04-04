@@ -43,6 +43,10 @@ omnipath_init_db <- function(pkgname){
                     getOption('omnipath.db_lifetime')
                 )
                 dbdef$package %<>% if_empty(pkgname)
+                dbdef$loaded <- FALSE
+                dbdef$last_used <- NA
+                dbdef$db <- NA
+                dbdef$latest_param <- NA
                 dbdef
             }
         )
@@ -101,14 +105,29 @@ remove_tasks <- function(pkgname){
 #' the database manager. Each database has a lifetime and will be unloaded
 #' automatically upon expiry.
 #'
-#' @return A data frame with the build in databaase definitions.
+#' @return A data frame with the built in databaase definitions.
+#'
+#' @examples
+#' database_definitions <- omnipath_show_db()
+#' database_definitions
+#' # # A tibble: 14 x 10
+#' #    name       last_used           lifetime package  loader    loader_p.
+#' #    <chr>      <dttm>                 <dbl> <chr>    <chr>     <list>
+#' #  1 Gene Onto. 2021-04-04 20:19:15      300 Omnipat. go_ontol. <named l.
+#' #  2 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#' #  3 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#' #  4 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#' #  5 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#' # ... (truncated)
+#' # # . with 4 more variables: latest_param <list>, loaded <lgl>, db <list>,
+#' # #   key <chr>
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate
 #' @importFrom tidyr unnest_wider
 #' @export
-omnipath_db_available <- function(){
+omnipath_show_db <- function(){
 
     omnipath.env$db %>%
     tibble(db = .) %>%
@@ -130,8 +149,6 @@ omnipath_db_available <- function(){
 #' @noRd
 db_lifetime_hook <- function(){
 
-    log_trace('Cleaning up unused databases.')
-
     omnipath.env$db %<>%
         map(
             function(dbdef){
@@ -139,18 +156,19 @@ db_lifetime_hook <- function(){
                     dbdef$loaded &&
                     as.numeric(
                         Sys.time() -
-                        dbdef$last_used
+                        dbdef$last_used,
+                        units = 'secs'
                     ) > dbdef$lifetime
                 ){
                     log_trace(
                         paste0(
-                            'Removing database `%s` (not used in the ',
-                            'past %d seconds)'
+                            'Removing database `%s` (not ',
+                            'used in the past %d seconds)'
                         ),
                         dbdef$name,
                         dbdef$lifetime
                     )
-                    dbdef$db <- list()
+                    dbdef$db <- NA
                     dbdef$loaded <- FALSE
                 }
                 dbdef
@@ -158,5 +176,110 @@ db_lifetime_hook <- function(){
         )
 
     later(db_lifetime_hook, delay = 10, loop = omnipath.env$.dbloop)
+
+}
+
+
+#' Load a built in database
+#'
+#' @param key Character: the key of the database to load. For a list of
+#'     available keys see \code{\link{omnipath_show_db}}.
+#' @param param List: override the defaults or pass further parameters to
+#'     the database loader function. See the loader functions and their
+#'     default parameters in \code{\link{omnipath_show_db}}.
+#'
+#' @examples
+#' load_db('gene_ontology_slim')
+#'
+#' @importFrom magrittr %<>%
+#' @importFrom logger log_fatal log_info
+#' @importFrom rlang exec !!!
+#' @export
+#' @seealso  \code{\link{omnipath_show_db}}.
+load_db <- function(key, param = list()){
+
+    db_exists(key)
+
+    dbdef <- omnipath.env$db[[key]]
+    log_info('Loading database `%s`.', dbdef$name)
+    loader <- get(dbdef$loader)
+    param %<>% add_defaults(loader, dbdef$loader_param)
+    db <- exec(loader, !!!param)
+    omnipath.env$db[[key]]$db <- db
+    omnipath.env$db[[key]]$latest_param <- param
+    omnipath.env$db[[key]]$loaded <- TRUE
+    omnipath.env$db[[key]]$last_used <- Sys.time()
+    log_info('Loaded database `%s`.', dbdef$name)
+
+}
+
+
+#' Access a built in database
+#'
+#' Databases are resources which might be costly to load but can be used many
+#' times by functions which usually automatically load and retrieve them from
+#' the database manager. Each database has a lifetime and will be unloaded
+#' automatically upon expiry.
+#'
+#' @param key Character: the key of the database to load. For a list of
+#'     available keys see \code{\link{omnipath_show_db}}.
+#' @param param List: override the defaults or pass further parameters to
+#'     the database loader function. See the loader functions and their
+#'     default parameters in \code{\link{omnipath_show_db}}. If the database
+#'     is already loaded with different parameters it will be reloaded
+#'     with the new parameters only if the \code{reload} option is
+#'     \code{TRUE}.
+#' @param reload Reload the database if \code{param} passed here is different
+#'     from the parameters used the last time the database was loaded. If
+#'     different functions with different parameters access the database
+#'     repeatedly and request reload the frequent reloads might cost
+#'     substantial time and resource use.
+#'
+#' @examples
+#' goslim <- get_db('gene_ontology_slim')
+#'
+#' @importFrom logger log_fatal log_info
+#' @importFrom rlang exec !!!
+#' @importFrom magrittr %<>%
+#' @export
+#' @seealso  \code{\link{omnipath_show_db}}.
+get_db <- function(key, param = NULL, reload = FALSE){
+
+    db_exists(key)
+
+    omnipath.env$db[[key]]$last_used <- Sys.time()
+    dbdef <- omnipath.env$db[[key]]
+
+    if(!is.null(param) && reload && dbdef$loaded){
+
+        loader <- get(dbdef$loader)
+        param %<>% add_defaults(loader, dbdef$loader_param)
+        reload <- !lists_identical(dbdef$latest_param, param)
+
+    }
+
+    if(!dbdef$loaded || reload){
+
+        load_db(key, param = param)
+
+    }
+
+    return(omnipath.env$db[[key]]$db)
+
+}
+
+
+#' Raise an error if the database key does not exist.
+#'
+#' @param key Character: a database definition key.
+#'
+#' @noRd
+db_exists <- function(key){
+
+    if(!key %in% names(omnipath.env$db)){
+        msg <- sprintf('No database defined with key `%s`.', key)
+        log_fatal(msg)
+        stop(msg)
+    }
 
 }

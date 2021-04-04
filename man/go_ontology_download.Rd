@@ -2,15 +2,41 @@
 % Please edit documentation in R/go.R
 \name{go_ontology_download}
 \alias{go_ontology_download}
-\title{Downloads and preprocesses the Gene Ontology tree}
+\title{The Gene Ontology tree}
 \usage{
 go_ontology_download(
+  basic = TRUE,
+  tables = TRUE,
+  subset = NULL,
   relations = c("is_a", "part_of", "occurs_in", "regulates", "positively_regulates",
-    "negatively_regulates"),
-  go_variant = "go-basic",
-  tables = TRUE
+    "negatively_regulates")
 )
 }
+\arguments{
+\item{basic}{Logical: use the basic or the full version of GO. As written
+on the GO home page: "the basic version of the GO is filtered such
+that the graph is guaranteed to be acyclic and annotations can be
+propagated up the graph. The relations included are is a, part of,
+regulates, negatively regulates and positively regulates. This
+version excludes relationships that cross the 3 GO hierarchies.
+This version should be used with most GO-based annotation tools."}
+
+\item{tables}{In the result return data frames or nested lists. These
+later can be converted to each other if necessary. However converting
+from table to list is faster.}
+
+\item{subset}{Character: the GO subset (GO slim) name. GO slims are
+subsets of the full GO which "give a broad overview of the ontology
+content without the detail of the specific fine grained terms". This
+option, if not \code{NULL}, overrides the \code{basic} parameter.
+Available GO slims are: "agr" (Alliance for Genomics Resources),
+"generic", "aspergillus", "candida", "drosophila", "chembl",
+"metagenomic", "mouse", "plant", "pir" (Protein Information Resource),
+"pombe" and "yeast".}
+
+\item{relations}{Character vector: the relations to include in the
+processed data.}
+}
 \description{
-Downloads and preprocesses the Gene Ontology tree
+The Gene Ontology tree
 }
