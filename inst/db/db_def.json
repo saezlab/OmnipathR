@@ -1,0 +1,14 @@
+{
+    "gene_ontology": {
+        "name": ["Gene Ontology (basic)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true
+        },
+        "loaded": false,
+        "db": []
+    }
+}
