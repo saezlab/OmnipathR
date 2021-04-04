@@ -31,3 +31,10 @@ unlink(path)
 rel_swapped <- swap_relations(obo$relations)
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{relations_list_to_table}}}
+    \item{\code{\link{relations_table_to_list}}}
+    \item{\code{\link{obo_parser}}}
+}
+}

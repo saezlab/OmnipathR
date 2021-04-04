@@ -58,3 +58,10 @@ head(obo$relations, n = 2)
 # [1] "GO:0007005"
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{relations_list_to_table}}}
+    \item{\code{\link{relations_table_to_list}}}
+    \item{\code{\link{swap_relations}}}
+}
+}
