@@ -192,9 +192,7 @@ obo_parser <- function(
         {`if`(
             tables,
             .,
-            chop(., c('key', 'value')) %>%
-            mutate(value = map2(value, key, setNames)) %>%
-            term_value_list(.)
+            relations_table_to_list(.)
         )}
 
     log_trace('Finished processing OBO file `%s`.', path)
