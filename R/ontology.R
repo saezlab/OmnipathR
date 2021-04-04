@@ -20,8 +20,6 @@
 #
 
 
-
-
 #' Nested list from a table of ontology relations
 #'
 #' @param relations A data frame of ontology relations (the "relations"
@@ -41,28 +39,35 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang !! sym
-#' @importFrom tidyr chop
+#' @importFrom tidyr chop replace_na
 #' @importFrom purrr map2
 #' @importFrom dplyr mutate
+#' @importFrom logger log_trace
 #' @export
 relations_table_to_list <- function(relations){
 
     direction <- c('parents', 'children')
-    to_str <- intersect(names(relations), direction)[1]
+    to_str <-
+        intersect(names(relations), direction)[1] %>%
+        replace_na('side2')
     to_sym <- sym(to_str)
+    direction <- `if`(
+        to_str == 'parents',
+        direction,
+        `if`(
+            to_str == 'children',
+            rev(direction),
+            NULL
+        )
+    )
+
+    log_trace('Converting ontology relations from table to list.')
 
     relations %>%
     chop(c('relation', to_str)) %>%
     mutate(value = map2(!!to_sym, relation, setNames)) %>%
     term_value_list %>%
-    `attr<-`(
-        'direction',
-        `if`(
-            to_str == 'children',
-            direction,
-            rev(direction)
-        )
-    )
+    `attr<-`('direction', direction)
 
 }
 
@@ -102,6 +107,7 @@ relations_table_to_list <- function(relations){
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate
 #' @importFrom tidyr unnest_longer
+#' @importFrom logger log_trace
 #' @export
 relations_list_to_table <- function(relations, direction = NULL){
 
@@ -111,6 +117,8 @@ relations_list_to_table <- function(relations, direction = NULL){
         c('side1', 'side2')
     to_str <- direction[2]
     to_sym <- sym(to_str)
+
+    log_trace('Converting ontology relations from list to table.')
 
     relations %>%
     tibble(rel = .) %>%
@@ -148,9 +156,9 @@ relations_list_to_table <- function(relations, direction = NULL){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang sym !! :=
-#' @importFrom dplyr mutate select summarize group_by
-#' @importFrom tidyr chop unnest unnest_longer
-#' @importFrom purrr map2
+#' @importFrom dplyr select summarize group_by
+#' @importFrom tidyr unnest
+#' @importFrom logger log_fatal log_trace
 #' @export
 swap_relations <- function(relations){
 
@@ -160,11 +168,23 @@ swap_relations <- function(relations){
         if('parents' %in% names(relations)){
             c_in <- sym('parents')
             c_out <- sym('children')
-        }else{
+        }else if('children' %in% names(relations)){
             c_in <- sym('children')
             c_out <- sym('parents')
+        }else if('side2' %in% names(relations)){
+            c_in <- sym('side2')
+            c_out <- sym('side2')
+        }else{
+            msg <- paste0(
+                'swap_relations: the input data frame must have one of the ',
+                'following columns: "parents", "children" or "side2".'
+            )
+            log_fatal(msg)
+            stop(msg)
         }
     }
+
+    log_trace('Swapping direction of ontology relations.')
 
     `if`(
         dfclass,
@@ -174,17 +194,9 @@ swap_relations <- function(relations){
             summarize(term = list(term), .groups = 'drop') %>%
             select(term = !!c_in, relation, !!c_out := term),
         relations %>%
-            tibble(rel = .) %>%
-            mutate(term = names(rel)) %>%
-            unnest_longer(
-                rel,
-                values_to = 'parents',
-                indices_to = 'relation'
-            ) %>%
+            relations_list_to_table() %>%
             swap_relations() %>%
-            chop(c('relation', 'children')) %>%
-            mutate(value = map2(children, relation, setNames)) %>%
-            term_value_list
+            relations_table_to_list()
     )
 
 }
