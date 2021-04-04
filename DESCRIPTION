@@ -66,7 +66,8 @@ Imports:
     igraph,
     stats,
     logger,
-    tidyselect
+    tidyselect,
+    later
 Suggests:
     dnet,
     gprofiler2,

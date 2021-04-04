@@ -46,6 +46,7 @@
     omnipath.cachedir = NULL,
     omnipath.cache_timeout = 5,
     omnipath.retry_downloads = 3,
+    omnipath.db_lifetime = 300,
     omnipath.pathwaycommons_url = paste0(
         'https://www.pathwaycommons.org/archives/PC2/v12/',
         'PathwayCommons12.All.hgnc.sif.gz'
@@ -456,24 +457,5 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
         )
 
     }
-
-}
-
-
-.onLoad <- function(libname, pkgname){
-
-    omnipath_init_config()
-    patch_logger()
-    omnipath_init_log(pkgname = pkgname)
-
-    if(Sys.info()['user'] == 'biocbuild'){
-
-        omnipath_set_console_loglevel('trace')
-
-    }
-
-    omnipath_init_cache()
-
-    logger::log_info('Welcome to OmnipathR!')
 
 }
