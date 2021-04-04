@@ -64,7 +64,7 @@
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_split_fixed str_trim str_sub
 #' @importFrom stringr str_to_upper str_split
-#' @importFrom dplyr mutate filter select pull summarize group_by
+#' @importFrom dplyr mutate filter select pull summarize group_by last first
 #' @importFrom tidyr separate chop
 #' @importFrom purrr map_chr map2
 #' @importFrom logger log_trace
@@ -87,6 +87,8 @@ obo_parser <- function(
 ){
 
     short_namespace <- function(ns){
+
+        last <- last
 
         ns %>%
         str_split('_') %>%
