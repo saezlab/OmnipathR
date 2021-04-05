@@ -385,7 +385,9 @@ get_ontology_db <- function(key, rel_tbl = TRUE, child_parents = TRUE){
 #'     relations will be used.
 #'
 #' @return Character vector of ontology IDs. If the input terms are all
-#'     leaves or roots \code{NULL} is returned.
+#'     leaves or roots \code{NULL} is returned. The starting nodes won't
+#'     be included in the result unless they fall onto the traversal path
+#'     from other nodes.
 #'
 #' @details
 #' Note: this function relies on the database manager, the first call might
@@ -406,7 +408,7 @@ get_ontology_db <- function(key, rel_tbl = TRUE, child_parents = TRUE){
 #' )
 #' # [1] "'de novo' CTP biosynthetic process" "CTP salvage"
 #'
-#' @importFrom rlang exec !!!
+#' @importFrom magrittr %>% %<>%
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{omnipath_show_db}}}
@@ -423,7 +425,20 @@ walk_ontology_tree <- function(
     )
 ){
 
-    exec(.walk_ontology_tree, !!!as.list(environment()))
+    db <- get_ontology_db(
+        key = db_key,
+        rel_tbl = FALSE,
+        child_parents = ancestors
+    )
+
+    rel_key <- `if`(ancestors, 'rel_lst_c2p', 'rel_lst_p2c')
+
+    rel <- db[[rel_key]]
+
+    terms %<>% ontology_ensure_id(db_key = db_key)
+
+    .walk_ontology_tree(terms, rel, relations) %>%
+    ontology_name_id(ids = ids, db_key = db_key)
 
 }
 
@@ -435,28 +450,9 @@ walk_ontology_tree <- function(
 #' @noRd
 .walk_ontology_tree <- function(
     terms,
-    ancestors = TRUE,
-    db_key = 'go_basic',
-    ids = TRUE,
-    relations = c(
-        'is_a', 'part_of', 'occurs_in', 'regulates',
-        'positively_regulates', 'negatively_regulates'
-    ),
-    .top_call = TRUE
+    rel,
+    relations
 ){
-
-
-    db <- get_ontology_db(
-        key = db_key,
-        rel_tbl = FALSE,
-        child_parents = ancestors
-    )
-
-    rel_key <- `if`(ancestors, 'rel_lst_c2p', 'rel_lst_p2c')
-
-    rel <- db[[rel_key]]
-
-    terms %<>% {`if`(.top_call, ontology_ensure_id(., db_key = db_key), .)}
 
     if(length(terms) == 1L){
 
@@ -467,40 +463,27 @@ walk_ontology_tree <- function(
         }else{
 
             related_terms <- rel[[terms]][relations] %>% unlist
-            result <-
-                c(
-                    related_terms,
-                    rel %>% names %>% intersect(related_terms) %>%
-                    .walk_ontology_tree(
-                        ancestors = ancestors,
-                        db_key = db_key,
-                        relations = relations,
-                        .top_call = FALSE
-                    )
-                ) %>%
-                unname
+            c(
+                related_terms,
+                rel %>% names %>% intersect(related_terms) %>%
+                .walk_ontology_tree(rel = rel, relations = relations)
+            ) %>%
+            unname %>%
+            unique
 
         }
 
     }else{
 
-        result <-
-            terms %>% map(
-                .walk_ontology_tree,
-                ancestors = ancestors,
-                db_key = db_key,
-                relations = relations,
-                .top_call = FALSE
-            ) %>%
-            unlist
+        terms %>% map(
+            .walk_ontology_tree,
+            rel = rel,
+            relations = relations
+        ) %>%
+        unlist %>%
+        unique
 
     }
-
-    `if`(
-        .top_call,
-        ontology_name_id(result, ids = ids, db_key = db_key),
-        result
-    )
 
 }
 

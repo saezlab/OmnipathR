@@ -32,7 +32,9 @@ relations will be used.}
 }
 \value{
 Character vector of ontology IDs. If the input terms are all
-    leaves or roots \code{NULL} is returned.
+    leaves or roots \code{NULL} is returned. The starting nodes won't
+    be included in the result unless they fall onto the traversal path
+    from other nodes.
 }
 \description{
 Starting from the selected nodes, recursively walks the ontology tree
