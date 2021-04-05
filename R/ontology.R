@@ -500,7 +500,54 @@ ontology_name_id <- function(terms, ids = TRUE, db_key = 'go_basic'){
 }
 
 
+#' Only ontology IDs
+#'
+#' Converts a mixture of ontology IDs and names to only IDs. If an element
+#' of the input is missing from the chosen ontology it will be dropped.
+#' This can happen if the ontology is a subset (slim) version, but also if
+#' the input is not a valid ID or name.
+#'
+#' @param terms Character: ontology IDs or term names.
+#' @param db_key Character: key to identify the ontology database. For the
+#'     available keys see \code{\link{omnipath_show_db}}.
+#'
+#' @return Character vector of ontology IDs.
+#'
+#' @examples
+#' ontology_ensure_id(c('mitochondrion inheritance', 'GO:0001754'))
+#' # [1] "GO:0000001" "GO:0001754"
+#'
+#' @export
+ontology_ensure_id <- function(terms, db_key = 'go_basic'){
 
+    ontology_name_id(terms, db_key = db_key)
+
+}
+
+
+#' Only ontology term names
+#'
+#' Converts a mixture of ontology IDs and names to only names. If an element
+#' of the input is missing from the chosen ontology it will be dropped.
+#' This can happen if the ontology is a subset (slim) version, but also if
+#' the input is not a valid ID or name.
+#'
+#' @param terms Character: ontology IDs or term names.
+#' @param db_key Character: key to identify the ontology database. For the
+#'     available keys see \code{\link{omnipath_show_db}}.
+#'
+#' @return Character vector of ontology term names.
+#'
+#' @examples
+#' ontology_ensure_name(c('reproduction', 'GO:0001754', 'foo bar'))
+#' # [1] "eye photoreceptor cell differentiation" "reproduction"
+#'
+#' @export
+ontology_ensure_name <- function(terms, db_key = 'go_basic'){
+
+    ontology_name_id(terms, ids = FALSE, db_key = db_key)
+
+}
 
 
 #' Looks like an ontology ID
