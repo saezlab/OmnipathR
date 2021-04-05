@@ -384,7 +384,8 @@ get_ontology_db <- function(key, rel_tbl = TRUE, child_parents = TRUE){
 #' @param relations Character vector of ontology relation types. Only these
 #'     relations will be used.
 #'
-#' @return Character vector of ontology IDs.
+#' @return Character vector of ontology IDs. If the input terms are all
+#'     leaves or roots \code{NULL} is returned.
 #'
 #' @details
 #' Note: this function relies on the database manager, the first call might
