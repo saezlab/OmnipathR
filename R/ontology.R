@@ -488,6 +488,101 @@ walk_ontology_tree <- function(
 }
 
 
+#' All descendants in the ontology tree
+#'
+#' Starting from the selected nodes, recursively walks the ontology tree
+#' until it reaches the leaf nodes. Collects all visited nodes, which are
+#' the descendants (children) of the starting nodes.
+#'
+#' @param terms Character vector of ontology term IDs or names. A mixture of
+#'     IDs and names can be provided.
+#' @param db_key Character: key to identify the ontology database. For the
+#'     available keys see \code{\link{omnipath_show_db}}.
+#' @param ids Logical: whether to return IDs or term names.
+#' @param relations Character vector of ontology relation types. Only these
+#'     relations will be used.
+#'
+#' @return Character vector of ontology IDs. If the input terms are all
+#'     leaves \code{NULL} is returned. The starting nodes won't be included
+#'     in the result unless some of them are descendants of other starting
+#'     nodes.
+#'
+#' @details
+#' Note: this function relies on the database manager, the first call might
+#' take long because of the database load process. Subsequent calls within
+#' a short period should be faster. See \code{\link{get_ontology_db}}.
+#'
+#' @examples
+#' descendants('GO:0005035', ids = FALSE)
+#' # [1] "tumor necrosis factor-activated receptor activity"
+#' # [2] "TRAIL receptor activity"
+#' # [3] "TNFSF11 receptor activity"
+#'
+#' @importFrom rlang exec !!!
+#' @export
+descendants <- function(
+    terms,
+    db_key = 'go_basic',
+    ids = TRUE,
+    relations = c(
+        'is_a', 'part_of', 'occurs_in', 'regulates',
+        'positively_regulates', 'negatively_regulates'
+    )
+){
+
+    exec(walk_ontology_tree, ancestors = FALSE, !!!as.list(environment()))
+
+}
+
+
+#' All ancestors in the ontology tree
+#'
+#' Starting from the selected nodes, recursively walks the ontology tree
+#' until it reaches the root. Collects all visited nodes, which are the
+#' ancestors (parents) of the starting nodes.
+#'
+#' @param terms Character vector of ontology term IDs or names. A mixture of
+#'     IDs and names can be provided.
+#' @param db_key Character: key to identify the ontology database. For the
+#'     available keys see \code{\link{omnipath_show_db}}.
+#' @param ids Logical: whether to return IDs or term names.
+#' @param relations Character vector of ontology relation types. Only these
+#'     relations will be used.
+#'
+#' @return Character vector of ontology IDs. If the input terms are all
+#'     root nodes, \code{NULL} is returned. The starting nodes won't be
+#'     included in the result unless some of them are ancestors of other
+#'     starting nodes.
+#'
+#' @details
+#' Note: this function relies on the database manager, the first call might
+#' take long because of the database load process. Subsequent calls within
+#' a short period should be faster. See \code{\link{get_ontology_db}}.
+#'
+#' @examples
+#' ancestors('GO:0005035', ids = FALSE)
+#' # [1] "molecular_function"
+#' # [2] "transmembrane signaling receptor activity"
+#' # [3] "signaling receptor activity"
+#' # [4] "molecular transducer activity"
+#'
+#' @importFrom rlang exec !!!
+#' @export
+ancestors <- function(
+    terms,
+    db_key = 'go_basic',
+    ids = TRUE,
+    relations = c(
+        'is_a', 'part_of', 'occurs_in', 'regulates',
+        'positively_regulates', 'negatively_regulates'
+    )
+){
+
+    exec(walk_ontology_tree, ancestors = TRUE, !!!as.list(environment()))
+
+}
+
+
 #' Translate between ontology IDs and names
 #'
 #' Makes sure that the output contains only valid IDs or term names. The
