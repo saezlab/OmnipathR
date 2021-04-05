@@ -189,7 +189,7 @@ db_lifetime_hook <- function(){
 #'     default parameters in \code{\link{omnipath_show_db}}.
 #'
 #' @examples
-#' load_db('gene_ontology_slim')
+#' load_db('go_slim')
 #'
 #' @importFrom magrittr %<>%
 #' @importFrom logger log_fatal log_info
@@ -236,7 +236,7 @@ load_db <- function(key, param = list()){
 #'     substantial time and resource use.
 #'
 #' @examples
-#' goslim <- get_db('gene_ontology_slim')
+#' goslim <- get_db('go_slim')
 #'
 #' @importFrom logger log_fatal log_info
 #' @importFrom rlang exec !!!

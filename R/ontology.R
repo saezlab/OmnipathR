@@ -223,7 +223,158 @@ swap_relations <- function(relations){
 }
 
 
+#' Creates an igraph object which helps to control transformations of
+#' ontology relation data structures
+#'
+#' @importFrom igraph graph_from_literal as.directed V E get.edgelist
+#' @importFrom purrr pmap_chr
+#' @importFrom stringr str_sub
+#' @importFrom magrittr %>%
+#' @importFrom tibble as_tibble
+#'
+#' @noRd
+get_ontology_db_variants_graph <- function(){
+
+    g <-
+        graph_from_literal(
+            rel_tbl_c2p-rel_tbl_p2c,
+            rel_tbl_c2p-rel_lst_c2p,
+            rel_tbl_p2c-rel_lst_p2c
+        ) %>%
+        as.directed
+
+    V(g)$tbl <- grepl('tbl', V(g)$name)
+    V(g)$c2p <- grepl('c2p', V(g)$name)
+    E(g)$fun <-
+        g %>%
+        get.edgelist %>%
+        `colnames<-`(c('from', 'to')) %>%
+        as_tibble %>%
+        pmap_chr(
+            function(from, to){
+                if(str_sub(from, -3) != str_sub(to, -3)){
+                    'swap_relations'
+                }else if(str_sub(from, 5, 7) == 'tbl'){
+                    'relations_table_to_list'
+                }else{
+                    'relations_list_to_table'
+                }
+            }
+        )
+
+    E(g)$weight <-
+        ifelse(E(g)$fun == 'swap_relations', 1, 2)
+
+    return(g)
+
+}
+
+
+.ontology_db_variants_graph <- get_ontology_db_variants_graph()
+
+
+#' Finds the most efficient way to transform ontology relationships into the
+#' desired format
+#'
+#' @param db An ontology database (as produced by \code{\link{obo_parser}}
+#'     and accessed by \code{\link{get_db}}.
+#' @param tbl Logical: the data structure should be a data frame
+#'     (\code{TRUE}) or a list (\code{FALSE}).
+#' @param c2p Logical: the data structure should contain child-to-parents
+#'     (\code{TRUE}) or parent-to-children (\code{FALSE}) relations.
+#'
+#'
+#' @return A list with the following elements: "operations" character
+#'     vector with the function names; "start" name of the starting data
+#'     structure; "end" name of the target data structure. Note: if the
+#'     target data structure already exists "operations" a zero length
+#'     vector.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom igraph V shortest_paths
+#' @importFrom dplyr first last
+#' @importFrom purrr map_dbl
+#'
+#' @noRd
+ontology_db_transformations <- function(db, tbl, c2p){
+
+    g <- .ontology_db_variants_graph
+
+    to <- (V(g)$tbl == tbl & V(g)$c2p == c2p) %>% which
+    from <- V(g)$name %in% names(db) %>% which
+
+    paths <- shortest_paths(g, to, from, mode = 'in', output = 'both')
+    idx <- paths$epath %>% map_dbl(function(e){sum(e$weight)}) %>% which.min
+    operations <- paths$epath[[idx]]$fun
+    start <- paths$vpath[[idx]] %>% last %>% `$`('name')
+    end <- paths$vpath[[idx]] %>% first %>% `$`('name')
+
+    list(
+        operations = operations,
+        start = start,
+        end = end
+    )
+
+}
+
+
+#' Access an ontology database
+#'
+#' Retrieves an ontology database with relations in the desired data
+#' structure. The database is automatically loaded and the requested data
+#' structure is constructed if necessary. The databases stay loaded up to a
+#' certain time period (see the option \code{omnipath.db_lifetime}). Hence
+#' the first one of repeated calls to this function might take long and the
+#' subsequent ones should be really quick.
+#'
+#' @param key Character: key of the ontology database. For the available keys
+#'     see \code{\link{omnipath_show_db}}.
+#' @param rel_tbl Logical: wheter the ontology relations data structure
+#'     should be a data frame or a list.
+#' @param child_parents Logical: whether the ontology relations should point
+#'     from child to parents (\code{TRUE}) or from parent to children
+#'     (\code{FALSE}).
+#'
+#' @examples
+#' go <- get_ontology_db('go_basic', child_parents = FALSE)
+#'
+#' @importFrom magrittr %<>%
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{omnipath_show_db}}}
+#'     \item{\code{\link{get_db}}}
+#' }
+get_ontology_db <- function(key, rel_tbl = TRUE, child_parents = TRUE){
+
+    db <- get_db(key)
+
+    transf <- ontology_db_transformations(db, rel_tbl, child_parents)
+
+    relations <- db[[transf$start]]
+
+    for(op in transf$operations){
+
+        relations %<>% (get(op))
+
+    }
+
+    db[[transf$end]] <- relations
+    omnipath.env$db[[key]]$db <- db
+
+    get_db(key)
+
+}
+
+
 descendants <- function(
-    descendants_of,
-    onto
-){}
+    terms,
+    db_key = 'go_basic',
+    db_param = list(tables = TRUE),
+    reload = FALSE
+){
+
+    db <- get_db(key = db_key, param = db_param, reload = reload)
+
+
+
+}

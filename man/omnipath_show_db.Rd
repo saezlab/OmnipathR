@@ -7,7 +7,7 @@
 omnipath_show_db()
 }
 \value{
-A data frame with the build in databaase definitions.
+A data frame with the built in databaase definitions.
 }
 \description{
 Databases are resources which might be costly to load but can be used many
@@ -19,13 +19,15 @@ automatically upon expiry.
 database_definitions <- omnipath_show_db()
 database_definitions
 # # A tibble: 14 x 10
-#    name    last_used lifetime package loader loader_param latest_param
-#    <chr>   <lgl>        <dbl> <chr>   <chr>  <list>       <lgl>
-#  1 Gene O. NA             300 Omnipa. go_on. <named list. NA
-#  2 Gene O. NA             300 Omnipa. go_on. <named list. NA
-#  3 Gene O. NA             300 Omnipa. go_on. <named list. NA
-#  4 Gene O. NA             300 Omnipa. go_on. <named list. NA
-#  5 Gene O. NA             300 Omnipa. go_on. <named list. NA
-# # . with 3 more variables: loaded <lgl>, db <lgl>, key <chr>
+#    name       last_used           lifetime package  loader    loader_p.
+#    <chr>      <dttm>                 <dbl> <chr>    <chr>     <list>
+#  1 Gene Onto. 2021-04-04 20:19:15      300 Omnipat. go_ontol. <named l.
+#  2 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#  3 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#  4 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+#  5 Gene Onto. NA                       300 Omnipat. go_ontol. <named l.
+# ... (truncated)
+# # . with 4 more variables: latest_param <list>, loaded <lgl>, db <list>,
+# #   key <chr>
 
 }

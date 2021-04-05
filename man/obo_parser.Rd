@@ -18,7 +18,8 @@ obo_parser(
 \item{relations}{Character vector: process only these relations.}
 
 \item{shorten_namespace}{Logical: shorten the namespace to a single
-code (as usual for Gene Ontology, e.g. cellular_component = "C").}
+letter code (as usual for Gene Ontology, e.g. cellular_component =
+"C").}
 
 \item{tables}{Logical: return data frames (tibbles) instead of nested
 lists.}
@@ -33,7 +34,8 @@ A list with the following elements: 1) "names" a list with
     vectors of subset names as values (or \code{NULL} if the term
     does not belong to any subset); 5) "obsolete" character vector
     with all the terms labeled as obsolete. If the \code{tables}
-    parameter is \code{TRUE},
+    parameter is \code{TRUE}, "names", "namespaces", "relations"
+    and "subsets" will be data frames (tibbles).
 }
 \description{
 Reads the contents of an OBO file and processes it into a list based

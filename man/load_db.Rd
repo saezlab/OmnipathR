@@ -18,7 +18,7 @@ default parameters in \code{\link{omnipath_show_db}}.}
 Load a built in database
 }
 \examples{
-load_db('gene_ontology_slim')
+load_db('go_slim')
 
 }
 \seealso{

@@ -28,7 +28,8 @@
 #' @param path Path to the OBO file.
 #' @param relations Character vector: process only these relations.
 #' @param shorten_namespace Logical: shorten the namespace to a single
-#'     code (as usual for Gene Ontology, e.g. cellular_component = "C").
+#'     letter code (as usual for Gene Ontology, e.g. cellular_component =
+#'     "C").
 #' @param tables Logical: return data frames (tibbles) instead of nested
 #'     lists.
 #'
@@ -41,7 +42,8 @@
 #'     vectors of subset names as values (or \code{NULL} if the term
 #'     does not belong to any subset); 5) "obsolete" character vector
 #'     with all the terms labeled as obsolete. If the \code{tables}
-#'     parameter is \code{TRUE},
+#'     parameter is \code{TRUE}, "names", "namespaces", "relations"
+#'     and "subsets" will be data frames (tibbles).
 #'
 #' @examples
 #' goslim_url <-
@@ -204,14 +206,21 @@ obo_parser <- function(
             relations_table_to_list(.)
         )}
 
+    rel_list <- list()
+    rel_key <- sprintf('rel_%s_c2p', `if`(tables, 'tbl', 'lst'))
+    rel_list[[rel_key]] <- term_relations
+
     log_trace('Finished processing OBO file `%s`.', path)
 
-    list(
-        names = term_name,
-        namespaces = term_namespace,
-        relations = term_relations,
-        subsets = term_subset,
-        obsolete = obsolete_terms
+    c(
+        list(
+            names = term_name,
+            namespaces = term_namespace,
+            relations = term_relations,
+            subsets = term_subset,
+            obsolete = obsolete_terms
+        ),
+        rel_list
     )
 
 }
