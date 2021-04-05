@@ -366,15 +366,159 @@ get_ontology_db <- function(key, rel_tbl = TRUE, child_parents = TRUE){
 }
 
 
-descendants <- function(
+#' All nodes of a subtree starting from the selected nodes
+#'
+#' Starting from the selected nodes, recursively walks the ontology tree
+#' until it reaches either the root or leaf nodes. Collects all visited
+#' nodes.
+#'
+#' @param terms Character vector of ontology term IDs.
+#' @param descendants Logical: if \code{TRUE} the ontology tree is traversed
+#'     towards the leaf nodes; if \code{FALSE}, the tree is traversed until
+#'     the root. The former returns the descendants (children), the latter
+#'     the ancestors (parents).
+#' @param db_key Character: key to identify the ontology database. For the
+#'     available keys see \code{\link{omnipath_show_db}}.
+#' @param relations Character vector of ontology relation types. Only these
+#'     relations will be used.
+#'
+#' @return Character vector of ontology IDs.
+#'
+#' @details
+#' Note: this function relies on the database manager, the first call might
+#' take long because of the database load process. Subsequent calls within
+#' a short period should be fast. See \code{\link{get_ontology_db}}.
+#'
+#' @examples
+#' walk_ontology_tree(c('GO:0006241', 'GO:0044211'))
+#' # [1] "GO:0044210" "GO:0044211"
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{omnipath_show_db}}}
+#'     \item{\code{\link{get_ontology_db}}}
+#' }
+walk_ontology_tree <- function(
     terms,
+    descendants = TRUE,
     db_key = 'go_basic',
-    db_param = list(tables = TRUE),
-    reload = FALSE
+    relations = c(
+        'is_a', 'part_of', 'occurs_in', 'regulates',
+        'positively_regulates', 'negatively_regulates'
+    )
 ){
 
-    db <- get_db(key = db_key, param = db_param, reload = reload)
+    db <- get_ontology_db(
+        key = db_key,
+        rel_tbl = FALSE,
+        child_parents = FALSE
+    )
+
+    rel_key <- `if`(descendants, 'rel_lst_p2c', 'rel_lst_c2p')
+
+    rel <- db[[rel_key]]
+
+    if(length(terms) == 1L){
+
+        if(!terms %in% names(rel)){
+            return(NULL)
+        }else{
+            related_terms <- rel[[terms]][relations] %>% unlist
+            c(
+                related_terms,
+                rel %>% names %>% intersect(related_terms) %>%
+                walk_ontology_tree(
+                    descendants = descendants,
+                    db_key = db_key,
+                    relations = relations
+                )
+            ) %>% unname
+        }
+
+    }else{
+
+        terms %>% map(
+            walk_ontology_tree,
+            descendants = descendants,
+            db_key = db_key,
+            relations = relations
+        ) %>%
+        unlist
+
+    }
+
+}
 
 
+#' Translate between ontology IDs and names
+#'
+#' Makes sure that the output contains only valid IDs or term names. The
+#' input can be a mixture of IDs and names. The order of the input won't
+#' be preserved in the output.
+#'
+#' @param terms Character: ontology IDs or term names.
+#' @param ids Logical: the output should contain IDs or term names.
+#' @param db_key Character: key to identify the ontology database. For the
+#'     available keys see \code{\link{omnipath_show_db}}.
+#'
+#' @return Character vector of ontology IDs or term names.
+#'
+#' @examples
+#' ontology_name_id(c('mitochondrion inheritance', 'reproduction'))
+#' # [1] "GO:0000001" "GO:0000003"
+#' ontology_name_id(c('GO:0000001', 'reproduction'), ids = FALSE)
+#' # [1] "mitochondrion inheritance" "reproduction"
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter pull
+#' @importFrom rlang !! sym
+#' @importFrom tibble tibble
+#' @export
+ontology_name_id <- function(terms, ids = TRUE, db_key = 'go_basic'){
+
+    db <- get_db(db_key)
+    to_col <- `if`(ids, 'term', 'name')
+    from_col <- `if`(ids, 'name', 'term')
+
+    id_name <- `if`(
+        inherits(db$names, 'data.frame'),
+        db$names,
+        db$names %>% {tibble(term = names(.), name = unlist(.))}
+    )
+
+    id_name %>%
+    filter(!!sym(from_col) %in% terms) %>%
+    pull(!!sym(to_col)) %>%
+    union(
+        id_name %>%
+        pull(!!sym(to_col)) %>%
+        intersect(terms)
+    )
+
+}
+
+
+
+
+
+#' Looks like an ontology ID
+#'
+#' Tells if the input has the typical format of ontology IDs, i.e. a code
+#' of capital letters, a colon, followed by a numeric code.
+#'
+#' @param terms Character vector with strings to check.
+#'
+#' @return A logical vector with the same length as the input.
+#'
+#' @examples
+#' is_ontology_id(c('GO:0000001', 'reproduction'))
+#' # [1]  TRUE FALSE
+#'
+#' @export
+is_ontology_id <- function(terms){
+
+    grepl('^[A-Z]+:[0-9]+$', terms)
 
 }

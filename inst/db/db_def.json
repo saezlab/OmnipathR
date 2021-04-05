@@ -190,5 +190,18 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "goa_human": {
+        "name": ["GO annotations (human)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_annot_download",
+        "loader_param": {
+            "organism": "human"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }
