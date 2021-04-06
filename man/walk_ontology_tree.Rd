@@ -9,6 +9,7 @@ walk_ontology_tree(
   ancestors = TRUE,
   db_key = "go_basic",
   ids = TRUE,
+  method = "gra",
   relations = c("is_a", "part_of", "occurs_in", "regulates", "positively_regulates",
     "negatively_regulates")
 )

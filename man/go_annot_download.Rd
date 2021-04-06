@@ -4,7 +4,7 @@
 \alias{go_annot_download}
 \title{Gene annotations from Gene Ontology}
 \usage{
-go_annot_download(organism = "human", aspects = c("C", "F", "P"))
+go_annot_download(organism = "human", aspects = c("C", "F", "P"), slim = NULL)
 }
 \arguments{
 \item{organism}{Character: either "chicken", "cow", "dog", "human", "pig"
@@ -15,10 +15,14 @@ or "uniprot_all".}
 process). Gene Ontology is three separate ontologies called as three
 aspects. By this parameter you can control which aspects to include
 in the output.}
+
+\item{slim}{Character: if not \code{NULL}, the name of a GOsubset (slim).
+instead of the full GO annotation, the slim annotation will be
+returned. See details at \code{\link{go_annot_slim}}.}
 }
 \value{
 A tibble (data frame) of annotations as it is provided by the
-database
+    database
 }
 \description{
 Gene Ontology is an ontology of gene subcellular localizations, molecular

@@ -264,7 +264,7 @@ go_annot_slim <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom progress progress_bar
-#' @importFrom dplyr left_join select distinct mutate
+#' @importFrom dplyr left_join select distinct mutate n_distinct
 #' @importFrom purrr map
 #' @importFrom tidyr unnest
 #'

@@ -262,7 +262,7 @@ swap_relations <- function(relations){
 #' Creates an igraph object which helps to control transformations of
 #' ontology relation data structures
 #'
-#' @importFrom igraph graph_from_literal as.directed V E
+#' @importFrom igraph graph_from_literal as.directed V E V<- E<-
 #' @importFrom igraph get.edgelist delete_edges
 #' @importFrom purrr pmap_chr
 #' @importFrom stringr str_sub

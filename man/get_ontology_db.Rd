@@ -4,14 +4,15 @@
 \alias{get_ontology_db}
 \title{Access an ontology database}
 \usage{
-get_ontology_db(key, rel_tbl = TRUE, child_parents = TRUE)
+get_ontology_db(key, rel_fmt = "tbl", child_parents = TRUE)
 }
 \arguments{
 \item{key}{Character: key of the ontology database. For the available keys
 see \code{\link{omnipath_show_db}}.}
 
-\item{rel_tbl}{Logical: wheter the ontology relations data structure
-should be a data frame or a list.}
+\item{rel_fmt}{Character: the data structure of the ontology relations.
+Posible values are 1) "tbl" a data frame, 2) "lst" a list or 3) "gra"
+a graph.}
 
 \item{child_parents}{Logical: whether the ontology relations should point
 from child to parents (\code{TRUE}) or from parent to children

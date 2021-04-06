@@ -4,7 +4,12 @@
 \alias{go_annot_slim}
 \title{GO slim gene annotations}
 \usage{
-go_annot_slim(organism = "human", slim = "generic", aspects = c("C", "F", "P"))
+go_annot_slim(
+  organism = "human",
+  slim = "generic",
+  aspects = c("C", "F", "P"),
+  cache = TRUE
+)
 }
 \arguments{
 \item{organism}{Character: either "chicken", "cow", "dog", "human", "pig"
@@ -15,6 +20,8 @@ or "uniprot_all".}
 process). Gene Ontology is three separate ontologies called as three
 aspects. By this parameter you can control which aspects to include
 in the output.}
+
+\item{cache}{Logical: Load the result from cache if available.}
 
 \item{subset}{Character: the GO subset (GO slim) name. Available GO
 slims are: "agr" (Alliance for Genomics Resources), "generic",
@@ -33,4 +40,20 @@ In order to annotate genes with GO slim terms, we take the annotations
 and search all ancestors of the terms up to the root of the ontology
 tree. From the ancestors we select the terms which are part of the slim
 subset.
+}
+\details{
+Building the GO slim is resource intensive in its current implementation.
+For human annotation and generic GO slim it might take around 20 minutes.
+The result is saved into the cache so next time loading the data from
+there is really quick. If the \code{cache} option is \code{FALSE} the
+data will be built fresh (the annotation and ontology files still might
+come from cache), and the newly build GO slim will overwrite the cache
+instance.
+}
+\seealso{
+\itemize{
+    \item{\code{\link{go_annot_download}}}
+    \item{\code{\link{go_ontology_download}}}
+    \item{\code{\link{get_db}}}
+}
 }
