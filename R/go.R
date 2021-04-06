@@ -162,3 +162,73 @@ go_ontology_download <- function(
     copy_source_attrs(path, resource = 'Gene Ontology')
 
 }
+
+
+#' GO slim gene annotations
+#'
+#' GO slims are subsets of the full GO which "give a broad overview of the
+#' ontology content without the detail of the specific fine grained terms".
+#' In order to annotate genes with GO slim terms, we take the annotations
+#' and search all ancestors of the terms up to the root of the ontology
+#' tree. From the ancestors we select the terms which are part of the slim
+#' subset.
+#'
+#' @param organism Character: either "chicken", "cow", "dog", "human", "pig"
+#'     or "uniprot_all".
+#' @param subset Character: the GO subset (GO slim) name. Available GO
+#'     slims are: "agr" (Alliance for Genomics Resources), "generic",
+#'     "aspergillus", "candida", "drosophila", "chembl", "metagenomic",
+#'     "mouse", "plant", "pir" (Protein Information Resource), "pombe"
+#'     and "yeast".
+#' @param aspects Character vector with some of the following elements:
+#'     "C" (cellular component), "F" (molecular function) and "P" (biological
+#'     process). Gene Ontology is three separate ontologies called as three
+#'     aspects. By this parameter you can control which aspects to include
+#'     in the output.
+#'
+#' @return A tibble (data frame) of genes annotated with ontology terms in
+#'     in the GO slim (subset).
+#'
+#' @importFrom magrittr %>%
+#' @importFrom progress progress_bar
+#' @importFrom dplyr left_join select distinct mutate
+#' @importFrom purrr map
+#' @importFrom tidyr unnest
+#' @export
+go_annot_slim <- function(
+    organism = 'human',
+    slim = 'generic',
+    aspects = c('C', 'F', 'P')
+){
+
+    annot <- go_annot_download(organism = organism, aspects = aspects)
+    slim_terms <- go_ontology_download(subset = slim)$names$term
+
+    pb <- progress_bar$new(
+        total = annot %>% pull(go_id) %>% n_distinct,
+        format = '  Looking up ancestors [:bar] :percent eta: :eta'
+    )
+
+    annot %>%
+    left_join(
+        select(., go_id) %>%
+        distinct %>%
+        mutate(
+            ancestors = map(go_id, function(g){
+                pb$tick()
+                union(ancestors(g), g)
+            })
+        ),
+        by = 'go_id'
+    ) %>%
+    mutate(
+        go_id = map(
+            ancestors,
+            intersect,
+            slim_terms
+        )
+    ) %>%
+    select(-ancestors) %>%
+    unnest(go_id)
+
+}
