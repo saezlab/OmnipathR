@@ -185,11 +185,21 @@ go_ontology_download <- function(
 #'     process). Gene Ontology is three separate ontologies called as three
 #'     aspects. By this parameter you can control which aspects to include
 #'     in the output.
+#' @param cache Logical: Load the result from cache if available.
 #'
 #' @return A tibble (data frame) of genes annotated with ontology terms in
 #'     in the GO slim (subset).
 #'
-#' @importFrom magrittr %>%
+#' @details
+#' Building the GO slim is resource intensive in its current implementation.
+#' For human annotation and generic GO slim it might take around 20 minutes.
+#' The result is saved into the cache so next time loading the data from
+#' there is really quick. If the \code{cache} option is \code{FALSE} the
+#' data will be built fresh (the annotation and ontology files still might
+#' come from cache), and the newly build GO slim will overwrite the cache
+#' instance.
+#'
+#' @importFrom magrittr %>% %<>%
 #' @importFrom progress progress_bar
 #' @importFrom dplyr left_join select distinct mutate
 #' @importFrom purrr map
@@ -198,37 +208,74 @@ go_ontology_download <- function(
 go_annot_slim <- function(
     organism = 'human',
     slim = 'generic',
-    aspects = c('C', 'F', 'P')
+    aspects = c('C', 'F', 'P'),
+    cache = TRUE
 ){
 
-    annot <- go_annot_download(organism = organism, aspects = aspects)
-    slim_terms <- go_ontology_download(subset = slim)$names$term
-
-    pb <- progress_bar$new(
-        total = annot %>% pull(go_id) %>% n_distinct,
-        format = '  Looking up ancestors [:bar] :percent eta: :eta'
+    cache_pseudo_url <- 'go_annot_slim'
+    cache_pseudo_post <- list(
+        organism = organism,
+        slim = slim,
+        aspects = aspects
     )
 
-    annot %>%
-    left_join(
-        select(., go_id) %>%
-        distinct %>%
-        mutate(
-            ancestors = map(go_id, function(g){
-                pb$tick()
-                union(ancestors(g), g)
-            })
-        ),
-        by = 'go_id'
-    ) %>%
-    mutate(
-        go_id = map(
-            ancestors,
-            intersect,
-            slim_terms
+    cache_record <- omnipath_cache_get(
+        url = cache_pseudo_url,
+        post = cache_pseudo_post,
+        create = FALSE
+    )
+
+    if(is.null(cache_record) || !cache){
+
+
+        annot <- go_annot_download(organism = organism, aspects = aspects)
+        slim_terms <- go_ontology_download(subset = slim)$names$term
+
+        pb <- progress_bar$new(
+            total = annot %>% pull(go_id) %>% n_distinct,
+            format = '  Looking up ancestors [:bar] :percent eta: :eta'
         )
-    ) %>%
-    select(-ancestors) %>%
-    unnest(go_id)
+
+        annot %<>%
+        select(
+            -qualifier, -db_ref, -evidence_code, -with_or_from,
+            -date, -assigned_by, -annotation_extension
+        ) %>%
+        left_join(
+            select(., go_id) %>%
+            distinct %>%
+            mutate(
+                ancestors = map(go_id, function(g){
+                    pb$tick()
+                    union(ancestors(g), g)
+                })
+            ),
+            by = 'go_id'
+        ) %>%
+        mutate(
+            go_id = map(
+                ancestors,
+                intersect,
+                slim_terms
+            )
+        ) %>%
+        select(-ancestors) %>%
+        unnest(go_id) %>%
+        distinct %>%
+        omnipath_cache_save(
+            url = cache_pseudo_url,
+            post = cache_pseudo_post
+        )
+
+    }else{
+
+        annot <- omnipath_cache_load(
+            url = cache_pseudo_url,
+            post = cache_pseudo_post
+        )
+
+    }
+
+    return(annot)
 
 }
