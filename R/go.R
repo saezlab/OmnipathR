@@ -231,11 +231,13 @@ go_annot_slim <- function(
         aspects = aspects
     )
 
-    cache_record <- omnipath_cache_get(
-        url = cache_pseudo_url,
-        post = cache_pseudo_post,
-        create = FALSE
-    )
+    in_cache <-
+        omnipath_cache_get(
+            url = cache_pseudo_url,
+            post = cache_pseudo_post,
+            create = FALSE
+        ) %>%
+        omnipath_cache_latest_version
 
     if(is.null(cache_record) || !cache){
 

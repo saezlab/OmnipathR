@@ -523,7 +523,7 @@ walk_ontology_tree <- function(
 
     V(rel)[terms, na_ok = TRUE] %>%
     na.omit %>%
-    {ego(rel, order = 33, nodes = ., mode = 'out')} %>%
+    {ego(rel, order = 16, nodes = ., mode = 'out')} %>%
     unlist %>%
     names %>%
     unique
