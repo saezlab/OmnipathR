@@ -199,12 +199,14 @@ go_ontology_download <- function(
 #' come from cache), and the newly build GO slim will overwrite the cache
 #' instance.
 #'
-#' @importFrom magrittr %>% %<>%
-#' @importFrom progress progress_bar
-#' @importFrom dplyr left_join select distinct mutate
-#' @importFrom purrr map
-#' @importFrom tidyr unnest
+#' @importFrom magrittr %>%
+#' @importFrom rlang exec !!!
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{go_annot_download}}}
+#'     \item{\code{\link{go_ontology_download}}}
+#'     \item{\code{\link{get_db}}}
+#' }
 go_annot_slim <- function(
     organism = 'human',
     slim = 'generic',
@@ -227,45 +229,12 @@ go_annot_slim <- function(
 
     if(is.null(cache_record) || !cache){
 
-
-        annot <- go_annot_download(organism = organism, aspects = aspects)
-        slim_terms <- go_ontology_download(subset = slim)$names$term
-
-        pb <- progress_bar$new(
-            total = annot %>% pull(go_id) %>% n_distinct,
-            format = '  Looking up ancestors [:bar] :percent eta: :eta'
-        )
-
-        annot %<>%
-        select(
-            -qualifier, -db_ref, -evidence_code, -with_or_from,
-            -date, -assigned_by, -annotation_extension
-        ) %>%
-        left_join(
-            select(., go_id) %>%
-            distinct %>%
-            mutate(
-                ancestors = map(go_id, function(g){
-                    pb$tick()
-                    union(ancestors(g), g)
-                })
-            ),
-            by = 'go_id'
-        ) %>%
-        mutate(
-            go_id = map(
-                ancestors,
-                intersect,
-                slim_terms
+        annot <-
+            exec(.go_annot_slim, !!!cache_pseudo_post) %>%
+            omnipath_cache_save(
+                url = cache_pseudo_url,
+                post = cache_pseudo_post
             )
-        ) %>%
-        select(-ancestors) %>%
-        unnest(go_id) %>%
-        distinct %>%
-        omnipath_cache_save(
-            url = cache_pseudo_url,
-            post = cache_pseudo_post
-        )
 
     }else{
 
@@ -277,5 +246,58 @@ go_annot_slim <- function(
     }
 
     return(annot)
+
+}
+
+
+#' See \code{\link{go_annot_slim}}
+#'
+#' @importFrom magrittr %>%
+#' @importFrom progress progress_bar
+#' @importFrom dplyr left_join select distinct mutate
+#' @importFrom purrr map
+#' @importFrom tidyr unnest
+#'
+#' @noRd
+.go_annot_slim <- function(
+    organism = 'human',
+    slim = 'generic',
+    aspects = c('C', 'F', 'P')
+){
+
+    annot <- go_annot_download(organism = organism, aspects = aspects)
+    slim_terms <- go_ontology_download(subset = slim)$names$term
+
+    pb <- progress_bar$new(
+        total = annot %>% pull(go_id) %>% n_distinct,
+        format = '  Looking up ancestors [:bar] :percent eta: :eta'
+    )
+
+    annot %>%
+    select(
+        -qualifier, -db_ref, -evidence_code, -with_or_from,
+        -date, -assigned_by, -annotation_extension
+    ) %>%
+    left_join(
+        select(., go_id) %>%
+        distinct %>%
+        mutate(
+            ancestors = map(go_id, function(g){
+                pb$tick()
+                union(ancestors(g), g)
+            })
+        ),
+        by = 'go_id'
+    ) %>%
+    mutate(
+        go_id = map(
+            ancestors,
+            intersect,
+            slim_terms
+        )
+    ) %>%
+    select(-ancestors) %>%
+    unnest(go_id) %>%
+    distinct
 
 }
