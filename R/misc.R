@@ -315,6 +315,21 @@ if_null <- function(value1, value2){
 }
 
 
+#' Returns \code{NULL} if `value` is \code{NULL}, otherwise executes the
+#' function `fun` on `value`.
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+null_or_call <- function(value, fun, ...){
+
+    value %>%
+    is.null %>%
+    `if`(NULL, fun(value, ...))
+
+}
+
+
 #' Returns `value1` if it's not zero length otherwise `value2`
 #'
 #' @importFrom magrittr %>%
