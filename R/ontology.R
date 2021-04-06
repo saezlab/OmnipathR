@@ -147,6 +147,42 @@ relations_list_to_table <- function(relations, direction = NULL){
 }
 
 
+#' Graph from a table of ontology relations
+#'
+#' @param relations A data frame of ontology relations (the "relations"
+#'     element of the list returned by \code{\link{obo_parser}} in case
+#'     its argument `tables` is \code{TRUE}).
+#'
+#' @return The relations converted to an igraph graph object.
+#'
+#' @details
+#' By default the relations point from child to parents, the edges in the
+#' graph will be of the same direction. Use \code{\link{swap_relations}}
+#' on the data frame to reverse the direction.
+#'
+#' @examples
+#' go <- get_db('go_basic')
+#' go_graph <- relations_table_to_graph(go$relations)
+#'
+#' @importFrom logger log_trace
+#' @importFrom magrittr %>%
+#' @importFrom dplyr rename
+#' @importFrom tidyr unnest
+#' @importFrom igraph graph_from_data_frame
+#' @export
+relations_table_to_graph <- function(relations){
+
+    log_trace('Converting ontology relations from table to graph.')
+
+    relations %>%
+    rename(term2 = 3) %>%
+    unnest(term2) %>%
+    select(term, term2, relation) %>%
+    graph_from_data_frame
+
+}
+
+
 #' Reverse the direction of ontology relations
 #'
 #' @param relations The `relations` component of the data returned by
@@ -226,10 +262,11 @@ swap_relations <- function(relations){
 #' Creates an igraph object which helps to control transformations of
 #' ontology relation data structures
 #'
-#' @importFrom igraph graph_from_literal as.directed V E get.edgelist
+#' @importFrom igraph graph_from_literal as.directed V E
+#' @importFrom igraph get.edgelist delete_edges
 #' @importFrom purrr pmap_chr
 #' @importFrom stringr str_sub
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
 #' @importFrom tibble as_tibble
 #'
 #' @noRd
@@ -239,7 +276,9 @@ get_ontology_db_variants_graph <- function(){
         graph_from_literal(
             rel_tbl_c2p-rel_tbl_p2c,
             rel_tbl_c2p-rel_lst_c2p,
-            rel_tbl_p2c-rel_lst_p2c
+            rel_tbl_p2c-rel_lst_p2c,
+            rel_tbl_c2p-rel_gra_c2p,
+            rel_tbl_p2c-rel_gra_p2c
         ) %>%
         as.directed
 
@@ -254,13 +293,28 @@ get_ontology_db_variants_graph <- function(){
             function(from, to){
                 if(str_sub(from, -3) != str_sub(to, -3)){
                     'swap_relations'
-                }else if(str_sub(from, 5, 7) == 'tbl'){
+                }else if(
+                    str_sub(from, 5, 7) == 'tbl' &&
+                    str_sub(to, 5, 7) == 'lst'
+                ){
                     'relations_table_to_list'
-                }else{
+                }else if(
+                    str_sub(from, 5, 7) == 'lst' &&
+                    str_sub(to, 5, 7) == 'tbl'
+                ){
                     'relations_list_to_table'
-                }
+                }else if(
+                    str_sub(from, 5, 7) == 'tbl' &&
+                    str_sub(to, 5, 7) == 'gra'
+                ){
+                    'relations_table_to_graph'
+                }else(
+                    NA
+                )
             }
         )
+
+    g %<>% delete_edges(E(g)$fun %>% is.na %>% which)
 
     E(g)$weight <-
         ifelse(E(g)$fun == 'swap_relations', 1, 2)
