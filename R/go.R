@@ -36,9 +36,12 @@
 #'     process). Gene Ontology is three separate ontologies called as three
 #'     aspects. By this parameter you can control which aspects to include
 #'     in the output.
+#' @param slim Character: if not \code{NULL}, the name of a GOsubset (slim).
+#'     instead of the full GO annotation, the slim annotation will be
+#'     returned. See details at \code{\link{go_annot_slim}}.
 #'
 #' @return A tibble (data frame) of annotations as it is provided by the
-#' database
+#'     database
 #'
 #' @examples
 #' goa_data <- go_annot_download()
@@ -64,8 +67,15 @@
 #' @importFrom dplyr filter
 go_annot_download <- function(
     organism = 'human',
-    aspects = c('C', 'F', 'P')
+    aspects = c('C', 'F', 'P'),
+    slim = NULL
 ){
+
+    if(!is.null(slim)){
+
+        exec(go_annot_slim, !!!as.list(environment()))
+
+    }
 
     'omnipath.go_annot_url' %>%
     generic_downloader(
