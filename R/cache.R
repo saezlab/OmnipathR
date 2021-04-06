@@ -1382,7 +1382,8 @@ omnipath_cache_next_version <- function(key){
 #' @export
 omnipath_cache_latest_version <- function(record){
 
-    omnipath_cache_filter_versions(record = record, latest = TRUE) %>%
+    record %>%
+    null_or_call(omnipath_cache_filter_versions, latest = TRUE) %>%
     empty_no_problem(identity)
 
 }
