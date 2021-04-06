@@ -282,7 +282,7 @@ get_ontology_db_variants_graph <- function(){
         ) %>%
         as.directed
 
-    V(g)$tbl <- grepl('tbl', V(g)$name)
+    V(g)$fmt <- str_sub(V(g)$name, 5, 7)
     V(g)$c2p <- grepl('c2p', V(g)$name)
     E(g)$fun <-
         g %>%
@@ -332,8 +332,8 @@ get_ontology_db_variants_graph <- function(){
 #'
 #' @param db An ontology database (as produced by \code{\link{obo_parser}}
 #'     and accessed by \code{\link{get_db}}.
-#' @param tbl Logical: the data structure should be a data frame
-#'     (\code{TRUE}) or a list (\code{FALSE}).
+#' @param fmt Character: the data structure should be 1) "tbl" a data frame,
+#'     2) "lst" a list or 3) "gra" a graph.
 #' @param c2p Logical: the data structure should contain child-to-parents
 #'     (\code{TRUE}) or parent-to-children (\code{FALSE}) relations.
 #'
@@ -350,11 +350,11 @@ get_ontology_db_variants_graph <- function(){
 #' @importFrom purrr map_dbl
 #'
 #' @noRd
-ontology_db_transformations <- function(db, tbl, c2p){
+ontology_db_transformations <- function(db, fmt, c2p){
 
     g <- .ontology_db_variants_graph
 
-    to <- (V(g)$tbl == tbl & V(g)$c2p == c2p) %>% which
+    to <- (V(g)$fmt == fmt & V(g)$c2p == c2p) %>% which
     from <- V(g)$name %in% names(db) %>% which
 
     paths <- shortest_paths(g, to, from, mode = 'in', output = 'both')
@@ -383,8 +383,9 @@ ontology_db_transformations <- function(db, tbl, c2p){
 #'
 #' @param key Character: key of the ontology database. For the available keys
 #'     see \code{\link{omnipath_show_db}}.
-#' @param rel_tbl Logical: wheter the ontology relations data structure
-#'     should be a data frame or a list.
+#' @param rel_fmt Character: the data structure of the ontology relations.
+#'     Posible values are 1) "tbl" a data frame, 2) "lst" a list or 3) "gra"
+#'     a graph.
 #' @param child_parents Logical: whether the ontology relations should point
 #'     from child to parents (\code{TRUE}) or from parent to children
 #'     (\code{FALSE}).
@@ -398,11 +399,11 @@ ontology_db_transformations <- function(db, tbl, c2p){
 #'     \item{\code{\link{omnipath_show_db}}}
 #'     \item{\code{\link{get_db}}}
 #' }
-get_ontology_db <- function(key, rel_tbl = TRUE, child_parents = TRUE){
+get_ontology_db <- function(key, rel_fmt = 'tbl', child_parents = TRUE){
 
     db <- get_db(key)
 
-    transf <- ontology_db_transformations(db, rel_tbl, child_parents)
+    transf <- ontology_db_transformations(db, rel_fmt, child_parents)
 
     relations <- db[[transf$start]]
 
@@ -481,7 +482,7 @@ walk_ontology_tree <- function(
 
     db <- get_ontology_db(
         key = db_key,
-        rel_tbl = FALSE,
+        rel_fmt = 'lst',
         child_parents = ancestors
     )
 
