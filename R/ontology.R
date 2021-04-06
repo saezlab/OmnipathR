@@ -464,6 +464,7 @@ get_ontology_db <- function(key, rel_fmt = 'tbl', child_parents = TRUE){
 #' # [1] "'de novo' CTP biosynthetic process" "CTP salvage"
 #'
 #' @importFrom magrittr %>% %<>%
+#' @importFrom igraph delete_edges
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{omnipath_show_db}}}
@@ -474,6 +475,7 @@ walk_ontology_tree <- function(
     ancestors = TRUE,
     db_key = 'go_basic',
     ids = TRUE,
+    method = 'gra',
     relations = c(
         'is_a', 'part_of', 'occurs_in', 'regulates',
         'positively_regulates', 'negatively_regulates'
@@ -482,18 +484,49 @@ walk_ontology_tree <- function(
 
     db <- get_ontology_db(
         key = db_key,
-        rel_fmt = 'lst',
+        rel_fmt = method,
         child_parents = ancestors
     )
 
-    rel_key <- `if`(ancestors, 'rel_lst_c2p', 'rel_lst_p2c')
+    rel_key <- `if`(ancestors, 'rel_gra_c2p', 'rel_gra_p2c')
 
     rel <- db[[rel_key]]
 
+    if(method == 'gra'){
+
+        rel %<>%
+            delete_edges(
+                E(rel)$relation %in% relations %>% `!` %>% which
+            )
+
+    }
+
     terms %<>% ontology_ensure_id(db_key = db_key)
 
-    .walk_ontology_tree(terms, rel, relations) %>%
+    fun <- `if`(
+        method == 'gra',
+        .walk_ontology_tree_graph,
+        .walk_ontology_tree
+    )
+
+    fun(terms, rel, relations) %>%
     ontology_name_id(ids = ids, db_key = db_key)
+
+}
+
+
+#' See \code{link{walk_ontology_tree}}
+#'
+#' @importFrom igraph V ego
+#' @noRd
+.walk_ontology_tree_graph <- function(terms, rel, relations){
+
+    V(rel)[terms, na_ok = TRUE] %>%
+    na.omit %>%
+    {ego(rel, order = 33, nodes = ., mode = 'out')} %>%
+    unlist %>%
+    names %>%
+    unique
 
 }
 
