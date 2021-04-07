@@ -361,10 +361,9 @@ get_ontology_db_variants_graph <- function(){
 #'     vector.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom igraph V shortest_paths
+#' @importFrom igraph V shortest_paths degree
 #' @importFrom dplyr first last
-#' @importFrom purrr map_dbl walk
-#' @importFrom logger log_success
+#' @importFrom purrr map_dbl
 #'
 #' @noRd
 ontology_db_transformations <- function(db, fmt, c2p){
@@ -372,13 +371,13 @@ ontology_db_transformations <- function(db, fmt, c2p){
     g <- .ontology_db_variants_graph
 
     to <- (V(g)$fmt == fmt & V(g)$c2p == c2p) %>% which
-    from <- V(g)$name %in% names(db) %>% which
+    from <- setdiff(
+        V(g)$name %in% names(db) %>% which,
+        g %>% degree(mode = 'out') %>% `==`(0L) %>% which
+    )
 
     paths <- shortest_paths(g, to, from, mode = 'in', output = 'both')
     idx <- paths$epath %>% map_dbl(function(e){sum(e$weight)}) %>% which.min
-
-    capture.output(print(paths)) %>%
-    walk(log_success, namespace = 'OmnipathR')
 
     operations <- paths$epath[[idx]]$fun %>% rev
     start <- paths$vpath[[idx]] %>% last %>% `$`('name')
