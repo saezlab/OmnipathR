@@ -23,6 +23,10 @@ different functions with different parameters access the database
 repeatedly and request reload the frequent reloads might cost
 substantial time and resource use.}
 }
+\value{
+An object with the database contents. The exact format depends
+    on the database, most often it is a data frame or a list.
+}
 \description{
 Databases are resources which might be costly to load but can be used many
 times by functions which usually automatically load and retrieve them from

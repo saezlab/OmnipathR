@@ -14,11 +14,21 @@ available keys see \code{\link{omnipath_show_db}}.}
 the database loader function. See the loader functions and their
 default parameters in \code{\link{omnipath_show_db}}.}
 }
+\value{
+Returns \code{NULL}.
+}
 \description{
 Load a built in database
 }
+\details{
+This function loads a database which is stored within the package
+namespace until its expiry. The loaded database is accessible by
+\code{\link{get_db}} and the loading process is typically initiated by
+\code{\link{get_db}}, not by the users directly.
+}
 \examples{
 load_db('go_slim')
+omnipath_show_db()
 
 }
 \seealso{

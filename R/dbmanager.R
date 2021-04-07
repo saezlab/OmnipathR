@@ -188,8 +188,17 @@ db_lifetime_hook <- function(){
 #'     the database loader function. See the loader functions and their
 #'     default parameters in \code{\link{omnipath_show_db}}.
 #'
+#' @return Returns \code{NULL}.
+
+#' @details
+#' This function loads a database which is stored within the package
+#' namespace until its expiry. The loaded database is accessible by
+#' \code{\link{get_db}} and the loading process is typically initiated by
+#' \code{\link{get_db}}, not by the users directly.
+#'
 #' @examples
 #' load_db('go_slim')
+#' omnipath_show_db()
 #'
 #' @importFrom magrittr %<>%
 #' @importFrom logger log_fatal log_info
@@ -234,6 +243,9 @@ load_db <- function(key, param = list()){
 #'     different functions with different parameters access the database
 #'     repeatedly and request reload the frequent reloads might cost
 #'     substantial time and resource use.
+#'
+#' @return An object with the database contents. The exact format depends
+#'     on the database, most often it is a data frame or a list.
 #'
 #' @examples
 #' goslim <- get_db('go_slim')
