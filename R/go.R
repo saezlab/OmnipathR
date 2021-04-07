@@ -239,7 +239,7 @@ go_annot_slim <- function(
         ) %>%
         omnipath_cache_latest_version
 
-    if(is.null(cache_record) || !cache){
+    if(is.null(in_cache) || !cache){
 
         annot <-
             exec(.go_annot_slim, !!!cache_pseudo_post) %>%
@@ -288,7 +288,8 @@ go_annot_slim <- function(
     annot %>%
     select(
         -qualifier, -db_ref, -evidence_code, -with_or_from,
-        -date, -assigned_by, -annotation_extension
+        -date, -assigned_by, -annotation_extension, -taxon,
+        -gene_product_from_id
     ) %>%
     left_join(
         select(., go_id) %>%
