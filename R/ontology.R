@@ -359,7 +359,8 @@ ontology_db_transformations <- function(db, fmt, c2p){
 
     paths <- shortest_paths(g, to, from, mode = 'in', output = 'both')
     idx <- paths$epath %>% map_dbl(function(e){sum(e$weight)}) %>% which.min
-    operations <- paths$epath[[idx]]$fun
+
+    operations <- paths$epath[[idx]]$fun %>% rev
     start <- paths$vpath[[idx]] %>% last %>% `$`('name')
     end <- paths$vpath[[idx]] %>% first %>% `$`('name')
 
