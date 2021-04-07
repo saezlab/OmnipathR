@@ -15,6 +15,12 @@ go_annot_slim(
 \item{organism}{Character: either "chicken", "cow", "dog", "human", "pig"
 or "uniprot_all".}
 
+\item{slim}{Character: the GO subset (GO slim) name. Available GO
+slims are: "agr" (Alliance for Genomics Resources), "generic",
+"aspergillus", "candida", "drosophila", "chembl", "metagenomic",
+"mouse", "plant", "pir" (Protein Information Resource), "pombe"
+and "yeast".}
+
 \item{aspects}{Character vector with some of the following elements:
 "C" (cellular component), "F" (molecular function) and "P" (biological
 process). Gene Ontology is three separate ontologies called as three
@@ -22,12 +28,6 @@ aspects. By this parameter you can control which aspects to include
 in the output.}
 
 \item{cache}{Logical: Load the result from cache if available.}
-
-\item{subset}{Character: the GO subset (GO slim) name. Available GO
-slims are: "agr" (Alliance for Genomics Resources), "generic",
-"aspergillus", "candida", "drosophila", "chembl", "metagenomic",
-"mouse", "plant", "pir" (Protein Information Resource), "pombe"
-and "yeast".}
 }
 \value{
 A tibble (data frame) of genes annotated with ontology terms in

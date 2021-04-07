@@ -88,6 +88,9 @@ obo_parser <- function(
     tables = TRUE
 ){
 
+    # NSE vs. R CMD check workaround
+    value <- key <- term <- NULL
+
     short_namespace <- function(ns){
 
         last <- last
@@ -232,6 +235,9 @@ obo_parser <- function(
 #' @importFrom dplyr pull
 #' @noRd
 term_value_list <- function(d){
+
+    # NSE vs. R CMD check workaround
+    value <- term <- NULL
 
     d %>%
     {setNames(

@@ -73,6 +73,9 @@ omnipath_init_db <- function(pkgname){
 #' @noRd
 remove_tasks <- function(pkgname){
 
+    # NSE vs. R CMD check workaround
+    .loops <- list_queue_ <- cancel <- NULL
+
     later%:::%.loops %>% ls %>% as.integer %>%
     walk(
         function(loop_id){
@@ -128,6 +131,9 @@ remove_tasks <- function(pkgname){
 #' @importFrom tidyr unnest_wider
 #' @export
 omnipath_show_db <- function(){
+
+    # NSE vs. R CMD check workaround
+    db <- NULL
 
     omnipath.env$db %>%
     tibble(db = .) %>%
