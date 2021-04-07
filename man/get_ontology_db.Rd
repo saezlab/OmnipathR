@@ -18,6 +18,14 @@ a graph.}
 from child to parents (\code{TRUE}) or from parent to children
 (\code{FALSE}).}
 }
+\value{
+A list with the following elements: 1) "names" a table with
+    term IDs and names; 2) "namespaces" a table to connect term IDs
+    and namespaces they belong to; 3) "relations" a table with
+    relations between terms and their parent terms; 4) "subsets" a
+    table with terms and the subsets they are part of; 5) "obsolete"
+    character vector with all the terms labeled as obsolete.
+}
 \description{
 Retrieves an ontology database with relations in the desired data
 structure. The database is automatically loaded and the requested data

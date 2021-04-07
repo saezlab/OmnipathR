@@ -407,6 +407,13 @@ ontology_db_transformations <- function(db, fmt, c2p){
 #'     from child to parents (\code{TRUE}) or from parent to children
 #'     (\code{FALSE}).
 #'
+#' @return A list with the following elements: 1) "names" a table with
+#'     term IDs and names; 2) "namespaces" a table to connect term IDs
+#'     and namespaces they belong to; 3) "relations" a table with
+#'     relations between terms and their parent terms; 4) "subsets" a
+#'     table with terms and the subsets they are part of; 5) "obsolete"
+#'     character vector with all the terms labeled as obsolete.
+#'
 #' @examples
 #' go <- get_ontology_db('go_basic', child_parents = FALSE)
 #'
