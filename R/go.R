@@ -209,6 +209,22 @@ go_ontology_download <- function(
 #' come from cache), and the newly build GO slim will overwrite the cache
 #' instance.
 #'
+#' @examples
+#' \donttest{
+#' goslim <- go_annot_slim(organism = 'human', slim = 'generic')
+#' goslim
+#' # # A tibble: 276,371 x 8
+#' #    db     db_object_id db_object_symbol go_id aspect db_object_name
+#' #    <fct>  <chr>        <chr>            <chr> <fct>  <chr>
+#' #  1 UniPr. A0A024RBG1   NUDT4B           GO:0. F      Diphosphoinosito.
+#' #  2 UniPr. A0A024RBG1   NUDT4B           GO:0. F      Diphosphoinosito.
+#' #  3 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
+#' #  4 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
+#' #  5 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
+#' # # . with 276,366 more rows, and 2 more variables:
+#' # #   db_object_synonym <chr>, db_object_type <fct>
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @importFrom rlang exec !!!
 #' @export
