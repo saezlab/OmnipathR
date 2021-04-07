@@ -63,17 +63,21 @@ url_parser <- function(
 #'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
 #'     be used to download the data and the contents will be channeled to
 #'     \code{fun} to read it.
-#' @param http_param List: further parameters for \code{httr::POST}. Used
-#'     only of \code{post} is not \code{NULL}.
+#' @param http_param List: further parameters for \code{httr::GET} or
+#'     \code{httr::POST}. Used only if \code{path} is not \code{NULL} or
+#'     if \code{post} is not \code{NULL}.
 #' @param content_param List: further parameters for \code{httr::content}.
-#'     Used only of \code{post} is not \code{NULL}.
+#'     Used only if \code{path} is \code{NULL} and \code{post} is not
+#'     \code{NULL}.
+#' @param path Character: if not `NULL` the file will be downloaded
+#'     to this path and the path will be returned.
 #' @param ... Passed to \code{fun}.
 #'
 #' @return The output of the downloader function \code{fun}.
 #'
 #' @importFrom logger log_level log_error log_warn log_trace
-#' @importFrom httr POST content
-#' @importFrom magrittr %>%
+#' @importFrom httr POST GET content write_disk
+#' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec
 #'
 #' @noRd
@@ -83,6 +87,7 @@ download_base <- function(
     post = NULL,
     http_param = list(),
     content_param = list(),
+    path = NULL,
     ...
 ){
 
@@ -99,15 +104,26 @@ download_base <- function(
 
     log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
 
-    if(!is.null(post)){
+    if(!is.null(post) || !is.null(path)){
 
         reader <- fun
 
-        fun <- function(url, post, ...){
+        fun <- function(url, post = NULL, ...){
 
-            exec(POST, url = url, body = post, !!!http_param) %>%
-            {exec(content, ., !!!content_param)} %>%
-            reader(...)
+            http_method <- `if`(is.null(post), GET, POST)
+            http_param$body <- post
+
+            if(!is.null(path)){
+                http_param %<>% c(list(write_disk(path, overwrite = TRUE)))
+            }
+
+            exec(http_method, url = url, !!!http_param) %>%
+            {`if`(
+                is.null(path),
+                exec(content, ., !!!content_param) %>%
+                reader(...),
+                path
+            )}
 
         }
 
@@ -159,6 +175,61 @@ download_base <- function(
 
 }
 
+
+#' Downloads a file to the cache directory
+#'
+#' Retrieves a file by HTTP GET or POST and returns the path to the cache
+#' file.
+#'
+#' @param url_key Character: name of the option containing the URL
+#' @param url_key_param List: variables to insert into the `url_key`.
+#' @param url_param List: variables to insert into the URL string (which is
+#' returned from the options).
+#' @param http_param List: further parameters for \code{httr::GET} or
+#'     \code{httr::POST}.
+#' @param ext Character: the file extension. If `NULL` a guess from the URL
+#'     will be attempted.
+#' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
+#'     will be used to download the data, otherwise \code{httr::POST}.
+#'
+#' @noRd
+download_to_cache <- function(
+    url_key,
+    url_key_param = list(),
+    url_param = list(),
+    http_param = list(),
+    ext = NULL,
+    post = NULL
+){
+
+    url <- url_parser(
+        url_key = url_key,
+        url_key_param = url_key_param,
+        url_param = url_param
+    )
+
+    version <- omnipath_cache_latest_or_new(url = url, ext = ext)
+
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
+
+        download_base(
+            url = url,
+            fun = NULL,
+            path = version$path,
+            http_param = http_param,
+            post = post
+        )
+        omnipath_cache_download_ready(version)
+
+    }
+
+    version$path %>%
+    origin_cache(from_cache) %>%
+    source_attrs(NULL, url)
+
+}
 
 #' Generic method to download a table
 #'
@@ -236,10 +307,14 @@ generic_downloader <- function(
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param ext Character: the file extension, either xls or xlsx.
+#' @param http_param List: further parameters for \code{httr::GET} or
+#'     \code{httr::POST}.
+#' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
+#'     will be used to download the data, otherwise \code{httr::POST}.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom readxl read_excel
-#' @importFrom utils download.file
+#' @importFrom logger log_info
 #'
 #' @noRd
 xls_downloader <- function(
@@ -248,34 +323,24 @@ xls_downloader <- function(
     url_key_param = list(),
     url_param = list(),
     ext = 'xlsx',
-    resource = NULL
+    resource = NULL,
+    http_param = list(),
+    post = NULL
 ){
 
-    url <- url_parser(
+    path <- download_to_cache(
         url_key = url_key,
         url_key_param = url_key_param,
-        url_param = url_param
+        url_param = url_param,
+        ext = ext,
+        http_param = http_param,
+        post = post
     )
 
-    version <- omnipath_cache_latest_or_new(url = url, ext = ext)
+    log_info('Reading XLS from `%s`', path)
 
-    from_cache <- version$status == CACHE_STATUS$READY
-
-    if(!from_cache){
-
-        download_base(
-            url = url,
-            fun = download.file,
-            destfile = version$path,
-            quiet = TRUE
-        )
-        omnipath_cache_download_ready(version)
-
-    }
-
-    read_excel(version$path, sheet = sheet) %>%
-    origin_cache(from_cache) %>%
-    source_attrs(resource, url)
+    read_excel(path, sheet = sheet) %>%
+    copy_source_attrs(path, resource = resource)
 
 }
 
@@ -558,13 +623,39 @@ source_attrs <- function(data, resource, url){
 #'
 #' @param to The object to copy attributes to.
 #' @param from The object to copy attributes from.
+#' @param ... Passed to \code{\link{update_source_attrs}}.
 #'
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-copy_source_attrs <- function(to, from){
+copy_source_attrs <- function(to, from, ...){
 
     to %>%
-    copy_attrs(from, c('source', 'resource', 'url', 'origin'))
+    copy_attrs(from, c('source', 'resource', 'url', 'origin')) %>%
+    update_source_attrs(...)
+
+}
+
+
+#' Updates the source attributes of an object
+#'
+#' @importFrom rlang %||%
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+update_source_attrs <- function(obj, ...){
+
+    attrs <- list(...)
+    origin <- attrs$origin %||% attr(obj, 'origin')
+    from_cache <- (
+        !is.null(origin) && origin == 'cache' ||
+        attrs$from_cache %||% FALSE
+    )
+    resource <- attrs$resource %||% attr(obj, 'resource')
+    url <- attrs$url %||% attr(obj, 'url')
+
+    obj %>%
+    origin_cache(from_cache) %>%
+    source_attrs(resource, url)
 
 }

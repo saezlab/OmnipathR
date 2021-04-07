@@ -25,13 +25,13 @@ Description: A client for the OmniPath web service
     It also includes functions to transform and pretty print
     some of the downloaded data, functions to access a number
     of other resources such as BioPlex, ConsensusPathDB, EVEX,
-    Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
-    InWeb InBioMap, Pathway Commons, Ramilowski et al. 2015,
-    RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al.
-    2011. Furthermore, OmnipathR features a close integration
-    with the NicheNet method for ligand activity prediction
-    from transcriptomics data, and its R implementation
-    `nichenetr` (available only on github).
+    Gene Ontology, Guide to Pharmacology (IUPHAR/BPS), Harmonizome,
+    HTRIdb, Human Phenotype Ontology, InWeb InBioMap, Pathway
+    Commons, Ramilowski et al. 2015, RegNetwork, ReMap, TF census,
+    TRRUST and Vinayagam et al. 2011. Furthermore, OmnipathR
+    features a close integration  with the NicheNet method for
+    ligand activity prediction from transcriptomics data, and its
+    R implementation `nichenetr` (available only on github).
 License: MIT + file LICENSE
 URL: https://saezlab.github.io/OmnipathR/
 BugReports: https://github.com/saezlab/OmnipathR/issues
@@ -66,7 +66,8 @@ Imports:
     igraph,
     stats,
     logger,
-    tidyselect
+    tidyselect,
+    later
 Suggests:
     dnet,
     gprofiler2,

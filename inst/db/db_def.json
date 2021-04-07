@@ -1,0 +1,207 @@
+{
+    "go_basic": {
+        "name": ["Gene Ontology (basic)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "basic": true
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_full": {
+        "name": ["Gene Ontology (full)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "basic": false
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_agr": {
+        "name": ["Gene Ontology (AGR)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "agr"
+        },
+        "loaded": false,
+        "db": []
+    },
+    "go_aspergillus": {
+        "name": ["Gene Ontology (Aspergillus)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "aspergillus"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_slim": {
+        "name": ["Gene Ontology (generic slim)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "generic"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_candida": {
+        "name": ["Gene Ontology (Candida)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "candida"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_drosphila": {
+        "name": ["Gene Ontology (Drosphila)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "drosophila"
+        },
+        "loaded": false,
+        "db": []
+    },
+    "go_chembl": {
+        "name": ["Gene Ontology (ChEMBL)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "chembl"
+        },
+        "loaded": false,
+        "db": []
+    },
+    "go_metagenomic": {
+        "name": ["Gene Ontology (metagenomic)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "metagenomic"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_plant": {
+        "name": ["Gene Ontology (plant)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "plant"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_mouse": {
+        "name": ["Gene Ontology (mouse)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "mouse"
+        },
+        "loaded": false,
+        "db": []
+    },
+    "go_pir": {
+        "name": ["Gene Ontology (PIR)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "pir"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_pombe": {
+        "name": ["Gene Ontology (Pombe)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "pombe"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "go_yeast": {
+        "name": ["Gene Ontology (yeast)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_ontology_download",
+        "loader_param": {
+            "tables": true,
+            "subset": "yeast"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "goa_human": {
+        "name": ["GO annotations (human)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "go_annot_download",
+        "loader_param": {
+            "organism": "human"
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    }
+}

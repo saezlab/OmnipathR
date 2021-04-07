@@ -20,7 +20,7 @@
 #
 
 
-#' Downloads gene annotations from Gene Ontology
+#' Gene annotations from Gene Ontology
 #'
 #' Gene Ontology is an ontology of gene subcellular localizations, molecular
 #' functions and involvement in biological processes. Gene products across
@@ -31,9 +31,17 @@
 #'
 #' @param organism Character: either "chicken", "cow", "dog", "human", "pig"
 #'     or "uniprot_all".
+#' @param aspects Character vector with some of the following elements:
+#'     "C" (cellular component), "F" (molecular function) and "P" (biological
+#'     process). Gene Ontology is three separate ontologies called as three
+#'     aspects. By this parameter you can control which aspects to include
+#'     in the output.
+#' @param slim Character: if not \code{NULL}, the name of a GOsubset (slim).
+#'     instead of the full GO annotation, the slim annotation will be
+#'     returned. See details at \code{\link{go_annot_slim}}.
 #'
 #' @return A tibble (data frame) of annotations as it is provided by the
-#' database
+#'     database
 #'
 #' @examples
 #' goa_data <- go_annot_download()
@@ -56,7 +64,18 @@
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr cols col_factor col_character col_date
-go_annot_download <- function(organism = 'human'){
+#' @importFrom dplyr filter
+go_annot_download <- function(
+    organism = 'human',
+    aspects = c('C', 'F', 'P'),
+    slim = NULL
+){
+
+    if(!is.null(slim)){
+
+        exec(go_annot_slim, !!!as.list(environment()))
+
+    }
 
     'omnipath.go_annot_url' %>%
     generic_downloader(
@@ -96,7 +115,218 @@ go_annot_download <- function(organism = 'human'){
             )
         ),
         resource = 'Gene Ontology'
-    ) %T>%
+    ) %>%
+    filter(aspect %in% aspects) %T>%
     load_success()
+
+}
+
+
+#' The Gene Ontology tree
+#'
+#' @param basic Logical: use the basic or the full version of GO. As written
+#'     on the GO home page: "the basic version of the GO is filtered such
+#'     that the graph is guaranteed to be acyclic and annotations can be
+#'     propagated up the graph. The relations included are is a, part of,
+#'     regulates, negatively regulates and positively regulates. This
+#'     version excludes relationships that cross the 3 GO hierarchies.
+#'     This version should be used with most GO-based annotation tools."
+#' @param tables In the result return data frames or nested lists. These
+#'     later can be converted to each other if necessary. However converting
+#'     from table to list is faster.
+#' @param subset Character: the GO subset (GO slim) name. GO slims are
+#'     subsets of the full GO which "give a broad overview of the ontology
+#'     content without the detail of the specific fine grained terms". This
+#'     option, if not \code{NULL}, overrides the \code{basic} parameter.
+#'     Available GO slims are: "agr" (Alliance for Genomics Resources),
+#'     "generic", "aspergillus", "candida", "drosophila", "chembl",
+#'     "metagenomic", "mouse", "plant", "pir" (Protein Information Resource),
+#'     "pombe" and "yeast".
+#' @param relations Character vector: the relations to include in the
+#'     processed data.
+#'
+#' @importFrom magrittr %>%
+#' @export
+go_ontology_download <- function(
+    basic = TRUE,
+    tables = TRUE,
+    subset = NULL,
+    relations = c(
+        'is_a', 'part_of', 'occurs_in', 'regulates',
+        'positively_regulates', 'negatively_regulates'
+    )
+){
+
+    url_key_param <- `if`(is.null(subset), 'full', 'slim')
+    url_param <- `if`(is.null(subset), `if`(basic, 'go-basic', 'go'), subset)
+
+    path <-
+        'omnipath.go_%s_url' %>%
+        download_to_cache(
+            url_param = list(url_param),
+            url_key_param = list(url_key_param)
+        )
+
+    path %>%
+    obo_parser(relations = relations, tables = tables) %>%
+    copy_source_attrs(path, resource = 'Gene Ontology')
+
+}
+
+
+#' GO slim gene annotations
+#'
+#' GO slims are subsets of the full GO which "give a broad overview of the
+#' ontology content without the detail of the specific fine grained terms".
+#' In order to annotate genes with GO slim terms, we take the annotations
+#' and search all ancestors of the terms up to the root of the ontology
+#' tree. From the ancestors we select the terms which are part of the slim
+#' subset.
+#'
+#' @param organism Character: either "chicken", "cow", "dog", "human", "pig"
+#'     or "uniprot_all".
+#' @param subset Character: the GO subset (GO slim) name. Available GO
+#'     slims are: "agr" (Alliance for Genomics Resources), "generic",
+#'     "aspergillus", "candida", "drosophila", "chembl", "metagenomic",
+#'     "mouse", "plant", "pir" (Protein Information Resource), "pombe"
+#'     and "yeast".
+#' @param aspects Character vector with some of the following elements:
+#'     "C" (cellular component), "F" (molecular function) and "P" (biological
+#'     process). Gene Ontology is three separate ontologies called as three
+#'     aspects. By this parameter you can control which aspects to include
+#'     in the output.
+#' @param cache Logical: Load the result from cache if available.
+#'
+#' @return A tibble (data frame) of genes annotated with ontology terms in
+#'     in the GO slim (subset).
+#'
+#' @details
+#' Building the GO slim is resource intensive in its current implementation.
+#' For human annotation and generic GO slim it might take around 20 minutes.
+#' The result is saved into the cache so next time loading the data from
+#' there is really quick. If the \code{cache} option is \code{FALSE} the
+#' data will be built fresh (the annotation and ontology files still might
+#' come from cache), and the newly build GO slim will overwrite the cache
+#' instance.
+#'
+#' @examples
+#' \donttest{
+#' goslim <- go_annot_slim(organism = 'human', slim = 'generic')
+#' goslim
+#' # # A tibble: 276,371 x 8
+#' #    db     db_object_id db_object_symbol go_id aspect db_object_name
+#' #    <fct>  <chr>        <chr>            <chr> <fct>  <chr>
+#' #  1 UniPr. A0A024RBG1   NUDT4B           GO:0. F      Diphosphoinosito.
+#' #  2 UniPr. A0A024RBG1   NUDT4B           GO:0. F      Diphosphoinosito.
+#' #  3 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
+#' #  4 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
+#' #  5 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
+#' # # . with 276,366 more rows, and 2 more variables:
+#' # #   db_object_synonym <chr>, db_object_type <fct>
+#' }
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang exec !!!
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{go_annot_download}}}
+#'     \item{\code{\link{go_ontology_download}}}
+#'     \item{\code{\link{get_db}}}
+#' }
+go_annot_slim <- function(
+    organism = 'human',
+    slim = 'generic',
+    aspects = c('C', 'F', 'P'),
+    cache = TRUE
+){
+
+    cache_pseudo_url <- 'go_annot_slim'
+    cache_pseudo_post <- list(
+        organism = organism,
+        slim = slim,
+        aspects = aspects
+    )
+
+    in_cache <-
+        omnipath_cache_get(
+            url = cache_pseudo_url,
+            post = cache_pseudo_post,
+            create = FALSE
+        ) %>%
+        omnipath_cache_latest_version
+
+    if(is.null(in_cache) || !cache){
+
+        annot <-
+            exec(.go_annot_slim, !!!cache_pseudo_post) %>%
+            omnipath_cache_save(
+                url = cache_pseudo_url,
+                post = cache_pseudo_post
+            )
+
+    }else{
+
+        annot <- omnipath_cache_load(
+            url = cache_pseudo_url,
+            post = cache_pseudo_post
+        )
+
+    }
+
+    return(annot)
+
+}
+
+
+#' See \code{\link{go_annot_slim}}
+#'
+#' @importFrom magrittr %>%
+#' @importFrom progress progress_bar
+#' @importFrom dplyr left_join select distinct mutate n_distinct
+#' @importFrom purrr map
+#' @importFrom tidyr unnest
+#'
+#' @noRd
+.go_annot_slim <- function(
+    organism = 'human',
+    slim = 'generic',
+    aspects = c('C', 'F', 'P')
+){
+
+    annot <- go_annot_download(organism = organism, aspects = aspects)
+    slim_terms <- go_ontology_download(subset = slim)$names$term
+
+    pb <- progress_bar$new(
+        total = annot %>% pull(go_id) %>% n_distinct,
+        format = '  Looking up ancestors [:bar] :percent eta: :eta'
+    )
+
+    annot %>%
+    select(
+        -qualifier, -db_ref, -evidence_code, -with_or_from,
+        -date, -assigned_by, -annotation_extension, -taxon,
+        -gene_product_from_id
+    ) %>%
+    left_join(
+        select(., go_id) %>%
+        distinct %>%
+        mutate(
+            ancestors = map(go_id, function(g){
+                pb$tick()
+                union(ancestors(g), g)
+            })
+        ),
+        by = 'go_id'
+    ) %>%
+    mutate(
+        go_id = map(
+            ancestors,
+            intersect,
+            slim_terms
+        )
+    ) %>%
+    select(-ancestors) %>%
+    unnest(go_id) %>%
+    distinct
 
 }

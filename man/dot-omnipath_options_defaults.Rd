@@ -5,7 +5,7 @@
 \alias{.omnipath_options_defaults}
 \title{Default values for the package options}
 \format{
-An object of class \code{list} of length 35.
+An object of class \code{list} of length 38.
 }
 \usage{
 .omnipath_options_defaults

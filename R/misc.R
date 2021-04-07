@@ -315,6 +315,36 @@ if_null <- function(value1, value2){
 }
 
 
+#' Returns \code{NULL} if `value` is \code{NULL}, otherwise executes the
+#' function `fun` on `value`.
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+null_or_call <- function(value, fun, ...){
+
+    value %>%
+    is.null %>%
+    `if`(NULL, fun(value, ...))
+
+}
+
+
+#' Returns `value1` if it's not zero length otherwise `value2`
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+if_empty <- function(value1, value2){
+
+    value1 %>%
+    length %>%
+    `==`(0) %>%
+    `if`(value2, value1)
+
+}
+
+
 #' Returns `value1` if it's not NULL or zero length otherwise `value2`
 #'
 #' @importFrom magrittr %>%
@@ -392,5 +422,49 @@ empty_no_problem <- function(v, fun, .default = NULL, ...){
 just_a_list <- function(obj){
 
     is.list(obj) && !is.data.frame(obj)
+
+}
+
+
+#' Compare two lists for complete equality
+#'
+#' @param list1 A list.
+#' @param list2 Another list.
+#'
+#' @return Logical.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+lists_identical <- function(list1, list2){
+
+    keys1 <- list1 %>% names %>% sort
+    keys2 <- list2 %>% names %>% sort
+    keys <- union(keys1, keys2)
+
+    if(is.null(keys1) && is.null(keys2)){
+        return(identical(list1, list2))
+    }
+
+    if(any(keys1 != keys2)){
+        return(FALSE)
+    }
+
+    for(key in keys){
+        val1 <- list1[[key]]
+        val2 <- list2[[key]]
+        if(length(val1) != length(val2)){
+            return(FALSE)
+        }else if(is.list(val1) && is.list(val2)){
+            if(!list_identical(val1, val2)){
+                return(FALSE)
+            }
+        }else if(!is.atomic(val1) || !is.atomic(val2)){
+            return(FALSE)
+        }else if(any(sort(val1) != sort(val2))){
+            return(FALSE)
+        }
+    }
+
+    return(TRUE)
 
 }

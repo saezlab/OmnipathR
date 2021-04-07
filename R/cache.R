@@ -943,7 +943,7 @@ omnipath_cache_load <- function(
 #' omnipath_cache_save(bioc_html, url = bioc_url)
 #' bioc_html <- omnipath_cache_load(url = bioc_url)
 #'
-#' @importFrom logger log_info
+#' @importFrom logger log_trace
 #' @export
 #' @seealso \code{\link{omnipath_cache_move_in}}
 omnipath_cache_save <- function(
@@ -972,8 +972,9 @@ omnipath_cache_save <- function(
 
     target_path <- omnipath.env$cache[[key]]$versions[[version]]$path
 
+    log_trace('Exporting object to RDS: `%s`.', target_path)
     saveRDS(data, target_path)
-    logger::log_trace('Exported RDS to `%s`.', target_path)
+    log_trace('Exported RDS to `%s`.', target_path)
 
     omnipath_cache_download_ready(version, key = key)
 
@@ -1381,7 +1382,8 @@ omnipath_cache_next_version <- function(key){
 #' @export
 omnipath_cache_latest_version <- function(record){
 
-    omnipath_cache_filter_versions(record = record, latest = TRUE) %>%
+    record %>%
+    null_or_call(omnipath_cache_filter_versions, latest = TRUE) %>%
     empty_no_problem(identity)
 
 }

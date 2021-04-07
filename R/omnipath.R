@@ -1087,8 +1087,11 @@ import_LigrecExtra_Interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param ... optional additional arguments 
+#' @param ... optional additional arguments
 #'
+#' @importFrom rlang %||% exec !!!
+#' @importFrom magrittr %<>%
+#' @importFrom RCurl merge.list
 #' @examples
 #' interactions <-
 #'     import_post_translational_interactions(
@@ -1109,20 +1112,23 @@ import_post_translational_interactions <- function(
     ...
 ){
 
-    datasets <- c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
-    datasets <- setdiff(datasets, exclude)
+    args <- list(...)
+    args$datasets <-
+        args$datasets %||%
+        c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
+    args$datasets %<>% setdiff(exclude)
 
-
-    result <- import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = datasets,
-        references_by_resource = references_by_resource,
-        ...
+    args %<>% merge.list(
+        list(
+            query_type = 'interactions',
+            resources = resources,
+            organism = organism,
+            references_by_resource = references_by_resource
+        )
     )
 
-    return(result)
+
+    exec(import_omnipath, !!!args)
 
 }
 

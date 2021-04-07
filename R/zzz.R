@@ -19,4 +19,22 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-omnipath.env <- new.env(parent = emptyenv())
+
+.onLoad <- function(libname, pkgname){
+
+    omnipath_init_config()
+    patch_logger()
+    omnipath_init_log(pkgname = pkgname)
+
+    if(Sys.info()['user'] == 'biocbuild'){
+
+        omnipath_set_console_loglevel('trace')
+
+    }
+
+    omnipath_init_cache()
+    omnipath_init_db(pkgname)
+
+    logger::log_info('Welcome to OmnipathR!')
+
+}
