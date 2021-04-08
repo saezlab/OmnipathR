@@ -22,7 +22,7 @@ goslim_url <-
     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 path <- tempfile()
 download.file(goslim_url, destfile = path, quiet = TRUE)
-obo <- obo_reader(path, tables = TRUE)
+obo <- obo_parser(path, tables = TRUE)
 unlink(path)
 rel_list <- relations_table_to_list(obo$relations)
 

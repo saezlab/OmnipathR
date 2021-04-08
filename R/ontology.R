@@ -33,7 +33,7 @@
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path, tables = TRUE)
+#' obo <- obo_parser(path, tables = TRUE)
 #' unlink(path)
 #' rel_list <- relations_table_to_list(obo$relations)
 #'
@@ -108,7 +108,7 @@ relations_table_to_list <- function(relations){
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path, tables = FALSE)
+#' obo <- obo_parser(path, tables = FALSE)
 #' unlink(path)
 #' rel_tbl <- relations_list_to_table(obo$relations)
 #'
@@ -209,7 +209,7 @@ relations_table_to_graph <- function(relations){
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path)
+#' obo <- obo_parser(path)
 #' unlink(path)
 #' rel_swapped <- swap_relations(obo$relations)
 #'
