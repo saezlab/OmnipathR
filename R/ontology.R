@@ -33,7 +33,7 @@
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path, tables = TRUE)
+#' obo <- obo_parser(path, tables = TRUE)
 #' unlink(path)
 #' rel_list <- relations_table_to_list(obo$relations)
 #'
@@ -52,6 +52,9 @@
 #'     \item{\code{\link{obo_parser}}}
 #' }
 relations_table_to_list <- function(relations){
+
+    # NSE vs. R CMD check workaround
+    relation <- NULL
 
     direction <- c('parents', 'children')
     to_str <-
@@ -105,7 +108,7 @@ relations_table_to_list <- function(relations){
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path, tables = FALSE)
+#' obo <- obo_parser(path, tables = FALSE)
 #' unlink(path)
 #' rel_tbl <- relations_list_to_table(obo$relations)
 #'
@@ -124,6 +127,9 @@ relations_table_to_list <- function(relations){
 #'     \item{\code{\link{obo_parser}}}
 #' }
 relations_list_to_table <- function(relations, direction = NULL){
+
+    # NSE vs. R CMD check workaround
+    rel <- term <- relation <- NULL
 
     direction <-
         direction %||%
@@ -172,6 +178,9 @@ relations_list_to_table <- function(relations, direction = NULL){
 #' @export
 relations_table_to_graph <- function(relations){
 
+    # NSE vs. R CMD check workaround
+    term2 <- term <- relation <- NULL
+
     log_trace('Converting ontology relations from table to graph.')
 
     relations %>%
@@ -200,7 +209,7 @@ relations_table_to_graph <- function(relations){
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path)
+#' obo <- obo_parser(path)
 #' unlink(path)
 #' rel_swapped <- swap_relations(obo$relations)
 #'
@@ -218,6 +227,9 @@ relations_table_to_graph <- function(relations){
 #'     \item{\code{\link{obo_parser}}}
 #' }
 swap_relations <- function(relations){
+
+    # NSE vs. R CMD check workaround
+    relation <- term <- NULL
 
     dfclass <- inherits(relations, 'data.frame')
 
@@ -271,6 +283,10 @@ swap_relations <- function(relations){
 #'
 #' @noRd
 get_ontology_db_variants_graph <- function(){
+
+    # NSE vs. R CMD check workaround
+    rel_tbl_c2p <- rel_tbl_p2c <- rel_lst_c2p <-
+    rel_lst_p2c <- rel_gra_c2p <- rel_gra_p2c <- NULL
 
     g <-
         graph_from_literal(
@@ -345,7 +361,7 @@ get_ontology_db_variants_graph <- function(){
 #'     vector.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom igraph V shortest_paths
+#' @importFrom igraph V shortest_paths degree
 #' @importFrom dplyr first last
 #' @importFrom purrr map_dbl
 #'
@@ -355,7 +371,10 @@ ontology_db_transformations <- function(db, fmt, c2p){
     g <- .ontology_db_variants_graph
 
     to <- (V(g)$fmt == fmt & V(g)$c2p == c2p) %>% which
-    from <- V(g)$name %in% names(db) %>% which
+    from <- setdiff(
+        V(g)$name %in% names(db) %>% which,
+        g %>% degree(mode = 'out') %>% `==`(0L) %>% which
+    )
 
     paths <- shortest_paths(g, to, from, mode = 'in', output = 'both')
     idx <- paths$epath %>% map_dbl(function(e){sum(e$weight)}) %>% which.min
@@ -444,6 +463,9 @@ get_ontology_db <- function(key, rel_fmt = 'tbl', child_parents = TRUE){
 #' @param db_key Character: key to identify the ontology database. For the
 #'     available keys see \code{\link{omnipath_show_db}}.
 #' @param ids Logical: whether to return IDs or term names.
+#' @param method Character: either "gra" or "lst". The implementation to use
+#'     for traversing the ontology tree. The graph based implementation is
+#'     faster than the list based, the latter will be removed in the future.
 #' @param relations Character vector of ontology relation types. Only these
 #'     relations will be used.
 #'
@@ -526,6 +548,7 @@ walk_ontology_tree <- function(
 #' See \code{link{walk_ontology_tree}}
 #'
 #' @importFrom igraph V ego
+#' @importFrom stats na.omit
 #' @noRd
 .walk_ontology_tree_graph <- function(terms, rel, relations){
 

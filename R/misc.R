@@ -455,7 +455,7 @@ lists_identical <- function(list1, list2){
         if(length(val1) != length(val2)){
             return(FALSE)
         }else if(is.list(val1) && is.list(val2)){
-            if(!list_identical(val1, val2)){
+            if(!lists_identical(val1, val2)){
                 return(FALSE)
             }
         }else if(!is.atomic(val1) || !is.atomic(val2)){

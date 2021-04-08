@@ -50,7 +50,7 @@
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path, tables = FALSE)
+#' obo <- obo_parser(path, tables = FALSE)
 #' unlink(path)
 #' names(obo)
 #' # [1] "names"      "namespaces" "relations"  "subsets"    "obsolete"
@@ -87,6 +87,9 @@ obo_parser <- function(
     shorten_namespace = TRUE,
     tables = TRUE
 ){
+
+    # NSE vs. R CMD check workaround
+    value <- key <- term <- NULL
 
     short_namespace <- function(ns){
 
@@ -232,6 +235,9 @@ obo_parser <- function(
 #' @importFrom dplyr pull
 #' @noRd
 term_value_list <- function(d){
+
+    # NSE vs. R CMD check workaround
+    value <- term <- NULL
 
     d %>%
     {setNames(

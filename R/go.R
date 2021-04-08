@@ -71,6 +71,9 @@ go_annot_download <- function(
     slim = NULL
 ){
 
+    # NSE vs. R CMD check workaround
+    aspect <- NULL
+
     if(!is.null(slim)){
 
         exec(go_annot_slim, !!!as.list(environment()))
@@ -201,7 +204,7 @@ go_ontology_download <- function(
 #'
 #' @param organism Character: either "chicken", "cow", "dog", "human", "pig"
 #'     or "uniprot_all".
-#' @param subset Character: the GO subset (GO slim) name. Available GO
+#' @param slim Character: the GO subset (GO slim) name. Available GO
 #'     slims are: "agr" (Alliance for Genomics Resources), "generic",
 #'     "aspergillus", "candida", "drosophila", "chembl", "metagenomic",
 #'     "mouse", "plant", "pir" (Protein Information Resource), "pombe"
@@ -308,6 +311,11 @@ go_annot_slim <- function(
     slim = 'generic',
     aspects = c('C', 'F', 'P')
 ){
+
+    # NSE vs. R CMD check workaround
+    go_id <- qualifier <- db_ref <- evidence_code <- with_or_from <-
+    assigned_by <- annotation_extension <- taxon <- gene_product_from_id <-
+    NULL
 
     annot <- go_annot_download(organism = organism, aspects = aspects)
     slim_terms <- go_ontology_download(subset = slim)$names$term

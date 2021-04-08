@@ -28,6 +28,10 @@ available keys see \code{\link{omnipath_show_db}}.}
 
 \item{ids}{Logical: whether to return IDs or term names.}
 
+\item{method}{Character: either "gra" or "lst". The implementation to use
+for traversing the ontology tree. The graph based implementation is
+faster than the list based, the latter will be removed in the future.}
+
 \item{relations}{Character vector of ontology relation types. Only these
 relations will be used.}
 }
