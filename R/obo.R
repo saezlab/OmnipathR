@@ -50,7 +50,7 @@
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
 #' download.file(goslim_url, destfile = path, quiet = TRUE)
-#' obo <- obo_reader(path, tables = FALSE)
+#' obo <- obo_parser(path, tables = FALSE)
 #' unlink(path)
 #' names(obo)
 #' # [1] "names"      "namespaces" "relations"  "subsets"    "obsolete"
