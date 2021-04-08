@@ -60,11 +60,11 @@ frame.
 d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
 d <- translate_ids(d, uniprot_id, genesymbol, 'ID', 'GENENAME')
 d
-#   uniprot_id  genesymbol
-# 1     P00533  EGFR_HUMAN
-# 2     Q9ULV1  FZD4_HUMAN
-# 3     P43897  EFTS_HUMAN
-# 4     Q9Y2P5 S27A5_HUMAN
+#   uniprot_id genesymbol
+# 1     P00533       EGFR
+# 2     Q9ULV1       FZD4
+# 3     P43897       TSFM
+# 4     Q9Y2P5    SLC27A5
 
 }
 \seealso{
