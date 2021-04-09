@@ -502,10 +502,10 @@ nichenet_build_model <- function(
 
 #' Creates a NicheNet ligand-target matrix
 #'
-#' @param weighted_networks Weighted networks as pro
+#' @param weighted_networks Weighted networks as provided by
+#'     \code{\link{nichenet_build_model}}.
 #' @param lr_network A data frame with ligand-receptor interactions, as
-#'     produced by \code{\link{nichenet_lr_network}}.vided by
-#'     \code{\link{nichenet_build_model}}
+#'     produced by \code{\link{nichenet_lr_network}}.
 #' @param optimized_parameters The outcome of NicheNet parameter optimization
 #'     as produced by \code{\link{nichenet_build_model}}.
 #' @param weighted Logical: wether the network sources are weighted. In this

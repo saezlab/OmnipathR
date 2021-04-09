@@ -193,12 +193,12 @@ omnipath_get_config_path <- function(user = FALSE){
 #' Save the current package configuration
 #'
 #' @param path Path to the config file. Directories and the file will be
-#' created if don't exist.
+#'     created if don't exist.
 #' @param title Save the config under this title. One config file might
-#' contain multple configurations, each identified by a title.
+#'     contain multiple configurations, each identified by a title.
 #' @param local Save into a config file in the current directory instead of
-#' a user level config file. When loading, the config in the current directory
-#' has prioroty over the user level config.
+#'     a user level config file. When loading, the config in the current
+#'     directory has priority over the user level config.
 #'
 #' @return Returns `NULL`.
 #'
@@ -313,7 +313,7 @@ omnipath_load_config <- function(
 #'
 #' @param save If a path, the restored config will be also saved
 #' to this file. If TRUE, the config will be saved to the current default
-#' config path (see `omnipath_get_config_path()`).
+#' config path (see \code{\link{omnipath_get_config_path}}).
 #'
 #' @examples
 #' \donttest{

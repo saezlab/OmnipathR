@@ -108,7 +108,7 @@ remove_tasks <- function(pkgname){
 #' the database manager. Each database has a lifetime and will be unloaded
 #' automatically upon expiry.
 #'
-#' @return A data frame with the built in databaase definitions.
+#' @return A data frame with the built in database definitions.
 #'
 #' @examples
 #' database_definitions <- omnipath_show_db()

@@ -22,8 +22,8 @@
 
 #' Generic OBO parser
 #'
-#' Reads the contents of an OBO file and processes it into a list based
-#' data structure.
+#' Reads the contents of an OBO file and processes it into data frames or
+#' a list based data structure.
 #'
 #' @param path Path to the OBO file.
 #' @param relations Character vector: process only these relations.

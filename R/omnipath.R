@@ -625,17 +625,19 @@ swap_undirected <- function(data){
 #' @return A data frame containing the information about ptms
 #'
 #' @param resources PTMs not reported in these databases are
-#' removed. See \code{\link{get_ptms_databases}} for more information
+#'     removed. See \code{\link{get_ptms_databases}} for more information.
 #' @param organism PTMs are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
+#'     Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields You can define here additional fields to be added to the
+#'     result. If used, set the next argument, \code{default_fields}, to
+#'     \code{FALSE}.
+#' @param default_fields Whether to include the default fields (columns) for
+#'     the query type. If \code{FALSE}, only the fields defined by the user
+#'     in the \code{fields} argument will be added.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
+#'     from the references (PubMed IDs); this way the information which
+#'     reference comes from which resource will be lost and the PubMed IDs
+#'     will be unique.
 #' @param ... Optional additional arguments.
 #'
 #' @examples
@@ -1887,9 +1889,9 @@ get_complexes_databases <- function(...){
 #' dataset is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few resources, depending on your interest. You can always
-#' download the full database from
-#' https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv
-#' using any standard R or readr method.
+#' download the full database from \url{
+#' https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv}
+#' using any standard R or \code{readr} method.
 #'
 #' @return A data.frame containing different gene/complex annotations
 #' @export
