@@ -843,6 +843,7 @@ omnipath_cache_latest_or_new <- function(
 #' bioc_html <- omnipath_cache_load(url = bioc_url)
 #'
 #' @importFrom logger log_info log_trace log_fatal
+#' @importFrom rlang %||%
 #' @export
 #' @seealso \code{\link{omnipath_cache_save}}
 omnipath_cache_load <- function(
@@ -862,7 +863,7 @@ omnipath_cache_load <- function(
     )
 
     if(is.null(record)){
-        log_info('Cache record does not exist: %s (%s)', key, url)
+        log_info('Cache record does not exist: `%s`', key %||% url)
         return(NULL)
     }
 
