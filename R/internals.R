@@ -694,7 +694,41 @@ update_source_attrs <- function(obj, ...){
 }
 
 
-archive_type <- function(path){
+#' Tells the type of an archive
+#'
+#' @param path Character: path to the archive.
+#' @param url Character, optional: the URL the archive has been downloaded
+#'     from.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr pmap detect
+#'
+#' @noRd
+archive_type <- function(path, url = NULL){
 
+    max_offset <- omnipath.env$mb %>% {length(.$magic) + .$offset} %>% max
+
+    header <- readBin(path, 'raw', n = max_offset)
+
+    omnipath.env$mb %>%
+    pmap(list) %>%
+    detect(
+        function(row){
+            all(
+                row$magic ==
+                header[row$offset:(row$offset + length(row$magic))]
+            )
+        }
+    ) %>%
+    `$`(ext) %>%
+    {`if`(
+        !is.null(.) && . %in% c('gz', 'bz', 'bz2', 'xz', 'zst'),
+        `if`(
+            any(grepl(sprintf('\\.tar\\.|\\.t%s', .), c(path, url))),
+            sprintf('tar.%s', .),
+            .
+        ),
+        .
+    )}
 
 }
