@@ -56,7 +56,6 @@ Imports:
     checkmate,
     yaml,
     digest,
-    wand,
     tools,
     httr,
     stringr,

@@ -363,8 +363,7 @@ xls_downloader <- function(
 #'
 #' @importFrom utils unzip untar
 #' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
-#' @importFrom wand get_content_type
-#' @importFrom logger log_info
+#' @importFrom logger log_info log_warn log_trace
 #'
 #' @noRd
 archive_downloader <- function(
@@ -414,9 +413,13 @@ archive_downloader <- function(
         RCurl::close(response)
         omnipath_cache_download_ready(version)
         key <- omnipath_cache_key_from_version(version)
-        content_type <- get_content_type(version$path)
-        ext <- `if`('application/zip' %in% content_type, 'zip', 'tar.gz')
-        omnipath_cache_set_ext(key, ext)
+        ext <- archive_type(version$path, url)
+        if(is.null(ext)){
+            log_warn('Could not state archive type: `%s`.', url)
+        }else{
+            log_trace('Archive type `%s`: `%s`', ext, url)
+            omnipath_cache_set_ext(key, ext)
+        }
         version <- omnipath_cache_latest_or_new(url = url)
 
     }
