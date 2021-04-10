@@ -9,7 +9,7 @@ omnipath_reset_config(save = NULL)
 \arguments{
 \item{save}{If a path, the restored config will be also saved
 to this file. If TRUE, the config will be saved to the current default
-config path (see `omnipath_get_config_path()`).}
+config path (see \code{\link{omnipath_get_config_path}}).}
 }
 \value{
 The config as a list.

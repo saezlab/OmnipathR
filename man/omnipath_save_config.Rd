@@ -11,11 +11,11 @@ omnipath_save_config(path = NULL, title = "default", local = FALSE)
 created if don't exist.}
 
 \item{title}{Save the config under this title. One config file might
-contain multple configurations, each identified by a title.}
+contain multiple configurations, each identified by a title.}
 
 \item{local}{Save into a config file in the current directory instead of
-a user level config file. When loading, the config in the current directory
-has prioroty over the user level config.}
+a user level config file. When loading, the config in the current
+directory has priority over the user level config.}
 }
 \value{
 Returns `NULL`.

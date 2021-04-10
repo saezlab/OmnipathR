@@ -17,21 +17,23 @@ import_omnipath_enzsub(
 }
 \arguments{
 \item{resources}{PTMs not reported in these databases are
-removed. See \code{\link{get_ptms_databases}} for more information}
+removed. See \code{\link{get_ptms_databases}} for more information.}
 
 \item{organism}{PTMs are available for human, mouse and rat.
 Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 
-\item{fields}{The user can define here the fields to be added. If used, set
-the next argument, `default_fields`, to FALSE.}
+\item{fields}{You can define here additional fields to be added to the
+result. If used, set the next argument, \code{default_fields}, to
+\code{FALSE}.}
 
-\item{default_fields}{whether to include the default fields (columns) for
-the query type. If FALSE, only the fields defined by the user in the
-`fields` argument will be added.}
+\item{default_fields}{Whether to include the default fields (columns) for
+the query type. If \code{FALSE}, only the fields defined by the user
+in the \code{fields} argument will be added.}
 
 \item{references_by_resource}{if FALSE, removes the resource name prefixes
-from the references (PubMed IDs); this way the information which reference
-comes from which resource will be lost and the PubMed IDs will be unique.}
+from the references (PubMed IDs); this way the information which
+reference comes from which resource will be lost and the PubMed IDs
+will be unique.}
 
 \item{...}{Optional additional arguments.}
 }

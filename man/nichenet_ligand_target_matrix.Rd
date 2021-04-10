@@ -13,11 +13,11 @@ nichenet_ligand_target_matrix(
 )
 }
 \arguments{
-\item{weighted_networks}{Weighted networks as pro}
+\item{weighted_networks}{Weighted networks as provided by
+\code{\link{nichenet_build_model}}.}
 
 \item{lr_network}{A data frame with ligand-receptor interactions, as
-produced by \code{\link{nichenet_lr_network}}.vided by
-\code{\link{nichenet_build_model}}}
+produced by \code{\link{nichenet_lr_network}}.}
 
 \item{optimized_parameters}{The outcome of NicheNet parameter optimization
 as produced by \code{\link{nichenet_build_model}}.}

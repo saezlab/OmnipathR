@@ -7,7 +7,7 @@
 omnipath_show_db()
 }
 \value{
-A data frame with the built in databaase definitions.
+A data frame with the built in database definitions.
 }
 \description{
 Databases are resources which might be costly to load but can be used many

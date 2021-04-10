@@ -38,8 +38,8 @@ A list with the following elements: 1) "names" a list with
     and "subsets" will be data frames (tibbles).
 }
 \description{
-Reads the contents of an OBO file and processes it into a list based
-data structure.
+Reads the contents of an OBO file and processes it into data frames or
+a list based data structure.
 }
 \examples{
 goslim_url <-

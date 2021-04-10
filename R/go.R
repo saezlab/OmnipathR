@@ -335,7 +335,7 @@ go_annot_slim <- function(
         select(., go_id) %>%
         distinct %>%
         mutate(
-            ancestors = furrr::future_map(go_id, function(g){
+            ancestors = map(go_id, function(g){
                 pb$tick()
                 union(ancestors(g), g)
             })
