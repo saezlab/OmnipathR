@@ -659,3 +659,42 @@ update_source_attrs <- function(obj, ...){
     source_attrs(resource, url)
 
 }
+
+
+#' Load the built-in magic byte database
+#'
+#' Called only in the package loading process.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom jsonlite fromJSON
+#' @importFrom tibble tibble
+#' @importFrom dplyr mutate
+#' @importFrom tidyr unnest_longer unnest_wider
+#' @importFrom purrr map
+#'
+#' @noRd
+.load_magic_bytes <- function(pkgname){
+
+    omnipath.env$mb <-
+        system.file(
+            'internal',
+            'magic_bytes.json',
+            package = pkgname,
+            mustWork = TRUE
+        ) %>%
+        fromJSON(simplifyDataFrame = FALSE) %>%
+        tibble(magic = .) %>%
+        mutate(ext = names(magic)) %>%
+        unnest_longer(magic) %>%
+        unnest_wider(magic) %>%
+        mutate(
+            magic = map(magic, as.raw)
+        )
+
+}
+
+
+archive_type <- function(path){
+
+
+}
