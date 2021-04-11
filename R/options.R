@@ -169,12 +169,17 @@ omnipath_get_default_config_path <- function(user = FALSE){
 }
 
 
-#' Retrieves the current config file path
+#' Current config file path
 #'
 #' @param user Logical: prioritize the user level config even if a config in
 #'     the current working directory is available.
 #'
-#' @noRd
+#' @return Character: path to the config file.
+#'
+#' @examples
+#' omnipath_get_config_path()
+#'
+#' @export
 omnipath_get_config_path <- function(user = FALSE){
 
     config_path_default <- omnipath_get_default_config_path(user = user)
