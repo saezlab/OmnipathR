@@ -240,10 +240,12 @@ download_to_cache <- function(
 #' @param reader Function: the function to download and read the data.
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
-#' returned from the options).
+#'     returned from the options).
 #' @param reader_param List: options for the reader function.
 #' @param resource Character: name of the resource.
 #' @param post List with HTTP POST parameters.
+#' @param use_httr Logical: force to use \code{httr::GET} instead of
+#'     allowing \code{reader} to download the file.
 #' @param ... Passed to \code{\link{download_base}}.
 #'
 #' @importFrom magrittr %>% %<>%
@@ -257,9 +259,10 @@ generic_downloader <- function(
     reader = read_tsv,
     url_key_param = list(),
     url_param = list(),
-    reader_param = list(col_types = cols()),
+    reader_param = list(),
     resource = NULL,
     post = NULL,
+    use_httr = FALSE,
     ...
 ){
 

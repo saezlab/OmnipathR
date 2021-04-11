@@ -42,40 +42,23 @@
 #' #  4 UPF1     na               5976 SMG1   na              23049      1
 #' # # . with 6,003 more rows
 #'
-#' @importFrom dplyr mutate select
 #' @importFrom readr read_tsv read_lines
 #' @importFrom magrittr %>% %T>%
-#' @importFrom utils download.file
 #' @export
 harmonizome_download <- function(dataset){
 
-    url <-
-        'omnipath.harmonizome_url' %>%
-        url_parser(url_param = list(dataset))
-
-    version <- omnipath_cache_latest_or_new(url = url)
-
-    from_cache <- version$status == CACHE_STATUS$READY
-
-    if(!from_cache){
-
-        download_base(
-            url = url,
-            fun = download.file,
-            destfile = version$path,
-            quiet = TRUE
+    path <-
+        download_to_cache(
+            url_key = 'omnipath.harmonizome_url',
+            url_param = list(dataset)
         )
-        omnipath_cache_download_ready(version)
 
-    }
-
-    version$path %>%
+    path %>%
     gzfile() %>%
     read_lines(progress = FALSE) %>%
     `[`(-2) %>%
     read_tsv(col_types = cols(), progress = FALSE) %>%
-    source_attrs('Harmonizome', url) %>%
-    origin_cache(from_cache) %T>%
+    copy_source_attrs(path, resource = 'Harmonizome') %T>%
     load_success()
 
 }

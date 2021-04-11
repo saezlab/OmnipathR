@@ -53,27 +53,17 @@
 #' # # . with 136,978 more rows
 #'
 #' @export
-#' @importFrom utils download.file
+#' @importFrom magrittr %>% %T>%
 #' @seealso \code{\link{remap_tf_target_download}}
 remap_dorothea_download <- function(){
 
-    url <- url_parser(url_key = 'omnipath.remap_dorothea_url')
+    path <-
+        'omnipath.remap_dorothea_url' %>%
+        download_to_cache()
 
-    version <- omnipath_cache_latest_or_new(url = url)
-
-    if(version$status != CACHE_STATUS$READY){
-
-        download_base(
-            url = url,
-            fun = download.file,
-            destfile = version$path,
-            quiet = TRUE
-        )
-        omnipath_cache_download_ready(version)
-
-    }
-
-    readRDS(version$path)
+    readRDS(path) %>%
+    copy_source_attrs(path, resource = 'ReMap (via DoRothEA)') %T>%
+    load_success()
 
 }
 

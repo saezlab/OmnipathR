@@ -49,7 +49,7 @@
 #' goslim_url <-
 #'     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 #' path <- tempfile()
-#' download.file(goslim_url, destfile = path, quiet = TRUE)
+#' httr::GET(goslim_url, httr::write_disk(path, overwrite = TRUE))
 #' obo <- obo_parser(path, tables = FALSE)
 #' unlink(path)
 #' names(obo)

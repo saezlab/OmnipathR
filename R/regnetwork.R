@@ -49,36 +49,22 @@
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr left_join mutate select
 #' @importFrom readr read_tsv cols col_character
-#' @importFrom utils download.file
 regnetwork_download <- function(organism = 'human'){
 
     # NSE vs. R CMD check workaround
     source_entrez <- target_entrez <- NULL
 
-    url <-
-        'omnipath.regnetwork_url' %>%
-        url_parser(url_param = list(organism))
-
-    version <- omnipath_cache_latest_or_new(url = url)
-
-    from_cache <- version$status == CACHE_STATUS$READY
-
-    if(!from_cache){
-
-
-        download_base(
-            url = url,
-            fun = download.file,
-            destfile = version$path,
-            quiet = TRUE
+    path <-
+        download_to_cache(
+            url_key = 'omnipath.regnetwork_url',
+            url_param = list(organism)
         )
-        omnipath_cache_download_ready(version)
 
-    }
+    con <- unz(path, sprintf('%s.source', organism), open = 'rb')
 
-    version$path %>%
-    unz(sprintf('%s.source', organism), open = 'rb') %T>%
-    close_on_exit(envir = parent.frame()) %>%
+    on.exit(close(con))
+
+    con %>%
     read_tsv(
         col_names = c(
             'source_genesymbol',
@@ -100,8 +86,7 @@ regnetwork_download <- function(organism = 'human'){
         source_type = mirna_or_protein(source_entrez),
         target_type = mirna_or_protein(target_entrez)
     ) %>%
-    origin_cache(from_cache) %>%
-    source_attrs('RegNetwork', url) %T>%
+    copy_source_attrs(path, resource = 'RegNetwork') %T>%
     load_success()
 
 }
@@ -129,7 +114,6 @@ regnetwork_download <- function(organism = 'human'){
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_delim cols col_character
 #' @importFrom dplyr mutate recode
-#' @importFrom utils download.file
 #'
 #' @export
 regnetwork_directions <- function(organism = 'human'){
@@ -137,28 +121,19 @@ regnetwork_directions <- function(organism = 'human'){
     # NSE vs. R CMD check workaround
     effect <- NULL
 
-    url <-
-        'omnipath.regnetwork_url' %>%
-        url_parser(url_param = list('RegulatoryDirections'))
-
-    version <- omnipath_cache_latest_or_new(url = url)
-
-    if(version$status != CACHE_STATUS$READY){
-
-
-        download_base(
-            url = url,
-            fun = download.file,
-            destfile = version$path,
-            quiet = TRUE
+    path <-
+        download_to_cache(
+            url_key = 'omnipath.regnetwork_url',
+            url_param = list('RegulatoryDirections')
         )
-        omnipath_cache_download_ready(version)
 
-    }
+    con <-
+        path %>%
+        unz(sprintf('new_kegg.%s.reg.direction.txt', organism), open = 'rb')
 
-    version$path %>%
-    unz(sprintf('new_kegg.%s.reg.direction.txt', organism), open = 'rb') %T>%
-    close_on_exit(envir = parent.frame()) %>%
+    on.exit(close(con))
+
+    con %>%
     read_delim(
         delim = ' ',
         skip = 1,
@@ -181,7 +156,9 @@ regnetwork_directions <- function(organism = 'human'){
             `-->`    =  1,
             .default =  0
         )
-    )
+    ) %>%
+    copy_source_attrs(path, resource = 'RegNetwork') %T>%
+    load_success()
 
 }
 
