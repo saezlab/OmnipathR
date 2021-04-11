@@ -30,3 +30,4 @@ vignettes/figure
 .*/testdir.*$
 .*kate-swp$
 ^omnipathr-log.*$
+^man/figures.*$
