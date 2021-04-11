@@ -64,7 +64,7 @@ omnipath_cache_remove(only_latest = TRUE)
 
 bioc_url <- 'https://bioconductor.org/'
 version <- omnipath_cache_latest_or_new(url = bioc_url)
-download.file(bioc_url, version$path)
+httr::GET(bioc_url, httr::write_disk(version$path, overwrite = TRUE))
 omnipath_cache_download_ready(version)
 key <- omnipath_cache_key(bioc_url)
 omnipath_cache_remove(key = key)

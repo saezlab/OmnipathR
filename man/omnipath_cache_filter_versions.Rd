@@ -35,7 +35,7 @@ Filters the versions based on multiple conditions: their age and status
 # creating an example cache record
 bioc_url <- 'https://bioconductor.org/'
 version <- omnipath_cache_latest_or_new(url = bioc_url)
-download.file(bioc_url, destfile = version$path)
+httr::GET(bioc_url, httr::write_disk(version$path, overwrite = TRUE))
 omnipath_cache_download_ready(version)
 record <- dplyr::first(omnipath_cache_search('biocond'))
 
