@@ -681,6 +681,9 @@ update_source_attrs <- function(obj, ...){
 #' @noRd
 .load_magic_bytes <- function(pkgname){
 
+    # NSE vs. R CMD check workaround
+    magic <- NULL
+
     omnipath.env$mb <-
         system.file(
             'internal',
@@ -711,6 +714,9 @@ update_source_attrs <- function(obj, ...){
 #'
 #' @noRd
 archive_type <- function(path, url = NULL){
+
+    # NSE vs. R CMD check workaround
+    ext <- NULL
 
     max_offset <- omnipath.env$mb %>% {length(.$magic) + .$offset} %>% max
 
