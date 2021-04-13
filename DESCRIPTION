@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: OmniPath web service client
-Version: 2.99.9
+Version: 2.99.10
 Authors@R: c(
     person(
         given = "Alberto",
