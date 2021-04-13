@@ -428,7 +428,7 @@ archive_downloader <- function(
     }
 
     key <- omnipath_cache_key_from_version(version)
-    record <- omnipath.env$cache[[key]]
+    record <- omnipath_cache_get(key)
     extractor <- `if`(record$ext == 'zip', unzip, untar)
 
     list(
@@ -466,7 +466,7 @@ archive_downloader <- function(
 #'     the path inside the archive.
 #'
 #' @importFrom magrittr %>% %T>%
-#' @importFrom logger log_fatal
+#' @importFrom logger log_fatal log_trace
 #' @importFrom rlang %||% !!! exec
 #' @importFrom readxl read_excel
 #' @importFrom utils unzip
@@ -500,7 +500,20 @@ archive_extractor <- function(
     # fallback to the first file
     path <- `if`(is.null(path), paths_in_archive(archive_data)[1], path)
 
-    if(!(path %in% paths_in_archive(archive_data))){
+    if(!path %in% paths_in_archive(archive_data)){
+
+        log_trace(
+            'First 8 bytes of `%s`: %s',
+            archive_data$path,
+            archive_data$path %>%
+                readBin('raw', n = 8) %>%
+                paste(collapse = ' ')
+        )
+        log_trace(
+            'Archive type stated: `%s`; size: %d bytes.',
+            archive_type(archive_data$path, archive_data$url),
+            file.info(archive_data$path)$size
+        )
 
         msg <- sprintf(
             'Path `%s` not found in archive `%s` (local file at `%s`)',
