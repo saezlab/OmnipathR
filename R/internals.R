@@ -406,6 +406,7 @@ archive_downloader <- function(
             url = url,
             verbose = curl_verbose,
             writedata = response@ref,
+            ssl.cipher.list = 'HIGH:!ECDH',
             ...
         )
         success <- download_base(

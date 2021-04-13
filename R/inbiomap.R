@@ -64,7 +64,8 @@ inbiomap_raw <- function(curl_verbose = FALSE){
             postfields = payload,
             followlocation = TRUE,
             httpheader = 'Content-Type: application/json;charset=utf-8',
-            url = 'omnipath.inbiomap_login_url' %>% url_parser
+            url = 'omnipath.inbiomap_login_url' %>% url_parser,
+            ssl.cipher.list = 'HIGH:!ECDH'
         )
         success <- curlPerform(curl = login_curl)
         token <- (login_response$value() %>% parse_json())$token
