@@ -31,3 +31,5 @@ vignettes/figure
 .*kate-swp$
 ^omnipathr-log.*$
 ^man/figures.*$
+^\.git_fetch_output\.txt$
+^\.git_merge_output\.txt$
