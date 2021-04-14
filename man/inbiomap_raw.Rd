@@ -19,7 +19,9 @@ Downloads the data from
 extracts the PSI MITAB table and returns it as a data frame.
 }
 \examples{
+\donttest{
 inbiomap_psimitab <- inbiomap_raw()
+}
 }
 \seealso{
 \code{\link{inbiomap_download}}

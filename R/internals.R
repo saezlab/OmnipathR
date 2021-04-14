@@ -356,17 +356,22 @@ xls_downloader <- function(
 #' @param url_key Character: name of the option containing the URL
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
-#' returned from the options).
-#' @param cache_by_url Logical: at the cache handling consider only the URL,
+#'     returned from the options).
+#' @param post List: passed to \code{curl::handle_setform}.
+#' @param http_headers Named list with HTTP header keys and values.
+#' @param cache_by_url Character: at the cache handling consider this URL
 #'     and ignore the POST parameters or the data payload. This is useful if
 #'     the download requires an access token which varies at each download
 #'     but at reading from the cache no need for token.
 #' @param ... Additional options for cURL. Passed to
-#'     `curlSetOpt`.
+#'     \code{curl::handle_setopt}.
 #'
 #' @importFrom utils unzip untar
-#' @importFrom RCurl getCurlHandle CFILE curlSetOpt curlPerform close
 #' @importFrom logger log_info log_warn log_trace
+#' @importFrom curl new_handle handle_setopt handle_setform
+#' @importFrom curl curl_download handle_setheaders
+#' @importFrom magrittr %>%
+#' @importFrom rlang exec !!!
 #'
 #' @noRd
 archive_downloader <- function(
@@ -374,6 +379,7 @@ archive_downloader <- function(
     url_key_param = list(),
     url_param = list(),
     post = NULL,
+    http_headers = list(),
     curl_verbose = FALSE,
     cache_by_url = NULL,
     ...
@@ -399,22 +405,26 @@ archive_downloader <- function(
 
         logger::log_info('Downloading `%s`', url)
         # downloading the data
-        curl_handle <- getCurlHandle()
-        response <- CFILE(version$path, mode = 'wb')
-        opt_set <- curlSetOpt(
-            curl = curl_handle,
-            url = url,
-            verbose = curl_verbose,
-            writedata = response@ref,
-            ssl.cipher.list = 'HIGH:!ECDH',
-            ...
-        )
+        curl_handle <-
+            new_handle() %>%
+            handle_setopt(
+                url = url,
+                verbose = curl_verbose,
+                ...
+            ) %>%
+            {`if`(
+                is.null(post),
+                .,
+                exec(handle_setform, ., !!!post)
+            )} %>%
+            handle_setheaders(.list = http_headers)
+
         success <- download_base(
             url = url,
-            fun = function(url, ...){curlPerform(...)},
-            curl = curl_handle
+            fun = curl_download,
+            destfile = version$path,
+            handle = curl_handle
         )
-        RCurl::close(response)
         omnipath_cache_download_ready(version)
         key <- omnipath_cache_key_from_version(version)
         ext <- archive_type(version$path, url)

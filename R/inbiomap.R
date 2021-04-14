@@ -30,10 +30,9 @@
 #'     debugging purposes.
 #'
 #' @importFrom magrittr %>% %T>%
-#' @importFrom RCurl basicHeaderGatherer basicTextGatherer
-#' @importFrom RCurl getCurlHandle curlSetOpt curlPerform
-#' @importFrom jsonlite parse_json
 #' @importFrom readr read_tsv cols
+#' @importFrom curl new_handle handle_setopt curl_fetch_memory
+#' @importFrom logger log_trace
 #' @export
 #'
 #' @return A data frame (tibble) with the extracted interaction table.
@@ -41,7 +40,9 @@
 #' @seealso \code{\link{inbiomap_download}}
 #'
 #' @examples
+#' \donttest{
 #' inbiomap_psimitab <- inbiomap_raw()
+#' }
 inbiomap_raw <- function(curl_verbose = FALSE){
 
     url <- 'omnipath.inbiomap_url' %>% url_parser
@@ -51,24 +52,35 @@ inbiomap_raw <- function(curl_verbose = FALSE){
     if(is.null(version) || version$status != CACHE_STATUS$READY){
 
         # acquiring an access token
-        resp_headers <- basicHeaderGatherer()
-        login_response <- basicTextGatherer()
         payload <- '{"ref":""}'
-        login_curl <- getCurlHandle()
-        opt_set <- curlSetOpt(
-            curl = login_curl,
-            writefunction = login_response$update,
-            headerfunction = resp_headers$update,
-            verbose = curl_verbose,
-            post = TRUE,
-            postfields = payload,
-            followlocation = TRUE,
-            httpheader = 'Content-Type: application/json;charset=utf-8',
-            url = 'omnipath.inbiomap_login_url' %>% url_parser,
-            ssl.cipher.list = 'HIGH:!ECDH'
-        )
-        success <- curlPerform(curl = login_curl)
-        token <- (login_response$value() %>% parse_json())$token
+        login_url <- 'omnipath.inbiomap_login_url' %>% url_parser
+
+        handle <- new_handle() %>%
+            handle_setopt(
+                url = login_url,
+                verbose = curl_verbose,
+                followlocation = TRUE,
+                httpheader = 'Content-Type: application/json;charset=utf-8',
+                postfields = payload,
+                post = TRUE
+            )
+
+        login_resp <- curl_fetch_memory(login_url, handle)
+
+        token <-
+            handle %>%
+            handle_cookies %>%
+            filter(name == 'access_token') %>%
+            pull(value)
+
+        # the token is also available in the response:
+        # token <-
+        #     login_resp$content %>%
+        #     rawToChar %>%
+        #     parse_json %>%
+        #     `$`(token)
+
+        log_trace('InBioMap token: %s', token)
 
     }
 
@@ -100,7 +112,7 @@ inbiomap_raw <- function(curl_verbose = FALSE){
             progress = FALSE
         ),
         curl_verbose = curl_verbose,
-        # this is passed to curlSetOpt
+        # this is passed to curl::handle_setopt
         httpheader = sprintf('Cookie: access_token=%s', token),
         resource = 'InWeb InBioMap'
     ) %T>%
@@ -126,8 +138,10 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @seealso \code{\link{inbiomap_raw}}
 #'
 #' @examples
+#' \donttest{
 #' inbiomap_interactions <- inbiomap_download()
 #' inbiomap_interactions
+#' }
 #' # # A tibble: 625,641 x 7
 #' #    uniprot_a uniprot_b genesymbol_a genesymbol_b inferred score1 score2
 #' #    <chr>     <chr>     <chr>        <chr>        <lgl>     <dbl>  <dbl>

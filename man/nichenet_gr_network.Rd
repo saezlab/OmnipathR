@@ -71,6 +71,7 @@ gr_network_omnipath <- nichenet_gr_network(only_omnipath = TRUE)
 \seealso{
 \itemize{
     \item{\code{\link{nichenet_gr_network_evex}}}
+    \item{\code{\link{nichenet_gr_network_harmonizome}}}
     \item{\code{\link{nichenet_gr_network_htridb}}}
     \item{\code{\link{nichenet_gr_network_omnipath}}}
     \item{\code{\link{nichenet_gr_network_pathwaycommons}}}

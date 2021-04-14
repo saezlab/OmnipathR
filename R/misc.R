@@ -93,6 +93,46 @@ ensure_list <- function(value){
 }
 
 
+#' Merge two lists by name
+#'
+#' From the RCurl package. This is a method that merges the contents of one
+#' list with another by adding the named elements in the second that are not
+#' in the first. In other words, the first list is the target template, and
+#' the second one adds any extra elements that it has.
+#'
+#' @param x The list to which elements will be added.
+#' @param y The list which will supply additional elements to ‘x’ that
+#'     are not already there by name.
+#' @param ... Ignored.
+#'
+#' @return A named list whose name set is the union of the elements in names
+#'    of x and y and whose values are those taken from y and then with
+#'    those in x, overwriting if necessary.
+#'
+#' @author Duncan Temple Lang
+#'
+#' @noRd
+merge_lists <- function (x, y, ...)
+{
+    if(length(x) == 0) return(y)
+
+    if(length(y) == 0) return(x)
+
+    i <- match(names(y), names(x))
+
+    i <- is.na(i)
+
+    if(any(i)){
+
+        x[names(y)[which(i)]] <- y[which(i)]
+
+    }
+
+    x
+
+}
+
+
 #' Returns NULL if `value` is a list with a single NULL element otherwise
 #' the value itself
 #'

@@ -1093,7 +1093,6 @@ import_LigrecExtra_Interactions <- function(...){
 #'
 #' @importFrom rlang %||% exec !!!
 #' @importFrom magrittr %<>%
-#' @importFrom RCurl merge.list
 #' @examples
 #' interactions <-
 #'     import_post_translational_interactions(
@@ -1120,7 +1119,7 @@ import_post_translational_interactions <- function(
         c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
     args$datasets %<>% setdiff(exclude)
 
-    args %<>% merge.list(
+    args %<>% merge_lists(
         list(
             query_type = 'interactions',
             resources = resources,
