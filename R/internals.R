@@ -356,17 +356,20 @@ xls_downloader <- function(
 #' @param url_key Character: name of the option containing the URL
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
-#' returned from the options).
+#'     returned from the options).
+#' @param post List: passed to \code{curl::handle_setform}.
+#' @param http_headers Named list with HTTP header keys and values.
 #' @param cache_by_url Character: at the cache handling consider this URL
 #'     and ignore the POST parameters or the data payload. This is useful if
 #'     the download requires an access token which varies at each download
 #'     but at reading from the cache no need for token.
 #' @param ... Additional options for cURL. Passed to
-#'     `curlSetOpt`.
+#'     \code{curl::handle_setopt}.
 #'
 #' @importFrom utils unzip untar
 #' @importFrom logger log_info log_warn log_trace
-#' @importFrom curl new_handle handle_setopt handle_setform curl_download
+#' @importFrom curl new_handle handle_setopt handle_setform
+#' @importFrom curl curl_download handle_setheaders
 #' @importFrom magrittr %>%
 #' @importFrom rlang exec !!!
 #'
@@ -376,6 +379,7 @@ archive_downloader <- function(
     url_key_param = list(),
     url_param = list(),
     post = NULL,
+    http_headers = list(),
     curl_verbose = FALSE,
     cache_by_url = NULL,
     ...
@@ -412,7 +416,8 @@ archive_downloader <- function(
                 is.null(post),
                 .,
                 exec(handle_setform, ., !!!post)
-            )}
+            )} %>%
+            handle_setheaders(.list = http_headers)
 
         success <- download_base(
             url = url,
