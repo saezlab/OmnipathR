@@ -80,6 +80,7 @@
 #'     # of the resources will be loaded according to the defaults
 #'     signaling_network = list(
 #'         cpdb = NULL, # this resource will be excluded
+#'         inbiomap = NULL,
 #'         evex = list(min_confidence = 1.0) # override some parameters
 #'     ),
 #'     gr_network = list(only_omnipath = TRUE),
@@ -422,9 +423,9 @@ nichenet_optimization <- function(
 #'     `optimized_parameters`.
 #'
 #' @examples
-#' networks <- nichenet_networks()
 #' expression <- nichenet_expression_data()
 #' \donttest{
+#' networks <- nichenet_networks()
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
 #' }
@@ -908,7 +909,9 @@ nichenet_networks <- function(
 #'
 #' @examples
 #' # load everything with the default parameters:
-#' sig_network <- nichenet_signaling_network()
+#' # we don't load inBio Map due to the - hopefully
+#' # temporary - issues of their server
+#' sig_network <- nichenet_signaling_network(inbiomap = NULL)
 #'
 #' # override parameters for some resources:
 #' sig_network <- nichenet_signaling_network(
@@ -916,7 +919,8 @@ nichenet_networks <- function(
 #'     pathwaycommons = NULL,
 #'     harmonizome = list(datasets = c('phosphositeplus', 'depod')),
 #'     cpdb = list(complex_max_size = 1, min_score = .98),
-#'     evex = list(min_confidence = 1.5)
+#'     evex = list(min_confidence = 1.5),
+#'     inbiomap = NULL
 #' )
 #'
 #' # use only OmniPath:
@@ -1050,7 +1054,7 @@ nichenet_lr_network <- function(
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{nichenet_gr_network_evex}}}
-# #'     \item{\code{\link{nichenet_gr_network_harmonizome}}}
+#'     \item{\code{\link{nichenet_gr_network_harmonizome}}}
 #'     \item{\code{\link{nichenet_gr_network_htridb}}}
 #'     \item{\code{\link{nichenet_gr_network_omnipath}}}
 #'     \item{\code{\link{nichenet_gr_network_pathwaycommons}}}
@@ -1650,7 +1654,9 @@ nichenet_signaling_network_evex <- function(
 #'     suitable for use with NicheNet.
 #'
 #' @examples
+#' \donttest{
 #' ib_signaling_network <- nichenet_signaling_network_inbiomap()
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select

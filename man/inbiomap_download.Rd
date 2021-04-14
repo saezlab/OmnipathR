@@ -17,8 +17,10 @@ Downloads the data by \code{\link{inbiomap_raw}}, extracts the
 UniProt IDs, Gene Symbols and scores and removes the irrelevant columns.
 }
 \examples{
+\donttest{
 inbiomap_interactions <- inbiomap_download()
 inbiomap_interactions
+}
 # # A tibble: 625,641 x 7
 #    uniprot_a uniprot_b genesymbol_a genesymbol_b inferred score1 score2
 #    <chr>     <chr>     <chr>        <chr>        <lgl>     <dbl>  <dbl>

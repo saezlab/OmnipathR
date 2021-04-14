@@ -97,6 +97,7 @@ nichenet_results <- nichenet_main(
     # of the resources will be loaded according to the defaults
     signaling_network = list(
         cpdb = NULL, # this resource will be excluded
+        inbiomap = NULL,
         evex = list(min_confidence = 1.0) # override some parameters
     ),
     gr_network = list(only_omnipath = TRUE),

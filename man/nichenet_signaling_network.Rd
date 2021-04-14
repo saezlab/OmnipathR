@@ -50,7 +50,9 @@ resources.
 }
 \examples{
 # load everything with the default parameters:
-sig_network <- nichenet_signaling_network()
+# we don't load inBio Map due to the - hopefully
+# temporary - issues of their server
+sig_network <- nichenet_signaling_network(inbiomap = NULL)
 
 # override parameters for some resources:
 sig_network <- nichenet_signaling_network(
@@ -58,7 +60,8 @@ sig_network <- nichenet_signaling_network(
     pathwaycommons = NULL,
     harmonizome = list(datasets = c('phosphositeplus', 'depod')),
     cpdb = list(complex_max_size = 1, min_score = .98),
-    evex = list(min_confidence = 1.5)
+    evex = list(min_confidence = 1.5),
+    inbiomap = NULL
 )
 
 # use only OmniPath:
