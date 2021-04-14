@@ -31,7 +31,7 @@
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
-#' @importFrom curl new_handle handle_setopt curl_fetch_memory
+#' @importFrom curl new_handle handle_setopt curl_fetch_memory handle_cookies
 #' @importFrom logger log_trace
 #' @export
 #'

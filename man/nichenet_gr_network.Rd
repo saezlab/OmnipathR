@@ -59,7 +59,10 @@ gr_network <- nichenet_gr_network()
 
 # less targets from ReMap, not using RegNetwork:
 gr_network <- nichenet_gr_network(
-    remap = list(top_targets = 200),
+    # I needed to disable ReMap here due to some issues
+    # of one of the Bioconductor build servers
+    # remap = list(top_targets = 200),
+    remap = NULL,
     regnetwork = NULL,
 )
 }
