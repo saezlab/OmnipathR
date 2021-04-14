@@ -1488,15 +1488,13 @@ which_dl_finished <- function(versions, t, op = `>=`){
 
 #' Adds a new item to the cache or updates an existing one
 #'
-#' @importFrom RCurl merge.list
-#'
 #' @noRd
 omnipath_cache_add <- cache_locked %@% function(record, new = FALSE){
 
     if(record$key %in% omnipath.env$cache && !new){
 
         omnipath.env$cache[[record$key]]$versions <-
-            RCurl::merge.list(
+            merge_lists(
                 omnipath.env$cache[[record$key]]$versions,
                 record$versions
             )
