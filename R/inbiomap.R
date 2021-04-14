@@ -45,6 +45,9 @@
 #' }
 inbiomap_raw <- function(curl_verbose = FALSE){
 
+    # NSE vs. R CMD check workaround
+    name <- value <- NULL
+
     url <- 'omnipath.inbiomap_url' %>% url_parser
     version <- omnipath_cache_latest_or_new(url = url, create = FALSE)
     token <- 'none'
