@@ -93,6 +93,25 @@ ensure_list <- function(value){
 }
 
 
+#' Makes sure value is a list
+#'
+#' If \code{value} is a list returns it unchanged, otherwise it wraps it
+#' into a single element list.
+#'
+#' @return A list
+#'
+#' @noRd
+ensure_list_2 <- function(value){
+
+    `if`(
+        class(value) == 'list',
+        value,
+        list(value)
+    )
+
+}
+
+
 #' Merge two lists by name
 #'
 #' From the RCurl package. This is a method that merges the contents of one
