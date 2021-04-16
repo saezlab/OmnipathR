@@ -110,11 +110,32 @@ kegg_pathway_list <- function(){
 #' @param process Logical: process the data or return it in raw format.
 #'     processing means joining the entries and relations into a single
 #'     data frame and adding UniProt IDs.
+#' @param max_expansion Numeric: the maximum number of relations
+#'     derived from a single relation record. As one entry might represent
+#'     more than one molecular entities, one relation might yield a large
+#'     number of relations in the processing. This happens in a combinatorial
+#'     way, e.g. if the two entries represent 3 and 4 entities, that results
+#'     12 relations. If \code{NULL}, all relations will be expanded.
 #'
 #' @return A data frame (tibble) of interactions if \code{process} is
 #'     \code{TRUE}, otherwise a list with two data frames: "entries" is
 #'     a raw table of the entries while "relations" is a table of relations
 #'     extracted from the KGML file.
+#'
+#' @examples
+#' tgf_pathway <- kegg_pathway_download('hsa04350')
+#' tgf_pathway
+#' # # A tibble: 50 x 12
+#' #    source target type  effect arrow relation_id kegg_id_source
+#' #    <chr>  <chr>  <chr> <chr>  <chr> <chr>       <chr>
+#' #  1 51     49     PPrel activ. -->   hsa04350:1  hsa:7040 hsa:.
+#' #  2 57     55     PPrel activ. -->   hsa04350:2  hsa:151449 hs.
+#' #  3 34     32     PPrel activ. -->   hsa04350:3  hsa:3624 hsa:.
+#' #  4 20     17     PPrel activ. -->   hsa04350:4  hsa:4838
+#' #  5 60     46     PPrel activ. -->   hsa04350:5  hsa:4086 hsa:.
+#' # # . with 45 more rows, and 5 more variables: genesymbol_source <chr>,
+#' # #   uniprot_source <chr>, kegg_id_target <chr>,
+#' # #   genesymbol_target <chr>, uniprot_target <chr>
 #'
 #' @importFrom httr add_headers
 #' @importFrom rlang exec !!!
@@ -122,9 +143,13 @@ kegg_pathway_list <- function(){
 #' @importFrom purrr map
 #' @importFrom magrittr %>%
 #' @importFrom tidyr unnest_wider separate_rows
-#' @importFrom dplyr left_join mutate n
+#' @importFrom dplyr mutate row_number
 #' @export
-kegg_pathway_download <- function(pathway_id, process = TRUE){
+kegg_pathway_download <- function(
+    pathway_id,
+    process = TRUE,
+    max_expansion = NULL
+){
 
     # NSE vs. R CMD check workaround
     genesymbol <- NULL
@@ -159,8 +184,7 @@ kegg_pathway_download <- function(pathway_id, process = TRUE){
             }
         ) %>%
         tibble(entries = .) %>%
-        unnest_wider(entries) %>%
-        separate_rows(genesymbol, sep = '[, ]+')
+        unnest_wider(entries)
 
     relations <-
         kgml %>%
@@ -178,21 +202,14 @@ kegg_pathway_download <- function(pathway_id, process = TRUE){
             }
         ) %>%
         tibble(relations = .) %>%
-        unnest_wider(relations)
+        unnest_wider(relations) %>%
+        mutate(
+            relation_id = sprintf('%s:%d', pathway_id, row_number())
+        )
 
     if(process){
 
-        relations %>%
-        mutate(relation_id = sprintf('%s:%d', pathway_id, n())) %>%
-        left_join(
-            entries,
-            by = c('source' = 'kgml_id')
-        ) %>%
-        left_join(
-            entries,
-            by = c('target' = 'kgml_id'),
-            suffix = c('_source', '_target')
-        )
+        kegg_process(entries, relations, max_expansion)
 
     }else{
 
@@ -202,5 +219,80 @@ kegg_pathway_download <- function(pathway_id, process = TRUE){
         )
 
     }
+
+}
+
+
+#' Interactions from KGML
+#'
+#' Processes KEGG Pathways data extracted from a KGML file. Joins the entries
+#' and relations into a single data frame and translates the Gene Symbols to
+#' UniProt IDs.
+#'
+#' @param entries A data frames with entries extracted from a KGML
+#'     file by \code{\link{kegg_pathway_download}}.
+#' @param relations A data frames with relations extracted from a KGML
+#'     file by \code{\link{kegg_pathway_download}}.
+#' @param max_expansion Numeric: the maximum number of relations
+#'     derived from a single relation record. As one entry might represent
+#'     more than one molecular entities, one relation might yield a large
+#'     number of relations in the processing. This happens in a combinatorial
+#'     way, e.g. if the two entries represent 3 and 4 entities, that results
+#'     12 relations. If \code{NULL}, all relations will be expanded.
+#'
+#' @return A data frame (tibble) of interactions.
+#'
+#' @examples
+#' hsa04350 <- kegg_pathway_download('hsa04350', process = FALSE)
+#' tgf_pathway <- kegg_process(hsa04350$entries, hsa04350$relatiions)
+#' tgf_pathway
+#' # # A tibble: 50 x 12
+#' #    source target type  effect arrow relation_id kegg_id_source
+#' #    <chr>  <chr>  <chr> <chr>  <chr> <chr>       <chr>
+#' #  1 51     49     PPrel activ. -->   hsa04350:1  hsa:7040 hsa:.
+#' #  2 57     55     PPrel activ. -->   hsa04350:2  hsa:151449 hs.
+#' #  3 34     32     PPrel activ. -->   hsa04350:3  hsa:3624 hsa:.
+#' #  4 20     17     PPrel activ. -->   hsa04350:4  hsa:4838
+#' #  5 60     46     PPrel activ. -->   hsa04350:5  hsa:4086 hsa:.
+#' # # . with 45 more rows, and 5 more variables: genesymbol_source <chr>,
+#' # #   uniprot_source <chr>, kegg_id_target <chr>,
+#' # #   genesymbol_target <chr>, uniprot_target <chr>
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom tidyr separate_rows
+#' @importFrom dplyr left_join mutate n rename group_by filter ungroup
+#' @export
+kegg_process <- function(entries, relations, max_expansion = NULL){
+
+    uniprots <- get_db('up_gs_human')
+
+    entries %<>%
+        separate_rows(genesymbol, sep = '[, ]+') %>%
+        left_join(
+            uniprots %>% rename(uniprot = From),
+            by = c('genesymbol' = 'To')
+        )
+
+    relations %>%
+    left_join(
+        entries,
+        by = c('source' = 'kgml_id')
+    ) %>%
+    left_join(
+        entries,
+        by = c('target' = 'kgml_id'),
+        suffix = c('_source', '_target')
+    ) %>%
+    {`if`(
+        is.null(max_expansion),
+        .,
+        group_by(., relation_id) %>%
+        filter(n() <= max_expansion) %>%
+        ungroup
+    )} %>%
+    filter(
+        !is.na(uniprot_source) &
+        !is.na(uniprot_target)
+    )
 
 }
