@@ -27,12 +27,38 @@
 #'
 #' @return A data frame (tibble) of interactions.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom progress progress_bar
+#' @importFrom dplyr filter mutate bind_rows
+#' @importFrom purrr pmap
+#' @importFrom stringr str_pad str_trunc
 #' @export
 kegg_pathways_download <- function(){
 
-    pathways <- kegg_pathway_list()
+    pathways <-
+        kegg_pathway_list() %>%
+        filter(
+            !startsWith(id, 'map')
+        )
 
+    pb <- progress_bar$new(
+        total = pathways %>% nrow,
+        format = paste0(
+            '  KEGG Pathways: :pw ',
+            '[:bar] :current/:total, eta: :eta'
+        )
+    )
 
+    pathways  %>%
+    pmap(
+        function(id, name){
+            display_name <- name %>% str_trunc(22) %>% str_pad(22, 'right')
+            pb$tick(tokens = list(pw = display_name))
+            kegg_pathway_download(id) %>%
+            null_or_call(mutate, pathway = name, pathway_id = id)
+        }
+    ) %>%
+    bind_rows
 
 }
 
@@ -63,6 +89,7 @@ kegg_pathways_download <- function(){
 #' @importFrom xml2 read_html xml_find_all xml_attr xml_text
 #' @importFrom stringr str_extract
 #' @importFrom tidyr unnest_wider
+#' @importFrom tibble tibble
 #' @export
 kegg_pathway_list <- function(){
 
@@ -138,12 +165,13 @@ kegg_pathway_list <- function(){
 #' # #   genesymbol_target <chr>, uniprot_target <chr>
 #'
 #' @importFrom httr add_headers
-#' @importFrom rlang exec !!!
-#' @importFrom xml2 read_xml xml_find_all xml_attr xml_child
+#' @importFrom rlang exec !!! %||%
+#' @importFrom xml2 read_xml xml_find_all xml_attr xml_child xml_children
 #' @importFrom purrr map
 #' @importFrom magrittr %>%
 #' @importFrom tidyr unnest_wider separate_rows
 #' @importFrom dplyr mutate row_number
+#' @importFrom tibble tibble
 #' @export
 kegg_pathway_download <- function(
     pathway_id,
@@ -191,13 +219,17 @@ kegg_pathway_download <- function(
         xml_find_all('.//relation') %>%
         map(
             function(r){
-                subtype <- xml_child(r)
+                subtype <- xml_children(r)[1]
                 list(
                     source = xml_attr(r, 'entry1'),
                     target = xml_attr(r, 'entry2'),
                     type = xml_attr(r, 'type'),
-                    effect = xml_attr(subtype, 'name'),
-                    arrow = xml_attr(subtype, 'value')
+                    effect =
+                        null_or_call(subtype, xml_attr, 'name') %||%
+                        'unknown',
+                    arrow =
+                        null_or_call(subtype, xml_attr, 'value') %||%
+                        '---'
                 )
             }
         ) %>%
@@ -240,7 +272,8 @@ kegg_pathway_download <- function(
 #'     way, e.g. if the two entries represent 3 and 4 entities, that results
 #'     12 relations. If \code{NULL}, all relations will be expanded.
 #'
-#' @return A data frame (tibble) of interactions.
+#' @return A data frame (tibble) of interactions. In rare cases when a
+#'     pathway doesn't contain any relation, returns \code{NULL}.
 #'
 #' @examples
 #' hsa04350 <- kegg_pathway_download('hsa04350', process = FALSE)
@@ -264,6 +297,12 @@ kegg_pathway_download <- function(
 #' @export
 kegg_process <- function(entries, relations, max_expansion = NULL){
 
+    if(!nrow(relations)){
+
+        return(NULL)
+
+    }
+
     uniprots <- get_db('up_gs_human')
 
     entries %<>%
@@ -283,16 +322,16 @@ kegg_process <- function(entries, relations, max_expansion = NULL){
         by = c('target' = 'kgml_id'),
         suffix = c('_source', '_target')
     ) %>%
+    filter(
+        !is.na(uniprot_source) &
+        !is.na(uniprot_target)
+    ) %>%
     {`if`(
         is.null(max_expansion),
         .,
         group_by(., relation_id) %>%
         filter(n() <= max_expansion) %>%
         ungroup
-    )} %>%
-    filter(
-        !is.na(uniprot_source) &
-        !is.na(uniprot_target)
-    )
+    )}
 
 }
