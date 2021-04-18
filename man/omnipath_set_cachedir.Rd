@@ -4,13 +4,14 @@
 \alias{omnipath_set_cachedir}
 \title{Change the cache directory}
 \usage{
-omnipath_set_cachedir(path)
+omnipath_set_cachedir(path = NULL)
 }
 \arguments{
 \item{path}{Character: path to the new cache directory. If don't exist,
 the directories will be created. If the path is an existing cache
 directory, the package's cache database for the current session will
-be loaded from the database in the directory.}
+be loaded from the database in the directory. If \code{NULL}, the
+cache directory will be set to its default path.}
 }
 \value{
 Returns \code{NULL}.
@@ -22,6 +23,6 @@ Change the cache directory
 tmp_cache <- tempdir()
 omnipath_set_cachedir(tmp_cache)
 # restore the default cache directory:
-omnipath_init_cache()
+omnipath_set_cachedir()
 
 }
