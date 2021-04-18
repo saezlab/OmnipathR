@@ -104,7 +104,7 @@ ensure_list <- function(value){
 ensure_list_2 <- function(value){
 
     `if`(
-        class(value) == 'list',
+        class(value)[1] == 'list',
         value,
         list(value)
     )
