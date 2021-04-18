@@ -25,6 +25,21 @@ A data frame (tibble) of interactions.
 Downloads all pathway diagrams in the KEGG Pathways database in KGML
 format and processes the XML to extract the interactions.
 }
+\examples{
+\donttest{
+kegg_pw <- kegg_pathways_download(simplify = TRUE)
+kegg_pw
+# # A tibble: 6,765 x 6
+#    uniprot_source uniprot_target type  effect genesymbol_source
+#    <chr>          <chr>          <chr> <chr>  <chr>
+#  1 Q03113         Q15283         PPrel activ. GNA12
+#  2 Q9Y4G8         P62070         PPrel activ. RAPGEF2
+#  3 Q13972         P62070         PPrel activ. RASGRF1
+#  4 O95267         P62070         PPrel activ. RASGRP1
+# # . with 6,760 more rows, and 1 more variable: genesymbol_target <chr>
+}
+
+}
 \seealso{
 \itemize{
     \item{\code{\link{kegg_pathway_list}}}

@@ -37,6 +37,20 @@
 #'
 #' @return A data frame (tibble) of interactions.
 #'
+#' @examples
+#' \donttest{
+#' kegg_pw <- kegg_pathways_download(simplify = TRUE)
+#' kegg_pw
+#' # # A tibble: 6,765 x 6
+#' #    uniprot_source uniprot_target type  effect genesymbol_source
+#' #    <chr>          <chr>          <chr> <chr>  <chr>
+#' #  1 Q03113         Q15283         PPrel activ. GNA12
+#' #  2 Q9Y4G8         P62070         PPrel activ. RAPGEF2
+#' #  3 Q13972         P62070         PPrel activ. RASGRF1
+#' #  4 O95267         P62070         PPrel activ. RASGRP1
+#' # # . with 6,760 more rows, and 1 more variable: genesymbol_target <chr>
+#' }
+#'
 #' @importFrom magrittr %>%
 #' @importFrom progress progress_bar
 #' @importFrom dplyr filter mutate bind_rows
