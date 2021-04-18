@@ -33,5 +33,8 @@ kegg_pws
     \item{\code{\link{kegg_process}}}
     \item{\code{\link{kegg_pathway_download}}}
     \item{\code{\link{kegg_pathways_download}}}
+    \item{\code{\link{kegg_open}}}
+    \item{\code{\link{kegg_picture}}}
+    \item{\code{\link{kegg_info}}}
 }
 }

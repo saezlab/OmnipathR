@@ -25,6 +25,13 @@ is located in the system path, you can set the option to point to it:
 can also include this in your \code{.Rprofile} file.
 }
 \examples{
-if(getOption('browser') != "") kegg_open("hsa04710")
+if(getOption('browser') != '') kegg_open('hsa04710')
 
+}
+\seealso{
+\itemize{
+    \item{\code{\link{kegg_pathway_list}}}
+    \item{\code{\link{kegg_picture}}}
+    \item{\code{\link{kegg_info}}}
+}
 }

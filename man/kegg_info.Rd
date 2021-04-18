@@ -20,3 +20,10 @@ Information about a KEGG Pathway
 kegg_info('map00563')
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{kegg_pathway_list}}}
+    \item{\code{\link{kegg_picture}}}
+    \item{\code{\link{kegg_open}}}
+}
+}

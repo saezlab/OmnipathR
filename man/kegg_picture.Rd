@@ -28,4 +28,10 @@ kegg_picture('hsa04710', path = 'foo/bar/circadian.png')
 }
 \seealso{
 \code{\link{kegg_pathway_list}}
+
+\itemize{
+    \item{\code{\link{kegg_pathway_list}}}
+    \item{\code{\link{kegg_open}}}
+    \item{\code{\link{kegg_info}}}
+}
 }

@@ -118,6 +118,9 @@ kegg_pathways_download <- function(max_expansion = NULL, simplify = FALSE){
 #'     \item{\code{\link{kegg_process}}}
 #'     \item{\code{\link{kegg_pathway_download}}}
 #'     \item{\code{\link{kegg_pathways_download}}}
+#'     \item{\code{\link{kegg_open}}}
+#'     \item{\code{\link{kegg_picture}}}
+#'     \item{\code{\link{kegg_info}}}
 #' }
 kegg_pathway_list <- function(){
 
@@ -436,11 +439,16 @@ kegg_simplify <- function(tbl, simplify = TRUE){
 #' can also include this in your \code{.Rprofile} file.
 #'
 #' @examples
-#' if(getOption('browser') != "") kegg_open("hsa04710")
+#' if(getOption('browser') != '') kegg_open('hsa04710')
 #'
 #' @importFrom magrittr %>%
 #' @importFrom utils browseURL
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_pathway_list}}}
+#'     \item{\code{\link{kegg_picture}}}
+#'     \item{\code{\link{kegg_info}}}
+#' }
 kegg_open <- function(pathway_id){
 
     'omnipath.kegg_pathway_url' %>%
@@ -470,6 +478,11 @@ kegg_open <- function(pathway_id){
 #' @importFrom magrittr %<>% %>%
 #' @export
 #' @seealso \code{\link{kegg_pathway_list}}
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_pathway_list}}}
+#'     \item{\code{\link{kegg_open}}}
+#'     \item{\code{\link{kegg_info}}}
+#' }
 kegg_picture <- function(pathway_id, path = NULL){
 
     imgname <- sprintf('%s.png', pathway_id)
@@ -504,6 +517,11 @@ kegg_picture <- function(pathway_id, path = NULL){
 #' @importFrom xml2 xml_text xml_find_first
 #' @importFrom stringr str_replace
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_pathway_list}}}
+#'     \item{\code{\link{kegg_picture}}}
+#'     \item{\code{\link{kegg_open}}}
+#' }
 kegg_info <- function(pathway_id){
 
     info <- list(
