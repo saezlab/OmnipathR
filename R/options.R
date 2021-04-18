@@ -140,7 +140,8 @@
         'https://www.genome.jp/kegg-bin/show_pathway?',
         'map=%s&show_description=show'
     ),
-    omnipath.kegg_pw_png_url = 'https://www.genome.jp/kegg/pathway/%s/%s.png'
+    omnipath.kegg_pw_png_url = 'https://www.genome.jp/kegg/pathway/%s/%s.png',
+    omnipath.kegg_pw_info_url = 'https://www.genome.jp/entry/pathway+%s'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'

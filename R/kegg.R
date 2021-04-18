@@ -486,3 +486,99 @@ kegg_picture <- function(pathway_id, path = NULL){
     invisible
 
 }
+
+
+#' Information about a KEGG Pathway
+#'
+#' @param pathway_id Character: a KEGG Pathway identifier, e.g. "hsa04710".
+#'     For a complete list of IDs see \code{\link{kegg_pathway_list}}.
+#'
+#' @return List with the pathway information.
+#'
+#' @examples
+#' kegg_info('map00563')
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom purrr map discard keep walk
+#' @importFrom xml2 read_html xml_find_all xml_children
+#' @importFrom xml2 xml_text xml_find_first
+#' @importFrom stringr str_replace
+#' @export
+kegg_info <- function(pathway_id){
+
+    info <- list(
+        id = pathway_id,
+        name = NULL,
+        desc = NULL,
+        pubmed = NULL,
+        diseases = NULL,
+        rel_pathways = NULL,
+        module = NULL
+    )
+
+    fields <- list(
+        Description = 'desc',
+        Disease = 'diseases',
+        Reference = 'pubmed',
+        Name = 'name',
+        Module = 'module',
+        Relatedpathway = 'rel_pathways'
+    )
+
+    top_env <- environment()
+
+    path <-
+        'omnipath.kegg_pw_info_url' %>%
+        download_to_cache(url_param = list(pathway_id), ext = 'html')
+
+    path %>%
+    read_html %>%
+    xml_find_all('.//tr') %>%
+    map(xml_children) %>%
+    discard(function(ch){length(ch) < 2}) %>%
+    map(
+        function(ch){
+            list(
+                ch[1] %>% xml_text,
+                ch[2]
+            )
+        }
+    ) %>%
+    keep(function(item){item[[1]] %in% names(fields)}) %>%
+    walk(
+        function(item){
+            tbl <- item[[2]] %>% xml_find_first('.//table')
+            key <- fields[[item[[1]]]]
+            content <-
+                item[[2]] %>%
+                {`if`(
+                    is.na(tbl),
+                    xml_text(.),
+                    kegg_info_tbl(.)
+                )} %>%
+                str_replace('^PMID:', '')
+            info[[key]] %<>% c(content)
+            assign('info', info, envir = top_env)
+        }
+    )
+
+    return(info)
+
+}
+
+
+#' Process a table from a KEGG pathway info sheet
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map discard map_chr
+#' @importFrom xml2 xml_find_all xml_children xml_text
+#' @noRd
+kegg_info_tbl <- function(tbl){
+
+    tbl %>%
+    xml_find_all('.//tr') %>%
+    map(xml_children) %>%
+    discard(function(ch){length(ch) < 2}) %>%
+    map_chr(function(ch){ch[2] %>% xml_text})
+
+}
