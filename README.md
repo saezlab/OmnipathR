@@ -2,23 +2,57 @@
 
 # OmnipathR
 
-Utility functions to work with **OmniPath** in `R`.
+An `R` client for the **OmniPath** web service and many other resources.
 
-## Description
+## Package contents
 
-*OmnipathR* is an `R` package built to provide easy access to the data stored
-in the OmniPath webservice:
+* Client for the OmniPath web service
+* Functions for post-processing OmniPath data
+* Access to other databases (17+ resources, see below)
+* Integration to NicheNet, a method to infer ligand activities from
+   transcriptomics data
+
+### OmniPath web service client
+
+*OmnipathR* retrieves the data from the OmniPath web service at
 
   <https://omnipathdb.org/>
 
-The webservice implements a very simple REST style API. This package make
+The web service implements a very simple REST style API. This package make
 requests by the HTTP protocol to retreive the data. Hence, fast Internet
 access is required for a proper use of *OmnipathR*.
 
-The package also provides some utility functions to filter, analyse and
-visualize the data.
+#### What is OmniPath?
 
-## Query types
+OmniPath is a database of:
+
+* Protein-protein, TF target and miRNA-mRNA interactions
+* Enzyme-PTM relationships
+* Protein complexes
+* Annotations of protein function, structure, localization, expression
+* Intercellular communication roles of proteins
+
+To learn more about OmniPath, you can visit its [website][1], or read our
+recent [publication][4] or our first [paper from 2016][5], especially its
+[supplementary material][6].
+
+
+### Access to further resources
+
+The package provides access to a number of other databases: BioPlex,
+ConsensusPathDB, EVEX, Gene Ontology, Guide to Pharmacology (IUPHAR/BPS),
+Harmonizome, HTRIdb, Human Phenotype Ontology, InWeb InBioMap, KEGG Pathway,
+Pathway Commons, Ramilowski et al. 2015, RegNetwork, ReMap, TF census,
+TRRUST and Vinayagam et al. 2011.
+
+## Documentation
+
+The latest version of the reference manual is available from
+<https://static.omnipathdb.org/omnipathr_manual.pdf>. Tutorials can be
+found at <https://workflows.omnipathdb.org/>. Sroll down for quick start
+examples.
+
+## OmniPath query types
 
 We provide here a brief summary about the data available through *OmnipathR*.
 *OmnipathR* provides access to 5 types of queries:
@@ -27,10 +61,12 @@ We provide here a brief summary about the data available through *OmnipathR*.
 2. **Enzyme-substrate**: enzyme-PTM (post-translational modification)
     relationships.
 3. **Complexes**: comprehensive database of more than 22000 protein complexes.
-4. **Annotations**: large variety of data about proteins and complexes features.
+4. **Annotations**: large variety of data about proteins and complexes
+    features.
 5. **Intercell**: information on the roles in inter-cellular signaling.
 
-For a more detailed information, we recommend you to visit the following sites:
+For a more detailed information, we recommend you to visit the following
+sites:
 
   <https://omnipathdb.org/>
 
@@ -42,7 +78,10 @@ For a more detailed information, we recommend you to visit the following sites:
 
 
 ## Installation
+
 First of all, you need a current version of `R` (<https://r-project.org>).
+
+### From Bioconductor
 *OmnipathR* is a freely available package deposited on *Bioconductor* and
 *Github*:
 (<https://bioconductor.org/>, <https://github.com/saezlab/OmnipathR>).
@@ -59,7 +98,11 @@ BiocManager::install('OmnipathR', version = '3.12')
 BiocManager::install('OmnipathR', version = 'devel')
 ```
 
-Sometimes it's easier to install directly from github:
+### From github
+
+We add new features to OmnipathR way more often than the Bioconductor release
+frequency. To make use of the recent developments, you can use `devtools` to
+install the package directly from github:
 
 ```{r}
 require(devtools)
@@ -194,3 +237,11 @@ Please use the Github issue page to report bugs or for questions:
   <https://github.com/saezlab/OmnipathR/issues>
 
 Many thanks for using *OmnipathR*!
+
+
+[1]: https://omnipathdb.org/
+[2]: https://apps.cytoscape.org/apps/omnipath
+[3]: https://github.com/saezlab/pypath
+[4]: https://www.embopress.org/doi/full/10.15252/msb.20209923
+[5]: https://www.nature.com/articles/nmeth.4077
+[6]: https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4077/MediaObjects/41592_2016_BFnmeth4077_MOESM495_ESM.pdf
