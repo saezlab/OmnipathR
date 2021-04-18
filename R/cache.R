@@ -94,7 +94,8 @@ omnipath_new_cachedir <- function(path){
 #' @param path Character: path to the new cache directory. If don't exist,
 #'     the directories will be created. If the path is an existing cache
 #'     directory, the package's cache database for the current session will
-#'     be loaded from the database in the directory.
+#'     be loaded from the database in the directory. If \code{NULL}, the
+#'     cache directory will be set to its default path.
 #'
 #' @return Returns \code{NULL}.
 #'
@@ -102,11 +103,13 @@ omnipath_new_cachedir <- function(path){
 #' tmp_cache <- tempdir()
 #' omnipath_set_cachedir(tmp_cache)
 #' # restore the default cache directory:
-#' omnipath_init_cache()
+#' omnipath_set_cachedir()
 #'
+#' @importFrom magrittr %<>%
 #' @export
-omnipath_set_cachedir <- function(path){
+omnipath_set_cachedir <- function(path = NULL){
 
+    path %<>% if_null(omnipath_default_cachedir())
     options(omnipath.cachedir = path)
     omnipath_new_cachedir(path)
     omnipath_read_cache_db()
