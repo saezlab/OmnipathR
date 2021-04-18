@@ -48,6 +48,7 @@
 #' #  2 Q9Y4G8         P62070         PPrel activ. RAPGEF2
 #' #  3 Q13972         P62070         PPrel activ. RASGRF1
 #' #  4 O95267         P62070         PPrel activ. RASGRP1
+#' #  5 P62834         P15056         PPrel activ. RAP1A
 #' # # . with 6,760 more rows, and 1 more variable: genesymbol_target <chr>
 #' }
 #'
