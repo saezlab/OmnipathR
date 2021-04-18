@@ -37,46 +37,47 @@ URL: https://saezlab.github.io/OmnipathR/
 BugReports: https://github.com/saezlab/OmnipathR/issues
 biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
     DataImport, DataRepresentation, GeneSignaling, GeneRegulation,
-    SystemsBiology, Transcriptomics, SingleCell, Annotation
+    SystemsBiology, Transcriptomics, SingleCell, Annotation, KEGG
 Encoding: UTF-8
 VignetteBuilder: knitr
 Depends:
     R(>= 4.1)
 Imports:
-    utils,
-    jsonlite,
-    progress,
-    magrittr,
-    purrr,
-    readr,
-    dplyr,
-    tidyr,
-    rappdirs,
     checkmate,
-    yaml,
-    digest,
-    tools,
     curl,
+    digest,
+    dplyr,
     httr,
-    stringr,
+    igraph,
+    jsonlite,
+    later,
+    logger,
+    magrittr,
+    progress,
+    purrr,
+    rappdirs,
+    readr,
     readxl,
     rlang,
-    tibble,
-    igraph,
     stats,
-    logger,
+    stringr,
+    tibble,
+    tidyr,
     tidyselect,
-    later
+    tools,
+    utils,
+    xml2,
+    yaml
 Suggests:
-    dnet,
-    gprofiler2,
     BiocStyle,
-    testthat,
-    knitr,
-    rmarkdown,
+    dnet,
     ggplot2,
     ggraph,
+    gprofiler2,
+    knitr,
     mlrMBO,
+    ParamHelpers,
+    rmarkdown,
     smoof,
-    ParamHelpers
+    testthat
 RoxygenNote: 7.1.1
