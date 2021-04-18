@@ -131,7 +131,17 @@
     omnipath.go_full_url = 'http://purl.obolibrary.org/obo/go/%s.obo',
     omnipath.go_slim_url = (
         'http://current.geneontology.org/ontology/subsets/goslim_%s.obo'
-    )
+    ),
+    omnipath.kegg_list_url = 'http://www.genome.jp/kegg/pathway.html',
+    omnipath.kegg_kgml_url = (
+        'http://www.kegg.jp/kegg-bin/download?entry=%s&format=kgml'
+    ),
+    omnipath.kegg_pathway_url = paste0(
+        'https://www.genome.jp/kegg-bin/show_pathway?',
+        'map=%s&show_description=show'
+    ),
+    omnipath.kegg_pw_png_url = 'https://www.genome.jp/kegg/pathway/%s/%s.png',
+    omnipath.kegg_pw_info_url = 'https://www.genome.jp/entry/pathway+%s'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'

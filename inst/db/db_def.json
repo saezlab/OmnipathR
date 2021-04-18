@@ -203,5 +203,19 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "up_gs_human": {
+        "name": ["UniProt-GeneSymbol table (human)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "uniprot_full_id_mapping_table",
+        "loader_param": {
+            "to": "genesymbol",
+            "organism": 9606
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }

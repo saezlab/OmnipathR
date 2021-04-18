@@ -89,6 +89,30 @@ omnipath_new_cachedir <- function(path){
 }
 
 
+#' Change the cache directory
+#'
+#' @param path Character: path to the new cache directory. If don't exist,
+#'     the directories will be created. If the path is an existing cache
+#'     directory, the package's cache database for the current session will
+#'     be loaded from the database in the directory.
+#'
+#' @return Returns \code{NULL}.
+#'
+#' @examples
+#' tmp_cache <- tempdir()
+#' omnipath_set_cachedir(tmp_cache)
+#' # restore the default cache directory:
+#' omnipath_init_cache()
+#'
+#' @export
+omnipath_set_cachedir <- function(path){
+
+    options(omnipath.cachedir = path)
+    omnipath_new_cachedir(path)
+    omnipath_read_cache_db()
+}
+
+
 #' Tells if a directory looks like an OmnipathR cache directory
 #'
 #' @noRd

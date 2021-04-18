@@ -229,7 +229,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' the protein), uniprot (UniProtKB ID, e.g. P00533).
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate rename
+#' @importFrom dplyr mutate rename filter
 #' @importFrom tidyr separate_rows
 #' @importFrom rlang !! enquo
 #' @export
@@ -306,6 +306,7 @@ uniprot_full_id_mapping_table <- function(
         To = strip_semicol(To)
     ) %>%
     separate_rows(From, sep = ';') %>%
-    separate_rows(To, sep = ';')
+    separate_rows(To, sep = ';') %>%
+    filter(!is.na(From) & !is.na(To))
 
 }
