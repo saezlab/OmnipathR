@@ -66,7 +66,8 @@
 #' @importFrom magrittr %>% %<>%
 #' @importFrom stringr str_split_fixed str_trim str_sub
 #' @importFrom stringr str_to_upper str_split
-#' @importFrom dplyr mutate filter select pull summarize group_by last first
+#' @importFrom dplyr mutate filter select pull summarize
+#' @importFrom dplyr group_by row_number last first
 #' @importFrom tidyr separate chop
 #' @importFrom purrr map_chr map2
 #' @importFrom logger log_trace
@@ -123,7 +124,7 @@ obo_parser <- function(
         as_tibble() %>%
         mutate(
             value = str_trim(value),
-            row = 1:n()
+            row = row_number()
         )
 
     terms <-

@@ -364,6 +364,9 @@ kegg_process <- function(
     simplify = FALSE
 ){
 
+    # NSE vs. R CMD check workaround
+    From <- uniprot_source <- uniprot_target <- relation_id <- NULL
+
     if(!nrow(relations)){
 
         return(NULL)
