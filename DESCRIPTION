@@ -66,7 +66,8 @@ Imports:
     stats,
     logger,
     tidyselect,
-    later
+    later,
+    xml2
 Suggests:
     dnet,
     gprofiler2,
