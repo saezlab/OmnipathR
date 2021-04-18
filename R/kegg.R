@@ -25,6 +25,16 @@
 #' Downloads all pathway diagrams in the KEGG Pathways database in KGML
 #' format and processes the XML to extract the interactions.
 #'
+#' @param max_expansion Numeric: the maximum number of relations
+#'     derived from a single relation record. As one entry might represent
+#'     more than one molecular entities, one relation might yield a large
+#'     number of relations in the processing. This happens in a combinatorial
+#'     way, e.g. if the two entries represent 3 and 4 entities, that results
+#'     12 relations. If \code{NULL}, all relations will be expanded.
+#' @param simplify Logical: remove KEGG's internal identifiers and the
+#'     pathway annotations, keep only unique interactions with direction
+#'     and effect sign.
+#'
 #' @return A data frame (tibble) of interactions.
 #'
 #' @importFrom magrittr %>%
@@ -33,7 +43,15 @@
 #' @importFrom purrr pmap
 #' @importFrom stringr str_pad str_trunc
 #' @export
-kegg_pathways_download <- function(){
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_pathway_list}}}
+#'     \item{\code{\link{kegg_process}}}
+#'     \item{\code{\link{kegg_pathway_download}}}
+#' }
+kegg_pathways_download <- function(max_expansion = NULL, simplify = FALSE){
+
+    # NSE vs. R CMD check workaround
+    id <- NULL
 
     pathways <-
         kegg_pathway_list() %>%
@@ -54,11 +72,16 @@ kegg_pathways_download <- function(){
         function(id, name){
             display_name <- name %>% str_trunc(22) %>% str_pad(22, 'right')
             pb$tick(tokens = list(pw = display_name))
-            kegg_pathway_download(id) %>%
+            kegg_pathway_download(
+                id,
+                max_expansion = max_expansion,
+                simplify = simplify
+            ) %>%
             null_or_call(mutate, pathway = name, pathway_id = id)
         }
     ) %>%
-    bind_rows
+    bind_rows %>%
+    kegg_simplify(simplify = simplify)
 
 }
 
@@ -91,6 +114,11 @@ kegg_pathways_download <- function(){
 #' @importFrom tidyr unnest_wider
 #' @importFrom tibble tibble
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_process}}}
+#'     \item{\code{\link{kegg_pathway_download}}}
+#'     \item{\code{\link{kegg_pathways_download}}}
+#' }
 kegg_pathway_list <- function(){
 
     # NSE vs. R CMD check workaround
@@ -143,6 +171,9 @@ kegg_pathway_list <- function(){
 #'     number of relations in the processing. This happens in a combinatorial
 #'     way, e.g. if the two entries represent 3 and 4 entities, that results
 #'     12 relations. If \code{NULL}, all relations will be expanded.
+#' @param simplify Logical: remove KEGG's internal identifiers and the
+#'     pathway annotations, keep only unique interactions with direction
+#'     and effect sign.
 #'
 #' @return A data frame (tibble) of interactions if \code{process} is
 #'     \code{TRUE}, otherwise a list with two data frames: "entries" is
@@ -173,10 +204,16 @@ kegg_pathway_list <- function(){
 #' @importFrom dplyr mutate row_number
 #' @importFrom tibble tibble
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_process}}}
+#'     \item{\code{\link{kegg_pathways_download}}}
+#'     \item{\code{\link{kegg_pathway_list}}}
+#' }
 kegg_pathway_download <- function(
     pathway_id,
     process = TRUE,
-    max_expansion = NULL
+    max_expansion = NULL,
+    simplify = FALSE
 ){
 
     # NSE vs. R CMD check workaround
@@ -241,7 +278,7 @@ kegg_pathway_download <- function(
 
     if(process){
 
-        kegg_process(entries, relations, max_expansion)
+        kegg_process(entries, relations, max_expansion, simplify)
 
     }else{
 
@@ -271,6 +308,9 @@ kegg_pathway_download <- function(
 #'     number of relations in the processing. This happens in a combinatorial
 #'     way, e.g. if the two entries represent 3 and 4 entities, that results
 #'     12 relations. If \code{NULL}, all relations will be expanded.
+#' @param simplify Logical: remove KEGG's internal identifiers and the
+#'     pathway annotations, keep only unique interactions with direction
+#'     and effect sign.
 #'
 #' @return A data frame (tibble) of interactions. In rare cases when a
 #'     pathway doesn't contain any relation, returns \code{NULL}.
@@ -295,7 +335,17 @@ kegg_pathway_download <- function(
 #' @importFrom tidyr separate_rows
 #' @importFrom dplyr left_join mutate n rename group_by filter ungroup
 #' @export
-kegg_process <- function(entries, relations, max_expansion = NULL){
+#' @seealso \itemize{
+#'     \item{\code{\link{kegg_pathway_download}}}
+#'     \item{\code{\link{kegg_pathways_download}}}
+#'     \item{\code{\link{kegg_pathway_list}}}
+#' }
+kegg_process <- function(
+    entries,
+    relations,
+    max_expansion = NULL,
+    simplify = FALSE
+){
 
     if(!nrow(relations)){
 
@@ -332,6 +382,39 @@ kegg_process <- function(entries, relations, max_expansion = NULL){
         group_by(., relation_id) %>%
         filter(n() <= max_expansion) %>%
         ungroup
-    )}
+    )} %>%
+    kegg_simplify(simplify = simplify)
+
+}
+
+
+#' Keep only the most important columns of KEGG data
+#'
+#' Removes KEGG's internal identifiers and the pathway annotations, keeps
+#' only unique interactions with direction and effect sign.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select distinct
+#' @noRd
+kegg_simplify <- function(tbl, simplify = TRUE){
+
+    # NSE vs. R CMD check workaround
+    uniprot_source <- uniprot_target <- type <- effect <-
+    genesymbol_source <- genesymbol_target <- NULL
+
+    `if`(
+        simplify,
+        tbl %>%
+            select(
+                uniprot_source,
+                uniprot_target,
+                type,
+                effect,
+                genesymbol_source,
+                genesymbol_target
+            ) %>%
+            distinct,
+        tbl
+    )
 
 }
