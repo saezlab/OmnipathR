@@ -135,7 +135,12 @@
     omnipath.kegg_list_url = 'http://www.genome.jp/kegg/pathway.html',
     omnipath.kegg_kgml_url = (
         'http://www.kegg.jp/kegg-bin/download?entry=%s&format=kgml'
-    )
+    ),
+    omnipath.kegg_pathway_url = paste0(
+        'https://www.genome.jp/kegg-bin/show_pathway?',
+        'map=%s&show_description=show'
+    ),
+    omnipath.kegg_pw_png_url = 'https://www.genome.jp/kegg/pathway/%s/%s.png'
 )
 
 .omnipath_local_config_fname <- 'omnipathr.yml'

@@ -418,3 +418,71 @@ kegg_simplify <- function(tbl, simplify = TRUE){
     )
 
 }
+
+
+#' Open a KEGG Pathway diagram in the browser
+#'
+#' @param pathway_id Character: a KEGG Pathway identifier, e.g. "hsa04710".
+#'     For a complete list of IDs see \code{\link{kegg_pathway_list}}.
+#'
+#' @return Returns \code{NULL}.
+#'
+#' @details
+#' To open URLs in the web browser the "browser" option must to be set to a
+#' a valid executable. You can check the value of this option by
+#' \code{getOption("browser")}. If your browser is firefox and the executable
+#' is located in the system path, you can set the option to point to it:
+#' \code{options(browser = "firefox")}. To make it a permanent setting, you
+#' can also include this in your \code{.Rprofile} file.
+#'
+#' @examples
+#' if(getOption('browser') != "") kegg_open("hsa04710")
+#'
+#' @importFrom magrittr %>%
+#' @importFrom utils browseURL
+#' @export
+kegg_open <- function(pathway_id){
+
+    'omnipath.kegg_pathway_url' %>%
+    url_parser(url_param = list(pathway_id)) %>%
+    browseURL
+
+}
+
+
+#' Download a pathway diagram as a picture
+#'
+#' Downloads a KEGG Pathway diagram as a PNG image.
+#'
+#' @param pathway_id Character: a KEGG Pathway identifier, e.g. "hsa04710".
+#'     For a complete list of IDs see \code{\link{kegg_pathway_list}}.
+#' @param path Character: save the image to this path. If \code{NULL}, the
+#'     image will be saved in the current directory under the name
+#'     \code{<pathway_id>.png}.
+#'
+#' @return Invisibly returns the path to the downloaded file.
+#'
+#' @examples
+#' kegg_picture('hsa04710')
+#' kegg_picture('hsa04710', path = 'foo/bar')
+#' kegg_picture('hsa04710', path = 'foo/bar/circadian.png')
+#'
+#' @importFrom magrittr %<>% %>%
+#' @export
+#' @seealso \code{\link{kegg_pathway_list}}
+kegg_picture <- function(pathway_id, path = NULL){
+
+    imgname <- sprintf('%s.png', pathway_id)
+
+    path %<>%
+        if_null('.') %>%
+        {`if`(endsWith(., '.png'), ., file.path(., imgname))}
+
+    path %>% dirname %>% dir.create(recursive = TRUE, showWarnings = FALSE)
+
+    'omnipath.kegg_pw_png_url' %>%
+    url_parser(url_param = list(substr(pathway_id, 1, 3), pathway_id)) %>%
+    download_base(fun = NULL, path = path) %>%
+    invisible
+
+}
