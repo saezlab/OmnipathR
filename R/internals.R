@@ -162,6 +162,8 @@ download_base <- function(
             }else{
 
                 log_warn(msg)
+                # to avoid too fast retries
+                Sys.sleep(1)
 
             }
 
@@ -409,17 +411,17 @@ archive_downloader <- function(
         # downloading the data
         curl_handle <-
             new_handle() %>%
-            handle_setopt(
-                url = url,
-                verbose = curl_verbose,
-                ...
-            ) %>%
+            handle_setheaders(.list = http_headers) %>%
             {`if`(
                 is.null(post),
                 .,
                 exec(handle_setform, ., !!!post)
             )} %>%
-            handle_setheaders(.list = http_headers)
+            handle_setopt(
+                url = url,
+                verbose = curl_verbose,
+                ...
+            )
 
         success <- download_base(
             url = url,
