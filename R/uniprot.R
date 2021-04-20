@@ -39,6 +39,7 @@
 #' the table here: \url{https://www.uniprot.org/help/api_idmapping}
 #'
 #' @importFrom magrittr %T>%
+#' @importFrom logger log_trace
 #' @export
 #'
 #' @examples
@@ -61,6 +62,11 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
         to = to,
         format = 'tab',
         query = paste(identifiers, collapse = ' ')
+    )
+
+    log_trace(
+        'UniProt uploadlists: querying `%s` to `%s`, %d identifiers.',
+        from, to, length(identifiers)
     )
 
     generic_downloader(
@@ -172,6 +178,7 @@ translate_ids <- function(
 #' @return Data frame (tibble) with the requested UniProt entries and fields.
 #'
 #' @importFrom magrittr %>% %T>%
+#' @importFrom logger log_trace
 #' @export
 #'
 #' @examples
@@ -189,6 +196,15 @@ translate_ids <- function(
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 
     fields <- fields %>% paste(collapse = ',')
+
+    log_trace(
+        paste0(
+            'Loading all UniProt records for organism %d ',
+            '(only reviewed: %s); fields: %s'
+        ),
+        organism, reviewed, fields
+    )
+
     reviewed <- `if`(
         is.null(reviewed),
         '',
@@ -232,6 +248,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' @importFrom dplyr mutate rename filter
 #' @importFrom tidyr separate_rows
 #' @importFrom rlang !! enquo
+#' @importFrom logger log_trace
 #' @export
 #'
 #' @examples
@@ -256,7 +273,7 @@ uniprot_full_id_mapping_table <- function(
     # NSE vs. R CMD check workaround
     From <- To <- NULL
 
-    id_types = list(
+    id_types <- list(
         entrez = c('database', 'GeneID'),
         genesymbol = c('genes', 'PREFERRED'),
         genesymbol_syn = c('genes', 'ALTERNATIVE'),
@@ -297,6 +314,14 @@ uniprot_full_id_mapping_table <- function(
     from <-
         .nse_ensure_str(!!enquo(from)) %>%
         get_field_name()
+
+    log_trace(
+        paste0(
+            'Creating ID mapping table from `%s` to `%s`, ',
+            'for organism %d (noly reviewed: %s)'
+        ),
+        from, to, organism, reviewed
+    )
 
     c(from, to) %>%
     all_uniprots(reviewed = reviewed, organism = organism) %>%
