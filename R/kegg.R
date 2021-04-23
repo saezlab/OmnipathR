@@ -457,7 +457,7 @@ kegg_simplify <- function(tbl, simplify = TRUE){
 #' can also include this in your \code{.Rprofile} file.
 #'
 #' @examples
-#' if(getOption('browser') != '') kegg_open('hsa04710')
+#' if(any(getOption('browser') != '')) kegg_open('hsa04710')
 #'
 #' @importFrom magrittr %>%
 #' @importFrom utils browseURL
