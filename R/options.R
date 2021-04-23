@@ -46,103 +46,10 @@
     omnipath.cachedir = NULL,
     omnipath.cache_timeout = 5,
     omnipath.retry_downloads = 3,
-    omnipath.db_lifetime = 300,
-    omnipath.pathwaycommons_url = paste0(
-        'https://www.pathwaycommons.org/archives/PC2/v12/',
-        'PathwayCommons12.All.hgnc.sif.gz'
-    ),
-    omnipath.harmonizome_url = paste0(
-        'https://maayanlab.cloud/static/hdfs/harmonizome/data/',
-        '%s/gene_attribute_edges.txt.gz'
-    ),
-    omnipath.vinayagam_url = paste0(
-        'https://stke.sciencemag.org/content/sigtrans/suppl/2011/09/01/',
-        '4.189.rs8.DC1/4_rs8_Tables_S1_S2_and_S6.zip'
-    ),
-    omnipath.cpdb_url = paste0(
-        'http://cpdb.molgen.mpg.de/download/',
-        'ConsensusPathDB_human_PPI.gz'
-    ),
-    omnipath.evex_url = paste0(
-        'http://evexdb.org/download/network-format/Metazoa/',
-        'Homo_sapiens.tar.gz'
-    ),
-    omnipath.all_uniprots_url = paste0(
-        'https://www.uniprot.org/uniprot/?',
-        'query=*&format=tab&force=true&columns=%s&fil=',
-        'organism:%d%s&compress=no'
-    ),
-    omnipath.uniprot_uploadlists_url = 'https://www.uniprot.org/uploadlists/',
-    omnipath.inbiomap_url = paste0(
-        'https://inbio-discover.com/api/data/map_public/',
-        '2016_09_12/inBio_Map_core_2016_09_12.tar.gz'
-    ),
-    omnipath.inbiomap_login_url = paste0(
-        'https://inbio-discover.com/api/login_guest'
-    ),
-    omnipath.bioplex_1.0_url = paste0(
-        'https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v2.tsv'
-    ),
-    omnipath.bioplex_2.0_url = paste0(
-        'https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v4a.tsv'
-    ),
-    omnipath.bioplex_3.0_url = paste0(
-        'https://bioplex.hms.harvard.edu/data/',
-        'BioPlex_293T_Network_10K_Dec_2019.tsv'
-    ),
-    omnipath.bioplex_HCT116_1.0_url = paste0(
-        'https://bioplex.hms.harvard.edu/data/',
-        'BioPlex_HCT116_Network_5.5K_Dec_2019.tsv'
-    ),
-    omnipath.guide2pharma_url = paste0(
-        'https://www.guidetopharmacology.org/DATA/interactions.tsv'
-    ),
-    omnipath.ramilowski_url = paste0(
-        'https://static-content.springer.com/esm/',
-        'art%%3A10.1038%%2Fncomms8866/MediaObjects/',
-        '41467_2015_BFncomms8866_MOESM611_ESM.xlsx'
-    ),
-    omnipath.regnetwork_url = 'http://www.regnetworkweb.org/download/%s.zip',
-    omnipath.trrust_url = paste0(
-        'https://www.grnpedia.org/trrust/data/trrust_rawdata.%s.tsv'
-    ),
-    omnipath.htridb_url = 'https://rescued.omnipathdb.org/HTRIdb.csv',
-    omnipath.remap_dorothea_url = paste0(
-        'https://github.com/saezlab/dorothea/raw/master/inst/extdata/',
-        'networks/chip_seq/remap/network.rds'
-    ),
-    omnipath.zenodo_url = 'https://zenodo.org/record/%s/files/%s?download=1',
-    omnipath.tfcensus_url = paste0(
-        'https://static-content.springer.com/esm/art%%3A10.1038%%2Fnrg2538/',
-        'MediaObjects/41576_2009_BFnrg2538_MOESM6_ESM.txt'
-    ),
-    omnipath.nichenet_expression_url = paste0(
-        'https://zenodo.org/record/3260758/files/expression_settings.rds'
-    ),
-    omnipath.nichenet_results_dir = 'nichenet_results',
-    omnipath.hpo_url = paste0(
-        'https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/',
-        'lastSuccessfulBuild/artifact/rare-diseases/util/annotation/',
-        'genes_to_phenotype.txt'
-    ),
-    omnipath.go_annot_url = (
-        'http://geneontology.org/gene-associations/goa_%s.gaf.gz'
-    ),
-    omnipath.go_full_url = 'http://purl.obolibrary.org/obo/go/%s.obo',
-    omnipath.go_slim_url = (
-        'http://current.geneontology.org/ontology/subsets/goslim_%s.obo'
-    ),
-    omnipath.kegg_list_url = 'http://www.genome.jp/kegg/pathway.html',
-    omnipath.kegg_kgml_url = (
-        'http://www.kegg.jp/kegg-bin/download?entry=%s&format=kgml'
-    ),
-    omnipath.kegg_pathway_url = paste0(
-        'https://www.genome.jp/kegg-bin/show_pathway?',
-        'map=%s&show_description=show'
-    ),
-    omnipath.kegg_pw_png_url = 'https://www.genome.jp/kegg/pathway/%s/%s.png',
-    omnipath.kegg_pw_info_url = 'https://www.genome.jp/entry/pathway+%s'
+    omnipath.db_lifetime = 300
+
 )
+
 
 .omnipath_local_config_fname <- 'omnipathr.yml'
 
@@ -274,8 +181,9 @@ omnipath_save_config <- function(
 #' }
 #'
 #' @export
-#' @importFrom yaml yaml.load_file
+#' @importFrom yaml yaml.load_file write_yaml
 #' @importFrom magrittr %<>%
+#' @importFrom purrr map discard map_lgl
 omnipath_load_config <- function(
         path = NULL,
         title = 'default',
@@ -290,6 +198,21 @@ omnipath_load_config <- function(
     )
 
     yaml_config <- yaml.load_file(input = path, ...)
+
+    # Earlier we had the URLs in the config. Then I realized it's not a
+    # good practice, and apart from not having them any more, here we
+    # remove them from existing configs.
+    if(yaml_config %>% map_lgl(is.list) %>% all){
+
+        yaml_config %<>% map(
+            ~`[`(
+                .x,
+                .x %>% names %>% discard(endsWith, '_url')
+            )
+        )
+        write_yaml(yaml_config, file = path)
+
+    }
 
     if(title %in% names(yaml_config)){
         this_config <- yaml_config[[title]]
