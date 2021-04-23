@@ -70,7 +70,7 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
     )
 
     generic_downloader(
-        url_key = 'omnipath.uniprot_uploadlists_url',
+        url_key = 'uniprot_uploadlists',
         post = post,
         content_param = list(encoding = 'ASCII'),
         resource = 'UniProt'
@@ -212,7 +212,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     )
 
     generic_downloader(
-        url_key = 'omnipath.all_uniprots_url',
+        url_key = 'all_uniprots_%s',
         url_param = list(fields, organism, reviewed),
         reader_param = list(progress = FALSE),
         resource = 'UniProt'
@@ -318,7 +318,7 @@ uniprot_full_id_mapping_table <- function(
     log_trace(
         paste0(
             'Creating ID mapping table from `%s` to `%s`, ',
-            'for organism %d (noly reviewed: %s)'
+            'for organism %d (only reviewed: %s)'
         ),
         from, to, organism, reviewed
     )

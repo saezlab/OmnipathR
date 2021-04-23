@@ -48,7 +48,7 @@
 pathwaycommons_download <- function(){
 
     generic_downloader(
-        url_key = 'omnipath.pathwaycommons_url',
+        url_key = 'pathwaycommons',
         reader_param = list(
             col_names = c('from', 'type', 'to'),
             col_types = cols()

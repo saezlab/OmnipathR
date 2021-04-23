@@ -39,14 +39,15 @@
     omnipath.url = 'https://omnipathdb.org/',
     omnipath.license = 'academic',
     omnipath.password = NULL,
-    omnipath.print_urls = FALSE,
+    prints = FALSE,
     omnipath.loglevel = 'trace',
     omnipath.console_loglevel = 'success',
     omnipath.logfile = NULL,
     omnipath.cachedir = NULL,
     omnipath.cache_timeout = 5,
     omnipath.retry_downloads = 3,
-    omnipath.db_lifetime = 300
+    omnipath.db_lifetime = 300,
+    omnipath.nichenet_results_dir = 'nichenet_results'
 
 )
 
@@ -322,6 +323,27 @@ omnipath_options_to_config <- function(){
         from_options,
         omnipath.env$config
     )
+
+}
+
+
+#' Populates the URL register
+#'
+#' @importFrom jsonlite from JSON
+#' @importFrom purrr map
+#'
+#' @noRd
+.load_urls <- function(pkgname){
+
+    omnipath.env$urls <-
+        system.file(
+            'internal',
+            'urls.json',
+            package = pkgname,
+            mustWork = TRUE
+        ) %>%
+        fromJSON(simplifyVector = TRUE) %>%
+        map(paste0, collapse = '')
 
 }
 

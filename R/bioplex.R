@@ -36,7 +36,7 @@
 bioplex_download <- function(version){
 
     result <-
-        'omnipath.bioplex_%s_url' %>%
+        'bioplex_%s' %>%
         generic_downloader(
             url_key_param = list(version),
             resource = sprintf('BioPlex %s', version)

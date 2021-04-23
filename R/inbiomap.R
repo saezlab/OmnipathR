@@ -48,7 +48,7 @@ inbiomap_raw <- function(curl_verbose = FALSE){
     # NSE vs. R CMD check workaround
     name <- value <- NULL
 
-    url <- 'omnipath.inbiomap_url' %>% url_parser
+    url <- 'inbiomap' %>% url_parser
     version <- omnipath_cache_latest_or_new(url = url, create = FALSE)
     token <- 'none'
 
@@ -56,7 +56,7 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 
         # acquiring an access token
         payload <- '{"ref":""}'
-        login_url <- 'omnipath.inbiomap_login_url' %>% url_parser
+        login_url <- 'inbiomap_login' %>% url_parser
 
         handle <- new_handle() %>%
             handle_setopt(
@@ -89,7 +89,7 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 
     # doing the actual download or reading from the cache
     archive_extractor(
-        url_key = 'omnipath.inbiomap_url',
+        url_key = 'inbiomap',
         path = 'InBio_Map_core_2016_09_12/core.psimitab',
         reader = read_tsv,
         reader_param = list(

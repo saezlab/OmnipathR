@@ -48,7 +48,7 @@ tfcensus_download <- function(){
 
     suppressWarnings(
         generic_downloader(
-            url_key = 'omnipath.tfcensus_url',
+            url_key = 'tfcensus',
             reader_param = list(
                 skip = 11
             ),

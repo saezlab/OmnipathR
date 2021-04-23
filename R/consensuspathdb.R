@@ -127,7 +127,7 @@ consensuspathdb_download <- function(
 #' @export
 consensuspathdb_raw_table <- function(){
 
-    'omnipath.cpdb_url' %>%
+    'cpdb' %>%
     generic_downloader(
         reader_param = list(
             col_names = c(

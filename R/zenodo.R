@@ -83,7 +83,7 @@ zenodo_download <- function(
         is.null(url_key)
     ){
 
-        url_key <- 'omnipath.zenodo_url'
+        url_key <- 'zenodo'
         url_param <- list(
             as.character(zenodo_record),
             zenodo_fname

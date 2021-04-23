@@ -20,7 +20,25 @@
 #
 
 
-#' Retrieves an URL from options and inserts variable parameters
+
+#' Retrieves an URL from the package's URL register
+#'
+#' @param key Character: name of the option containing the URL
+#' @param key_param List: variables to insert into the `key`.
+#'
+#' @importFrom rlang exec !!!
+#'
+#' @noRd
+get_url <- function(key, param = list()){
+
+    key %>%
+    exec(.fn = sprintf, !!!param) %>%
+    `[[`(omnipath.env$urls, .)
+
+}
+
+
+#' Retrieves an URL and inserts variable parameters
 #'
 #' @param url_key Character: name of the option containing the URL
 #' @param url_key_param List: variables to insert into the `url_key`.
@@ -38,15 +56,15 @@ url_parser <- function(
 ){
 
     url_key %>%
-    c(url_key_param) %>%
-    do.call(what = sprintf) %>%
-    options() %>%
-    `[[`(1) %>%
+    get_url(url_key_param) %>%
     c(url_param) %>%
     do.call(what = sprintf) %>%
     URLencode()
 
 }
+
+
+
 
 
 #' Downloads an URL
@@ -95,7 +113,7 @@ download_base <- function(
     on.exit(options(op))
 
     url_loglevel <- `if`(
-        getOption('omnipath.print_urls'),
+        getOption('prints'),
         omnipath_console_loglevel(),
         logger::INFO
     )

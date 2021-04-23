@@ -54,7 +54,7 @@ trrust_download <- function(organism = 'human'){
     effect <- reference <- NULL
 
     generic_downloader(
-        url_key = 'omnipath.trrust_url',
+        url_key = 'trrust',
         url_param = list(organism),
         reader_param = list(
             col_names = c(

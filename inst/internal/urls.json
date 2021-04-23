@@ -1,0 +1,106 @@
+{
+    "pathwaycommons": [
+        "https://www.pathwaycommons.org/archives/PC2/v12/",
+        "PathwayCommons12.All.hgnc.sif.gz"
+    ],
+    "harmonizome": [
+        "https://maayanlab.cloud/static/hdfs/harmonizome/data/",
+        "%s/gene_attribute_edges.txt.gz"
+    ],
+    "vinayagam": [
+        "https://stke.sciencemag.org/content/sigtrans/suppl/2011/09/01/",
+        "4.189.rs8.DC1/4_rs8_Tables_S1_S2_and_S6.zip"
+    ],
+    "cpdb": [
+        "http://cpdb.molgen.mpg.de/download/",
+        "ConsensusPathDB_human_PPI.gz"
+    ],
+    "evex": [
+        "http://evexdb.org/download/network-format/Metazoa/",
+        "Homo_sapiens.tar.gz"
+    ],
+    "all_uniprots_pir": [
+        "https://pir3.uniprot.org/uniprot/?",
+        "query=*&format=tab&force=true&columns=%s&fil=",
+        "organism:%d%s&compress=no"
+    ],
+    "uniprot_uploadlists_pir": [
+        "https://pir3.uniprot.org/uploadlists/"
+    ],
+    "all_uniprots": [
+        "https://www.uniprot.org/uniprot/?",
+        "query=*&format=tab&force=true&columns=%s&fil=",
+        "organism:%d%s&compress=no"
+    ],
+    "uniprot_uploadlists": [
+        "https://www.uniprot.org/uploadlists/"
+    ],
+    "inbiomap": [
+        "https://inbio-discover.com/api/data/map_public/",
+        "2016_09_12/inBio_Map_core_2016_09_12.tar.gz"
+    ],
+    "inbiomap_login": [
+        "https://inbio-discover.com/api/login_guest"
+    ],
+    "bioplex_1.0": [
+        "https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v2.tsv"
+    ],
+    "bioplex_2.0": [
+        "https://bioplex.hms.harvard.edu/data/BioPlex_interactionList_v4a.tsv"
+    ],
+    "bioplex_3.0": [
+        "https://bioplex.hms.harvard.edu/data/",
+        "BioPlex_293T_Network_10K_Dec_2019.tsv"
+    ],
+    "bioplex_HCT116_1.0": [
+        "https://bioplex.hms.harvard.edu/data/",
+        "BioPlex_HCT116_Network_5.5K_Dec_2019.tsv"
+    ],
+    "guide2pharma": [
+        "https://www.guidetopharmacology.org/DATA/interactions.tsv"
+    ],
+    "ramilowski": [
+        "https://static-content.springer.com/esm/",
+        "art%%3A10.1038%%2Fncomms8866/MediaObjects/",
+        "41467_2015_BFncomms8866_MOESM611_ESM.xlsx"
+    ],
+    "regnetwork": "http://www.regnetworkweb.org/download/%s.zip",
+    "trrust": [
+        "https://www.grnpedia.org/trrust/data/trrust_rawdata.%s.tsv"
+    ],
+    "htridb": "https://rescued.omnipathdb.org/HTRIdb.csv",
+    "remap_dorothea": [
+        "https://github.com/saezlab/dorothea/raw/master/inst/extdata/",
+        "networks/chip_seq/remap/network.rds"
+    ],
+    "zenodo": "https://zenodo.org/record/%s/files/%s?download=1",
+    "tfcensus": [
+        "https://static-content.springer.com/esm/art%%3A10.1038%%2Fnrg2538/",
+        "MediaObjects/41576_2009_BFnrg2538_MOESM6_ESM.txt"
+    ],
+    "nichenet_expression": [
+        "https://zenodo.org/record/3260758/files/expression_settings.rds"
+    ],
+    "hpo": [
+        "https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/",
+        "lastSuccessfulBuild/artifact/rare-diseases/util/annotation/",
+        "genes_to_phenotype.txt"
+    ],
+    "go_annot": [
+        "http://geneontology.org/gene-associations/goa_%s.gaf.gz"
+    ],
+    "go_full": "http://purl.obolibrary.org/obo/go/%s.obo",
+    "go_slim": [
+        "http://current.geneontology.org/ontology/subsets/goslim_%s.obo"
+    ],
+    "kegg_list": "http://www.genome.jp/kegg/pathway.html",
+    "kegg_kgml": [
+        "http://www.kegg.jp/kegg-bin/download?entry=%s&format=kgml"
+    ],
+    "kegg_pathway": [
+        "https://www.genome.jp/kegg-bin/show_pathway?",
+        "map=%s&show_description=show"
+    ],
+    "kegg_pw_png": "https://www.genome.jp/kegg/pathway/%s/%s.png",
+    "kegg_pw_info": "https://www.genome.jp/entry/pathway+%s"
+}
