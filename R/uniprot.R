@@ -65,6 +65,7 @@ uniprot_domains <- decorator %@% function(FUN){
 #'     values.
 #' @param to Identifier type to be retrieved from UniProt. See Details for
 #'     possible values.
+#' @param chunk_size Integer: query the identifiers in chunks of this size.
 #'
 #' @return A data frame (tibble) with columns `From` and `To`, the
 #'     identifiers provided and the corresponding target IDs, respectively.
@@ -73,9 +74,15 @@ uniprot_domains <- decorator %@% function(FUN){
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
 #' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: \url{https://www.uniprot.org/help/api_idmapping}
+#' the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+#' Note: if the number of identifiers is larger than the chunk size the log
+#' message about the cache origin is not guaranteed to be correct (most
+#' of the times it is still correct).
 #'
-#' @importFrom rlang exec !!!
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @importFrom dplyr bind_rows
+#' @importFrom rlang !!
 #' @export
 #'
 #' @examples
@@ -88,9 +95,22 @@ uniprot_domains <- decorator %@% function(FUN){
 #' #   <chr>  <chr>
 #' # 1 P00533 EGFR
 #' # 2 P23771 GATA3
-uniprot_id_mapping_table <- function(identifiers, from, to){
+uniprot_id_mapping_table <- function(
+    identifiers,
+    from,
+    to,
+    chunk_size = 5000
+){
 
-    exec(.uniprot_full_id_mapping_table, !!!as.list(environment()))
+    from <- .nse_ensure_str(!!enquo(from))
+    to <- .nse_ensure_str(!!enquo(to))
+
+    identifiers %>%
+    sort %>%
+    chunks(5000) %>%
+    map(.uniprot_id_mapping_table, from, to) %>%
+    bind_rows() %T>%
+    load_success()
 
 }
 
@@ -107,9 +127,6 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
     to,
     .subdomain = 'www'
 ){
-
-    from <- .nse_ensure_str(!!enquo(from))
-    to <- .nse_ensure_str(!!enquo(to))
 
     post <- list(
         from = from,
@@ -129,8 +146,7 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
         post = post,
         content_param = list(encoding = 'ASCII'),
         resource = 'UniProt'
-    ) %T>%
-    load_success()
+    )
 
 }
 
