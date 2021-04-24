@@ -20,6 +20,43 @@
 #
 
 
+#' Decorator for trying UniProt subdomains
+#'
+#' This has any relevance only in rare cases with OS networking issues.
+#'
+#' @noRd
+uniprot_domains <- decorator %@% function(FUN){
+
+    function(...){
+
+        for(subd in c('www', 'pir3')){
+
+            result <- tryCatch(
+                FUN(..., .subdomain = subd),
+                error = identity
+            )
+
+            if(!inherits(result, 'error')){
+
+                break
+
+            }
+
+        }
+
+        if(inherits(result, 'error')){
+
+            stop(conditionMessage(result))
+
+        }
+
+        return(result)
+
+    }
+
+}
+
+
 #' Retrieves an identifier translation table from the UniProt uploadlists
 #' service
 #'
@@ -38,8 +75,7 @@
 #' identifier type abbreviations used in the UniProt API, please refer to
 #' the table here: \url{https://www.uniprot.org/help/api_idmapping}
 #'
-#' @importFrom magrittr %T>%
-#' @importFrom logger log_trace
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @examples
@@ -53,6 +89,24 @@
 #' # 1 P00533 EGFR
 #' # 2 P23771 GATA3
 uniprot_id_mapping_table <- function(identifiers, from, to){
+
+    exec(.uniprot_full_id_mapping_table, !!!as.list(environment()))
+
+}
+
+
+#' R CMD check workaround, see details at \code{uniprot_id_mapping_table}
+#'
+#' @importFrom magrittr %T>%
+#' @importFrom logger log_trace
+#'
+#' @noRd
+.uniprot_id_mapping_table <- uniprot_domains %@% function(
+    identifiers,
+    from,
+    to,
+    .subdomain = 'www'
+){
 
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
@@ -71,6 +125,7 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
 
     generic_downloader(
         url_key = 'uniprot_uploadlists',
+        url_param = list(.subdomain),
         post = post,
         content_param = list(encoding = 'ASCII'),
         resource = 'UniProt'
@@ -177,8 +232,7 @@ translate_ids <- function(
 #'
 #' @return Data frame (tibble) with the requested UniProt entries and fields.
 #'
-#' @importFrom magrittr %>% %T>%
-#' @importFrom logger log_trace
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @examples
@@ -194,6 +248,24 @@ translate_ids <- function(
 #' #  5 O11G2_HUMAN
 #' # # . with 20,386 more rows
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
+
+    exec(.all_uniprots, !!!as.list(environment()))
+
+}
+
+
+#' R CMD check workaround, see details at \code{all_uniprots}
+#'
+#' @importFrom magrittr %>% %T>%
+#' @importFrom logger log_trace
+#'
+#' @noRd
+.all_uniprots <- uniprot_domains %@% function(
+    fields = 'id',
+    reviewed = TRUE,
+    organism = 9606,
+    .subdomain = 'www'
+){
 
     fields <- fields %>% paste(collapse = ',')
 
@@ -212,8 +284,8 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     )
 
     generic_downloader(
-        url_key = 'all_uniprots_%s',
-        url_param = list(fields, organism, reviewed),
+        url_key = 'all_uniprots',
+        url_param = list(.subdomain, fields, organism, reviewed),
         reader_param = list(progress = FALSE),
         resource = 'UniProt'
     ) %T>%

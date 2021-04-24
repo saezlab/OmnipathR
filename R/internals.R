@@ -113,7 +113,7 @@ download_base <- function(
     on.exit(options(op))
 
     url_loglevel <- `if`(
-        getOption('prints'),
+        getOption('omnipath.print_urls'),
         omnipath_console_loglevel(),
         logger::INFO
     )

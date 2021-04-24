@@ -329,7 +329,7 @@ omnipath_options_to_config <- function(){
 
 #' Populates the URL register
 #'
-#' @importFrom jsonlite from JSON
+#' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #'
 #' @noRd

@@ -19,21 +19,13 @@
         "http://evexdb.org/download/network-format/Metazoa/",
         "Homo_sapiens.tar.gz"
     ],
-    "all_uniprots_pir": [
-        "https://pir3.uniprot.org/uniprot/?",
-        "query=*&format=tab&force=true&columns=%s&fil=",
-        "organism:%d%s&compress=no"
-    ],
-    "uniprot_uploadlists_pir": [
-        "https://pir3.uniprot.org/uploadlists/"
-    ],
     "all_uniprots": [
-        "https://www.uniprot.org/uniprot/?",
+        "https://%s.uniprot.org/uniprot/?",
         "query=*&format=tab&force=true&columns=%s&fil=",
         "organism:%d%s&compress=no"
     ],
     "uniprot_uploadlists": [
-        "https://www.uniprot.org/uploadlists/"
+        "https://%s.uniprot.org/uploadlists/"
     ],
     "inbiomap": [
         "https://inbio-discover.com/api/data/map_public/",
