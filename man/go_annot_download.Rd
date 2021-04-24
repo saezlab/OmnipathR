@@ -18,7 +18,8 @@ in the output.}
 
 \item{slim}{Character: if not \code{NULL}, the name of a GOsubset (slim).
 instead of the full GO annotation, the slim annotation will be
-returned. See details at \code{\link{go_annot_slim}}.}
+returned. See details at \code{\link{go_annot_slim}}. If \code{TRUE},
+the "generic" slim will be used.}
 }
 \value{
 A tibble (data frame) of annotations as it is provided by the
