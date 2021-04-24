@@ -45,7 +45,7 @@
 #' @examples
 #' cpdb_data <- consensuspathdb_download(
 #'     complex_max_size = 1,
-#'     min_score = .98
+#'     min_score = .99
 #' )
 #' nrow(cpdb_data)
 #' # [1] 252302
@@ -127,7 +127,7 @@ consensuspathdb_download <- function(
 #' @export
 consensuspathdb_raw_table <- function(){
 
-    'omnipath.cpdb_url' %>%
+    'cpdb' %>%
     generic_downloader(
         reader_param = list(
             col_names = c(

@@ -51,7 +51,7 @@ guide2pharma_download <- function(){
     # NSE vs. R CMD check workaround
     ligand_gene_symbol <- target_gene_symbol <- NULL
 
-    'omnipath.guide2pharma_url' %>%
+    'guide2pharma' %>%
     generic_downloader(
         reader_param = list(
             col_types = cols(

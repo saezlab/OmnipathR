@@ -33,7 +33,7 @@ to Gene Symbols.
 \examples{
 cpdb_data <- consensuspathdb_download(
     complex_max_size = 1,
-    min_score = .98
+    min_score = .99
 )
 nrow(cpdb_data)
 # [1] 252302

@@ -20,6 +20,43 @@
 #
 
 
+#' Decorator for trying UniProt subdomains
+#'
+#' This has any relevance only in rare cases with OS networking issues.
+#'
+#' @noRd
+uniprot_domains <- decorator %@% function(FUN){
+
+    function(...){
+
+        for(subd in c('www', 'pir3')){
+
+            result <- tryCatch(
+                FUN(..., .subdomain = subd),
+                error = identity
+            )
+
+            if(!inherits(result, 'error')){
+
+                break
+
+            }
+
+        }
+
+        if(inherits(result, 'error')){
+
+            stop(conditionMessage(result))
+
+        }
+
+        return(result)
+
+    }
+
+}
+
+
 #' Retrieves an identifier translation table from the UniProt uploadlists
 #' service
 #'
@@ -28,6 +65,7 @@
 #'     values.
 #' @param to Identifier type to be retrieved from UniProt. See Details for
 #'     possible values.
+#' @param chunk_size Integer: query the identifiers in chunks of this size.
 #'
 #' @return A data frame (tibble) with columns `From` and `To`, the
 #'     identifiers provided and the corresponding target IDs, respectively.
@@ -36,9 +74,15 @@
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
 #' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: \url{https://www.uniprot.org/help/api_idmapping}
+#' the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+#' Note: if the number of identifiers is larger than the chunk size the log
+#' message about the cache origin is not guaranteed to be correct (most
+#' of the times it is still correct).
 #'
-#' @importFrom magrittr %T>%
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @importFrom dplyr bind_rows
+#' @importFrom rlang !!
 #' @export
 #'
 #' @examples
@@ -51,10 +95,38 @@
 #' #   <chr>  <chr>
 #' # 1 P00533 EGFR
 #' # 2 P23771 GATA3
-uniprot_id_mapping_table <- function(identifiers, from, to){
+uniprot_id_mapping_table <- function(
+    identifiers,
+    from,
+    to,
+    chunk_size = 5000
+){
 
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
+
+    identifiers %>%
+    sort %>%
+    chunks(5000) %>%
+    map(.uniprot_id_mapping_table, from, to) %>%
+    bind_rows() %T>%
+    load_success()
+
+}
+
+
+#' R CMD check workaround, see details at \code{uniprot_id_mapping_table}
+#'
+#' @importFrom magrittr %T>%
+#' @importFrom logger log_trace
+#'
+#' @noRd
+.uniprot_id_mapping_table <- uniprot_domains %@% function(
+    identifiers,
+    from,
+    to,
+    .subdomain = 'www'
+){
 
     post <- list(
         from = from,
@@ -63,13 +135,18 @@ uniprot_id_mapping_table <- function(identifiers, from, to){
         query = paste(identifiers, collapse = ' ')
     )
 
+    log_trace(
+        'UniProt uploadlists: querying `%s` to `%s`, %d identifiers.',
+        from, to, length(identifiers)
+    )
+
     generic_downloader(
-        url_key = 'omnipath.uniprot_uploadlists_url',
+        url_key = 'uniprot_uploadlists',
+        url_param = list(.subdomain),
         post = post,
         content_param = list(encoding = 'ASCII'),
         resource = 'UniProt'
-    ) %T>%
-    load_success()
+    )
 
 }
 
@@ -171,7 +248,7 @@ translate_ids <- function(
 #'
 #' @return Data frame (tibble) with the requested UniProt entries and fields.
 #'
-#' @importFrom magrittr %>% %T>%
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @examples
@@ -188,7 +265,34 @@ translate_ids <- function(
 #' # # . with 20,386 more rows
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 
+    exec(.all_uniprots, !!!as.list(environment()))
+
+}
+
+
+#' R CMD check workaround, see details at \code{all_uniprots}
+#'
+#' @importFrom magrittr %>% %T>%
+#' @importFrom logger log_trace
+#'
+#' @noRd
+.all_uniprots <- uniprot_domains %@% function(
+    fields = 'id',
+    reviewed = TRUE,
+    organism = 9606,
+    .subdomain = 'www'
+){
+
     fields <- fields %>% paste(collapse = ',')
+
+    log_trace(
+        paste0(
+            'Loading all UniProt records for organism %d ',
+            '(only reviewed: %s); fields: %s'
+        ),
+        organism, reviewed, fields
+    )
+
     reviewed <- `if`(
         is.null(reviewed),
         '',
@@ -196,8 +300,8 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     )
 
     generic_downloader(
-        url_key = 'omnipath.all_uniprots_url',
-        url_param = list(fields, organism, reviewed),
+        url_key = 'all_uniprots',
+        url_param = list(.subdomain, fields, organism, reviewed),
         reader_param = list(progress = FALSE),
         resource = 'UniProt'
     ) %T>%
@@ -232,6 +336,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' @importFrom dplyr mutate rename filter
 #' @importFrom tidyr separate_rows
 #' @importFrom rlang !! enquo
+#' @importFrom logger log_trace
 #' @export
 #'
 #' @examples
@@ -256,7 +361,7 @@ uniprot_full_id_mapping_table <- function(
     # NSE vs. R CMD check workaround
     From <- To <- NULL
 
-    id_types = list(
+    id_types <- list(
         entrez = c('database', 'GeneID'),
         genesymbol = c('genes', 'PREFERRED'),
         genesymbol_syn = c('genes', 'ALTERNATIVE'),
@@ -297,6 +402,14 @@ uniprot_full_id_mapping_table <- function(
     from <-
         .nse_ensure_str(!!enquo(from)) %>%
         get_field_name()
+
+    log_trace(
+        paste0(
+            'Creating ID mapping table from `%s` to `%s`, ',
+            'for organism %d (only reviewed: %s)'
+        ),
+        from, to, organism, reviewed
+    )
 
     c(from, to) %>%
     all_uniprots(reviewed = reviewed, organism = organism) %>%

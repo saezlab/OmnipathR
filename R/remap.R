@@ -58,7 +58,7 @@
 remap_dorothea_download <- function(){
 
     path <-
-        'omnipath.remap_dorothea_url' %>%
+        'remap_dorothea' %>%
         download_to_cache()
 
     readRDS(path) %>%

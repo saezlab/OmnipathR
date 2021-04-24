@@ -49,7 +49,7 @@ htridb_download <- function(){
 
     suppressWarnings(
         generic_downloader(
-            url_key = 'omnipath.htridb_url',
+            url_key = 'htridb',
             reader = read_delim,
             reader_param = list(
                 delim = ';',

@@ -76,7 +76,7 @@ evex_download <- function(
         article_id <- general_event_id <- NULL
 
     relations <- archive_extractor(
-        url_key = 'omnipath.evex_url',
+        url_key = 'evex',
         path = 'EVEX_relations_9606.tab',
         reader = read_tsv,
         reader_param = list(
@@ -90,7 +90,7 @@ evex_download <- function(
     )
 
     articles <- archive_extractor(
-        url_key = 'omnipath.evex_url',
+        url_key = 'evex',
         path = 'EVEX_articles_9606.tab',
         reader = read_tsv,
         reader_param = list(

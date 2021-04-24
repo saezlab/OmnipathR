@@ -45,7 +45,7 @@
 #' @export
 vinayagam_download <- function(){
 
-    'omnipath.vinayagam_url' %>%
+    'vinayagam' %>%
     archive_extractor(
         path = '2001699_Tables_S1_S2_S6.xls',
         reader_param = list(

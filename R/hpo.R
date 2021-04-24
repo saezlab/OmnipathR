@@ -52,7 +52,7 @@
 #' @importFrom tidyselect everything
 hpo_download <- function(){
 
-    'omnipath.hpo_url' %>%
+    'hpo' %>%
     generic_downloader(
         reader_param = list(
             skip = 1,

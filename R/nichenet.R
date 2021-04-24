@@ -2149,7 +2149,7 @@ nichenet_common_postprocess <- function(
 nichenet_expression_data <- function(){
 
     generic_downloader(
-        url_key = 'omnipath.nichenet_expression_url',
+        url_key = 'nichenet_expression',
         reader = url_rds,
         reader_param = list(),
         resource = 'NicheNet expression data'

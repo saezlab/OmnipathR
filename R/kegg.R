@@ -144,7 +144,7 @@ kegg_pathway_list <- function(){
 
     path <-
         download_to_cache(
-            url_key = 'omnipath.kegg_list_url',
+            url_key = 'kegg_list',
             ext = 'html'
         )
 
@@ -246,7 +246,7 @@ kegg_pathway_download <- function(
 
     path <-
         download_to_cache(
-            url_key = 'omnipath.kegg_kgml_url',
+            url_key = 'kegg_kgml',
             url_param = list(pathway_id),
             http_param = exec(add_headers, !!!req_hdrs),
             ext = 'xml'
@@ -457,7 +457,7 @@ kegg_simplify <- function(tbl, simplify = TRUE){
 #' can also include this in your \code{.Rprofile} file.
 #'
 #' @examples
-#' if(getOption('browser') != '') kegg_open('hsa04710')
+#' if(any(getOption('browser') != '')) kegg_open('hsa04710')
 #'
 #' @importFrom magrittr %>%
 #' @importFrom utils browseURL
@@ -469,7 +469,7 @@ kegg_simplify <- function(tbl, simplify = TRUE){
 #' }
 kegg_open <- function(pathway_id){
 
-    'omnipath.kegg_pathway_url' %>%
+    'kegg_pathway' %>%
     url_parser(url_param = list(pathway_id)) %>%
     browseURL
 
@@ -511,7 +511,7 @@ kegg_picture <- function(pathway_id, path = NULL){
 
     path %>% dirname %>% dir.create(recursive = TRUE, showWarnings = FALSE)
 
-    'omnipath.kegg_pw_png_url' %>%
+    'kegg_pw_png' %>%
     url_parser(url_param = list(substr(pathway_id, 1, 3), pathway_id)) %>%
     download_base(fun = NULL, path = path) %>%
     invisible
@@ -564,7 +564,7 @@ kegg_info <- function(pathway_id){
     top_env <- environment()
 
     path <-
-        'omnipath.kegg_pw_info_url' %>%
+        'kegg_pw_info' %>%
         download_to_cache(url_param = list(pathway_id), ext = 'html')
 
     path %>%

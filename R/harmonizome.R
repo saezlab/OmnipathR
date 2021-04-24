@@ -49,7 +49,7 @@ harmonizome_download <- function(dataset){
 
     path <-
         download_to_cache(
-            url_key = 'omnipath.harmonizome_url',
+            url_key = 'harmonizome',
             url_param = list(dataset)
         )
 

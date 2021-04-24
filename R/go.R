@@ -80,7 +80,7 @@ go_annot_download <- function(
 
     }
 
-    'omnipath.go_annot_url' %>%
+    'go_annot' %>%
     generic_downloader(
         url_param = list(organism),
         reader_param = list(
@@ -180,7 +180,7 @@ go_ontology_download <- function(
     url_param <- `if`(is.null(subset), `if`(basic, 'go-basic', 'go'), subset)
 
     path <-
-        'omnipath.go_%s_url' %>%
+        'go_%s' %>%
         download_to_cache(
             url_param = list(url_param),
             url_key_param = list(url_key_param)

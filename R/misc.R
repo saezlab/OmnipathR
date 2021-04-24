@@ -527,3 +527,16 @@ lists_identical <- function(list1, list2){
     return(TRUE)
 
 }
+
+
+#' Splits a vector into a list of chunks of a certain size
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+chunks <- function(v, size){
+
+    v %>%
+    split(seq_along(.) %>% `-`(1) %>% `%%`(size) %>% `==`(0) %>% cumsum)
+
+}

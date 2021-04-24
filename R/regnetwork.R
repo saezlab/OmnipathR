@@ -56,7 +56,7 @@ regnetwork_download <- function(organism = 'human'){
 
     path <-
         download_to_cache(
-            url_key = 'omnipath.regnetwork_url',
+            url_key = 'regnetwork',
             url_param = list(organism)
         )
 
@@ -123,7 +123,7 @@ regnetwork_directions <- function(organism = 'human'){
 
     path <-
         download_to_cache(
-            url_key = 'omnipath.regnetwork_url',
+            url_key = 'regnetwork',
             url_param = list('RegulatoryDirections')
         )
 

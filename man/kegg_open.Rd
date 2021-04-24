@@ -25,7 +25,7 @@ is located in the system path, you can set the option to point to it:
 can also include this in your \code{.Rprofile} file.
 }
 \examples{
-if(getOption('browser') != '') kegg_open('hsa04710')
+if(any(getOption('browser') != '')) kegg_open('hsa04710')
 
 }
 \seealso{

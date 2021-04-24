@@ -5,7 +5,7 @@
 \title{Retrieves an identifier translation table from the UniProt uploadlists
 service}
 \usage{
-uniprot_id_mapping_table(identifiers, from, to)
+uniprot_id_mapping_table(identifiers, from, to, chunk_size = 5000)
 }
 \arguments{
 \item{identifiers}{Character vector of identifiers}
@@ -15,6 +15,8 @@ values.}
 
 \item{to}{Identifier type to be retrieved from UniProt. See Details for
 possible values.}
+
+\item{chunk_size}{Integer: query the identifiers in chunks of this size.}
 }
 \value{
 A data frame (tibble) with columns `From` and `To`, the
@@ -28,7 +30,10 @@ service
 This function uses the uploadlists service of UniProt to obtain identifier
 translation tables. The possible values for `from` and `to` are the
 identifier type abbreviations used in the UniProt API, please refer to
-the table here: \url{https://www.uniprot.org/help/api_idmapping}
+the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+Note: if the number of identifiers is larger than the chunk size the log
+message about the cache origin is not guaranteed to be correct (most
+of the times it is still correct).
 }
 \examples{
 uniprot_genesymbol <- uniprot_id_mapping_table(

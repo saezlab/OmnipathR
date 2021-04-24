@@ -50,7 +50,7 @@
 ramilowski_download <- function(){
 
     xls_downloader(
-        url_key = 'omnipath.ramilowski_url',
+        url_key = 'ramilowski',
         sheet = 'All.Pairs',
         resource = 'Ramilowski et al. 2015'
     ) %T>%
