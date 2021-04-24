@@ -38,7 +38,8 @@
 #'     in the output.
 #' @param slim Character: if not \code{NULL}, the name of a GOsubset (slim).
 #'     instead of the full GO annotation, the slim annotation will be
-#'     returned. See details at \code{\link{go_annot_slim}}.
+#'     returned. See details at \code{\link{go_annot_slim}}. If \code{TRUE},
+#'     the "generic" slim will be used.
 #'
 #' @return A tibble (data frame) of annotations as it is provided by the
 #'     database
@@ -71,14 +72,14 @@ go_annot_download <- function(
     slim = NULL
 ){
 
-    # NSE vs. R CMD check workaround
-    aspect <- NULL
-
     if(!is.null(slim)){
 
         exec(go_annot_slim, !!!as.list(environment()))
 
     }
+
+    # NSE vs. R CMD check workaround
+    aspect <- NULL
 
     'go_annot' %>%
     generic_downloader(
@@ -244,7 +245,7 @@ go_ontology_download <- function(
 #' # #   db_object_synonym <chr>, db_object_type <fct>
 #' }
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
 #' @importFrom rlang exec !!!
 #' @export
 #' @seealso \itemize{
@@ -258,6 +259,8 @@ go_annot_slim <- function(
     aspects = c('C', 'F', 'P'),
     cache = TRUE
 ){
+
+    slim %<>% {`if`(. == TRUE, 'generic', .)}
 
     cache_pseudo_url <- 'go_annot_slim'
     cache_pseudo_post <- list(
@@ -275,6 +278,15 @@ go_annot_slim <- function(
         omnipath_cache_latest_version
 
     if(is.null(in_cache) || !cache){
+
+        log_success(
+            paste0(
+                'Building GO slim (organism: %s; aspects: %s; slim: %s). ',
+                'This will take 20-40 min at the first ',
+                'time, and will be saved in the cache for later use.'
+            ),
+            organism, paste(aspects, collapse = ', '), slim
+        )
 
         annot <-
             exec(.go_annot_slim, !!!cache_pseudo_post) %>%
@@ -322,7 +334,7 @@ go_annot_slim <- function(
 
     pb <- progress_bar$new(
         total = annot %>% pull(go_id) %>% n_distinct,
-        format = '  Looking up ancestors [:bar] :percent eta: :eta'
+        format = '  Building GO slim [:bar] :percent eta: :eta'
     )
 
     annot %>%
