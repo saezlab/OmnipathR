@@ -234,6 +234,7 @@ obo_parser <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr pull
+#' @importFrom rlang set_names
 #' @noRd
 term_value_list <- function(d){
 
@@ -241,7 +242,7 @@ term_value_list <- function(d){
     value <- term <- NULL
 
     d %>%
-    {setNames(
+    {set_names(
         as.list(pull(., value)),
         pull(., term)
     )}

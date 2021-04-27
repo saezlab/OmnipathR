@@ -38,7 +38,7 @@
 #' rel_list <- relations_table_to_list(obo$relations)
 #'
 #' @importFrom magrittr %>%
-#' @importFrom rlang !! sym
+#' @importFrom rlang !! sym set_names
 #' @importFrom tidyr chop replace_na
 #' @importFrom purrr map2
 #' @importFrom dplyr mutate
@@ -75,7 +75,7 @@ relations_table_to_list <- function(relations){
 
     relations %>%
     chop(c('relation', to_str)) %>%
-    mutate(value = map2(!!to_sym, relation, setNames)) %>%
+    mutate(value = map2(!!to_sym, relation, set_names)) %>%
     term_value_list %>%
     `attr<-`('direction', direction)
 

@@ -1109,6 +1109,7 @@ nichenet_gr_network <- function(
 #' @importFrom magrittr %>%
 #' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
+#' @importFrom rlang set_names
 #'
 #' @noRd
 nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
@@ -1156,7 +1157,7 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
             character() %>%
             list() %>%
             rep(4) %>%
-            setNames(c('from', 'to', 'source', 'database')) %>%
+            set_names(c('from', 'to', 'source', 'database')) %>%
             do.call(what = tibble)
         )
     ) %>%
