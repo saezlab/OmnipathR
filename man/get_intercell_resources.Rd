@@ -14,7 +14,8 @@ get_intercell_resources(dataset = NULL)
 character vector with the names of the databases
 }
 \description{
-Retrieves a list of the databases from \url{https://omnipath.org/intercell}.
+Retrieves a list of the databases from
+\url{https://omnipath.org/intercell}.
 }
 \examples{
 get_intercell_resources()

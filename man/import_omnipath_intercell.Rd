@@ -26,16 +26,17 @@ import_omnipath_intercell(
 }
 \arguments{
 \item{categories}{vector containing the categories to be retrieved.
-All the genes belonging to those categories will be returned. For further
-information about the categories see \code{\link{get_intercell_categories}}}
+All the genes belonging to those categories will be returned. For
+further information about the categories see
+code{\link{get_intercell_categories}}.}
 
 \item{resources}{limit the query to certain resources; see the available
-resources by \code{\link{get_intercell_resources}}}
+resources by \code{\link{get_intercell_resources}}.}
 
 \item{parent}{vector containing the parent classes to be retrieved.
-All the genes belonging to those classes will be returned. For furter
-information about the main classes see
-\code{\link{get_intercell_categories}}}
+All the genes belonging to those classes will be returned. For
+furter information about the main classes see
+\code{\link{get_intercell_categories}}.}
 
 \item{scope}{either `specific` or `generic`}
 
@@ -44,30 +45,29 @@ information about the main classes see
 \item{source}{either `resource_specific` or `composite`}
 
 \item{transmitter}{logical, include only transmitters i.e. proteins
-delivering signal from a cell to
-its environment}
+delivering signal from a cell to its environment.}
 
 \item{receiver}{logical, include only receivers i.e. proteins delivering
-signal to the cell from its environment}
+signal to the cell from its environment.}
 
 \item{secreted}{logical, include only secreted proteins}
 
 \item{plasma_membrane_peripheral}{logical, include only plasma membrane
-peripheral membrane proteins}
+peripheral membrane proteins.}
 
 \item{plasma_membrane_transmembrane}{logical, include only plasma membrane
-transmembrane proteins}
+transmembrane proteins.}
 
 \item{proteins}{limit the query to certain proteins}
 
 \item{topology}{topology categories: one or more of `secreted` (sec),
-`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane` (pmtm)
-(both short or long notation can be used)}
+`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane`
+(pmtm) (both short or long notation can be used).}
 
 \item{causality}{`transmitter` (trans), `receiver` (rec) or `both` (both
-short or long notation can be used)}
+short or long notation can be used).}
 
-\item{...}{Additional optional arguments}
+\item{...}{Additional optional arguments, ignored.}
 }
 \value{
 A dataframe cotaining information about roles in intercellular

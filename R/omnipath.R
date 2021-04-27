@@ -2356,7 +2356,31 @@ get_intercell_resources <- function(dataset = NULL){
 #' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
 #'     annotations will be used instead of the more generic *transmitter* and
 #'     *receiver* categories.
-#' @param ... Ignored.
+#' @param high_confidence Logical: shortcut to do some filtering in order to
+#'     include only higher confidence interactions. The intercell database
+#'     of OmniPath covers a very broad range of possible ways of cell to cell
+#'     communication, and the pieces of information, such as localization,
+#'     topology, function and interaction, are combined from many, often
+#'     independent sources. This unavoidably result some weird and unexpected
+#'     combinations which are false positives in the context of intercellular
+#'     communication. This option sets some minimum criteria to remove most
+#'     (but definitely not all!) of the wrong connections. These criteria
+#'     are the followings: 1) the receiver must be plasma membrane
+#'     transmembrane; 2) the curation effort for interactions must be larger
+#'     than one; 3) the consensus score for annotations must be larger than
+#'     one. 4) the transmitter must be secreted or exposed on the plasma
+#'     membrane. These are very relaxed criteria, you can always tune them
+#'     to be more stringent by filtering manually.
+#' @param simplify Logical: keep only the most often used columns. This
+#'     function combines a network data frame with two copies of the
+#'     intercell annotation data frames, all of them already having quite
+#'     some columns. With this option we keep only the names of the
+#'     interacting pair, their intercellular communication roles, and the
+#'     minimal information of the origin of both the interaction and
+#'     the annotations.
+#' @param ... If \code{simplify} is \code{TRUE}, additional column
+#'     names can be passed here to \code{dplyr::select} on the final
+#'     data frame. Otherwise ignored.
 #'
 #' @examples
 #' intercellNetwork <- import_intercell_network(
@@ -2386,6 +2410,8 @@ import_intercell_network <- function(
     resources = NULL,
     entity_types = NULL,
     ligand_receptor = FALSE,
+    high_confidence = FALSE,
+    simplify = FALSE,
     ...
 ){
 
@@ -2446,13 +2472,40 @@ import_intercell_network <- function(
     transmitters <-
         do.call(import_omnipath_intercell, transmitter_param) %>%
         dplyr::filter(!parent %in% intracell) %>%
-        dplyr::rename(category_source = source)
+        dplyr::rename(category_source = source) %>%
+        {`if`(
+            high_confidence,
+            filter(
+                .,
+                (
+                    secreted |
+                    plasma_membrane_transmembrane |
+                    plasma_membrane_peripheral
+                ) &
+                consensus_score > 1
+            ),
+            .
+        )}
     receivers <-
         do.call(import_omnipath_intercell, receiver_param) %>%
         dplyr::filter(!parent %in% intracell) %>%
-        dplyr::rename(category_source = source)
+        dplyr::rename(category_source = source) %>%
+        {`if`(
+            high_confidence,
+            filter(
+                .,
+                plasma_membrane_transmembrane &
+                consensus_score > 1
+            ),
+            .
+        )}
 
     interactions %>%
+    {`if`(
+        high_confidence,
+        filter(., curation_effort > 1),
+        .
+    )} %>%
     dplyr::inner_join(
         transmitters,
         by = c('source' = 'uniprot')
@@ -2484,7 +2537,29 @@ import_intercell_network <- function(
         )
     ) %>%
     dplyr::summarize_all(first) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    {`if`(
+        simplify,
+        select(
+            .,
+            # TODO: safely merge ... and the built in set of columns
+            source,
+            target,
+            source_genesymbol,
+            target_genesymbol,
+            category_intercell_source,
+            database_intercell_source,
+            category_intercell_target,
+            database_intercell_target,
+            is_directed,
+            is_stimulation,
+            is_inhibition,
+            sources,
+            references,
+            ...
+        ),
+        .
+    )}
 
 }
 

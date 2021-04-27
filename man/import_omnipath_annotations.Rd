@@ -31,7 +31,7 @@ See examples at \code{\link{pivot_annotations}}.}
 \item{...}{Additional arguments.}
 }
 \value{
-A data.frame containing different gene/complex annotations
+A data frame containing different gene and complex annotations.
 }
 \description{
 Imports protein annotations about function, localization, expression,

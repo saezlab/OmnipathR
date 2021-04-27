@@ -14,7 +14,7 @@ get_complex_resources(dataset = NULL)
 character vector with the names of the databases
 }
 \description{
-get the names of the resources from \url{https://omnipath.org/complexes}
+Get the names of the resources from \url{https://omnipath.org/complexes}
 }
 \examples{
 get_complex_resources()

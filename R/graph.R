@@ -252,6 +252,7 @@ format_graph_edges <- function(df_interact, flag){
 #' @importFrom purrr map cross2 map2 transpose
 #' @importFrom magrittr %>% %<>%
 #' @importFrom progress progress_bar
+#' @importFrom rlang set_names
 #' @export
 #'
 #' @examples
@@ -312,7 +313,7 @@ find_all_paths <- function(
 
         attr_to_id <- graph %>%
             vertex_attr(attr) %>%
-            setNames(graph %>% vcount %>% seq, .)
+            set_names(graph %>% vcount %>% seq, .)
         start <- attr_to_id[start]
         end <- attr_to_id[end]
 
