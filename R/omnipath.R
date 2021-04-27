@@ -1838,14 +1838,15 @@ import_OmniPath_complexes <- function(...){
 
 #' Retrieve a list of complex resources available in Omnipath
 #'
-#' get the names of the resources from \url{https://omnipath.org/complexes}
+#' Get the names of the resources from \url{https://omnipath.org/complexes}
+#'
 #' @param dataset ignored for this query type
 #' @return character vector with the names of the databases
-#' @export
-#' @importFrom utils read.csv
 #'
 #' @examples
 #' get_complex_resources()
+#'
+#' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -1892,9 +1893,8 @@ get_complexes_databases <- function(...){
 #' https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv}
 #' using any standard R or \code{readr} method.
 #'
-#' @return A data.frame containing different gene/complex annotations
+#' @return A data frame containing different gene and complex annotations.
 #' @export
-#' @importFrom utils read.csv
 #'
 #' @param proteins Vector containing the genes or proteins for whom
 #'     annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
@@ -2139,6 +2139,7 @@ get_annotation_databases <- function(...){
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr select pull group_split
 #' @importFrom purrr map
+#' @importFrom rlang set_names
 #'
 #' @seealso \code{\link{import_omnipath_annotations}}
 pivot_annotations <- function(annotations){
@@ -2150,7 +2151,7 @@ pivot_annotations <- function(annotations){
 
         annotations %>%
         group_split(source) %>%
-        setNames(annotations %>% pull(source) %>% unique %>% sort) %>%
+        set_names(annotations %>% pull(source) %>% unique %>% sort) %>%
         map(pivot_annotations)
 
     }else{
@@ -2187,41 +2188,41 @@ pivot_annotations <- function(annotations){
 #'
 #' @return A dataframe cotaining information about roles in intercellular
 #' signaling.
-#' @export
-#' @importFrom utils read.csv
-#' @importFrom stats setNames
+#'
 #' @param categories vector containing the categories to be retrieved.
-#' All the genes belonging to those categories will be returned. For further
-#' information about the categories see \code{\link{get_intercell_categories}}
+#'     All the genes belonging to those categories will be returned. For
+#'     further information about the categories see
+#'     code{\link{get_intercell_categories}}.
 #' @param parent vector containing the parent classes to be retrieved.
-#' All the genes belonging to those classes will be returned. For furter
-#' information about the main classes see
-#' \code{\link{get_intercell_categories}}
+#'     All the genes belonging to those classes will be returned. For
+#'     furter information about the main classes see
+#'     \code{\link{get_intercell_categories}}.
 #' @param resources limit the query to certain resources; see the available
-#' resources by \code{\link{get_intercell_resources}}
+#'     resources by \code{\link{get_intercell_resources}}.
 #' @param scope either `specific` or `generic`
 #' @param aspect either `locational` or `functional`
 #' @param source either `resource_specific` or `composite`
 #' @param transmitter logical, include only transmitters i.e. proteins
-#' delivering signal from a cell to
-#' its environment
+#'     delivering signal from a cell to its environment.
 #' @param receiver logical, include only receivers i.e. proteins delivering
-#' signal to the cell from its environment
+#'     signal to the cell from its environment.
 #' @param plasma_membrane_peripheral logical, include only plasma membrane
-#' peripheral membrane proteins
+#'     peripheral membrane proteins.
 #' @param plasma_membrane_transmembrane logical, include only plasma membrane
-#' transmembrane proteins
+#'     transmembrane proteins.
 #' @param secreted logical, include only secreted proteins
 #' @param proteins limit the query to certain proteins
 #' @param topology topology categories: one or more of `secreted` (sec),
-#' `plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane` (pmtm)
-#' (both short or long notation can be used)
+#'     `plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane`
+#'     (pmtm) (both short or long notation can be used).
 #' @param causality `transmitter` (trans), `receiver` (rec) or `both` (both
-#' short or long notation can be used)
-#' @param ... Additional optional arguments 
+#'     short or long notation can be used).
+#' @param ... Additional optional arguments, ignored.
 #'
 #' @examples
 #' intercell <- import_omnipath_intercell(categories = 'ecm')
+#'
+#' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_intercell_categories}}}
@@ -2291,15 +2292,17 @@ import_OmniPath_intercell <- function(...){
 #' Retrieves a list of intercellular communication resources available in
 #' OmniPath
 #'
-#' Retrieves a list of the databases from \url{https://omnipath.org/intercell}.
+#' Retrieves a list of the databases from
+#' \url{https://omnipath.org/intercell}.
+#'
+#' @param dataset ignored at this query type
 #'
 #' @return character vector with the names of the databases
-#' @export
-#' @importFrom utils read.csv
-#' @param dataset ignored at this query type
 #'
 #' @examples
 #' get_intercell_resources()
+#'
+#' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
@@ -2328,17 +2331,10 @@ get_intercell_resources <- function(dataset = NULL){
 #' proteins by the receiver categories. If undirected interactions present
 #' (these are disabled by default) they will be duplicated, i.e. both
 #' partners can be both receiver and transmitter.
-#' If a cache file provided, its content will be returned without any further
-#' filtering.
 #'
 #' @return A dataframe containing information about protein-protein
 #' interactions and the inter-cellular roles of the protiens involved in those
 #' interactions.
-#' @export
-#' @importFrom utils read.csv modifyList
-#' @importFrom dplyr rename bind_rows filter inner_join distinct group_by
-#' summarize_all first
-#' @importFrom magrittr %>%
 #'
 #' @param interactions_param a list with arguments for an interactions query:
 #'     \code{\link{import_omnipath_interactions}},
@@ -2368,6 +2364,11 @@ get_intercell_resources <- function(dataset = NULL){
 #'    receiver_param = list(categories = c('receptor', 'transporter')),
 #'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
 #' )
+#'
+#' @importFrom dplyr rename bind_rows filter inner_join distinct group_by
+#' @importFrom dplyr summarize_all first
+#' @importFrom magrittr %>%
+#' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_intercell_categories}}}
@@ -2640,7 +2641,8 @@ filter_sources <- function(...){
 #'
 #' @importFrom dplyr recode rename_all
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
+#' @importFrom rlang .data set_names
+#'
 #'
 #' @noRd
 filter_intercell <- function(
@@ -2665,7 +2667,7 @@ filter_intercell <- function(
     before <- nrow(data)
 
     topology <-
-        data.frame(setNames(
+        data.frame(set_names(
             as.list(topology),
             rep(TRUE, length(topology))
         )) %>%
@@ -2680,7 +2682,7 @@ filter_intercell <- function(
         causality <- c('transmitter', 'receiver')
     }
     causality <-
-        data.frame(setNames(
+        data.frame(set_names(
             as.list(causality),
             rep(TRUE, length(causality))
         )) %>%
