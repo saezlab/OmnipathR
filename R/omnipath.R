@@ -138,6 +138,7 @@ utils::globalVariables(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble as_tibble
+#' @importFrom readr read_tsv cols
 #'
 #' @noRd
 import_omnipath <- function(
@@ -166,11 +167,8 @@ import_omnipath <- function(
         url = url
     )
     dataframe_defaults <- list(
-        fun = read.table,
-        header = TRUE,
-        sep = '\t',
-        stringsAsFactors = FALSE,
-        quote = ''
+        fun = read_tsv,
+        col_types = cols()
     )
     json_defaults <- list(
         fun = jsonlite::fromJSON
@@ -714,7 +712,6 @@ import_OmniPath_PTMS <- function(...){
 #' @param dataset ignored for this query type
 #' @return character vector with the names of the enzyme-substrate resources
 #' @export
-#' @importFrom utils read.table
 #'
 #' @examples
 #' get_enzsub_resources()
@@ -759,7 +756,6 @@ get_ptms_databases <- function(...){
 #'
 #' @return A dataframe of protein-protein interactions
 #' @export
-#' @importFrom utils read.table
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
@@ -854,7 +850,6 @@ import_OmniPath_Interactions <- function(...){
 #' @return A dataframe containing activity flow interactions between proteins
 #' without literature reference
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -933,7 +928,6 @@ import_PathwayExtra_Interactions <- function(...){
 #' @return A dataframe containing enzyme-substrate interactions without
 #' literature reference
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1011,7 +1005,6 @@ import_KinaseExtra_Interactions <- function(...){
 #' @return A dataframe containing ligand-receptor interactions including
 #' the ones without literature references
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1083,7 +1076,6 @@ import_LigrecExtra_Interactions <- function(...){
 #'
 #' @return A dataframe containing post-translational interactions
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1147,7 +1139,6 @@ import_post_translational_interactions <- function(
 #'
 #' @return A dataframe containing TF-target interactions from DoRothEA
 #' @export
-#' @importFrom utils read.table
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
@@ -1245,7 +1236,6 @@ import_tfregulons_interactions <- function(...){
 #'
 #' @return A dataframe containing TF-target interactions
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1306,7 +1296,6 @@ import_tf_target_interactions <- function(
 #'
 #' @return A dataframe containing TF-target interactions
 #' @export
-#' @importFrom utils read.table
 #' @importFrom dplyr mutate select
 #' @importFrom magrittr %>%
 #' @param resources interactions not reported in these databases are
@@ -1380,7 +1369,6 @@ import_transcriptional_interactions <- function(
 #'
 #' @return A dataframe containing miRNA-mRNA interactions
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1454,7 +1442,6 @@ import_miRNAtarget_Interactions <- function(...){
 #'
 #' @return A dataframe containing TF-miRNA interactions
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1514,7 +1501,6 @@ import_tf_mirna_interactions <- function(
 #'
 #' @return A dataframe containing lncRNA-mRNA interactions
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1584,7 +1570,6 @@ import_lncrna_mrna_interactions <- function(
 #'
 #' @return A dataframe containing all the datasets in the interactions query
 #' @export
-#' @importFrom utils read.table
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1674,7 +1659,6 @@ import_AllInteractions <- function(...){
 #'
 #' @return character vector with the names of the interaction databases
 #' @export
-#' @importFrom utils read.table
 #'
 #' @examples
 #' get_interaction_resources()
@@ -1786,7 +1770,6 @@ get_resources <- function(
 #'
 #' @return A dataframe containing information about complexes
 #' @export
-#' @importFrom utils read.table
 #'
 #' @param resources complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
