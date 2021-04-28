@@ -2,7 +2,7 @@
 % Please edit documentation in R/omnipath.R
 \name{get_intercell_categories}
 \alias{get_intercell_categories}
-\title{Retrieves a list of categories from the intercell database of OmniPath}
+\title{Categories in the intercell database of OmniPath}
 \usage{
 get_intercell_categories()
 }
