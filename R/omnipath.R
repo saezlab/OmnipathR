@@ -592,8 +592,8 @@ swap_undirected <- function(data){
     is_directed <- NULL
 
     data <- data %>%
-        dplyr::filter(is_directed == 0) %>%
-        dplyr::rename(
+        filter(is_directed == 0) %>%
+        rename(
             source = target,
             target = source,
             source_genesymbol = target_genesymbol,
@@ -601,14 +601,14 @@ swap_undirected <- function(data){
         ) %>%
         {`if`(
             'ncbi_tax_id_source' %in% names(.),
-            dplyr::rename(
+            rename(
                 .,
                 ncbi_tax_id_source = ncbi_tax_id_target,
                 ncbi_tax_id_target = ncbi_tax_id_source
             ),
             .
         )} %>%
-        dplyr::bind_rows(data)
+        bind_rows(data)
 
     return(data)
 
@@ -1348,8 +1348,8 @@ import_transcriptional_interactions <- function(
             organism = organism, 
             references_by_resource = references_by_resource, 
             ...) %>% 
-            dplyr::mutate(dorothea_level = "") %>% 
-            dplyr::select(source, target, source_genesymbol, target_genesymbol, 
+            mutate(dorothea_level = "") %>%
+            select(source, target, source_genesymbol, target_genesymbol,
                 is_directed, is_stimulation, is_inhibition, consensus_direction,
                 consensus_stimulation, consensus_inhibition, dip_url, sources,
                 references, curation_effort, dorothea_level,n_references, 
@@ -2190,7 +2190,7 @@ pivot_annotations <- function(annotations){
                 names_from = 'label',
                 values_from = 'value'
             ) %>%
-            dplyr::select(-record_id)
+            select(-record_id)
         )
 
     }
@@ -2589,8 +2589,8 @@ import_intercell_network <- function(
     intracell <- c('intracellular_intercellular_related', 'intracellular')
     transmitters <-
         do.call(import_omnipath_intercell, transmitter_param) %>%
-        dplyr::filter(!parent %in% intracell) %>%
-        dplyr::rename(category_source = source) %>%
+        filter(!parent %in% intracell) %>%
+        rename(category_source = source) %>%
         {`if`(
             high_confidence,
             filter(
@@ -2603,8 +2603,8 @@ import_intercell_network <- function(
         )}
     receivers <-
         do.call(import_omnipath_intercell, receiver_param) %>%
-        dplyr::filter(!parent %in% intracell) %>%
-        dplyr::rename(category_source = source) %>%
+        filter(!parent %in% intracell) %>%
+        rename(category_source = source) %>%
         {`if`(
             high_confidence,
             filter(., plasma_membrane_transmembrane),
@@ -2617,23 +2617,23 @@ import_intercell_network <- function(
         filter(., curation_effort > 1),
         .
     )} %>%
-    dplyr::inner_join(
+    inner_join(
         transmitters,
         by = c('source' = 'uniprot')
     ) %>%
-    dplyr::group_by(
+    group_by(
         category, parent, source, target
     ) %>%
-    dplyr::mutate(
+    mutate(
         database = paste(database, collapse = ';')
     ) %>%
-    dplyr::summarize_all(first) %>%
-    dplyr::inner_join(
+    summarize_all(first) %>%
+    inner_join(
         receivers,
         by = c('target' = 'uniprot'),
         suffix = c('_intercell_source', '_intercell_target')
     ) %>%
-    dplyr::group_by(
+    group_by(
         category_intercell_source,
         parent_intercell_source,
         source,
@@ -2641,14 +2641,14 @@ import_intercell_network <- function(
         category_intercell_target,
         parent_intercell_target
     ) %>%
-    dplyr::mutate(
+    mutate(
         database_intercell_target = paste(
             database_intercell_target,
             collapse = ';'
         )
     ) %>%
-    dplyr::summarize_all(first) %>%
-    dplyr::ungroup() %>%
+    summarize_all(first) %>%
+    ungroup() %>%
     {`if`(
         simplify,
         simplify_intercell_network(., ...),
@@ -3091,8 +3091,8 @@ filter_intercell <- function(
             as.list(topology),
             rep(TRUE, length(topology))
         )) %>%
-        dplyr::rename_all(
-            dplyr::recode,
+        rename_all(
+            recode,
             secreted = 'sec',
             plasma_membrane_peripheral = 'pmp',
             plasma_membrane_transmembrane = 'pmtm'
@@ -3106,15 +3106,15 @@ filter_intercell <- function(
             as.list(causality),
             rep(TRUE, length(causality))
         )) %>%
-        dplyr::rename_all(
-            dplyr::recode,
+        rename_all(
+            recode,
             transmitter = 'trans',
             receiver = 'rec'
         )
 
     data <-
         data %>%
-        dplyr::filter(
+        filter(
             (is.null(categories) | category %in% categories) &
             (is.null(parent) | .data$parent %in% parent) &
             (is.null(scope) | .data$scope %in% scope) &
@@ -3139,12 +3139,12 @@ filter_intercell <- function(
         ) %>%
         {`if`(
             ncol(topology) > 0,
-            dplyr::inner_join(., topology, by = names(topology)),
+            inner_join(., topology, by = names(topology)),
             .
         )} %>%
         {`if`(
             ncol(causality) > 0,
-            dplyr::inner_join(., causality, by = names(causality)),
+            inner_join(., causality, by = names(causality)),
             .
         )}
 

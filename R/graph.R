@@ -158,16 +158,16 @@ format_graph_edges <- function(df_interact, flag){
     if(flag == 'enzsub_dataset'){
         # keep only edge attributes
         edges <- df_interact %>%
-            dplyr::select(-c(.data$enzyme, .data$substrate))
+            select(-c(.data$enzyme, .data$substrate))
 
         # build vertices: gene_names and gene_uniprotIDs
         nodesA <-
-            dplyr::select(
+            select(
                 df_interact,
                 c(.data$enzyme_genesymbol, .data$enzyme)
             )
         nodesB <-
-            dplyr::select(
+            select(
                 df_interact,
                 c(.data$substrate_genesymbol, .data$substrate)
             )
@@ -175,13 +175,13 @@ format_graph_edges <- function(df_interact, flag){
         if(flag == 'interactions_dataset'){
             # keep only edge attributes
             edges <- df_interact %>%
-                dplyr::select(- c(.data$source, .data$target))
+                select(- c(.data$source, .data$target))
             # build vertices: gene_names and gene_uniprotIDs
             nodesA <-
-                dplyr::select(df_interact,
+                select(df_interact,
                 c(.data$source_genesymbol,.data$source))
             nodesB <-
-                dplyr::select(df_interact,
+                select(df_interact,
                 c(.data$target_genesymbol,.data$target))
         }else{
             stop('Incorrect Input Flag')
@@ -191,9 +191,9 @@ format_graph_edges <- function(df_interact, flag){
     colnames(nodesA) <- colnames(nodesB) <- c('genesymbol', 'up_id')
     nodes <- rbind(nodesA,nodesB)
     nodes <- unique(nodes)
-    nodes <- nodes %>% dplyr::group_by(.data$genesymbol) %>%
-        dplyr::summarise('up_ids' = paste0(.data$up_id,collapse=',')) %>%
-        dplyr::ungroup()
+    nodes <- nodes %>% group_by(.data$genesymbol) %>%
+        summarise('up_ids' = paste0(.data$up_id,collapse=',')) %>%
+        ungroup()
 
     op_dfs <- list(edges = edges, nodes = nodes)
     directed <- TRUE
