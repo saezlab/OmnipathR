@@ -2479,7 +2479,7 @@ get_intercell_resources <- function(dataset = NULL){
 #'
 #' @importFrom dplyr rename bind_rows filter inner_join distinct group_by
 #' @importFrom dplyr summarize_all first
-#' @importFrom rlang %||%
+#' @importFrom rlang %||% ensyms !!!
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
@@ -2505,7 +2505,31 @@ import_intercell_network <- function(
     ...
 ){
 
-    parent <- NULL
+    # NSE vs. R CMD check workaround
+    parent <- source <- target <- source_genesymbol <- target_genesymbol <-
+    category_intercell_source <- database_intercell_source <-
+    category_intercell_target <- database_intercell_target <-
+    is_directed <- is_stimulation <- is_inhibition <-
+    sources <- references <- NULL
+
+    simplify_cols <-
+        alist(
+            source,
+            target,
+            source_genesymbol,
+            target_genesymbol,
+            category_intercell_source,
+            database_intercell_source,
+            category_intercell_target,
+            database_intercell_target,
+            is_directed,
+            is_stimulation,
+            is_inhibition,
+            sources,
+            references
+        ) %>%
+        c(ensyms(...)) %>%
+        unique
 
     # retrieving interactions
     interactions_param <- list(
@@ -2631,24 +2655,7 @@ import_intercell_network <- function(
     dplyr::ungroup() %>%
     {`if`(
         simplify,
-        select(
-            .,
-            # TODO: safely merge ... and the built in set of columns
-            source,
-            target,
-            source_genesymbol,
-            target_genesymbol,
-            category_intercell_source,
-            database_intercell_source,
-            category_intercell_target,
-            database_intercell_target,
-            is_directed,
-            is_stimulation,
-            is_inhibition,
-            sources,
-            references,
-            ...
-        ),
+        select(., !!!simplify_cols),
         .
     )}
 
