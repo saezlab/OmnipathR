@@ -2089,6 +2089,24 @@ get_annotation_databases <- function(...){
 }
 
 
+#' Annotation categories and resources
+#'
+#' A full list of annotation resources, keys and values.
+#'
+#' @return A data frame with resource names, annotation key labels and
+#'     for each key all possible values.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom tidyr separate_rows
+#' @export
+annotation_categories <- function(){
+
+    import_omnipath('annotations_summary', license = NA) %>%
+    separate_rows(value, sep = '#')
+
+}
+
+
 #' Converts annotation tables to a wide format
 #'
 #' Use this method to reconstitute the annotation tables into the format of
@@ -2662,7 +2680,7 @@ import_intercell_network <- function(
 }
 
 
-#' Retrieves a list of categories from the intercell database of OmniPath
+#' Categories in the intercell database of OmniPath
 #'
 #' Retrieves a list of categories from \url{https://omnipath.org/intercell}.
 #'
@@ -2686,6 +2704,30 @@ get_intercell_categories <- function(){
 
 }
 
+
+#' Full list of intercell categories and resources
+#'
+#' @return A data frame of categories and resources.
+#'
+#' @examples
+#' ic_cat <- intercell_categories()
+#' ic_cat
+#' # # A tibble: 1,125 x 3
+#' #    category                parent                  database
+#' #    <chr>                   <chr>                   <chr>
+#' #  1 transmembrane           transmembrane           UniProt_location
+#' #  2 transmembrane           transmembrane           UniProt_topology
+#' #  3 transmembrane           transmembrane           UniProt_keyword
+#' #  4 transmembrane           transmembrane_predicted Phobius
+#' #  5 transmembrane_phobius   transmembrane_predicted Almen2009
+#' # # . with 1,120 more rows
+#'
+#' @export
+intercell_categories <- function(){
+
+    import_omnipath('intercell_summary', license = NA)
+
+}
 
 #' Retrieves a list of the generic categories in the intercell database
 #' of OmniPath
