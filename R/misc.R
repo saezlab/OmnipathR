@@ -287,7 +287,7 @@ url_rds <- function(URL){
 #' @noRd
 load_success <- function(data){
 
-    from_cache <- data %>% attr('origin') %>% {!is.null(.) && . == 'cache'}
+    from_cache <- data %>% is_from_cache
 
     '%s: %sloaded %d records%s' %>%
     sprintf(
@@ -300,6 +300,17 @@ load_success <- function(data){
 
 }
 
+
+#' Is the object labelled as cache origin
+#'
+#' @param obj Any object, typically a data frame.
+#'
+#' @noRd
+is_from_cache <- function(obj){
+
+    obj %>% attr('origin') %>% {!is.null(.) && . == 'cache'}
+
+}
 
 #' Adds default parameters to a list of function arguments
 #'

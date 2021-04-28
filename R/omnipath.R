@@ -192,7 +192,7 @@ import_omnipath <- function(
 
     omnipath_check_result(result, url)
 
-    msg <- 'Downloaded %d %s.'
+    msg <- '%soaded %d %s%s.'
 
     result <- cast_logicals(result, logicals)
     result <- strip_resource_labels(result, references_by_resource)
@@ -203,6 +203,7 @@ import_omnipath <- function(
     if(is.data.frame(result)){
         result %<>% as_tibble
     }
+    from_cache <- result %>% is_from_cache
 
     loglevel <- `if`(
         silent,
@@ -213,12 +214,14 @@ import_omnipath <- function(
     logger::log_level(
         level = loglevel,
         msg,
+        `if`(from_cache, 'L', 'Downl'),
         `if`(
             is.data.frame(result),
             nrow(result),
             length(result)
         ),
-        param$qt_message
+        param$qt_message,
+        `if`(from_cache, ' from cache', '')
     )
 
     return(result)
