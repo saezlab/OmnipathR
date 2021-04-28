@@ -139,6 +139,7 @@ utils::globalVariables(
 #' @importFrom magrittr %>%
 #' @importFrom tibble as_tibble
 #' @importFrom readr read_tsv cols
+#' @importFrom utils modifyList
 #'
 #' @noRd
 import_omnipath <- function(
@@ -2102,6 +2103,9 @@ get_annotation_databases <- function(...){
 #' @export
 annotation_categories <- function(){
 
+    # NSE vs. R CMD check workaround
+    value <- NULL
+
     import_omnipath('annotations_summary', license = NA) %>%
     separate_rows(value, sep = '#')
 
@@ -2500,6 +2504,7 @@ get_intercell_resources <- function(dataset = NULL){
 #' @importFrom dplyr summarize_all first
 #' @importFrom rlang %||%
 #' @importFrom magrittr %>% %<>%
+#' @importFrom utils modifyList
 #' @export
 #'
 #' @seealso \itemize{
@@ -2525,7 +2530,8 @@ import_intercell_network <- function(
 ){
 
     # NSE vs. R CMD check workaround
-    parent <- NULL
+    parent <- secreted <- plasma_membrane_transmembrane <-
+    plasma_membrane_peripheral <- NULL
 
     # retrieving interactions
     interactions_param <- list(
@@ -2747,7 +2753,7 @@ filter_intercell_network <- function(
 ){
 
     # NSE vs. R CMD check workaround
-    curation_effort <- n_resources <- n_references <- NULL
+    parent <- curation_effort <- n_resources <- n_references <- NULL
 
     consensus_filter <-
         import_omnipath_intercell(
