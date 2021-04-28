@@ -21,6 +21,7 @@ import_omnipath_intercell(
   proteins = NULL,
   topology = NULL,
   causality = NULL,
+  consensus_percentile = NULL,
   ...
 )
 }
@@ -67,6 +68,16 @@ transmembrane proteins.}
 \item{causality}{`transmitter` (trans), `receiver` (rec) or `both` (both
 short or long notation can be used).}
 
+\item{consensus_percentile}{Numeric: a percentile cut off for the consensus
+score of generic categories. The consensus score is the number of
+resources supporting the classification of an entity into a category
+based on combined information of many resources. Here you can apply
+a cut-off, keeping only the annotations supported by a higher number
+of resources than a certain percentile of each category. If
+\code{NULL} no filtering will be performed. The value is either in the
+0-1 range, or will be divided by 100 if graeter than 1. The specific
+categories won't be affected by this filtering.}
+
 \item{...}{Additional optional arguments, ignored.}
 }
 \value{
@@ -88,5 +99,6 @@ intercell <- import_omnipath_intercell(categories = 'ecm')
     \item{\code{\link{get_intercell_categories}}}
     \item{\code{\link{get_intercell_generic_categories}}}
     \item{\code{\link{import_intercell_network}}}
+    \item{\code{\link{intercell_consensus_filter}}}
 }
 }

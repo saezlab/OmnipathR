@@ -2217,17 +2217,28 @@ pivot_annotations <- function(annotations){
 #'     (pmtm) (both short or long notation can be used).
 #' @param causality `transmitter` (trans), `receiver` (rec) or `both` (both
 #'     short or long notation can be used).
+#' @param consensus_percentile Numeric: a percentile cut off for the consensus
+#'     score of generic categories. The consensus score is the number of
+#'     resources supporting the classification of an entity into a category
+#'     based on combined information of many resources. Here you can apply
+#'     a cut-off, keeping only the annotations supported by a higher number
+#'     of resources than a certain percentile of each category. If
+#'     \code{NULL} no filtering will be performed. The value is either in the
+#'     0-1 range, or will be divided by 100 if graeter than 1. The specific
+#'     categories won't be affected by this filtering.
 #' @param ... Additional optional arguments, ignored.
 #'
 #' @examples
 #' intercell <- import_omnipath_intercell(categories = 'ecm')
 #'
+#' @importFrom magrittr %>%
 #' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_intercell_categories}}}
 #'     \item{\code{\link{get_intercell_generic_categories}}}
 #'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{intercell_consensus_filter}}}
 #' }
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
@@ -2246,6 +2257,7 @@ import_omnipath_intercell <- function(
     proteins = NULL,
     topology = NULL,
     causality = NULL,
+    consensus_percentile = NULL,
     ...
 ){
 
@@ -2258,10 +2270,58 @@ import_omnipath_intercell <- function(
         'plasma_membrane_peripheral',
         'plasma_membrane_transmembrane'
     )
+    args$consensus_percentile <- NULL
 
-    result <- do.call(import_omnipath, args)
+    result <-
+        do.call(import_omnipath, args) %>%
+        intercell_consensus_filter(consensus_percentile)
 
     return(result)
+
+}
+
+
+#' Quality filter for intercell annotations
+#'
+#' @param data A data frame with intercell annotations, as provided by
+#'     \code{\link{import_omnipath_intercell}}.
+#' @param percentile Numeric: a percentile cut off for the consensus score
+#'     of composite categories. The consensus score is the number of
+#'     resources supporting the classification of an entity into a category
+#'     based on combined information of many resources. Here you can apply
+#'     a cut-off, keeping only the annotations supported by a higher number
+#'     of resources than a certain percentile of each category. If
+#'     \code{NULL} no filtering will be performed. The value is either in the
+#'     0-1 range, or will be divided by 100 if graeter than 1. The specific
+#'     categories won't be affected by this filtering.
+#'
+#' @return The data frame in \code{data} filtered by the consensus scores.
+#'
+#' @examples
+#' intercell <- import_omnipath_intercell(parent = c('ligand', 'receptor'))
+#' nrow(intercell)
+#' # [1] 50174
+#' intercell_q50 <- intercell_consensus_filter(intercell, 50)
+#' nrow(intercell_q50)
+#' # [1] 41562
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom dplyr group_by filter ungroup
+#' @importFrom stats quantile
+#' @export
+intercell_consensus_filter <- function(data, percentile = NULL){
+
+    percentile %<>%
+        if_null(0) %>%
+        {`if`(. > 1, . / 100, .)}
+
+    data %>%
+    group_by(., parent) %>%
+    filter(
+        scope != 'generic' |
+        consensus_score >= quantile(consensus_score, percentile)
+    ) %>%
+    ungroup()
 
 }
 
@@ -2378,12 +2438,21 @@ get_intercell_resources <- function(dataset = NULL){
 #'     interacting pair, their intercellular communication roles, and the
 #'     minimal information of the origin of both the interaction and
 #'     the annotations.
+#' @param consensus_percentile Numeric: a percentile cut off for the consensus
+#'     score of generic categories in intercell annotations. The consensus
+#'     score is the number of resources supporting the classification of an
+#'     entity into a category based on combined information of many resources.
+#'     Here you can apply a cut-off, keeping only the annotations supported
+#'     by a higher number of resources than a certain percentile of each
+#'     category. If \code{NULL} no filtering will be performed. The value is
+#'     either in the 0-1 range, or will be divided by 100 if graeter than 1.
+#'     The specific categories won't be affected by this filtering.
 #' @param ... If \code{simplify} is \code{TRUE}, additional column
 #'     names can be passed here to \code{dplyr::select} on the final
 #'     data frame. Otherwise ignored.
 #'
 #' @examples
-#' intercellNetwork <- import_intercell_network(
+#' intercell_network <- import_intercell_network(
 #'    interactions_param = list(datasets = 'ligrecextra'),
 #'    receiver_param = list(categories = c('receptor', 'transporter')),
 #'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
@@ -2412,6 +2481,7 @@ import_intercell_network <- function(
     ligand_receptor = FALSE,
     high_confidence = FALSE,
     simplify = FALSE,
+    consensus_percentile = NULL,
     ...
 ){
 
@@ -2444,7 +2514,8 @@ import_intercell_network <- function(
         ) %>%
         insert_if_not_null(
             resources = resources,
-            entity_types = entity_types
+            entity_types = entity_types,
+            consensus_percentile = consensus_percentile
         ) %>%
         {`if`(
             ligand_receptor,
@@ -2459,7 +2530,8 @@ import_intercell_network <- function(
         ) %>%
         insert_if_not_null(
             resources = resources,
-            entity_types = entity_types
+            entity_types = entity_types,
+            consensus_percentile = consensus_percentile
         ) %>%
         {`if`(
             ligand_receptor,

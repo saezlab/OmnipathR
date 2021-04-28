@@ -13,6 +13,7 @@ import_intercell_network(
   ligand_receptor = FALSE,
   high_confidence = FALSE,
   simplify = FALSE,
+  consensus_percentile = NULL,
   ...
 )
 }
@@ -67,6 +68,16 @@ interacting pair, their intercellular communication roles, and the
 minimal information of the origin of both the interaction and
 the annotations.}
 
+\item{consensus_percentile}{Numeric: a percentile cut off for the consensus
+score of generic categories in intercell annotations. The consensus
+score is the number of resources supporting the classification of an
+entity into a category based on combined information of many resources.
+Here you can apply a cut-off, keeping only the annotations supported
+by a higher number of resources than a certain percentile of each
+category. If \code{NULL} no filtering will be performed. The value is
+either in the 0-1 range, or will be divided by 100 if graeter than 1.
+The specific categories won't be affected by this filtering.}
+
 \item{...}{If \code{simplify} is \code{TRUE}, additional column
 names can be passed here to \code{dplyr::select} on the final
 data frame. Otherwise ignored.}
@@ -93,7 +104,7 @@ proteins by the receiver categories. If undirected interactions present
 partners can be both receiver and transmitter.
 }
 \examples{
-intercellNetwork <- import_intercell_network(
+intercell_network <- import_intercell_network(
    interactions_param = list(datasets = 'ligrecextra'),
    receiver_param = list(categories = c('receptor', 'transporter')),
    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
