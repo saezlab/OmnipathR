@@ -2246,7 +2246,7 @@ pivot_annotations <- function(annotations){
 #'     apply a cut-off, keeping only the annotations supported by a higher
 #'     number of resources than a certain percentile of each category. If
 #'     \code{NULL} no filtering will be performed. The value is either in the
-#'     0-1 range, or will be divided by 100 if graeter than 1. The
+#'     0-1 range, or will be divided by 100 if greater than 1. The
 #'     percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
@@ -2316,7 +2316,7 @@ import_omnipath_intercell <- function(
 #'     a cut-off, keeping only the annotations supported by a higher number
 #'     of resources than a certain percentile of each category. If
 #'     \code{NULL} no filtering will be performed. The value is either in the
-#'     0-1 range, or will be divided by 100 if graeter than 1. The
+#'     0-1 range, or will be divided by 100 if greater than 1. The
 #'     percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
@@ -2481,7 +2481,7 @@ get_intercell_resources <- function(dataset = NULL){
 #'     Here you can apply a cut-off, keeping only the annotations supported
 #'     by a higher number of resources than a certain percentile of each
 #'     category. If \code{NULL} no filtering will be performed. The value is
-#'     either in the 0-1 range, or will be divided by 100 if graeter than 1.
+#'     either in the 0-1 range, or will be divided by 100 if greater than 1.
 #'     The percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
@@ -2666,7 +2666,7 @@ import_intercell_network <- function(
 #' often independent sources. This unavoidably result some weird and
 #' unexpected combinations which are false positives in the context of
 #' intercellular communication. \code{\link{import_intercell_network}}
-#' provides a shortcut (code{high_confidence}) to do basic quality filtering.
+#' provides a shortcut (\code{high_confidence}) to do basic quality filtering.
 #' For custom filtering or experimentation with the parameters we offer this
 #' function.
 #'
@@ -2694,7 +2694,7 @@ import_intercell_network <- function(
 #'     Here you can apply a cut-off, keeping only the annotations supported
 #'     by a higher number of resources than a certain percentile of each
 #'     category. If \code{NULL} no filtering will be performed. The value is
-#'     either in the 0-1 range, or will be divided by 100 if graeter than 1.
+#'     either in the 0-1 range, or will be divided by 100 if greater than 1.
 #'     The percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
