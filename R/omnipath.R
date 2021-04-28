@@ -2410,9 +2410,9 @@ get_intercell_resources <- function(dataset = NULL){
 }
 
 
-#' Imports an intercellular network combining annotations and interactions
+#' Intercellular communication network
 #'
-#' Imports an intercellular network by mapping intercellular annotations
+#' Imports an intercellular network by combining intercellular annotations
 #' and protein interactions. First imports a network of protein-protein
 #' interactions. Then, it retrieves annotations about the proteins
 #' intercellular communication roles, once for the transmitter (delivering
@@ -2491,14 +2491,14 @@ get_intercell_resources <- function(dataset = NULL){
 #'
 #' @examples
 #' intercell_network <- import_intercell_network(
-#'    interactions_param = list(datasets = 'ligrecextra'),
-#'    receiver_param = list(categories = c('receptor', 'transporter')),
-#'    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
+#'     interactions_param = list(datasets = 'ligrecextra'),
+#'     receiver_param = list(categories = c('receptor', 'transporter')),
+#'     transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
 #' )
 #'
 #' @importFrom dplyr rename bind_rows filter inner_join distinct group_by
 #' @importFrom dplyr summarize_all first
-#' @importFrom rlang %||% ensyms !!!
+#' @importFrom rlang %||%
 #' @importFrom magrittr %>% %<>%
 #' @export
 #'
@@ -2525,30 +2525,7 @@ import_intercell_network <- function(
 ){
 
     # NSE vs. R CMD check workaround
-    parent <- source <- target <- source_genesymbol <- target_genesymbol <-
-    category_intercell_source <- database_intercell_source <-
-    category_intercell_target <- database_intercell_target <-
-    is_directed <- is_stimulation <- is_inhibition <-
-    sources <- references <- NULL
-
-    simplify_cols <-
-        alist(
-            source,
-            target,
-            source_genesymbol,
-            target_genesymbol,
-            category_intercell_source,
-            database_intercell_source,
-            category_intercell_target,
-            database_intercell_target,
-            is_directed,
-            is_stimulation,
-            is_inhibition,
-            sources,
-            references
-        ) %>%
-        c(ensyms(...)) %>%
-        unique
+    parent <- NULL
 
     # retrieving interactions
     interactions_param <- list(
@@ -2674,9 +2651,236 @@ import_intercell_network <- function(
     dplyr::ungroup() %>%
     {`if`(
         simplify,
-        select(., !!!simplify_cols),
+        simplify_intercell_network(., ...),
         .
     )}
+
+}
+
+
+#' Quality filter an intercell network
+#'
+#' The intercell database  of OmniPath covers a very broad range of possible
+#' ways of cell to cell communication, and the pieces of information, such as
+#' localization, topology, function and interaction, are combined from many,
+#' often independent sources. This unavoidably result some weird and
+#' unexpected combinations which are false positives in the context of
+#' intercellular communication. \code{\link{import_intercell_network}}
+#' provides a shortcut (code{high_confidence}) to do basic quality filtering.
+#' For custom filtering or experimentation with the parameters we offer this
+#' function.
+#'
+#' @param network An intercell network data frame, as provided by
+#'     \code{\link{import_intercell_network}}, without \code{simplify}.
+#' @param transmitter_topology Character vector: topologies allowed for the
+#'     entities in transmitter role. Abbreviations allowed: "sec", "pmtm"
+#'     and "pmp".
+#' @param receiver_topology Same as \code{transmitter_topology} for the
+#'     entities in the receiver role.
+#' @param min_curation_effort Numeric: a minimum value of curation effort
+#'     (resource-reference pairs) for network interactions. Use zero to
+#'     disable filtering.
+#' @param min_resources Numeric: minimum number of resources for
+#'     interactions. The value 1 means no filtering.
+#' @param min_references Numeric: minimum number of references for
+#'     interactions. Use zero to disable filtering.
+#' @param min_provenances Numeric: minimum number of provenances (either
+#'     resources or references) for interactions. Use zero or one for
+#'     disable filtering.
+#' @param consensus_percentile Numeric: percentile cut off for the consensus
+#'     score of generic categories in intercell annotations. The consensus
+#'     score is the number of resources supporting the classification of an
+#'     entity into a category based on combined information of many resources.
+#'     Here you can apply a cut-off, keeping only the annotations supported
+#'     by a higher number of resources than a certain percentile of each
+#'     category. If \code{NULL} no filtering will be performed. The value is
+#'     either in the 0-1 range, or will be divided by 100 if graeter than 1.
+#'     The percentiles will be calculated against the generic composite
+#'     categories and then will be applied to their resource specific
+#'     annotations and specific child categories.
+#' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
+#'     annotations will be used instead of the more generic *transmitter* and
+#'     *receiver* categories.
+#' @param simplify Logical: keep only the most often used columns. This
+#'     function combines a network data frame with two copies of the
+#'     intercell annotation data frames, all of them already having quite
+#'     some columns. With this option we keep only the names of the
+#'     interacting pair, their intercellular communication roles, and the
+#'     minimal information of the origin of both the interaction and
+#'     the annotations.
+#' @param ... If \code{simplify} is \code{TRUE}, additional column
+#'     names can be passed here to \code{dplyr::select} on the final
+#'     data frame. Otherwise ignored.
+#'
+#' @return An intercell network data frame filtered.
+#'
+#' @examples
+#' icn <- import_intercell_network()
+#' icn_f <- filter_intercell_network(
+#'     icn,
+#'     consensus_percentile = 75,
+#'     min_provenances = 3,
+#'     simplify = TRUE
+#' )
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select distinct filter inner_join
+#' @importFrom rlang !!! parse_expr
+#' @importFrom logger log_warn
+#' @importFrom purrr walk
+filter_intercell_network <- function(
+    network,
+    transmitter_topology = c(
+        'secreted',
+        'plasma_membrane_transmembrane',
+        'plasma_membrane_peripheral'
+    ),
+    receiver_topology = 'plasma_membrane_transmembrane',
+    min_curation_effort = 2,
+    min_resources = 1,
+    min_references = 0,
+    min_provenances = 1,
+    consensus_percentile = 50,
+    ligand_receptor = FALSE,
+    simplify = FALSE,
+    ...
+){
+
+    # NSE vs. R CMD check workaround
+    curation_effort <- n_resources <- n_references <- NULL
+
+    consensus_filter <-
+        import_omnipath_intercell(
+            consensus_percentile = consensus_percentile
+        ) %>%
+        select(uniprot, parent) %>%
+        distinct
+
+    topology_short <-
+        list(
+            sec = 'secreted',
+            pmtm = 'plasma_membrane_transmembrane',
+            pmp = 'plasma_membrane_peripheral'
+        )
+    topologies <- unlist(topology_short)
+    check_topo <- function(x){
+        if(!x %in% topologies){
+            log_warn('Unknown topology: %s', x)
+        }
+    }
+
+    transmitter_topology %<>%
+        recode(!!!topology_short) %>%
+        walk(check_topo) %>%
+        intersect(topologies) %>%
+        sprintf('%s_intercell_source', .) %>%
+        paste(collapse = ' | ')
+
+    receiver_topology %<>%
+        recode(!!!topology_short) %>%
+        walk(check_topo) %>%
+        intersect(topologies) %>%
+        sprintf('%s_intercell_target', .) %>%
+        paste(collapse = ' | ')
+
+    network %>%
+    filter(eval(parse_expr(receiver_topology))) %>%
+    filter(eval(parse_expr(transmitter_topology))) %>%
+    filter(
+        curation_effort >= min_curation_effort &
+        n_resources >= min_resources &
+        n_references >= min_references &
+        (
+            n_resources >= min_provenances |
+            n_references >= min_provenances
+        )
+    ) %>%
+    inner_join(
+        consensus_filter,
+        by = c(
+            'parent_intercell_source' = 'parent',
+            'source' = 'uniprot'
+        )
+    ) %>%
+    inner_join(
+        consensus_filter,
+        by = c(
+            'parent_intercell_target' = 'parent',
+            'target' = 'uniprot'
+        )
+    ) %>%
+    {`if`(
+        ligand_receptor,
+        filter(
+            .,
+            parent_intercell_source == 'ligand' &
+            parent_intercell_target == 'receptor'
+        ),
+        .
+    )} %>%
+    {`if`(
+        simplify,
+        simplify_intercell_network(., ...),
+        .
+    )}
+
+}
+
+
+#' Simplify an intercell network
+#'
+#' The intercellular communication network data frames, created by
+#' \code{\link{import_intercell_network}}, are combinations of a network data
+#' frame with two copies of the intercell annotation data frames, all of them
+#' already having quite some columns. Here we keep only the names of the
+#' interacting pair, their intercellular communication roles, and the minimal
+#' information of the origin of both the interaction and the annotations.
+#' Optionally further columns can be selected.
+#'
+#' @param network An intercell network data frame, as provided by
+#'     \code{\link{import_intercell_network}}.
+#' @param ... Optional, further columns to select.
+#'
+#' @return An intercell network data frame with some columns removed.
+#'
+#' @examples
+#' icn <- import_intercell_network()
+#' icn_s <- simplify_intercell_network(icn)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select
+#' @importFrom rlang ensyms !!!
+#' @export
+simplify_intercell_network <- function(network, ...){
+
+    # NSE vs. R CMD check workaround
+    source <- target <- source_genesymbol <- target_genesymbol <-
+    category_intercell_source <- database_intercell_source <-
+    category_intercell_target <- database_intercell_target <-
+    is_directed <- is_stimulation <- is_inhibition <-
+    sources <- references <- NULL
+
+    simplify_cols <-
+        alist(
+            source,
+            target,
+            source_genesymbol,
+            target_genesymbol,
+            category_intercell_source,
+            database_intercell_source,
+            category_intercell_target,
+            database_intercell_target,
+            is_directed,
+            is_stimulation,
+            is_inhibition,
+            sources,
+            references
+        ) %>%
+        c(ensyms(...)) %>%
+        unique
+
+    network %>%
+    select(!!!simplify_cols)
 
 }
 

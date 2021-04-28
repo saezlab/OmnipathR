@@ -2,7 +2,7 @@
 % Please edit documentation in R/omnipath.R
 \name{import_intercell_network}
 \alias{import_intercell_network}
-\title{Imports an intercellular network combining annotations and interactions}
+\title{Intercellular communication network}
 \usage{
 import_intercell_network(
   interactions_param = list(),
@@ -91,7 +91,7 @@ interactions and the inter-cellular roles of the protiens involved in those
 interactions.
 }
 \description{
-Imports an intercellular network by mapping intercellular annotations
+Imports an intercellular network by combining intercellular annotations
 and protein interactions. First imports a network of protein-protein
 interactions. Then, it retrieves annotations about the proteins
 intercellular communication roles, once for the transmitter (delivering
@@ -108,9 +108,9 @@ partners can be both receiver and transmitter.
 }
 \examples{
 intercell_network <- import_intercell_network(
-   interactions_param = list(datasets = 'ligrecextra'),
-   receiver_param = list(categories = c('receptor', 'transporter')),
-   transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
+    interactions_param = list(datasets = 'ligrecextra'),
+    receiver_param = list(categories = c('receptor', 'transporter')),
+    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
 )
 
 }
