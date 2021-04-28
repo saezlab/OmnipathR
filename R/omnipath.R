@@ -2336,7 +2336,7 @@ import_omnipath_intercell <- function(
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom dplyr group_by filter ungroup bind_rows
-#' @importFrom dplyr select distinct inner_join
+#' @importFrom dplyr select distinct inner_join pull
 #' @importFrom stats quantile
 #' @export
 intercell_consensus_filter <- function(data, percentile = NULL){
@@ -2345,7 +2345,7 @@ intercell_consensus_filter <- function(data, percentile = NULL){
     scope <- source <- parent <- consensus_score <- NULL
 
     percentile %<>%
-        if_null(0) %>%
+        if_null(0L) %>%
         {`if`(. > 1, . / 100, .)}
 
     thresholds <-
@@ -2359,8 +2359,18 @@ intercell_consensus_filter <- function(data, percentile = NULL){
         select(parent, uniprot) %>%
         distinct
 
+    composite_parents <-
+        data %>%
+        filter(source == 'composite') %>%
+        pull(parent) %>%
+        unique
+
     data %>%
-    inner_join(thresholds, by = c('parent', 'uniprot'))
+    inner_join(thresholds, by = c('parent', 'uniprot')) %>%
+    bind_rows(
+        data %>%
+        filter(!parent %in% composite_parents)
+    )
 
 }
 
@@ -2734,6 +2744,7 @@ import_intercell_network <- function(
 #' @importFrom rlang !!! parse_expr
 #' @importFrom logger log_warn
 #' @importFrom purrr walk
+#' @export
 filter_intercell_network <- function(
     network,
     transmitter_topology = c(
