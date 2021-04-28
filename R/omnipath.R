@@ -2217,15 +2217,17 @@ pivot_annotations <- function(annotations){
 #'     (pmtm) (both short or long notation can be used).
 #' @param causality `transmitter` (trans), `receiver` (rec) or `both` (both
 #'     short or long notation can be used).
-#' @param consensus_percentile Numeric: a percentile cut off for the consensus
-#'     score of generic categories. The consensus score is the number of
-#'     resources supporting the classification of an entity into a category
-#'     based on combined information of many resources. Here you can apply
-#'     a cut-off, keeping only the annotations supported by a higher number
-#'     of resources than a certain percentile of each category. If
+#' @param consensus_percentile Numeric: a percentile cut off for the
+#'     consensus score of generic categories. The consensus score is the
+#'     number of resources supporting the classification of an entity into a
+#'     category based on combined information of many resources. Here you can
+#'     apply a cut-off, keeping only the annotations supported by a higher
+#'     number of resources than a certain percentile of each category. If
 #'     \code{NULL} no filtering will be performed. The value is either in the
-#'     0-1 range, or will be divided by 100 if graeter than 1. The specific
-#'     categories won't be affected by this filtering.
+#'     0-1 range, or will be divided by 100 if graeter than 1. The
+#'     percentiles will be calculated against the generic composite
+#'     categories and then will be applied to their resource specific
+#'     annotations and specific child categories.
 #' @param ... Additional optional arguments, ignored.
 #'
 #' @examples
@@ -2292,9 +2294,10 @@ import_omnipath_intercell <- function(
 #'     a cut-off, keeping only the annotations supported by a higher number
 #'     of resources than a certain percentile of each category. If
 #'     \code{NULL} no filtering will be performed. The value is either in the
-#'     0-1 range, or will be divided by 100 if graeter than 1. The specific
-#'     categories won't be affected by this filtering.
-#'
+#'     0-1 range, or will be divided by 100 if graeter than 1. The
+#'     percentiles will be calculated against the generic composite
+#'     categories and then will be applied to their resource specific
+#'     annotations and specific child categories.
 #' @return The data frame in \code{data} filtered by the consensus scores.
 #'
 #' @examples
@@ -2303,25 +2306,35 @@ import_omnipath_intercell <- function(
 #' # [1] 50174
 #' intercell_q50 <- intercell_consensus_filter(intercell, 50)
 #' nrow(intercell_q50)
-#' # [1] 41562
+#' # [1] 42863
 #'
 #' @importFrom magrittr %>% %<>%
-#' @importFrom dplyr group_by filter ungroup
+#' @importFrom dplyr group_by filter ungroup bind_rows
+#' @importFrom dplyr select distinct inner_join
 #' @importFrom stats quantile
 #' @export
 intercell_consensus_filter <- function(data, percentile = NULL){
+
+    # NSE vs. R CMD check workaround
+    scope <- source <- parent <- consensus_score <- NULL
 
     percentile %<>%
         if_null(0) %>%
         {`if`(. > 1, . / 100, .)}
 
+    thresholds <-
+        data %>%
+        filter(scope == 'generic' & source == 'composite') %>%
+        group_by(parent) %>%
+        filter(
+            consensus_score >= quantile(consensus_score, percentile)
+        ) %>%
+        ungroup %>%
+        select(parent, uniprot) %>%
+        distinct
+
     data %>%
-    group_by(., parent) %>%
-    filter(
-        scope != 'generic' |
-        consensus_score >= quantile(consensus_score, percentile)
-    ) %>%
-    ungroup()
+    inner_join(thresholds, by = c('parent', 'uniprot'))
 
 }
 
@@ -2446,7 +2459,9 @@ get_intercell_resources <- function(dataset = NULL){
 #'     by a higher number of resources than a certain percentile of each
 #'     category. If \code{NULL} no filtering will be performed. The value is
 #'     either in the 0-1 range, or will be divided by 100 if graeter than 1.
-#'     The specific categories won't be affected by this filtering.
+#'     The percentiles will be calculated against the generic composite
+#'     categories and then will be applied to their resource specific
+#'     annotations and specific child categories.
 #' @param ... If \code{simplify} is \code{TRUE}, additional column
 #'     names can be passed here to \code{dplyr::select} on the final
 #'     data frame. Otherwise ignored.

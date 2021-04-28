@@ -17,8 +17,10 @@ based on combined information of many resources. Here you can apply
 a cut-off, keeping only the annotations supported by a higher number
 of resources than a certain percentile of each category. If
 \code{NULL} no filtering will be performed. The value is either in the
-0-1 range, or will be divided by 100 if graeter than 1. The specific
-categories won't be affected by this filtering.}
+0-1 range, or will be divided by 100 if graeter than 1. The
+percentiles will be calculated against the generic composite
+categories and then will be applied to their resource specific
+annotations and specific child categories.}
 }
 \value{
 The data frame in \code{data} filtered by the consensus scores.
