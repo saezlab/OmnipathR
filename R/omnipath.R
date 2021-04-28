@@ -2734,6 +2734,7 @@ import_intercell_network <- function(
 #' @importFrom rlang !!! parse_expr
 #' @importFrom logger log_warn
 #' @importFrom purrr walk
+#' @export
 filter_intercell_network <- function(
     network,
     transmitter_topology = c(
