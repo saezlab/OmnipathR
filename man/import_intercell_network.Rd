@@ -56,9 +56,10 @@ communication. This option sets some minimum criteria to remove most
 are the followings: 1) the receiver must be plasma membrane
 transmembrane; 2) the curation effort for interactions must be larger
 than one; 3) the consensus score for annotations must be larger than
-one. 4) the transmitter must be secreted or exposed on the plasma
-membrane. These are very relaxed criteria, you can always tune them
-to be more stringent by filtering manually.}
+the 50 percentile within the generic category (you can override this
+by \code{consensus_percentile}). 4) the transmitter must be secreted
+or exposed on the plasma membrane. These are very relaxed criteria,
+you can always tune them to be more stringent by filtering manually.}
 
 \item{simplify}{Logical: keep only the most often used columns. This
 function combines a network data frame with two copies of the

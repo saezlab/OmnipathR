@@ -2441,9 +2441,10 @@ get_intercell_resources <- function(dataset = NULL){
 #'     are the followings: 1) the receiver must be plasma membrane
 #'     transmembrane; 2) the curation effort for interactions must be larger
 #'     than one; 3) the consensus score for annotations must be larger than
-#'     one. 4) the transmitter must be secreted or exposed on the plasma
-#'     membrane. These are very relaxed criteria, you can always tune them
-#'     to be more stringent by filtering manually.
+#'     the 50 percentile within the generic category (you can override this
+#'     by \code{consensus_percentile}). 4) the transmitter must be secreted
+#'     or exposed on the plasma membrane. These are very relaxed criteria,
+#'     you can always tune them to be more stringent by filtering manually.
 #' @param simplify Logical: keep only the most often used columns. This
 #'     function combines a network data frame with two copies of the
 #'     intercell annotation data frames, all of them already having quite
@@ -2475,7 +2476,8 @@ get_intercell_resources <- function(dataset = NULL){
 #'
 #' @importFrom dplyr rename bind_rows filter inner_join distinct group_by
 #' @importFrom dplyr summarize_all first
-#' @importFrom magrittr %>%
+#' @importFrom rlang %||%
+#' @importFrom magrittr %>% %<>%
 #' @export
 #'
 #' @seealso \itemize{
@@ -2502,6 +2504,7 @@ import_intercell_network <- function(
 
     parent <- NULL
 
+    # retrieving interactions
     interactions_param <- list(
             query_type = 'interactions',
             datasets = c(
@@ -2522,6 +2525,11 @@ import_intercell_network <- function(
         interactions_param
     )
     interactions <- swap_undirected(interactions)
+
+    # retrieving intercell annotations
+
+    consensus_percentile %<>%
+        {`if`(high_confidence, . %||% 50, .)}
 
     transmitter_param <- list(
             causality = 'trans',
@@ -2564,12 +2572,9 @@ import_intercell_network <- function(
             high_confidence,
             filter(
                 .,
-                (
-                    secreted |
-                    plasma_membrane_transmembrane |
-                    plasma_membrane_peripheral
-                ) &
-                consensus_score > 1
+                secreted |
+                plasma_membrane_transmembrane |
+                plasma_membrane_peripheral
             ),
             .
         )}
@@ -2579,11 +2584,7 @@ import_intercell_network <- function(
         dplyr::rename(category_source = source) %>%
         {`if`(
             high_confidence,
-            filter(
-                .,
-                plasma_membrane_transmembrane &
-                consensus_score > 1
-            ),
+            filter(., plasma_membrane_transmembrane),
             .
         )}
 

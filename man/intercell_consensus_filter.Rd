@@ -34,6 +34,6 @@ nrow(intercell)
 # [1] 50174
 intercell_q50 <- intercell_consensus_filter(intercell, 50)
 nrow(intercell_q50)
-# [1] 41562
+# [1] 42863
 
 }
