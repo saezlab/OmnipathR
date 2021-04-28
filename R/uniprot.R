@@ -181,7 +181,7 @@ uniprot_id_mapping_table <- function(
 #' in the original data frame yields multiple rows in the returned data
 #' frame.
 #'
-#' @importFrom rlang !! enquo := quo_text
+#' @importFrom rlang !! enquo := quo_text set_names
 #' @importFrom magrittr %>%
 #' @importFrom dplyr pull left_join inner_join rename
 #' @export
@@ -226,7 +226,7 @@ translate_ids <- function(
     d %>%
     join_method(
         translation_table,
-        by = 'From' %>% setNames(from_col %>% quo_text)
+        by = 'From' %>% set_names(from_col %>% quo_text)
     ) %>%
     mutate(!!to_col := To) %>%
     select(-To)

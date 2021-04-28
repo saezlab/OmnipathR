@@ -21,21 +21,23 @@ import_omnipath_intercell(
   proteins = NULL,
   topology = NULL,
   causality = NULL,
+  consensus_percentile = NULL,
   ...
 )
 }
 \arguments{
 \item{categories}{vector containing the categories to be retrieved.
-All the genes belonging to those categories will be returned. For further
-information about the categories see \code{\link{get_intercell_categories}}}
+All the genes belonging to those categories will be returned. For
+further information about the categories see
+code{\link{get_intercell_categories}}.}
 
 \item{resources}{limit the query to certain resources; see the available
-resources by \code{\link{get_intercell_resources}}}
+resources by \code{\link{get_intercell_resources}}.}
 
 \item{parent}{vector containing the parent classes to be retrieved.
-All the genes belonging to those classes will be returned. For furter
-information about the main classes see
-\code{\link{get_intercell_categories}}}
+All the genes belonging to those classes will be returned. For
+furter information about the main classes see
+\code{\link{get_intercell_categories}}.}
 
 \item{scope}{either `specific` or `generic`}
 
@@ -44,30 +46,41 @@ information about the main classes see
 \item{source}{either `resource_specific` or `composite`}
 
 \item{transmitter}{logical, include only transmitters i.e. proteins
-delivering signal from a cell to
-its environment}
+delivering signal from a cell to its environment.}
 
 \item{receiver}{logical, include only receivers i.e. proteins delivering
-signal to the cell from its environment}
+signal to the cell from its environment.}
 
 \item{secreted}{logical, include only secreted proteins}
 
 \item{plasma_membrane_peripheral}{logical, include only plasma membrane
-peripheral membrane proteins}
+peripheral membrane proteins.}
 
 \item{plasma_membrane_transmembrane}{logical, include only plasma membrane
-transmembrane proteins}
+transmembrane proteins.}
 
 \item{proteins}{limit the query to certain proteins}
 
 \item{topology}{topology categories: one or more of `secreted` (sec),
-`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane` (pmtm)
-(both short or long notation can be used)}
+`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane`
+(pmtm) (both short or long notation can be used).}
 
 \item{causality}{`transmitter` (trans), `receiver` (rec) or `both` (both
-short or long notation can be used)}
+short or long notation can be used).}
 
-\item{...}{Additional optional arguments}
+\item{consensus_percentile}{Numeric: a percentile cut off for the
+consensus score of generic categories. The consensus score is the
+number of resources supporting the classification of an entity into a
+category based on combined information of many resources. Here you can
+apply a cut-off, keeping only the annotations supported by a higher
+number of resources than a certain percentile of each category. If
+\code{NULL} no filtering will be performed. The value is either in the
+0-1 range, or will be divided by 100 if greater than 1. The
+percentiles will be calculated against the generic composite
+categories and then will be applied to their resource specific
+annotations and specific child categories.}
+
+\item{...}{Additional optional arguments, ignored.}
 }
 \value{
 A dataframe cotaining information about roles in intercellular
@@ -88,5 +101,6 @@ intercell <- import_omnipath_intercell(categories = 'ecm')
     \item{\code{\link{get_intercell_categories}}}
     \item{\code{\link{get_intercell_generic_categories}}}
     \item{\code{\link{import_intercell_network}}}
+    \item{\code{\link{intercell_consensus_filter}}}
 }
 }

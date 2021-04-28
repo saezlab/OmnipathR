@@ -2,7 +2,7 @@
 % Please edit documentation in R/omnipath.R
 \name{import_intercell_network}
 \alias{import_intercell_network}
-\title{Imports an intercellular network combining annotations and interactions}
+\title{Intercellular communication network}
 \usage{
 import_intercell_network(
   interactions_param = list(),
@@ -11,6 +11,9 @@ import_intercell_network(
   resources = NULL,
   entity_types = NULL,
   ligand_receptor = FALSE,
+  high_confidence = FALSE,
+  simplify = FALSE,
+  consensus_percentile = NULL,
   ...
 )
 }
@@ -41,7 +44,46 @@ both.}
 annotations will be used instead of the more generic *transmitter* and
 *receiver* categories.}
 
-\item{...}{Ignored.}
+\item{high_confidence}{Logical: shortcut to do some filtering in order to
+include only higher confidence interactions. The intercell database
+of OmniPath covers a very broad range of possible ways of cell to cell
+communication, and the pieces of information, such as localization,
+topology, function and interaction, are combined from many, often
+independent sources. This unavoidably result some weird and unexpected
+combinations which are false positives in the context of intercellular
+communication. This option sets some minimum criteria to remove most
+(but definitely not all!) of the wrong connections. These criteria
+are the followings: 1) the receiver must be plasma membrane
+transmembrane; 2) the curation effort for interactions must be larger
+than one; 3) the consensus score for annotations must be larger than
+the 50 percentile within the generic category (you can override this
+by \code{consensus_percentile}). 4) the transmitter must be secreted
+or exposed on the plasma membrane. These are very relaxed criteria,
+you can always tune them to be more stringent by filtering manually.}
+
+\item{simplify}{Logical: keep only the most often used columns. This
+function combines a network data frame with two copies of the
+intercell annotation data frames, all of them already having quite
+some columns. With this option we keep only the names of the
+interacting pair, their intercellular communication roles, and the
+minimal information of the origin of both the interaction and
+the annotations.}
+
+\item{consensus_percentile}{Numeric: a percentile cut off for the consensus
+score of generic categories in intercell annotations. The consensus
+score is the number of resources supporting the classification of an
+entity into a category based on combined information of many resources.
+Here you can apply a cut-off, keeping only the annotations supported
+by a higher number of resources than a certain percentile of each
+category. If \code{NULL} no filtering will be performed. The value is
+either in the 0-1 range, or will be divided by 100 if greater than 1.
+The percentiles will be calculated against the generic composite
+categories and then will be applied to their resource specific
+annotations and specific child categories.}
+
+\item{...}{If \code{simplify} is \code{TRUE}, additional column
+names can be passed here to \code{dplyr::select} on the final
+data frame. Otherwise ignored.}
 }
 \value{
 A dataframe containing information about protein-protein
@@ -49,7 +91,7 @@ interactions and the inter-cellular roles of the protiens involved in those
 interactions.
 }
 \description{
-Imports an intercellular network by mapping intercellular annotations
+Imports an intercellular network by combining intercellular annotations
 and protein interactions. First imports a network of protein-protein
 interactions. Then, it retrieves annotations about the proteins
 intercellular communication roles, once for the transmitter (delivering
@@ -63,14 +105,12 @@ proteins in each interaction annotated by the transmitter, and the target
 proteins by the receiver categories. If undirected interactions present
 (these are disabled by default) they will be duplicated, i.e. both
 partners can be both receiver and transmitter.
-If a cache file provided, its content will be returned without any further
-filtering.
 }
 \examples{
-intercellNetwork <- import_intercell_network(
-   interactions_param = list(datasets = 'ligrecextra'),
-   receiver_param = list(categories = c('receptor', 'transporter')),
-   transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
+intercell_network <- import_intercell_network(
+    interactions_param = list(datasets = 'ligrecextra'),
+    receiver_param = list(categories = c('receptor', 'transporter')),
+    transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
 )
 
 }
