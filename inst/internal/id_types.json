@@ -1,0 +1,35 @@
+{
+    "uniprot": {
+        "entrez": "database(GeneID)",
+        "genesymbol": "genes(PREFERRED)",
+        "genesymbol_syn": "genes(ALTERNATIVE)",
+        "hgnc": "database(HGNC)",
+        "embl": "database(embl)",
+        "entrez": "database(geneid)",
+        "refseqp": "database(refseq)",
+        "enst": "database(ensembl)",
+        "uniprot_entry": "entry name",
+        "uniprot": "id",
+        "protein_name": "protein names"
+    },
+    "uniprot_uploadlists": {
+        "uniprot": "ACC",
+        "uniprot_entry": "ID",
+        "embl": "EMBL",
+        "embl_id": "EMBL_ID",
+        "pir": "PIR",
+        "entrez": "P_ENTREZGENEID",
+        "gi": "P_GI",
+        "refseqp": "P_REFSEQ_AC",
+        "refseqn": "REFSEQ_NT_ID",
+        "ensembl": "ENSEMBL_ID",
+        "ensp": "ENSEMBL_PRO_ID",
+        "enst": "ENSEMBL_TRS_ID",
+        "ensg": "ENSEMBLGENOME_ID",
+        "ensgp": "ENSEMBLGENOME_PRO_ID",
+        "ensgt": "ENSEMBLGENOME_TRS_ID",
+        "hgnc": "HGNC_ID",
+        "pdb": "PDB_ID",
+        "genesymbol": "GENENAME"
+    }
+}
