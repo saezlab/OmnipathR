@@ -16,7 +16,8 @@ values.}
 \item{to}{Identifier type to be retrieved from UniProt. See Details for
 possible values.}
 
-\item{chunk_size}{Integer: query the identifiers in chunks of this size.}
+\item{chunk_size}{Integer: query the identifiers in chunks of this size.
+If you are experiencing download failures, try lower values.}
 }
 \value{
 A data frame (tibble) with columns `From` and `To`, the
@@ -30,14 +31,16 @@ service
 This function uses the uploadlists service of UniProt to obtain identifier
 translation tables. The possible values for `from` and `to` are the
 identifier type abbreviations used in the UniProt API, please refer to
-the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+the table here: \url{https://www.uniprot.org/help/api_idmapping} or
+the table of synonyms supported by the current package:
+\code{\link{translate_ids}}.
 Note: if the number of identifiers is larger than the chunk size the log
 message about the cache origin is not guaranteed to be correct (most
 of the times it is still correct).
 }
 \examples{
 uniprot_genesymbol <- uniprot_id_mapping_table(
-    c('P00533', 'P23771'), 'ID', 'GENENAME'
+    c('P00533', 'P23771'), uniprot, genesymbol
 )
 uniprot_genesymbol
 # # A tibble: 2 x 2
@@ -45,4 +48,8 @@ uniprot_genesymbol
 #   <chr>  <chr>
 # 1 P00533 EGFR
 # 2 P23771 GATA3
+
+}
+\seealso{
+\code{\link{translate_ids}}
 }

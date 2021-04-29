@@ -66,6 +66,7 @@ uniprot_domains <- decorator %@% function(FUN){
 #' @param to Identifier type to be retrieved from UniProt. See Details for
 #'     possible values.
 #' @param chunk_size Integer: query the identifiers in chunks of this size.
+#'     If you are experiencing download failures, try lower values.
 #'
 #' @return A data frame (tibble) with columns `From` and `To`, the
 #'     identifiers provided and the corresponding target IDs, respectively.
@@ -74,7 +75,9 @@ uniprot_domains <- decorator %@% function(FUN){
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
 #' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+#' the table here: \url{https://www.uniprot.org/help/api_idmapping} or
+#' the table of synonyms supported by the current package:
+#' \code{\link{translate_ids}}.
 #' Note: if the number of identifiers is larger than the chunk size the log
 #' message about the cache origin is not guaranteed to be correct (most
 #' of the times it is still correct).
@@ -87,7 +90,7 @@ uniprot_domains <- decorator %@% function(FUN){
 #'
 #' @examples
 #' uniprot_genesymbol <- uniprot_id_mapping_table(
-#'     c('P00533', 'P23771'), 'ID', 'GENENAME'
+#'     c('P00533', 'P23771'), uniprot, genesymbol
 #' )
 #' uniprot_genesymbol
 #' # # A tibble: 2 x 2
@@ -95,6 +98,8 @@ uniprot_domains <- decorator %@% function(FUN){
 #' #   <chr>  <chr>
 #' # 1 P00533 EGFR
 #' # 2 P23771 GATA3
+#'
+#' @seealso \code{\link{translate_ids}}
 uniprot_id_mapping_table <- function(
     identifiers,
     from,
@@ -117,7 +122,9 @@ uniprot_id_mapping_table <- function(
 
 #' R CMD check workaround, see details at \code{uniprot_id_mapping_table}
 #'
-#' @importFrom magrittr %T>%
+#' @importFrom magrittr %T>% %<>%
+#' @importFrom rlang !!!
+#' @importFrom dplyr recode
 #' @importFrom logger log_trace
 #'
 #' @noRd
@@ -127,6 +134,30 @@ uniprot_id_mapping_table <- function(
     to,
     .subdomain = 'www'
 ){
+
+    id_types <- list(
+        uniprot = 'ACC',
+        uniprot_entry = 'ID',
+        embl = 'EMBL',
+        embl_id = 'EMBL_ID',
+        pir = 'PIR',
+        entrez = 'P_ENTREZGENEID',
+        gi = 'P_GI',
+        refseqp = 'P_REFSEQ_AC',
+        refseqn = 'REFSEQ_NT_ID',
+        ensembl = 'ENSEMBL_ID',
+        ensp = 'ENSEMBL_PRO_ID',
+        enst = 'ENSEMBL_TRS_ID',
+        ensg = 'ENSEMBLGENOME_ID',
+        ensgp = 'ENSEMBLGENOME_PRO_ID',
+        ensgt = 'ENSEMBLGENOME_TRS_ID',
+        hgnc = 'HGNC_ID',
+        pdb = 'PDB_ID',
+        genesymbol = 'GENENAME'
+    )
+
+    from %<>% recode(!!!id_types)
+    to %<>% recode(!!!id_types)
 
     post <- list(
         from = from,
@@ -173,10 +204,38 @@ uniprot_id_mapping_table <- function(
 #' @return The data frame `d` a new column added with the translated IDs.
 #'
 #' @details
-#' This function uses the uploadlists service of UniProt to obtain identifier
-#' translation tables. The possible values for `from` and `to` are the
-#' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: \url{https://www.uniprot.org/help/api_idmapping}
+#' This function, depending on the `uploadlists` parameter, uses either
+#' the uploadlists service of UniProt or plain UniProt queries to obtain
+#' identifier translation tables. The possible values for `from` and `to`
+#' are the identifier type abbreviations used in the UniProt API, please
+#' refer to the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+#' In addition, simple synonyms are available which realize a uniform API
+#' for the uploadlists and UniProt query based backends. These are the
+#' followings:
+#'
+#'     | OmnipathR      | Uploadlists          | UniProt query           |
+#'     | -------------- | -------------------- | ----------------------- |
+#'     | uniprot        | ACC                  | id                      |
+#'     | uniprot_entry  | ID                   | entry name              |
+#'     | genesymbol     | GENENAME             | genes(PREFERRED)        |
+#'     | genesymbol_syn |                      | genes(ALTERNATIVE)      |
+#'     | hgnc           | HGNC_ID              | database(HGNC)          |
+#'     | entrez         | P_ENTREZGENEID       | database(geneid)        |
+#'     | ensg           | ENSEMBLGENOME_ID     |                         |
+#'     | enst           | ENSEMBL_TRS_ID       | database(ensembl)       |
+#'     | ensp           | ENSEMBL_PRO_ID       |                         |
+#'     | ensgt          | ENSEMBLGENOME_TRS_ID |                         |
+#'     | ensgp          | ENSEMBLGENOME_PRO_ID |                         |
+#'     | ensembl        | ENSEMBL_ID           |                         |
+#'     | protein_name   |                      | protein names           |
+#'     | refseqp        | P_REFSEQ_AC          | database(refseq)        |
+#'     | refseqn        | REFSEQ_NT_ID         |                         |
+#'     | embl           | EMBL                 | database(embl)          |
+#'     | embl_id        | EMBL_ID              |                         |
+#'     | gi             | P_GI                 |                         |
+#'     | pir            | PIR                  |                         |
+#'     | pdb            | PDB_ID               |                         |
+#'
 #' The mapping between identifiers can be ambiguous. In this case one row
 #' in the original data frame yields multiple rows in the returned data
 #' frame.
@@ -188,7 +247,7 @@ uniprot_id_mapping_table <- function(
 #'
 #' @examples
 #' d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
-#' d <- translate_ids(d, uniprot_id, genesymbol, 'ID', 'GENENAME')
+#' d <- translate_ids(d, uniprot_id, genesymbol, uniprot, genesymbol)
 #' d
 #' #   uniprot_id genesymbol
 #' # 1     P00533       EGFR
@@ -196,7 +255,11 @@ uniprot_id_mapping_table <- function(
 #' # 3     P43897       TSFM
 #' # 4     Q9Y2P5    SLC27A5
 #'
-#' @seealso \code{\link{uniprot_id_mapping_table}}
+#' @seealso \itemize{
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#' }
+#' @md
 translate_ids <- function(
     d, from_col, to_col, from, to,
     uploadlists = TRUE,
@@ -330,7 +393,8 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' The shortcuts are entrez, genesymbol, genesymbol_syn (synonym gene
 #' symbols), hgnc, embl, refseqp (RefSeq protein), enst (Ensembl transcript),
 #' uniprot_entry (UniProtKB AC, e.g. EGFR_HUMAN), protein_name (full name of
-#' the protein), uniprot (UniProtKB ID, e.g. P00533).
+#' the protein), uniprot (UniProtKB ID, e.g. P00533). For a complete table
+#' please refer to \code{\link{translate_ids}}.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate rename filter
@@ -351,6 +415,8 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' #  4 Q8NGN2 219873
 #' #  5 Q8NGC1 390439
 #' # # . with 20,713 more rows
+#'
+#' @seealso \code{\link{translate_ids}}
 uniprot_full_id_mapping_table <- function(
     to,
     from = 'id',
@@ -384,7 +450,7 @@ uniprot_full_id_mapping_table <- function(
                 '%s%s',
                 id_types[[.]][1],
                 `if`(
-                    is.null(id_types[[.]][2]),
+                    is.na(id_types[[.]][2]),
                     '',
                     sprintf('(%s)', id_types[[.]][2])
                 )
