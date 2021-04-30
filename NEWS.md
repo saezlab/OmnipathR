@@ -1,9 +1,42 @@
+## OmnipathR v2.99.17
+
++ Improved quality filtering of intercell networks
+
+## OmnipathR v2.99.16
+
++ Improved API for translate_ids
++ Quality filtering of intercell networks
+
+## OmnipathR v2.99.13
+
++ Functions to access KEGG Pathways
++ More robust access to UniProt (in case of network failures)
+
+## OmnipathR v2.99.11
+
++ Improved downloader backends
+
+## OmnipathR v2.99.8
+
++ OBO parser
++ Gene Ontology access, functions to work with ontology trees
++ Database manager
+
+## OmnipathR v2.99.7
+
++ New interactions query parameter: loops
++ Fixed many caching bugs
+
+## OmnipathR v2.99.6
+
++ All downloaders attempt 3 times
++ New resources: Human Phenotype Ontology and Gene Ontology annotations
+
 ## OmnipathR v2.99.0 (2021-03-08)
 
 + Many new resources besides OmniPath:
-BioPlex, ConsensusPathDB, EVEX, Gene Ontology,
-Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
-Human Phenotype Ontology, InWeb InBioMap, Pathway Commons,
+BioPlex, ConsensusPathDB, EVEX, Guide to Pharmacology (IUPHAR/BPS),
+Harmonizome, HTRIdb, InWeb InBioMap, Pathway Commons,
 Ramilowski et al. 2015, RegNetwork, ReMap, TF census,
 TRRUST and Vinayagam et al. 2011
 + Methods for converting network elements to Bio Model
