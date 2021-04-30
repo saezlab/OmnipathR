@@ -16,6 +16,10 @@ filter_intercell_network(
   consensus_percentile = 50,
   ligand_receptor = FALSE,
   simplify = FALSE,
+  omnipath = TRUE,
+  ligrecextra = TRUE,
+  kinaseextra = FALSE,
+  pathwayextra = FALSE,
   ...
 )
 }
@@ -67,6 +71,18 @@ some columns. With this option we keep only the names of the
 interacting pair, their intercellular communication roles, and the
 minimal information of the origin of both the interaction and
 the annotations.}
+
+\item{omnipath}{Logical: shortcut to include the "omnipath" dataset in
+the interactions query.}
+
+\item{ligrecextra}{Logical: shortcut to include the "ligrecextra" dataset
+in the interactions query.}
+
+\item{kinaseextra}{Logical: shortcut to include the "kinaseextra" dataset
+in the interactions query.}
+
+\item{pathwayextra}{Logical: shortcut to include the "pathwayextra"
+dataset in the interactions query.}
 
 \item{...}{If \code{simplify} is \code{TRUE}, additional column
 names can be passed here to \code{dplyr::select} on the final

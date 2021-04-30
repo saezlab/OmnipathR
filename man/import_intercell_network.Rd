@@ -14,6 +14,10 @@ import_intercell_network(
   high_confidence = FALSE,
   simplify = FALSE,
   consensus_percentile = NULL,
+  omnipath = TRUE,
+  ligrecextra = TRUE,
+  kinaseextra = !high_confidence,
+  pathwayextra = !high_confidence,
   ...
 )
 }
@@ -81,6 +85,18 @@ The percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.}
 
+\item{omnipath}{Logical: shortcut to include the "omnipath" dataset in
+the interactions query.}
+
+\item{ligrecextra}{Logical: shortcut to include the "ligrecextra" dataset
+in the interactions query.}
+
+\item{kinaseextra}{Logical: shortcut to include the "kinaseextra" dataset
+in the interactions query.}
+
+\item{pathwayextra}{Logical: shortcut to include the "pathwayextra"
+dataset in the interactions query.}
+
 \item{...}{If \code{simplify} is \code{TRUE}, additional column
 names can be passed here to \code{dplyr::select} on the final
 data frame. Otherwise ignored.}
@@ -105,6 +121,13 @@ proteins in each interaction annotated by the transmitter, and the target
 proteins by the receiver categories. If undirected interactions present
 (these are disabled by default) they will be duplicated, i.e. both
 partners can be both receiver and transmitter.
+}
+\details{
+By default this function creates almost the largest possible network of
+intercellular interactions. However, this might contain a large number
+of false positives. Please refer to the documentation of the arguments,
+especially \code{high_confidence}, and the
+\code{\link{filter_intercell_network}} function.
 }
 \examples{
 intercell_network <- import_intercell_network(

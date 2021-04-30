@@ -258,9 +258,10 @@ uniprot_id_mapping_table <- function(
 #'
 #' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym
 #' @importFrom magrittr %>% %<>%
-#' @importFrom dplyr pull left_join inner_join rename tail
+#' @importFrom dplyr pull left_join inner_join rename
 #' @importFrom purrr map reduce2
 #' @importFrom logger log_fatal
+#' @importFrom utils tail
 #' @export
 #'
 #' @seealso \itemize{

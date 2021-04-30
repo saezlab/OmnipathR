@@ -233,6 +233,8 @@ import_omnipath <- function(
 #' the download function.
 #' Not exported.
 #'
+#' @importFrom logger log_warn
+#'
 #' @noRd
 omnipath_check_param <- function(param){
 
@@ -268,7 +270,9 @@ omnipath_check_param <- function(param){
         'dorothea_levels' %in% names(param) &&
         !all(param$dorothea_levels %in% c('A', 'B', 'C', 'D'))
     ){
-        warning('DoRothEA confidence levels available are A, B, C and D.')
+        msg <- 'DoRothEA confidence levels available are A, B, C and D.'
+        log_warn(msg)
+        warning(msg)
     }
 
     # adding default fields if not disabled
@@ -2499,9 +2503,24 @@ get_intercell_resources <- function(dataset = NULL){
 #'     The percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
+#' @param omnipath Logical: shortcut to include the "omnipath" dataset in
+#'     the interactions query.
+#' @param ligrecextra Logical: shortcut to include the "ligrecextra" dataset
+#'     in the interactions query.
+#' @param kinaseextra Logical: shortcut to include the "kinaseextra" dataset
+#'     in the interactions query.
+#' @param pathwayextra Logical: shortcut to include the "pathwayextra"
+#'     dataset in the interactions query.
 #' @param ... If \code{simplify} is \code{TRUE}, additional column
 #'     names can be passed here to \code{dplyr::select} on the final
 #'     data frame. Otherwise ignored.
+#'
+#' @details
+#' By default this function creates almost the largest possible network of
+#' intercellular interactions. However, this might contain a large number
+#' of false positives. Please refer to the documentation of the arguments,
+#' especially \code{high_confidence}, and the
+#' \code{\link{filter_intercell_network}} function.
 #'
 #' @examples
 #' intercell_network <- import_intercell_network(
@@ -2536,6 +2555,10 @@ import_intercell_network <- function(
     high_confidence = FALSE,
     simplify = FALSE,
     consensus_percentile = NULL,
+    omnipath = TRUE,
+    ligrecextra = TRUE,
+    kinaseextra = !high_confidence,
+    pathwayextra = !high_confidence,
     ...
 ){
 
@@ -2543,15 +2566,15 @@ import_intercell_network <- function(
     parent <- secreted <- plasma_membrane_transmembrane <-
     plasma_membrane_peripheral <- NULL
 
+    datasets <-
+        environment() %>%
+        select_interaction_datasets
+
     # retrieving interactions
     interactions_param <- list(
             query_type = 'interactions',
-            datasets = c(
-                'omnipath',
-                'pathwayextra',
-                'kinaseextra',
-                'ligrecextra'
-            )
+            datasets = datasets,
+            fields = 'datasets'
         ) %>%
         insert_if_not_null(
             resources = resources,
@@ -2674,6 +2697,34 @@ import_intercell_network <- function(
 }
 
 
+#' Create a vector with dataset names from an environment with logical
+#' variables.
+#'
+#' @param envir Environment from the calling function where dataset names
+#'     present as logical variables.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr keep
+#'
+#' @noRd
+select_interaction_datasets <- function(envir){
+
+    envir %>%
+    as.list %>%
+    `[`(
+        c(
+            'omnipath',
+            'pathwayextra',
+            'kinaseextra',
+            'ligrecextra'
+        )
+    ) %>%
+    keep(identity) %>%
+    names
+
+}
+
+
 #' Quality filter an intercell network
 #'
 #' The intercell database  of OmniPath covers a very broad range of possible
@@ -2724,6 +2775,14 @@ import_intercell_network <- function(
 #'     interacting pair, their intercellular communication roles, and the
 #'     minimal information of the origin of both the interaction and
 #'     the annotations.
+#' @param omnipath Logical: shortcut to include the "omnipath" dataset in
+#'     the interactions query.
+#' @param ligrecextra Logical: shortcut to include the "ligrecextra" dataset
+#'     in the interactions query.
+#' @param kinaseextra Logical: shortcut to include the "kinaseextra" dataset
+#'     in the interactions query.
+#' @param pathwayextra Logical: shortcut to include the "pathwayextra"
+#'     dataset in the interactions query.
 #' @param ... If \code{simplify} is \code{TRUE}, additional column
 #'     names can be passed here to \code{dplyr::select} on the final
 #'     data frame. Otherwise ignored.
@@ -2760,6 +2819,10 @@ filter_intercell_network <- function(
     consensus_percentile = 50,
     ligand_receptor = FALSE,
     simplify = FALSE,
+    omnipath = TRUE,
+    ligrecextra = TRUE,
+    kinaseextra = FALSE,
+    pathwayextra = FALSE,
     ...
 ){
 
@@ -2786,6 +2849,34 @@ filter_intercell_network <- function(
         }
     }
 
+    datasets <-
+        environment() %>%
+        select_interaction_datasets
+
+    missing_datasets <- datasets %>% setdiff(colnames(network))
+
+    if(length(missing_datasets)){
+
+        msg <- sprintf(
+            paste0(
+                'filter_intercell_network: cannot select %s %s, ',
+                'apparently %s %s not included in the original ',
+                'download.'
+            ),
+            missing_datasets %>%
+            plural('dataset'),
+            missing_datasets %>%
+            pretty_list,
+            missing_datasets %>%
+            plural('this', 'these'),
+            missing_datasets %>%
+            plural('was', 'were')
+        )
+        log_warn(msg)
+        warning(msg)
+
+    }
+
     transmitter_topology %<>%
         recode(!!!topology_short) %>%
         walk(check_topo) %>%
@@ -2800,9 +2891,14 @@ filter_intercell_network <- function(
         sprintf('%s_intercell_target', .) %>%
         paste(collapse = ' | ')
 
+    datasets %<>%
+        intersect(colnames(network)) %>%
+        paste(collapse = ' | ')
+
     network %>%
     filter(eval(parse_expr(receiver_topology))) %>%
     filter(eval(parse_expr(transmitter_topology))) %>%
+    filter(eval(parse_expr(datasets))) %>%
     filter(
         curation_effort >= min_curation_effort &
         n_resources >= min_resources &
