@@ -340,6 +340,7 @@ omnipath_check_param <- function(param){
 #' adding all user or package defined query string parameters.
 #' Not exported.
 #'
+#' @importFrom magrittr %>%
 #' @importFrom logger log_warn
 #'
 #' @noRd
@@ -360,8 +361,9 @@ omnipath_url <- function(param){
     if(length(unknown_param) > 0L){
 
         log_warn(
-            'Unknown parameter(s): %s.',
-            paste(unknown_param, collapse = ', ')
+            'Unknown %s: %s.',
+            unknown_param %>% plural('parameter'),
+            unknown_param %>% pretty_list
         )
 
     }
@@ -2258,6 +2260,11 @@ pivot_annotations <- function(annotations){
 #'     percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
+#' @param loc_consensus_percentile Numeric: similar to
+#'     code{consensus_percentile} for major localizations. For example, with
+#'     a value of 50, the secreted, plasma membrane transmembrane or
+#'     peripheral attributes will be true only where at least 50 percent
+#'     of the resources support these.
 #' @param ... Additional optional arguments, ignored.
 #'
 #' @examples
@@ -2290,6 +2297,7 @@ import_omnipath_intercell <- function(
     topology = NULL,
     causality = NULL,
     consensus_percentile = NULL,
+    loc_consensus_percentile = NULL,
     ...
 ){
 
@@ -2303,10 +2311,14 @@ import_omnipath_intercell <- function(
         'plasma_membrane_transmembrane'
     )
     args$consensus_percentile <- NULL
+    args$loc_consensus_percentile <- NULL
 
     result <-
         do.call(import_omnipath, args) %>%
-        intercell_consensus_filter(consensus_percentile)
+        intercell_consensus_filter(
+            consensus_percentile,
+            loc_consensus_percentile
+        )
 
     return(result)
 
@@ -2328,6 +2340,11 @@ import_omnipath_intercell <- function(
 #'     percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
+#' @param loc_percentile Numeric: similar to code{percentile} for major
+#'     localizations. For example, with a value of 50, the secreted, plasma
+#'     membrane transmembrane or peripheral attributes will be true only
+#'     where at least 50 percent of the resources support these.
+#'
 #' @return The data frame in \code{data} filtered by the consensus scores.
 #'
 #' @examples
@@ -2342,8 +2359,14 @@ import_omnipath_intercell <- function(
 #' @importFrom dplyr group_by filter ungroup bind_rows
 #' @importFrom dplyr select distinct inner_join pull
 #' @importFrom stats quantile
+#' @importFrom rlang !! := sym
+#' @importFrom purrr reduce
 #' @export
-intercell_consensus_filter <- function(data, percentile = NULL){
+intercell_consensus_filter <- function(
+    data,
+    percentile = NULL,
+    loc_percentile = NULL
+){
 
     # NSE vs. R CMD check workaround
     scope <- source <- parent <- consensus_score <- NULL
@@ -2369,12 +2392,48 @@ intercell_consensus_filter <- function(data, percentile = NULL){
         pull(parent) %>%
         unique
 
-    data %>%
-    inner_join(thresholds, by = c('parent', 'uniprot')) %>%
-    bind_rows(
-        data %>%
-        filter(!parent %in% composite_parents)
-    )
+    data %<>%
+        inner_join(thresholds, by = c('parent', 'uniprot')) %>%
+        bind_rows(
+            data %>%
+            filter(!parent %in% composite_parents)
+        )
+
+    if(!is.null(loc_percentile)){
+
+        major_locations <- c(
+            'secreted',
+            'plasma_membrane_transmembrane',
+            'plasma_membrane_peripheral'
+        )
+
+        locations <- import_omnipath_intercell(
+            aspect = 'locational',
+            parent = major_locations,
+            consensus_percentile = loc_percentile
+        )
+
+        data %<>%
+        {reduce(
+            major_locations,
+            function(data, loc){
+
+                in_location <-
+                    locations %>%
+                    filter(!!sym(loc)) %>%
+                    pull(uniprot) %>%
+                    unique
+
+                data %>%
+                mutate(!!sym(loc) := uniprot %in% in_location)
+
+            },
+            .init = .
+        )}
+
+    }
+
+    return(data)
 
 }
 
@@ -2503,6 +2562,11 @@ get_intercell_resources <- function(dataset = NULL){
 #'     The percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
+#' @param loc_consensus_percentile Numeric: similar to
+#'     code{consensus_percentile} for major localizations. For example, with
+#'     a value of 50, the secreted, plasma membrane transmembrane or
+#'     peripheral attributes will be true only where at least 50 percent
+#'     of the resources support these.
 #' @param omnipath Logical: shortcut to include the "omnipath" dataset in
 #'     the interactions query.
 #' @param ligrecextra Logical: shortcut to include the "ligrecextra" dataset
@@ -2555,6 +2619,7 @@ import_intercell_network <- function(
     high_confidence = FALSE,
     simplify = FALSE,
     consensus_percentile = NULL,
+    loc_consensus_percentile = NULL,
     omnipath = TRUE,
     ligrecextra = TRUE,
     kinaseextra = !high_confidence,
@@ -2593,6 +2658,9 @@ import_intercell_network <- function(
     consensus_percentile %<>%
         {`if`(high_confidence, . %||% 50, .)}
 
+    loc_consensus_percentile %<>%
+        {`if`(high_confidence, . %||% 30, .)}
+
     transmitter_param <- list(
             causality = 'trans',
             scope = 'generic'
@@ -2600,7 +2668,8 @@ import_intercell_network <- function(
         insert_if_not_null(
             resources = resources,
             entity_types = entity_types,
-            consensus_percentile = consensus_percentile
+            consensus_percentile = consensus_percentile,
+            loc_consensus_percentile = loc_consensus_percentile
         ) %>%
         {`if`(
             ligand_receptor,
@@ -2765,6 +2834,11 @@ select_interaction_datasets <- function(envir){
 #'     The percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
+#' @param loc_consensus_percentile Numeric: similar to
+#'     code{consensus_percentile} for major localizations. For example, with
+#'     a value of 50, the secreted, plasma membrane transmembrane or
+#'     peripheral attributes will be true only where at least 50 percent
+#'     of the resources support these.
 #' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
 #'     annotations will be used instead of the more generic *transmitter* and
 #'     *receiver* categories.
@@ -2817,6 +2891,7 @@ filter_intercell_network <- function(
     min_references = 0,
     min_provenances = 1,
     consensus_percentile = 50,
+    loc_consensus_percentile = 30,
     ligand_receptor = FALSE,
     simplify = FALSE,
     omnipath = TRUE,
@@ -2831,7 +2906,8 @@ filter_intercell_network <- function(
 
     consensus_filter <-
         import_omnipath_intercell(
-            consensus_percentile = consensus_percentile
+            consensus_percentile = consensus_percentile,
+            loc_consensus_percentile = loc_consensus_percentile
         ) %>%
         select(uniprot, parent) %>%
         distinct

@@ -14,6 +14,7 @@ import_intercell_network(
   high_confidence = FALSE,
   simplify = FALSE,
   consensus_percentile = NULL,
+  loc_consensus_percentile = NULL,
   omnipath = TRUE,
   ligrecextra = TRUE,
   kinaseextra = !high_confidence,
@@ -84,6 +85,12 @@ either in the 0-1 range, or will be divided by 100 if greater than 1.
 The percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.}
+
+\item{loc_consensus_percentile}{Numeric: similar to
+code{consensus_percentile} for major localizations. For example, with
+a value of 50, the secreted, plasma membrane transmembrane or
+peripheral attributes will be true only where at least 50 percent
+of the resources support these.}
 
 \item{omnipath}{Logical: shortcut to include the "omnipath" dataset in
 the interactions query.}

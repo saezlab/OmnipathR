@@ -4,7 +4,7 @@
 \alias{intercell_consensus_filter}
 \title{Quality filter for intercell annotations}
 \usage{
-intercell_consensus_filter(data, percentile = NULL)
+intercell_consensus_filter(data, percentile = NULL, loc_percentile = NULL)
 }
 \arguments{
 \item{data}{A data frame with intercell annotations, as provided by
@@ -21,6 +21,11 @@ of resources than a certain percentile of each category. If
 percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.}
+
+\item{loc_percentile}{Numeric: similar to code{percentile} for major
+localizations. For example, with a value of 50, the secreted, plasma
+membrane transmembrane or peripheral attributes will be true only
+where at least 50 percent of the resources support these.}
 }
 \value{
 The data frame in \code{data} filtered by the consensus scores.

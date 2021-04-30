@@ -14,6 +14,7 @@ filter_intercell_network(
   min_references = 0,
   min_provenances = 1,
   consensus_percentile = 50,
+  loc_consensus_percentile = 30,
   ligand_receptor = FALSE,
   simplify = FALSE,
   omnipath = TRUE,
@@ -59,6 +60,12 @@ either in the 0-1 range, or will be divided by 100 if greater than 1.
 The percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.}
+
+\item{loc_consensus_percentile}{Numeric: similar to
+code{consensus_percentile} for major localizations. For example, with
+a value of 50, the secreted, plasma membrane transmembrane or
+peripheral attributes will be true only where at least 50 percent
+of the resources support these.}
 
 \item{ligand_receptor}{Logical. If TRUE, only *ligand* and *receptor*
 annotations will be used instead of the more generic *transmitter* and
