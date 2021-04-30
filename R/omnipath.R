@@ -2899,8 +2899,8 @@ select_interaction_datasets <- function(envir){
 #' )
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr select distinct filter inner_join
-#' @importFrom rlang !!! parse_expr
+#' @importFrom dplyr select distinct filter inner_join left_join
+#' @importFrom rlang !!! parse_expr exprs syms
 #' @importFrom logger log_warn
 #' @importFrom purrr walk
 #' @export
@@ -2937,20 +2937,31 @@ filter_intercell_network <- function(
     # NSE vs. R CMD check workaround
     parent <- curation_effort <- n_resources <- n_references <- NULL
 
-    consensus_filter <-
+    major_locations <- c(
+        'secreted',
+        'plasma_membrane_transmembrane',
+        'plasma_membrane_peripheral'
+    )
+
+    consensus <-
         import_omnipath_intercell(
             consensus_percentile = consensus_percentile,
             loc_consensus_percentile = loc_consensus_percentile
-        ) %>%
+        )
+
+    consensus_annot <-
+        consensus %>%
         select(uniprot, parent) %>%
         distinct
 
+    consensus_loc <-
+        consensus %>%
+        select(uniprot, !!!syms(major_locations)) %>%
+        distinct
+
     topology_short <-
-        list(
-            sec = 'secreted',
-            pmtm = 'plasma_membrane_transmembrane',
-            pmp = 'plasma_membrane_peripheral'
-        )
+        major_locations %>%
+        set_names(c('sec', 'pmtm', 'pmp'))
     topologies <- unlist(topology_short)
     check_topo <- function(x){
         if(!x %in% topologies){
@@ -3005,6 +3016,19 @@ filter_intercell_network <- function(
         paste(collapse = ' | ')
 
     network %>%
+    {`if`(
+        is.null(loc_consensus_percentile),
+        .,
+        select(
+            .,
+            -(!!!exprs(sprintf('%s_intercell_source', major_locations))),
+            -(!!!exprs(sprintf('%s_intercell_target', major_locations)))
+        ) %>%
+        left_join(consensus_loc, by = c('source' = 'uniprot')) %>%
+        left_join(consensus_loc, by = c('target' = 'uniprot'),
+            suffix = c('_intercell_source', '_intercell_target')
+        )
+    )} %>%
     filter(eval(parse_expr(receiver_topology))) %>%
     filter(eval(parse_expr(transmitter_topology))) %>%
     filter(eval(parse_expr(datasets))) %>%
@@ -3018,14 +3042,14 @@ filter_intercell_network <- function(
         )
     ) %>%
     inner_join(
-        consensus_filter,
+        consensus_annot,
         by = c(
             'parent_intercell_source' = 'parent',
             'source' = 'uniprot'
         )
     ) %>%
     inner_join(
-        consensus_filter,
+        consensus_annot,
         by = c(
             'parent_intercell_target' = 'parent',
             'target' = 'uniprot'
