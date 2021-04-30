@@ -36,6 +36,7 @@
     omnipath_init_db(pkgname)
     .load_magic_bytes(pkgname)
     .load_urls(pkgname)
+    .load_id_types(pkgname)
 
     logger::log_info('Welcome to OmnipathR!')
 

@@ -12,7 +12,7 @@
         "uniprot": "id",
         "protein_name": "protein names"
     },
-    "uniprot_uploadlists": {
+    "uploadlists": {
         "uniprot": "ACC",
         "uniprot_entry": "ID",
         "embl": "EMBL",

@@ -10,11 +10,11 @@ uniprot_id_mapping_table(identifiers, from, to, chunk_size = 5000)
 \arguments{
 \item{identifiers}{Character vector of identifiers}
 
-\item{from}{Type of the identifiers provided. See Details for possible
-values.}
+\item{from}{Character or symbol: type of the identifiers provided.
+See Details for possible values.}
 
-\item{to}{Identifier type to be retrieved from UniProt. See Details for
-possible values.}
+\item{to}{Character or symbol: identifier type to be retrieved from
+UniProt. See Details for possible values.}
 
 \item{chunk_size}{Integer: query the identifiers in chunks of this size.
 If you are experiencing download failures, try lower values.}
