@@ -2340,10 +2340,10 @@ import_omnipath_intercell <- function(
 #'     percentiles will be calculated against the generic composite
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
-#' @param loc_percentile Numeric: similar to code{percentile} for major
+#' @param loc_percentile Numeric: similar to \code{percentile} for major
 #'     localizations. For example, with a value of 50, the secreted, plasma
-#'     membrane transmembrane or peripheral attributes will be true only
-#'     where at least 50 percent of the resources support these.
+#'     membrane transmembrane or peripheral attributes will be \code{TRUE}
+#'     only where at least 50 percent of the resources support these.
 #'
 #' @return The data frame in \code{data} filtered by the consensus scores.
 #'
@@ -2525,9 +2525,9 @@ get_intercell_resources <- function(dataset = NULL){
 #'     CellChatDB, connected by connections from CellChatDB.
 #' @param entity_types Character, possible values are "protein", "complex" or
 #'     both.
-#' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
-#'     annotations will be used instead of the more generic *transmitter* and
-#'     *receiver* categories.
+#' @param ligand_receptor Logical. If \code{TRUE}, only \emph{ligand} and
+#'     \emph{receptor} annotations will be used instead of the more generic
+#'     \emph{transmitter} and \emph{receiver} categories.
 #' @param high_confidence Logical: shortcut to do some filtering in order to
 #'     include only higher confidence interactions. The intercell database
 #'     of OmniPath covers a very broad range of possible ways of cell to cell
@@ -2542,8 +2542,13 @@ get_intercell_resources <- function(dataset = NULL){
 #'     than one; 3) the consensus score for annotations must be larger than
 #'     the 50 percentile within the generic category (you can override this
 #'     by \code{consensus_percentile}). 4) the transmitter must be secreted
-#'     or exposed on the plasma membrane. These are very relaxed criteria,
-#'     you can always tune them to be more stringent by filtering manually.
+#'     or exposed on the plasma membrane. 5) The major localizations have
+#'     to be supported by at least 30 percent of the relevant resources (
+#'     you can override this by \code{loc_consensus_percentile}). 6) The
+#'     datasets with lower level of curation (\emph{kinaseextra} and \emph{
+#'     pathwayextra}) will be disabled. These are very relaxed criteria,
+#'     you can always tune them to be more stringent by filtering manually,
+#'     using \code{\link{filter_intercell_network}}.
 #' @param simplify Logical: keep only the most often used columns. This
 #'     function combines a network data frame with two copies of the
 #'     intercell annotation data frames, all of them already having quite
@@ -2551,6 +2556,10 @@ get_intercell_resources <- function(dataset = NULL){
 #'     interacting pair, their intercellular communication roles, and the
 #'     minimal information of the origin of both the interaction and
 #'     the annotations.
+#' @param unique_pairs Logical: instead of having separate rows for each
+#'     pair of annotations, drop the annotations and reduce the data frame to
+#'     unique interacting pairs. See \code{\link{unique_intercell_network}}
+#'     for details.
 #' @param consensus_percentile Numeric: a percentile cut off for the consensus
 #'     score of generic categories in intercell annotations. The consensus
 #'     score is the number of resources supporting the classification of an
@@ -2563,28 +2572,32 @@ get_intercell_resources <- function(dataset = NULL){
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
 #' @param loc_consensus_percentile Numeric: similar to
-#'     code{consensus_percentile} for major localizations. For example, with
+#'     \code{consensus_percentile} for major localizations. For example, with
 #'     a value of 50, the secreted, plasma membrane transmembrane or
-#'     peripheral attributes will be true only where at least 50 percent
-#'     of the resources support these.
-#' @param omnipath Logical: shortcut to include the "omnipath" dataset in
-#'     the interactions query.
-#' @param ligrecextra Logical: shortcut to include the "ligrecextra" dataset
+#'     peripheral attributes will be \code{TRUE} only where at least 50
+#'     percent of the resources support these.
+#' @param omnipath Logical: shortcut to include the \emph{omnipath} dataset
 #'     in the interactions query.
-#' @param kinaseextra Logical: shortcut to include the "kinaseextra" dataset
-#'     in the interactions query.
-#' @param pathwayextra Logical: shortcut to include the "pathwayextra"
+#' @param ligrecextra Logical: shortcut to include the \emph{ligrecextra}
 #'     dataset in the interactions query.
-#' @param ... If \code{simplify} is \code{TRUE}, additional column
-#'     names can be passed here to \code{dplyr::select} on the final
-#'     data frame. Otherwise ignored.
+#' @param kinaseextra Logical: shortcut to include the \emph{kinaseextra}
+#'     dataset in the interactions query.
+#' @param pathwayextra Logical: shortcut to include the \emph{pathwayextra}
+#'     dataset in the interactions query.
+#' @param ... If \code{simplify} or \code{unique_pairs} is \code{TRUE},
+#'     additional column  names can be passed here to \code{dplyr::select}
+#'     on the final data frame. Otherwise ignored.
 #'
 #' @details
 #' By default this function creates almost the largest possible network of
 #' intercellular interactions. However, this might contain a large number
 #' of false positives. Please refer to the documentation of the arguments,
-#' especially \code{high_confidence}, and the
-#' \code{\link{filter_intercell_network}} function.
+#' especially \code{high_confidence}, and the \code{\link{
+#' filter_intercell_network}} function. Note: if you restrict the query to
+#' certain intercell annotation resources or small categories, it's not
+#' recommended to use the \code{consensus_percentile} or
+#' \code{high_confidence} options, instead filter the network with \code{
+#' \link{filter_intercell_network}} for more consistent results.
 #'
 #' @examples
 #' intercell_network <- import_intercell_network(
@@ -2608,6 +2621,9 @@ get_intercell_resources <- function(dataset = NULL){
 #'     \item{\code{\link{import_pathwayextra_interactions}}}
 #'     \item{\code{\link{import_kinaseextra_interactions}}}
 #'     \item{\code{\link{import_ligrecextra_interactions}}}
+#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{simplify_intercell_network}}}
+#'     \item{\code{\link{filter_intercell_network}}}
 #' }
 import_intercell_network <- function(
     interactions_param = list(),
@@ -2618,6 +2634,7 @@ import_intercell_network <- function(
     ligand_receptor = FALSE,
     high_confidence = FALSE,
     simplify = FALSE,
+    unique_pairs = FALSE,
     consensus_percentile = NULL,
     loc_consensus_percentile = NULL,
     omnipath = TRUE,
@@ -2761,6 +2778,11 @@ import_intercell_network <- function(
         simplify,
         simplify_intercell_network(., ...),
         .
+    )} %>%
+    {`if`(
+        unique_pairs,
+        unique_intercell_network(., ...),
+        .
     )}
 
 }
@@ -2821,9 +2843,9 @@ select_interaction_datasets <- function(envir){
 #' @param min_references Numeric: minimum number of references for
 #'     interactions. Use zero to disable filtering.
 #' @param min_provenances Numeric: minimum number of provenances (either
-#'     resources or references) for interactions. Use zero or one for
+#'     resources or references) for interactions. Use zero or one to
 #'     disable filtering.
-#' @param consensus_percentile Numeric: percentile cut off for the consensus
+#' @param consensus_percentile Numeric: percentile threshold for the consensus
 #'     score of generic categories in intercell annotations. The consensus
 #'     score is the number of resources supporting the classification of an
 #'     entity into a category based on combined information of many resources.
@@ -2835,13 +2857,13 @@ select_interaction_datasets <- function(envir){
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
 #' @param loc_consensus_percentile Numeric: similar to
-#'     code{consensus_percentile} for major localizations. For example, with
+#'     \code{consensus_percentile} for major localizations. For example, with
 #'     a value of 50, the secreted, plasma membrane transmembrane or
-#'     peripheral attributes will be true only where at least 50 percent
-#'     of the resources support these.
-#' @param ligand_receptor Logical. If TRUE, only *ligand* and *receptor*
-#'     annotations will be used instead of the more generic *transmitter* and
-#'     *receiver* categories.
+#'     peripheral attributes will be \code{TRUE} only where at least 50
+#'     percent of the resources support these.
+#' @param ligand_receptor Logical. If \code{TRUE}, only \emph{ligand} and
+#'     \emph{receptor} annotations will be used instead of the more generic
+#'     \emph{transmitter} and \emph{receiver} categories.
 #' @param simplify Logical: keep only the most often used columns. This
 #'     function combines a network data frame with two copies of the
 #'     intercell annotation data frames, all of them already having quite
@@ -2849,17 +2871,21 @@ select_interaction_datasets <- function(envir){
 #'     interacting pair, their intercellular communication roles, and the
 #'     minimal information of the origin of both the interaction and
 #'     the annotations.
-#' @param omnipath Logical: shortcut to include the "omnipath" dataset in
-#'     the interactions query.
-#' @param ligrecextra Logical: shortcut to include the "ligrecextra" dataset
+#' @param unique_pairs Logical: instead of having separate rows for each
+#'     pair of annotations, drop the annotations and reduce the data frame to
+#'     unique interacting pairs. See \code{\link{unique_intercell_network}}
+#'     for details.
+#' @param omnipath Logical: shortcut to include the \emph{omnipath} dataset
 #'     in the interactions query.
-#' @param kinaseextra Logical: shortcut to include the "kinaseextra" dataset
-#'     in the interactions query.
-#' @param pathwayextra Logical: shortcut to include the "pathwayextra"
+#' @param ligrecextra Logical: shortcut to include the \emph{ligrecextra}
 #'     dataset in the interactions query.
-#' @param ... If \code{simplify} is \code{TRUE}, additional column
-#'     names can be passed here to \code{dplyr::select} on the final
-#'     data frame. Otherwise ignored.
+#' @param kinaseextra Logical: shortcut to include the \emph{kinaseextra}
+#'     dataset in the interactions query.
+#' @param pathwayextra Logical: shortcut to include the \emph{pathwayextra}
+#'     dataset in the interactions query.
+#' @param ... If \code{simplify} or \code{unique_pairs} is \code{TRUE},
+#'     additional column  names can be passed here to \code{dplyr::select}
+#'     on the final data frame. Otherwise ignored.
 #'
 #' @return An intercell network data frame filtered.
 #'
@@ -2878,6 +2904,12 @@ select_interaction_datasets <- function(envir){
 #' @importFrom logger log_warn
 #' @importFrom purrr walk
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{simplify_intercell_network}}}
+#' }
 filter_intercell_network <- function(
     network,
     transmitter_topology = c(
@@ -2894,6 +2926,7 @@ filter_intercell_network <- function(
     loc_consensus_percentile = 30,
     ligand_receptor = FALSE,
     simplify = FALSE,
+    unique_pairs = FALSE,
     omnipath = TRUE,
     ligrecextra = TRUE,
     kinaseextra = FALSE,
@@ -3011,6 +3044,11 @@ filter_intercell_network <- function(
         simplify,
         simplify_intercell_network(., ...),
         .
+    )} %>%
+    {`if`(
+        unique_pairs,
+        unique_intercell_network(., ...),
+        .
     )}
 
 }
@@ -3040,6 +3078,12 @@ filter_intercell_network <- function(
 #' @importFrom dplyr select
 #' @importFrom rlang ensyms !!!
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{filter_intercell_network}}}
+#' }
 simplify_intercell_network <- function(network, ...){
 
     # NSE vs. R CMD check workaround
@@ -3070,6 +3114,59 @@ simplify_intercell_network <- function(network, ...){
 
     network %>%
     select(!!!simplify_cols)
+
+}
+
+
+#' Unique intercellular interactions
+#'
+#' In the intercellular network data frames produced by \code{\link{
+#' import_intercell_network}}, by default each pair of annotations for an
+#' interaction is represented in a separate row. This function drops the
+#' annotations and keeps only the distinct interacting pairs.
+#'
+#' @param network An intercellular network data frame as produced by
+#'     \code{\link{import_intercell_network}}.
+#' @param ... Additional columns to keep. Note: if these have multiple
+#'     values for an interacting pair, only the first row will be
+#'     preserved.
+#'
+#' @return A data frame with interacting pairs and interaction attributes.
+#'
+#' @examples
+#' icn <- import_intercell_network()
+#' icn_unique <- unique_intercell_network(icn)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select distinct
+#' @importFrom rlang !!!
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{simplify_intercell_network}}}
+#'     \item{\code{\link{filter_intercell_network}}}
+#' }
+unique_intercell_network <- function(network, ...){
+
+    cols <-
+        alist(
+            source,
+            target,
+            source_genesymbol,
+            target_genesymbol,
+            is_directed,
+            is_stimulation,
+            is_inhibition,
+            sources,
+            references
+        ) %>%
+        c(ensyms(...)) %>%
+        unique
+
+    network %>%
+    select(!!!cols) %>%
+    distinct(source, target)
 
 }
 

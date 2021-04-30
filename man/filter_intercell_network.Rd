@@ -17,6 +17,7 @@ filter_intercell_network(
   loc_consensus_percentile = 30,
   ligand_receptor = FALSE,
   simplify = FALSE,
+  unique_pairs = FALSE,
   omnipath = TRUE,
   ligrecextra = TRUE,
   kinaseextra = FALSE,
@@ -46,10 +47,10 @@ interactions. The value 1 means no filtering.}
 interactions. Use zero to disable filtering.}
 
 \item{min_provenances}{Numeric: minimum number of provenances (either
-resources or references) for interactions. Use zero or one for
+resources or references) for interactions. Use zero or one to
 disable filtering.}
 
-\item{consensus_percentile}{Numeric: percentile cut off for the consensus
+\item{consensus_percentile}{Numeric: percentile threshold for the consensus
 score of generic categories in intercell annotations. The consensus
 score is the number of resources supporting the classification of an
 entity into a category based on combined information of many resources.
@@ -62,14 +63,14 @@ categories and then will be applied to their resource specific
 annotations and specific child categories.}
 
 \item{loc_consensus_percentile}{Numeric: similar to
-code{consensus_percentile} for major localizations. For example, with
+\code{consensus_percentile} for major localizations. For example, with
 a value of 50, the secreted, plasma membrane transmembrane or
-peripheral attributes will be true only where at least 50 percent
-of the resources support these.}
+peripheral attributes will be \code{TRUE} only where at least 50
+percent of the resources support these.}
 
-\item{ligand_receptor}{Logical. If TRUE, only *ligand* and *receptor*
-annotations will be used instead of the more generic *transmitter* and
-*receiver* categories.}
+\item{ligand_receptor}{Logical. If \code{TRUE}, only \emph{ligand} and
+\emph{receptor} annotations will be used instead of the more generic
+\emph{transmitter} and \emph{receiver} categories.}
 
 \item{simplify}{Logical: keep only the most often used columns. This
 function combines a network data frame with two copies of the
@@ -79,21 +80,26 @@ interacting pair, their intercellular communication roles, and the
 minimal information of the origin of both the interaction and
 the annotations.}
 
-\item{omnipath}{Logical: shortcut to include the "omnipath" dataset in
-the interactions query.}
+\item{unique_pairs}{Logical: instead of having separate rows for each
+pair of annotations, drop the annotations and reduce the data frame to
+unique interacting pairs. See \code{\link{unique_intercell_network}}
+for details.}
 
-\item{ligrecextra}{Logical: shortcut to include the "ligrecextra" dataset
+\item{omnipath}{Logical: shortcut to include the \emph{omnipath} dataset
 in the interactions query.}
 
-\item{kinaseextra}{Logical: shortcut to include the "kinaseextra" dataset
-in the interactions query.}
-
-\item{pathwayextra}{Logical: shortcut to include the "pathwayextra"
+\item{ligrecextra}{Logical: shortcut to include the \emph{ligrecextra}
 dataset in the interactions query.}
 
-\item{...}{If \code{simplify} is \code{TRUE}, additional column
-names can be passed here to \code{dplyr::select} on the final
-data frame. Otherwise ignored.}
+\item{kinaseextra}{Logical: shortcut to include the \emph{kinaseextra}
+dataset in the interactions query.}
+
+\item{pathwayextra}{Logical: shortcut to include the \emph{pathwayextra}
+dataset in the interactions query.}
+
+\item{...}{If \code{simplify} or \code{unique_pairs} is \code{TRUE},
+additional column  names can be passed here to \code{dplyr::select}
+on the final data frame. Otherwise ignored.}
 }
 \value{
 An intercell network data frame filtered.
@@ -118,4 +124,11 @@ icn_f <- filter_intercell_network(
     simplify = TRUE
 )
 
+}
+\seealso{
+\itemize{
+    \item{\code{\link{import_intercell_network}}}
+    \item{\code{\link{unique_intercell_network}}}
+    \item{\code{\link{simplify_intercell_network}}}
+}
 }
