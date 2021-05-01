@@ -2546,9 +2546,9 @@ get_intercell_resources <- function(dataset = NULL){
 #'     to be supported by at least 30 percent of the relevant resources (
 #'     you can override this by \code{loc_consensus_percentile}). 6) The
 #'     datasets with lower level of curation (\emph{kinaseextra} and \emph{
-#'     pathwayextra}) will be disabled. These are very relaxed criteria,
-#'     you can always tune them to be more stringent by filtering manually,
-#'     using \code{\link{filter_intercell_network}}.
+#'     pathwayextra}) will be disabled. These criteria are of medium
+#'     stringency, you can always tune them to be more relaxed or stringent
+#'     by filtering manually, using \code{\link{filter_intercell_network}}.
 #' @param simplify Logical: keep only the most often used columns. This
 #'     function combines a network data frame with two copies of the
 #'     intercell annotation data frames, all of them already having quite
