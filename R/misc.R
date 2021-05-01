@@ -551,3 +551,48 @@ chunks <- function(v, size){
     split(seq_along(.) %>% `-`(1) %>% `%%`(size) %>% `==`(0) %>% cumsum)
 
 }
+
+
+#' Pretty print a list of words
+#'
+#' @param words Character vector with words.
+#' @param quotes Logical: wrap all words in backticks.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom utils head tail
+#'
+#' @noRd
+pretty_list <- function(words, quotes = TRUE){
+
+    words %>%
+    sort %>%
+    {`if`(quotes, sprintf('`%s`', .), .)} %>%
+    {sprintf(
+        '%s%s%s',
+        paste(head(., -1), collapse = ', '),
+        `if`(length(.) > 1, ' and ', ''),
+        tail(., 1)
+    )}
+
+}
+
+
+#' Plural form of a word depending on the count of the objects
+#'
+#' @param objects The objects to count.
+#' @param word Character: the name of the objects.
+#' @param irregular Character: irregular plural form (anything else than
+#'     adding an "s").
+#'
+#' @importFrom rlang %||%
+#'
+#' @noRd
+plural <- function(objects, word, irregular = NULL){
+
+    `if`(
+        length(objects) > 1,
+        irregular %||% sprintf('%ss', word),
+        word
+    )
+
+}

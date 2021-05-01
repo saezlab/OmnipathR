@@ -39,7 +39,7 @@
     omnipath.url = 'https://omnipathdb.org/',
     omnipath.license = 'academic',
     omnipath.password = NULL,
-    prints = FALSE,
+    omnipath.print_urls = FALSE,
     omnipath.loglevel = 'trace',
     omnipath.console_loglevel = 'success',
     omnipath.logfile = NULL,

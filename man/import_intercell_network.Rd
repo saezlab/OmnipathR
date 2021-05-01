@@ -13,7 +13,13 @@ import_intercell_network(
   ligand_receptor = FALSE,
   high_confidence = FALSE,
   simplify = FALSE,
+  unique_pairs = FALSE,
   consensus_percentile = NULL,
+  loc_consensus_percentile = NULL,
+  omnipath = TRUE,
+  ligrecextra = TRUE,
+  kinaseextra = !high_confidence,
+  pathwayextra = !high_confidence,
   ...
 )
 }
@@ -40,9 +46,9 @@ CellChatDB, connected by connections from CellChatDB.}
 \item{entity_types}{Character, possible values are "protein", "complex" or
 both.}
 
-\item{ligand_receptor}{Logical. If TRUE, only *ligand* and *receptor*
-annotations will be used instead of the more generic *transmitter* and
-*receiver* categories.}
+\item{ligand_receptor}{Logical. If \code{TRUE}, only \emph{ligand} and
+\emph{receptor} annotations will be used instead of the more generic
+\emph{transmitter} and \emph{receiver} categories.}
 
 \item{high_confidence}{Logical: shortcut to do some filtering in order to
 include only higher confidence interactions. The intercell database
@@ -58,8 +64,13 @@ transmembrane; 2) the curation effort for interactions must be larger
 than one; 3) the consensus score for annotations must be larger than
 the 50 percentile within the generic category (you can override this
 by \code{consensus_percentile}). 4) the transmitter must be secreted
-or exposed on the plasma membrane. These are very relaxed criteria,
-you can always tune them to be more stringent by filtering manually.}
+or exposed on the plasma membrane. 5) The major localizations have
+to be supported by at least 30 percent of the relevant resources (
+you can override this by \code{loc_consensus_percentile}). 6) The
+datasets with lower level of curation (\emph{kinaseextra} and \emph{
+pathwayextra}) will be disabled. These criteria are of medium
+stringency, you can always tune them to be more relaxed or stringent
+by filtering manually, using \code{\link{filter_intercell_network}}.}
 
 \item{simplify}{Logical: keep only the most often used columns. This
 function combines a network data frame with two copies of the
@@ -68,6 +79,11 @@ some columns. With this option we keep only the names of the
 interacting pair, their intercellular communication roles, and the
 minimal information of the origin of both the interaction and
 the annotations.}
+
+\item{unique_pairs}{Logical: instead of having separate rows for each
+pair of annotations, drop the annotations and reduce the data frame to
+unique interacting pairs. See \code{\link{unique_intercell_network}}
+for details.}
 
 \item{consensus_percentile}{Numeric: a percentile cut off for the consensus
 score of generic categories in intercell annotations. The consensus
@@ -81,9 +97,27 @@ The percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.}
 
-\item{...}{If \code{simplify} is \code{TRUE}, additional column
-names can be passed here to \code{dplyr::select} on the final
-data frame. Otherwise ignored.}
+\item{loc_consensus_percentile}{Numeric: similar to
+\code{consensus_percentile} for major localizations. For example, with
+a value of 50, the secreted, plasma membrane transmembrane or
+peripheral attributes will be \code{TRUE} only where at least 50
+percent of the resources support these.}
+
+\item{omnipath}{Logical: shortcut to include the \emph{omnipath} dataset
+in the interactions query.}
+
+\item{ligrecextra}{Logical: shortcut to include the \emph{ligrecextra}
+dataset in the interactions query.}
+
+\item{kinaseextra}{Logical: shortcut to include the \emph{kinaseextra}
+dataset in the interactions query.}
+
+\item{pathwayextra}{Logical: shortcut to include the \emph{pathwayextra}
+dataset in the interactions query.}
+
+\item{...}{If \code{simplify} or \code{unique_pairs} is \code{TRUE},
+additional column  names can be passed here to \code{dplyr::select}
+on the final data frame. Otherwise ignored.}
 }
 \value{
 A dataframe containing information about protein-protein
@@ -106,6 +140,17 @@ proteins by the receiver categories. If undirected interactions present
 (these are disabled by default) they will be duplicated, i.e. both
 partners can be both receiver and transmitter.
 }
+\details{
+By default this function creates almost the largest possible network of
+intercellular interactions. However, this might contain a large number
+of false positives. Please refer to the documentation of the arguments,
+especially \code{high_confidence}, and the \code{\link{
+filter_intercell_network}} function. Note: if you restrict the query to
+certain intercell annotation resources or small categories, it's not
+recommended to use the \code{consensus_percentile} or
+\code{high_confidence} options, instead filter the network with \code{
+\link{filter_intercell_network}} for more consistent results.
+}
 \examples{
 intercell_network <- import_intercell_network(
     interactions_param = list(datasets = 'ligrecextra'),
@@ -123,5 +168,8 @@ intercell_network <- import_intercell_network(
     \item{\code{\link{import_pathwayextra_interactions}}}
     \item{\code{\link{import_kinaseextra_interactions}}}
     \item{\code{\link{import_ligrecextra_interactions}}}
+    \item{\code{\link{unique_intercell_network}}}
+    \item{\code{\link{simplify_intercell_network}}}
+    \item{\code{\link{filter_intercell_network}}}
 }
 }

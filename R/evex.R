@@ -116,18 +116,12 @@ evex_download <- function(
         filter(., confidence >= min_confidence)
     )} %>%
     translate_ids(
-        source_entrezgene_id,
-        source_genesymbol,
-        'entrez',
-        'genesymbol',
-        uploadlists = FALSE
+        source_entrezgene_id = entrez,
+        source_genesymbol = genesymbol
     ) %>%
     translate_ids(
-        target_entrezgene_id,
-        target_genesymbol,
-        'entrez',
-        'genesymbol',
-        uploadlists = FALSE
+        target_entrezgene_id = entrez,
+        target_genesymbol = genesymbol
     ) %>%
     left_join(
         articles %>%

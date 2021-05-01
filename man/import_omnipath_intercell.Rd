@@ -22,6 +22,7 @@ import_omnipath_intercell(
   topology = NULL,
   causality = NULL,
   consensus_percentile = NULL,
+  loc_consensus_percentile = NULL,
   ...
 )
 }
@@ -79,6 +80,12 @@ number of resources than a certain percentile of each category. If
 percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.}
+
+\item{loc_consensus_percentile}{Numeric: similar to
+code{consensus_percentile} for major localizations. For example, with
+a value of 50, the secreted, plasma membrane transmembrane or
+peripheral attributes will be true only where at least 50 percent
+of the resources support these.}
 
 \item{...}{Additional optional arguments, ignored.}
 }

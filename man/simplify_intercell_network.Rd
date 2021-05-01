@@ -29,3 +29,10 @@ icn <- import_intercell_network()
 icn_s <- simplify_intercell_network(icn)
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{import_intercell_network}}}
+    \item{\code{\link{unique_intercell_network}}}
+    \item{\code{\link{filter_intercell_network}}}
+}
+}

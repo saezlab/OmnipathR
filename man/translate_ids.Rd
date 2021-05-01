@@ -2,63 +2,109 @@
 % Please edit documentation in R/uniprot.R
 \name{translate_ids}
 \alias{translate_ids}
-\title{Translates a column of identifiers in a data frame by creating another
-column with the target identifiers}
+\title{Translate gene and protein identifiers}
 \usage{
 translate_ids(
   d,
-  from_col,
-  to_col,
-  from,
-  to,
-  uploadlists = TRUE,
+  ...,
+  uploadlists = FALSE,
   keep_untranslated = TRUE,
-  ...
+  return_df = FALSE,
+  organism = 9606,
+  reviewed = TRUE
 )
 }
 \arguments{
-\item{d}{A data frame}
+\item{d}{Character vector or data frame.}
 
-\item{from_col}{Name of an existing column in the data frame containing
-the identifiers to be translated}
+\item{...}{At least two arguments, with or without names. The first
+of these arguments describes the source identifier, the rest
+of them describe the target identifier(s). The values of all these
+arguments must be valid identifier types as shown in Details. The
+names of the arguments are column names. In case of the first
+(source) ID the column must exist. For the rest of the IDs new
+columns will be created with the desired names. For ID types provided
+as arguments without names, the name of the ID type will be used for
+column name.}
 
-\item{to_col}{Name for a new column which will contain the target
-identifiers}
+\item{uploadlists}{Force using the \code{uploadlists} service from UniProt.
+By default the plain query interface is used (implemented in
+\code{\link{uniprot_full_id_mapping_table}} in this package).
+If any of the provided ID types is only available in the uploadlists
+service, it will be automatically selected. The plain query interface
+is preferred because in the long term, with caching, it requires
+less download and data storage.}
 
-\item{from}{Identifier type for `from_col`. See Details for possible
-values.}
+\item{keep_untranslated}{In case the output is a data frame, keep the
+records where the source identifier could not be translated. At
+these records the target identifier will be NA.}
 
-\item{to}{Identifier type for `to_col`. See Details for possible values.}
+\item{return_df}{Return a data frame even if the input is a vector.}
 
-\item{uploadlists}{Whether to use the `uploadlists` service from UniProt
-or the plain query interface (implemented in
-\code{\link{uniprot_full_id_mapping_table}} in this package).}
+\item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
+9606 for human). Matters only if \code{uploadlists} is \code{FALSE}.}
 
-\item{keep_untranslated}{Keep the records where the source identifier
-could not be translated. At these records the target identifier will
-be NA.}
-
-\item{...}{Passed to \code{\link{uniprot_full_id_mapping_table}}.}
+\item{reviewed}{Translate only reviewed (\code{TRUE}), only unreviewed
+(\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
+if \code{uploadlists} is \code{FALSE}.}
 }
 \value{
-The data frame `d` a new column added with the translated IDs.
+\itemize{
+\item{Data frame: if the input is a data frame or the input is a
+vector and \code{return_df} is \code{TRUE}.}
+\item{Vector: if the input is a vector, there is only one target
+ID type and \code{return_df} is \code{FALSE}.}
+\item{List of vectors: if the input is a vector, there are more than
+one target ID types and \code{return_df} is \code{FALSE}. The names
+of the list will be ID types (as they were column names, see
+the description of the \code{...} argument), and the list will also
+include the source IDs.}
+}
 }
 \description{
-Translates a column of identifiers in a data frame by creating another
-column with the target identifiers
+Translates a vector of identifiers, resulting a new vector, or a column
+of identifiers in a data frame by creating another column with the target
+identifiers.
 }
 \details{
-This function uses the uploadlists service of UniProt to obtain identifier
-translation tables. The possible values for `from` and `to` are the
-identifier type abbreviations used in the UniProt API, please refer to
-the table here: \url{https://www.uniprot.org/help/api_idmapping}
+This function, depending on the \code{uploadlists} parameter, uses either
+the uploadlists service of UniProt or plain UniProt queries to obtain
+identifier translation tables. The possible values for \code{from} and \code{to}
+are the identifier type abbreviations used in the UniProt API, please
+refer to the table here: \url{https://www.uniprot.org/help/api_idmapping}.
+In addition, simple synonyms are available which realize a uniform API
+for the uploadlists and UniProt query based backends. These are the
+followings:\preformatted{| OmnipathR      | Uploadlists          | UniProt query           |
+| -------------- | -------------------- | ----------------------- |
+| uniprot        | ACC                  | id                      |
+| uniprot_entry  | ID                   | entry name              |
+| genesymbol     | GENENAME             | genes(PREFERRED)        |
+| genesymbol_syn |                      | genes(ALTERNATIVE)      |
+| hgnc           | HGNC_ID              | database(HGNC)          |
+| entrez         | P_ENTREZGENEID       | database(geneid)        |
+| ensg           | ENSEMBLGENOME_ID     |                         |
+| enst           | ENSEMBL_TRS_ID       | database(ensembl)       |
+| ensp           | ENSEMBL_PRO_ID       |                         |
+| ensgt          | ENSEMBLGENOME_TRS_ID |                         |
+| ensgp          | ENSEMBLGENOME_PRO_ID |                         |
+| ensembl        | ENSEMBL_ID           |                         |
+| protein_name   |                      | protein names           |
+| refseqp        | P_REFSEQ_AC          | database(refseq)        |
+| refseqn        | REFSEQ_NT_ID         |                         |
+| embl           | EMBL                 | database(embl)          |
+| embl_id        | EMBL_ID              |                         |
+| gi             | P_GI                 |                         |
+| pir            | PIR                  |                         |
+| pdb            | PDB_ID               |                         |
+}
+
 The mapping between identifiers can be ambiguous. In this case one row
-in the original data frame yields multiple rows in the returned data
-frame.
+in the original data frame yields multiple rows or elements in the
+returned data frame or vector(s).
 }
 \examples{
 d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
-d <- translate_ids(d, uniprot_id, genesymbol, 'ID', 'GENENAME')
+d <- translate_ids(d, uniprot_id = uniprot, genesymbol)
 d
 #   uniprot_id genesymbol
 # 1     P00533       EGFR
@@ -68,5 +114,8 @@ d
 
 }
 \seealso{
-\code{\link{uniprot_id_mapping_table}}
+\itemize{
+\item{\code{\link{uniprot_id_mapping_table}}}
+\item{\code{\link{uniprot_full_id_mapping_table}}}
+}
 }

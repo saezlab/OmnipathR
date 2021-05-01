@@ -12,12 +12,14 @@ uniprot_full_id_mapping_table(
 )
 }
 \arguments{
-\item{to}{Target ID type. See Details for possible values.}
+\item{to}{Character or symbol: target ID type. See Details for possible
+values.}
 
-\item{from}{Source ID type. See Details for possible values.}
+\item{from}{Character or symbol: source ID type. See Details for possible
+values.}
 
-\item{reviewed}{Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
-or both (`NULL`).}
+\item{reviewed}{Translate only reviewed (\code{TRUE}), only unreviewed
+(\code{FALSE}) or both (\code{NULL}) UniProt records.}
 
 \item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
 9606 for human).}
@@ -37,7 +39,8 @@ https://www.uniprot.org/help/uniprotkb%5Fcolumn%5Fnames
 The shortcuts are entrez, genesymbol, genesymbol_syn (synonym gene
 symbols), hgnc, embl, refseqp (RefSeq protein), enst (Ensembl transcript),
 uniprot_entry (UniProtKB AC, e.g. EGFR_HUMAN), protein_name (full name of
-the protein), uniprot (UniProtKB ID, e.g. P00533).
+the protein), uniprot (UniProtKB ID, e.g. P00533). For a complete table
+please refer to \code{\link{translate_ids}}.
 }
 \examples{
 uniprot_entrez <- uniprot_full_id_mapping_table(to = 'entrez')
@@ -51,4 +54,8 @@ uniprot_entrez
 #  4 Q8NGN2 219873
 #  5 Q8NGC1 390439
 # # . with 20,713 more rows
+
+}
+\seealso{
+\code{\link{translate_ids}}
 }
