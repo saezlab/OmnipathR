@@ -144,9 +144,9 @@ partners can be both receiver and transmitter.
 By default this function creates almost the largest possible network of
 intercellular interactions. However, this might contain a large number
 of false positives. Please refer to the documentation of the arguments,
-especially \code{high_confidence}, and the \code{\link{
-filter_intercell_network}} function. Note: if you restrict the query to
-certain intercell annotation resources or small categories, it's not
+especially \code{high_confidence}, and the \code{
+\link{filter_intercell_network}} function. Note: if you restrict the query
+to certain intercell annotation resources or small categories, it's not
 recommended to use the \code{consensus_percentile} or
 \code{high_confidence} options, instead filter the network with \code{
 \link{filter_intercell_network}} for more consistent results.

@@ -2592,9 +2592,9 @@ get_intercell_resources <- function(dataset = NULL){
 #' By default this function creates almost the largest possible network of
 #' intercellular interactions. However, this might contain a large number
 #' of false positives. Please refer to the documentation of the arguments,
-#' especially \code{high_confidence}, and the \code{\link{
-#' filter_intercell_network}} function. Note: if you restrict the query to
-#' certain intercell annotation resources or small categories, it's not
+#' especially \code{high_confidence}, and the \code{
+#' \link{filter_intercell_network}} function. Note: if you restrict the query
+#' to certain intercell annotation resources or small categories, it's not
 #' recommended to use the \code{consensus_percentile} or
 #' \code{high_confidence} options, instead filter the network with \code{
 #' \link{filter_intercell_network}} for more consistent results.
@@ -3144,9 +3144,9 @@ simplify_intercell_network <- function(network, ...){
 
 #' Unique intercellular interactions
 #'
-#' In the intercellular network data frames produced by \code{\link{
-#' import_intercell_network}}, by default each pair of annotations for an
-#' interaction is represented in a separate row. This function drops the
+#' In the intercellular network data frames produced by \code{
+#' \link{import_intercell_network}}, by default each pair of annotations for
+#' an interaction is represented in a separate row. This function drops the
 #' annotations and keeps only the distinct interacting pairs.
 #'
 #' @param network An intercellular network data frame as produced by
