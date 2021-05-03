@@ -3173,6 +3173,11 @@ simplify_intercell_network <- function(network, ...){
 #' }
 unique_intercell_network <- function(network, ...){
 
+    # NSE vs. R CMD check workaround
+    source <- target <- source_genesymbol <- target_genesymbol <-
+    is_directed <- is_stimulation <- is_inhibition <-
+    sources <- references <- NULL
+
     cols <-
         alist(
             source,

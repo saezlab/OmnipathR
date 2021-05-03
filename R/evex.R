@@ -73,7 +73,7 @@ evex_download <- function(
 
     # NSE vs. R CMD check workaround
     negation <- confidence <- source_entrezgene_id <- target_entrezgene_id <-
-        article_id <- general_event_id <- NULL
+        article_id <- general_event_id <- entrez <- NULL
 
     relations <- archive_extractor(
         url_key = 'evex',
