@@ -18,9 +18,9 @@ preserved.}
 A data frame with interacting pairs and interaction attributes.
 }
 \description{
-In the intercellular network data frames produced by \code{\link{
-import_intercell_network}}, by default each pair of annotations for an
-interaction is represented in a separate row. This function drops the
+In the intercellular network data frames produced by \code{
+\link{import_intercell_network}}, by default each pair of annotations for
+an interaction is represented in a separate row. This function drops the
 annotations and keeps only the distinct interacting pairs.
 }
 \examples{
