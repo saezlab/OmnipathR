@@ -125,7 +125,8 @@ utils::globalVariables(
     'download_args',
     'references_by_resource',
     'add_counts',
-    'qt_message'
+    'qt_message',
+    'exclude'
 )
 
 
@@ -136,7 +137,7 @@ utils::globalVariables(
 #' to manage the download.
 #' Not exported.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
 #' @importFrom tibble as_tibble
 #' @importFrom readr read_tsv cols
 #' @importFrom utils modifyList
@@ -157,8 +158,12 @@ import_omnipath <- function(
     add_counts = TRUE,
     license = NULL,
     password = NULL,
+    exclude = NULL,
     ...
 ){
+
+    datasets %<>% setdiff(exclude)
+    resources %<>% setdiff(exclude)
 
     param <- c(as.list(environment()), list(...))
     param <- omnipath_check_param(param)
@@ -193,17 +198,19 @@ import_omnipath <- function(
 
     msg <- '%soaded %d %s%s.'
 
-    result <- cast_logicals(result, logicals)
-    result <- strip_resource_labels(result, references_by_resource)
+    result %<>% cast_logicals(logicals)
+    result %<>% strip_resource_labels(references_by_resource)
+    result %<>% apply_exclude(exclude)
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
-        result <- count_references(result)
-        result <- count_resources(result)
+        result %<>% count_references
+        result %<>% count_resources
     }
     if(is.data.frame(result)){
         result %<>% as_tibble
     }
     from_cache <- result %>% is_from_cache
 
+    # reporting and returning result
     loglevel <- `if`(
         silent,
         logger::DEBUG,
@@ -460,6 +467,39 @@ cast_logicals <- function(data, logicals = NULL){
 }
 
 
+#' Removes records which are only from resources to be excluded
+#'
+#' @param data A data frame from the OmniPath web service.
+#' @param exclude Character vector with the resource names to exclude.
+#'
+#' @return The input data frame with records removed according to the
+#'     exclude list.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter
+#' @importFrom rlang !! sym
+#' @importFrom purrr map_lgl
+#' @noRd
+apply_exclude <- function(data, exclude){
+
+    col <- data %>% resources_colname
+
+    data %>%
+    `if`(
+        is.null(exclude),
+        .,
+        filter(
+            .,
+            map_lgl(
+                str_split(!!sym(col), ';'),
+                function(x){x %>% setdiff(exclude) %>% length %>% as.logical}
+            )
+        )
+    )
+
+}
+
+
 #' Removes the resource labels from references (PubMed IDs) in the
 #' interactions and enzyme-substrate data frames.
 #'
@@ -646,6 +686,7 @@ swap_undirected <- function(data){
 #'     from the references (PubMed IDs); this way the information which
 #'     reference comes from which resource will be lost and the PubMed IDs
 #'     will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... Optional additional arguments.
 #'
 #' @examples
@@ -670,6 +711,7 @@ import_omnipath_enzsub <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -680,6 +722,7 @@ import_omnipath_enzsub <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -781,7 +824,8 @@ get_ptms_databases <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param ... optional additional arguments 
+#' @param exclude Character: datasets or resources to exclude.
+#' @param ... optional additional arguments
 #'
 #' @examples
 #' interactions = import_omnipath_interactions(
@@ -804,6 +848,7 @@ import_omnipath_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -815,6 +860,7 @@ import_omnipath_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -869,7 +915,8 @@ import_OmniPath_Interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param ... optional additional arguments 
+#' @param exclude Character: datasets or resources to exclude.
+#' @param ... optional additional arguments
 #'
 #' @examples
 #' interactions <-
@@ -892,6 +939,7 @@ import_pathwayextra_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = exclude,
     ...
 ){
 
@@ -903,6 +951,7 @@ import_pathwayextra_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -947,6 +996,7 @@ import_PathwayExtra_Interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... Optional additional arguments.
 #'
 #' @examples
@@ -970,6 +1020,7 @@ import_kinaseextra_interactions <- function(
     fields = NULL, 
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -981,6 +1032,7 @@ import_kinaseextra_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1024,6 +1076,7 @@ import_KinaseExtra_Interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments 
 #'
 #' @examples
@@ -1046,6 +1099,7 @@ import_ligrecextra_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -1057,6 +1111,7 @@ import_ligrecextra_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1087,14 +1142,14 @@ import_LigrecExtra_Interactions <- function(...){
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param exclude datasets to exclude
+#' @param exclude Character: datasets or resources to exclude
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments
 #'
 #' @importFrom rlang %||% exec !!!
-#' @importFrom magrittr %<>%
 #' @examples
 #' interactions <-
 #'     import_post_translational_interactions(
@@ -1119,14 +1174,14 @@ import_post_translational_interactions <- function(
     args$datasets <-
         args$datasets %||%
         c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
-    args$datasets %<>% setdiff(exclude)
 
     args %<>% merge_lists(
         list(
             query_type = 'interactions',
             resources = resources,
             organism = organism,
-            references_by_resource = references_by_resource
+            references_by_resource = references_by_resource,
+            exclude = exclude
         )
     )
 
@@ -1165,6 +1220,7 @@ import_post_translational_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments 
 #'
 #' @examples
@@ -1189,6 +1245,7 @@ import_dorothea_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -1201,6 +1258,7 @@ import_dorothea_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1255,6 +1313,7 @@ import_tfregulons_interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... Optional additional arguments
 #'
 #' @examples
@@ -1275,6 +1334,7 @@ import_tf_target_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -1286,6 +1346,7 @@ import_tf_target_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1318,6 +1379,7 @@ import_tf_target_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments 
 #'
 #' @examples
@@ -1337,6 +1399,7 @@ import_transcriptional_interactions <- function(
     organism = 9606,
     dorothea_levels = c('A', 'B'),
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -1348,19 +1411,24 @@ import_transcriptional_interactions <- function(
             organism = organism,
             dorothea_levels = dorothea_levels,
             references_by_resource = references_by_resource,
+            exclude = exclude,
             ...
         ),
         import_tf_target_interactions(
-            resources = resources, 
-            organism = organism, 
-            references_by_resource = references_by_resource, 
-            ...) %>% 
-            mutate(dorothea_level = "") %>%
-            select(source, target, source_genesymbol, target_genesymbol,
-                is_directed, is_stimulation, is_inhibition, consensus_direction,
-                consensus_stimulation, consensus_inhibition, dip_url, sources,
-                references, curation_effort, dorothea_level,n_references, 
-                n_resources)
+            resources = resources,
+            organism = organism,
+            references_by_resource = references_by_resource,
+            exclude = exclude,
+            ...
+        ) %>%
+        mutate(dorothea_level = '') %>%
+        select(
+            source, target, source_genesymbol, target_genesymbol,
+            is_directed, is_stimulation, is_inhibition, consensus_direction,
+            consensus_stimulation, consensus_inhibition, dip_url, sources,
+            references, curation_effort, dorothea_level, n_references,
+            n_resources
+        )
     )
 
     return(result)
@@ -1388,6 +1456,7 @@ import_transcriptional_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments 
 #'
 #' @examples
@@ -1410,6 +1479,7 @@ import_mirnatarget_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -1421,6 +1491,7 @@ import_mirnatarget_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1461,6 +1532,7 @@ import_miRNAtarget_Interactions <- function(...){
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments 
 #'
 #' @examples
@@ -1481,6 +1553,7 @@ import_tf_mirna_interactions <- function(
     fields = NULL, 
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -1492,6 +1565,7 @@ import_tf_mirna_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1520,6 +1594,7 @@ import_tf_mirna_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
 #' @param ... optional additional arguments 
 #'
 #' @examples
@@ -1551,6 +1626,7 @@ import_lncrna_mrna_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        exclude = exclude,
         ...
     )
 
@@ -1576,7 +1652,8 @@ import_lncrna_mrna_interactions <- function(
 #' lncrna_mrna: lncRNA-mRNA interactions
 #'
 #' @return A dataframe containing all the datasets in the interactions query
-#' @export
+
+#'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1584,7 +1661,7 @@ import_lncrna_mrna_interactions <- function(
 #' @param dorothea_levels The confidence levels of the dorothea 
 #' interactions (TF-target) which range from A to D. Set to A and B by
 #' default.
-#' @param exclude datasets to exclude
+#' @param exclude Character: datasets or resources to exclude.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE. 
 #' @param default_fields whether to include the default fields (columns) for
@@ -1593,14 +1670,17 @@ import_lncrna_mrna_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-
-#' @param ... optional additional arguments 
+#' @param ... optional additional arguments
 #'
 #' @examples
 #' interactions <- import_all_interactions(
 #'     resources = c('HPRD', 'BioGRID'),
 #'     organism = 9606
 #' )
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom jsonlite fromJSON
+#' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1621,12 +1701,12 @@ import_all_interactions <- function(
 ){
 
     url <- paste0(options('omnipath.url'), 'queries/interactions?format=json')
-    all_datasets <- jsonlite::fromJSON(txt = url)$datasets
-
-    all_datasets <- setdiff(all_datasets, exclude)
+    all_datasets <-
+        fromJSON(txt = url)$datasets %>%
+        setdiff(exclude)
 
     # it does not make sense without the type field
-    fields <- unique(c(fields), 'type')
+    fields %<>% c('type', 'dorothea_level') %>% unique
 
     result <- import_omnipath(
         query_type = 'interactions',
@@ -3321,27 +3401,18 @@ filter_by_resource <- function(data, resources = NULL){
 
         before <- nrow(data)
 
-        # unfortunately the column title is different across the various
-        # query types, so we need to guess
-        for(field in c('sources', 'database', 'source')){
+        field <- data %>% resources_colname
 
-            if(field %in% names(data)){
-
-                data <- data[
-                    which(
-                        unlist(lapply(
-                            strsplit(data[[field]], ';'),
-                            function(res){
-                                length(intersect(res, resources)) > 0
-                            }
-                        ))
-                    ),
-                ]
-                break
-
-            }
-
-        }
+        data <- data[
+            which(
+                unlist(lapply(
+                    strsplit(data[[field]], ';'),
+                    function(res){
+                        length(intersect(res, resources)) > 0
+                    }
+                ))
+            ),
+        ]
 
         after <- nrow(data)
 
@@ -3353,6 +3424,32 @@ filter_by_resource <- function(data, resources = NULL){
     }
 
     return(data)
+}
+
+
+#' Name of the column with the resources
+#'
+#' Unfortunately the column title is different across the various
+#' query types in the OmniPath web service, so we need to guess.
+#'
+#' @return Character: the name of the column, if any of the column names
+#'     matches.
+#'
+#' @examples
+#' co <- import_omnipath_complexes()
+#' resources_colname()
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr first
+#' @export
+resources_colname <- function(data){
+
+    intersect(
+        c('sources', 'database', 'source'),
+        colnames(data)
+    ) %>%
+    first
+
 }
 
 

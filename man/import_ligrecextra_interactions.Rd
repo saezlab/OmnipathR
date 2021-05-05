@@ -11,6 +11,7 @@ import_ligrecextra_interactions(
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,
+  exclude = NULL,
   ...
 )
 }
@@ -31,6 +32,8 @@ the query type. If FALSE, only the fields defined by the user in the
 \item{references_by_resource}{if FALSE, removes the resource name prefixes
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
+
+\item{exclude}{Character: datasets or resources to exclude.}
 
 \item{...}{optional additional arguments}
 }

@@ -12,6 +12,7 @@ import_omnipath_enzsub(
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,
+  exclude = NULL,
   ...
 )
 }
@@ -34,6 +35,8 @@ in the \code{fields} argument will be added.}
 from the references (PubMed IDs); this way the information which
 reference comes from which resource will be lost and the PubMed IDs
 will be unique.}
+
+\item{exclude}{Character: datasets or resources to exclude.}
 
 \item{...}{Optional additional arguments.}
 }

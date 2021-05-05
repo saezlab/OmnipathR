@@ -29,7 +29,7 @@ Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 interactions (TF-target) which range from A to D. Set to A and B by
 default.}
 
-\item{exclude}{datasets to exclude}
+\item{exclude}{Character: datasets or resources to exclude.}
 
 \item{fields}{The user can define here the fields to be added. If used, set
 the next argument, `default_fields`, to FALSE.}
