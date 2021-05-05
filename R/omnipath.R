@@ -139,7 +139,7 @@ utils::globalVariables(
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom tibble as_tibble
-#' @importFrom readr read_tsv cols
+#' @importFrom readr read_tsv cols col_character
 #' @importFrom utils modifyList
 #'
 #' @noRd
@@ -174,7 +174,11 @@ import_omnipath <- function(
     )
     dataframe_defaults <- list(
         fun = read_tsv,
-        col_types = cols()
+        col_types = `if`(
+            'dorothea_level' %in% param$fields,
+            cols(dorothea_level = col_character()),
+            cols()
+        )
     )
     json_defaults <- list(
         fun = jsonlite::fromJSON
