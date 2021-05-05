@@ -9,6 +9,7 @@ import_transcriptional_interactions(
   organism = 9606,
   dorothea_levels = c("A", "B"),
   references_by_resource = TRUE,
+  exclude = NULL,
   ...
 )
 }
@@ -29,6 +30,8 @@ It is to note that E interactions are not available in OmnipathR.}
 \item{references_by_resource}{if FALSE, removes the resource name prefixes
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
+
+\item{exclude}{Character: datasets or resources to exclude.}
 
 \item{...}{optional additional arguments}
 }
