@@ -943,7 +943,7 @@ import_pathwayextra_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
-    exclude = exclude,
+    exclude = NULL,
     ...
 ){
 
