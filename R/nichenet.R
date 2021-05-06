@@ -48,6 +48,9 @@
 #'     cells (e.g. genes differentially expressed upon cell-cell interaction).
 #' @param background_genes Character vector with the gene symbols of the
 #'     genes to be used as background.
+#' @param use_weights Logical: calculate and use optimized weights for
+#'     resources (i.e. one resource seems to be better than another, hence
+#'     the former is considered with a higher weight).
 #' @param n_top_ligands How many of the top ligands to include in the
 #'     ligand-target table.
 #' @param n_top_targets How many of the top targets (for each of the top
@@ -92,6 +95,8 @@
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%
+#' @importFrom logger log_success
+#' @importFrom rlang exec !!!
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{nichenet_networks}}}
@@ -105,6 +110,7 @@ nichenet_main <- function(
     expressed_genes_receiver = NULL,
     genes_of_interest = NULL,
     background_genes = NULL,
+    use_weights = TRUE,
     n_top_ligands = 42,
     n_top_targets = 250,
     signaling_network = list(),
@@ -118,16 +124,16 @@ nichenet_main <- function(
 ){
 
     # NSE vs. R CMD check workaround
-    optimization_results <- optimized_parameters <- weighted_networks <-
+    optimization_results <- optimized_parameters <- use_weights_networks <-
         ligand_target_matrix <- NULL
 
     top_env <- environment()
 
     results_dir %>%
-    if_null(options('omnipath.nichenet_results_dir')) %>%
+    if_null(getOption('omnipath.nichenet_results_dir')) %>%
     options(omnipath.nichenet_results_dir = .)
 
-    logger::log_success('Building NicheNet prior knowledge.')
+    log_success('Building NicheNet prior knowledge.')
 
     networks <- nichenet_networks(
         signaling_network = signaling_network,
@@ -139,76 +145,60 @@ nichenet_main <- function(
     expression <- nichenet_expression_data() %>%
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
 
-    logger::log_success('Finished building NicheNet prior knowledge.')
-    logger::log_success('Building NicheNet model.')
+    log_success('Finished building NicheNet prior knowledge.')
+    log_success('Building NicheNet model.')
 
-    networks %>%
-    nichenet_optimization(
-        expression = expression,
-        make_multi_objective_function_param =
-            make_multi_objective_function_param,
-        objective_function_param = objective_function_param,
-        mlrmbo_optimization_param = mlrmbo_optimization_param
-    ) %T>%
-    assign(x = 'optimization_results', value = ., envir = top_env) %>%
-    nichenet_build_model(networks = networks, weighted = FALSE) %>%
-    c(
-        list(
+    optimization_results <-
+        networks %>%
+        nichenet_optimization(
+            expression = expression,
+            make_multi_objective_function_param =
+                make_multi_objective_function_param,
+            objective_function_param = objective_function_param,
+            mlrmbo_optimization_param = mlrmbo_optimization_param
+        )
+
+    optimized_parameters <-
+        nichenet_build_model(
+            networks = networks,
+            optimization_results = optimization_results,
+            use_weights = use_weights
+        )
+
+    ligand_target_matrix <-
+        nichenet_ligand_target_matrix(
+            optimized_parameters,
             lr_network = networks$lr_network,
             construct_ligand_target_matrix_param =
-                construct_ligand_target_matrix_param,
-            weighted = FALSE
+            construct_ligand_target_matrix_param,
+            use_weights = use_weights
         )
-    ) %T>%
-    assign(
-        x = 'optimized_parameters',
-        value = .$optimized_parameters,
-        envir = top_env
-    ) %>%
-    do.call(what = nichenet_ligand_target_matrix) %>%
-    # second run with weights
-    {nichenet_build_model(
-        networks = networks,
-        optimization_results = optimization_results
-    )} %T>%
-    assign(
-        x = 'weighted_networks',
-        value = .$weighted_networks,
-        envir = top_env
-    ) %>%
-    c(
-        list(
-            lr_network = networks$lr_network,
-            construct_ligand_target_matrix_param =
-                construct_ligand_target_matrix_param
-        )
-    ) %>%
-    do.call(what = nichenet_ligand_target_matrix) %T>%
-    assign(x = 'ligand_target_matrix', ., envir = top_env) %T>%
-    {logger::log_success('Finished building NicheNet model.')} %>%
+
+    log_success('Finished building NicheNet model.')
+
     list(
-        ligand_target_matrix = .,
+        ligand_target_matrix = ligand_target_matrix,
         expressed_genes_transmitter = expressed_genes_transmitter,
         expressed_genes_receiver = expressed_genes_receiver,
         genes_of_interest = genes_of_interest,
         background_genes = background_genes
-    ) %>%
+    )
     {`if`(
         any(map_lgl(., is.null)),
         list(ligand_activities = NULL, ligand_target_links = NULL),
-        do.call(nichenet_ligand_activities, .)
+        exec(nichenet_ligand_activities, !!!.)
     )} %>%
     c(
         list(
             networks = networks,
             expression = expression,
             optimized_parameters = optimized_parameters,
-            weighted_networks = weighted_networks,
+            use_weights_networks = use_weights_networks,
             ligand_target_matrix = ligand_target_matrix
         ),
         .
     ) %T>%
-    {logger::log_success('Completed NicheNet pipeline.')}
+    {log_success('Completed NicheNet pipeline.')}
 
 }
 
@@ -417,7 +407,7 @@ nichenet_optimization <- function(
 #' @param networks A list with NicheNet format signaling, ligand-receptor
 #'     and gene regulatory networks as produced by
 #'     \code{\link{nichenet_networks}}.
-#' @param weighted Logical: whether to use the optimized weights.
+#' @param use_weights Logical: whether to use the optimized weights.
 #'
 #' @return A named list with two elements: `weighted_networks` and
 #'     `optimized_parameters`.
@@ -438,12 +428,12 @@ nichenet_optimization <- function(
 nichenet_build_model <- function(
     optimization_results,
     networks,
-    weighted = TRUE
+    use_weights = TRUE
 ){
 
     # R CMD check workaround
     nichenetr <- process_mlrmbo_nichenet_optimization <-
-        construct_weighted_networks <- apply_hub_corrections <- NULL
+    construct_weighted_networks <- apply_hub_corrections <- NULL
 
     # all resources with initial weights of 1
     resource_weights <-
@@ -467,7 +457,7 @@ nichenet_build_model <- function(
         file.path(
             sprintf(
                 'weighted_networks%s.rds',
-                `if`(weighted, '_weighted', '')
+                `if`(use_weights, '_weighted', '')
             )
         )
 
@@ -478,7 +468,7 @@ nichenet_build_model <- function(
         sig_network = networks$signaling_network,
         gr_network = networks$gr_network,
         source_weights_df = `if`(
-            weighted,
+            use_weights,
             optimization_results$source_weight_df,
             resource_weights
         )
@@ -509,7 +499,7 @@ nichenet_build_model <- function(
 #'     produced by \code{\link{nichenet_lr_network}}.
 #' @param optimized_parameters The outcome of NicheNet parameter optimization
 #'     as produced by \code{\link{nichenet_build_model}}.
-#' @param weighted Logical: wether the network sources are weighted. In this
+#' @param use_weights Logical: wether the network sources are weighted. In this
 #'     function it only affects the output file name.
 #' @param construct_ligand_target_matrix_param Override parameters for
 #'     \code{nichenetr::construct_ligand_target_matrix}.
@@ -536,7 +526,7 @@ nichenet_ligand_target_matrix <- function(
     weighted_networks,
     lr_network,
     optimized_parameters,
-    weighted = TRUE,
+    use_weights = TRUE,
     construct_ligand_target_matrix_param = list()
 ){
 
@@ -553,7 +543,7 @@ nichenet_ligand_target_matrix <- function(
         file.path(
             sprintf(
                 'ligand_target_matrix%s.rds',
-                `if`(weighted, '_weighted', '')
+                `if`(use_weights, '_weighted', '')
             )
         )
 
