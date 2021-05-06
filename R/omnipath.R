@@ -1369,10 +1369,6 @@ import_tf_target_interactions <- function(
 #' which contains transcription factor-target protein coding gene
 #' interactions.
 #'
-#' @return A dataframe containing TF-target interactions
-#' @export
-#' @importFrom dplyr mutate select
-#' @importFrom magrittr %>%
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1387,13 +1383,22 @@ import_tf_target_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
-#' @param ... optional additional arguments 
+#' @param datasets Character vector with the
+#' @param ... Optional additional arguments.
+#'
+#' @return A dataframe containing TF-target interactions.
 #'
 #' @examples
 #' interactions <-
 #'     import_transcriptional_interactions(
 #'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
 #'     )
+#'
+#'
+#' @export
+#' @importFrom dplyr mutate select
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang %||% exec !!!
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1412,31 +1417,21 @@ import_transcriptional_interactions <- function(
 
     is_directed <- NULL
 
-    result <- rbind(
-        import_dorothea_interactions(
-            resources = resources,
-            organism = organism,
+    args <- list(...)
+    tr_datasets <- c('dorothea', 'tf_target')
+    args$datasets %<>% {. %||% tr_datasets} %>% intersect(tr_datasets)
+
+    result <-
+        exec(
+            import_omnipath,
+            query_type = 'interactions',
+            exclude = exclude,
             dorothea_levels = dorothea_levels,
-            references_by_resource = references_by_resource,
-            exclude = exclude,
-            ...
-        ),
-        import_tf_target_interactions(
-            resources = resources,
             organism = organism,
+            resources = resources,
             references_by_resource = references_by_resource,
-            exclude = exclude,
-            ...
-        ) %>%
-        mutate(dorothea_level = '') %>%
-        select(
-            source, target, source_genesymbol, target_genesymbol,
-            is_directed, is_stimulation, is_inhibition, consensus_direction,
-            consensus_stimulation, consensus_inhibition, dip_url, sources,
-            references, curation_effort, dorothea_level, n_references,
-            n_resources
+            !!!args
         )
-    )
 
     return(result)
 

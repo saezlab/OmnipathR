@@ -11,7 +11,7 @@ import_pathwayextra_interactions(
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,
-  exclude = exclude,
+  exclude = NULL,
   ...
 )
 }
