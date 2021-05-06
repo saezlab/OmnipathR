@@ -4,7 +4,7 @@
 \alias{nichenet_build_model}
 \title{Construct a NicheNet ligand-target model}
 \usage{
-nichenet_build_model(optimization_results, networks, weighted = TRUE)
+nichenet_build_model(optimization_results, networks, use_weights = TRUE)
 }
 \arguments{
 \item{optimization_results}{The outcome of NicheNet parameter optimization
@@ -14,7 +14,7 @@ as produced by \code{\link{nichenet_optimization}}.}
 and gene regulatory networks as produced by
 \code{\link{nichenet_networks}}.}
 
-\item{weighted}{Logical: whether to use the optimized weights.}
+\item{use_weights}{Logical: whether to use the optimized weights.}
 }
 \value{
 A named list with two elements: `weighted_networks` and

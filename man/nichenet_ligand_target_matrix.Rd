@@ -8,7 +8,7 @@ nichenet_ligand_target_matrix(
   weighted_networks,
   lr_network,
   optimized_parameters,
-  weighted = TRUE,
+  use_weights = TRUE,
   construct_ligand_target_matrix_param = list()
 )
 }
@@ -22,7 +22,7 @@ produced by \code{\link{nichenet_lr_network}}.}
 \item{optimized_parameters}{The outcome of NicheNet parameter optimization
 as produced by \code{\link{nichenet_build_model}}.}
 
-\item{weighted}{Logical: wether the network sources are weighted. In this
+\item{use_weights}{Logical: wether the network sources are weighted. In this
 function it only affects the output file name.}
 
 \item{construct_ligand_target_matrix_param}{Override parameters for

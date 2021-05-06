@@ -1100,6 +1100,7 @@ nichenet_gr_network <- function(
 #' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
 #' @importFrom rlang set_names
+#' @importFrom logger log_info log_success
 #'
 #' @noRd
 nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
@@ -1128,14 +1129,15 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
         keep(., names(.) == 'omnipath'),
         .
     )} %T>%
-    {logger::log_success(
+    {log_success(
         'Starting to build NicheNet %s network',
         network_types[[network_type]]
     )} %>%
     map2(
         names(.),
         function(args, resource){
-            resource %>%
+            resource %T>%
+            {log_info('Loading resource `%s`.', .)} %>%
             sprintf('nichenet_%s_network_%s', network_type, .) %>%
             get() %>%
             do.call(args)
@@ -1155,7 +1157,7 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
     filter(from != to) %>%
     filter(!is.na(from) & !is.na(to)) %>%
     as_tibble %T>%
-    {logger::log_success(
+    {log_success(
         'Finished building NicheNet %s network: %d records total',
         network_types[[network_type]],
         nrow(.)
@@ -1272,6 +1274,7 @@ nichenet_lr_network_omnipath <- function(
 #' )
 #'
 #' @importFrom magrittr %>% %<>%
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @seealso \itemize{
@@ -1293,7 +1296,7 @@ nichenet_gr_network_omnipath <- function(
     args$exclude %<>% union('ligrecextra')
     args$entity_types <- 'protein'
 
-    do.call(import_transcriptional_interactions, args) %>%
+    exec(import_transcriptional_interactions, !!!args) %>%
     omnipath_interactions_postprocess(type = 'gr')
 
 }
@@ -2146,5 +2149,40 @@ nichenet_expression_data <- function(){
         resource = 'NicheNet expression data'
     ) %T>%
     load_success()
+
+}
+
+
+#' Small networks for testing
+#'
+#' Building a NicheNet model is computationally demanding, taking several
+#' hours to run. As this is related to the enormous size of the networks,
+#' to speed up testing we can use smaller networks, around 1,000 times
+#' smaller, with few thousands of interactions instead of few millions.
+#' Random subsetting of the whole network would result disjunct fragments,
+#' instead we load only a few resources.
+#'
+#' @noRd
+nichenet_networks_small <- function(){
+
+    nichenet_networks(
+        signaling_network = list(
+            omnipath = list(
+                resources = 'SIGNOR'
+            )
+        ),
+        lr_network = list(
+            omnipath = list(
+                high_confidence = TRUE
+            )
+        ),
+        gr_network = list(
+            omnipath = list(
+                dorothea_levels = c('A', 'B'),
+                datasets = 'dorothea'
+            )
+        ),
+        only_omnipath = TRUE
+    )
 
 }

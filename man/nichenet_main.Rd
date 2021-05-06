@@ -10,6 +10,7 @@ nichenet_main(
   expressed_genes_receiver = NULL,
   genes_of_interest = NULL,
   background_genes = NULL,
+  use_weights = TRUE,
   n_top_ligands = 42,
   n_top_targets = 250,
   signaling_network = list(),
@@ -43,6 +44,10 @@ cells (e.g. genes differentially expressed upon cell-cell interaction).}
 
 \item{background_genes}{Character vector with the gene symbols of the
 genes to be used as background.}
+
+\item{use_weights}{Logical: calculate and use optimized weights for
+resources (i.e. one resource seems to be better than another, hence
+the former is considered with a higher weight).}
 
 \item{n_top_ligands}{How many of the top ligands to include in the
 ligand-target table.}
