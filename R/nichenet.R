@@ -225,10 +225,7 @@ nichenet_main <- function(
 #' @importFrom purrr keep
 nichenet_remove_orphan_ligands <- function(expression, lr_network){
 
-    # NSE vs. R CMD check workaround
-    networks <- NULL
-
-    all_ligands <- networks$lr_network$from %>% unique
+    all_ligands <- lr_network$from %>% unique
 
     expression %>%
     keep(
