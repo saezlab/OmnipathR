@@ -200,18 +200,19 @@ import_omnipath <- function(
 
     omnipath_check_result(result, url)
 
-    msg <- '%soaded %d %s%s.'
-
     result %<>% cast_logicals(logicals)
     result %<>% strip_resource_labels(references_by_resource)
     result %<>% apply_exclude(exclude)
+
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references
         result %<>% count_resources
     }
+
     if(is.data.frame(result)){
         result %<>% as_tibble
     }
+
     from_cache <- result %>% is_from_cache
 
     # reporting and returning result
@@ -220,6 +221,8 @@ import_omnipath <- function(
         logger::DEBUG,
         logger::SUCCESS
     )
+
+    msg <- '%soaded %d %s%s.'
 
     logger::log_level(
         level = loglevel,
