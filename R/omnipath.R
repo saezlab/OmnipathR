@@ -579,6 +579,7 @@ split_unique_join <- function(
 #' each sub vector.
 #'
 #' @importFrom purrr map
+#' @importFrom magrittr %>%
 #'
 #' @noRd
 split_apply <- function(
@@ -622,18 +623,26 @@ count_resources <- function(data, only_primary = TRUE){
 #' For an interactions or enzyme-substrate data frame adds a column
 #' `n_references` with the number of references for each record.
 #'
+#' @importFrom dplyr n_distinct mutate
+#' @importFrom magrittr %>%
 #' @noRd
 count_references <- function(data){
 
-    data[['n_references']] <- strip_resource_labels(
-        data,
-        inplace = FALSE,
-        method = function(refs, ...){
-            length(unique(refs))
-        }
-    )
+    # NSE vs. R CMD check workaround
+    n_references <- references <- NULL
 
-    return(data)
+    data %>%
+    mutate(
+        n_references = ifelse(
+            is.na(references),
+            0,
+            strip_resource_labels(
+                references,
+                inplace = FALSE,
+                method = n_distinct
+            )
+        )
+    )
 
 }
 
