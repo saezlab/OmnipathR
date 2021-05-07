@@ -478,17 +478,20 @@ nichenet_build_model <- function(
 
     logger::log_success('Creating weighted networks.')
 
-    nichenetr%::%construct_weighted_networks(
+    (nichenetr%::%construct_weighted_networks)(
         lr_network = networks$lr_network,
         sig_network = networks$signaling_network,
         gr_network = networks$gr_network,
         source_weights_df = `if`(
             use_weights,
-            optimization_results$source_weight_df,
+            optimized_parameters$source_weight_df,
             resource_weights
         )
     ) %T>%
     {logger::log_success('Applying hub corrections.')} %>%
+    # Error in (nichenetr %::% apply_hub_corrections)(., lr_sig_hub = optimized_parameters$lr_sig_hub,  :
+    # weighted_networks must be a list object
+
     (nichenetr%::%apply_hub_corrections)(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub
@@ -858,6 +861,7 @@ nichenet_results_dir <- function(){
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom purrr map2 keep
+#' @importFrom logger log_success
 #' @export
 #'
 #' @seealso \itemize{
@@ -878,31 +882,29 @@ nichenet_networks <- function(
         nichenet_results_dir() %>%
         file.path('networks.rds')
 
-    if(small || tiny){
-
-        return(nichenet_networks_small(tiny = tiny)) %T>%
-        saveRDS(networks_rds_path)
-
-    }
-
-    environment() %>%
-    as.list() %T>%
-    {logger::log_success('Building NicheNet network knowledge')} %>%
-    keep(names(.) %>% endsWith('_network')) %>%
-    map2(
-        names(.),
-        function(args, network_type){
-            if(!('only_omnipath' %in% names(args))){
-                args$only_omnipath <- only_omnipath
+    `if`(
+        small || tiny,
+        nichenet_networks_small(tiny = tiny),
+        environment() %>%
+        as.list() %T>%
+        {logger::log_success('Building NicheNet network knowledge')} %>%
+        keep(names(.) %>% endsWith('_network')) %>%
+        map2(
+            names(.),
+            function(args, network_type){
+                if(!('only_omnipath' %in% names(args))){
+                    args$only_omnipath <- only_omnipath
+                }
+                network_type %>%
+                sprintf('nichenet_%s', .) %>%
+                get() %>%
+                do.call(args)
             }
-            network_type %>%
-            sprintf('nichenet_%s', .) %>%
-            get() %>%
-            do.call(args)
-        }
+        ) %T>%
+        {log_success('Finished building NicheNet network knowledge')}
     ) %T>%
-    {log_success('Finished building NicheNet network knowledge')} %T>%
-    saveRDS(networks_rds_path)
+    saveRDS(networks_rds_path) %T>%
+    {log_success('Saved networks to `%s`.', networks_rds_path)}
 
 }
 
@@ -2214,8 +2216,9 @@ nichenet_expression_data <- function(){
 #' )
 #' }
 #'
-#' @importFrom dplyr sample_frac
+#' @importFrom dplyr sample_frac filter bind_rows
 #' @importFrom magrittr %>% %<>%
+#' @importFrom purrr map_dbl map2_chr
 #' @noRd
 nichenet_networks_small <- function(tiny = FALSE){
 
@@ -2250,7 +2253,8 @@ nichenet_networks_small <- function(tiny = FALSE){
                     '%s_%d',
                     source,
                     sample(c(1, 2), nrow(d), TRUE)
-                )
+                ),
+                database = source
             )
 
         }
@@ -2281,10 +2285,14 @@ nichenet_networks_small <- function(tiny = FALSE){
             filter(from %in% networks$signaling_network$to) %>%
             pseudo_sources
 
-        exec(
-            log_success,
-            'Tiny network size: LR: %d, SIG: %d, GR: %d.',
-            !!!map_dbl(networks, nrow)
+        log_success(
+            'Tiny network sizes: %s.',
+            networks %>%
+            map2_chr(
+                names(.),
+                function(netw, name){sprintf('%s: %d', name, nrow(netw))}
+            ) %>%
+            paste(collapse = ', ')
         )
 
     }
@@ -2328,5 +2336,16 @@ nichenet_load_data <- function(){
     ncitations <<- nichenetr::ncitations
     geneinfo_human <<- nichenetr::geneinfo_human
     lr_network <<- NULL
+
+    ns <- loadNamespace('BBmisc')
+    convertToShortString_original <- BBmisc%::%convertToShortString
+
+    convertToShortString_new <- function(...){
+
+        convertToShortString_original(..., clip.len = 300L)
+
+    }
+
+    patch_ns('convertToShortString', convertToShortString_new, ns)
 
 }
