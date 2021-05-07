@@ -76,6 +76,7 @@ Suggests:
     gprofiler2,
     knitr,
     mlrMBO,
+    ParallelMap,
     ParamHelpers,
     rmarkdown,
     smoof,

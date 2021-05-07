@@ -56,11 +56,17 @@
 #' @param n_top_targets How many of the top targets (for each of the top
 #'     ligands) to consider in the ligand-target table.
 #' @param signaling_network A list of parameters for building the signaling
-#'     network, passed to \code{\link{nichenet_signaling_network}}
+#'     network, passed to \code{\link{nichenet_signaling_network}}.
 #' @param lr_network A list of parameters for building the ligand-receptor
-#'     network, passed to \code{\link{nichenet_lr_network}}
+#'     network, passed to \code{\link{nichenet_lr_network}}.
 #' @param gr_network A list of parameters for building the gene regulatory
-#'     network, passed to \code{\link{nichenet_gr_network}}
+#'     network, passed to \code{\link{nichenet_gr_network}}.
+#' @param small Logical: build a small network for testing purposes, using
+#'     only OmniPath data. It is also a high quality network, it is
+#'     reasonable to try the analysis with this small network.
+#' @param tiny Logical: build an even smaller network for testing
+#'     purposes. As this involves random subsetting, it's not recommended
+#'     to use this network for analysis.
 #' @param make_multi_objective_function_param Override parameters for
 #'     \code{smoof::makeMultiObjectiveFunction}.
 #' @param objective_function_param Override additional arguments passed to
@@ -116,6 +122,8 @@ nichenet_main <- function(
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
+    small = FALSE,
+    tiny = FALSE,
     make_multi_objective_function_param = list(),
     objective_function_param = list(),
     mlrmbo_optimization_param = list(),
@@ -125,7 +133,9 @@ nichenet_main <- function(
 
     # NSE vs. R CMD check workaround
     optimization_results <- optimized_parameters <- use_weights_networks <-
-        ligand_target_matrix <- NULL
+    ligand_target_matrix <- NULL
+
+    nichenet_load_data()
 
     top_env <- environment()
 
@@ -139,7 +149,9 @@ nichenet_main <- function(
         signaling_network = signaling_network,
         lr_network = lr_network,
         gr_network = gr_network,
-        only_omnipath = only_omnipath
+        only_omnipath = only_omnipath,
+        small = small,
+        tiny = tiny
     )
 
     expression <- nichenet_expression_data() %>%
@@ -232,7 +244,11 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
         function(record){
             all(record$from %in% all_ligands)
         }
-    )
+    ) %T>%
+    {log_success(
+        'Expression experiments after removing unconnected ligands: %d',
+        length(.)
+    )}
 
 }
 
@@ -280,7 +296,7 @@ nichenet_optimization <- function(
 
     # R CMD check workaround
     nichenetr <- convert_expression_settings_evaluation <-
-        mlrmbo_optimization <- model_evaluation_optimization <- NULL
+    mlrmbo_optimization <- model_evaluation_optimization <- NULL
 
     resources <-
         networks %>%
@@ -805,6 +821,12 @@ nichenet_results_dir <- function(){
 #'     network, passed to \code{\link{nichenet_gr_network}}
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#' @param small Logical: build a small network for testing purposes, using
+#'     only OmniPath data. It is also a high quality network, it is
+#'     reasonable to try the analysis with this small network.
+#' @param tiny Logical: build an even smaller network for testing
+#'     purposes. As this involves random subsetting, it's not recommended
+#'     to use this network for analysis.
 #'
 #' @return A named list with three network data frames (tibbles): the
 #'     signaling, the ligand-receptor (lr) and the gene regulatory (gr)
@@ -845,13 +867,21 @@ nichenet_networks <- function(
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
-    only_omnipath = FALSE
+    only_omnipath = FALSE,
+    small = FALSE,
+    tiny = FALSE
 ){
+
+    if(small || tiny){
+
+        return(nichenet_networks_small(tiny = tiny))
+
+    }
 
     environment() %>%
     as.list() %T>%
     {logger::log_success('Building NicheNet network knowledge')} %>%
-    discard(names(.) == 'only_omnipath') %>%
+    discard(names(.) %in% c('only_omnipath', 'small', 'tiny')) %>%
     map2(
         names(.),
         function(args, network_type){
@@ -2159,13 +2189,32 @@ nichenet_expression_data <- function(){
 #' Random subsetting of the whole network would result disjunct fragments,
 #' instead we load only a few resources.
 #'
+#' @param tiny Logical: compile an even smaller network.
+#'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks_small(tiny = TRUE)
+#' expression <- nichenet_expression_data()
+#' expression <- nichenet_remove_orphan_ligands(
+#'     expression,
+#'     networks$lr_network
+#' )
+#' optimized_parameters <- nichenet_build_model(
+#'     networks = networks,
+#'     expression = expression,
+#'     mlrmbo_optimization_param = list(niter = 2, nstart = 16, ncores = 4)
+#' )
+#' }
+#'
+#' @importFrom dplyr sample_frac
+#' @importFrom magrittr %>% %<>%
 #' @noRd
-nichenet_networks_small <- function(){
+nichenet_networks_small <- function(tiny = FALSE){
 
     nichenet_networks(
         signaling_network = list(
             omnipath = list(
-                resources = 'SIGNOR'
+                resources = `if`(tiny, 'SignaLink3', 'SIGNOR')
             )
         ),
         lr_network = list(
@@ -2175,11 +2224,59 @@ nichenet_networks_small <- function(){
         ),
         gr_network = list(
             omnipath = list(
-                dorothea_levels = c('A', 'B'),
+                dorothea_levels = `if`(tiny, 'A', c('A', 'B')),
                 datasets = 'dorothea'
             )
         ),
         only_omnipath = TRUE
+    ) %>%
+    {`if`(
+        tiny,
+        {
+            .$lr_network %<>% sample_frac(.075)
+            .$signaling_network %<>% sample_frac(.33)
+            .$gr_network %<>% sample_frac(.1)
+            .
+        },
+        .
+    )}
+
+}
+
+
+#' Run the NicheNet pipeline with a little dummy network
+#'
+#' Loads a tiny network and runs the NicheNet pipeline with low number of
+#' iterations in the optimization process. This way the pipeline runs in
+#' a reasonable time in order to test the code. Due to the random subsampling
+#' disconnected networks might be produced sometimes. If you see an error
+#' like "00005: Error in if (sd(prediction_vector) == 0) ... missing value
+#' where TRUE/FALSE needed", the random subsampled input is not appropriate.
+#' In this case just interrupt and call again.
+#'
+#' @param ... Passed to \code{\link{nichenet_main}}.
+#'
+#' @noRd
+nichenet_test <- function(...){
+
+    mlrmbo_optimization_param <- list(niter = 2, nstart = 16, ncores = 4)
+
+    nichenet_main(
+        tiny = TRUE,
+        mlrmbo_optimization_param = mlrmbo_optimization_param,
+        ...
     )
+
+}
+
+
+#' Load NicheNet external data
+#'
+#' @noRd
+nichenet_load_data <- function(){
+
+    ncitations <<- nichenetr::ncitations
+    geneinfo_human <<- nichenetr::geneinfo_human
+    lr_network <<- NULL
 
 }

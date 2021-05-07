@@ -8,7 +8,9 @@ nichenet_networks(
   signaling_network = list(),
   lr_network = list(),
   gr_network = list(),
-  only_omnipath = FALSE
+  only_omnipath = FALSE,
+  small = FALSE,
+  tiny = FALSE
 )
 }
 \arguments{
@@ -23,6 +25,14 @@ network, passed to \code{\link{nichenet_gr_network}}}
 
 \item{only_omnipath}{Logical: a shortcut to use only OmniPath as network
 resource.}
+
+\item{small}{Logical: build a small network for testing purposes, using
+only OmniPath data. It is also a high quality network, it is
+reasonable to try the analysis with this small network.}
+
+\item{tiny}{Logical: build an even smaller network for testing
+purposes. As this involves random subsetting, it's not recommended
+to use this network for analysis.}
 }
 \value{
 A named list with three network data frames (tibbles): the
