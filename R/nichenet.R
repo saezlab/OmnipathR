@@ -145,16 +145,18 @@ nichenet_main <- function(
 
     log_success('Building NicheNet prior knowledge.')
 
-    networks <- nichenet_networks(
-        signaling_network = signaling_network,
-        lr_network = lr_network,
-        gr_network = gr_network,
-        only_omnipath = only_omnipath,
-        small = small,
-        tiny = tiny
-    )
+    networks <-
+        nichenet_networks(
+            signaling_network = signaling_network,
+            lr_network = lr_network,
+            gr_network = gr_network,
+            only_omnipath = only_omnipath,
+            small = small,
+            tiny = tiny
+        )
 
-    expression <- nichenet_expression_data() %>%
+    expression <-
+        nichenet_expression_data() %>%
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
 
     log_success('Finished building NicheNet prior knowledge.')
@@ -355,7 +357,7 @@ nichenet_optimization <- function(
                         len = 1,
                         lower = 0.01,
                         upper = 0.99,
-                        tunable =TRUE
+                        tunable = TRUE
                     )
                 ),
                 has.simple.signature = FALSE,
@@ -855,7 +857,7 @@ nichenet_results_dir <- function(){
 #' omnipath_networks <- nichenet_networks(only_omnipath = TRUE)
 #'
 #' @importFrom magrittr %>% %T>%
-#' @importFrom purrr map2
+#' @importFrom purrr map2 keep
 #' @export
 #'
 #' @seealso \itemize{
@@ -872,16 +874,21 @@ nichenet_networks <- function(
     tiny = FALSE
 ){
 
+    networks_rds_path <-
+        nichenet_results_dir() %>%
+        file.path('networks.rds')
+
     if(small || tiny){
 
-        return(nichenet_networks_small(tiny = tiny))
+        return(nichenet_networks_small(tiny = tiny)) %T>%
+        saveRDS(networks_rds_path)
 
     }
 
     environment() %>%
     as.list() %T>%
     {logger::log_success('Building NicheNet network knowledge')} %>%
-    discard(names(.) %in% c('only_omnipath', 'small', 'tiny')) %>%
+    keep(names(.) %>% endsWith('_network')) %>%
     map2(
         names(.),
         function(args, network_type){
@@ -894,7 +901,8 @@ nichenet_networks <- function(
             do.call(args)
         }
     ) %T>%
-    {logger::log_success('Finished building NicheNet network knowledge')}
+    {log_success('Finished building NicheNet network knowledge')} %T>%
+    saveRDS(networks_rds_path)
 
 }
 
@@ -2211,35 +2219,56 @@ nichenet_expression_data <- function(){
 #' @noRd
 nichenet_networks_small <- function(tiny = FALSE){
 
-    nichenet_networks(
-        signaling_network = list(
-            omnipath = list(
-                resources = `if`(tiny, 'SignaLink3', 'SIGNOR')
+    networks <-
+        nichenet_networks(
+            signaling_network = list(
+                omnipath = list(
+                    resources = `if`(tiny, 'SignaLink3', 'SIGNOR')
+                )
+            ),
+            lr_network = list(
+                omnipath = list(
+                    high_confidence = TRUE
+                )
+            ),
+            gr_network = list(
+                omnipath = list(
+                    dorothea_levels = `if`(tiny, 'A', c('A', 'B')),
+                    datasets = 'dorothea'
+                )
+            ),
+            only_omnipath = TRUE
+        )
+
+    if(tiny){
+
+        ligands <-
+            nichenet_expression_data() %>%
+            map('from') %>%
+            unlist %>%
+            unique
+
+        networks$lr_network %<>%
+            sample_frac(
+                .04,
+                weight = .$from %in% ligands + 1
             )
-        ),
-        lr_network = list(
-            omnipath = list(
-                high_confidence = TRUE
+
+        networks$signaling_network %<>%
+            sample_frac(
+                .33,
+                weight = .$from %in% networks$lr_network$to + .2
             )
-        ),
-        gr_network = list(
-            omnipath = list(
-                dorothea_levels = `if`(tiny, 'A', c('A', 'B')),
-                datasets = 'dorothea'
+
+        networks$gr_network %<>%
+            sample_frac(
+                .1,
+                weight = .$from %in% networks$signaling_network$to + .2
             )
-        ),
-        only_omnipath = TRUE
-    ) %>%
-    {`if`(
-        tiny,
-        {
-            .$lr_network %<>% sample_frac(.075)
-            .$signaling_network %<>% sample_frac(.33)
-            .$gr_network %<>% sample_frac(.1)
-            .
-        },
-        .
-    )}
+
+    }
+
+    return(networks)
 
 }
 

@@ -16,6 +16,8 @@ nichenet_main(
   signaling_network = list(),
   lr_network = list(),
   gr_network = list(),
+  small = FALSE,
+  tiny = FALSE,
   make_multi_objective_function_param = list(),
   objective_function_param = list(),
   mlrmbo_optimization_param = list(),
@@ -56,13 +58,21 @@ ligand-target table.}
 ligands) to consider in the ligand-target table.}
 
 \item{signaling_network}{A list of parameters for building the signaling
-network, passed to \code{\link{nichenet_signaling_network}}}
+network, passed to \code{\link{nichenet_signaling_network}}.}
 
 \item{lr_network}{A list of parameters for building the ligand-receptor
-network, passed to \code{\link{nichenet_lr_network}}}
+network, passed to \code{\link{nichenet_lr_network}}.}
 
 \item{gr_network}{A list of parameters for building the gene regulatory
-network, passed to \code{\link{nichenet_gr_network}}}
+network, passed to \code{\link{nichenet_gr_network}}.}
+
+\item{small}{Logical: build a small network for testing purposes, using
+only OmniPath data. It is also a high quality network, it is
+reasonable to try the analysis with this small network.}
+
+\item{tiny}{Logical: build an even smaller network for testing
+purposes. As this involves random subsetting, it's not recommended
+to use this network for analysis.}
 
 \item{make_multi_objective_function_param}{Override parameters for
 \code{smoof::makeMultiObjectiveFunction}.}
