@@ -2242,6 +2242,19 @@ nichenet_networks_small <- function(tiny = FALSE){
 
     if(tiny){
 
+        pseudo_sources <- function(d){
+
+            mutate(
+                d,
+                source = sprintf(
+                    '%s_%d',
+                    source,
+                    sample(c(1, 2), nrow(d), TRUE)
+                )
+            )
+
+        }
+
         ligands <-
             nichenet_expression_data() %>%
             map('from') %>%
@@ -2252,19 +2265,27 @@ nichenet_networks_small <- function(tiny = FALSE){
             sample_frac(
                 .04,
                 weight = .$from %in% ligands + 1
-            )
+            ) %>%
+            pseudo_sources
 
-        networks$signaling_network %<>%
-            sample_frac(
-                .33,
-                weight = .$from %in% networks$lr_network$to + .2
-            )
+        sig_net <- networks$signaling_network
+
+        networks$signaling_network <-
+            sig_net %>%
+            filter(from %in% networks$lr_network$to) %>%
+            bind_rows(filter(sig_net, from %in% .$to)) %>%
+            bind_rows(filter(sig_net, from %in% .$to)) %>%
+            pseudo_sources
 
         networks$gr_network %<>%
-            sample_frac(
-                .1,
-                weight = .$from %in% networks$signaling_network$to + .2
-            )
+            filter(from %in% networks$signaling_network$to) %>%
+            pseudo_sources
+
+        exec(
+            log_success,
+            'Tiny network size: LR: %d, SIG: %d, GR: %d.',
+            !!!map_dbl(networks, nrow)
+        )
 
     }
 
