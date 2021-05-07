@@ -460,7 +460,7 @@ nichenet_build_model <- function(
     optimized_parameters <-
         optimization_results %T>%
         {logger::log_success('Processing MLRMBO parameters.')} %>%
-        nichenetr%::%process_mlrmbo_nichenet_optimization(
+        (nichenetr%::%process_mlrmbo_nichenet_optimization)(
             source_names = resource_weights %>% pull(source) %>% unique
         ) %T>%
         {logger::log_success('Finished processing MLRMBO parameters.')}
@@ -487,7 +487,7 @@ nichenet_build_model <- function(
         )
     ) %T>%
     {logger::log_success('Applying hub corrections.')} %>%
-    nichenetr%::%apply_hub_corrections(
+    (nichenetr%::%apply_hub_corrections)(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub
     ) %T>%
