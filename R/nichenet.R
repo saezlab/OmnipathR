@@ -181,8 +181,9 @@ nichenet_main <- function(
 
     ligand_target_matrix <-
         nichenet_ligand_target_matrix(
-            optimized_parameters,
+            optimized_parameters$weighted_networks,
             lr_network = networks$lr_network,
+            optimized_parameters = optimized_parameters,
             construct_ligand_target_matrix_param =
             construct_ligand_target_matrix_param,
             use_weights = use_weights
@@ -567,7 +568,7 @@ nichenet_ligand_target_matrix <- function(
 
     construct_ligand_target_matrix_param %>%
     add_defaults(
-        fun = nichenetr%::%construct_ligand_target_matrix,
+        fun = (nichenetr%::%construct_ligand_target_matrix),
         defaults = list(
             weighted_networks = weighted_networks,
             ligands = ligands,
