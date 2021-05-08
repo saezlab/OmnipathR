@@ -339,9 +339,23 @@ lt_matrix <- nichenet_ligand_target_matrix(
 
 In this step we ues the NicheNet model to infer ligand activities from our
 transcriptomics data. The last three arguments are all character vectors
-with gene symbols:
+with gene symbols. For genes of interest, here we select 50 random genes
+from the targets in the ligand-target matrix. Also just for testing
+purposes, we consider all genes in the network to be expressed in both
+the transmitter and receiver cells.
 
 ```{r eval=FALSE}
+genes_of_interest <- sample(rownames(ligand_target_matrix), 50)
+background_genes <- setdiff(
+    rownames(ligand_target_matrix),
+    genes_of_interest
+)
+expressed_genes_transmitter <- union(
+    unlist(purrr::map(networks, 'from')),
+    unlist(purrr::map(networks, 'to'))
+)
+expressed_genes_receiver <- expressed_genes_transmitter
+
 ligand_activities <- nichenet_ligand_activities(
     ligand_target_matrix = lt_matrix,
     lr_network = networks$lr_network,
