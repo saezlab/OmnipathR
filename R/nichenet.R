@@ -193,11 +193,12 @@ nichenet_main <- function(
 
     list(
         ligand_target_matrix = ligand_target_matrix,
+        lr_network = networks$lr_network,
         expressed_genes_transmitter = expressed_genes_transmitter,
         expressed_genes_receiver = expressed_genes_receiver,
         genes_of_interest = genes_of_interest,
         background_genes = background_genes
-    )
+    ) %>%
     {`if`(
         any(map_lgl(., is.null)),
         list(ligand_activities = NULL, ligand_target_links = NULL),
@@ -641,6 +642,7 @@ nichenet_ligand_target_matrix <- function(
 #' @export
 #' @importFrom magrittr %>% %<>% %T>%
 #' @importFrom dplyr pull filter arrange
+#' @importFrom logger log_success
 nichenet_ligand_activities <- function(
     ligand_target_matrix,
     lr_network,
@@ -658,7 +660,7 @@ nichenet_ligand_activities <- function(
     # NSE vs. R CMD check workaround
     from <- to <- pearson <- NULL
 
-    logger::log_success('Running ligand activity analysis.')
+    log_success('Running ligand activity analysis.')
 
     ligand_activites_rds_path <-
         nichenet_results_dir() %>%
@@ -684,7 +686,7 @@ nichenet_ligand_activities <- function(
             # shouldn't we also remove the genes of interest?
         )
 
-    nichenetr%::%predict_ligand_activities(
+    (nichenetr%::%predict_ligand_activities)(
         geneset = genes_of_interest,
         background_expressed_genes = background_genes,
         ligand_target_matrix = ligand_target_matrix,
@@ -693,10 +695,16 @@ nichenet_ligand_activities <- function(
     arrange(-pearson) %>%
     list(
         ligand_activities = .,
-        ligand_target_links = nichenet_ligand_target_links(.)
+        ligand_target_links = nichenet_ligand_target_links(
+            ligand_activities = .,
+            ligand_target_matrix = ligand_target_matrix,
+            genes_of_interest = genes_of_interest,
+            n_top_ligands = n_top_ligands,
+            n_top_targets = n_top_targets
+        )
     ) %T>%
     {saveRDS(.$ligand_activities, ligand_activites_rds_path)} %T>%
-    {logger::log_success(
+    {log_success(
         'Finished running ligand activity analysis, saved to `%s`.',
         ligand_activites_rds_path
     )}
@@ -759,7 +767,7 @@ nichenet_ligand_activities <- function(
 #'
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom dplyr top_n arrange
+#' @importFrom dplyr slice_max pull bind_rows
 #' @importFrom purrr map
 nichenet_ligand_target_links <- function(
     ligand_activities,
@@ -776,14 +784,15 @@ nichenet_ligand_target_links <- function(
     pearson <- NULL
 
     ligand_activities %>%
-    arrange(-pearson)
-    top_n(pearson, n_top_ligands) %>%
+    slice_max(abs(pearson), n = n_top_ligands) %>%
+    pull(test_ligand) %>%
     map(
-        nichenetr%::%get_weighted_ligand_target_links,
+        (nichenetr%::%get_weighted_ligand_target_links),
         geneset = genes_of_interest,
         ligand_target_matrix = ligand_target_matrix,
         n = n_top_targets
-    )
+    ) %>%
+    bind_rows
 
 }
 
