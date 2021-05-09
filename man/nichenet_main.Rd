@@ -105,6 +105,16 @@ target matrix. Then, considering the expressed genes from user provided
 data, a gene set of interest and background genes, it executes the
 NicheNet ligand activity analysis.
 }
+\details{
+About \emph{small} and \emph{tiny} networks: Building a NicheNet model
+is computationally demanding, taking several hours to run. As this is
+related to the enormous size of the networks, to speed up testing we can
+use smaller networks, around 1,000 times smaller, with few thousands of
+interactions instead of few millions. Random subsetting of the whole
+network would result disjunct fragments, instead we load only a few
+resources. To run the whole pipeline with tiny networks use \code{
+\link{nichenet_test}}.
+}
 \examples{
 \donttest{
 nichenet_results <- nichenet_main(

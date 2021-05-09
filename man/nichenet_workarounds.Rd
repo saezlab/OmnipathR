@@ -16,7 +16,9 @@ the \code{BBmisc::convertToShortString} used for error reporting in
 \code{mlrMBO::evalTargetFun.OptState} is patched here to print longer
 error messages. Maybe it's a better solution to attach \code{nichenetr}
 before running the NicheNet pipeline. Alternatively you can try to call
-this function in the beginning.
+this function in the beginning. Why we don't call this automatically is
+just because we don't want to load datasets from another package without
+the user knowing about it.
 }
 \examples{
 \donttest{

@@ -89,7 +89,8 @@
 #' use smaller networks, around 1,000 times smaller, with few thousands of
 #' interactions instead of few millions. Random subsetting of the whole
 #' network would result disjunct fragments, instead we load only a few
-#' resources.
+#' resources. To run the whole pipeline with tiny networks use \code{
+#' \link{nichenet_test}}.
 #'
 #' @examples
 #' \donttest{
@@ -2338,7 +2339,8 @@ nichenet_networks_small <- function(tiny = FALSE){
 #' it's also difficult to find out which conditions lead to which errors.
 #' At least 3 different errors appear time to time, depending on the input.
 #' It also seems like restarting R sometimes helps, suggesting that the
-#' entire system might be somehow stateful.
+#' entire system might be somehow stateful. You can ignore the \code{
+#' Parallelization was not stopped} warnings on repeated runs.
 #'
 #' @param ... Passed to \code{\link{nichenet_main}}.
 #'

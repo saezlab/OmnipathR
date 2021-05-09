@@ -29,7 +29,8 @@ restarting R. The unpredictability is related to code{mlrMBO} and
 it's also difficult to find out which conditions lead to which errors.
 At least 3 different errors appear time to time, depending on the input.
 It also seems like restarting R sometimes helps, suggesting that the
-entire system might be somehow stateful.
+entire system might be somehow stateful. You can ignore the \code{
+Parallelization was not stopped} warnings on repeated runs.
 }
 \examples{
 \donttest{
