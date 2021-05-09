@@ -82,6 +82,15 @@
 #'     pipeline: `networks`, `expression`, `optimized_parameters`,
 #'     `weighted_networks` and `ligand_target_matrix`.
 #'
+#' @details
+#' About \emph{small} and \emph{tiny} networks: Building a NicheNet model
+#' is computationally demanding, taking several hours to run. As this is
+#' related to the enormous size of the networks, to speed up testing we can
+#' use smaller networks, around 1,000 times smaller, with few thousands of
+#' interactions instead of few millions. Random subsetting of the whole
+#' network would result disjunct fragments, instead we load only a few
+#' resources.
+#'
 #' @examples
 #' \donttest{
 #' nichenet_results <- nichenet_main(
@@ -2391,12 +2400,16 @@ nichenet_workarounds <- function(){
     ns <- loadNamespace('BBmisc')
     convertToShortString_original <- BBmisc::convertToShortString
 
-    convertToShortString_new <- function(...){
+    if(formals(convertToShortString_original)$clip.len != 300L){
 
-        convertToShortString_original(..., clip.len = 300L)
+        convertToShortString_new <- function(...){
+
+            convertToShortString_original(..., clip.len = 300L)
+
+        }
+
+        patch_ns('convertToShortString', convertToShortString_new, ns)
 
     }
-
-    patch_ns('convertToShortString', convertToShortString_new, ns)
 
 }
