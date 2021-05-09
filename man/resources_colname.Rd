@@ -6,6 +6,10 @@
 \usage{
 resources_colname(data)
 }
+\arguments{
+\item{data}{A data frame downloaded by any \code{import_...} function
+in the current package.}
+}
 \value{
 Character: the name of the column, if any of the column names
     matches.

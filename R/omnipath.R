@@ -1626,6 +1626,7 @@ import_lncrna_mrna_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -3442,6 +3443,9 @@ filter_by_resource <- function(data, resources = NULL){
 #'
 #' Unfortunately the column title is different across the various
 #' query types in the OmniPath web service, so we need to guess.
+#'
+#' @param data A data frame downloaded by any \code{import_...} function
+#'     in the current package.
 #'
 #' @return Character: the name of the column, if any of the column names
 #'     matches.
