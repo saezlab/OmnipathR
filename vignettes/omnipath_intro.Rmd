@@ -547,24 +547,46 @@ complex in some databases. We check the pathways where these proteins
 are involved. Once again, we also find many nucleus related annotations when
 checking their cellular location.
 
+Then, we explore some annotations of its individual components. Pathways
+where the proteins belong:
 ```{r annotations_components}
-## Then, we explore some annotations of its individual components
+annotations <- import_omnipath_annotations(
+    proteins = genes_complex,
+    resources = "NetPath"
+)
 
-## Pathways where the proteins belong:
-annotations <- import_omnipath_annotations(proteins=genes_complex,
-    resources=c("NetPath"))
+dplyr::select(annotations, genesymbol, value)
+```
 
-dplyr::select(annotations,genesymbol,value)
+Subcellular localization of our proteins:
 
-## Cellular localization of our proteins
-annotations <-import_omnipath_annotations(proteins=genes_complex,
-   resources=c("ComPPI"))
+```{r subcell_loc}
+annotations <-import_omnipath_annotations(
+    proteins = genes_complex,
+    resources = "ComPPI"
+)
+```
 
-## Since we have same record_id for some results of our query, we spread
-## these records across columns
-spread(annotations, label, value) %>%
-    dplyr::arrange(desc(score)) %>%
-    dplyr::top_n(10, score)
+Since we have same record_id for some results of our query, we spread these
+records across columns:
+
+```{r annot_spread}
+tidyr::spread(annotations, label, value) %>%
+dplyr::arrange(desc(score)) %>%
+dplyr::top_n(10, score)
+```
+
+The way above, we more or less reconstituted the data as it is in the
+original resource. The same can be done much easier by passing the
+`wide = TRUE` parameter to `import_omnipath_annotations`. In this case,
+if the data contains more than one resources, a list of data frames
+will be returned.
+
+```{r annot_wide}
+signaling_pathways <- import_omnipath_annotations(
+    resources = 'SignaLink_pathway',
+    wide = TRUE
+)
 ```
 
 ## Intercell
@@ -598,10 +620,35 @@ intercell <- import_omnipath_intercell(scope = 'generic',
 ## We check the intercell annotations for the individual components of
 ## our previous complex. We filter our data to print it in a good format
 dplyr::filter(intercell,genesymbol %in% genes_complex) %>%
-    dplyr::distinct(genesymbol, parent, .keep_all = TRUE) %>%
-    dplyr::select(category, genesymbol, parent) %>%
-    dplyr::arrange(genesymbol)
+dplyr::distinct(genesymbol, parent, .keep_all = TRUE) %>%
+dplyr::select(category, genesymbol, parent) %>%
+dplyr::arrange(genesymbol)
+```
 
+The `import_intercell_network` function creates the most complete network,
+including many interactions which are false positives in the context of
+interacellular communication. It is highly recommended to apply some
+quality filtering on this network. The `high_confidence` parameter performs
+a quiet stringent filtering:
+
+```{r intercell_quality}
+icn <- import_intercell_network(high_confidence = TRUE)
+```
+
+Using the function `filter_intercell_network` instead, you have much more
+flexibility to adjust the stringency of the filtering to the needs of your
+analysis. See the full list of options in the docs of the function.
+
+```{r intercell_filter}
+icn <-
+    import_intercell_network() %>%
+    filter_intercell_network(
+        min_curation_effort = 1,
+        consensus_percentile = 33
+    )
+```
+
+```{r close_dev}
 ## We close graphical connections
 while (!is.null(dev.list()))  dev.off()
 ```
