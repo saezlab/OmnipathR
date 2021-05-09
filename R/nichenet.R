@@ -2351,21 +2351,18 @@ nichenet_networks_small <- function(tiny = FALSE){
 #' nnt <- nichenet_test()
 #' }
 #'
-#' @importFrom rlang !!!
+#' @importFrom rlang exec !!!
 #' @export
 nichenet_test <- function(...){
 
     args <- list(...)
 
-    mlrmbo_optimization_param <- merge_lists(
+    args$mlrmbo_optimization_param <- merge_lists(
         args$mlrmbo_optimization_param,
         list(niter = 2, nstart = 16, ncores = 4)
     )
 
-    nichenet_main(
-        tiny = TRUE,
-        !!!args
-    )
+    exec(nichenet_main, tiny = TRUE, !!!args)
 
 }
 
@@ -2378,7 +2375,9 @@ nichenet_test <- function(...){
 #' \code{mlrMBO::evalTargetFun.OptState} is patched here to print longer
 #' error messages. Maybe it's a better solution to attach \code{nichenetr}
 #' before running the NicheNet pipeline. Alternatively you can try to call
-#' this function in the beginning.
+#' this function in the beginning. Why we don't call this automatically is
+#' just because we don't want to load datasets from another package without
+#' the user knowing about it.
 #'
 #' @return Returns \code{NULL}.
 #'
