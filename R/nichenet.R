@@ -799,7 +799,7 @@ nichenet_ligand_target_links <- function(
     nichenetr <- get_weighted_ligand_target_links <- NULL
 
     # NSE vs. R CMD check workaround
-    pearson <- NULL
+    pearson <- test_ligand <- NULL
 
     ligand_activities %>%
     slice_max(abs(pearson), n = n_top_ligands) %>%
@@ -2286,6 +2286,9 @@ nichenet_expression_data <- function(){
 #' @importFrom purrr map_dbl map2_chr
 #' @noRd
 nichenet_networks_small <- function(tiny = FALSE){
+
+    # NSE vs. R CMD check workaround
+    from <- NULL
 
     networks <-
         nichenet_networks(
