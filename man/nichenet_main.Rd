@@ -129,5 +129,8 @@ nichenet_results <- nichenet_main(
     \item{\code{\link{nichenet_signaling_network}}}
     \item{\code{\link{nichenet_lr_network}}}
     \item{\code{\link{nichenet_gr_network}}}
+    \item{\code{\link{nichenet_test}}}
+    \item{\code{\link{nichenet_workarounds}}}
+    \item{\code{\link{nichenet_results_dir}}}
 }
 }

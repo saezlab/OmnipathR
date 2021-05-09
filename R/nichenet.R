@@ -109,6 +109,9 @@
 #'     \item{\code{\link{nichenet_signaling_network}}}
 #'     \item{\code{\link{nichenet_lr_network}}}
 #'     \item{\code{\link{nichenet_gr_network}}}
+#'     \item{\code{\link{nichenet_test}}}
+#'     \item{\code{\link{nichenet_workarounds}}}
+#'     \item{\code{\link{nichenet_results_dir}}}
 #' }
 nichenet_main <- function(
     only_omnipath = FALSE,
@@ -134,8 +137,6 @@ nichenet_main <- function(
     # NSE vs. R CMD check workaround
     optimization_results <- optimized_parameters <- use_weights_networks <-
     ligand_target_matrix <- NULL
-
-    nichenet_load_data()
 
     top_env <- environment()
 
@@ -2318,37 +2319,77 @@ nichenet_networks_small <- function(tiny = FALSE){
 #' iterations in the optimization process. This way the pipeline runs in
 #' a reasonable time in order to test the code. Due to the random subsampling
 #' disconnected networks might be produced sometimes. If you see an error
-#' like "00005: Error in if (sd(prediction_vector) == 0) ... missing value
+#' like "Error in if (sd(prediction_vector) == 0) ... missing value
 #' where TRUE/FALSE needed", the random subsampled input is not appropriate.
-#' In this case just interrupt and call again.
+#' In this case just interrupt and call again. This test ensures the
+#' computational integrity of the pipeline. If it fails during the
+#' optimization process, try to start it over several times, even
+#' restarting R. The unpredictability is related to code{mlrMBO} and
+#' \code{nichenetr} not being prepared to handle certain conditions, and
+#' it's also difficult to find out which conditions lead to which errors.
+#' At least 3 different errors appear time to time, depending on the input.
+#' It also seems like restarting R sometimes helps, suggesting that the
+#' entire system might be somehow stateful.
 #'
 #' @param ... Passed to \code{\link{nichenet_main}}.
 #'
-#' @noRd
+#' @return A named list with the intermediate and final outputs of the
+#'     pipeline: `networks`, `expression`, `optimized_parameters`,
+#'     `weighted_networks` and `ligand_target_matrix`.
+#'
+#' @examples
+#' \donttest{
+#' nnt <- nichenet_test()
+#' }
+#'
+#' @importFrom rlang !!!
+#' @export
 nichenet_test <- function(...){
 
-    mlrmbo_optimization_param <- list(niter = 2, nstart = 16, ncores = 4)
+    args <- list(...)
+
+    mlrmbo_optimization_param <- merge_lists(
+        args$mlrmbo_optimization_param,
+        list(niter = 2, nstart = 16, ncores = 4)
+    )
 
     nichenet_main(
         tiny = TRUE,
-        mlrmbo_optimization_param = mlrmbo_optimization_param,
-        ...
+        !!!args
     )
 
 }
 
 
-#' Load NicheNet external data
+#' Workarounds using NicheNet without attaching the package
 #'
-#' @noRd
-nichenet_load_data <- function(){
+#' NicheNet requires the availability of some lazy loaded external data
+#' which are not available if the package is not loaded and attached. Also,
+#' the \code{BBmisc::convertToShortString} used for error reporting in
+#' \code{mlrMBO::evalTargetFun.OptState} is patched here to print longer
+#' error messages. Maybe it's a better solution to attach \code{nichenetr}
+#' before running the NicheNet pipeline. Alternatively you can try to call
+#' this function in the beginning.
+#'
+#' @return Returns \code{NULL}.
+#'
+#' @examples
+#' \donttest{
+#' nichenet_workarounds()
+#' }
+#'
+#' @export
+nichenet_workarounds <- function(){
 
-    ncitations <<- nichenetr::ncitations
-    geneinfo_human <<- nichenetr::geneinfo_human
-    lr_network <<- NULL
+    # R CMD check workaround
+    nichenetr <- BBmisc <- ncitations <- geneinfo_human <- NULL
+
+    assign('ncitations', nichenetr::ncitations, envir = .GlobalEnv)
+    assign('geneinfo_human', nichenetr::geneinfo_human, envir = .GlobalEnv)
+    assign('lr_network', NULL, .GlobalEnv)
 
     ns <- loadNamespace('BBmisc')
-    convertToShortString_original <- BBmisc%::%convertToShortString
+    convertToShortString_original <- BBmisc::convertToShortString
 
     convertToShortString_new <- function(...){
 
