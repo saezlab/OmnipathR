@@ -456,6 +456,20 @@ if_null_len0 <- function(value1, value2){
 }
 
 
+#' Wrapper around loadNamespace to avoid R CMD check `call not declared from`
+#' warnings.
+#'
+#' @param pkgname Character: name of the package.
+#'
+#' @return The package namespace loaded.
+#'
+#' @noRd
+load_namespace <- function(pkgname){
+
+    loadNamespace(pkgname)
+
+}
+
 
 #' Calls a function without throwing error on empty vectors
 #'

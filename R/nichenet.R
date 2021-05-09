@@ -2447,7 +2447,7 @@ nichenet_workarounds <- function(){
     assign('geneinfo_human', nichenetr%::%geneinfo_human, envir = .GlobalEnv)
     assign('lr_network', NULL, .GlobalEnv)
 
-    ns <- loadNamespace('BBmisc')
+    ns <- load_namespace('BBmisc')
     convertToShortString_original <- (BBmisc%::%convertToShortString)
 
     args <- formals(convertToShortString_original)
