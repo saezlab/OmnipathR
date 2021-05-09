@@ -49,11 +49,12 @@ fig_height: 7
 # Status
 
 The integration between NicheNet and OmniPath is a fresh development, as of
-March 2021 we are still doing some bug fixes and polishing until it will be
-stable. The network building methods are complete and functional. To use the
-features described here you will need the [latest git version of OmnipathR](
+May 2021 we have already tested the basic functionality. To use the features
+described here you will need the [latest git version of OmnipathR](
 https://github.com/saezlab/OmnipathR), which we update often as we test and
-improve the elements of the pipeline.
+improve the elements of the pipeline. Bug reports, questions and suggestions
+are welcome, please open an issue on [github](
+https://github.com/saezlab/OmnipathR/issues).
 
 # Introduction
 
@@ -138,6 +139,62 @@ arguments, all further arguments are optional override of package defaults.
 
 ```{r eval=FALSE}
 nichenet_model <- nichenet_main()
+```
+
+# Installing packages and loading nichenetr
+
+Before running the pipeline it's necessary to install `nichenetr` and its
+dependencies. The `nichenetr` package is available only from github, while
+the dependencies are distributed in standard repositories like CRAN.
+
+```{r eval=FALSE}
+require(devtools)
+install_github('saeyslab/nichenetr')
+```
+
+This procedure should install the dependencies as well. Some more specific
+dependencies are `mlrMBO`, `ParallelMap`, `ParamHelpers` and `smoof`.
+
+The `nichenetr` package is suggested by `OmnipathR` but not loaded and
+attached by default. This might cause issues, for example NicheNet requires
+access to some of its lazy loaded external data. To address this, you can
+either attach `nichenetr`:
+
+```{r eval=FALSE}
+library(nichenetr)
+```
+
+Or call a function which loads the datasets into the global environment, so
+NicheNet can access them:
+
+```{r eval=FALSE}
+nichenet_workarounds()
+```
+
+# Testing the pipeline
+
+With a fresh setup, as a first step it is recommended to test the pipeline,
+to make sure it is able to run in your particular environment, all packages
+are installed and loaded properly. The optimization process takes hours to
+run, while the test included in `OmnipathR` takes only around 10 minutes.
+This way you can avoid some errors to come up after running the analysis
+already for many hours. Although it's never guaranteed that you won't have
+errors in the pipeline as the outcome depends on the input data and certain
+conditions are not handled in `nichenetr`, `mlr` and `mlrMBO`. If you get
+an error during the optimization process, start it over a few times to see
+if it's consistent. Sometimes it helps also to restart your R session. I
+would recommend to try it around 10 times before suspecting a bug. See more
+details in the docs of `nichenet_test`.
+
+The `nichenet_test` function builds a tiny network and runs the pipeline
+with a highly reduced number of parameters and iteration steps in the
+optimization. Also it inputs dummy gene sets as genes of interest and
+background genes.
+
+```{r eval=FALSE}
+require(OmnipathR)
+nichenet_workarounds()
+nichenet_test()
 ```
 
 # Workflow steps
@@ -226,6 +283,8 @@ and format the interactions, but a few of them accepts parameters, such as
 confidence score thresholds or switches to include or exclude certain kind
 of records:
 
+### Raw data from network resources
+
 ```{r eval=FALSE}
 evex_signaling <- nichenet_signaling_network_evex(top_confidence = .9)
 ```
@@ -249,6 +308,50 @@ Currently the following ligand-receptor network resources are available in
 OmnipathR: OmniPath, Ramilowski et al. 2015, Guide to Pharmacology
 (IUPHAR/BPS); and in the gene regulatory network: OmniPath, Harmonizome,
 RegNetwork, HTRIdb, ReMap, EVEX, PathwayCommons and TRRUST.
+
+#### The OmniPath ligand-receptor network
+
+The ligand-receptor interactions from OmniPath are special: these cover
+broader categories than only ligands and receptors. It includes also
+secreted enzymes, transporters, etc. Also the `import_intercell_network`
+function, responsible for creating the OmniPath LR network, by default
+returns the most complete network. However, this contains a considerable
+number of interactions which might be false positives in the context of
+intercellular communication. It is highly recommended to apply quality
+filtering on this network, using the `quality_filter_param` argument of
+the functions in the NicheNet pipeline. The default settings already
+ensure a certain level of filtering, read more about the options in the
+docs of `filter_intercell_network`. Passing the `high_confidence = TRUE`
+argument by `lr_network = list(omnipath = list(high_confidence = TRUE))`
+results a quite stringent filtering, it's better to find your preferred
+options and set them by `quality_filter_param`. An example how to pass
+quality options from the top of the pipeline:
+
+```{r eval=FALSE}
+nichenet_results <- nichenet_main(
+    quality_filter_param = list(
+        min_curation_effort = 1,
+        consensus_percentile = 30
+    )
+)
+```
+
+### Small network
+
+Initially for testing purposes we included an option to create a small
+network (few thousands interactions instead of few millions), using only
+a high quality subset of OmniPath data. It might be interesting to try
+the analysis with this lower coverage but higher confidence network:
+
+```{r eval=FALSE}
+nichenet_results <- nichenet_main(small = TRUE)
+```
+
+The small network is not customizable, and it uses the `high_confidence`
+option in `import_intercell_network`. You can build similar smaller networks
+by using the general options instead. Another option `tiny` generates an
+even smaller network, however this involves a random subsetting, the outcome
+is not deterministic, this option is only for testing purposes.
 
 ## Ligand perturbation experiments
 
@@ -339,9 +442,23 @@ lt_matrix <- nichenet_ligand_target_matrix(
 
 In this step we ues the NicheNet model to infer ligand activities from our
 transcriptomics data. The last three arguments are all character vectors
-with gene symbols:
+with gene symbols. For genes of interest, here we select 50 random genes
+from the targets in the ligand-target matrix. Also just for testing
+purposes, we consider all genes in the network to be expressed in both
+the transmitter and receiver cells.
 
 ```{r eval=FALSE}
+genes_of_interest <- sample(rownames(ligand_target_matrix), 50)
+background_genes <- setdiff(
+    rownames(ligand_target_matrix),
+    genes_of_interest
+)
+expressed_genes_transmitter <- union(
+    unlist(purrr::map(networks, 'from')),
+    unlist(purrr::map(networks, 'to'))
+)
+expressed_genes_receiver <- expressed_genes_transmitter
+
 ligand_activities <- nichenet_ligand_activities(
     ligand_target_matrix = lt_matrix,
     lr_network = networks$lr_network,

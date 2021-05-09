@@ -10,16 +10,20 @@ nichenet_main(
   expressed_genes_receiver = NULL,
   genes_of_interest = NULL,
   background_genes = NULL,
+  use_weights = TRUE,
   n_top_ligands = 42,
   n_top_targets = 250,
   signaling_network = list(),
   lr_network = list(),
   gr_network = list(),
+  small = FALSE,
+  tiny = FALSE,
   make_multi_objective_function_param = list(),
   objective_function_param = list(),
   mlrmbo_optimization_param = list(),
   construct_ligand_target_matrix_param = list(),
-  results_dir = NULL
+  results_dir = NULL,
+  quality_filter_param = list()
 )
 }
 \arguments{
@@ -44,6 +48,10 @@ cells (e.g. genes differentially expressed upon cell-cell interaction).}
 \item{background_genes}{Character vector with the gene symbols of the
 genes to be used as background.}
 
+\item{use_weights}{Logical: calculate and use optimized weights for
+resources (i.e. one resource seems to be better than another, hence
+the former is considered with a higher weight).}
+
 \item{n_top_ligands}{How many of the top ligands to include in the
 ligand-target table.}
 
@@ -51,13 +59,21 @@ ligand-target table.}
 ligands) to consider in the ligand-target table.}
 
 \item{signaling_network}{A list of parameters for building the signaling
-network, passed to \code{\link{nichenet_signaling_network}}}
+network, passed to \code{\link{nichenet_signaling_network}}.}
 
 \item{lr_network}{A list of parameters for building the ligand-receptor
-network, passed to \code{\link{nichenet_lr_network}}}
+network, passed to \code{\link{nichenet_lr_network}}.}
 
 \item{gr_network}{A list of parameters for building the gene regulatory
-network, passed to \code{\link{nichenet_gr_network}}}
+network, passed to \code{\link{nichenet_gr_network}}.}
+
+\item{small}{Logical: build a small network for testing purposes, using
+only OmniPath data. It is also a high quality network, it is
+reasonable to try the analysis with this small network.}
+
+\item{tiny}{Logical: build an even smaller network for testing
+purposes. As this involves random subsetting, it's not recommended
+to use this network for analysis.}
 
 \item{make_multi_objective_function_param}{Override parameters for
 \code{smoof::makeMultiObjectiveFunction}.}
@@ -73,6 +89,12 @@ the objective function.}
 
 \item{results_dir}{Character: path to the directory to save intermediate
 and final outputs from NicheNet methods.}
+
+\item{quality_filter_param}{Arguments for \code{
+\link{filter_intercell_network}} (quality filtering of the OmniPath
+ligand-receptor network). It is recommended to check these parameters
+and apply some quality filtering. The defaults already ensure certain
+filtering, but you might want more relaxed or stringent options.}
 }
 \value{
 A named list with the intermediate and final outputs of the
@@ -89,6 +111,16 @@ optimization to build a NicheNet model. This results a weighted ligand-
 target matrix. Then, considering the expressed genes from user provided
 data, a gene set of interest and background genes, it executes the
 NicheNet ligand activity analysis.
+}
+\details{
+About \emph{small} and \emph{tiny} networks: Building a NicheNet model
+is computationally demanding, taking several hours to run. As this is
+related to the enormous size of the networks, to speed up testing we can
+use smaller networks, around 1,000 times smaller, with few thousands of
+interactions instead of few millions. Random subsetting of the whole
+network would result disjunct fragments, instead we load only a few
+resources. To run the whole pipeline with tiny networks use \code{
+\link{nichenet_test}}.
 }
 \examples{
 \donttest{
@@ -114,5 +146,8 @@ nichenet_results <- nichenet_main(
     \item{\code{\link{nichenet_signaling_network}}}
     \item{\code{\link{nichenet_lr_network}}}
     \item{\code{\link{nichenet_gr_network}}}
+    \item{\code{\link{nichenet_test}}}
+    \item{\code{\link{nichenet_workarounds}}}
+    \item{\code{\link{nichenet_results_dir}}}
 }
 }

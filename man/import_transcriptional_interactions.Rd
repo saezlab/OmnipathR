@@ -33,10 +33,12 @@ comes from which resource will be lost and the PubMed IDs will be unique.}
 
 \item{exclude}{Character: datasets or resources to exclude.}
 
-\item{...}{optional additional arguments}
+\item{...}{Optional additional arguments.}
+
+\item{datasets}{Character vector with the}
 }
 \value{
-A dataframe containing TF-target interactions
+A dataframe containing TF-target interactions.
 }
 \description{
 Imports the dataset from:
@@ -49,6 +51,7 @@ interactions <-
     import_transcriptional_interactions(
         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
     )
+
 
 }
 \seealso{

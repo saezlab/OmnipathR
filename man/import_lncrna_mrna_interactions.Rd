@@ -10,6 +10,7 @@ import_lncrna_mrna_interactions(
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,
+  exclude = NULL,
   ...
 )
 }
@@ -31,9 +32,9 @@ the query type. If FALSE, only the fields defined by the user in the
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
-\item{...}{optional additional arguments}
-
 \item{exclude}{Character: datasets or resources to exclude.}
+
+\item{...}{optional additional arguments}
 }
 \value{
 A dataframe containing lncRNA-mRNA interactions

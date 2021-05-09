@@ -200,18 +200,19 @@ import_omnipath <- function(
 
     omnipath_check_result(result, url)
 
-    msg <- '%soaded %d %s%s.'
-
     result %<>% cast_logicals(logicals)
     result %<>% strip_resource_labels(references_by_resource)
     result %<>% apply_exclude(exclude)
+
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references
         result %<>% count_resources
     }
+
     if(is.data.frame(result)){
         result %<>% as_tibble
     }
+
     from_cache <- result %>% is_from_cache
 
     # reporting and returning result
@@ -220,6 +221,8 @@ import_omnipath <- function(
         logger::DEBUG,
         logger::SUCCESS
     )
+
+    msg <- '%soaded %d %s%s.'
 
     logger::log_level(
         level = loglevel,
@@ -576,6 +579,7 @@ split_unique_join <- function(
 #' each sub vector.
 #'
 #' @importFrom purrr map
+#' @importFrom magrittr %>%
 #'
 #' @noRd
 split_apply <- function(
@@ -619,18 +623,26 @@ count_resources <- function(data, only_primary = TRUE){
 #' For an interactions or enzyme-substrate data frame adds a column
 #' `n_references` with the number of references for each record.
 #'
+#' @importFrom dplyr n_distinct mutate
+#' @importFrom magrittr %>%
 #' @noRd
 count_references <- function(data){
 
-    data[['n_references']] <- strip_resource_labels(
-        data,
-        inplace = FALSE,
-        method = function(refs, ...){
-            length(unique(refs))
-        }
-    )
+    # NSE vs. R CMD check workaround
+    n_references <- references <- NULL
 
-    return(data)
+    data %>%
+    mutate(
+        n_references = ifelse(
+            is.na(references),
+            0,
+            strip_resource_labels(
+                references,
+                inplace = FALSE,
+                method = n_distinct
+            )
+        )
+    )
 
 }
 
@@ -1366,10 +1378,6 @@ import_tf_target_interactions <- function(
 #' which contains transcription factor-target protein coding gene
 #' interactions.
 #'
-#' @return A dataframe containing TF-target interactions
-#' @export
-#' @importFrom dplyr mutate select
-#' @importFrom magrittr %>%
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
@@ -1384,13 +1392,22 @@ import_tf_target_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
-#' @param ... optional additional arguments 
+#' @param datasets Character vector with the
+#' @param ... Optional additional arguments.
+#'
+#' @return A dataframe containing TF-target interactions.
 #'
 #' @examples
 #' interactions <-
 #'     import_transcriptional_interactions(
 #'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
 #'     )
+#'
+#'
+#' @export
+#' @importFrom dplyr mutate select
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang %||% exec !!!
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
@@ -1409,31 +1426,21 @@ import_transcriptional_interactions <- function(
 
     is_directed <- NULL
 
-    result <- rbind(
-        import_dorothea_interactions(
-            resources = resources,
-            organism = organism,
+    args <- list(...)
+    tr_datasets <- c('dorothea', 'tf_target')
+    args$datasets %<>% {. %||% tr_datasets} %>% intersect(tr_datasets)
+
+    result <-
+        exec(
+            import_omnipath,
+            query_type = 'interactions',
+            exclude = exclude,
             dorothea_levels = dorothea_levels,
-            references_by_resource = references_by_resource,
-            exclude = exclude,
-            ...
-        ),
-        import_tf_target_interactions(
-            resources = resources,
             organism = organism,
+            resources = resources,
             references_by_resource = references_by_resource,
-            exclude = exclude,
-            ...
-        ) %>%
-        mutate(dorothea_level = '') %>%
-        select(
-            source, target, source_genesymbol, target_genesymbol,
-            is_directed, is_stimulation, is_inhibition, consensus_direction,
-            consensus_stimulation, consensus_inhibition, dip_url, sources,
-            references, curation_effort, dorothea_level, n_references,
-            n_resources
+            !!!args
         )
-    )
 
     return(result)
 
@@ -1619,6 +1626,7 @@ import_lncrna_mrna_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    exclude = NULL,
     ...
 ){
 
@@ -3435,6 +3443,9 @@ filter_by_resource <- function(data, resources = NULL){
 #'
 #' Unfortunately the column title is different across the various
 #' query types in the OmniPath web service, so we need to guess.
+#'
+#' @param data A data frame downloaded by any \code{import_...} function
+#'     in the current package.
 #'
 #' @return Character: the name of the column, if any of the column names
 #'     matches.

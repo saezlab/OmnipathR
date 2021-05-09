@@ -48,16 +48,25 @@
 #'     cells (e.g. genes differentially expressed upon cell-cell interaction).
 #' @param background_genes Character vector with the gene symbols of the
 #'     genes to be used as background.
+#' @param use_weights Logical: calculate and use optimized weights for
+#'     resources (i.e. one resource seems to be better than another, hence
+#'     the former is considered with a higher weight).
 #' @param n_top_ligands How many of the top ligands to include in the
 #'     ligand-target table.
 #' @param n_top_targets How many of the top targets (for each of the top
 #'     ligands) to consider in the ligand-target table.
 #' @param signaling_network A list of parameters for building the signaling
-#'     network, passed to \code{\link{nichenet_signaling_network}}
+#'     network, passed to \code{\link{nichenet_signaling_network}}.
 #' @param lr_network A list of parameters for building the ligand-receptor
-#'     network, passed to \code{\link{nichenet_lr_network}}
+#'     network, passed to \code{\link{nichenet_lr_network}}.
 #' @param gr_network A list of parameters for building the gene regulatory
-#'     network, passed to \code{\link{nichenet_gr_network}}
+#'     network, passed to \code{\link{nichenet_gr_network}}.
+#' @param small Logical: build a small network for testing purposes, using
+#'     only OmniPath data. It is also a high quality network, it is
+#'     reasonable to try the analysis with this small network.
+#' @param tiny Logical: build an even smaller network for testing
+#'     purposes. As this involves random subsetting, it's not recommended
+#'     to use this network for analysis.
 #' @param make_multi_objective_function_param Override parameters for
 #'     \code{smoof::makeMultiObjectiveFunction}.
 #' @param objective_function_param Override additional arguments passed to
@@ -68,10 +77,25 @@
 #'     \code{nichenetr::construct_ligand_target_matrix}.
 #' @param results_dir Character: path to the directory to save intermediate
 #'     and final outputs from NicheNet methods.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #'
 #' @return A named list with the intermediate and final outputs of the
 #'     pipeline: `networks`, `expression`, `optimized_parameters`,
 #'     `weighted_networks` and `ligand_target_matrix`.
+#'
+#' @details
+#' About \emph{small} and \emph{tiny} networks: Building a NicheNet model
+#' is computationally demanding, taking several hours to run. As this is
+#' related to the enormous size of the networks, to speed up testing we can
+#' use smaller networks, around 1,000 times smaller, with few thousands of
+#' interactions instead of few millions. Random subsetting of the whole
+#' network would result disjunct fragments, instead we load only a few
+#' resources. To run the whole pipeline with tiny networks use \code{
+#' \link{nichenet_test}}.
 #'
 #' @examples
 #' \donttest{
@@ -92,12 +116,17 @@
 #'
 #' @export
 #' @importFrom magrittr %>% %T>%
+#' @importFrom logger log_success
+#' @importFrom rlang exec !!!
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{nichenet_networks}}}
 #'     \item{\code{\link{nichenet_signaling_network}}}
 #'     \item{\code{\link{nichenet_lr_network}}}
 #'     \item{\code{\link{nichenet_gr_network}}}
+#'     \item{\code{\link{nichenet_test}}}
+#'     \item{\code{\link{nichenet_workarounds}}}
+#'     \item{\code{\link{nichenet_results_dir}}}
 #' }
 nichenet_main <- function(
     only_omnipath = FALSE,
@@ -105,89 +134,84 @@ nichenet_main <- function(
     expressed_genes_receiver = NULL,
     genes_of_interest = NULL,
     background_genes = NULL,
+    use_weights = TRUE,
     n_top_ligands = 42,
     n_top_targets = 250,
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
+    small = FALSE,
+    tiny = FALSE,
     make_multi_objective_function_param = list(),
     objective_function_param = list(),
     mlrmbo_optimization_param = list(),
     construct_ligand_target_matrix_param = list(),
-    results_dir = NULL
+    results_dir = NULL,
+    quality_filter_param = list()
 ){
 
     # NSE vs. R CMD check workaround
-    optimization_results <- optimized_parameters <- weighted_networks <-
-        ligand_target_matrix <- NULL
+    optimization_results <- optimized_parameters <- use_weights_networks <-
+    ligand_target_matrix <- NULL
 
     top_env <- environment()
 
     results_dir %>%
-    if_null(options('omnipath.nichenet_results_dir')) %>%
+    if_null(getOption('omnipath.nichenet_results_dir')) %>%
     options(omnipath.nichenet_results_dir = .)
 
-    logger::log_success('Building NicheNet prior knowledge.')
+    log_success('Building NicheNet prior knowledge.')
 
-    networks <- nichenet_networks(
-        signaling_network = signaling_network,
-        lr_network = lr_network,
-        gr_network = gr_network,
-        only_omnipath = only_omnipath
-    )
+    networks <-
+        nichenet_networks(
+            signaling_network = signaling_network,
+            lr_network = lr_network,
+            gr_network = gr_network,
+            only_omnipath = only_omnipath,
+            small = small,
+            tiny = tiny,
+            quality_filter_param = quality_filter_param
+        )
 
-    expression <- nichenet_expression_data() %>%
+    expression <-
+        nichenet_expression_data() %>%
         nichenet_remove_orphan_ligands(lr_network = networks$lr_network)
 
-    logger::log_success('Finished building NicheNet prior knowledge.')
-    logger::log_success('Building NicheNet model.')
+    log_success('Finished building NicheNet prior knowledge.')
+    log_success('Building NicheNet model.')
 
-    networks %>%
-    nichenet_optimization(
-        expression = expression,
-        make_multi_objective_function_param =
-            make_multi_objective_function_param,
-        objective_function_param = objective_function_param,
-        mlrmbo_optimization_param = mlrmbo_optimization_param
-    ) %T>%
-    assign(x = 'optimization_results', value = ., envir = top_env) %>%
-    nichenet_build_model(networks = networks, weighted = FALSE) %>%
-    c(
-        list(
-            lr_network = networks$lr_network,
-            construct_ligand_target_matrix_param =
-                construct_ligand_target_matrix_param,
-            weighted = FALSE
+    optimization_results <-
+        networks %>%
+        nichenet_optimization(
+            expression = expression,
+            make_multi_objective_function_param =
+                make_multi_objective_function_param,
+            objective_function_param = objective_function_param,
+            mlrmbo_optimization_param = mlrmbo_optimization_param
         )
-    ) %T>%
-    assign(
-        x = 'optimized_parameters',
-        value = .$optimized_parameters,
-        envir = top_env
-    ) %>%
-    do.call(what = nichenet_ligand_target_matrix) %>%
-    # second run with weights
-    {nichenet_build_model(
-        networks = networks,
-        optimization_results = optimization_results
-    )} %T>%
-    assign(
-        x = 'weighted_networks',
-        value = .$weighted_networks,
-        envir = top_env
-    ) %>%
-    c(
-        list(
-            lr_network = networks$lr_network,
-            construct_ligand_target_matrix_param =
-                construct_ligand_target_matrix_param
+
+    optimized_parameters <-
+        nichenet_build_model(
+            networks = networks,
+            optimization_results = optimization_results,
+            use_weights = use_weights
         )
-    ) %>%
-    do.call(what = nichenet_ligand_target_matrix) %T>%
-    assign(x = 'ligand_target_matrix', ., envir = top_env) %T>%
-    {logger::log_success('Finished building NicheNet model.')} %>%
+
+    ligand_target_matrix <-
+        nichenet_ligand_target_matrix(
+            optimized_parameters$weighted_networks,
+            lr_network = networks$lr_network,
+            optimized_parameters = optimized_parameters,
+            construct_ligand_target_matrix_param =
+            construct_ligand_target_matrix_param,
+            use_weights = use_weights
+        )
+
+    log_success('Finished building NicheNet model.')
+
     list(
-        ligand_target_matrix = .,
+        ligand_target_matrix = ligand_target_matrix,
+        lr_network = networks$lr_network,
         expressed_genes_transmitter = expressed_genes_transmitter,
         expressed_genes_receiver = expressed_genes_receiver,
         genes_of_interest = genes_of_interest,
@@ -196,19 +220,19 @@ nichenet_main <- function(
     {`if`(
         any(map_lgl(., is.null)),
         list(ligand_activities = NULL, ligand_target_links = NULL),
-        do.call(nichenet_ligand_activities, .)
+        exec(nichenet_ligand_activities, !!!.)
     )} %>%
     c(
         list(
             networks = networks,
             expression = expression,
             optimized_parameters = optimized_parameters,
-            weighted_networks = weighted_networks,
+            use_weights_networks = use_weights_networks,
             ligand_target_matrix = ligand_target_matrix
         ),
         .
     ) %T>%
-    {logger::log_success('Completed NicheNet pipeline.')}
+    {log_success('Completed NicheNet pipeline.')}
 
 }
 
@@ -235,17 +259,18 @@ nichenet_main <- function(
 #' @importFrom purrr keep
 nichenet_remove_orphan_ligands <- function(expression, lr_network){
 
-    # NSE vs. R CMD check workaround
-    networks <- NULL
-
-    all_ligands <- networks$lr_network$from %>% unique
+    all_ligands <- lr_network$from %>% unique
 
     expression %>%
     keep(
         function(record){
             all(record$from %in% all_ligands)
         }
-    )
+    ) %T>%
+    {log_success(
+        'Expression experiments after removing unconnected ligands: %d',
+        length(.)
+    )}
 
 }
 
@@ -293,7 +318,7 @@ nichenet_optimization <- function(
 
     # R CMD check workaround
     nichenetr <- convert_expression_settings_evaluation <-
-        mlrmbo_optimization <- model_evaluation_optimization <- NULL
+    mlrmbo_optimization <- model_evaluation_optimization <- NULL
 
     resources <-
         networks %>%
@@ -352,7 +377,7 @@ nichenet_optimization <- function(
                         len = 1,
                         lower = 0.01,
                         upper = 0.99,
-                        tunable =TRUE
+                        tunable = TRUE
                     )
                 ),
                 has.simple.signature = FALSE,
@@ -417,7 +442,7 @@ nichenet_optimization <- function(
 #' @param networks A list with NicheNet format signaling, ligand-receptor
 #'     and gene regulatory networks as produced by
 #'     \code{\link{nichenet_networks}}.
-#' @param weighted Logical: whether to use the optimized weights.
+#' @param use_weights Logical: whether to use the optimized weights.
 #'
 #' @return A named list with two elements: `weighted_networks` and
 #'     `optimized_parameters`.
@@ -438,12 +463,12 @@ nichenet_optimization <- function(
 nichenet_build_model <- function(
     optimization_results,
     networks,
-    weighted = TRUE
+    use_weights = TRUE
 ){
 
     # R CMD check workaround
     nichenetr <- process_mlrmbo_nichenet_optimization <-
-        construct_weighted_networks <- apply_hub_corrections <- NULL
+    construct_weighted_networks <- apply_hub_corrections <- NULL
 
     # all resources with initial weights of 1
     resource_weights <-
@@ -457,7 +482,7 @@ nichenet_build_model <- function(
     optimized_parameters <-
         optimization_results %T>%
         {logger::log_success('Processing MLRMBO parameters.')} %>%
-        nichenetr%::%process_mlrmbo_nichenet_optimization(
+        (nichenetr%::%process_mlrmbo_nichenet_optimization)(
             source_names = resource_weights %>% pull(source) %>% unique
         ) %T>%
         {logger::log_success('Finished processing MLRMBO parameters.')}
@@ -467,24 +492,27 @@ nichenet_build_model <- function(
         file.path(
             sprintf(
                 'weighted_networks%s.rds',
-                `if`(weighted, '_weighted', '')
+                `if`(use_weights, '_weighted', '')
             )
         )
 
     logger::log_success('Creating weighted networks.')
 
-    nichenetr%::%construct_weighted_networks(
+    (nichenetr%::%construct_weighted_networks)(
         lr_network = networks$lr_network,
         sig_network = networks$signaling_network,
         gr_network = networks$gr_network,
         source_weights_df = `if`(
-            weighted,
-            optimization_results$source_weight_df,
+            use_weights,
+            optimized_parameters$source_weight_df,
             resource_weights
         )
     ) %T>%
     {logger::log_success('Applying hub corrections.')} %>%
-    nichenetr%::%apply_hub_corrections(
+    # Error in (nichenetr %::% apply_hub_corrections)(., lr_sig_hub = optimized_parameters$lr_sig_hub,  :
+    # weighted_networks must be a list object
+
+    (nichenetr%::%apply_hub_corrections)(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub
     ) %T>%
@@ -509,7 +537,7 @@ nichenet_build_model <- function(
 #'     produced by \code{\link{nichenet_lr_network}}.
 #' @param optimized_parameters The outcome of NicheNet parameter optimization
 #'     as produced by \code{\link{nichenet_build_model}}.
-#' @param weighted Logical: wether the network sources are weighted. In this
+#' @param use_weights Logical: wether the network sources are weighted. In this
 #'     function it only affects the output file name.
 #' @param construct_ligand_target_matrix_param Override parameters for
 #'     \code{nichenetr::construct_ligand_target_matrix}.
@@ -536,7 +564,7 @@ nichenet_ligand_target_matrix <- function(
     weighted_networks,
     lr_network,
     optimized_parameters,
-    weighted = TRUE,
+    use_weights = TRUE,
     construct_ligand_target_matrix_param = list()
 ){
 
@@ -553,13 +581,13 @@ nichenet_ligand_target_matrix <- function(
         file.path(
             sprintf(
                 'ligand_target_matrix%s.rds',
-                `if`(weighted, '_weighted', '')
+                `if`(use_weights, '_weighted', '')
             )
         )
 
     construct_ligand_target_matrix_param %>%
     add_defaults(
-        fun = nichenetr%::%construct_ligand_target_matrix,
+        fun = (nichenetr%::%construct_ligand_target_matrix),
         defaults = list(
             weighted_networks = weighted_networks,
             ligands = ligands,
@@ -632,6 +660,7 @@ nichenet_ligand_target_matrix <- function(
 #' @export
 #' @importFrom magrittr %>% %<>% %T>%
 #' @importFrom dplyr pull filter arrange
+#' @importFrom logger log_success
 nichenet_ligand_activities <- function(
     ligand_target_matrix,
     lr_network,
@@ -649,7 +678,7 @@ nichenet_ligand_activities <- function(
     # NSE vs. R CMD check workaround
     from <- to <- pearson <- NULL
 
-    logger::log_success('Running ligand activity analysis.')
+    log_success('Running ligand activity analysis.')
 
     ligand_activites_rds_path <-
         nichenet_results_dir() %>%
@@ -675,7 +704,7 @@ nichenet_ligand_activities <- function(
             # shouldn't we also remove the genes of interest?
         )
 
-    nichenetr%::%predict_ligand_activities(
+    (nichenetr%::%predict_ligand_activities)(
         geneset = genes_of_interest,
         background_expressed_genes = background_genes,
         ligand_target_matrix = ligand_target_matrix,
@@ -684,10 +713,16 @@ nichenet_ligand_activities <- function(
     arrange(-pearson) %>%
     list(
         ligand_activities = .,
-        ligand_target_links = nichenet_ligand_target_links(.)
+        ligand_target_links = nichenet_ligand_target_links(
+            ligand_activities = .,
+            ligand_target_matrix = ligand_target_matrix,
+            genes_of_interest = genes_of_interest,
+            n_top_ligands = n_top_ligands,
+            n_top_targets = n_top_targets
+        )
     ) %T>%
     {saveRDS(.$ligand_activities, ligand_activites_rds_path)} %T>%
-    {logger::log_success(
+    {log_success(
         'Finished running ligand activity analysis, saved to `%s`.',
         ligand_activites_rds_path
     )}
@@ -750,7 +785,7 @@ nichenet_ligand_activities <- function(
 #'
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom dplyr top_n arrange
+#' @importFrom dplyr slice_max pull bind_rows
 #' @importFrom purrr map
 nichenet_ligand_target_links <- function(
     ligand_activities,
@@ -767,14 +802,15 @@ nichenet_ligand_target_links <- function(
     pearson <- NULL
 
     ligand_activities %>%
-    arrange(-pearson)
-    top_n(pearson, n_top_ligands) %>%
+    slice_max(abs(pearson), n = n_top_ligands) %>%
+    pull(test_ligand) %>%
     map(
-        nichenetr%::%get_weighted_ligand_target_links,
+        (nichenetr%::%get_weighted_ligand_target_links),
         geneset = genes_of_interest,
         ligand_target_matrix = ligand_target_matrix,
         n = n_top_targets
-    )
+    ) %>%
+    bind_rows
 
 }
 
@@ -818,6 +854,17 @@ nichenet_results_dir <- function(){
 #'     network, passed to \code{\link{nichenet_gr_network}}
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#' @param small Logical: build a small network for testing purposes, using
+#'     only OmniPath data. It is also a high quality network, it is
+#'     reasonable to try the analysis with this small network.
+#' @param tiny Logical: build an even smaller network for testing
+#'     purposes. As this involves random subsetting, it's not recommended
+#'     to use this network for analysis.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #'
 #' @return A named list with three network data frames (tibbles): the
 #'     signaling, the ligand-receptor (lr) and the gene regulatory (gr)
@@ -846,7 +893,8 @@ nichenet_results_dir <- function(){
 #' omnipath_networks <- nichenet_networks(only_omnipath = TRUE)
 #'
 #' @importFrom magrittr %>% %T>%
-#' @importFrom purrr map2
+#' @importFrom purrr map2 keep
+#' @importFrom logger log_success
 #' @export
 #'
 #' @seealso \itemize{
@@ -858,26 +906,42 @@ nichenet_networks <- function(
     signaling_network = list(),
     lr_network = list(),
     gr_network = list(),
-    only_omnipath = FALSE
+    only_omnipath = FALSE,
+    small = FALSE,
+    tiny = FALSE,
+    quality_filter_param = list()
 ){
 
-    environment() %>%
-    as.list() %T>%
-    {logger::log_success('Building NicheNet network knowledge')} %>%
-    discard(names(.) == 'only_omnipath') %>%
-    map2(
-        names(.),
-        function(args, network_type){
-            if(!('only_omnipath' %in% names(args))){
-                args$only_omnipath <- only_omnipath
+    networks_rds_path <-
+        nichenet_results_dir() %>%
+        file.path('networks.rds')
+
+    `if`(
+        small || tiny,
+        nichenet_networks_small(tiny = tiny),
+        environment() %>%
+        as.list() %T>%
+        {logger::log_success('Building NicheNet network knowledge')} %>%
+        keep(names(.) %>% endsWith('_network')) %>%
+        map2(
+            names(.),
+            function(args, network_type){
+                if(!('only_omnipath' %in% names(args))){
+                    args$only_omnipath <- only_omnipath
+                }
+                if(network_type == 'lr_network'){
+                    args$quality_filter_param <- quality_filter_param
+                }
+                network_type %>%
+                sprintf('nichenet_%s', .) %>%
+                get() %>%
+                do.call(args)
             }
-            network_type %>%
-            sprintf('nichenet_%s', .) %>%
-            get() %>%
-            do.call(args)
-        }
+        ) %T>%
+        {log_success('Finished building NicheNet network knowledge')}
     ) %T>%
-    {logger::log_success('Finished building NicheNet network knowledge')}
+    saveRDS(networks_rds_path) %T>%
+    {log_success('Saved networks to `%s`.', networks_rds_path)}
 
 }
 
@@ -970,6 +1034,11 @@ nichenet_signaling_network <- function(
 #'     \code{\link{nichenet_lr_network_ramilowski}}.
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #'
 #' @return A network data frame (tibble) with ligand-receptor interactions
 #'     suitable for use with NicheNet.
@@ -991,12 +1060,14 @@ nichenet_signaling_network <- function(
 #'     \item{\code{\link{nichenet_lr_network_omnipath}}}
 #'     \item{\code{\link{nichenet_lr_network_guide2pharma}}}
 #'     \item{\code{\link{nichenet_lr_network_ramilowski}}}
+#'     \item{\code{\link{filter_intercell_network}}}
 #' }
 nichenet_lr_network <- function(
     omnipath = list(),
     guide2pharma = list(),
     ramilowski = list(),
-    only_omnipath = FALSE
+    only_omnipath = FALSE,
+    quality_filter_param = list()
 ){
 
     environment() %>%
@@ -1091,6 +1162,11 @@ nichenet_gr_network <- function(
 #'     "signaling", "lr" (ligand-receptor) or "gr" (gene regulatory).
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #' @param ... Argument names are the name of the resources to download (all
 #'     lowercase), while their values are lists of arguments to the resource
 #'     specific nichenet import methods (an empty list if no arguments should
@@ -1110,9 +1186,15 @@ nichenet_gr_network <- function(
 #' @importFrom dplyr bind_rows filter
 #' @importFrom tibble as_tibble
 #' @importFrom rlang set_names
+#' @importFrom logger log_info log_success
 #'
 #' @noRd
-nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
+nichenet_network <- function(
+    network_type,
+    only_omnipath = FALSE,
+    quality_filter_param = list(),
+    ...
+){
 
     # NSE vs. R CMD check workaround
     from <- to <- NULL
@@ -1138,14 +1220,20 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
         keep(., names(.) == 'omnipath'),
         .
     )} %T>%
-    {logger::log_success(
+    {log_success(
         'Starting to build NicheNet %s network',
         network_types[[network_type]]
     )} %>%
     map2(
         names(.),
         function(args, resource){
-            resource %>%
+            args$quality_filter_param <- `if`(
+                network_type == 'lr' && resource == 'OmniPath',
+                quality_filter_param,
+                NULL
+            )
+            resource %T>%
+            {log_info('Loading resource `%s`.', .)} %>%
             sprintf('nichenet_%s_network_%s', network_type, .) %>%
             get() %>%
             do.call(args)
@@ -1165,7 +1253,7 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
     filter(from != to) %>%
     filter(!is.na(from) & !is.na(to)) %>%
     as_tibble %T>%
-    {logger::log_success(
+    {log_success(
         'Finished building NicheNet %s network: %d records total',
         network_types[[network_type]],
         nrow(.)
@@ -1223,7 +1311,11 @@ nichenet_signaling_network_omnipath <- function(
 #' ligand-receptor interactions are supposed to come from \code{
 #' \link{nichenet_lr_network_omnipath}}.
 #'
-#' @param min_curation_effort Lower threshold for curation effort
+#' @param quality_filter_param List with arguments for \code{
+#'     \link{filter_intercell_network}}. It is recommended to check these
+#'     parameters and apply some quality filtering. The defaults already
+#'     ensure certain  filtering, but you might want more relaxed or
+#'     stringent options.
 #' @param ... Passed to \code{\link{import_intercell_network}}
 #'
 #' @return A network data frame (tibble) with ligand-receptor interactions
@@ -1244,6 +1336,7 @@ nichenet_signaling_network_omnipath <- function(
 #' )
 #'
 #' @importFrom magrittr %>%
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @seealso \itemize{
@@ -1251,11 +1344,12 @@ nichenet_signaling_network_omnipath <- function(
 #'     \item{\code{\link{import_intercell_network}}}
 #' }
 nichenet_lr_network_omnipath <- function(
-    min_curation_effort = 0,
+    quality_filter_param = list(),
     ...
 ){
 
     import_intercell_network(...) %>%
+    {exec(filter_intercell_network, ., !!!quality_filter_param)} %>%
     omnipath_interactions_postprocess(type = 'lr')
 
 }
@@ -1282,6 +1376,7 @@ nichenet_lr_network_omnipath <- function(
 #' )
 #'
 #' @importFrom magrittr %>% %<>%
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @seealso \itemize{
@@ -1303,7 +1398,7 @@ nichenet_gr_network_omnipath <- function(
     args$exclude %<>% union('ligrecextra')
     args$entity_types <- 'protein'
 
-    do.call(import_transcriptional_interactions, args) %>%
+    exec(import_transcriptional_interactions, !!!args) %>%
     omnipath_interactions_postprocess(type = 'gr')
 
 }
@@ -2156,5 +2251,210 @@ nichenet_expression_data <- function(){
         resource = 'NicheNet expression data'
     ) %T>%
     load_success()
+
+}
+
+
+#' Small networks for testing
+#'
+#' Building a NicheNet model is computationally demanding, taking several
+#' hours to run. As this is related to the enormous size of the networks,
+#' to speed up testing we can use smaller networks, around 1,000 times
+#' smaller, with few thousands of interactions instead of few millions.
+#' Random subsetting of the whole network would result disjunct fragments,
+#' instead we load only a few resources.
+#'
+#' @param tiny Logical: compile an even smaller network.
+#'
+#' @examples
+#' \donttest{
+#' networks <- nichenet_networks_small(tiny = TRUE)
+#' expression <- nichenet_expression_data()
+#' expression <- nichenet_remove_orphan_ligands(
+#'     expression,
+#'     networks$lr_network
+#' )
+#' optimized_parameters <- nichenet_build_model(
+#'     networks = networks,
+#'     expression = expression,
+#'     mlrmbo_optimization_param = list(niter = 2, nstart = 16, ncores = 4)
+#' )
+#' }
+#'
+#' @importFrom dplyr sample_frac filter bind_rows
+#' @importFrom magrittr %>% %<>%
+#' @importFrom purrr map_dbl map2_chr
+#' @noRd
+nichenet_networks_small <- function(tiny = FALSE){
+
+    networks <-
+        nichenet_networks(
+            signaling_network = list(
+                omnipath = list(
+                    resources = `if`(tiny, 'SignaLink3', 'SIGNOR')
+                )
+            ),
+            lr_network = list(
+                omnipath = list(
+                    high_confidence = TRUE
+                )
+            ),
+            gr_network = list(
+                omnipath = list(
+                    dorothea_levels = `if`(tiny, 'A', c('A', 'B')),
+                    datasets = 'dorothea'
+                )
+            ),
+            only_omnipath = TRUE
+        )
+
+    if(tiny){
+
+        pseudo_sources <- function(d){
+
+            mutate(
+                d,
+                source = sprintf(
+                    '%s_%d',
+                    source,
+                    sample(c(1, 2), nrow(d), TRUE)
+                ),
+                database = source
+            )
+
+        }
+
+        ligands <-
+            nichenet_expression_data() %>%
+            map('from') %>%
+            unlist %>%
+            unique
+
+        networks$lr_network %<>%
+            sample_frac(
+                .04,
+                weight = .$from %in% ligands + 1
+            ) %>%
+            pseudo_sources
+
+        sig_net <- networks$signaling_network
+
+        networks$signaling_network <-
+            sig_net %>%
+            filter(from %in% networks$lr_network$to) %>%
+            bind_rows(filter(sig_net, from %in% .$to)) %>%
+            bind_rows(filter(sig_net, from %in% .$to)) %>%
+            pseudo_sources
+
+        networks$gr_network %<>%
+            filter(from %in% networks$signaling_network$to) %>%
+            pseudo_sources
+
+        log_success(
+            'Tiny network sizes: %s.',
+            networks %>%
+            map2_chr(
+                names(.),
+                function(netw, name){sprintf('%s: %d', name, nrow(netw))}
+            ) %>%
+            paste(collapse = ', ')
+        )
+
+    }
+
+    return(networks)
+
+}
+
+
+#' Run the NicheNet pipeline with a little dummy network
+#'
+#' Loads a tiny network and runs the NicheNet pipeline with low number of
+#' iterations in the optimization process. This way the pipeline runs in
+#' a reasonable time in order to test the code. Due to the random subsampling
+#' disconnected networks might be produced sometimes. If you see an error
+#' like "Error in if (sd(prediction_vector) == 0) ... missing value
+#' where TRUE/FALSE needed", the random subsampled input is not appropriate.
+#' In this case just interrupt and call again. This test ensures the
+#' computational integrity of the pipeline. If it fails during the
+#' optimization process, try to start it over several times, even
+#' restarting R. The unpredictability is related to code{mlrMBO} and
+#' \code{nichenetr} not being prepared to handle certain conditions, and
+#' it's also difficult to find out which conditions lead to which errors.
+#' At least 3 different errors appear time to time, depending on the input.
+#' It also seems like restarting R sometimes helps, suggesting that the
+#' entire system might be somehow stateful. You can ignore the \code{
+#' Parallelization was not stopped} warnings on repeated runs.
+#'
+#' @param ... Passed to \code{\link{nichenet_main}}.
+#'
+#' @return A named list with the intermediate and final outputs of the
+#'     pipeline: `networks`, `expression`, `optimized_parameters`,
+#'     `weighted_networks` and `ligand_target_matrix`.
+#'
+#' @examples
+#' \donttest{
+#' nnt <- nichenet_test()
+#' }
+#'
+#' @importFrom rlang exec !!!
+#' @export
+nichenet_test <- function(...){
+
+    args <- list(...)
+
+    args$mlrmbo_optimization_param <- merge_lists(
+        args$mlrmbo_optimization_param,
+        list(niter = 2, nstart = 16, ncores = 4)
+    )
+
+    exec(nichenet_main, tiny = TRUE, !!!args)
+
+}
+
+
+#' Workarounds using NicheNet without attaching the package
+#'
+#' NicheNet requires the availability of some lazy loaded external data
+#' which are not available if the package is not loaded and attached. Also,
+#' the \code{BBmisc::convertToShortString} used for error reporting in
+#' \code{mlrMBO::evalTargetFun.OptState} is patched here to print longer
+#' error messages. Maybe it's a better solution to attach \code{nichenetr}
+#' before running the NicheNet pipeline. Alternatively you can try to call
+#' this function in the beginning. Why we don't call this automatically is
+#' just because we don't want to load datasets from another package without
+#' the user knowing about it.
+#'
+#' @return Returns \code{NULL}.
+#'
+#' @examples
+#' \donttest{
+#' nichenet_workarounds()
+#' }
+#'
+#' @export
+nichenet_workarounds <- function(){
+
+    # R CMD check workaround
+    nichenetr <- BBmisc <- ncitations <- geneinfo_human <- NULL
+
+    assign('ncitations', nichenetr::ncitations, envir = .GlobalEnv)
+    assign('geneinfo_human', nichenetr::geneinfo_human, envir = .GlobalEnv)
+    assign('lr_network', NULL, .GlobalEnv)
+
+    ns <- loadNamespace('BBmisc')
+    convertToShortString_original <- BBmisc::convertToShortString
+
+    if(formals(convertToShortString_original)$clip.len != 300L){
+
+        convertToShortString_new <- function(...){
+
+            convertToShortString_original(..., clip.len = 300L)
+
+        }
+
+        patch_ns('convertToShortString', convertToShortString_new, ns)
+
+    }
 
 }

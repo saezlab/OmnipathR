@@ -8,7 +8,8 @@ nichenet_lr_network(
   omnipath = list(),
   guide2pharma = list(),
   ramilowski = list(),
-  only_omnipath = FALSE
+  only_omnipath = FALSE,
+  quality_filter_param = list()
 )
 }
 \arguments{
@@ -23,6 +24,12 @@ nichenet_lr_network(
 
 \item{only_omnipath}{Logical: a shortcut to use only OmniPath as network
 resource.}
+
+\item{quality_filter_param}{Arguments for \code{
+\link{filter_intercell_network}} (quality filtering of the OmniPath
+ligand-receptor network). It is recommended to check these parameters
+and apply some quality filtering. The defaults already ensure certain
+filtering, but you might want more relaxed or stringent options.}
 }
 \value{
 A network data frame (tibble) with ligand-receptor interactions
@@ -48,5 +55,6 @@ lr_network_omnipath <- nichenet_lr_network(only_omnipath = TRUE)
     \item{\code{\link{nichenet_lr_network_omnipath}}}
     \item{\code{\link{nichenet_lr_network_guide2pharma}}}
     \item{\code{\link{nichenet_lr_network_ramilowski}}}
+    \item{\code{\link{filter_intercell_network}}}
 }
 }
