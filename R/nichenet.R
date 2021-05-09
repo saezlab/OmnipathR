@@ -2441,12 +2441,12 @@ nichenet_workarounds <- function(){
     # R CMD check workaround
     nichenetr <- BBmisc <- ncitations <- geneinfo_human <- NULL
 
-    assign('ncitations', nichenetr::ncitations, envir = .GlobalEnv)
-    assign('geneinfo_human', nichenetr::geneinfo_human, envir = .GlobalEnv)
+    assign('ncitations', nichenetr%::%ncitations, envir = .GlobalEnv)
+    assign('geneinfo_human', nichenetr%::%geneinfo_human, envir = .GlobalEnv)
     assign('lr_network', NULL, .GlobalEnv)
 
     ns <- loadNamespace('BBmisc')
-    convertToShortString_original <- BBmisc::convertToShortString
+    convertToShortString_original <- BBmisc%::%convertToShortString
 
     if(formals(convertToShortString_original)$clip.len != 300L){
 

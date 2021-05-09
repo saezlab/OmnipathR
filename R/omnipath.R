@@ -1392,7 +1392,6 @@ import_tf_target_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
-#' @param datasets Character vector with the
 #' @param ... Optional additional arguments.
 #'
 #' @return A dataframe containing TF-target interactions.
