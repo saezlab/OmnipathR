@@ -20,6 +20,7 @@ query types in the OmniPath web service, so we need to guess.
 }
 \examples{
 co <- import_omnipath_complexes()
-resources_colname()
+resources_colname(co)
+# [1] "sources"
 
 }

@@ -3451,7 +3451,8 @@ filter_by_resource <- function(data, resources = NULL){
 #'
 #' @examples
 #' co <- import_omnipath_complexes()
-#' resources_colname()
+#' resources_colname(co)
+#' # [1] "sources"
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr first
