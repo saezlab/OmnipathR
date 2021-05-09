@@ -502,10 +502,10 @@ sessionInfo()
 [1] R Browaeys, W Saelens and Y Saeys (2020) NicheNet: modeling intercellular
 communication by linking ligands to target genes. _Nat Methods_ 17, 159–162
 
-[2] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, O Ivanova, A Gabor,
-D Modos, T Korcsmaros and J Saez-Rodriguez (2020) Integrated intra- and
-intercellular signaling knowledge for multicellular omics analysis. _bioRxiv_
-2020.08.03.221242
+[2] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, M Klein, O Ivanova,
+M Olbei, A Gabor, F Theis, D Modos, T Korcsmaros and J Saez-Rodriguez (2021)
+Integrated intra- and intercellular signaling knowledge for multicellular
+omics analysis. _Molecular Systems Biology_ 17:e9923
 
 [3] S Anders, W Huber (2010) Differential expression analysis for sequence
 count data. _Genome Biol_ 11, R106
