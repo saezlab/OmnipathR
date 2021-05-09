@@ -77,6 +77,11 @@
 #'     \code{nichenetr::construct_ligand_target_matrix}.
 #' @param results_dir Character: path to the directory to save intermediate
 #'     and final outputs from NicheNet methods.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #'
 #' @return A named list with the intermediate and final outputs of the
 #'     pipeline: `networks`, `expression`, `optimized_parameters`,
@@ -141,7 +146,8 @@ nichenet_main <- function(
     objective_function_param = list(),
     mlrmbo_optimization_param = list(),
     construct_ligand_target_matrix_param = list(),
-    results_dir = NULL
+    results_dir = NULL,
+    quality_filter_param = list()
 ){
 
     # NSE vs. R CMD check workaround
@@ -163,7 +169,8 @@ nichenet_main <- function(
             gr_network = gr_network,
             only_omnipath = only_omnipath,
             small = small,
-            tiny = tiny
+            tiny = tiny,
+            quality_filter_param = quality_filter_param
         )
 
     expression <-
@@ -853,6 +860,11 @@ nichenet_results_dir <- function(){
 #' @param tiny Logical: build an even smaller network for testing
 #'     purposes. As this involves random subsetting, it's not recommended
 #'     to use this network for analysis.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #'
 #' @return A named list with three network data frames (tibbles): the
 #'     signaling, the ligand-receptor (lr) and the gene regulatory (gr)
@@ -896,7 +908,8 @@ nichenet_networks <- function(
     gr_network = list(),
     only_omnipath = FALSE,
     small = FALSE,
-    tiny = FALSE
+    tiny = FALSE,
+    quality_filter_param = list()
 ){
 
     networks_rds_path <-
@@ -915,6 +928,9 @@ nichenet_networks <- function(
             function(args, network_type){
                 if(!('only_omnipath' %in% names(args))){
                     args$only_omnipath <- only_omnipath
+                }
+                if(network_type == 'lr_network'){
+                    args$quality_filter_param <- quality_filter_param
                 }
                 network_type %>%
                 sprintf('nichenet_%s', .) %>%
@@ -1018,6 +1034,11 @@ nichenet_signaling_network <- function(
 #'     \code{\link{nichenet_lr_network_ramilowski}}.
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #'
 #' @return A network data frame (tibble) with ligand-receptor interactions
 #'     suitable for use with NicheNet.
@@ -1039,12 +1060,14 @@ nichenet_signaling_network <- function(
 #'     \item{\code{\link{nichenet_lr_network_omnipath}}}
 #'     \item{\code{\link{nichenet_lr_network_guide2pharma}}}
 #'     \item{\code{\link{nichenet_lr_network_ramilowski}}}
+#'     \item{\code{\link{filter_intercell_network}}}
 #' }
 nichenet_lr_network <- function(
     omnipath = list(),
     guide2pharma = list(),
     ramilowski = list(),
-    only_omnipath = FALSE
+    only_omnipath = FALSE,
+    quality_filter_param = list()
 ){
 
     environment() %>%
@@ -1139,6 +1162,11 @@ nichenet_gr_network <- function(
 #'     "signaling", "lr" (ligand-receptor) or "gr" (gene regulatory).
 #' @param only_omnipath Logical: a shortcut to use only OmniPath as network
 #'     resource.
+#' @param quality_filter_param Arguments for \code{
+#'     \link{filter_intercell_network}} (quality filtering of the OmniPath
+#'     ligand-receptor network). It is recommended to check these parameters
+#'     and apply some quality filtering. The defaults already ensure certain
+#'     filtering, but you might want more relaxed or stringent options.
 #' @param ... Argument names are the name of the resources to download (all
 #'     lowercase), while their values are lists of arguments to the resource
 #'     specific nichenet import methods (an empty list if no arguments should
@@ -1161,7 +1189,12 @@ nichenet_gr_network <- function(
 #' @importFrom logger log_info log_success
 #'
 #' @noRd
-nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
+nichenet_network <- function(
+    network_type,
+    only_omnipath = FALSE,
+    quality_filter_param = list(),
+    ...
+){
 
     # NSE vs. R CMD check workaround
     from <- to <- NULL
@@ -1194,6 +1227,11 @@ nichenet_network <- function(network_type, only_omnipath = FALSE, ...){
     map2(
         names(.),
         function(args, resource){
+            args$quality_filter_param <- `if`(
+                network_type == 'lr' && resource == 'OmniPath',
+                quality_filter_param,
+                NULL
+            )
             resource %T>%
             {log_info('Loading resource `%s`.', .)} %>%
             sprintf('nichenet_%s_network_%s', network_type, .) %>%
@@ -1273,7 +1311,11 @@ nichenet_signaling_network_omnipath <- function(
 #' ligand-receptor interactions are supposed to come from \code{
 #' \link{nichenet_lr_network_omnipath}}.
 #'
-#' @param min_curation_effort Lower threshold for curation effort
+#' @param quality_filter_param List with arguments for \code{
+#'     \link{filter_intercell_network}}. It is recommended to check these
+#'     parameters and apply some quality filtering. The defaults already
+#'     ensure certain  filtering, but you might want more relaxed or
+#'     stringent options.
 #' @param ... Passed to \code{\link{import_intercell_network}}
 #'
 #' @return A network data frame (tibble) with ligand-receptor interactions
@@ -1294,6 +1336,7 @@ nichenet_signaling_network_omnipath <- function(
 #' )
 #'
 #' @importFrom magrittr %>%
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @seealso \itemize{
@@ -1301,11 +1344,12 @@ nichenet_signaling_network_omnipath <- function(
 #'     \item{\code{\link{import_intercell_network}}}
 #' }
 nichenet_lr_network_omnipath <- function(
-    min_curation_effort = 0,
+    quality_filter_param = list(),
     ...
 ){
 
     import_intercell_network(...) %>%
+    {exec(filter_intercell_network, ., !!!quality_filter_param)} %>%
     omnipath_interactions_postprocess(type = 'lr')
 
 }

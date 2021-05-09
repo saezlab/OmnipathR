@@ -4,10 +4,14 @@
 \alias{nichenet_lr_network_omnipath}
 \title{Builds ligand-receptor network for NicheNet using OmniPath}
 \usage{
-nichenet_lr_network_omnipath(min_curation_effort = 0, ...)
+nichenet_lr_network_omnipath(quality_filter_param = list(), ...)
 }
 \arguments{
-\item{min_curation_effort}{Lower threshold for curation effort}
+\item{quality_filter_param}{List with arguments for \code{
+\link{filter_intercell_network}}. It is recommended to check these
+parameters and apply some quality filtering. The defaults already
+ensure certain  filtering, but you might want more relaxed or
+stringent options.}
 
 \item{...}{Passed to \code{\link{import_intercell_network}}}
 }

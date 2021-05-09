@@ -22,7 +22,8 @@ nichenet_main(
   objective_function_param = list(),
   mlrmbo_optimization_param = list(),
   construct_ligand_target_matrix_param = list(),
-  results_dir = NULL
+  results_dir = NULL,
+  quality_filter_param = list()
 )
 }
 \arguments{
@@ -88,6 +89,12 @@ the objective function.}
 
 \item{results_dir}{Character: path to the directory to save intermediate
 and final outputs from NicheNet methods.}
+
+\item{quality_filter_param}{Arguments for \code{
+\link{filter_intercell_network}} (quality filtering of the OmniPath
+ligand-receptor network). It is recommended to check these parameters
+and apply some quality filtering. The defaults already ensure certain
+filtering, but you might want more relaxed or stringent options.}
 }
 \value{
 A named list with the intermediate and final outputs of the
