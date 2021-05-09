@@ -34,8 +34,6 @@ comes from which resource will be lost and the PubMed IDs will be unique.}
 \item{exclude}{Character: datasets or resources to exclude.}
 
 \item{...}{Optional additional arguments.}
-
-\item{datasets}{Character vector with the}
 }
 \value{
 A dataframe containing TF-target interactions.
