@@ -1,3 +1,9 @@
+## OmnipathR v2.99.19
+
++ NicheNet pipeline works
++ Fixed an error which resulted value 1 in the `n_references` columns
+even for records without references
+
 ## OmnipathR v2.99.17
 
 + Improved quality filtering of intercell networks

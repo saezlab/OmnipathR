@@ -70,7 +70,7 @@ and reproducible process, as the origin of any data record can be easily
 traced back to its original source. The data used in the NicheNet publication
 is deposited at [Zenodo](https://zenodo.org/record/3260758). The other part
 of the prior knowledge used by NicheNet is a collection of expression data
-from ligand perturbation experiments. In OmnipathR This is taken directly
+from ligand perturbation experiments. In OmnipathR this is taken directly
 from the Zenodo repository.
 
 Apart from building the prior knowledge, OmnipathR provides a number of glue
@@ -153,7 +153,7 @@ install_github('saeyslab/nichenetr')
 ```
 
 This procedure should install the dependencies as well. Some more specific
-dependencies are `mlrMBO`, `ParallelMap`, `ParamHelpers` and `smoof`.
+dependencies are `mlrMBO`, `parallelMap`, `ParamHelpers` and `smoof`.
 
 The `nichenetr` package is suggested by `OmnipathR` but not loaded and
 attached by default. This might cause issues, for example NicheNet requires
