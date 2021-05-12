@@ -509,9 +509,6 @@ nichenet_build_model <- function(
         )
     ) %T>%
     {logger::log_success('Applying hub corrections.')} %>%
-    # Error in (nichenetr %::% apply_hub_corrections)(., lr_sig_hub = optimized_parameters$lr_sig_hub,  :
-    # weighted_networks must be a list object
-
     (nichenetr%::%apply_hub_corrections)(
         lr_sig_hub = optimized_parameters$lr_sig_hub,
         gr_hub = optimized_parameters$gr_hub

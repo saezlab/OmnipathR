@@ -1978,7 +1978,6 @@ get_complexes_databases <- function(...){
 #' using any standard R or \code{readr} method.
 #'
 #' @return A data frame containing different gene and complex annotations.
-#' @export
 #'
 #' @param proteins Vector containing the genes or proteins for whom
 #'     annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
@@ -1998,6 +1997,9 @@ get_complexes_databases <- function(...){
 #'     proteins = c('TP53', 'LMNA'),
 #'     resources = c('HPA_subcellular')
 #' )
+#'
+#' @importFrom logger log_fatal log_success
+#' @export
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_annotation_databases}}}
@@ -2020,16 +2022,17 @@ import_omnipath_annotations <- function(
         is.null(resources)
     ){
 
-        stop(
-            paste(
-                'Downloading the entire annotations database is not allowed',
-                'by default because of its huge size (>1GB). If you really',
-                'want to do that, you find static files at',
-                'https://archive.omnipathdb.org/.',
-                'However we recommend to query a set of proteins or a few',
-                'resources, depending on your interest.'
-            )
+        msg <- paste(
+            'Downloading the entire annotations database is not allowed',
+            'by default because of its huge size (>1GB). If you really',
+            'want to do that, you find static files at',
+            'https://archive.omnipathdb.org/.',
+            'However we recommend to query a set of proteins or a few',
+            'resources, depending on your interest.'
         )
+
+        log_fatal(msg)
+        stop(msg)
 
     }
 
@@ -2091,7 +2094,7 @@ import_omnipath_annotations <- function(
 
         result <- do.call(rbind, parts)
 
-        logger::log_success(
+        log_success(
             'Downloaded %d annotation records.',
             nrow(result)
         )
