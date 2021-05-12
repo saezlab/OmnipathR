@@ -1442,7 +1442,7 @@ omnipath_cache_latest_version <- function(record){
 #' version_numbers <- omnipath_cache_filter_versions(record, status = 'ready')
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
-#' @importFrom magrittr %<>% %>%
+#' @importFrom magrittr %<>% %>% and
 #' @importFrom purrr map map_chr map_lgl
 #' @export
 omnipath_cache_filter_versions <- function(
@@ -1465,12 +1465,12 @@ omnipath_cache_filter_versions <- function(
 
     if(!is.null(max_age)){
         max_age <- days_ago(max_age)
-        selection %<>% `&`(which_dl_finished(versions, max_age))
+        selection %<>% and(which_dl_finished(versions, max_age))
     }
 
     if(!is.null(min_age)){
         min_age <- days_ago(min_age)
-        selection %<>% `&`(which_dl_finished(versions, min_age, op = `<=`))
+        selection %<>% and(which_dl_finished(versions, min_age, op = `<=`))
     }
 
     if(latest){
@@ -1479,7 +1479,7 @@ omnipath_cache_filter_versions <- function(
             map('dl_finished') %>%
             unlist() %>%
             empty_no_problem(max)
-        selection %<>% `&`(which_dl_finished(versions, t_latest, op = `==`))
+        selection %<>% and(which_dl_finished(versions, t_latest, op = `==`))
     }
 
     versions %>%

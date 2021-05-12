@@ -402,14 +402,14 @@ null_or_call <- function(value, fun, ...){
 
 #' Returns `value1` if it's not zero length otherwise `value2`
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% equals
 #'
 #' @noRd
 if_empty <- function(value1, value2){
 
     value1 %>%
     length %>%
-    `==`(0) %>%
+    equals(0) %>%
     `if`(value2, value1)
 
 }
@@ -556,13 +556,13 @@ lists_identical <- function(list1, list2){
 
 #' Splits a vector into a list of chunks of a certain size
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% equals
 #'
 #' @noRd
 chunks <- function(v, size){
 
     v %>%
-    split(seq_along(.) %>% `-`(1) %>% `%%`(size) %>% `==`(0) %>% cumsum)
+    split(seq_along(.) %>% `-`(1) %>% `%%`(size) %>% equals(0) %>% cumsum)
 
 }
 

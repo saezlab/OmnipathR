@@ -102,14 +102,14 @@ omnipath_log <- function(){
 #' omnipath_set_loglevel(logger::FATAL, target = 'console')
 #'
 #' @export
-#' @importFrom magrittr %<>% %>%
+#' @importFrom magrittr %<>% %>% equals
 omnipath_set_loglevel <- function(level, target = 'logfile'){
 
     # NSE vs. R CMD check workaround
     namespaces <- NULL
 
     level %<>% ensure_loglevel
-    i_logger <- target %>% `==`(c('logfile', 'console')) %>% which
+    i_logger <- target %>% equals(c('logfile', 'console')) %>% which
 
     omnipathr_loggers <- (logger%:::%namespaces)$OmnipathR
     omnipathr_loggers[[i_logger]]$threshold <- level
