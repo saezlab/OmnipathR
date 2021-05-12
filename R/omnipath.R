@@ -2258,7 +2258,7 @@ annotation_categories <- function(){
 #' # # . with 815 more rows
 #'
 #' @export
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% is_greater_than
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr select pull group_split
 #' @importFrom purrr map
@@ -2270,7 +2270,14 @@ pivot_annotations <- function(annotations){
     # NSE vs. R CMD check workaround
     record_id <- NULL
 
-    if(annotations %>% pull(source) %>% unique %>% length %>% `>`(1)){
+    more_than_one_resources <-
+        annotations %>%
+        pull(source) %>%
+        unique %>%
+        length %>%
+        is_greater_than(1)
+
+    if(more_than_one_resources){
 
         annotations %>%
         group_split(source) %>%
