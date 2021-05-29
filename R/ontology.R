@@ -371,10 +371,16 @@ ontology_db_transformations <- function(db, fmt, c2p){
     g <- .ontology_db_variants_graph
 
     to <- (V(g)$fmt == fmt & V(g)$c2p == c2p) %>% which
-    from <- setdiff(
-        V(g)$name %in% names(db) %>% which,
-        g %>% degree(mode = 'out') %>% equals(0L) %>% which
-    )
+    from <-
+        setdiff(
+            V(g)$name %in% names(db) %>% which,
+            setdiff(
+                g %>% degree(mode = 'out') %>% equals(0L) %>% which,
+                # `to` must can stay in the set,
+                # even if it has no outgoing edges
+                to
+            )
+        )
 
     paths <- shortest_paths(g, to, from, mode = 'in', output = 'both')
     idx <- paths$epath %>% map_dbl(function(e){sum(e$weight)}) %>% which.min
@@ -421,6 +427,7 @@ ontology_db_transformations <- function(db, fmt, c2p){
 #' go <- get_ontology_db('go_basic', child_parents = FALSE)
 #'
 #' @importFrom magrittr %<>%
+#' @importFrom igraph V
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{omnipath_show_db}}}
@@ -441,6 +448,13 @@ get_ontology_db <- function(key, rel_fmt = 'tbl', child_parents = TRUE){
     }
 
     db[[transf$end]] <- relations
+
+    if(rel_fmt == 'gra'){
+
+        db[[sprintf('%s_v', transf$end)]] <- V(relations)
+
+    }
+
     omnipath.env$db[[key]]$db <- db
 
     get_db(key)
@@ -545,7 +559,7 @@ walk_ontology_tree <- function(
 }
 
 
-#' See \code{link{walk_ontology_tree}}
+#' See \code{\link{walk_ontology_tree}}
 #'
 #' @importFrom igraph V ego
 #' @importFrom stats na.omit
@@ -562,7 +576,7 @@ walk_ontology_tree <- function(
 }
 
 
-#' See \code{link{walk_ontology_tree}}
+#' See \code{\link{walk_ontology_tree}}
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom purrr map
