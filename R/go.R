@@ -85,7 +85,7 @@ go_annot_download <- function(
     generic_downloader(
         url_param = list(organism),
         reader_param = list(
-            skip = 40,
+            comment = '!',
             col_names = c(
                 'db',
                 'db_object_id',
