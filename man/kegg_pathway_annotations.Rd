@@ -20,6 +20,16 @@ annotations.
 \examples{
 \donttest{
 kegg_pw_annot <- kegg_pathway_annotations()
+kegg_pw_annot
+# # A tibble: 7,341 x 4
+#    uniprot genesymbol pathway                pathway_id
+#    <chr>   <chr>      <chr>                  <chr>
+#  1 Q03113  GNA12      MAPK signaling pathway hsa04010
+#  2 Q9Y4G8  RAPGEF2    MAPK signaling pathway hsa04010
+#  3 Q13972  RASGRF1    MAPK signaling pathway hsa04010
+#  4 O95267  RASGRP1    MAPK signaling pathway hsa04010
+#  5 P62834  RAP1A      MAPK signaling pathway hsa04010
+# # . with 7,336 more rows
 }
 
 }
