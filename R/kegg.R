@@ -622,3 +622,48 @@ kegg_info_tbl <- function(tbl){
     map_chr(function(ch){ch[2] %>% xml_text})
 
 }
+
+
+#' Protein pathway annotations
+#'
+#' Downloads all KEGG pathways and creates a table of protein-pathway
+#' annotations.
+#'
+#' @param pathways A table of KEGG pathways as produced by \code{
+#'      \link{kegg_pathways_download}}.
+#'
+#' @return A data frame (tibble) with UniProt IDs and pathway names.
+#'
+#' @examples
+#' \donttest{
+#' kegg_pw_annot <- kegg_pathway_annotations()
+#' }
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang %||%
+#' @importFrom dplyr select bind_rows distinct
+#' @export
+#' @seealso \code{\link{kegg_pathways_download}}
+kegg_pathway_annotations <- function(pathways = NULL){
+
+    pathways %<>% {. %||% kegg_pathways_download()}
+
+    pathways %>%
+    select(
+        uniprot = uniprot_source,
+        genesymbol = genesymbol_source,
+        pathway,
+        pathway_id
+    ) %>%
+    bind_rows(
+        pathways %>%
+        select(
+            uniprot = uniprot_target,
+            genesymbol = genesymbol_target,
+            pathway,
+            pathway_id
+        )
+    ) %>%
+    distinct
+
+}
