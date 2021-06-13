@@ -32,6 +32,25 @@
 #' @return A data frame (tibble) of interactions with scores, databases
 #'     and literature references.
 #'
+#' @details
+#' PrePPI is a combination of many prediction methods, each resulting a
+#' score. For an explanation of the scores see
+#' \url{https://honiglab.c2b2.columbia.edu/hfpd/help/Manual.html}.
+#' The minimum and maximum values of the scores:
+#'     | Score   | Minimum | Maximum           |
+#'     | ------- | ------- | ----------------- |
+#'     | str     |       0 |           6,495   |
+#'     | protpep |       0 |          38,138   |
+#'     | str_max |       0 |          38,138   |
+#'     | red     |       0 |              24.4 |
+#'     | ort     |       0 |           5,000   |
+#'     | phy     |       0 |            2.42   |
+#'     | coexp   |       0 |              45.3 |
+#'     | go      |       0 |             181   |
+#'     | total   |       0 | 106,197,000,000   |
+#'     | exp     |       1 |           4,626   |
+#'     | final   |     600 |           4.91e14 |
+#'
 #' @examples
 #' preppi <- preppi_download()
 #'
@@ -40,6 +59,7 @@
 #' @importFrom dplyr filter
 #' @importFrom rlang !!!
 #' @export
+#' @md
 preppi_download <- function(...){
 
     'preppi' %>%
