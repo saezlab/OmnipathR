@@ -42,6 +42,7 @@
     omnipath.print_urls = FALSE,
     omnipath.loglevel = 'trace',
     omnipath.console_loglevel = 'success',
+    omnipath.logdir = NULL,
     omnipath.logfile = NULL,
     omnipath.cachedir = NULL,
     omnipath.cache_timeout = 5,
@@ -350,24 +351,39 @@ omnipath_options_to_config <- function(){
 
 #' Setting up the logfile and logging parameters.
 #'
-#' @importFrom magrittr %>% %T>%
+#' @importFrom magrittr %>% %T>% equals
 #' @importFrom rlang %||%
+#' @importFrom stringr str_to_lower
+#' @importFrom logger log_formatter log_appender log_layout appender_file
+#' @importFrom logger appender_console log_threshold layout_glue_generator
+#' @importFrom logger formatter_glue_or_sprintf
 #'
 #' @noRd
 omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
-    log_path <-
-        options('omnipath.logfile')[[1]] %||%
-        file.path(
-            'omnipathr-log',
-            sprintf('omnipathr-%s.log', format(Sys.time(), "%Y%m%d-%H%M"))
-        ) %>%
-        absolute_path() %T>%
-        {dir.create(dirname(.), showWarnings = FALSE, recursive = TRUE)}
+    logfile_enabled <-
+        getOption('omnipath.logfile') %||% '' %>%
+        str_to_lower %>%
+        equals('none')
+
+    if(logfile_enabled){
+
+        log_path <-
+            getOption('omnipath.logfile') %||%
+            file.path(
+                getOption('omnipath.logdir') %||% 'omnipathr-log',
+                sprintf('omnipathr-%s.log', format(Sys.time(), "%Y%m%d-%H%M"))
+            ) %>%
+            absolute_path() %T>%
+            {dir.create(dirname(.), showWarnings = FALSE, recursive = TRUE)}
+
+    }
 
     for(idx in seq(2)){
         # 1 = logfile
         # 2 = console
+
+        if(!logfile_enabled && idx == 1) next
 
         loglevel <- sprintf(
             'omnipath.%sloglevel',
@@ -375,8 +391,8 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
         )
         appender <- `if`(
             idx == 1,
-            logger::appender_file(log_path),
-            logger::appender_console
+            appender_file(log_path),
+            appender_console
         )
         layout_format <- `if`(
             idx == 1,
@@ -396,19 +412,19 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
             )
         )
 
-        logger::log_formatter(
-            logger::formatter_glue_or_sprintf,
+        log_formatter(
+            formatter_glue_or_sprintf,
             namespace = pkgname,
             index = idx
         )
-        logger::log_threshold(
+        log_threshold(
             ensure_loglevel(options(loglevel)[[1]]),
             namespace = pkgname,
             index = idx
         )
-        logger::log_appender(appender, namespace = pkgname, index = idx)
-        logger::log_layout(
-            logger::layout_glue_generator(format = layout_format),
+        log_appender(appender, namespace = pkgname, index = idx)
+        log_layout(
+            layout_glue_generator(format = layout_format),
             namespace = pkgname,
             index = idx
         )
