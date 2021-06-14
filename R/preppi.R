@@ -71,6 +71,8 @@
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
+#' @importFrom dplyr mutate
+#' @importFrom stringr str_replace str_replace_all
 #' @export
 #' @md
 #' @seealso \code{\link{preppi_filter}}
@@ -87,7 +89,14 @@ preppi_download <- function(...){
         resource = 'PrePPI'
     ) %T>%
     load_success() %>%
-    preppi_filter(...)
+    preppi_filter(...) %>%
+    mutate(
+        dbs = str_replace(dbs, ',$', ''),
+        pubs =
+            str_replace_all(pubs, 'pubmed:', '') %>%
+            str_replace_all('\\|', ',')
+    )
+
 
 }
 
