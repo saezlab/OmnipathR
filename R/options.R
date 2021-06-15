@@ -233,8 +233,6 @@ omnipath_load_config <- function(
         this_config %<>% merge_lists(yaml_config[['default']])
     }
 
-    this_config %<>% merge_lists(.omnipath_options_defaults)
-
     # ensure the `omnipath.` prefix for all parameter keys
     names(this_config) <- ifelse(
         startsWith(names(this_config), 'omnipath.'),
@@ -242,8 +240,35 @@ omnipath_load_config <- function(
         sprintf('omnipath.%s', names(this_config))
     )
 
+    this_config %<>% merge_lists(.omnipath_options_defaults)
+    this_config %<>% merge_lists(omnipath_env_config(), .)
+
     omnipath.env$config <- this_config
     omnipath_config_to_options()
+
+}
+
+
+#' Options from environment variables
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom purrr map2 discard
+#' @importFrom stringr str_replace_all str_to_upper
+#' @noRd
+omnipath_env_config <- function(){
+
+    .omnipath_options_defaults %>%
+    map2(
+        names(.),
+        function(val, key){
+            key %>%
+            str_replace_all('\\.', '_') %>%
+            str_to_upper %>%
+            Sys.getenv %>%
+            as_type(val)
+        }
+    ) %>%
+    discard(function(x){is.na(x) || x == ''})
 
 }
 
