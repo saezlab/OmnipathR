@@ -610,3 +610,26 @@ plural <- function(objects, word, irregular = NULL){
     )
 
 }
+
+
+#' Convert an atomic variable to the type of another atomic variable
+#'
+#' @param var The variable to be converted.
+#' @param type Convert to the type of this variable.
+#'
+#' @importFrom margittr %>%
+#'
+#' @noRd
+as_type <- function(var, type){
+
+    if(!is.atomic(var) || !is.atomic(type) || is.null(type)){
+
+        var
+
+    }else{
+
+        (type %>% typeof %>% sprintf('as.%s', .) %>% get)(var)
+
+    }
+
+}
