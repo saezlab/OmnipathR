@@ -35,6 +35,8 @@ PROTECTED_FILES <- c('cache.lock', 'cache.json')
 #' Sets up the cache once the module is loaded or after the cachedir option
 #' has been changed
 #'
+#' @importFrom logger log_info
+#'
 #' @noRd
 omnipath_init_cache <- function(){
 
@@ -42,7 +44,7 @@ omnipath_init_cache <- function(){
     omnipath_new_cachedir(cachedir)
     options(omnipath.cachedir = cachedir)
     omnipath_read_cache_db()
-    logger::log_info('Initialized cache: `%s`.', cachedir)
+    log_info('Initialized cache: `%s`.', cachedir)
 
     invisible(cachedir)
 
@@ -68,6 +70,7 @@ omnipath_default_cachedir <- function(){
 #' Sets up a new cache directory
 #'
 #' @importFrom jsonlite toJSON
+#' @importFrom logger log_info
 #'
 #' @noRd
 omnipath_new_cachedir <- function(path){
