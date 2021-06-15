@@ -8,7 +8,7 @@ An `R` client for the **OmniPath** web service and many other resources.
 
 * Client for the OmniPath web service
 * Functions for post-processing OmniPath data
-* Access to other databases (17+ resources, see below)
+* Access to other databases (18+ resources, see below)
 * Integration to NicheNet, a method to infer ligand activities from
    transcriptomics data
 
@@ -42,8 +42,8 @@ recent [publication][4] or our first [paper from 2016][5], especially its
 The package provides access to a number of other databases: BioPlex,
 ConsensusPathDB, EVEX, Gene Ontology, Guide to Pharmacology (IUPHAR/BPS),
 Harmonizome, HTRIdb, Human Phenotype Ontology, InWeb InBioMap, KEGG Pathway,
-Pathway Commons, Ramilowski et al. 2015, RegNetwork, ReMap, TF census,
-TRRUST and Vinayagam et al. 2011.
+Pathway Commons, PrePPI, Ramilowski et al. 2015, RegNetwork, ReMap,
+TF census, TRRUST and Vinayagam et al. 2011.
 
 ## Documentation
 
