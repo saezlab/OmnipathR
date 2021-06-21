@@ -376,9 +376,8 @@ omnipath_options_to_config <- function(){
 
 #' Setting up the logfile and logging parameters.
 #'
-#' @importFrom magrittr %>% %T>% equals
+#' @importFrom magrittr %>% %T>%
 #' @importFrom rlang %||%
-#' @importFrom stringr str_to_lower
 #' @importFrom logger log_formatter log_appender log_layout appender_file
 #' @importFrom logger appender_console log_threshold layout_glue_generator
 #' @importFrom logger formatter_glue_or_sprintf
@@ -386,10 +385,7 @@ omnipath_options_to_config <- function(){
 #' @noRd
 omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
-    logfile_enabled <-
-        getOption('omnipath.logfile') %||% '' %>%
-        str_to_lower %>%
-        equals('none')
+    logfile_enabled <- omnipath_has_logfile()
 
     if(logfile_enabled){
 
@@ -404,36 +400,34 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
     }
 
-    for(idx in seq(2)){
-        # 1 = logfile
-        # 2 = console
-
-        if(!logfile_enabled && idx == 1) next
+    for(idx in seq(1 + logfile_enabled)){
+        # 1 = console
+        # 2 = logfile
 
         loglevel <- sprintf(
             'omnipath.%sloglevel',
-            `if`(idx == 1, '', 'console_')
+            `if`(idx == 1, 'console_', '')
         )
         appender <- `if`(
             idx == 1,
-            appender_file(log_path),
-            appender_console
+            appender_console,
+            appender_file(log_path)
         )
         layout_format <- `if`(
             idx == 1,
-            paste0(
-                '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
-                '[{level}]',
-                '{paste0(rep(" ", 7 - nchar(level)), collapse = "")} ',
-                '[{ns}] ',
-                '{msg}'
-            ),
             paste0(
                 '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
                 '[{colorize_by_log_level(level, levelr)}]',
                 '{paste0(rep(" ", 7 - nchar(level)), collapse = "")} ',
                 '[{ns}] ',
                 '{grayscale_by_log_level(msg, levelr)}'
+            ),
+            paste0(
+                '[{format(time, "%Y-%m-%d %H:%M:%S")}] ',
+                '[{level}]',
+                '{paste0(rep(" ", 7 - nchar(level)), collapse = "")} ',
+                '[{ns}] ',
+                '{msg}'
             )
         )
 

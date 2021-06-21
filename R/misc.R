@@ -617,7 +617,7 @@ plural <- function(objects, word, irregular = NULL){
 #' @param var The variable to be converted.
 #' @param type Convert to the type of this variable.
 #'
-#' @importFrom margittr %>%
+#' @importFrom magrittr %>%
 #'
 #' @noRd
 as_type <- function(var, type){

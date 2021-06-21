@@ -44,9 +44,10 @@ omnipath_console_loglevel <- function(){
 }
 
 
-#' Returns the path to the current OmnipathR log file
+#' Path to the current OmnipathR log file
 #'
-#' @return Character: path to the current logfile.
+#' @return Character: path to the current logfile, or \code{NULL} if no
+#'     logfile is available.
 #'
 #' @examples
 #' omnipath_logfile()
@@ -60,9 +61,11 @@ omnipath_logfile <- function(){
     # NSE vs. R CMD check workaround
     get_logger_definitions <- NULL
 
+    if(!omnipath_has_logfile()) return()
+
     (logger%:::%get_logger_definitions)(
         namespace = 'OmnipathR'
-    )$default$appender %>%
+    )[[2]]$appender %>%
     environment() %>%
     `$`('file') %>%
     normalizePath()
@@ -84,6 +87,8 @@ omnipath_logfile <- function(){
 #' @importFrom magrittr %>%
 #' @seealso \code{\link{omnipath_logfile}}
 omnipath_log <- function(){
+
+    if(!omnipath_has_logfile()) return()
 
     omnipath_logfile() %>%
     file.show(title = 'OmnipathR log')
@@ -265,5 +270,22 @@ patch_ns <- function(name, patched, ns){
         assign(name, patched, ns)
         lb(name, as.environment(ns))
     }
+
+}
+
+
+#' Is the logfile enabled?
+#'
+#' @importFrom magrittr %>% equals not
+#' @importFrom stringr str_to_lower
+#' @importFrom rlang %||%
+#'
+#' @noRd
+omnipath_has_logfile <- function(){
+
+    getOption('omnipath.logfile') %||% '' %>%
+    str_to_lower %>%
+    equals('none') %>%
+    magrittr::not()
 
 }

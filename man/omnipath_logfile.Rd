@@ -2,15 +2,16 @@
 % Please edit documentation in R/log.R
 \name{omnipath_logfile}
 \alias{omnipath_logfile}
-\title{Returns the path to the current OmnipathR log file}
+\title{Path to the current OmnipathR log file}
 \usage{
 omnipath_logfile()
 }
 \value{
-Character: path to the current logfile.
+Character: path to the current logfile, or \code{NULL} if no
+    logfile is available.
 }
 \description{
-Returns the path to the current OmnipathR log file
+Path to the current OmnipathR log file
 }
 \examples{
 omnipath_logfile()
