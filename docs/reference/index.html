@@ -89,7 +89,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -112,7 +112,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     </li>
     <li>
       <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
@@ -196,6 +202,24 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="ancestors.html">ancestors()</a></code> </p>
+        </td>
+        <td><p>All ancestors in the ontology tree</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="annotated_network.html">annotated_network()</a></code> </p>
+        </td>
+        <td><p>Network interactions with annotations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="annotation_categories.html">annotation_categories()</a></code> </p>
+        </td>
+        <td><p>Annotation categories and resources</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="bioplex1.html">bioplex1()</a></code> </p>
         </td>
         <td><p>Downloads the BioPlex version 1.0 interaction dataset</p></td>
@@ -251,6 +275,12 @@ copy/pasted into the BMA canvas</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="descendants.html">descendants()</a></code> </p>
+        </td>
+        <td><p>All descendants in the ontology tree</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="dot-omnipath_options_defaults.html">.omnipath_options_defaults</a></code> </p>
         </td>
         <td><p>Default values for the package options</p></td>
@@ -272,6 +302,12 @@ copy/pasted into the BMA canvas</p></td>
           <p><code><a href="filter_by_resource.html">filter_by_resource()</a></code> </p>
         </td>
         <td><p>Filters OmniPath data by resources</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filter_intercell_network.html">filter_intercell_network()</a></code> </p>
+        </td>
+        <td><p>Quality filter an intercell network</p></td>
       </tr><tr>
         
         <td>
@@ -300,6 +336,12 @@ of OmniPath</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="get_db.html">get_db()</a></code> </p>
+        </td>
+        <td><p>Access a built in database</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="get_enzsub_resources.html">get_enzsub_resources()</a></code> </p>
         </td>
         <td><p>Retrieves a list of enzyme-substrate resources available in OmniPath</p></td>
@@ -314,7 +356,7 @@ of OmniPath</p></td>
         <td>
           <p><code><a href="get_intercell_categories.html">get_intercell_categories()</a></code> </p>
         </td>
-        <td><p>Retrieves a list of categories from the intercell database of OmniPath</p></td>
+        <td><p>Categories in the intercell database of OmniPath</p></td>
       </tr><tr>
         
         <td>
@@ -329,6 +371,12 @@ of OmniPath</p></td>
         </td>
         <td><p>Retrieves a list of intercellular communication resources available in
 OmniPath</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_ontology_db.html">get_ontology_db()</a></code> </p>
+        </td>
+        <td><p>Access an ontology database</p></td>
       </tr><tr>
         
         <td>
@@ -350,6 +398,24 @@ OmniPath</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="go_annot_download.html">go_annot_download()</a></code> </p>
+        </td>
+        <td><p>Gene annotations from Gene Ontology</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="go_annot_slim.html">go_annot_slim()</a></code> </p>
+        </td>
+        <td><p>GO slim gene annotations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="go_ontology_download.html">go_ontology_download()</a></code> </p>
+        </td>
+        <td><p>The Gene Ontology tree</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="guide2pharma_download.html">guide2pharma_download()</a></code> </p>
         </td>
         <td><p>Downloads interactions from the Guide to Pharmacology database</p></td>
@@ -359,6 +425,12 @@ OmniPath</p></td>
           <p><code><a href="harmonizome_download.html">harmonizome_download()</a></code> </p>
         </td>
         <td><p>Downloads a Harmonizome network dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="hpo_download.html">hpo_download()</a></code> </p>
+        </td>
+        <td><p>Downloads protein annotations from Human Phenotype Ontology</p></td>
       </tr><tr>
         
         <td>
@@ -383,7 +455,7 @@ DoRothEA dataset</p></td>
         <td>
           <p><code><a href="import_intercell_network.html">import_intercell_network()</a></code> </p>
         </td>
-        <td><p>Imports an intercellular network combining annotations and interactions</p></td>
+        <td><p>Intercellular communication network</p></td>
       </tr><tr>
         
         <td>
@@ -486,6 +558,78 @@ DoRothEA dataset</p></td>
           <p><code><a href="interaction_graph.html">interaction_graph()</a></code> </p>
         </td>
         <td><p>Build Omnipath interaction graph</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="intercell_categories.html">intercell_categories()</a></code> </p>
+        </td>
+        <td><p>Full list of intercell categories and resources</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="intercell_consensus_filter.html">intercell_consensus_filter()</a></code> </p>
+        </td>
+        <td><p>Quality filter for intercell annotations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is_ontology_id.html">is_ontology_id()</a></code> </p>
+        </td>
+        <td><p>Looks like an ontology ID</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_info.html">kegg_info()</a></code> </p>
+        </td>
+        <td><p>Information about a KEGG Pathway</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_open.html">kegg_open()</a></code> </p>
+        </td>
+        <td><p>Open a KEGG Pathway diagram in the browser</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_pathway_annotations.html">kegg_pathway_annotations()</a></code> </p>
+        </td>
+        <td><p>Protein pathway annotations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_pathway_download.html">kegg_pathway_download()</a></code> </p>
+        </td>
+        <td><p>Download one KEGG pathway</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_pathway_list.html">kegg_pathway_list()</a></code> </p>
+        </td>
+        <td><p>List of KEGG pathways</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_pathways_download.html">kegg_pathways_download()</a></code> </p>
+        </td>
+        <td><p>Download the KEGG Pathways database</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_picture.html">kegg_picture()</a></code> </p>
+        </td>
+        <td><p>Download a pathway diagram as a picture</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kegg_process.html">kegg_process()</a></code> </p>
+        </td>
+        <td><p>Interactions from KGML</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="load_db.html">load_db()</a></code> </p>
+        </td>
+        <td><p>Load a built in database</p></td>
       </tr><tr>
         
         <td>
@@ -676,6 +820,24 @@ NicheNet</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="nichenet_test.html">nichenet_test()</a></code> </p>
+        </td>
+        <td><p>Run the NicheNet pipeline with a little dummy network</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nichenet_workarounds.html">nichenet_workarounds()</a></code> </p>
+        </td>
+        <td><p>Workarounds using NicheNet without attaching the package</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="obo_parser.html">obo_parser()</a></code> </p>
+        </td>
+        <td><p>Generic OBO parser</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="omnipath_cache_autoclean.html">omnipath_cache_autoclean()</a></code> </p>
         </td>
         <td><p>Keeps only the latest versions of complete downloads</p></td>
@@ -779,6 +941,12 @@ database</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="omnipath_get_config_path.html">omnipath_get_config_path()</a></code> </p>
+        </td>
+        <td><p>Current config file path</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="omnipath_load_config.html">omnipath_load_config()</a></code> </p>
         </td>
         <td><p>Load the package configuration from a config file</p></td>
@@ -793,7 +961,13 @@ database</p></td>
         <td>
           <p><code><a href="omnipath_logfile.html">omnipath_logfile()</a></code> </p>
         </td>
-        <td><p>Returns the path to the current OmnipathR log file</p></td>
+        <td><p>Path to the current OmnipathR log file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="omnipath_msg.html">omnipath_msg()</a></code> </p>
+        </td>
+        <td><p>Dispatch a message to the OmnipathR logger</p></td>
       </tr><tr>
         
         <td>
@@ -806,6 +980,12 @@ database</p></td>
           <p><code><a href="omnipath_save_config.html">omnipath_save_config()</a></code> </p>
         </td>
         <td><p>Save the current package configuration</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="omnipath_set_cachedir.html">omnipath_set_cachedir()</a></code> </p>
+        </td>
+        <td><p>Change the cache directory</p></td>
       </tr><tr>
         
         <td>
@@ -827,9 +1007,33 @@ database</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="omnipath_show_db.html">omnipath_show_db()</a></code> </p>
+        </td>
+        <td><p>Built in database definitions</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="omnipath_unlock_cache_db.html">omnipath_unlock_cache_db()</a></code> </p>
         </td>
         <td><p>Removes the lock file from the cache directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ontology_ensure_id.html">ontology_ensure_id()</a></code> </p>
+        </td>
+        <td><p>Only ontology IDs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ontology_ensure_name.html">ontology_ensure_name()</a></code> </p>
+        </td>
+        <td><p>Only ontology term names</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ontology_name_id.html">ontology_name_id()</a></code> </p>
+        </td>
+        <td><p>Translate between ontology IDs and names</p></td>
       </tr><tr>
         
         <td>
@@ -842,6 +1046,18 @@ database</p></td>
           <p><code><a href="pivot_annotations.html">pivot_annotations()</a></code> </p>
         </td>
         <td><p>Converts annotation tables to a wide format</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="preppi_download.html">preppi_download()</a></code> </p>
+        </td>
+        <td><p>Interactions from PrePPI</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="preppi_filter.html">preppi_filter()</a></code> </p>
+        </td>
+        <td><p>Filter PrePPI interactions by scores</p></td>
       </tr><tr>
         
         <td>
@@ -893,6 +1109,24 @@ database</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="relations_list_to_table.html">relations_list_to_table()</a></code> </p>
+        </td>
+        <td><p>Table from a nested list of ontology relations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="relations_table_to_graph.html">relations_table_to_graph()</a></code> </p>
+        </td>
+        <td><p>Graph from a table of ontology relations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="relations_table_to_list.html">relations_table_to_list()</a></code> </p>
+        </td>
+        <td><p>Nested list from a table of ontology relations</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="remap_dorothea_download.html">remap_dorothea_download()</a></code> </p>
         </td>
         <td><p>Downloads TF-target interactions from ReMap</p></td>
@@ -911,6 +1145,24 @@ database</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="resources_colname.html">resources_colname()</a></code> </p>
+        </td>
+        <td><p>Name of the column with the resources</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="simplify_intercell_network.html">simplify_intercell_network()</a></code> </p>
+        </td>
+        <td><p>Simplify an intercell network</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="swap_relations.html">swap_relations()</a></code> </p>
+        </td>
+        <td><p>Reverse the direction of ontology relations</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="tfcensus_download.html">tfcensus_download()</a></code> </p>
         </td>
         <td><p>Downloads the list of transcription factors from TF census</p></td>
@@ -919,8 +1171,7 @@ database</p></td>
         <td>
           <p><code><a href="translate_ids.html">translate_ids()</a></code> </p>
         </td>
-        <td><p>Translates a column of identifiers in a data frame by creating another
-column with the target identifiers</p></td>
+        <td><p>Translate gene and protein identifiers</p></td>
       </tr><tr>
         
         <td>
@@ -943,9 +1194,21 @@ service</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="unique_intercell_network.html">unique_intercell_network()</a></code> </p>
+        </td>
+        <td><p>Unique intercellular interactions</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="vinayagam_download.html">vinayagam_download()</a></code> </p>
         </td>
         <td><p>Protein-protein interactions from Vinayagam 2011</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="walk_ontology_tree.html">walk_ontology_tree()</a></code> </p>
+        </td>
+        <td><p>All nodes of a subtree starting from the selected nodes</p></td>
       </tr><tr>
         
         <td>

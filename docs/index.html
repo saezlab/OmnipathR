@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmniPath web service client • OmnipathR</title>
+<title>OmniPath web service client and more • OmnipathR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -17,19 +17,19 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="OmniPath web service client">
+<script src="pkgdown.js"></script><meta property="og:title" content="OmniPath web service client and more">
 <meta property="og:description" content="A client for the OmniPath web service
     (https://www.omnipathdb.org) and many other resources.
     It also includes functions to transform and pretty print
     some of the downloaded data, functions to access a number
     of other resources such as BioPlex, ConsensusPathDB, EVEX,
-    Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb,
-    InWeb InBioMap, Pathway Commons, Ramilowski et al. 2015,
-    RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al.
-    2011. Furthermore, OmnipathR features a close integration
-    with the NicheNet method for ligand activity prediction
-    from transcriptomics data, and its R implementation
-    `nichenetr` (available in CRAN).">
+    Gene Ontology, Guide to Pharmacology (IUPHAR/BPS), Harmonizome,
+    HTRIdb, Human Phenotype Ontology, InWeb InBioMap, KEGG Pathway,
+    Pathway Commons, Ramilowski et al. 2015, RegNetwork, ReMap, TF
+    census, TRRUST and Vinayagam et al. 2011. Furthermore, OmnipathR
+    features a close integration  with the NicheNet method for
+    ligand activity prediction from transcriptomics data, and its
+    R implementation `nichenetr` (available only on github).">
 <meta property="og:image" content="https://saezlab.github.io/OmnipathR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -55,7 +55,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -78,7 +78,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    </li>
+    <li>
+      <a href="articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     </li>
     <li>
       <a href="articles/nichenet.html">Using NicheNet with OmnipathR</a>
@@ -128,18 +134,50 @@
 <div id="omnipathr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#omnipathr" class="anchor"></a>OmnipathR</h1></div>
-<p>Utility functions to work with <strong>OmniPath</strong> in <code>R</code>.</p>
-<div id="description" class="section level2">
+<p>An <code>R</code> client for the <strong>OmniPath</strong> web service and many other resources.</p>
+<div id="package-contents" class="section level2">
 <h2 class="hasAnchor">
-<a href="#description" class="anchor"></a>Description</h2>
-<p><em>OmnipathR</em> is an <code>R</code> package built to provide easy access to the data stored in the OmniPath webservice:</p>
+<a href="#package-contents" class="anchor"></a>Package contents</h2>
+<ul>
+<li>Client for the OmniPath web service</li>
+<li>Functions for post-processing OmniPath data</li>
+<li>Access to other databases (18+ resources, see below)</li>
+<li>Integration to NicheNet, a method to infer ligand activities from transcriptomics data</li>
+</ul>
+<div id="omnipath-web-service-client" class="section level3">
+<h3 class="hasAnchor">
+<a href="#omnipath-web-service-client" class="anchor"></a>OmniPath web service client</h3>
+<p><em>OmnipathR</em> retrieves the data from the OmniPath web service at</p>
 <p><a href="https://omnipathdb.org/" class="uri">https://omnipathdb.org/</a></p>
-<p>The webservice implements a very simple REST style API. This package make requests by the HTTP protocol to retreive the data. Hence, fast Internet access is required for a proper use of <em>OmnipathR</em>.</p>
-<p>The package also provides some utility functions to filter, analyse and visualize the data.</p>
+<p>The web service implements a very simple REST style API. This package make requests by the HTTP protocol to retreive the data. Hence, fast Internet access is required for a proper use of <em>OmnipathR</em>.</p>
+<div id="what-is-omnipath" class="section level4">
+<h4 class="hasAnchor">
+<a href="#what-is-omnipath" class="anchor"></a>What is OmniPath?</h4>
+<p>OmniPath is a database of:</p>
+<ul>
+<li>Protein-protein, TF target and miRNA-mRNA interactions</li>
+<li>Enzyme-PTM relationships</li>
+<li>Protein complexes</li>
+<li>Annotations of protein function, structure, localization, expression</li>
+<li>Intercellular communication roles of proteins</li>
+</ul>
+<p>To learn more about OmniPath, you can visit its <a href="https://omnipathdb.org/">website</a>, or read our recent <a href="https://www.embopress.org/doi/full/10.15252/msb.20209923">publication</a> or our first <a href="https://www.nature.com/articles/nmeth.4077">paper from 2016</a>, especially its <a href="https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4077/MediaObjects/41592_2016_BFnmeth4077_MOESM495_ESM.pdf">supplementary material</a>.</p>
 </div>
-<div id="query-types" class="section level2">
+</div>
+<div id="access-to-further-resources" class="section level3">
+<h3 class="hasAnchor">
+<a href="#access-to-further-resources" class="anchor"></a>Access to further resources</h3>
+<p>The package provides access to a number of other databases: BioPlex, ConsensusPathDB, EVEX, Gene Ontology, Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb, Human Phenotype Ontology, InWeb InBioMap, KEGG Pathway, Pathway Commons, PrePPI, Ramilowski et al. 2015, RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al. 2011.</p>
+</div>
+</div>
+<div id="documentation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#query-types" class="anchor"></a>Query types</h2>
+<a href="#documentation" class="anchor"></a>Documentation</h2>
+<p>The latest version of the reference manual is available from <a href="https://static.omnipathdb.org/omnipathr_manual.pdf" class="uri">https://static.omnipathdb.org/omnipathr_manual.pdf</a>. Tutorials can be found at <a href="https://workflows.omnipathdb.org/" class="uri">https://workflows.omnipathdb.org/</a>. Sroll down for quick start examples.</p>
+</div>
+<div id="omnipath-query-types" class="section level2">
+<h2 class="hasAnchor">
+<a href="#omnipath-query-types" class="anchor"></a>OmniPath query types</h2>
 <p>We provide here a brief summary about the data available through <em>OmnipathR</em>. <em>OmnipathR</em> provides access to 5 types of queries:</p>
 <ol>
 <li>
@@ -162,7 +200,11 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>First of all, you need a current version of <code>R</code> (<a href="https://r-project.org" class="uri">https://r-project.org</a>). <em>OmnipathR</em> is a freely available package deposited on <em>Bioconductor</em> and <em>Github</em>: (<a href="https://bioconductor.org/" class="uri">https://bioconductor.org/</a>, <a href="https://github.com/saezlab/OmnipathR" class="uri">https://github.com/saezlab/OmnipathR</a>).</p>
+<p>First of all, you need a current version of <code>R</code> (<a href="https://r-project.org" class="uri">https://r-project.org</a>).</p>
+<div id="from-bioconductor" class="section level3">
+<h3 class="hasAnchor">
+<a href="#from-bioconductor" class="anchor"></a>From Bioconductor</h3>
+<p><em>OmnipathR</em> is a freely available package deposited on <em>Bioconductor</em> and <em>Github</em>: (<a href="https://bioconductor.org/" class="uri">https://bioconductor.org/</a>, <a href="https://github.com/saezlab/OmnipathR" class="uri">https://github.com/saezlab/OmnipathR</a>).</p>
 <p>You can install it by running the following commands on a <code>R</code> console:</p>
 <pre class="{r}"><code>if (!requireNamespace('BiocManager', quietly = TRUE))
     install.packages('BiocManager')
@@ -171,9 +213,14 @@
 BiocManager::install('OmnipathR', version = '3.12')
 ## Development version with the lastest updates
 BiocManager::install('OmnipathR', version = 'devel')</code></pre>
-<p>Sometimes it’s easier to install directly from github:</p>
+</div>
+<div id="from-github" class="section level3">
+<h3 class="hasAnchor">
+<a href="#from-github" class="anchor"></a>From github</h3>
+<p>We add new features to OmnipathR way more often than the Bioconductor release frequency. To make use of the recent developments, you can use <code>devtools</code> to install the package directly from github:</p>
 <pre class="{r}"><code><a href="https://devtools.r-lib.org/">require(devtools)
 install_github('saezlab/OmnipathR')</a></code></pre>
+</div>
 </div>
 <div id="getting-started-and-some-usage-examples" class="section level2">
 <h2 class="hasAnchor">

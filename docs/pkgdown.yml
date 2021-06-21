@@ -1,11 +1,13 @@
-pandoc: 2.11.3
+pandoc: '2.14'
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
+  bioc_workshop: bioc_workshop.html
   drug_targets: drug_targets.html
+  gene_ontology: gene_ontology.html
   nichenet: nichenet.html
   omnipath_intro: omnipath_intro.html
-last_built: 2021-03-12T09:39Z
+last_built: 2021-06-21T17:29Z
 urls:
   reference: https://saezlab.github.io/OmnipathR/reference
   article: https://saezlab.github.io/OmnipathR/articles
