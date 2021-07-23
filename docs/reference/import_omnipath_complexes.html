@@ -91,7 +91,7 @@ https://omnipathdb.org/complexes." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -99,7 +99,7 @@ https://omnipathdb.org/complexes." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -114,10 +114,19 @@ https://omnipathdb.org/complexes." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -128,19 +137,19 @@ https://omnipathdb.org/complexes." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -158,7 +167,7 @@ https://omnipathdb.org/complexes." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Imports protein complexes from OmniPath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>import_omnipath_complexes.Rd</code></div>
     </div>
 
@@ -167,19 +176,11 @@ https://omnipathdb.org/complexes." />
 <a href='https://omnipathdb.org/complexes'>https://omnipathdb.org/complexes</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import_omnipath_complexes</span><span class='op'>(</span>cache_file <span class='op'>=</span> <span class='cn'>NULL</span>, resources <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>import_Omnipath_complexes</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>import_OmniPath_complexes</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>import_omnipath_complexes</span><span class='op'>(</span>resources <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>cache_file</th>
-      <td><p>path to an earlier data file</p></td>
-    </tr>
     <tr>
       <th>resources</th>
       <td><p>complexes not reported in these databases are
@@ -187,7 +188,7 @@ removed. See <code><a href='get_complex_resources.html'>get_complexes_databases<
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Passed to <code>import_omnipath_complexes</code>.</p></td>
+      <td><p>optional additional arguments</p></td>
     </tr>
     </table>
 
@@ -196,13 +197,17 @@ removed. See <code><a href='get_complex_resources.html'>get_complexes_databases<
     <p>A dataframe containing information about complexes</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_complex_resources.html'>get_complexes_databases</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='get_complex_resources.html'>get_complexes_databases</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>complexes</span> <span class='op'>=</span> <span class='fu'>import_omnipath_complexes</span><span class='op'>(</span>
     resources <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'CORUM'</span>, <span class='st'>'hu.MAP'</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Downloaded 7215 protein complexes.</span></div><div class='input'>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

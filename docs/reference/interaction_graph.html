@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Build Omnipath interaction graph — interaction_graph" />
-<meta property="og:description" content="transforms the interactions data.frame to an igraph object" />
+<meta property="og:description" content="Transforms the interactions data frame to an igraph graph object." />
 <meta property="og:image" content="https://saezlab.github.io/OmnipathR/logo.svg" />
 
 
@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -113,10 +113,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -127,19 +136,19 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -162,7 +171,7 @@
     </div>
 
     <div class="ref-description">
-    <p>transforms the interactions data.frame to an igraph object</p>
+    <p>Transforms the interactions data frame to an igraph graph object.</p>
     </div>
 
     <pre class="usage"><span class='fu'>interaction_graph</span><span class='op'>(</span>interactions <span class='op'>=</span> <span class='va'>interactions</span><span class='op'>)</span></pre>
@@ -172,33 +181,45 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>interactions</th>
-      <td><p>data.frame created by 
-<code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></code>,
-<code><a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a></code>, 
-<code><a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a></code>,
-<code><a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code>, 
-<code><a href='import_dorothea_interactions.html'>import_dorothea_interactions</a></code>,
-<code><a href='import_mirnatarget_interactions.html'>import_mirnatarget_interactions</a></code> or 
-<code><a href='import_all_interactions.html'>import_all_interactions</a></code></p></td>
+      <td><p>data.frame created by</p><ul>
+<li><p><code><a href='import_omnipath_enzsub.html'>import_omnipath_enzsub</a></code></p></li>
+<li><p><code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></code></p></li>
+<li><p><code><a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a></code></p></li>
+<li><p><code><a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a></code></p></li>
+<li><p><code><a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code></p></li>
+<li><p><code><a href='import_post_translational_interactions.html'>import_post_translational_interactions</a></code></p></li>
+<li><p><code><a href='import_dorothea_interactions.html'>import_dorothea_interactions</a></code></p></li>
+<li><p><code><a href='import_tf_target_interactions.html'>import_tf_target_interactions</a></code></p></li>
+<li><p><code><a href='import_transcriptional_interactions.html'>import_transcriptional_interactions</a></code></p></li>
+<li><p><code><a href='import_mirnatarget_interactions.html'>import_mirnatarget_interactions</a></code></p></li>
+<li><p><code><a href='import_all_interactions.html'>import_all_interactions</a></code></p></li>
+</ul></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An igraph object</p>
+    <p>An igraph graph object.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></code>,
-<code><a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a></code>, 
-<code><a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a></code>,
-<code><a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code>, 
-<code><a href='import_dorothea_interactions.html'>import_dorothea_interactions</a></code>,
-<code><a href='import_mirnatarget_interactions.html'>import_mirnatarget_interactions</a></code> or 
-<code><a href='import_all_interactions.html'>import_all_interactions</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></code></p></li>
+<li><p><code><a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a></code></p></li>
+<li><p><code><a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a></code></p></li>
+<li><p><code><a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code></p></li>
+<li><p><code><a href='import_dorothea_interactions.html'>import_dorothea_interactions</a></code></p></li>
+<li><p><code><a href='import_mirnatarget_interactions.html'>import_mirnatarget_interactions</a></code></p></li>
+<li><p><code><a href='import_all_interactions.html'>import_all_interactions</a></code></p></li>
+<li><p><code><a href='giant_component.html'>giant_component</a></code></p></li>
+<li><p><code><a href='find_all_paths.html'>find_all_paths</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>interactions</span> <span class='op'>=</span> <span class='fu'><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></span><span class='op'>(</span>resources<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SignaLink3"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Downloaded 1799 interactions.</span></div><div class='input'><span class='va'>OPI_g</span> <span class='op'>=</span> <span class='fu'>interaction_graph</span><span class='op'>(</span><span class='va'>interactions</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='va'>interactions</span> <span class='op'>&lt;-</span> <span class='fu'><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></span><span class='op'>(</span>resources <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'SignaLink3'</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>g</span> <span class='op'>&lt;-</span> <span class='fu'>interaction_graph</span><span class='op'>(</span><span class='va'>interactions</span><span class='op'>)</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

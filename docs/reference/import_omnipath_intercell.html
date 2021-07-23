@@ -93,7 +93,7 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,10 +116,19 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -130,19 +139,19 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -160,7 +169,7 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Imports OmniPath intercell annotations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>import_omnipath_intercell.Rd</code></div>
     </div>
 
@@ -172,7 +181,6 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc.</p>
     </div>
 
     <pre class="usage"><span class='fu'>import_omnipath_intercell</span><span class='op'>(</span>
-  cache_file <span class='op'>=</span> <span class='cn'>NULL</span>,
   categories <span class='op'>=</span> <span class='cn'>NULL</span>,
   resources <span class='op'>=</span> <span class='cn'>NULL</span>,
   parent <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -187,37 +195,32 @@ a ligand, a receptor, an extracellular matrix (ECM) component, etc.</p>
   proteins <span class='op'>=</span> <span class='cn'>NULL</span>,
   topology <span class='op'>=</span> <span class='cn'>NULL</span>,
   causality <span class='op'>=</span> <span class='cn'>NULL</span>,
+  consensus_percentile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  loc_consensus_percentile <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
-<span class='op'>)</span>
-
-<span class='fu'>import_Omnipath_intercell</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>import_OmniPath_intercell</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>cache_file</th>
-      <td><p>path to an earlier data file</p></td>
-    </tr>
-    <tr>
       <th>categories</th>
       <td><p>vector containing the categories to be retrieved.
-All the genes belonging to those categories will be returned. For further
-information about the categories see <code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></td>
+All the genes belonging to those categories will be returned. For
+further information about the categories see
+code<a href='get_intercell_categories.html'>get_intercell_categories</a>.</p></td>
     </tr>
     <tr>
       <th>resources</th>
       <td><p>limit the query to certain resources; see the available
-resources by <code><a href='get_intercell_resources.html'>get_intercell_resources</a></code></p></td>
+resources by <code><a href='get_intercell_resources.html'>get_intercell_resources</a></code>.</p></td>
     </tr>
     <tr>
       <th>parent</th>
       <td><p>vector containing the parent classes to be retrieved.
-All the genes belonging to those classes will be returned. For furter
-information about the main classes see
-<code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></td>
+All the genes belonging to those classes will be returned. For
+furter information about the main classes see
+<code><a href='get_intercell_categories.html'>get_intercell_categories</a></code>.</p></td>
     </tr>
     <tr>
       <th>scope</th>
@@ -234,13 +237,12 @@ information about the main classes see
     <tr>
       <th>transmitter</th>
       <td><p>logical, include only transmitters i.e. proteins
-delivering signal from a cell to
-its environment</p></td>
+delivering signal from a cell to its environment.</p></td>
     </tr>
     <tr>
       <th>receiver</th>
       <td><p>logical, include only receivers i.e. proteins delivering
-signal to the cell from its environment</p></td>
+signal to the cell from its environment.</p></td>
     </tr>
     <tr>
       <th>secreted</th>
@@ -249,12 +251,12 @@ signal to the cell from its environment</p></td>
     <tr>
       <th>plasma_membrane_peripheral</th>
       <td><p>logical, include only plasma membrane
-peripheral membrane proteins</p></td>
+peripheral membrane proteins.</p></td>
     </tr>
     <tr>
       <th>plasma_membrane_transmembrane</th>
       <td><p>logical, include only plasma membrane
-transmembrane proteins</p></td>
+transmembrane proteins.</p></td>
     </tr>
     <tr>
       <th>proteins</th>
@@ -263,17 +265,39 @@ transmembrane proteins</p></td>
     <tr>
       <th>topology</th>
       <td><p>topology categories: one or more of `secreted` (sec),
-`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane` (pmtm)
-(both short or long notation can be used)</p></td>
+`plasma_membrane_peripheral` (pmp), `plasma_membrane_transmembrane`
+(pmtm) (both short or long notation can be used).</p></td>
     </tr>
     <tr>
       <th>causality</th>
       <td><p>`transmitter` (trans), `receiver` (rec) or `both` (both
-short or long notation can be used)</p></td>
+short or long notation can be used).</p></td>
+    </tr>
+    <tr>
+      <th>consensus_percentile</th>
+      <td><p>Numeric: a percentile cut off for the
+consensus score of generic categories. The consensus score is the
+number of resources supporting the classification of an entity into a
+category based on combined information of many resources. Here you can
+apply a cut-off, keeping only the annotations supported by a higher
+number of resources than a certain percentile of each category. If
+<code>NULL</code> no filtering will be performed. The value is either in the
+0-1 range, or will be divided by 100 if greater than 1. The
+percentiles will be calculated against the generic composite
+categories and then will be applied to their resource specific
+annotations and specific child categories.</p></td>
+    </tr>
+    <tr>
+      <th>loc_consensus_percentile</th>
+      <td><p>Numeric: similar to
+codeconsensus_percentile for major localizations. For example, with
+a value of 50, the secreted, plasma membrane transmembrane or
+peripheral attributes will be true only where at least 50 percent
+of the resources support these.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Passed to <code>import_omnipath_intercell</code>.</p></td>
+      <td><p>Additional optional arguments, ignored.</p></td>
     </tr>
     </table>
 
@@ -283,12 +307,18 @@ short or long notation can be used)</p></td>
 signaling.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a>,
-<a href='get_intercell_generic_categories.html'>get_intercell_generic_categories</a>, <a href='import_intercell_network.html'>import_intercell_network</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></li>
+<li><p><code><a href='get_intercell_generic_categories.html'>get_intercell_generic_categories</a></code></p></li>
+<li><p><code><a href='import_intercell_network.html'>import_intercell_network</a></code></p></li>
+<li><p><code><a href='intercell_consensus_filter.html'>intercell_consensus_filter</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>intercell</span> <span class='op'>=</span> <span class='fu'>import_omnipath_intercell</span><span class='op'>(</span>categories <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'ecm'</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Downloaded 2754 intercellular communication role records.</span></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>intercell</span> <span class='op'>&lt;-</span> <span class='fu'>import_omnipath_intercell</span><span class='op'>(</span>categories <span class='op'>=</span> <span class='st'>'ecm'</span><span class='op'>)</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Retrieve a list of complex resources available in Omnipath — get_complex_resources" />
-<meta property="og:description" content="get the names of the resources from https://omnipath.org/complexes" />
+<meta property="og:description" content="Get the names of the resources from https://omnipath.org/complexes" />
 <meta property="og:image" content="https://saezlab.github.io/OmnipathR/logo.svg" />
 
 
@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -113,10 +113,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -127,19 +136,19 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -157,17 +166,15 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Retrieve a list of complex resources available in Omnipath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>get_complex_resources.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>get the names of the resources from <a href='https://omnipath.org/complexes'>https://omnipath.org/complexes</a></p>
+    <p>Get the names of the resources from <a href='https://omnipath.org/complexes'>https://omnipath.org/complexes</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_complex_resources</span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-
-<span class='fu'>get_complexes_databases</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_complex_resources</span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,10 +183,6 @@
       <th>dataset</th>
       <td><p>ignored for this query type</p></td>
     </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Passed to <code>import_omnipath_enzsub</code>.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -187,15 +190,20 @@
     <p>character vector with the names of the databases</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_resources.html'>get_resources</a>,
-<a href='import_omnipath_complexes.html'>import_omnipath_complexes</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='get_resources.html'>get_resources</a></code></p></li>
+<li><p><code><a href='import_omnipath_complexes.html'>import_omnipath_complexes</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>get_complex_resources</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;  [1] "CellPhoneDB"    "CFinder"        "Compleat"       "ComplexPortal" 
-#&gt;  [5] "CORUM"          "Guide2Pharma"   "Havugimana2012" "HPMR"          
-#&gt;  [9] "hu.MAP"         "ICELLNET"       "KEGG-MEDICUS"   "NetworkBlast"  
-#&gt; [13] "PDB"            "Signor"         "SIGNOR"        </div><div class='input'>
+</div><div class='output co'>#&gt;  [1] "CellChatDB"     "CellPhoneDB"    "CFinder"        "Compleat"      
+#&gt;  [5] "ComplexPortal"  "CORUM"          "Guide2Pharma"   "Havugimana2012"
+#&gt;  [9] "HPMR"           "hu.MAP"         "hu.MAP2"        "ICELLNET"      
+#&gt; [13] "KEGG-MEDICUS"   "NetworkBlast"   "PDB"            "Signor"        
+#&gt; [17] "SIGNOR"        </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

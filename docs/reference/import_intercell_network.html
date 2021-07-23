@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Imports an intercellular network combining annotations and interactions — import_intercell_network • OmnipathR</title>
+<title>Intercellular communication network — import_intercell_network • OmnipathR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Imports an intercellular network combining annotations and interactions — import_intercell_network" />
-<meta property="og:description" content="Imports an intercellular network by mapping intercellular annotations
+<meta property="og:title" content="Intercellular communication network — import_intercell_network" />
+<meta property="og:description" content="Imports an intercellular network by combining intercellular annotations
 and protein interactions. First imports a network of protein-protein
 interactions. Then, it retrieves annotations about the proteins
 intercellular communication roles, once for the transmitter (delivering
@@ -60,9 +60,7 @@ annotations). Finally the 3 data frames combined in a way that the source
 proteins in each interaction annotated by the transmitter, and the target
 proteins by the receiver categories. If undirected interactions present
 (these are disabled by default) they will be duplicated, i.e. both
-partners can be both receiver and transmitter.
-If a cache file provided, its content will be returned without any further
-filtering." />
+partners can be both receiver and transmitter." />
 <meta property="og:image" content="https://saezlab.github.io/OmnipathR/logo.svg" />
 
 
@@ -105,7 +103,7 @@ filtering." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -113,7 +111,7 @@ filtering." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -128,10 +126,19 @@ filtering." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -142,19 +149,19 @@ filtering." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -171,13 +178,13 @@ filtering." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Imports an intercellular network combining annotations and interactions</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <h1>Intercellular communication network</h1>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>import_intercell_network.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Imports an intercellular network by mapping intercellular annotations
+    <p>Imports an intercellular network by combining intercellular annotations
 and protein interactions. First imports a network of protein-protein
 interactions. Then, it retrieves annotations about the proteins
 intercellular communication roles, once for the transmitter (delivering
@@ -190,34 +197,38 @@ annotations). Finally the 3 data frames combined in a way that the source
 proteins in each interaction annotated by the transmitter, and the target
 proteins by the receiver categories. If undirected interactions present
 (these are disabled by default) they will be duplicated, i.e. both
-partners can be both receiver and transmitter.
-If a cache file provided, its content will be returned without any further
-filtering.</p>
+partners can be both receiver and transmitter.</p>
     </div>
 
     <pre class="usage"><span class='fu'>import_intercell_network</span><span class='op'>(</span>
-  cache_file <span class='op'>=</span> <span class='cn'>NULL</span>,
   interactions_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
   transmitter_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
-  receiver_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
+  receiver_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  resources <span class='op'>=</span> <span class='cn'>NULL</span>,
+  entity_types <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ligand_receptor <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  high_confidence <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  simplify <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  unique_pairs <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  consensus_percentile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  loc_consensus_percentile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  omnipath <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  ligrecextra <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  kinaseextra <span class='op'>=</span> <span class='op'>!</span><span class='va'>high_confidence</span>,
+  pathwayextra <span class='op'>=</span> <span class='op'>!</span><span class='va'>high_confidence</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>cache_file</th>
-      <td><p>path to an earlier data file; if exists, will be loaded
-as it is, the further arguments have no effect; if does not exists, the
-result will be dumped into this file.</p></td>
-    </tr>
-    <tr>
       <th>interactions_param</th>
-      <td><p>a list with arguments for an interactions query: 
-<code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a>, 
-<a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a>,
-<a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a>,
-<a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code></p></td>
+      <td><p>a list with arguments for an interactions query:
+<code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></code>,
+<code><a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a></code>,
+<code><a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a></code>,
+<code><a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code></p></td>
     </tr>
     <tr>
       <th>transmitter_param</th>
@@ -231,6 +242,113 @@ of intercellular connections</p></td>
 <code><a href='import_omnipath_intercell.html'>import_omnipath_intercell</a></code>, to define the receiver side
 of intercellular connections</p></td>
     </tr>
+    <tr>
+      <th>resources</th>
+      <td><p>A character vector of resources to be applied to
+both the interactions and the annotations. For example, <code>resources
+= 'CellChatDB'</code> will download the transmitters and receivers defined by
+CellChatDB, connected by connections from CellChatDB.</p></td>
+    </tr>
+    <tr>
+      <th>entity_types</th>
+      <td><p>Character, possible values are "protein", "complex" or
+both.</p></td>
+    </tr>
+    <tr>
+      <th>ligand_receptor</th>
+      <td><p>Logical. If <code>TRUE</code>, only <em>ligand</em> and
+<em>receptor</em> annotations will be used instead of the more generic
+<em>transmitter</em> and <em>receiver</em> categories.</p></td>
+    </tr>
+    <tr>
+      <th>high_confidence</th>
+      <td><p>Logical: shortcut to do some filtering in order to
+include only higher confidence interactions. The intercell database
+of OmniPath covers a very broad range of possible ways of cell to cell
+communication, and the pieces of information, such as localization,
+topology, function and interaction, are combined from many, often
+independent sources. This unavoidably result some weird and unexpected
+combinations which are false positives in the context of intercellular
+communication. This option sets some minimum criteria to remove most
+(but definitely not all!) of the wrong connections. These criteria
+are the followings: 1) the receiver must be plasma membrane
+transmembrane; 2) the curation effort for interactions must be larger
+than one; 3) the consensus score for annotations must be larger than
+the 50 percentile within the generic category (you can override this
+by <code>consensus_percentile</code>). 4) the transmitter must be secreted
+or exposed on the plasma membrane. 5) The major localizations have
+to be supported by at least 30 percent of the relevant resources (
+you can override this by <code>loc_consensus_percentile</code>). 6) The
+datasets with lower level of curation (<em>kinaseextra</em> and <em>
+pathwayextra</em>) will be disabled. These criteria are of medium
+stringency, you can always tune them to be more relaxed or stringent
+by filtering manually, using <code><a href='filter_intercell_network.html'>filter_intercell_network</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>simplify</th>
+      <td><p>Logical: keep only the most often used columns. This
+function combines a network data frame with two copies of the
+intercell annotation data frames, all of them already having quite
+some columns. With this option we keep only the names of the
+interacting pair, their intercellular communication roles, and the
+minimal information of the origin of both the interaction and
+the annotations.</p></td>
+    </tr>
+    <tr>
+      <th>unique_pairs</th>
+      <td><p>Logical: instead of having separate rows for each
+pair of annotations, drop the annotations and reduce the data frame to
+unique interacting pairs. See <code><a href='unique_intercell_network.html'>unique_intercell_network</a></code>
+for details.</p></td>
+    </tr>
+    <tr>
+      <th>consensus_percentile</th>
+      <td><p>Numeric: a percentile cut off for the consensus
+score of generic categories in intercell annotations. The consensus
+score is the number of resources supporting the classification of an
+entity into a category based on combined information of many resources.
+Here you can apply a cut-off, keeping only the annotations supported
+by a higher number of resources than a certain percentile of each
+category. If <code>NULL</code> no filtering will be performed. The value is
+either in the 0-1 range, or will be divided by 100 if greater than 1.
+The percentiles will be calculated against the generic composite
+categories and then will be applied to their resource specific
+annotations and specific child categories.</p></td>
+    </tr>
+    <tr>
+      <th>loc_consensus_percentile</th>
+      <td><p>Numeric: similar to
+<code>consensus_percentile</code> for major localizations. For example, with
+a value of 50, the secreted, plasma membrane transmembrane or
+peripheral attributes will be <code>TRUE</code> only where at least 50
+percent of the resources support these.</p></td>
+    </tr>
+    <tr>
+      <th>omnipath</th>
+      <td><p>Logical: shortcut to include the <em>omnipath</em> dataset
+in the interactions query.</p></td>
+    </tr>
+    <tr>
+      <th>ligrecextra</th>
+      <td><p>Logical: shortcut to include the <em>ligrecextra</em>
+dataset in the interactions query.</p></td>
+    </tr>
+    <tr>
+      <th>kinaseextra</th>
+      <td><p>Logical: shortcut to include the <em>kinaseextra</em>
+dataset in the interactions query.</p></td>
+    </tr>
+    <tr>
+      <th>pathwayextra</th>
+      <td><p>Logical: shortcut to include the <em>pathwayextra</em>
+dataset in the interactions query.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>If <code>simplify</code> or <code>unique_pairs</code> is <code>TRUE</code>,
+additional column  names can be passed here to <code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select</a></code>
+on the final data frame. Otherwise ignored.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -238,22 +356,41 @@ of intercellular connections</p></td>
     <p>A dataframe containing information about protein-protein
 interactions and the inter-cellular roles of the protiens involved in those
 interactions.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>By default this function creates almost the largest possible network of
+intercellular interactions. However, this might contain a large number
+of false positives. Please refer to the documentation of the arguments,
+especially <code>high_confidence</code>, and the <code>
+<a href='filter_intercell_network.html'>filter_intercell_network</a></code> function. Note: if you restrict the query
+to certain intercell annotation resources or small categories, it's not
+recommended to use the <code>consensus_percentile</code> or
+<code>high_confidence</code> options, instead filter the network with <code>
+<a href='filter_intercell_network.html'>filter_intercell_network</a></code> for more consistent results.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a>,
-<a href='get_intercell_generic_categories.html'>get_intercell_generic_categories</a>, 
-<a href='import_omnipath_intercell.html'>import_omnipath_intercell</a>,
-<a href='import_omnipath_interactions.html'>import_omnipath_interactions</a>, 
-<a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a>,
-<a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a>, 
-<a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></li>
+<li><p><code><a href='get_intercell_generic_categories.html'>get_intercell_generic_categories</a></code></p></li>
+<li><p><code><a href='import_omnipath_intercell.html'>import_omnipath_intercell</a></code></p></li>
+<li><p><code><a href='import_omnipath_interactions.html'>import_omnipath_interactions</a></code></p></li>
+<li><p><code><a href='import_pathwayextra_interactions.html'>import_pathwayextra_interactions</a></code></p></li>
+<li><p><code><a href='import_kinaseextra_interactions.html'>import_kinaseextra_interactions</a></code></p></li>
+<li><p><code><a href='import_ligrecextra_interactions.html'>import_ligrecextra_interactions</a></code></p></li>
+<li><p><code><a href='unique_intercell_network.html'>unique_intercell_network</a></code></p></li>
+<li><p><code><a href='simplify_intercell_network.html'>simplify_intercell_network</a></code></p></li>
+<li><p><code><a href='filter_intercell_network.html'>filter_intercell_network</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>intercellNetwork</span> <span class='op'>&lt;-</span> <span class='fu'>import_intercell_network</span><span class='op'>(</span>
-   interactions_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>datasets <span class='op'>=</span> <span class='st'>'ligrecextra'</span><span class='op'>)</span>,
-   receiver_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>categories <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'receptor'</span>, <span class='st'>'transporter'</span><span class='op'>)</span><span class='op'>)</span>,
-   transmitter_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>categories <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'ligand'</span>, <span class='st'>'secreted_enzyme'</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Downloaded 3995 interactions.</span></div><div class='output co'>#&gt; <span class='message'>Downloaded 9189 intercellular communication role records.</span></div><div class='output co'>#&gt; <span class='message'>Downloaded 19884 intercellular communication role records.</span></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>intercell_network</span> <span class='op'>&lt;-</span> <span class='fu'>import_intercell_network</span><span class='op'>(</span>
+    interactions_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>datasets <span class='op'>=</span> <span class='st'>'ligrecextra'</span><span class='op'>)</span>,
+    receiver_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>categories <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'receptor'</span>, <span class='st'>'transporter'</span><span class='op'>)</span><span class='op'>)</span>,
+    transmitter_param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>categories <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'ligand'</span>, <span class='st'>'secreted_enzyme'</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

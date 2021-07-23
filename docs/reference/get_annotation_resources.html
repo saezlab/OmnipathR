@@ -92,7 +92,7 @@ of OmniPath — get_annotation_resources" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -100,7 +100,7 @@ of OmniPath — get_annotation_resources" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -115,10 +115,19 @@ of OmniPath — get_annotation_resources" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -129,19 +138,19 @@ of OmniPath — get_annotation_resources" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -160,7 +169,7 @@ of OmniPath — get_annotation_resources" />
     <div class="page-header">
     <h1>Retrieves a list of available resources in the annotations database
 of OmniPath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>get_annotation_resources.Rd</code></div>
     </div>
 
@@ -168,9 +177,7 @@ of OmniPath</h1>
     <p>Get the names of the resources from <a href='https://omnipath.org/annotations'>https://omnipath.org/annotations</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_annotation_resources</span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>get_annotation_databases</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_annotation_resources</span><span class='op'>(</span>dataset <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,7 +188,7 @@ of OmniPath</h1>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Passed to <code>get_annotation_resources</code>.</p></td>
+      <td><p>optional additional arguments</p></td>
     </tr>
     </table>
 
@@ -190,32 +197,38 @@ of OmniPath</h1>
     <p>character vector with the names of the annotation resources</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_resources.html'>get_resources</a>,
-<a href='import_omnipath_annotations.html'>import_omnipath_annotations</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='get_resources.html'>get_resources</a></code></p></li>
+<li><p><code><a href='import_omnipath_annotations.html'>import_omnipath_annotations</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>get_annotation_resources</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] "Adhesome"             "Almen2009"            "Baccin2019"          
 #&gt;  [4] "CancerGeneCensus"     "CancerSEA"            "CellCellInteractions"
-#&gt;  [7] "CellPhoneDB"          "CellPhoneDB_complex"  "ComPPI"              
-#&gt; [10] "CORUM_Funcat"         "CORUM_GO"             "CSPA"                
-#&gt; [13] "CSPA_celltype"        "DGIdb"                "DisGeNet"            
-#&gt; [16] "EMBRACE"              "Exocarta"             "GO_Intercell"        
-#&gt; [19] "GPCRdb"               "Guide2Pharma"         "HGNC"                
-#&gt; [22] "HPA_secretome"        "HPA_subcellular"      "HPA_tissue"          
-#&gt; [25] "HPMR"                 "HPMR_complex"         "ICELLNET"            
-#&gt; [28] "ICELLNET_complex"     "Integrins"            "IntOGen"             
-#&gt; [31] "iTALK"                "KEGG-PC"              "kinase.com"          
-#&gt; [34] "Kirouac2010"          "LOCATE"               "LRdb"                
-#&gt; [37] "Matrisome"            "MatrixDB"             "MCAM"                
-#&gt; [40] "Membranome"           "MSigDB"               "NetPath"             
-#&gt; [43] "OPM"                  "Phobius"              "Phosphatome"         
-#&gt; [46] "Ramilowski_location"  "Ramilowski2015"       "SignaLink_function"  
-#&gt; [49] "SignaLink_pathway"    "SIGNOR"               "Surfaceome"          
-#&gt; [52] "TCDB"                 "TFcensus"             "TopDB"               
-#&gt; [55] "UniProt_family"       "UniProt_keyword"      "UniProt_location"    
-#&gt; [58] "UniProt_tissue"       "UniProt_topology"     "Vesiclepedia"        
-#&gt; [61] "Zhong2015"           </div><div class='input'>
+#&gt;  [7] "CellChatDB"           "CellChatDB_complex"   "CellPhoneDB"         
+#&gt; [10] "CellPhoneDB_complex"  "CellTalkDB"           "ComPPI"              
+#&gt; [13] "connectomeDB2020"     "CORUM_Funcat"         "CORUM_GO"            
+#&gt; [16] "CSPA"                 "CSPA_celltype"        "DGIdb"               
+#&gt; [19] "DisGeNet"             "EMBRACE"              "Exocarta"            
+#&gt; [22] "GO_Intercell"         "GPCRdb"               "Guide2Pharma"        
+#&gt; [25] "HGNC"                 "HPA_secretome"        "HPA_subcellular"     
+#&gt; [28] "HPA_tissue"           "HPMR"                 "HPMR_complex"        
+#&gt; [31] "HumanCellMap"         "ICELLNET"             "ICELLNET_complex"    
+#&gt; [34] "Integrins"            "IntOGen"              "iTALK"               
+#&gt; [37] "KEGG-PC"              "kinase.com"           "Kirouac2010"         
+#&gt; [40] "LOCATE"               "LRdb"                 "Matrisome"           
+#&gt; [43] "MatrixDB"             "MCAM"                 "Membranome"          
+#&gt; [46] "MSigDB"               "NetPath"              "OPM"                 
+#&gt; [49] "Phobius"              "Phosphatome"          "Ramilowski_location" 
+#&gt; [52] "Ramilowski2015"       "SignaLink_function"   "SignaLink_pathway"   
+#&gt; [55] "SIGNOR"               "Surfaceome"           "talklr"              
+#&gt; [58] "TCDB"                 "TFcensus"             "TopDB"               
+#&gt; [61] "UniProt_family"       "UniProt_keyword"      "UniProt_location"    
+#&gt; [64] "UniProt_tissue"       "UniProt_topology"     "Vesiclepedia"        
+#&gt; [67] "Zhong2015"           </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

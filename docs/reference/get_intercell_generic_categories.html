@@ -93,7 +93,7 @@ https://omnipath.org/intercell." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -101,7 +101,7 @@ https://omnipath.org/intercell." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,10 +116,19 @@ https://omnipath.org/intercell." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -130,19 +139,19 @@ https://omnipath.org/intercell." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -161,7 +170,7 @@ https://omnipath.org/intercell." />
     <div class="page-header">
     <h1>Retrieves a list of the generic categories in the intercell database
 of OmniPath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>get_intercell_generic_categories.Rd</code></div>
     </div>
 
@@ -170,49 +179,44 @@ of OmniPath</h1>
 <a href='https://omnipath.org/intercell'>https://omnipath.org/intercell</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_intercell_generic_categories</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>get_intercell_generic_categories</span><span class='op'>(</span><span class='op'>)</span></pre>
 
-<span class='fu'>get_intercell_classes</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>...</th>
-      <td><p>Passed to <code>get_intercell_generic_categories</code>.</p></td>
-    </tr>
-    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>character vector with the different intercell main classes</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='import_omnipath_intercell.html'>import_omnipath_intercell</a>,
-<a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='import_omnipath_intercell.html'>import_omnipath_intercell</a></code></p></li>
+<li><p><code><a href='get_intercell_categories.html'>get_intercell_categories</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>get_intercell_generic_categories</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Downloaded 1108 records.</span></div><div class='output co'>#&gt;  [1] "plasma_membrane"                     "transmembrane"                      
-#&gt;  [3] "peripheral"                          "transmembrane_predicted"            
-#&gt;  [5] "receptor"                            "adhesion"                           
-#&gt;  [7] "ligand"                              "cell_surface_ligand"                
-#&gt;  [9] "ecm"                                 "secreted"                           
-#&gt; [11] "ion_channel"                         "cell_surface"                       
-#&gt; [13] "transporter"                         "ligand_regulator"                   
-#&gt; [15] "receptor_regulator"                  "plasma_membrane_transmembrane"      
-#&gt; [17] "cell_adhesion"                       "extracellular"                      
-#&gt; [19] "matrix_adhesion"                     "secreted_receptor"                  
-#&gt; [21] "plasma_membrane_peripheral"          "plasma_membrane_regulator"          
-#&gt; [23] "secreted_enzyme"                     "cell_surface_enzyme"                
-#&gt; [25] "matrix_adhesion_regulator"           "secreted_peptidase"                 
-#&gt; [27] "intracellular"                       "cell_surface_peptidase"             
-#&gt; [29] "extracellular_peptidase"             "secreted_peptidase_inhibitor"       
-#&gt; [31] "secreted_enyzme"                     "desmosome"                          
-#&gt; [33] "ecm_regulator"                       "gap_junction"                       
-#&gt; [35] "sparc_ecm_regulator"                 "intracellular_intercellular_related"
-#&gt; [37] "adherens_junction"                   "ion_channel_regulator"              
-#&gt; [39] "tight_junction"                     </div></pre>
+</div><div class='output co'>#&gt;  [1] "transmembrane"                       "transmembrane_predicted"            
+#&gt;  [3] "peripheral"                          "plasma_membrane"                    
+#&gt;  [5] "plasma_membrane_transmembrane"       "plasma_membrane_regulator"          
+#&gt;  [7] "plasma_membrane_peripheral"          "secreted"                           
+#&gt;  [9] "cell_surface"                        "ecm"                                
+#&gt; [11] "ligand"                              "receptor"                           
+#&gt; [13] "secreted_enzyme"                     "secreted_peptidase"                 
+#&gt; [15] "extracellular"                       "intracellular"                      
+#&gt; [17] "receptor_regulator"                  "secreted_receptor"                  
+#&gt; [19] "sparc_ecm_regulator"                 "ecm_regulator"                      
+#&gt; [21] "ligand_regulator"                    "cell_surface_ligand"                
+#&gt; [23] "cell_adhesion"                       "matrix_adhesion"                    
+#&gt; [25] "adhesion"                            "matrix_adhesion_regulator"          
+#&gt; [27] "cell_surface_enzyme"                 "cell_surface_peptidase"             
+#&gt; [29] "secreted_enyzme"                     "extracellular_peptidase"            
+#&gt; [31] "secreted_peptidase_inhibitor"        "transporter"                        
+#&gt; [33] "ion_channel"                         "ion_channel_regulator"              
+#&gt; [35] "gap_junction"                        "tight_junction"                     
+#&gt; [37] "adherens_junction"                   "desmosome"                          
+#&gt; [39] "intracellular_intercellular_related"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

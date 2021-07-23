@@ -95,7 +95,7 @@ members: if all members carry the same annotation the complex inherits." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.99.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@ members: if all members carry the same annotation the complex inherits." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,10 +118,19 @@ members: if all members carry the same annotation the complex inherits." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    </li>
+    <li>
       <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     </li>
     <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: utility functions to work with OmniPath in R</a>
+      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    </li>
+    <li>
+      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     </li>
   </ul>
 </li>
@@ -132,19 +141,19 @@ members: if all members carry the same annotation the complex inherits." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa fab fa-twitter fa-lg"></span>
+    <span class="fab fa-twitter fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="https://omnipathdb.org/">
-    <span class="fas fa fas fa-university"></span>
+    <span class="fas fa-university"></span>
      
   </a>
 </li>
@@ -162,7 +171,7 @@ members: if all members carry the same annotation the complex inherits." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Imports annotations from OmniPath</h1>
-    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/import.R'><code>R/import.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/saezlab/OmnipathR/blob/master/R/omnipath.R'><code>R/omnipath.R</code></a></small>
     <div class="hidden name"><code>import_omnipath_annotations.Rd</code></div>
     </div>
 
@@ -176,25 +185,15 @@ members: if all members carry the same annotation the complex inherits.</p>
     </div>
 
     <pre class="usage"><span class='fu'>import_omnipath_annotations</span><span class='op'>(</span>
-  cache_file <span class='op'>=</span> <span class='cn'>NULL</span>,
   proteins <span class='op'>=</span> <span class='cn'>NULL</span>,
   resources <span class='op'>=</span> <span class='cn'>NULL</span>,
-  force_full_download <span class='op'>=</span> <span class='cn'>FALSE</span>,
   wide <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
-<span class='op'>)</span>
-
-<span class='fu'>import_Omnipath_annotations</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span>
-
-<span class='fu'>import_OmniPath_annotations</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>cache_file</th>
-      <td><p>Path to an earlier data file</p></td>
-    </tr>
     <tr>
       <th>proteins</th>
       <td><p>Vector containing the genes or proteins for whom
@@ -209,37 +208,46 @@ the genes integrating the complex. Check the vignette for examples.</p></td>
 See <code><a href='get_annotation_resources.html'>get_annotation_resources</a></code> for possible values.</p></td>
     </tr>
     <tr>
-      <th>force_full_download</th>
-      <td><p>Force the download of the entire annotations
-dataset. This is disabled by default because the size of this data is
-around 1GB. We recommend to retrieve the annotations for a set of proteins
-or only from a few resources, depending on your interest.</p></td>
-    </tr>
-    <tr>
       <th>wide</th>
       <td><p>Convert the annotation table to wide format, which
-corresponds more or less to the original resource. If the data comes from
-more than one resource a list of wide tables will be returned.</p></td>
+corresponds more or less to the original resource. If the data comes
+from more than one resource a list of wide tables will be returned.
+See examples at <code><a href='pivot_annotations.html'>pivot_annotations</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Passed to <code>import_omnipath_annotations</code>.</p></td>
+      <td><p>Additional arguments.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data.frame containing different gene/complex annotations</p>
+    <p>A data frame containing different gene and complex annotations.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Downloading the full annotations
+dataset is disabled by default because the size of this data is
+around 1GB. We recommend to retrieve the annotations for a set of proteins
+or only from a few resources, depending on your interest. You can always
+download the full database from
+<a href='https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv'>https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv</a>
+using any standard R or <code>readr</code> method.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_annotation_resources.html'>get_annotation_databases</a></code></p></div>
+    <div class='dont-index'>
+<ul>
+<li><p><code><a href='get_annotation_resources.html'>get_annotation_databases</a></code></p></li>
+<li><p><code><a href='pivot_annotations.html'>pivot_annotations</a></code></p></li>
+</ul>
+</div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>annotations</span> <span class='op'>=</span> <span class='fu'>import_omnipath_annotations</span><span class='op'>(</span>
+    <pre class="examples"><div class='input'><span class='va'>annotations</span> <span class='op'>&lt;-</span> <span class='fu'>import_omnipath_annotations</span><span class='op'>(</span>
     proteins <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'TP53'</span>, <span class='st'>'LMNA'</span><span class='op'>)</span>,
     resources <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'HPA_subcellular'</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Downloaded 8 annotation records.</span></div></pre>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
