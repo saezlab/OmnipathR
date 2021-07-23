@@ -123,7 +123,7 @@ resources. To run the whole pipeline with tiny networks use \code{
 \link{nichenet_test}}.
 }
 \examples{
-\donttest{
+\dontrun{
 nichenet_results <- nichenet_main(
     # altering some network resource parameters, the rest
     # of the resources will be loaded according to the defaults

@@ -38,7 +38,7 @@ Character: invisibly returns the version number of the cache
 Either the key or the URL (with POST and payload) must be provided.
 }
 \examples{
-\donttest{
+\dontrun{
 omnipath_cache_move_in('some/file.zip', url = 'the_download_address')
 }
 

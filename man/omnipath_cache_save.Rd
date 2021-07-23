@@ -36,7 +36,7 @@ Invisibly returns the `data`.
 Exports the object in RDS format, creates new cache record if necessary.
 }
 \examples{
-\donttest{
+\dontrun{
 mydata <- data.frame(a = c(1, 2, 3), b = c('a', 'b', 'c'))
 omnipath_cache_save(mydata, url = 'some_dummy_address')
 from_cache <- omnipath_cache_load(url = 'some_dummy_address')

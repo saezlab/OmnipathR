@@ -18,7 +18,7 @@ Builds signaling network prior knowledge for NicheNet from the InWeb
 InBioMap database.
 }
 \examples{
-\donttest{
+\dontrun{
 ib_signaling_network <- nichenet_signaling_network_inbiomap()
 }
 

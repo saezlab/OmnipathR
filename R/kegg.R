@@ -38,7 +38,7 @@
 #' @return A data frame (tibble) of interactions.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' kegg_pw <- kegg_pathways_download(simplify = TRUE)
 #' kegg_pw
 #' # # A tibble: 6,765 x 6
@@ -199,7 +199,7 @@ kegg_pathway_list <- function(){
 #'     extracted from the KGML file.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' tgf_pathway <- kegg_pathway_download('hsa04350')
 #' tgf_pathway
 #' }
@@ -336,7 +336,7 @@ kegg_pathway_download <- function(
 #'     pathway doesn't contain any relation, returns \code{NULL}.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' hsa04350 <- kegg_pathway_download('hsa04350', process = FALSE)
 #' tgf_pathway <- kegg_process(hsa04350$entries, hsa04350$relations)
 #' tgf_pathway
@@ -635,7 +635,7 @@ kegg_info_tbl <- function(tbl){
 #' @return A data frame (tibble) with UniProt IDs and pathway names.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' kegg_pw_annot <- kegg_pathway_annotations()
 #' kegg_pw_annot
 #' # # A tibble: 7,341 x 4

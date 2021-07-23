@@ -24,7 +24,7 @@ Returns `NULL`.
 Save the current package configuration
 }
 \examples{
-\donttest{
+\dontrun{
 # after this, all downloads will default to commercial licenses
 # i.e. the resources that allow only academic use will be excluded:
 options(omnipath.license = 'commercial')

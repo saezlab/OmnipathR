@@ -42,7 +42,7 @@ compile a data frame with weighted links from the top ligands to their
 top targets.
 }
 \examples{
-\donttest{
+\dontrun{
 networks <- nichenet_networks()
 expression <- nichenet_expression_data()
 optimization_results <- nichenet_optimization(networks, expression)

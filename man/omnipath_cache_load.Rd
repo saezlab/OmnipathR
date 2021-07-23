@@ -31,7 +31,7 @@ Object loaded from the cache RDS file.
 Loads the object from RDS format.
 }
 \examples{
-\donttest{
+\dontrun{
 # works only if you have already this item in the cache
 intercell_data <- omnipath_cache_load(url = paste0(
     'https://omnipathdb.org/intercell?resources=Adhesome,Almen2009,',

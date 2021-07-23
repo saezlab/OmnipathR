@@ -86,7 +86,7 @@ remap_dorothea_download <- function(){
 #' @return Data frame with TF-target relationships.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' remap_interactions <- remap_tf_target_download()
 #' remap_interactions
 #' # # A tibble: 9,546,470 x 4
@@ -153,7 +153,7 @@ remap_tf_target_download <- function(){
 #' @return Data frame with TF-target relationships.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' remap_interactions <- remap_filtered()
 #' nrow(remap_interactions)
 #' # [1] 145680

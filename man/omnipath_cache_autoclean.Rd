@@ -16,7 +16,7 @@ operations use \code{\link{omnipath_cache_remove}} and
 \code{\link{omnipath_cache_clean}}.
 }
 \examples{
-\donttest{
+\dontrun{
 omnipath_cache_autoclean()
 }
 

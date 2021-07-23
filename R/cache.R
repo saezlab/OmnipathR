@@ -326,7 +326,7 @@ omnipath_cache_search <- function(pattern, ...){
 #' @return Invisibly returns the cache database (list of cache records).
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # remove all cache data from the BioPlex database
 #' cache_records <- omnipath_cache_search(
 #'     'bioplex',
@@ -579,7 +579,7 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' omnipath_cache_wipe()
 #' # the cache is completely empty:
 #' print(omnipath.env$cache)
@@ -651,7 +651,7 @@ omnipath_cache_clean <- function(){
 #' @return Invisibl returns the cache database (list of cache records).
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' omnipath_cache_autoclean()
 #' }
 #'
@@ -760,7 +760,7 @@ omnipath_cache_get <- function(
 #' @return A cache version item.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # retrieve the latest version of the first cache record
 #' # found by the search keyword "bioplex"
 #' latest_bioplex <-
@@ -852,7 +852,7 @@ omnipath_cache_latest_or_new <- function(
 #' @return Object loaded from the cache RDS file.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # works only if you have already this item in the cache
 #' intercell_data <- omnipath_cache_load(url = paste0(
 #'     'https://omnipathdb.org/intercell?resources=Adhesome,Almen2009,',
@@ -955,7 +955,7 @@ omnipath_cache_load <- function(
 #' @return Invisibly returns the `data`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' mydata <- data.frame(a = c(1, 2, 3), b = c('a', 'b', 'c'))
 #' omnipath_cache_save(mydata, url = 'some_dummy_address')
 #' from_cache <- omnipath_cache_load(url = 'some_dummy_address')
@@ -1031,7 +1031,7 @@ omnipath_cache_save <- function(
 #'     version item.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' omnipath_cache_move_in('some/file.zip', url = 'the_download_address')
 #' }
 #'

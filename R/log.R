@@ -78,7 +78,7 @@ omnipath_logfile <- function(){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' omnipath_log()
 #' # then you can browse the log file, and exit with `q`
 #' }

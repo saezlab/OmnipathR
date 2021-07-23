@@ -34,7 +34,7 @@ and relations into a single data frame and translates the Gene Symbols to
 UniProt IDs.
 }
 \examples{
-\donttest{
+\dontrun{
 hsa04350 <- kegg_pathway_download('hsa04350', process = FALSE)
 tgf_pathway <- kegg_process(hsa04350$entries, hsa04350$relations)
 tgf_pathway

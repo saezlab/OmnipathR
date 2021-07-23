@@ -230,7 +230,7 @@ go_ontology_download <- function(
 #' instance.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' goslim <- go_annot_slim(organism = 'human', slim = 'generic')
 #' goslim
 #' # # A tibble: 276,371 x 8
