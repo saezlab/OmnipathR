@@ -1973,8 +1973,8 @@ get_complexes_databases <- function(...){
 #' dataset is disabled by default because the size of this data is
 #' around 1GB. We recommend to retrieve the annotations for a set of proteins
 #' or only from a few resources, depending on your interest. You can always
-#' download the full database from \url{
-#' https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv}
+#' download the full database from
+#' \url{https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv}
 #' using any standard R or \code{readr} method.
 #'
 #' @return A data frame containing different gene and complex annotations.

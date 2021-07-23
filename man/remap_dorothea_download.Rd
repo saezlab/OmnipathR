@@ -21,9 +21,7 @@ different filtering strategies that consisted of selecting only the
 top-scoring 100, 200, 500, and 1000 target genes for each TF."
 (\url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6673718/#s1title}).
 This function returns the top TF-target relationships as used in DoRothEA:
-\url{
-https://github.com/saezlab/dorothea/blob/master/inst/scripts/02_chip_seq.R
-}).
+\url{https://github.com/saezlab/dorothea/blob/master/inst/scripts/02_chip_seq.R}).
 }
 \examples{
 remap_interactions <- remap_dorothea_download()
