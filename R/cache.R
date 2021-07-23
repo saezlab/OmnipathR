@@ -1535,8 +1535,6 @@ omnipath_cache_add <- cache_locked %@% function(record, new = FALSE){
 
     }
 
-    # omnipath.env$cache <- omnipath.env$cache
-
 }
 
 
