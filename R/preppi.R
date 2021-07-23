@@ -40,6 +40,7 @@
 #' score. For an explanation of the scores see
 #' \url{https://honiglab.c2b2.columbia.edu/hfpd/help/Manual.html}.
 #' The minimum, median and maximum values of the scores:
+#'
 #'     | Score   | Minimum | Median   | Maximum            |
 #'     | ------- | ------- | -------- | ------------------ |
 #'     | str     |       0 |     5.5  |           6,495    |
