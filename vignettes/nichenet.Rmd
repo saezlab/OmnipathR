@@ -2,13 +2,11 @@
 title: "Using NicheNet with OmnipathR"
 author:
   - name: Denes Turei
-    affiliation: unihd
     email: turei.denes@gmail.com
     correspondance: true
   - name: Alberto Valdeolivas
-    affiliation: unihd
   - name: Julio Saez-Rodriguez
-    affiliation: unihd
+    affiliation: Institute for Computational Biomedicine, Heidelberg University
 institute:
   - unihd: Institute for Computational Biomedicine, Heidelberg University
 package: OmnipathR

@@ -11,7 +11,13 @@ navbar:
      homepage:
        icon: "fas fa-university"
        href: https://omnipathdb.org/
-
+  type: dark
+  bg: primary
 template:
   params:
     ganalytics: UA-119440867-10
+    highlightcss: false
+  bootstrap: 4
+  bootswatch: cosmo
+  bslib:
+    primary: "#007B7F"

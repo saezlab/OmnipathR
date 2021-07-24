@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/404.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/bioc_workshop.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/drug_targets.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/gene_ontology.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/nichenet.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/authors.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/index.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/news/index.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/OmnipathR.html</loc>
@@ -182,6 +212,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/inbiomap_raw.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/index.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/interaction_graph.html</loc>
@@ -512,20 +545,5 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/zenodo_download.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/bioc_workshop.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/drug_targets.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/gene_ontology.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/nichenet.html</loc>
-  </url>
-  <url>
-    <loc>https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html</loc>
   </url>
 </urlset>

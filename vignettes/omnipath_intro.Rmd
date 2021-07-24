@@ -2,13 +2,11 @@
 title: "OmnipathR: an R client for the OmniPath web service"
 author:
 - name: Alberto Valdeolivas
-  affiliation: Institute for Computational Biomedicine, Heidelberg University
   email: alvaldeolivas@gmail.com
 - name: Attila Gabor
-  affiliation: Institute for Computational Biomedicine, Heidelberg University
   email: attila.gabor@bioquant.uni-heidelberg.de
 - name: Denes Turei
-  affiliation: Institute for Computational Biomedicine, Heidelberg University
+  email: turei.denes@gmail.com
 - name: Julio Saez-Rodriguez
   affiliation: Institute for Computational Biomedicine, Heidelberg University
 package: OmnipathR
@@ -379,8 +377,8 @@ OPI_g_2 <-interaction_graph(interactions = interactions_miRNA_GLI1)
 ```
 
 ```{r fig4, dpi=300, echo = FALSE, fig.cap="miRNA-TF-target network. Schematic
-    network of the miRNA (red square nodes) targeting \textit{GLI1} (yellow
-    node) and the genes regulated by this TF (blue round nodes)."}
+network of the miRNA (red square nodes) targeting \textit{GLI1} (yellow
+node) and the genes regulated by this TF (blue round nodes)."}
 ## We print the union of both previous graphs
 par(mar=c(0.1,0.1,0.1,0.1))
 plot(OPI_g_1 %u% OPI_g_2, vertex.label.color="black",

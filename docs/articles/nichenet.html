@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="OmnipathR">
 <title>Using NicheNet with OmnipathR • OmnipathR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -12,12 +13,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="../deps/bs3compat-0.2.5.1/tabs.js"></script><script src="../deps/bs3compat-0.2.5.1/bs3compat.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Using NicheNet with OmnipathR">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Using NicheNet with OmnipathR">
 <meta property="og:description" content="OmnipathR">
 <meta property="og:image" content="https://saezlab.github.io/OmnipathR/logo.svg">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -31,108 +33,78 @@
   gtag('config', 'UA-119440867-10');
 </script>
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">OmnipathR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">3.1.2</span>
-      </span>
-    </div>
+<body data-spy="scroll" data-target="#toc" data-headroom>
+    
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+      <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
+    <a class="navbar-brand mb-0 h1" href="../index.html">OmnipathR</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <button type="button" id="version-badge" class="badge badge-default d-none d-lg-block" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Released version">3.1.2</button>
+
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto ml-3">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
-    </li>
-    <li>
-      <a href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
-    </li>
-    <li>
-      <a href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
-    </li>
-    <li>
-      <a href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
-    </li>
-    <li>
-      <a href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
-    </li>
-  </ul>
-</li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/saezlab/OmnipathR/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://twitter.com/omnipathdb">
-    <span class="fab fa-twitter fa-lg"></span>
-     
-  </a>
-</li>
-<li>
-  <a href="https://omnipathdb.org/">
-    <span class="fas fa-university"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
+    <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
   </div>
-<!--/.container -->
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control mr-sm-2" aria-label="Search" name="search-input" data-search-index="/search.json" id="search-input" placeholder="Search..." autocomplete="off">
+</form>
+
+      <ul class="navbar-nav ml-1">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/saezlab/OmnipathR/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://twitter.com/omnipathdb">
+    <span class="fab fa fab fa-twitter fa-lg"></span>
+     
+  </a>
+</li>
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://omnipathdb.org/">
+    <span class="fas fa fas fa-university"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
-
-      
-
-      </header><script src="nichenet_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+  </div>
+</nav><div class="container template-article">
+<script src="nichenet_files/header-attrs-2.9.5/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Using NicheNet with OmnipathR</h1>
-                        <h4 class="author">Denes Turei</h4>
+    <img src="../package-logo.png" class="pkg-logo" alt=""><div class="page-header pb-2 mt-4 mb-2 border-bottom toc-ignore">
+      <h1 class="display-4" data-toc-skip>Using NicheNet with OmnipathR</h1>
+                        <h4 data-toc-skip class="author">Denes Turei</h4>
+                  <a class="author_email" href="mailto:#"></a><a href="mailto:turei.denes@gmail.com" class="email">turei.denes@gmail.com</a>
+      
+                              <h4 data-toc-skip class="author">Alberto Valdeolivas</h4>
+                                    <h4 data-toc-skip class="author">Julio Saez-Rodriguez</h4>
             <address class="author_afil">
-      unihd<br><a class="author_email" href="mailto:#"></a><a href="mailto:turei.denes@gmail.com" class="email">turei.denes@gmail.com</a>
-      </address>
-                              <h4 class="author">Alberto Valdeolivas</h4>
-            <address class="author_afil">
-      unihd<br><h4 class="author">Julio Saez-Rodriguez</h4>
-            <address class="author_afil">
-      unihd<br><small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/master/vignettes/nichenet.Rmd"><code>vignettes/nichenet.Rmd</code></a></small>
-      <div class="hidden name"><code>nichenet.Rmd</code></div>
+      Institute for Computational Biomedicine, Heidelberg University<br><small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/master/vignettes/nichenet.Rmd" class="external-link"><code>vignettes/nichenet.Rmd</code></a></small>
+      <div class="d-none name"><code>nichenet.Rmd</code></div>
 
     </address>
-</address>
 </div>
 
     
@@ -143,76 +115,76 @@
     
 <div id="status" class="section level1">
 <h1 class="hasAnchor">
-<a href="#status" class="anchor"></a>Status</h1>
-<p>The integration between NicheNet and OmniPath is a fresh development, as of May 2021 we have already tested the basic functionality. To use the features described here you will need the <a href="https://github.com/saezlab/OmnipathR">latest git version of OmnipathR</a>, which we update often as we test and improve the elements of the pipeline. Bug reports, questions and suggestions are welcome, please open an issue on <a href="https://github.com/saezlab/OmnipathR/issues">github</a>.</p>
+<a href="#status" class="anchor" aria-hidden="true"></a>Status</h1>
+<p>The integration between NicheNet and OmniPath is a fresh development, as of May 2021 we have already tested the basic functionality. To use the features described here you will need the <a href="https://github.com/saezlab/OmnipathR" class="external-link">latest git version of OmnipathR</a>, which we update often as we test and improve the elements of the pipeline. Bug reports, questions and suggestions are welcome, please open an issue on <a href="https://github.com/saezlab/OmnipathR/issues" class="external-link">github</a>.</p>
 </div>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The OmnipathR package contains methods to build NichNet[1] format networks from OmniPath[2] data and from the resources used in the original NicheNet study. With a few exceptions, almost all resources used originally by NicheNet are available by OmnipathR both in their raw format or after minimal preprocessing, and in the format suitable for NicheNet. However, the networks built by OmnipathR are not completely identical with the ones used by NicheNet due to the complexity of processing such a large amount of data. The advantage of building these networks with OmnipathR is the transparent and reproducible process, as the origin of any data record can be easily traced back to its original source. The data used in the NicheNet publication is deposited at <a href="https://zenodo.org/record/3260758">Zenodo</a>. The other part of the prior knowledge used by NicheNet is a collection of expression data from ligand perturbation experiments. In OmnipathR this is taken directly from the Zenodo repository.</p>
-<p>Apart from building the prior knowledge, OmnipathR provides a number of glue methods which connect elements of the NicheNet workflow, ultimately making it possible to run everything with a single function call, starting from the processed transcriptomics data and going until the predicted ligand activities. To implement such a workflow we followed the <a href="https://workflows.omnipathdb.org/nichenet1.html">analysis from the case study</a> in the <a href="https://www.biorxiv.org/content/10.1101/2020.08.03.221242v2">OmniPath paper</a> and the <a href="https://github.com/saeyslab/nichenetr/tree/master/vignettes">vignettes</a> from NicheNet. The workflow consists of thin wrappers around some of the NicheNet methods. Parameters for these methods can be provided from the top level call.</p>
-<p>The transcriptomics data is the main input for the pipeline which is specific for the study. The transcriptomics data can be processed by standard tools, such as <a href="https://bioconductor.org/packages/release/bioc/html/DESeq.html">DESeq</a>[3] for bulk and <a href="https://satijalab.org/seurat/">Seurat</a>[4] for single-cell transcriptomics. For the latter more guidance is available in the <a href="https://github.com/saeyslab/nichenetr/blob/master/vignettes/%20seurat_wrapper.md">NicheNet vignettes</a>. The pipeline presented here only requires the list of genes expressed in the transmitter and receiver cells (in case of autocrine signaling these are the same); and a list with genes of interest. Genes of interest might come from the investigation subject or gene set enrichment analysis (see an example <a href="https://workflows.omnipathdb.org/nichenet1.html">here</a>).</p>
+<a href="#introduction" class="anchor" aria-hidden="true"></a>Introduction</h1>
+<p>The OmnipathR package contains methods to build NichNet[1] format networks from OmniPath[2] data and from the resources used in the original NicheNet study. With a few exceptions, almost all resources used originally by NicheNet are available by OmnipathR both in their raw format or after minimal preprocessing, and in the format suitable for NicheNet. However, the networks built by OmnipathR are not completely identical with the ones used by NicheNet due to the complexity of processing such a large amount of data. The advantage of building these networks with OmnipathR is the transparent and reproducible process, as the origin of any data record can be easily traced back to its original source. The data used in the NicheNet publication is deposited at <a href="https://zenodo.org/record/3260758" class="external-link">Zenodo</a>. The other part of the prior knowledge used by NicheNet is a collection of expression data from ligand perturbation experiments. In OmnipathR this is taken directly from the Zenodo repository.</p>
+<p>Apart from building the prior knowledge, OmnipathR provides a number of glue methods which connect elements of the NicheNet workflow, ultimately making it possible to run everything with a single function call, starting from the processed transcriptomics data and going until the predicted ligand activities. To implement such a workflow we followed the <a href="https://workflows.omnipathdb.org/nichenet1.html" class="external-link">analysis from the case study</a> in the <a href="https://www.biorxiv.org/content/10.1101/2020.08.03.221242v2" class="external-link">OmniPath paper</a> and the <a href="https://github.com/saeyslab/nichenetr/tree/master/vignettes" class="external-link">vignettes</a> from NicheNet. The workflow consists of thin wrappers around some of the NicheNet methods. Parameters for these methods can be provided from the top level call.</p>
+<p>The transcriptomics data is the main input for the pipeline which is specific for the study. The transcriptomics data can be processed by standard tools, such as <a href="https://bioconductor.org/packages/release/bioc/html/DESeq.html" class="external-link">DESeq</a>[3] for bulk and <a href="https://satijalab.org/seurat/" class="external-link">Seurat</a>[4] for single-cell transcriptomics. For the latter more guidance is available in the <a href="https://github.com/saeyslab/nichenetr/blob/master/vignettes/%20seurat_wrapper.md" class="external-link">NicheNet vignettes</a>. The pipeline presented here only requires the list of genes expressed in the transmitter and receiver cells (in case of autocrine signaling these are the same); and a list with genes of interest. Genes of interest might come from the investigation subject or gene set enrichment analysis (see an example <a href="https://workflows.omnipathdb.org/nichenet1.html" class="external-link">here</a>).</p>
 </div>
 <div id="run-the-workflow-by-a-single-call" class="section level1">
 <h1 class="hasAnchor">
-<a href="#run-the-workflow-by-a-single-call" class="anchor"></a>Run the workflow by a single call</h1>
+<a href="#run-the-workflow-by-a-single-call" class="anchor" aria-hidden="true"></a>Run the workflow by a single call</h1>
 <p>The <code>nichenet_main</code> function executes all the workflow elements, hence it can be used to run the complete workflow. Here we show it as an example, and in the next sections we take a closer look at the individual steps. The first four arguments comes from the study data and objective, as discussed above. All parameters of the workflow can be overridden here, for example, for the <code>mlrbo_optimization</code> we override the <code>ncores</code> argument, and exclude CPDB from the signaling network and set the confidence threshold for EVEX.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saeyslab/nichenetr">nichenetr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saeyslab/nichenetr" class="external-link">nichenetr</a></span><span class="op">)</span>
 
 <span class="va">nichenet_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_main.html">nichenet_main</a></span><span class="op">(</span>
     expressed_genes_transmitter <span class="op">=</span> <span class="va">expressed_genes_transmitter</span>,
     expressed_genes_receiver <span class="op">=</span> <span class="va">expressed_genes_receiver</span>,
     genes_of_interest <span class="op">=</span> <span class="va">genes_of_interest</span>,
     background_genes <span class="op">=</span> <span class="va">background_genes</span>,
-    signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
         cpdb <span class="op">=</span> <span class="cn">NULL</span>,
-        evex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>min_confidence <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span>
+        evex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_confidence <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span>
     <span class="op">)</span>,
-    gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>only_omnipath <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>only_omnipath <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
     n_top_ligands <span class="op">=</span> <span class="fl">20</span>,
-    mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ncores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+    mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 </div>
 <div id="only-model-building" class="section level1">
 <h1 class="hasAnchor">
-<a href="#only-model-building" class="anchor"></a>Only model building</h1>
+<a href="#only-model-building" class="anchor" aria-hidden="true"></a>Only model building</h1>
 <p>Without transcriptomics data, it is possible to build a NicheNet model which later can be used for the ligand activity prediction. Hence if the first four arguments above are <code>NULL</code> the pipeline will run only the model building. Still, in this tutorial we wrap all blocks into <code>eval = FALSE</code> because the model optimization is computationally intensive, it might take hours to run. To create the NicheNet model it’s enough to call <code>nichenet_main</code> without arguments, all further arguments are optional override of package defaults.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nichenet_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_main.html">nichenet_main</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="installing-packages-and-loading-nichenetr" class="section level1">
 <h1 class="hasAnchor">
-<a href="#installing-packages-and-loading-nichenetr" class="anchor"></a>Installing packages and loading nichenetr</h1>
+<a href="#installing-packages-and-loading-nichenetr" class="anchor" aria-hidden="true"></a>Installing packages and loading nichenetr</h1>
 <p>Before running the pipeline it’s necessary to install <code>nichenetr</code> and its dependencies. The <code>nichenetr</code> package is available only from github, while the dependencies are distributed in standard repositories like CRAN.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
-<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">'saeyslab/nichenetr'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
+<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'saeyslab/nichenetr'</span><span class="op">)</span></code></pre></div>
 <p>This procedure should install the dependencies as well. Some more specific dependencies are <code>mlrMBO</code>, <code>parallelMap</code>, <code>ParamHelpers</code> and <code>smoof</code>.</p>
 <p>The <code>nichenetr</code> package is suggested by <code>OmnipathR</code> but not loaded and attached by default. This might cause issues, for example NicheNet requires access to some of its lazy loaded external data. To address this, you can either attach <code>nichenetr</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saeyslab/nichenetr">nichenetr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saeyslab/nichenetr" class="external-link">nichenetr</a></span><span class="op">)</span></code></pre></div>
 <p>Or call a function which loads the datasets into the global environment, so NicheNet can access them:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nichenet_workarounds.html">nichenet_workarounds</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="testing-the-pipeline" class="section level1">
 <h1 class="hasAnchor">
-<a href="#testing-the-pipeline" class="anchor"></a>Testing the pipeline</h1>
+<a href="#testing-the-pipeline" class="anchor" aria-hidden="true"></a>Testing the pipeline</h1>
 <p>With a fresh setup, as a first step it is recommended to test the pipeline, to make sure it is able to run in your particular environment, all packages are installed and loaded properly. The optimization process takes hours to run, while the test included in <code>OmnipathR</code> takes only around 10 minutes. This way you can avoid some errors to come up after running the analysis already for many hours. Although it’s never guaranteed that you won’t have errors in the pipeline as the outcome depends on the input data and certain conditions are not handled in <code>nichenetr</code>, <code>mlr</code> and <code>mlrMBO</code>. If you get an error during the optimization process, start it over a few times to see if it’s consistent. Sometimes it helps also to restart your R session. I would recommend to try it around 10 times before suspecting a bug. See more details in the docs of <code>nichenet_test</code>.</p>
 <p>The <code>nichenet_test</code> function builds a tiny network and runs the pipeline with a highly reduced number of parameters and iteration steps in the optimization. Also it inputs dummy gene sets as genes of interest and background genes.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/nichenet_workarounds.html">nichenet_workarounds</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nichenet_test.html">nichenet_test</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="workflow-steps" class="section level1">
 <h1 class="hasAnchor">
-<a href="#workflow-steps" class="anchor"></a>Workflow steps</h1>
+<a href="#workflow-steps" class="anchor" aria-hidden="true"></a>Workflow steps</h1>
 <div id="networks" class="section level2">
 <h2 class="hasAnchor">
-<a href="#networks" class="anchor"></a>Networks</h2>
+<a href="#networks" class="anchor" aria-hidden="true"></a>Networks</h2>
 <p>NicheNet requires three types of interactions: signaling, ligand-receptor (lr) and gene regulatory (gr). All these are collected from various resources. In OmnipathR a top level function, <code>nichenet_networks</code> manages the build of all the three networks. It returns a list with three data frames:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">networks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_networks.html">nichenet_networks</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -223,19 +195,19 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">networks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_networks.html">nichenet_networks</a></span><span class="op">(</span>
     only_omnipath <span class="op">=</span> <span class="cn">TRUE</span>,
-    signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-        omnipath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-            resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'SIGNOR'</span>, <span class="st">'PhosphoSite'</span><span class="op">)</span>
+    signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+        omnipath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+            resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SIGNOR'</span>, <span class="st">'PhosphoSite'</span><span class="op">)</span>
         <span class="op">)</span>
     <span class="op">)</span>,
-    lr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-        omnipath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-            transmitter_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'ligand'</span>, <span class="st">'secreted_enzyme'</span><span class="op">)</span><span class="op">)</span>,
-            receiver_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'receptor'</span>, <span class="st">'transporter'</span><span class="op">)</span><span class="op">)</span>
+    lr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+        omnipath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+            transmitter_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'ligand'</span>, <span class="st">'secreted_enzyme'</span><span class="op">)</span><span class="op">)</span>,
+            receiver_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'receptor'</span>, <span class="st">'transporter'</span><span class="op">)</span><span class="op">)</span>
         <span class="op">)</span>
     <span class="op">)</span>,
-    gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-        omnipath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+        omnipath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
             resources <span class="op">=</span> <span class="st">'DoRothEA'</span>,
             dorothea_levels <span class="op">=</span> <span class="st">'A'</span>
         <span class="op">)</span>
@@ -243,15 +215,15 @@
 <span class="op">)</span></code></pre></div>
 <div id="signaling-network" class="section level3">
 <h3 class="hasAnchor">
-<a href="#signaling-network" class="anchor"></a>Signaling network</h3>
+<a href="#signaling-network" class="anchor" aria-hidden="true"></a>Signaling network</h3>
 <p>The function <code>nichenet_signaling_network</code> builds the signaling network from all resources with the default settings. Each argument of this function is a list of arguments for a single resource. If an argument is set to <code>NULL</code>, the resource will be omitted. In the example below we set custom confidence score thresholds for ConsensusPathDB and EVEX, while use no data from Pathway Commons. In this case, the rest of the resources will be loaded with their default parameters:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">signaling_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_signaling_network.html">nichenet_signaling_network</a></span><span class="op">(</span>
-    cpdb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    cpdb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
         complex_max_size <span class="op">=</span> <span class="fl">1</span>,
         min_score <span class="op">=</span> <span class="fl">.98</span>
     <span class="op">)</span>,
-    evex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    evex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
         min_confidence <span class="op">=</span> <span class="fl">2</span>
     <span class="op">)</span>,
     pathwaycommons <span class="op">=</span> <span class="cn">NULL</span>
@@ -260,7 +232,7 @@
 </div>
 <div id="raw-data-from-network-resources" class="section level3">
 <h3 class="hasAnchor">
-<a href="#raw-data-from-network-resources" class="anchor"></a>Raw data from network resources</h3>
+<a href="#raw-data-from-network-resources" class="anchor" aria-hidden="true"></a>Raw data from network resources</h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">evex_signaling</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_signaling_network_evex.html">nichenet_signaling_network_evex</a></span><span class="op">(</span>top_confidence <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span></code></pre></div>
 <p>The network format of NicheNet is very minimalistic, it contains only the interacting partners and the resource. To investigate the data more in depth, we recommend to look at the original data. The methods retrieving data from resources all end by <code>_download</code> for foreign resources and start by <code>import_</code> for OmniPath. For example, to access the EVEX data as it is provided by the resource:</p>
@@ -269,15 +241,15 @@
 </div>
 <div id="ligand-receptor-interactions-and-gene-regulation" class="section level3">
 <h3 class="hasAnchor">
-<a href="#ligand-receptor-interactions-and-gene-regulation" class="anchor"></a>Ligand-receptor interactions and gene regulation</h3>
+<a href="#ligand-receptor-interactions-and-gene-regulation" class="anchor" aria-hidden="true"></a>Ligand-receptor interactions and gene regulation</h3>
 <p>These networks work exactly the same way as the signaling network: they are built by the <code>nichenet_lr_network</code> and <code>nichenet_gr_network</code> functions. Currently the following ligand-receptor network resources are available in OmnipathR: OmniPath, Ramilowski et al. 2015, Guide to Pharmacology (IUPHAR/BPS); and in the gene regulatory network: OmniPath, Harmonizome, RegNetwork, HTRIdb, ReMap, EVEX, PathwayCommons and TRRUST.</p>
 <div id="the-omnipath-ligand-receptor-network" class="section level4">
 <h4 class="hasAnchor">
-<a href="#the-omnipath-ligand-receptor-network" class="anchor"></a>The OmniPath ligand-receptor network</h4>
+<a href="#the-omnipath-ligand-receptor-network" class="anchor" aria-hidden="true"></a>The OmniPath ligand-receptor network</h4>
 <p>The ligand-receptor interactions from OmniPath are special: these cover broader categories than only ligands and receptors. It includes also secreted enzymes, transporters, etc. Also the <code>import_intercell_network</code> function, responsible for creating the OmniPath LR network, by default returns the most complete network. However, this contains a considerable number of interactions which might be false positives in the context of intercellular communication. It is highly recommended to apply quality filtering on this network, using the <code>quality_filter_param</code> argument of the functions in the NicheNet pipeline. The default settings already ensure a certain level of filtering, read more about the options in the docs of <code>filter_intercell_network</code>. Passing the <code>high_confidence = TRUE</code> argument by <code>lr_network = list(omnipath = list(high_confidence = TRUE))</code> results a quite stringent filtering, it’s better to find your preferred options and set them by <code>quality_filter_param</code>. An example how to pass quality options from the top of the pipeline:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nichenet_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_main.html">nichenet_main</a></span><span class="op">(</span>
-    quality_filter_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    quality_filter_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
         min_curation_effort <span class="op">=</span> <span class="fl">1</span>,
         consensus_percentile <span class="op">=</span> <span class="fl">30</span>
     <span class="op">)</span>
@@ -286,7 +258,7 @@
 </div>
 <div id="small-network" class="section level3">
 <h3 class="hasAnchor">
-<a href="#small-network" class="anchor"></a>Small network</h3>
+<a href="#small-network" class="anchor" aria-hidden="true"></a>Small network</h3>
 <p>Initially for testing purposes we included an option to create a small network (few thousands interactions instead of few millions), using only a high quality subset of OmniPath data. It might be interesting to try the analysis with this lower coverage but higher confidence network:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nichenet_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_main.html">nichenet_main</a></span><span class="op">(</span>small <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -295,8 +267,8 @@
 </div>
 <div id="ligand-perturbation-experiments" class="section level2">
 <h2 class="hasAnchor">
-<a href="#ligand-perturbation-experiments" class="anchor"></a>Ligand perturbation experiments</h2>
-<p>The expression data from the collection of over a hundred of ligand perturbation experiments is available in the data deposited by NicheNet authors in <a href="https://zenodo.org/record/3260758">Zenodo</a>, in the <code>expression_settings.rds</code> file. The function below downloads and imports this data:</p>
+<a href="#ligand-perturbation-experiments" class="anchor" aria-hidden="true"></a>Ligand perturbation experiments</h2>
+<p>The expression data from the collection of over a hundred of ligand perturbation experiments is available in the data deposited by NicheNet authors in <a href="https://zenodo.org/record/3260758" class="external-link">Zenodo</a>, in the <code>expression_settings.rds</code> file. The function below downloads and imports this data:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">expression</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_expression_data.html">nichenet_expression_data</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>If there is any ligand which is missing from the ligand-receptor network, probably we want to remove it:</p>
@@ -309,24 +281,24 @@
 </div>
 <div id="model-optimization" class="section level2">
 <h2 class="hasAnchor">
-<a href="#model-optimization" class="anchor"></a>Model optimization</h2>
+<a href="#model-optimization" class="anchor" aria-hidden="true"></a>Model optimization</h2>
 <p>In this step we optimize the parameters of the model and assign weights to the network resources, especially based on the ligand perturbation data. The <code>nichenet_optimization</code> function is a wrapper around <code>nichenetr::mlrmbl_optimization</code>. The arguments for this function, and the objective function can be overriden, for example it’s a good idea to set the cores according to our machine’s CPU count:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">optimization_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_optimization.html">nichenet_optimization</a></span><span class="op">(</span>
     networks <span class="op">=</span> <span class="va">networks</span>,
     expression <span class="op">=</span> <span class="va">expression</span>,
-    mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ncores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+    mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <p>This function takes very long, even hours to run. Before it returns the results, it saves them into an RDS file. This and the further RDS files are saved into the <code>nichenet_results</code> directory by default, it can be changed by the option <code>omnipath.nichenet_results_dir</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>omnipath.nichenet_results_dir <span class="op">=</span> <span class="st">'my/nichenet/dir'</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>omnipath.nichenet_results_dir <span class="op">=</span> <span class="st">'my/nichenet/dir'</span><span class="op">)</span>
 <span class="fu"><a href="../reference/nichenet_results_dir.html">nichenet_results_dir</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co"># [1] "my/nichenet/dir"</span></code></pre></div>
 </div>
 <div id="model-build" class="section level2">
 <h2 class="hasAnchor">
-<a href="#model-build" class="anchor"></a>Model build</h2>
-<p>The next major part is to build a model which connects ligands to targets, i.e. which genes are affected in their expression by which of the ligands. Again, we use a wrapper around NicheNet functions: the <code>nichenet_build_model</code> calls <code>nichenetr::onstruct_weighted_networks</code> and <code><a href="https://rdrr.io/pkg/nichenetr/man/apply_hub_corrections.html">nichenetr::apply_hub_corrections</a></code>. If the argument <code>weights</code> is <code>FALSE</code>, the optimized resource weights are not used, all resources considered with the same weight. The results are saved automatically into an RDS.</p>
+<a href="#model-build" class="anchor" aria-hidden="true"></a>Model build</h2>
+<p>The next major part is to build a model which connects ligands to targets, i.e. which genes are affected in their expression by which of the ligands. Again, we use a wrapper around NicheNet functions: the <code>nichenet_build_model</code> calls <code>nichenetr::onstruct_weighted_networks</code> and <code><a href="https://rdrr.io/pkg/nichenetr/man/apply_hub_corrections.html" class="external-link">nichenetr::apply_hub_corrections</a></code>. If the argument <code>weights</code> is <code>FALSE</code>, the optimized resource weights are not used, all resources considered with the same weight. The results are saved automatically into an RDS.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nichenet_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_build_model.html">nichenet_build_model</a></span><span class="op">(</span>
     optimization_results <span class="op">=</span> <span class="va">optimization_results</span>,
@@ -335,8 +307,8 @@
 </div>
 <div id="ligand-target-matrix" class="section level2">
 <h2 class="hasAnchor">
-<a href="#ligand-target-matrix" class="anchor"></a>Ligand-target matrix</h2>
-<p>Finally, we produce a ligand-target matrix, a sparse matrix with weighted connections from ligands to targets. The function <code>nichenet_ligand_target_matrix</code> is a wrapper around <code><a href="https://rdrr.io/pkg/nichenetr/man/construct_ligand_target_matrix.html">nichenetr::construct_ligand_target_matrix</a></code>. As usual the results are exported to an RDS. This is the last step of the NicheNet model building process.</p>
+<a href="#ligand-target-matrix" class="anchor" aria-hidden="true"></a>Ligand-target matrix</h2>
+<p>Finally, we produce a ligand-target matrix, a sparse matrix with weighted connections from ligands to targets. The function <code>nichenet_ligand_target_matrix</code> is a wrapper around <code><a href="https://rdrr.io/pkg/nichenetr/man/construct_ligand_target_matrix.html" class="external-link">nichenetr::construct_ligand_target_matrix</a></code>. As usual the results are exported to an RDS. This is the last step of the NicheNet model building process.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lt_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_ligand_target_matrix.html">nichenet_ligand_target_matrix</a></span><span class="op">(</span>
     <span class="va">nichenet_model</span><span class="op">$</span><span class="va">weighted_networks</span>,
@@ -346,17 +318,17 @@
 </div>
 <div id="ligand-activities" class="section level2">
 <h2 class="hasAnchor">
-<a href="#ligand-activities" class="anchor"></a>Ligand activities</h2>
+<a href="#ligand-activities" class="anchor" aria-hidden="true"></a>Ligand activities</h2>
 <p>In this step we ues the NicheNet model to infer ligand activities from our transcriptomics data. The last three arguments are all character vectors with gene symbols. For genes of interest, here we select 50 random genes from the targets in the ligand-target matrix. Also just for testing purposes, we consider all genes in the network to be expressed in both the transmitter and receiver cells.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">genes_of_interest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">ligand_target_matrix</span><span class="op">)</span>, <span class="fl">50</span><span class="op">)</span>
-<span class="va">background_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">ligand_target_matrix</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">genes_of_interest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">ligand_target_matrix</span><span class="op">)</span>, <span class="fl">50</span><span class="op">)</span>
+<span class="va">background_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">ligand_target_matrix</span><span class="op">)</span>,
     <span class="va">genes_of_interest</span>
 <span class="op">)</span>
-<span class="va">expressed_genes_transmitter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">union</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">networks</span>, <span class="st">'from'</span><span class="op">)</span><span class="op">)</span>,
-    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">networks</span>, <span class="st">'to'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">expressed_genes_transmitter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">union</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">networks</span>, <span class="st">'from'</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">networks</span>, <span class="st">'to'</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="va">expressed_genes_receiver</span> <span class="op">&lt;-</span> <span class="va">expressed_genes_transmitter</span>
 
@@ -380,12 +352,12 @@
 </div>
 <div id="further-steps" class="section level1">
 <h1 class="hasAnchor">
-<a href="#further-steps" class="anchor"></a>Further steps</h1>
-<p>The NicheNet workflow in OmnipathR is implemented until this point. The results can be visualized by the methods included in <code>nichenetr</code>, can be analysed for enrichment of functional properties, or the signaling network connecting the ligands to targets can be reconstructed and analysed, as it’s shown in the OmniPath <a href="https://workflows.omnipathdb.org/nichenet1.html">case study</a>.</p>
+<a href="#further-steps" class="anchor" aria-hidden="true"></a>Further steps</h1>
+<p>The NicheNet workflow in OmnipathR is implemented until this point. The results can be visualized by the methods included in <code>nichenetr</code>, can be analysed for enrichment of functional properties, or the signaling network connecting the ligands to targets can be reconstructed and analysed, as it’s shown in the OmniPath <a href="https://workflows.omnipathdb.org/nichenet1.html" class="external-link">case study</a>.</p>
 </div>
 <div id="session-info" class="section level1 unnumbered">
 <h1 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h1>
+<a href="#session-info" class="anchor" aria-hidden="true"></a>Session info</h1>
 <pre><code>## R version 4.1.0 (2021-05-18)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Arch Linux
@@ -414,39 +386,42 @@
 ##  [7] stringr_1.4.0       tools_4.1.0         xfun_0.24          
 ## [10] jquerylib_0.1.4     htmltools_0.5.1.1   systemfonts_1.0.2  
 ## [13] yaml_2.2.1          digest_0.6.27       rprojroot_2.0.2    
-## [16] pkgdown_1.6.1       crayon_1.4.1        bookdown_0.22      
+## [16] pkgdown_1.6.1.9001  crayon_1.4.1        bookdown_0.22      
 ## [19] textshaping_0.3.5   BiocManager_1.30.16 sass_0.4.0         
 ## [22] fs_1.5.0            memoise_2.0.0       cachem_1.0.5       
-## [25] evaluate_0.14       rmarkdown_2.9       stringi_1.7.3      
+## [25] evaluate_0.14       rmarkdown_2.9.5     stringi_1.7.3      
 ## [28] compiler_4.1.0      bslib_0.2.5.1       desc_1.3.0         
 ## [31] jsonlite_1.7.2</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<a href="#references" class="anchor" aria-hidden="true"></a>References</h1>
 <p>[1] R Browaeys, W Saelens and Y Saeys (2020) NicheNet: modeling intercellular communication by linking ligands to target genes. <em>Nat Methods</em> 17, 159–162</p>
 <p>[2] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, M Klein, O Ivanova, M Olbei, A Gabor, F Theis, D Modos, T Korcsmaros and J Saez-Rodriguez (2021) Integrated intra- and intercellular signaling knowledge for multicellular omics analysis. <em>Molecular Systems Biology</em> 17:e9923</p>
 <p>[3] S Anders, W Huber (2010) Differential expression analysis for sequence count data. <em>Genome Biol</em> 11, R106</p>
 <p>[4] Y Hao, S Hao, E Andersen-Nissen, WM Mauck, S Zheng, A Butler, MJ Lee, AJ Wilk, C Darby, M Zagar, P Hoffman, M Stoeckius, E Papalexi, EP Mimitou, J Jain, A Srivastava, T Stuart, LB Fleming, B Yeung, AJ Rogers, JM McElrath, CA Blish, R Gottardo, P Smibert and R Satija (2020) Integrated analysis of multimodal single-cell data. <em>bioRxiv</em> 2020.10.12.335331</p>
 </div>
   </div>
+ <div class="col-md-3 d-none d-md-block" id="pkgdown-sidebar">
+        <div class="sticky-top">
+    <nav id="toc"><h2 data-toc-skip>Contents</h2>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
     </nav>
 </div>
+      </div>
 
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
+      <footer><div class="pkgdown-footer-left">
+  <p></p>
+<p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="pkgdown-footer-right">
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -454,6 +429,7 @@
 
   
 
+  
 
   </body>
 </html>

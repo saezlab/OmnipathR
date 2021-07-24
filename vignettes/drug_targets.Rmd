@@ -2,10 +2,8 @@
 title: "Building protein networks around drug-targets using OmnipathR"
 author:
 - name: Attila Gabor
-  affiliation: Institute for Computational Biomedicine, Heidelberg University
   email: attila.gabor@bioquant.uni-heidelberg.de
 - name: Alberto Valdeolivas
-  affiliation: Institute for Computational Biomedicine, Heidelberg University
 - name: Julio Saez-Rodriguez
   affiliation: Institute for Computational Biomedicine, Heidelberg University
 package: OmnipathR
