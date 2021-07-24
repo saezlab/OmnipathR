@@ -74,7 +74,7 @@ sites:
 
   <https://github.com/saezlab/pypath/blob/master/webservice.rst>
 
-  <https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html>
+  <https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html>
 
 
 ## Installation
@@ -113,7 +113,7 @@ install_github('saezlab/OmnipathR')
 To get started, we strongly recommend to read our main vignette in order to deal
 with the different types of queries and handle the data they return:
 
-  <https://saezlab.github.io/OmnipathR/articles/OmnipathMainVignette.html>
+  <https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html>
 
 You can also check the manual:
 
