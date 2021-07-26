@@ -1148,9 +1148,11 @@ import_LigrecExtra_Interactions <- function(...){
 }
 
 
-#' Imports all post-translational interactions from OmniPath
+#' All post-translational interactions from OmniPath
 #'
-#' Imports the dataset from all post-translational datasets of OmniPath.
+#' Imports interactions from all post-translational datasets of OmniPath.
+#' The datasets are "omnipath", "kinaseextra", "pathwayextra" and
+#' "ligrecextra".
 #'
 #' @return A dataframe containing post-translational interactions
 #' @export

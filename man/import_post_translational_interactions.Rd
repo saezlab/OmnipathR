@@ -2,7 +2,7 @@
 % Please edit documentation in R/omnipath.R
 \name{import_post_translational_interactions}
 \alias{import_post_translational_interactions}
-\title{Imports all post-translational interactions from OmniPath}
+\title{All post-translational interactions from OmniPath}
 \usage{
 import_post_translational_interactions(
   resources = NULL,
@@ -31,7 +31,9 @@ comes from which resource will be lost and the PubMed IDs will be unique.}
 A dataframe containing post-translational interactions
 }
 \description{
-Imports the dataset from all post-translational datasets of OmniPath.
+Imports interactions from all post-translational datasets of OmniPath.
+The datasets are "omnipath", "kinaseextra", "pathwayextra" and
+"ligrecextra".
 }
 \examples{
 interactions <-

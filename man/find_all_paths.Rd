@@ -32,7 +32,7 @@ but for example vertex names or labels.}
 \item{maxlen}{Integer: maximum length of paths in steps, i.e. if
 maxlen = 3, then the longest path may consist of 3 edges and 4 nodes.}
 
-\item{progress}{Logical: show a progress bar. Default is FALSE.}
+\item{progress}{Logical: show a progress bar.}
 }
 \value{
 List of vertex paths, each path is a character or integer vector.

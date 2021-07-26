@@ -244,7 +244,7 @@ format_graph_edges <- function(df_interact, flag){
 #' @param mode Character: IN, OUT or ALL. Default is OUT.
 #' @param maxlen Integer: maximum length of paths in steps, i.e. if
 #'     maxlen = 3, then the longest path may consist of 3 edges and 4 nodes.
-#' @param progress Logical: show a progress bar. Default is FALSE.
+#' @param progress Logical: show a progress bar.
 #'
 #' @return List of vertex paths, each path is a character or integer vector.
 #'
