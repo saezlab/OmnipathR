@@ -42,8 +42,8 @@
 #' #  4 UPF1     na               5976 SMG1   na              23049      1
 #' # # . with 6,003 more rows
 #'
-#' @importFrom readr read_tsv read_lines
-#' @importFrom magrittr %>% %T>%
+#' @importFrom readr read_tsv read_lines with_edition
+#' @importFrom magrittr %>% %T>% extract
 #' @export
 harmonizome_download <- function(dataset){
 
@@ -56,8 +56,8 @@ harmonizome_download <- function(dataset){
     path %>%
     gzfile() %>%
     read_lines(progress = FALSE) %>%
-    `[`(-2) %>%
-    read_tsv(col_types = cols(), progress = FALSE) %>%
+    extract(-2) %>%
+    {with_edition(1, read_tsv(., col_types = cols(), progress = FALSE))} %>%
     copy_source_attrs(path, resource = 'Harmonizome') %T>%
     load_success()
 
