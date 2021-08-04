@@ -833,6 +833,8 @@ omnipath_cache_latest_or_new <- function(
 
     }
 
+    logger::log_trace('Cache file path: %s', version$path)
+
     return(version)
 
 }
