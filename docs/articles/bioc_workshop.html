@@ -97,21 +97,16 @@
     <img src="../package-logo.png" class="pkg-logo" alt=""><div class="page-header pb-2 mt-4 mb-2 border-bottom toc-ignore">
       <h1 class="display-4" data-toc-skip>OmniPath Bioconductor workshop</h1>
                         <h4 data-toc-skip class="author">Denes Turei</h4>
-            <address class="author_afil">
-      unihd<br><a class="author_email" href="mailto:#"></a><a href="mailto:turei.denes@gmail.com" class="email">turei.denes@gmail.com</a>
-      </address>
+                  <a class="author_email" href="mailto:#"></a><a href="mailto:turei.denes@gmail.com" class="email">turei.denes@gmail.com</a>
+      
                               <h4 data-toc-skip class="author">Alberto Valdeolivas</h4>
+                                    <h4 data-toc-skip class="author">Attila Gabor</h4>
+                                    <h4 data-toc-skip class="author">Julio Saez-Rodriguez</h4>
             <address class="author_afil">
-      unihd<br><h4 data-toc-skip class="author">Attila Gabor</h4>
-            <address class="author_afil">
-      unihd<br><h4 data-toc-skip class="author">Julio Saez-Rodriguez</h4>
-            <address class="author_afil">
-      unihd<br><small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/master/vignettes/bioc_workshop.Rmd" class="external-link"><code>vignettes/bioc_workshop.Rmd</code></a></small>
+      Institute for Computational Biomedicine, Heidelberg University<br><small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/master/vignettes/bioc_workshop.Rmd" class="external-link"><code>vignettes/bioc_workshop.Rmd</code></a></small>
       <div class="d-none name"><code>bioc_workshop.Rmd</code></div>
 
     </address>
-</address>
-</address>
 </div>
 
     
@@ -306,12 +301,12 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gr_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span><span class="va">gri</span><span class="op">)</span>
 <span class="va">gr_graph</span></code></pre></div>
-<pre><code>## IGRAPH 2cea95e DN-- 14991 73802 -- 
+<pre><code>## IGRAPH a0a9200 DN-- 14991 73802 -- 
 ## + attr: name (v/c), up_ids (v/c), is_directed (e/n), is_stimulation (e/n), is_inhibition (e/n),
 ## | consensus_direction (e/n), consensus_stimulation (e/n), consensus_inhibition (e/n), dip_url
 ## | (e/l), sources (e/x), references (e/x), curation_effort (e/n), dorothea_level (e/c),
 ## | n_references (e/c), n_resources (e/n)
-## + edges from 2cea95e (vertex names):
+## + edges from a0a9200 (vertex names):
 ##  [1] AHR-&gt;ASAP1    AHR-&gt;CYP1A1   AHR-&gt;CYP1A2   AHR-&gt;CYP1B1   AHR-&gt;ERG      FOS-&gt;AHR      AHR-&gt;FOS     
 ##  [8] AHR-&gt;MYC      AHR-&gt;SOS1     AHR-&gt;UGT1A6   AHR-&gt;VGLL4    AR -&gt;ABCC4    AR -&gt;ABCE1    AR -&gt;ABHD2   
 ## [15] AR -&gt;ABLIM1   AR -&gt;ACAD10   AR -&gt;ACOXL    AR -&gt;ACPP     AR -&gt;ACSL1    AR -&gt;ACTA1    AR -&gt;ADAMTS4 
@@ -355,10 +350,10 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">es_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enzsub_graph.html">enzsub_graph</a></span><span class="op">(</span><span class="va">enz_sub</span><span class="op">)</span>
 <span class="va">es_graph</span></code></pre></div>
-<pre><code>## IGRAPH 6c5a590 DN-- 4397 39042 -- 
+<pre><code>## IGRAPH 0875802 DN-- 4397 39042 -- 
 ## + attr: name (v/c), up_ids (v/c), residue_type (e/c), residue_offset (e/n), modification (e/c),
 ## | sources (e/x), references (e/x), curation_effort (e/n), n_references (e/c), n_resources (e/n)
-## + edges from 6c5a590 (vertex names):
+## + edges from 0875802 (vertex names):
 ##  [1] LCK  -&gt;SOCS3  LCK  -&gt;SOCS3  SRC  -&gt;TERT   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  
 ##  [8] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  
 ## [15] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  
@@ -687,9 +682,9 @@
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">go_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/relations_table_to_graph.html">relations_table_to_graph</a></span><span class="op">(</span><span class="va">go</span><span class="op">$</span><span class="va">rel_tbl_c2p</span><span class="op">)</span>
 <span class="va">go_graph</span></code></pre></div>
-<pre><code>## IGRAPH 2e55138 DN-- 43917 86871 -- 
+<pre><code>## IGRAPH c0c43db DN-- 43917 86871 -- 
 ## + attr: name (v/c), relation (e/c)
-## + edges from 2e55138 (vertex names):
+## + edges from c0c43db (vertex names):
 ##  [1] GO:0000001-&gt;GO:0048308 GO:0000001-&gt;GO:0048311 GO:0000002-&gt;GO:0007005 GO:0000003-&gt;GO:0008150
 ##  [5] GO:0000006-&gt;GO:0005385 GO:0000007-&gt;GO:0005385 GO:0000009-&gt;GO:0000030 GO:0000010-&gt;GO:0004659
 ##  [9] GO:0000011-&gt;GO:0007033 GO:0000011-&gt;GO:0048308 GO:0000012-&gt;GO:0006281 GO:0000014-&gt;GO:0004520
@@ -784,15 +779,15 @@
 ## [11] rlang_0.4.11        pkgdown_1.6.1.9001  jquerylib_0.1.4     pillar_1.6.1        later_1.2.0        
 ## [16] glue_1.4.2          DBI_1.1.1           rappdirs_0.3.3      bit64_4.0.5         readxl_1.3.1       
 ## [21] lifecycle_1.0.0     stringr_1.4.0       cellranger_1.1.0    ragg_1.1.3          memoise_2.0.0      
-## [26] evaluate_0.14       knitr_1.33          tzdb_0.1.2          fastmap_1.1.0       parallel_4.1.0     
-## [31] curl_4.3.2          fansi_0.5.0         Rcpp_1.0.7          readr_2.0.0         backports_1.2.1    
-## [36] checkmate_2.0.0     BiocManager_1.30.16 cachem_1.0.5        desc_1.3.0          vroom_1.5.3        
-## [41] jsonlite_1.7.2      bit_4.0.4           systemfonts_1.0.2   fs_1.5.0            textshaping_0.3.5  
-## [46] hms_1.1.0           digest_0.6.27       stringi_1.7.3       bookdown_0.22       dplyr_1.0.7        
-## [51] rprojroot_2.0.2     cli_3.0.1           tools_4.1.0         magrittr_2.0.1      logger_0.2.1       
-## [56] sass_0.4.0          tibble_3.1.2        tidyr_1.1.3         crayon_1.4.1        pkgconfig_2.0.3    
-## [61] ellipsis_0.3.2      xml2_1.3.2          prettyunits_1.1.1   assertthat_0.2.1    rmarkdown_2.9.5    
-## [66] httr_1.4.2          R6_2.5.0            igraph_1.2.6        compiler_4.1.0</code></pre>
+## [26] evaluate_0.14       knitr_1.33          tzdb_0.1.2          fastmap_1.1.0       curl_4.3.2         
+## [31] fansi_0.5.0         Rcpp_1.0.7          readr_2.0.0         backports_1.2.1     checkmate_2.0.0    
+## [36] BiocManager_1.30.16 cachem_1.0.5        desc_1.3.0          vroom_1.5.3         jsonlite_1.7.2     
+## [41] bit_4.0.4           systemfonts_1.0.2   fs_1.5.0            textshaping_0.3.5   hms_1.1.0          
+## [46] digest_0.6.27       stringi_1.7.3       bookdown_0.22       dplyr_1.0.7         rprojroot_2.0.2    
+## [51] cli_3.0.1           tools_4.1.0         magrittr_2.0.1      logger_0.2.1        sass_0.4.0         
+## [56] tibble_3.1.2        tidyr_1.1.3         crayon_1.4.1        pkgconfig_2.0.3     ellipsis_0.3.2     
+## [61] xml2_1.3.2          prettyunits_1.1.1   assertthat_0.2.1    rmarkdown_2.9.5     httr_1.4.2         
+## [66] R6_2.5.0            igraph_1.2.6        compiler_4.1.0</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">

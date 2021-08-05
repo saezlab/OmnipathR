@@ -2,17 +2,12 @@
 title: "OmniPath Bioconductor workshop"
 author:
   - name: Denes Turei
-    affiliation: unihd
     email: turei.denes@gmail.com
     correspondance: true
   - name: Alberto Valdeolivas
-    affiliation: unihd
   - name: Attila Gabor
-    affiliation: unihd
   - name: Julio Saez-Rodriguez
-    affiliation: unihd
-institute:
-  - unihd: Institute for Computational Biomedicine, Heidelberg University
+    affiliation: Institute for Computational Biomedicine, Heidelberg University
 package: OmnipathR
 output:
   BiocStyle::html_document:
