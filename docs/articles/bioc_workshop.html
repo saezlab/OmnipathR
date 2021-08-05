@@ -58,6 +58,7 @@
     <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
+    <a class="dropdown-item" href="../articles/paths.html">Pathway construction</a>
   </div>
 </li>
 <li class="nav-item">
@@ -214,7 +215,545 @@
 <div id="workshop" class="section level1">
 <h1 class="hasAnchor">
 <a href="#workshop" class="anchor" aria-hidden="true"></a>Workshop</h1>
-<p>Here we will publish the workshop contents with code examples.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></code></pre></div>
+<div id="data-from-omnipath" class="section level2">
+<h2 class="hasAnchor">
+<a href="#data-from-omnipath" class="anchor" aria-hidden="true"></a>Data from OmniPath</h2>
+<p>OmniPath consists of five major databases, each combining many original resources. The five databases are:</p>
+<ul>
+<li>Network (interactions)</li>
+<li>Enzyme-substrate relationships (enzsub)</li>
+<li>Protein complexes (complexes)</li>
+<li>Annotations (annotations)</li>
+<li>Intercellular communication roles (intercell)</li>
+</ul>
+<p>The parameters for each database (query type) are available in the web service, for example: <a href="https://omnipathdb.org/queries/interactions" class="external-link uri">https://omnipathdb.org/queries/interactions</a>. The R package supports all features of the web service and the parameter names and values usually correspond to the web service parameters which you would use in a HTTP query string.</p>
+<div id="networks" class="section level3">
+<h3 class="hasAnchor">
+<a href="#networks" class="anchor" aria-hidden="true"></a>Networks</h3>
+<p>The network database contains protein-protein, gene regulatory and miRNA-mRNA interactions. Soon more interaction types will be added. Some of these categories can be further divided into datasets which are defined by the type of evidences. A full list of network datasets:</p>
+<ul>
+<li>Protein-protein interactions <em>(post_translational)</em> <a href="https://saezlab.github.io/OmnipathR/reference/import_post_translational_interactions.html">import_post_translational_interactions</a>
+<ul>
+<li>
+<strong>omnipath:</strong> literature curated, directed interactions with effect signs; corresponds to the first edition of OmniPath, hence the confusing name is due to historical reasons <a href="https://saezlab.github.io/OmnipathR/reference/import_omnipath_interactions.html">import_omnipath_interactions</a>
+</li>
+<li>
+<strong>pathwayextra:</strong> directed and signed interactions, without literature references (might be literature curated, but references are not available) <a href="https://saezlab.github.io/OmnipathR/reference/import_pathwayextra_interactions.html">import_pathwayextra_interactions</a>
+</li>
+<li>
+<strong>kinaseextra:</strong> enzyme-PTM interactions without literature references <a href="https://saezlab.github.io/OmnipathR/reference/import_kinaseextra_interactions.html">import_kinaseextra_interactions</a>
+</li>
+<li>
+<strong>ligrecextra:</strong> ligand-receptor interactions without literature references <a href="https://saezlab.github.io/OmnipathR/reference/import_ligrecextra_interactions.html">import_ligrecextra_interactions</a>
+</li>
+</ul>
+</li>
+<li>Gene regulatory interactions <em>(transcriptional)</em> <a href="https://saezlab.github.io/OmnipathR/reference/import_transcriptional_interactions.html">import_transcriptional_interactions</a>
+<ul>
+<li>
+<strong>dorothea:</strong> a comprehensive collection built out of 18 resources, contains literature curated, ChIP-Seq, gene expression derived and TF binding site predicted data, with 5 confidence levels (A-E) <a href="https://saezlab.github.io/OmnipathR/reference/import_kinaseextra_interactions.html">import_dorothea_interactions</a>
+</li>
+<li>
+<strong>tf_target:</strong> additional literature curated interactions <a href="https://saezlab.github.io/OmnipathR/reference/import_tf_target_interactions.html">import_tf_target_interactions</a>
+</li>
+</ul>
+</li>
+<li>miRNA interactions <em>(post_transcriptional and mirna_transcriptional)</em>
+<ul>
+<li>
+<strong>mirnatarget:</strong> literature curated miRNA-mRNA interactions <a href="https://saezlab.github.io/OmnipathR/reference/import_mirnatarget_interactions.html">import_mirnatarget_interactions</a>
+</li>
+<li>
+<strong>tf_mirna:</strong> literature curated TF-miRNA interactions (transcriptional regulations of miRNA) <a href="https://saezlab.github.io/OmnipathR/reference/import_tf_mirna_interactions.html">import_tf_mirna_interactions</a>
+</li>
+</ul>
+</li>
+<li>lncRNA interactions <em>(lncrna_post_transcriptional)</em>
+<ul>
+<li>
+<strong>lncrna_mrna:</strong> literature curated lncRNA-mRNA interactions <a href="https://saezlab.github.io/OmnipathR/reference/import_lncrna_mrna_interactions.html">import_lncrna_mrna_interactions</a>
+</li>
+</ul>
+</li>
+</ul>
+<p>Not individual interactions but resource are classified into the datasets above, so these can overlap. Each interaction type and dataset has its dedicated function in <code>OmnipathR</code>, above we provide links to their help pages. As an example, let’s see the gene regulatory interactions:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gri</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_transcriptional_interactions.html">import_transcriptional_interactions</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">gri</span></code></pre></div>
+<pre><code>## # A tibble: 73,802 x 17
+##    source target source_genesymbol target_genesymb… is_directed is_stimulation is_inhibition consensus_direct…
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;             &lt;chr&gt;                  &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;
+##  1 P35869 Q9ULH1 AHR               ASAP1                      1              0             0                 0
+##  2 P35869 P04798 AHR               CYP1A1                     1              1             0                 1
+##  3 P35869 P05177 AHR               CYP1A2                     1              0             0                 0
+##  4 P35869 Q16678 AHR               CYP1B1                     1              1             0                 1
+##  5 P35869 P11308 AHR               ERG                        1              0             0                 0
+##  6 P01100 P35869 FOS               AHR                        1              0             0                 0
+##  7 P35869 P01100 AHR               FOS                        1              0             0                 0
+##  8 P35869 P01106 AHR               MYC                        1              0             0                 0
+##  9 P35869 Q07889 AHR               SOS1                       1              0             0                 0
+## 10 P35869 P19224 AHR               UGT1A6                     1              0             0                 0
+## # … with 73,792 more rows, and 9 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,
+## #   dip_url &lt;lgl&gt;, sources &lt;chr&gt;, references &lt;chr&gt;, curation_effort &lt;dbl&gt;, dorothea_level &lt;chr&gt;,
+## #   n_references &lt;chr&gt;, n_resources &lt;int&gt;</code></pre>
+<p>The interaction data frame contains the UniProt IDs and Gene Symbols of the interacting partners, the list of resources and references (PubMed IDs) for each interaction, and whether the interaction is directed, stimulatory or inhibitory.</p>
+<div id="igraph-integration" class="section level4">
+<h4 class="hasAnchor">
+<a href="#igraph-integration" class="anchor" aria-hidden="true"></a>Igraph integration</h4>
+<p>The network data frames can be converted to igraph graph objects, so you can make use of the graph and visualization methods of igraph:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gr_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span><span class="va">gri</span><span class="op">)</span>
+<span class="va">gr_graph</span></code></pre></div>
+<pre><code>## IGRAPH 2cea95e DN-- 14991 73802 -- 
+## + attr: name (v/c), up_ids (v/c), is_directed (e/n), is_stimulation (e/n), is_inhibition (e/n),
+## | consensus_direction (e/n), consensus_stimulation (e/n), consensus_inhibition (e/n), dip_url
+## | (e/l), sources (e/x), references (e/x), curation_effort (e/n), dorothea_level (e/c),
+## | n_references (e/c), n_resources (e/n)
+## + edges from 2cea95e (vertex names):
+##  [1] AHR-&gt;ASAP1    AHR-&gt;CYP1A1   AHR-&gt;CYP1A2   AHR-&gt;CYP1B1   AHR-&gt;ERG      FOS-&gt;AHR      AHR-&gt;FOS     
+##  [8] AHR-&gt;MYC      AHR-&gt;SOS1     AHR-&gt;UGT1A6   AHR-&gt;VGLL4    AR -&gt;ABCC4    AR -&gt;ABCE1    AR -&gt;ABHD2   
+## [15] AR -&gt;ABLIM1   AR -&gt;ACAD10   AR -&gt;ACOXL    AR -&gt;ACPP     AR -&gt;ACSL1    AR -&gt;ACTA1    AR -&gt;ADAMTS4 
+## [22] AR -&gt;ADAMTSL1 AR -&gt;ADGRG6   AR -&gt;ADGRV1   AR -&gt;ADIPOR1  AR -&gt;AFDN     AR -&gt;AFF1     AR -&gt;AFF3    
+## [29] AR -&gt;AGAP1    AR -&gt;AHSG     AR -&gt;CRYBG1   AR -&gt;AKAP13   AR -&gt;AKAP6    AR -&gt;AKAP7    AR -&gt;AKR1B1  
+## + ... omitted several edges</code></pre>
+<p>On this network we can use <code>OmnipathR</code>’s <code>find_all_paths</code> function, which is able to look up all paths up to a certain length between two set of nodes:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/find_all_paths.html">find_all_paths</a></span><span class="op">(</span>
+    graph <span class="op">=</span> <span class="va">gr_graph</span>,
+    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'EGFR'</span>, <span class="st">'STAT3'</span><span class="op">)</span>,
+    end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'AKT1'</span>, <span class="st">'ULK1'</span><span class="op">)</span>,
+    attr <span class="op">=</span> <span class="st">'name'</span>
+<span class="op">)</span></code></pre></div>
+<p><em>As this is a gene regulatory network, the paths are TFs regulating the transcription of other TFs.</em></p>
+</div>
+</div>
+<div id="enzyme-substrate-relationships" class="section level3">
+<h3 class="hasAnchor">
+<a href="#enzyme-substrate-relationships" class="anchor" aria-hidden="true"></a>Enzyme-substrate relationships</h3>
+<p>Enzyme-substrate interactions are also available also in the interactions query, but the enzyme-substrate query type provides additional information about the PTM types and residues.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">enz_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">enz_sub</span></code></pre></div>
+<pre><code>## # A tibble: 39,042 x 12
+##    enzyme substrate enzyme_genesymbol substrate_genes… residue_type residue_offset modification sources       
+##    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;            &lt;chr&gt;                 &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;         
+##  1 P06239 O14543    LCK               SOCS3            Y                       204 phosphoryla… KEA;MIMP;Phos…
+##  2 P06239 O14543    LCK               SOCS3            Y                       221 phosphoryla… KEA;MIMP;Phos…
+##  3 P12931 O14746    SRC               TERT             Y                       707 phosphoryla… BEL-Large-Cor…
+##  4 P06241 O15117    FYN               FYB1             Y                       651 phosphoryla… HPRD;KEA;Phos…
+##  5 P06241 O15117    FYN               FYB1             Y                       595 phosphoryla… HPRD;KEA;Phos…
+##  6 P06241 O15117    FYN               FYB1             Y                       697 phosphoryla… HPRD;KEA;Phos…
+##  7 P06241 O15117    FYN               FYB1             Y                       625 phosphoryla… PhosphoSite;P…
+##  8 P06241 O15117    FYN               FYB1             Y                       771 phosphoryla… PhosphoSite;P…
+##  9 P06241 O15117    FYN               FYB1             Y                       559 phosphoryla… PhosphoSite;P…
+## 10 P06241 O15117    FYN               FYB1             Y                       755 phosphoryla… PhosphoSite;P…
+## # … with 39,032 more rows, and 4 more variables: references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;,
+## #   n_resources &lt;int&gt;</code></pre>
+<p>This data frame also can be converted to an igraph object:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">es_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enzsub_graph.html">enzsub_graph</a></span><span class="op">(</span><span class="va">enz_sub</span><span class="op">)</span>
+<span class="va">es_graph</span></code></pre></div>
+<pre><code>## IGRAPH 6c5a590 DN-- 4397 39042 -- 
+## + attr: name (v/c), up_ids (v/c), residue_type (e/c), residue_offset (e/n), modification (e/c),
+## | sources (e/x), references (e/x), curation_effort (e/n), n_references (e/c), n_resources (e/n)
+## + edges from 6c5a590 (vertex names):
+##  [1] LCK  -&gt;SOCS3  LCK  -&gt;SOCS3  SRC  -&gt;TERT   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  
+##  [8] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  
+## [15] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  
+## [22] ABL1 -&gt;PLSCR1 ABL1 -&gt;PLSCR1 SRC  -&gt;PLSCR1 SRC  -&gt;PLSCR1 ABL1 -&gt;TP73   CDK2 -&gt;TP73   CHEK1-&gt;TP73  
+## [29] AURKB-&gt;BIRC5  AURKB-&gt;BIRC5  AURKB-&gt;BIRC5  CDK1 -&gt;BIRC5  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1 
+## [36] PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1 
+## [43] PDPK1-&gt;PDPK1  PDPK1-&gt;PDPK1  SRC  -&gt;PDPK1  SRC  -&gt;PDPK1  SRC  -&gt;PDPK1  SRC  -&gt;PDPK1  SRC  -&gt;PDPK1 
+## + ... omitted several edges</code></pre>
+<p>It is also possible to add effect signs (stimulatory or inhibitory) to enzyme-PTM relationships:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">es_signed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_signed_ptms.html">get_signed_ptms</a></span><span class="op">(</span><span class="va">enz_sub</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="protein-complexes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#protein-complexes" class="anchor" aria-hidden="true"></a>Protein complexes</h3>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cplx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_complexes.html">import_omnipath_complexes</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">cplx</span></code></pre></div>
+<pre><code>## # A tibble: 28,173 x 7
+##    name    components      components_genesy… stoichiometry sources         references      identifiers       
+##    &lt;chr&gt;   &lt;chr&gt;           &lt;chr&gt;              &lt;chr&gt;         &lt;chr&gt;           &lt;chr&gt;           &lt;chr&gt;             
+##  1 NFY     P23511_P25208_… NFYA_NFYB_NFYC     1:1:1         CORUM;Compleat… 15243141;93729… CORUM:4478;Comple…
+##  2 mTORC2  P68104_P85299_… DEPTOR_EEF1A1_MLS… 0:0:0:0:0     Signor          &lt;NA&gt;            Signor:SIGNOR-C2  
+##  3 mTORC1  P42345_Q8N122_… AKT1S1_DEPTOR_MLS… 0:0:0:0:0     Signor          &lt;NA&gt;            Signor:SIGNOR-C3  
+##  4 SCF-be… P63208_Q13616_… BTRC_CUL1_SKP1     1:1:1         CORUM;Compleat… 9990852         CORUM:227;Complea…
+##  5 CBP/p3… Q09472_Q92793   CREBBP_EP300       0:0           Signor          &lt;NA&gt;            Signor:SIGNOR-C6  
+##  6 P300/P… Q09472_Q92793_… CREBBP_EP300_KAT2B 0:0:0         Signor          &lt;NA&gt;            Signor:SIGNOR-C7  
+##  7 SMAD2/… Q13485_Q15796   SMAD2_SMAD4        1:2           ComplexPortal;… 12923550;80616… PDB:1u7v;Signor:S…
+##  8 SMAD3/… P84022_Q13485   SMAD3_SMAD4        2:1           ComplexPortal;… 12923550;80616… PDB:1U7F;PDB:1u7f…
+##  9 SMAD4/… P05412_Q13485   JUN_SMAD4          0:0           Signor          &lt;NA&gt;            Signor:SIGNOR-C10 
+## 10 SMAD2/… Q15796_Q9HAU4   SMAD2_SMURF2       1:1           Compleat;Signor 11389444        Compleat:HC501;Si…
+## # … with 28,163 more rows</code></pre>
+<p>The resulted data frame provides the constitution and stoichiometry of protein complexes, with references.</p>
+</div>
+<div id="annotations" class="section level3">
+<h3 class="hasAnchor">
+<a href="#annotations" class="anchor" aria-hidden="true"></a>Annotations</h3>
+<p>The annotations query type includes a diverse set of resources (about 60 of them), about protein function, localization, structure and expression. For most use cases it is better to convert the data into wide data frames, as these correspond to the original format of the resources. If you load more than one resources into wide data frames, the result will be a list of data frames, otherwise one data frame. See a few examples with localization data from UniProt, tissue expression from Human Protein Atlas and pathway information from SignaLink:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">uniprot_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
+    resources <span class="op">=</span> <span class="st">'UniProt_location'</span>,
+    wide <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+<span class="va">uniprot_loc</span></code></pre></div>
+<pre><code>## # A tibble: 55,470 x 5
+##    uniprot genesymbol entity_type location                features                   
+##    &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                   &lt;chr&gt;                      
+##  1 Q99470  SDF2       protein     Secreted                &lt;NA&gt;                       
+##  2 O75494  SRSF10     protein     Nucleus speckle         &lt;NA&gt;                       
+##  3 O75494  SRSF10     protein     Cytoplasm               &lt;NA&gt;                       
+##  4 Q9NQ55  PPAN       protein     Nucleus                 &lt;NA&gt;                       
+##  5 Q9NQ55  PPAN       protein     Nucleolus               &lt;NA&gt;                       
+##  6 Q8IW03  SIAH3      protein     Mitochondrion           &lt;NA&gt;                       
+##  7 Q96L92  SNX27      protein     Cytosol                 &lt;NA&gt;                       
+##  8 Q96L92  SNX27      protein     Early endosome membrane Peripheral membrane protein
+##  9 Q96L92  SNX27      protein     Cytoplasm               &lt;NA&gt;                       
+## 10 Q99598  TSNAX      protein     Nucleus                 &lt;NA&gt;                       
+## # … with 55,460 more rows</code></pre>
+<p>The <code>entity_type</code> field can be protein, mirna or complex. Protein complexes mostly annotated based on the consensus of their members, we should be aware that this is an <em>in silico</em> inference.</p>
+<p>In case of spelling mistake either in parameter names or values <code>OmnipathR</code> either corrects the mistake or gives a warning or error:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">uniprot_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
+    resources <span class="op">=</span> <span class="st">'Uniprot_location'</span>,
+    wide <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>## Warning in omnipath_check_param(param): The following resources are not available: Uniprot_location. Check the
+## resource names for spelling mistakes.</code></pre>
+<p>Above the name of the resource is wrong. If the parameter name is wrong, it throws an error:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">uniprot_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
+    resuorces <span class="op">=</span> <span class="st">'UniProt_location'</span>,
+    wide <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>## Error in import_omnipath_annotations(resuorces = "UniProt_location", wide = TRUE): Downloading the entire annotations database is not allowed by default because of its huge size (&gt;1GB). If you really want to do that, you find static files at https://archive.omnipathdb.org/. However we recommend to query a set of proteins or a few resources, depending on your interest.</code></pre>
+<p>Singular vs. plural forms and a few synonyms are automatically corrected:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">uniprot_loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
+    resource <span class="op">=</span> <span class="st">'UniProt_location'</span>,
+    wide <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
+<p>Another example with tissue expression from Human Protein Atlas:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hpa_tissue</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
+    resources <span class="op">=</span> <span class="st">'HPA_tissue'</span>,
+    wide <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+<span class="va">hpa_tissue</span></code></pre></div>
+<pre><code>## # A tibble: 1,810,497 x 15
+##    uniprot genesymbol entity_type organ  tissue    level status prognostic favourable pathology n_not_detected
+##    &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;         
+##  1 O43657  TSPAN6     protein     skin 1 fibrobla… Not … Appro… False      False      False     &lt;NA&gt;          
+##  2 O43657  TSPAN6     protein     soft … peripher… Not … Appro… False      False      False     &lt;NA&gt;          
+##  3 O43657  TSPAN6     protein     endom… glandula… High  Appro… False      False      False     &lt;NA&gt;          
+##  4 O43657  TSPAN6     protein     lung   pneumocy… Low   Appro… False      False      False     &lt;NA&gt;          
+##  5 O43657  TSPAN6     protein     small… glandula… Medi… Appro… False      False      False     &lt;NA&gt;          
+##  6 O43657  TSPAN6     protein     hippo… glial ce… Not … Appro… False      False      False     &lt;NA&gt;          
+##  7 O43657  TSPAN6     protein     spleen cells in… Not … Appro… False      False      False     &lt;NA&gt;          
+##  8 O43657  TSPAN6     protein     nasop… respirat… High  Appro… False      False      False     &lt;NA&gt;          
+##  9 O43657  TSPAN6     protein     lymph… lymphoma  Not … &lt;NA&gt;   &lt;NA&gt;       &lt;NA&gt;       True      11            
+## 10 O43657  TSPAN6     protein     bone … hematopo… Not … Appro… False      False      False     &lt;NA&gt;          
+## # … with 1,810,487 more rows, and 4 more variables: n_low &lt;chr&gt;, n_medium &lt;chr&gt;, n_high &lt;chr&gt;, score &lt;chr&gt;</code></pre>
+<p>And pathway annotations from SignaLink:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">slk_pathw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
+    resources <span class="op">=</span> <span class="st">'SignaLink_pathway'</span>,
+    wide <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+<span class="va">slk_pathw</span></code></pre></div>
+<pre><code>## # A tibble: 2,372 x 4
+##    uniprot genesymbol entity_type pathway                 
+##    &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                   
+##  1 P20963  CD247      protein     T-cell receptor         
+##  2 P43403  ZAP70      protein     Receptor tyrosine kinase
+##  3 P43403  ZAP70      protein     T-cell receptor         
+##  4 Q9NYJ8  TAB2       protein     Receptor tyrosine kinase
+##  5 Q9NYJ8  TAB2       protein     Innate immune pathways  
+##  6 Q9NYJ8  TAB2       protein     Toll-like receptor      
+##  7 Q9NYJ8  TAB2       protein     JAK/STAT                
+##  8 O43318  MAP3K7     protein     Receptor tyrosine kinase
+##  9 O43318  MAP3K7     protein     WNT                     
+## 10 O43318  MAP3K7     protein     Toll-like receptor      
+## # … with 2,362 more rows</code></pre>
+<div id="combining-networks-with-annotations" class="section level4">
+<h4 class="hasAnchor">
+<a href="#combining-networks-with-annotations" class="anchor" aria-hidden="true"></a>Combining networks with annotations</h4>
+<p>Annotations can be easily added to network data frames, in this case both the source and target nodes will have their annotation data. This function accepts either the name of an annotation resource or an annotation data frame:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">network_slk_pw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotated_network.html">annotated_network</a></span><span class="op">(</span><span class="va">network</span>, <span class="st">'SignaLink_pathway'</span><span class="op">)</span>
+<span class="va">network_slk_pw</span></code></pre></div>
+<pre><code>## # A tibble: 79,245 x 18
+##    source target source_genesymbol target_genesymb… is_directed is_stimulation is_inhibition consensus_direct…
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;             &lt;chr&gt;                  &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;             &lt;dbl&gt;
+##  1 P0DP25 P48995 CALM3             TRPC1                      1              0             1                 1
+##  2 Q03135 P48995 CAV1              TRPC1                      1              1             0                 1
+##  3 P14416 P48995 DRD2              TRPC1                      1              1             0                 1
+##  4 Q02790 P48995 FKBP4             TRPC1                      1              0             1                 1
+##  5 Q99750 P48995 MDFI              TRPC1                      1              0             1                 1
+##  6 Q14571 P48995 ITPR2             TRPC1                      1              1             0                 1
+##  7 P29966 P48995 MARCKS            TRPC1                      1              0             1                 1
+##  8 Q13255 P48995 GRM1              TRPC1                      1              1             0                 1
+##  9 Q13586 P48995 STIM1             TRPC1                      1              1             0                 1
+## 10 P48995 Q13507 TRPC1             TRPC3                      1              1             0                 1
+## # … with 79,235 more rows, and 10 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,
+## #   dip_url &lt;chr&gt;, sources &lt;chr&gt;, references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;,
+## #   n_resources &lt;int&gt;, pathway_source &lt;chr&gt;, pathway_target &lt;chr&gt;</code></pre>
+</div>
+</div>
+<div id="intercellular-communication-roles" class="section level3">
+<h3 class="hasAnchor">
+<a href="#intercellular-communication-roles" class="anchor" aria-hidden="true"></a>Intercellular communication roles</h3>
+<p>The <code>intercell</code> database assigns roles to proteins such as ligand, receptor, adhesion, transporter, ECM, etc. The design of this database is far from being simple, best is to check the description in the recent OmniPath paper [1].</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_intercell.html">import_omnipath_intercell</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">ic</span></code></pre></div>
+<pre><code>## # A tibble: 301,527 x 15
+##    category  parent  database  scope aspect source  uniprot genesymbol entity_type consensus_score transmitter
+##    &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;                 &lt;dbl&gt; &lt;lgl&gt;      
+##  1 transmem… transm… UniProt_… gene… locat… resour… Q9H6L2  TMEM231    protein                   5 FALSE      
+##  2 transmem… transm… UniProt_… gene… locat… resour… Q8NFT8  DNER       protein                   8 FALSE      
+##  3 transmem… transm… UniProt_… gene… locat… resour… Q6NTF9  RHBDD2     protein                   5 FALSE      
+##  4 transmem… transm… UniProt_… gene… locat… resour… Q9H1U9  SLC25A51   protein                   5 FALSE      
+##  5 transmem… transm… UniProt_… gene… locat… resour… Q6V0L0  CYP26C1    protein                   5 FALSE      
+##  6 transmem… transm… UniProt_… gene… locat… resour… Q5QGT7  RTP2       protein                   6 FALSE      
+##  7 transmem… transm… UniProt_… gene… locat… resour… O60320  FAM189A1   protein                   5 FALSE      
+##  8 transmem… transm… UniProt_… gene… locat… resour… A2RU48  SMCO3      protein                   5 FALSE      
+##  9 transmem… transm… UniProt_… gene… locat… resour… Q9UHF4  IL20RA     protein                   8 FALSE      
+## 10 transmem… transm… UniProt_… gene… locat… resour… Q08722  CD47       protein                   7 FALSE      
+## # … with 301,517 more rows, and 4 more variables: receiver &lt;lgl&gt;, secreted &lt;lgl&gt;,
+## #   plasma_membrane_transmembrane &lt;lgl&gt;, plasma_membrane_peripheral &lt;lgl&gt;</code></pre>
+<p>This data frame is about individual proteins. To create a network of intercellular communication, we provide the <code>import_intercell_network</code> function:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">icn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_intercell_network.html">import_intercell_network</a></span><span class="op">(</span>high_confidence <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">icn</span></code></pre></div>
+<pre><code>## # A tibble: 6,544 x 46
+##    category_intercell… parent_intercell_… source target category_intercell… parent_intercell… target_genesymb…
+##    &lt;chr&gt;               &lt;chr&gt;              &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;               &lt;chr&gt;             &lt;chr&gt;           
+##  1 activating_cofactor receptor_regulator O14786 P35968 receptor            receptor          KDR             
+##  2 activating_cofactor receptor_regulator O14786 Q9UIW2 receptor            receptor          PLXNA1          
+##  3 activating_cofactor receptor_regulator P08138 P04629 receptor            receptor          NTRK1           
+##  4 activating_cofactor receptor_regulator P34925 Q9H461 receptor            receptor          FZD8            
+##  5 activating_cofactor receptor_regulator Q01973 P21860 receptor            receptor          ERBB3           
+##  6 activating_cofactor receptor_regulator Q01974 O00238 receptor            receptor          BMPR1B          
+##  7 activating_cofactor receptor_regulator Q01974 Q13467 receptor            receptor          FZD5            
+##  8 activating_cofactor receptor_regulator Q01974 Q13467 tight_junction      tight_junction    FZD5            
+##  9 activating_cofactor receptor_regulator Q01974 Q14332 receptor            receptor          FZD2            
+## 10 activating_cofactor receptor_regulator Q13145 O00238 receptor            receptor          BMPR1B          
+## # … with 6,534 more rows, and 39 more variables: source_genesymbol &lt;chr&gt;, is_directed &lt;dbl&gt;,
+## #   is_stimulation &lt;dbl&gt;, is_inhibition &lt;dbl&gt;, consensus_direction &lt;dbl&gt;, consensus_stimulation &lt;dbl&gt;,
+## #   consensus_inhibition &lt;dbl&gt;, dip_url &lt;chr&gt;, ligrecextra &lt;lgl&gt;, omnipath &lt;lgl&gt;, sources &lt;chr&gt;,
+## #   references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;, n_resources &lt;int&gt;,
+## #   database_intercell_source &lt;chr&gt;, scope_intercell_source &lt;chr&gt;, aspect_intercell_source &lt;chr&gt;,
+## #   category_source_intercell_source &lt;chr&gt;, genesymbol_intercell_source &lt;chr&gt;,
+## #   entity_type_intercell_source &lt;chr&gt;, consensus_score_intercell_source &lt;dbl&gt;,
+## #   transmitter_intercell_source &lt;lgl&gt;, receiver_intercell_source &lt;lgl&gt;, secreted_intercell_source &lt;lgl&gt;,
+## #   plasma_membrane_transmembrane_intercell_source &lt;lgl&gt;, plasma_membrane_peripheral_intercell_source &lt;lgl&gt;,
+## #   database_intercell_target &lt;chr&gt;, scope_intercell_target &lt;chr&gt;, aspect_intercell_target &lt;chr&gt;,
+## #   category_source_intercell_target &lt;chr&gt;, genesymbol_intercell_target &lt;chr&gt;,
+## #   entity_type_intercell_target &lt;chr&gt;, consensus_score_intercell_target &lt;dbl&gt;,
+## #   transmitter_intercell_target &lt;lgl&gt;, receiver_intercell_target &lt;lgl&gt;, secreted_intercell_target &lt;lgl&gt;,
+## #   plasma_membrane_transmembrane_intercell_target &lt;lgl&gt;, plasma_membrane_peripheral_intercell_target &lt;lgl&gt;</code></pre>
+<p>The result is similar to the <code>annotated_network</code>, each interacting partner has its intercell annotations. In the <code>intercell</code> database, OmniPath aims to ship all available information, which means it might contain quite some false positives. The <code>high_confidence</code> option is a shortcut to stringent filter settings based on the number and consensus of provenances. Using instead the <code>filter_intercell_network</code> function, you can have a fine control over the quality filters. It has many options which are described in the manual.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">icn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_intercell_network.html">import_intercell_network</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">icn_hc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_intercell_network.html">filter_intercell_network</a></span><span class="op">(</span>
+    <span class="va">icn</span>,
+    ligand_receptor <span class="op">=</span> <span class="cn">TRUE</span>,
+    consensus_percentile <span class="op">=</span> <span class="fl">30</span>,
+    loc_consensus_percentile <span class="op">=</span> <span class="fl">50</span>,
+    simplify <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
+<p>The <code>filter_intecell</code> function does a similar procedure on an intercell annotation data frame.</p>
+</div>
+<div id="metadata" class="section level3">
+<h3 class="hasAnchor">
+<a href="#metadata" class="anchor" aria-hidden="true"></a>Metadata</h3>
+<p>The list of available resources for each query type can be retrieved by the <code>get_..._resources</code> function. For example, the annotation resources are:</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_annotation_resources.html">get_annotation_resources</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>##  [1] "Adhesome"             "Almen2009"            "Baccin2019"           "CancerGeneCensus"    
+##  [5] "CancerSEA"            "CellCellInteractions" "CellChatDB"           "CellChatDB_complex"  
+##  [9] "CellPhoneDB"          "CellPhoneDB_complex"  "CellTalkDB"           "ComPPI"              
+## [13] "connectomeDB2020"     "CORUM_Funcat"         "CORUM_GO"             "CSPA"                
+## [17] "CSPA_celltype"        "DGIdb"                "DisGeNet"             "EMBRACE"             
+## [21] "Exocarta"             "GO_Intercell"         "GPCRdb"               "Guide2Pharma"        
+## [25] "HGNC"                 "HPA_secretome"        "HPA_subcellular"      "HPA_tissue"          
+## [29] "HPMR"                 "HPMR_complex"         "HumanCellMap"         "ICELLNET"            
+## [33] "ICELLNET_complex"     "Integrins"            "IntOGen"              "iTALK"               
+## [37] "KEGG-PC"              "kinase.com"           "Kirouac2010"          "LOCATE"              
+## [41] "LRdb"                 "Matrisome"            "MatrixDB"             "MCAM"                
+## [45] "Membranome"           "MSigDB"               "NetPath"              "OPM"                 
+## [49] "Phobius"              "Phosphatome"          "Ramilowski_location"  "Ramilowski2015"      
+## [53] "SignaLink_function"   "SignaLink_pathway"    "SIGNOR"               "Surfaceome"          
+## [57] "talklr"               "TCDB"                 "TFcensus"             "TopDB"               
+## [61] "UniProt_family"       "UniProt_keyword"      "UniProt_location"     "UniProt_tissue"      
+## [65] "UniProt_topology"     "Vesiclepedia"         "Zhong2015"</code></pre>
+<p>Categories in the <code>intercell</code> query also can be listed:</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_intercell_generic_categories.html">get_intercell_generic_categories</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>##  [1] "transmembrane"                       "transmembrane_predicted"            
+##  [3] "peripheral"                          "plasma_membrane"                    
+##  [5] "plasma_membrane_transmembrane"       "plasma_membrane_regulator"          
+##  [7] "plasma_membrane_peripheral"          "secreted"                           
+##  [9] "cell_surface"                        "ecm"                                
+## [11] "ligand"                              "receptor"                           
+## [13] "secreted_enzyme"                     "secreted_peptidase"                 
+## [15] "extracellular"                       "intracellular"                      
+## [17] "receptor_regulator"                  "secreted_receptor"                  
+## [19] "sparc_ecm_regulator"                 "ecm_regulator"                      
+## [21] "ligand_regulator"                    "cell_surface_ligand"                
+## [23] "cell_adhesion"                       "matrix_adhesion"                    
+## [25] "adhesion"                            "matrix_adhesion_regulator"          
+## [27] "cell_surface_enzyme"                 "cell_surface_peptidase"             
+## [29] "secreted_enyzme"                     "extracellular_peptidase"            
+## [31] "secreted_peptidase_inhibitor"        "transporter"                        
+## [33] "ion_channel"                         "ion_channel_regulator"              
+## [35] "gap_junction"                        "tight_junction"                     
+## [37] "adherens_junction"                   "desmosome"                          
+## [39] "intracellular_intercellular_related"</code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get_intercell_categories() # this would show also the specific categories</span></code></pre></div>
+</div>
+</div>
+<div id="data-from-other-resources" class="section level2">
+<h2 class="hasAnchor">
+<a href="#data-from-other-resources" class="anchor" aria-hidden="true"></a>Data from other resources</h2>
+<p>An increasing number of other resources (currently around 20) can be directly accessed by <code>OmnipathR</code> (not from the omnipathdb.org domain, but from their original providers). As an example,</p>
+</div>
+<div id="general-purpose-functionalities" class="section level2">
+<h2 class="hasAnchor">
+<a href="#general-purpose-functionalities" class="anchor" aria-hidden="true"></a>General purpose functionalities</h2>
+<div id="identifier-translation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#identifier-translation" class="anchor" aria-hidden="true"></a>Identifier translation</h3>
+<p><code>OmnipathR</code> uses UniProt data to translate identifiers. You may find a list of the available identifiers in the manual page of <code>translate_ids</code> function. The evaluation of the parameters is tidyverse style, and both UniProt’s notation and a simple internal notation can be used. Furthermore, it can handle vectors, data frames or list of vectors.</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>uniprot_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'P00533'</span>, <span class="st">'Q9ULV1'</span>, <span class="st">'P43897'</span>, <span class="st">'Q9Y2P5'</span><span class="op">)</span><span class="op">)</span>
+<span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/translate_ids.html">translate_ids</a></span><span class="op">(</span>
+    <span class="va">d</span>,
+    uniprot_id <span class="op">=</span> <span class="va">uniprot</span>, <span class="co"># the source ID type and column name</span>
+    <span class="va">genesymbol</span> <span class="co"># the target ID type using OmniPath's notation</span>
+<span class="op">)</span>
+<span class="va">d</span></code></pre></div>
+<pre><code>##   uniprot_id genesymbol
+## 1     P00533       EGFR
+## 2     Q9ULV1       FZD4
+## 3     P43897       TSFM
+## 4     Q9Y2P5    SLC27A5</code></pre>
+<p>It is possible to have one source ID type and column in one call, but multiple target ID types and columns: to translate a network, two calls are necessary. <em>Note: certain functionality fails recently due to changes in other packages, will be fixed in a few days.</em></p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/translate_ids.html">translate_ids</a></span><span class="op">(</span>
+    <span class="va">network</span>,
+    source <span class="op">=</span> <span class="va">uniprot_id</span>,
+    source_entrez <span class="op">=</span> <span class="va">entrez</span>
+<span class="op">)</span>
+<span class="va">network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/translate_ids.html">translate_ids</a></span><span class="op">(</span>
+    <span class="va">network</span>,
+    target <span class="op">=</span> <span class="va">uniprot_id</span>,
+    target_entrez <span class="op">=</span> <span class="va">entrez</span>
+<span class="op">)</span></code></pre></div>
+</div>
+<div id="gene-ontology" class="section level3">
+<h3 class="hasAnchor">
+<a href="#gene-ontology" class="anchor" aria-hidden="true"></a>Gene Ontology</h3>
+<p><code>OmnipathR</code> is able to look up ancestors and descendants in ontology trees, and also exposes the ontology tree in three different formats: as a data frame, as a list of lists or as an igraph graph object. All these can have two directions: child-to-parent (<code>c2p</code>) or parent-to-child (<code>p2c</code>).</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">go</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/go_ontology_download.html">go_ontology_download</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">go</span><span class="op">$</span><span class="va">rel_tbl_c2p</span></code></pre></div>
+<pre><code>## # A tibble: 59,288 x 3
+##    term       relation parents  
+##    &lt;fct&gt;      &lt;chr&gt;    &lt;list&gt;   
+##  1 GO:0000001 is_a     &lt;chr [2]&gt;
+##  2 GO:0000002 is_a     &lt;chr [1]&gt;
+##  3 GO:0000003 is_a     &lt;chr [1]&gt;
+##  4 GO:0000006 is_a     &lt;chr [1]&gt;
+##  5 GO:0000007 is_a     &lt;chr [1]&gt;
+##  6 GO:0000009 is_a     &lt;chr [1]&gt;
+##  7 GO:0000010 is_a     &lt;chr [1]&gt;
+##  8 GO:0000011 is_a     &lt;chr [2]&gt;
+##  9 GO:0000012 is_a     &lt;chr [1]&gt;
+## 10 GO:0000014 is_a     &lt;chr [1]&gt;
+## # … with 59,278 more rows</code></pre>
+<p>To convert the relations to list or graph format, use the <code>relations_table_to_list</code> or <code>relations_table_to_graph</code> functions. To swap between <code>c2p</code> and <code>p2c</code> use the <code>swap_relations</code> function.</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">go_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/relations_table_to_graph.html">relations_table_to_graph</a></span><span class="op">(</span><span class="va">go</span><span class="op">$</span><span class="va">rel_tbl_c2p</span><span class="op">)</span>
+<span class="va">go_graph</span></code></pre></div>
+<pre><code>## IGRAPH 2e55138 DN-- 43917 86871 -- 
+## + attr: name (v/c), relation (e/c)
+## + edges from 2e55138 (vertex names):
+##  [1] GO:0000001-&gt;GO:0048308 GO:0000001-&gt;GO:0048311 GO:0000002-&gt;GO:0007005 GO:0000003-&gt;GO:0008150
+##  [5] GO:0000006-&gt;GO:0005385 GO:0000007-&gt;GO:0005385 GO:0000009-&gt;GO:0000030 GO:0000010-&gt;GO:0004659
+##  [9] GO:0000011-&gt;GO:0007033 GO:0000011-&gt;GO:0048308 GO:0000012-&gt;GO:0006281 GO:0000014-&gt;GO:0004520
+## [13] GO:0000015-&gt;GO:1902494 GO:0000015-&gt;GO:0005829 GO:0000016-&gt;GO:0004553 GO:0000017-&gt;GO:0042946
+## [17] GO:0000018-&gt;GO:0051052 GO:0000018-&gt;GO:0006310 GO:0000019-&gt;GO:0000018 GO:0000019-&gt;GO:0006312
+## [21] GO:0000022-&gt;GO:0051231 GO:0000022-&gt;GO:1903047 GO:0000022-&gt;GO:0000070 GO:0000022-&gt;GO:0007052
+## [25] GO:0000023-&gt;GO:0005984 GO:0000024-&gt;GO:0000023 GO:0000024-&gt;GO:0046351 GO:0000025-&gt;GO:0000023
+## [29] GO:0000025-&gt;GO:0046352 GO:0000026-&gt;GO:0000030 GO:0000027-&gt;GO:0022618 GO:0000027-&gt;GO:0042255
+## + ... omitted several edges</code></pre>
+<p>It can also translate term IDs to term names:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ontology_ensure_name.html">ontology_ensure_name</a></span><span class="op">(</span><span class="st">'GO:0000022'</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "mitotic spindle elongation"</code></pre>
+<p><em>The first call takes a few seconds as it loads the database, subsequent calls are faster.</em></p>
+</div>
+</div>
+<div id="useful-tips" class="section level2">
+<h2 class="hasAnchor">
+<a href="#useful-tips" class="anchor" aria-hidden="true"></a>Useful tips</h2>
+<p><code>OmnipathR</code> features a logging facility, a YML configuration file and a cache directory. By default the highest level messages are printed to the console, and you can browse the full log from R by calling <code><a href="../reference/omnipath_log.html">omnipath_log()</a></code>. The cache can be controlled by a number of functions, for example you can search for cache files by <code><a href="../reference/omnipath_cache_search.html">omnipath_cache_search()</a></code>, and delete them by <code>omnipath_cache_remove</code>:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/omnipath_cache_search.html">omnipath_cache_search</a></span><span class="op">(</span><span class="st">'dorothea'</span><span class="op">)</span></code></pre></div>
+<pre><code>## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$key
+## [1] "f4de1f63d60f35d18bb262dd6de84d1cccd9cc97"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$url
+## [1] "https://omnipathdb.org/interactions?genesymbols=yes&amp;datasets=dorothea,tf_target&amp;organisms=9606&amp;dorothea_levels=A,B&amp;fields=sources,references,curation_effort,dorothea_level&amp;license=academic"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$post
+## list()
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$payload
+## list()
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$ext
+## [1] "rds"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$number
+## [1] "1"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$path
+## [1] "/home/denes/.cache/OmnipathR/f4de1f63d60f35d18bb262dd6de84d1cccd9cc97-1.rds"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$dl_started
+## [1] "2021-08-05 13:35:06 CEST"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$status
+## [1] "ready"
+## 
+## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$dl_finished
+## [1] "2021-08-05 13:35:07 CEST"</code></pre>
+<p>The configuration can be set by <code>options</code>, all options are prefixed with <code>omnipath.</code>, and can be saved by <code>omnipath_save_config</code>. For example, to exclude all OmniPath resources which don’t allow for-profit use:</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>omnipath.license <span class="op">=</span> <span class="st">'commercial'</span><span class="op">)</span></code></pre></div>
+<p>The internal state is contained by the <code>omnipath.env</code> environment.</p>
+</div>
+<div id="further-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#further-information" class="anchor" aria-hidden="true"></a>Further information</h2>
+<p>Find more examples in the other vignettes and the manual. For example, the NicheNet vignette presents the integratation between <code>OmnipathR</code> and <code>nichenetr</code>, a method for prediction of ligand-target gene connections. Another Bioconductor package <code>wppi</code> is able to add context specific scores to networks, based on genes of interest, functional annotations and network proximity (random walks with restart). The new <code>paths</code> vignette presents some approaches to construct pathways from networks. The design of the OmniPath database is described in our recent paper [1], while an in depth analysis of the pathway resources is available in the first OmniPath paper [2].</p>
+</div>
 </div>
 <div id="session-info" class="section level1 unnumbered">
 <h1 class="hasAnchor">
@@ -228,31 +767,32 @@
 ## LAPACK: /usr/lib/liblapack.so.3.10.0
 ## 
 ## locale:
-##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    
-##  [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   
-##  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 
-##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
+##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C               LC_TIME=en_GB.UTF-8       
+##  [4] LC_COLLATE=en_GB.UTF-8     LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   
+##  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+## [10] LC_TELEPHONE=C             LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] BiocStyle_2.16.1
+## [1] OmnipathR_3.1.2  BiocStyle_2.16.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] knitr_1.33          magrittr_2.0.1      R6_2.5.0           
-##  [4] ragg_1.1.3          rlang_0.4.11        fastmap_1.1.0      
-##  [7] stringr_1.4.0       tools_4.1.0         xfun_0.24          
-## [10] jquerylib_0.1.4     htmltools_0.5.1.1   systemfonts_1.0.2  
-## [13] yaml_2.2.1          digest_0.6.27       rprojroot_2.0.2    
-## [16] pkgdown_1.6.1.9001  crayon_1.4.1        bookdown_0.22      
-## [19] textshaping_0.3.5   BiocManager_1.30.16 sass_0.4.0         
-## [22] fs_1.5.0            memoise_2.0.0       cachem_1.0.5       
-## [25] evaluate_0.14       rmarkdown_2.9.5     stringi_1.7.3      
-## [28] compiler_4.1.0      bslib_0.2.5.1       desc_1.3.0         
-## [31] jsonlite_1.7.2</code></pre>
+##  [1] progress_1.2.2      tidyselect_1.1.1    xfun_0.24           bslib_0.2.5.1       purrr_0.3.4        
+##  [6] vctrs_0.3.8         generics_0.1.0      htmltools_0.5.1.1   yaml_2.2.1          utf8_1.2.1         
+## [11] rlang_0.4.11        pkgdown_1.6.1.9001  jquerylib_0.1.4     pillar_1.6.1        later_1.2.0        
+## [16] glue_1.4.2          DBI_1.1.1           rappdirs_0.3.3      bit64_4.0.5         readxl_1.3.1       
+## [21] lifecycle_1.0.0     stringr_1.4.0       cellranger_1.1.0    ragg_1.1.3          memoise_2.0.0      
+## [26] evaluate_0.14       knitr_1.33          tzdb_0.1.2          fastmap_1.1.0       parallel_4.1.0     
+## [31] curl_4.3.2          fansi_0.5.0         Rcpp_1.0.7          readr_2.0.0         backports_1.2.1    
+## [36] checkmate_2.0.0     BiocManager_1.30.16 cachem_1.0.5        desc_1.3.0          vroom_1.5.3        
+## [41] jsonlite_1.7.2      bit_4.0.4           systemfonts_1.0.2   fs_1.5.0            textshaping_0.3.5  
+## [46] hms_1.1.0           digest_0.6.27       stringi_1.7.3       bookdown_0.22       dplyr_1.0.7        
+## [51] rprojroot_2.0.2     cli_3.0.1           tools_4.1.0         magrittr_2.0.1      logger_0.2.1       
+## [56] sass_0.4.0          tibble_3.1.2        tidyr_1.1.3         crayon_1.4.1        pkgconfig_2.0.3    
+## [61] ellipsis_0.3.2      xml2_1.3.2          prettyunits_1.1.1   assertthat_0.2.1    rmarkdown_2.9.5    
+## [66] httr_1.4.2          R6_2.5.0            igraph_1.2.6        compiler_4.1.0</code></pre>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">

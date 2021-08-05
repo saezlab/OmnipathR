@@ -32,6 +32,7 @@
     <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
+    <a class="dropdown-item" href="../articles/paths.html">Pathway construction</a>
   </div>
 </li>
 <li class="nav-item">
@@ -110,11 +111,11 @@ namespace until its expiry. The loaded database is accessible by
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16 x 10</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    name   last_used           lifetime package  loader loader_param latest_param</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Gene … 2021-07-24 <span style="color: #949494;">19:33:52</span>      300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;named list</span>…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Gene … 2021-07-30 <span style="color: #949494;">02:41:07</span>      300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;named list</span>…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Gene … 2021-07-24 <span style="color: #949494;">19:36:10</span>      300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;named list</span>…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Gene … 2021-07-30 <span style="color: #949494;">02:43:42</span>      300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;named list</span>…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>

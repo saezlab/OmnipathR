@@ -7,7 +7,8 @@ articles:
   gene_ontology: gene_ontology.html
   nichenet: nichenet.html
   omnipath_intro: omnipath_intro.html
-last_built: 2021-07-24T17:27Z
+  paths: paths.html
+last_built: 2021-07-30T00:33Z
 urls:
   reference: https://saezlab.github.io/OmnipathR/reference
   article: https://saezlab.github.io/OmnipathR/articles

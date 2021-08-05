@@ -55,6 +55,10 @@ fig_width: 9
 fig_height: 7
 ---
 
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width = 110)
+```
+
 # Introduction
 
 Database knowledge is essential for omics data analysis and modeling. Despite
@@ -94,7 +98,7 @@ https://bioconductor.org/packages/release/bioc/html/OmnipathR.html)
 the examples yourself we recommend to install the latest version of the
 package before the workshop:
 
-```{r, eval=FALSE}
+```{r installation, eval=FALSE}
 library(devtools)
 install_github('saezlab/OmnipathR')
 ```
@@ -152,7 +156,400 @@ easier.
 
 # Workshop
 
-Here we will publish the workshop contents with code examples.
+```{r library}
+library(OmnipathR)
+```
+
+## Data from OmniPath
+
+OmniPath consists of five major databases, each combining many original
+resources. The five databases are:
+
+* Network (interactions)
+* Enzyme-substrate relationships (enzsub)
+* Protein complexes (complexes)
+* Annotations (annotations)
+* Intercellular communication roles (intercell)
+
+The parameters for each database (query type) are available in the web
+service, for example: https://omnipathdb.org/queries/interactions. The
+R package supports all features of the web service and the parameter
+names and values usually correspond to the web service parameters which
+you would use in a HTTP query string.
+
+### Networks
+
+The network database contains protein-protein, gene regulatory and miRNA-mRNA
+interactions. Soon more interaction types will be added. Some of these
+categories can be further divided into datasets which are defined by the
+type of evidences. A full list of network datasets:
+
+* Protein-protein interactions *(post_translational)*
+  [import_post_translational_interactions](https://saezlab.github.io/OmnipathR/reference/import_post_translational_interactions.html)
+  - **omnipath:** literature curated, directed interactions with effect signs;
+    corresponds to the first edition of OmniPath, hence the confusing name
+    is due to historical reasons
+    [import_omnipath_interactions](https://saezlab.github.io/OmnipathR/reference/import_omnipath_interactions.html)
+  - **pathwayextra:** directed and signed interactions, without literature
+    references (might be literature curated, but references are not
+    available)
+    [import_pathwayextra_interactions](https://saezlab.github.io/OmnipathR/reference/import_pathwayextra_interactions.html)
+  - **kinaseextra:** enzyme-PTM interactions without literature references
+    [import_kinaseextra_interactions](https://saezlab.github.io/OmnipathR/reference/import_kinaseextra_interactions.html)
+  - **ligrecextra:** ligand-receptor interactions without literature
+    references
+    [import_ligrecextra_interactions](https://saezlab.github.io/OmnipathR/reference/import_ligrecextra_interactions.html)
+* Gene regulatory interactions *(transcriptional)*
+  [import_transcriptional_interactions](https://saezlab.github.io/OmnipathR/reference/import_transcriptional_interactions.html)
+  - **dorothea:** a comprehensive collection built out of 18 resources,
+    contains literature curated, ChIP-Seq, gene expression derived
+    and TF binding site predicted data, with 5 confidence levels (A-E)
+    [import_dorothea_interactions](https://saezlab.github.io/OmnipathR/reference/import_kinaseextra_interactions.html)
+  - **tf_target:** additional literature curated interactions
+    [import_tf_target_interactions](https://saezlab.github.io/OmnipathR/reference/import_tf_target_interactions.html)
+* miRNA interactions *(post_transcriptional and mirna_transcriptional)*
+  - **mirnatarget:** literature curated miRNA-mRNA interactions
+    [import_mirnatarget_interactions](https://saezlab.github.io/OmnipathR/reference/import_mirnatarget_interactions.html)
+  - **tf_mirna:** literature curated TF-miRNA interactions (transcriptional
+    regulations of miRNA)
+    [import_tf_mirna_interactions](https://saezlab.github.io/OmnipathR/reference/import_tf_mirna_interactions.html)
+* lncRNA interactions *(lncrna_post_transcriptional)*
+  - **lncrna_mrna:** literature curated lncRNA-mRNA interactions
+    [import_lncrna_mrna_interactions](https://saezlab.github.io/OmnipathR/reference/import_lncrna_mrna_interactions.html)
+
+Not individual interactions but resource are classified into the datasets
+above, so these can overlap. Each interaction type and dataset has its
+dedicated function in `OmnipathR`, above we provide links to their help
+pages. As an example, let's see the gene regulatory interactions:
+
+```{r network}
+gri <- import_transcriptional_interactions()
+gri
+```
+
+The interaction data frame contains the UniProt IDs and Gene Symbols of
+the interacting partners, the list of resources and references (PubMed IDs)
+for each interaction, and whether the interaction is directed,
+stimulatory or inhibitory.
+
+#### Igraph integration
+
+The network data frames can be converted to igraph graph objects, so you
+can make use of the graph and visualization methods of igraph:
+
+```{r network-igraph}
+gr_graph <- interaction_graph(gri)
+gr_graph
+```
+
+On this network we can use `OmnipathR`'s `find_all_paths` function, which
+is able to look up all paths up to a certain length between two set of
+nodes:
+
+```{r paths}
+paths <- find_all_paths(
+    graph = gr_graph,
+    start = c('EGFR', 'STAT3'),
+    end = c('AKT1', 'ULK1'),
+    attr = 'name'
+)
+```
+
+*As this is a gene regulatory network, the paths are TFs regulating the
+transcription of other TFs.*
+
+### Enzyme-substrate relationships
+
+Enzyme-substrate interactions are also available also in the interactions
+query, but the enzyme-substrate query type provides additional information
+about the PTM types and residues.
+
+```{r enzsub}
+enz_sub <- import_omnipath_enzsub()
+enz_sub
+```
+
+This data frame also can be converted to an igraph object:
+
+```{r enzsub-igraph}
+es_graph <- enzsub_graph(enz_sub)
+es_graph
+```
+
+It is also possible to add effect signs (stimulatory or inhibitory) to
+enzyme-PTM relationships:
+
+```{r enzsub-signs}
+es_signed <- get_signed_ptms(enz_sub)
+```
+
+### Protein complexes
+
+```{r complexes}
+cplx <- import_omnipath_complexes()
+cplx
+```
+
+The resulted data frame provides the constitution and stoichiometry of
+protein complexes, with references.
+
+### Annotations
+
+The annotations query type includes a diverse set of resources (about 60 of
+them), about protein function, localization, structure and expression. For
+most use cases it is better to convert the data into wide data frames, as
+these correspond to the original format of the resources. If you load more
+than one resources into wide data frames, the result will be a list of
+data frames, otherwise one data frame. See a few examples with localization
+data from UniProt, tissue expression from Human Protein Atlas and
+pathway information from SignaLink:
+
+```{r uniprot-loc}
+uniprot_loc <- import_omnipath_annotations(
+    resources = 'UniProt_location',
+    wide = TRUE
+)
+uniprot_loc
+```
+
+The `entity_type` field can be protein, mirna or complex. Protein complexes
+mostly annotated based on the consensus of their members, we should be aware
+that this is an *in silico* inference.
+
+In case of spelling mistake either in parameter names or values `OmnipathR`
+either corrects the mistake or gives a warning or error:
+
+```{r uniprot-loc-1}
+uniprot_loc <- import_omnipath_annotations(
+    resources = 'Uniprot_location',
+    wide = TRUE
+)
+```
+
+Above the name of the resource is wrong. If the parameter name is wrong, it
+throws an error:
+
+```{r uniprot-loc-2, error = TRUE}
+uniprot_loc <- import_omnipath_annotations(
+    resuorces = 'UniProt_location',
+    wide = TRUE
+)
+```
+
+Singular vs. plural forms and a few synonyms are automatically corrected:
+
+```{r uniprot-loc-3}
+uniprot_loc <- import_omnipath_annotations(
+    resource = 'UniProt_location',
+    wide = TRUE
+)
+```
+
+Another example with tissue expression from Human Protein Atlas:
+
+```{r hpa-tissue}
+hpa_tissue <- import_omnipath_annotations(
+    resources = 'HPA_tissue',
+    wide = TRUE
+)
+hpa_tissue
+```
+
+And pathway annotations from SignaLink:
+
+```{r slk-pathway}
+slk_pathw <- import_omnipath_annotations(
+    resources = 'SignaLink_pathway',
+    wide = TRUE
+)
+slk_pathw
+```
+
+#### Combining networks with annotations
+
+Annotations can be easily added to network data frames, in this case both
+the source and target nodes will have their annotation data. This function
+accepts either the name of an annotation resource or an annotation data
+frame:
+
+```{r annotate-network}
+network <- import_omnipath_interactions()
+
+network_slk_pw <- annotated_network(network, 'SignaLink_pathway')
+network_slk_pw
+```
+
+### Intercellular communication roles
+
+The `intercell` database assigns roles to proteins such as ligand, receptor,
+adhesion, transporter, ECM, etc. The design of this database is far from
+being simple, best is to check the description in the recent OmniPath paper
+[1].
+
+```{r intercell}
+ic <- import_omnipath_intercell()
+ic
+```
+
+This data frame is about individual proteins. To create a network of
+intercellular communication, we provide the `import_intercell_network`
+function:
+
+```{r intercell-network}
+icn <- import_intercell_network(high_confidence = TRUE)
+icn
+```
+
+The result is similar to the `annotated_network`, each interacting partner
+has its intercell annotations. In the `intercell` database, OmniPath aims to
+ship all available information, which means it might contain quite some
+false positives. The `high_confidence` option is a shortcut to stringent
+filter settings based on the number and consensus of provenances. Using
+instead the `filter_intercell_network` function, you can have a fine control
+over the quality filters. It has many options which are described in the
+manual.
+
+```{r intercell-filter}
+icn <- import_intercell_network()
+icn_hc <- filter_intercell_network(
+    icn,
+    ligand_receptor = TRUE,
+    consensus_percentile = 30,
+    loc_consensus_percentile = 50,
+    simplify = TRUE
+)
+```
+
+The `filter_intecell` function does a similar procedure on an intercell
+annotation data frame.
+
+### Metadata
+
+The list of available resources for each query type can be retrieved
+by the `get_..._resources` function. For example, the annotation resources
+are:
+
+```{r annot-res}
+get_annotation_resources()
+```
+
+Categories in the `intercell` query also can be listed:
+
+```{r intercell-cat}
+get_intercell_generic_categories()
+# get_intercell_categories() # this would show also the specific categories
+```
+
+## Data from other resources
+
+An increasing number of other resources (currently around 20) can be directly
+accessed by `OmnipathR` (not from the omnipathdb.org domain, but from their
+original providers). As an example,
+
+## General purpose functionalities
+
+### Identifier translation
+
+`OmnipathR` uses UniProt data to translate identifiers. You may find a list
+of the available identifiers in the manual page of `translate_ids` function.
+The evaluation of the parameters is tidyverse style, and both UniProt's
+notation and a simple internal notation can be used. Furthermore, it can
+handle vectors, data frames or list of vectors.
+
+```{r id-translate-vector}
+d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
+d <- translate_ids(
+    d,
+    uniprot_id = uniprot, # the source ID type and column name
+    genesymbol # the target ID type using OmniPath's notation
+)
+d
+```
+
+It is possible to have one source ID type and column in one call, but
+multiple target ID types and columns: to translate a network, two calls
+are necessary. *Note: certain functionality fails recently due to changes
+in other packages, will be fixed in a few days.*
+
+```{r id-translate-df, eval = FALSE}
+network <- import_omnipath_interactions()
+network <- translate_ids(
+    network,
+    source = uniprot_id,
+    source_entrez = entrez
+)
+network <- translate_ids(
+    network,
+    target = uniprot_id,
+    target_entrez = entrez
+)
+```
+
+### Gene Ontology
+
+`OmnipathR` is able to look up ancestors and descendants in ontology trees,
+and also exposes the ontology tree in three different formats: as a
+data frame, as a list of lists or as an igraph graph object. All these
+can have two directions: child-to-parent (`c2p`) or parent-to-child (`p2c`).
+
+```{r go}
+go <- go_ontology_download()
+go$rel_tbl_c2p
+```
+
+To convert the relations to list or graph format, use the
+`relations_table_to_list` or `relations_table_to_graph` functions. To
+swap between `c2p` and `p2c` use the `swap_relations` function.
+
+```{r go-graph}
+go_graph <- relations_table_to_graph(go$rel_tbl_c2p)
+go_graph
+```
+
+It can also translate term IDs to term names:
+
+```{r go-name}
+ontology_ensure_name('GO:0000022')
+```
+
+*The first call takes a few seconds as it loads the database, subsequent
+calls are faster.*
+
+## Useful tips
+
+`OmnipathR` features a logging facility, a YML configuration file and
+a cache directory. By default the highest level messages are printed to
+the console, and you can browse the full log from R by calling
+`omnipath_log()`. The cache can be controlled by a number of functions,
+for example you can search for cache files by `omnipath_cache_search()`,
+and delete them by `omnipath_cache_remove`:
+
+```{r cache}
+omnipath_cache_search('dorothea')
+```
+
+The configuration can be set by `options`, all options are prefixed with
+`omnipath.`, and can be saved by `omnipath_save_config`. For example, to
+exclude all OmniPath resources which don't allow for-profit use:
+
+```{r license, eval = FALSE}
+options(omnipath.license = 'commercial')
+```
+
+The internal state is contained by the `omnipath.env` environment.
+
+## Further information
+
+Find more examples in the other vignettes and the manual. For example, the
+NicheNet vignette presents the integratation between `OmnipathR` and
+`nichenetr`, a method for prediction of ligand-target gene connections.
+Another Bioconductor package `wppi` is able to add context specific scores
+to networks, based on genes of interest, functional annotations and network
+proximity (random walks with restart). The new `paths` vignette presents
+some approaches to construct pathways from networks. The design of the
+OmniPath database is described in our recent paper [1], while an in depth
+analysis of the pathway resources is available in the first OmniPath
+paper [2].
 
 # Session info {.unnumbered}
 
