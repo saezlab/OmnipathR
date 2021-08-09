@@ -56,7 +56,7 @@ Imports:
     progress,
     purrr,
     rappdirs,
-    readr,
+    readr(>= 2.0.0),
     readxl,
     rlang,
     stats,
