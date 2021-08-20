@@ -292,6 +292,7 @@ generic_downloader <- function(
         reader,
         list(
             col_types = cols(),
+            show_col_types = FALSE,
             progress = FALSE
         )
     )

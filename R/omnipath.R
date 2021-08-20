@@ -178,7 +178,9 @@ import_omnipath <- function(
             'dorothea_level' %in% param$fields,
             cols(dorothea_level = col_character()),
             cols()
-        )
+        ),
+        progress = FALSE,
+        show_col_types = FALSE
     )
     json_defaults <- list(
         fun = jsonlite::fromJSON
