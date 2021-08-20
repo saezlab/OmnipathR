@@ -244,6 +244,8 @@ omnipath_load_config <- function(
     this_config %<>% merge_lists(omnipath_env_config(), .)
 
     omnipath.env$config <- this_config
+
+    omnipath_options_to_config()
     omnipath_config_to_options()
 
 }
@@ -276,8 +278,10 @@ omnipath_env_config <- function(){
 #' Restores the built-in default values of all config parameters
 #'
 #' @param save If a path, the restored config will be also saved
-#' to this file. If TRUE, the config will be saved to the current default
-#' config path (see \code{\link{omnipath_get_config_path}}).
+#'     to this file. If TRUE, the config will be saved to the current default
+#'     config path (see \code{\link{omnipath_get_config_path}}).
+#' @param reset_all Reset to their defaults also the options already set in
+#'     the R options.
 #'
 #' @examples
 #' \donttest{
@@ -290,9 +294,14 @@ omnipath_env_config <- function(){
 #'
 #' @export
 #' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config}}
-omnipath_reset_config <- function(save = NULL){
+omnipath_reset_config <- function(save = NULL, reset_all = FALSE){
 
     omnipath.env$config <- .omnipath_options_defaults
+
+    if(!reset_all){
+        omnipath_options_to_config()
+    }
+
     omnipath_config_to_options()
 
     if(!is.null(save)){
@@ -338,13 +347,17 @@ omnipath_config_to_options <- function(){
 
 #' Copies OmnipathR settings from options to omnipath.env$config
 #'
+#' @importFrom magrittr %>%
+#' @importFrom purrr discard
 #' @noRd
 omnipath_options_to_config <- function(){
 
     from_options <- do.call(
         options,
         as.list(names(.omnipath_options_defaults))
-    )
+    ) %>%
+    discard(is.null)
+
     omnipath.env$config <- merge_lists(
         from_options,
         omnipath.env$config
