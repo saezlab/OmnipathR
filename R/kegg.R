@@ -656,6 +656,10 @@ kegg_info_tbl <- function(tbl){
 #' @seealso \code{\link{kegg_pathways_download}}
 kegg_pathway_annotations <- function(pathways = NULL){
 
+    # NSE vs. R CMD check workaround
+    uniprot_source <- uniprot_target <- pathway <- pathway_id <-
+    genesymbol_source <- genesymbol_target <- NULL
+
     pathways %<>% {. %||% kegg_pathways_download()}
 
     pathways %>%

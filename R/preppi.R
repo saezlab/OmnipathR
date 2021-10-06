@@ -79,6 +79,9 @@
 #' @seealso \code{\link{preppi_filter}}
 preppi_download <- function(...){
 
+    # NSE vs. R CMD check workaround
+    dbs <- pubs <- NULL
+
     'preppi' %>%
     archive_extractor(
         path = 'preppi_final600.txt',
