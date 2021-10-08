@@ -423,8 +423,8 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
         )
         appender <- `if`(
             idx == 1,
-            appender_console,
-            appender_file(log_path)
+            logger::appender_console,
+            logger::appender_file(log_path)
         )
         layout_format <- `if`(
             idx == 1,

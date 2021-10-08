@@ -114,7 +114,7 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
     namespaces <- NULL
 
     level %<>% ensure_loglevel
-    i_logger <- target %>% equals(c('logfile', 'console')) %>% which
+    i_logger <- target %>% equals(c('console', 'logfile')) %>% which
 
     omnipathr_loggers <- (logger%:::%namespaces)$OmnipathR
     omnipathr_loggers[[i_logger]]$threshold <- level
@@ -244,14 +244,14 @@ patch_logger <- function(){
 
     original_appender_console <- logger::appender_console
 
-    patched_appender <- function(...){
+    appender_patched <- function(...){
 
         no_colorout(original_appender_console(...))
 
     }
 
-    patch_ns('appender_console', patched_appender, ns)
-    patch_ns('appender_stderr', patched_appender, ns)
+    patch_ns('appender_console', appender_patched, ns)
+    patch_ns('appender_stderr', appender_patched, ns)
 
 }
 
