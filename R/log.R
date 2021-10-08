@@ -238,6 +238,9 @@ no_colorout <- function(ex){
 
 #' Patches logger::appender_console to not to interfere with colorout
 #'
+#' @importFrom crayon num_colors
+#' @importFrom magrittr %<>%
+#' @importFrom logger appender_console
 #' @noRd
 patch_logger <- function(){
 
@@ -245,9 +248,13 @@ patch_logger <- function(){
 
     original_appender_console <- logger::appender_console
 
-    appender_patched <- function(...){
+    appender_patched <- function(lines){
 
-        no_colorout(original_appender_console(...))
+        if(crayon::num_colors() > 1L){
+            lines[1] %<>% {paste0('\033[0m', .)}
+        }
+
+        no_colorout(original_appender_console(lines))
 
     }
 

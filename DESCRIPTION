@@ -44,6 +44,7 @@ Depends:
     R(>= 4.0)
 Imports:
     checkmate,
+    crayon,
     curl,
     digest,
     dplyr,
