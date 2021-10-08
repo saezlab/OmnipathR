@@ -228,6 +228,7 @@ no_colorout <- function(ex){
 
     if(colorout_active) noColorOut()
     result <- eval(ex)
+    flush.console()
     if(colorout_active) ColorOut()
 
     invisible(result)
