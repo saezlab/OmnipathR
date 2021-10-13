@@ -152,8 +152,8 @@ merge_lists <- function (x, y, ...)
 }
 
 
-#' Returns NULL if `value` is a list with a single NULL element otherwise
-#' the value itself
+#' Returns NULL if `value` is an empty list or a list with a single NULL
+#' element otherwise the value itself
 #'
 #' @importFrom utils tail
 #'
@@ -161,7 +161,10 @@ merge_lists <- function (x, y, ...)
 list_null <- function(value){
 
     `if`(
-        is.list(value) && length(value) == 1 && is.null(value[[1]]),
+        is.list(value) && (
+            length(value) == 0 ||
+            length(value) == 1 && is.null(value[[1]])
+        ),
         NULL,
         value
     )
