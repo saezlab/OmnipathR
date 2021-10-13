@@ -64,9 +64,6 @@ url_parser <- function(
 }
 
 
-
-
-
 #' Downloads an URL
 #'
 #' This function is convenient for appropriate resource retrieval. Following
@@ -74,10 +71,12 @@ url_parser <- function(
 #' It tries to retrieve the resource one or several times before failing.
 #'
 #' @param url Character: the URL to download.
-#' @param reader The downloader function. Should be able to accept \code{url}
-#'     as its first argument. Alternatively, it can be a function for reading
-#'     the data, in this case `path` must be provided, and `httr::GET` or
-#'     `httr::POST` will be used to download the file.
+#' @param fun The downloader function. Should be able to accept \code{url}
+#'     as its first argument. Alternatively, it can be `NULL` or a function
+#'     for reading the data, in the latter case `path` must be provided, or
+#'     one of the `use_httr` or the `ignore_contents` parameters should be
+#'     `TRUE`. In all these cases, `httr::GET` or `httr::POST` will be used
+#'     to download the file.
 #' @param post List with HTTP POST data. If \code{NULL}, the function
 #'     \code{fun} will execute the download and potentially the reading from
 #'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
@@ -91,6 +90,31 @@ url_parser <- function(
 #'     \code{NULL}.
 #' @param path Character: if not `NULL` the file will be downloaded
 #'     to this path and the path will be returned.
+#' @param req_headers List: a list of HTTP headers. Passed to
+#'     `httr::add_headers`, used only if the downloader function is set up
+#'     here (see details at param `fun`).
+#' @param init_url Character: retrieve first this URL, to obtain cookies
+#'     or start a session.
+#' @param init_headers List: HTTP headers for the initial request to
+#'     `init_url`.
+#' @param return_response Logical: return the response object from `httr`
+#'     without any further processing. Used only if the downloader function
+#'     is set up here (see details at param `fun`).
+#' @param keep_headers Logical: add the response headers to the returned
+#'     object as an attribute. If `ignore_contents` is `TRUE`, the returned
+#'     object will be `FALSE`, but still might carry the headers in its
+#'     `headers` attribute. Used only if the downloader method is set up here
+#'     (see details at param `fun`).
+#' @param ignore_contents Logical: do not extract the contents from the
+#'     response object. The contents still might be saved to the disk if
+#'     `path` is provided. The returned object will be the response object
+#'     if `return_response` is `TRUE`, otherwise `FALSE` will be returned.
+#' @param extract_headers Callable: a custom function which accepts the
+#'     response object retrieved from `init_url` and returns a list of
+#'     HTTP headers which can be used in the main request. Must be provided
+#'     if `init_url` is not `NULL`.
+#' @param use_httr Logical: use `httr::GET` to download the data even if no
+#'     other argument or condition implies this.
 #' @param ... Passed to \code{fun}.
 #'
 #' @return The output of the downloader function \code{fun}.
@@ -98,7 +122,7 @@ url_parser <- function(
 #' @importFrom logger log_level log_error log_warn log_trace
 #' @importFrom httr POST GET content write_disk add_headers status_code
 #' @importFrom magrittr %>% %<>%
-#' @importFrom rlang !!! exec
+#' @importFrom rlang !!! exec %||%
 #'
 #' @noRd
 download_base <- function(
@@ -151,11 +175,17 @@ download_base <- function(
 
     log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
 
-    if(!is.null(post) || !is.null(path) || ignore_contents || use_httr){
+    if(
+        !is.null(post) ||
+        !is.null(path) ||
+        ignore_contents ||
+        is.null(fun) ||
+        use_httr
+    ){
 
         fun <- function(url, post = NULL, ...){
 
-            reader <- fun
+            reader <- fun %||% identity
 
             http_param %<>% ensure_list_2
             content_param %<>% ensure_list_2
