@@ -74,8 +74,10 @@ url_parser <- function(
 #' It tries to retrieve the resource one or several times before failing.
 #'
 #' @param url Character: the URL to download.
-#' @param fun The downloader function. Should be able to accept \code{url}
-#'     as its first argument.
+#' @param reader The downloader function. Should be able to accept \code{url}
+#'     as its first argument. Alternatively, it can be a function for reading
+#'     the data, in this case `path` must be provided, and `httr::GET` or
+#'     `httr::POST` will be used to download the file.
 #' @param post List with HTTP POST data. If \code{NULL}, the function
 #'     \code{fun} will execute the download and potentially the reading from
 #'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
@@ -94,20 +96,47 @@ url_parser <- function(
 #' @return The output of the downloader function \code{fun}.
 #'
 #' @importFrom logger log_level log_error log_warn log_trace
-#' @importFrom httr POST GET content write_disk
+#' @importFrom httr POST GET content write_disk add_headers status_code
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec
 #'
 #' @noRd
 download_base <- function(
     url,
-    fun,
+    fun = NULL,
     post = NULL,
     http_param = list(),
     content_param = list(),
     path = NULL,
+    req_headers = list(),
+    init_url = NULL,
+    init_headers = NULL,
+    return_response = FALSE,
+    keep_headers = FALSE,
+    ignore_contents = FALSE,
+    extract_headers = NULL,
+    use_httr = FALSE,
     ...
 ){
+
+    if(!is.null(init_url)){
+
+        init_response <- download_base(
+            url = init_url,
+            req_headers = init_headers,
+            return_response = TRUE
+        )
+
+        if(!is.null(extract_headers)){
+
+            req_headers <-
+                init_response %>%
+                extract_headers %>%
+                {merge_lists(req_headers, .)}
+
+        }
+
+    }
 
     op <- options(timeout = 600)
     on.exit(options(op))
@@ -122,28 +151,62 @@ download_base <- function(
 
     log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
 
-    if(!is.null(post) || !is.null(path)){
-
-        reader <- fun
+    if(!is.null(post) || !is.null(path) || ignore_contents || use_httr){
 
         fun <- function(url, post = NULL, ...){
+
+            reader <- fun
 
             http_param %<>% ensure_list_2
             content_param %<>% ensure_list_2
             http_method <- `if`(is.null(post), GET, POST)
             http_param$body <- post
+            req_headers %<>% list_null
+            http_param %<>% c(list(add_headers(.headers = req_headers)))
 
             if(!is.null(path)){
+
                 http_param %<>% c(list(write_disk(path, overwrite = TRUE)))
+
             }
 
-            exec(http_method, url = url, !!!http_param) %>%
-            {`if`(
-                is.null(path),
-                exec(content, ., !!!content_param) %>%
-                reader(...),
-                path
-            )}
+            response <- exec(http_method, url = url, !!!http_param)
+            http_status <- status_code(response)
+            msg <- sprintf('HTTP %i', http_status)
+
+            if(http_status != 200L){
+
+                log_warning(msg)
+                stop(msg)
+
+            }
+
+            log_trace(msg)
+
+            result <- FALSE
+
+            if(return_response){
+
+                result <- response
+
+            }else{
+
+                if(is.null(path) && !ignore_contents){
+
+                    result <- exec(content, response, !!!content_param) %>%
+                    reader(...)
+
+                }
+
+            }
+
+            if(keep_headers){
+
+                attr(result, 'headers') <- headers(response)
+
+            }
+
+            return(result)
 
         }
 
@@ -155,6 +218,8 @@ download_base <- function(
     for(attempt in seq(retries)){
 
         log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
+
+        resp <- exec(fun, url, !!!args)
 
         result <- tryCatch(
             exec(fun, url, !!!args),
@@ -312,7 +377,15 @@ generic_downloader <- function(
         log_trace('Could not find in cache, initiating download: `%s`.', url)
 
         result <-
-            exec(download_base, url, reader, post, !!!reader_param, ...) %>%
+            exec(
+                download_base,
+                url,
+                reader,
+                post,
+                !!!reader_param,
+                use_httr = use_httr,
+                ...
+            ) %>%
             omnipath_cache_save(url = url, post = post)
 
     }
@@ -387,12 +460,10 @@ xls_downloader <- function(
 #'     the download requires an access token which varies at each download
 #'     but at reading from the cache no need for token.
 #' @param ... Additional options for cURL. Passed to
-#'     \code{curl::handle_setopt}.
+#'     \code{\link{download_base}}.
 #'
 #' @importFrom utils unzip untar
 #' @importFrom logger log_info log_warn log_trace
-#' @importFrom curl new_handle handle_setopt handle_setform
-#' @importFrom curl curl_download handle_setheaders
 #' @importFrom magrittr %>%
 #' @importFrom rlang exec !!!
 #'
@@ -403,7 +474,6 @@ archive_downloader <- function(
     url_param = list(),
     post = NULL,
     http_headers = list(),
-    curl_verbose = FALSE,
     cache_by_url = NULL,
     ...
 ){
@@ -427,26 +497,13 @@ archive_downloader <- function(
     if(!from_cache){
 
         logger::log_info('Downloading `%s`', url)
-        # downloading the data
-        curl_handle <-
-            new_handle() %>%
-            handle_setheaders(.list = http_headers) %>%
-            {`if`(
-                is.null(post),
-                .,
-                exec(handle_setform, ., !!!post)
-            )} %>%
-            handle_setopt(
-                url = url,
-                verbose = curl_verbose,
-                ...
-            )
 
         success <- download_base(
             url = url,
-            fun = curl_download,
-            destfile = version$path,
-            handle = curl_handle
+            path = version$path,
+            post = post,
+            req_headers = http_headers,
+            ...
         )
         omnipath_cache_download_ready(version)
         key <- omnipath_cache_key_from_version(version)
