@@ -861,7 +861,7 @@ omnipath_cache_latest_or_new <- function(
 #' result <- read.delim(url, sep = '\t')
 #' omnipath_cache_save(result, url = url)
 #' # works only if you have already this item in the cache
-#' intercell_data <- omnipath_cache_load()
+#' intercell_data <- omnipath_cache_load(url = url)
 #' class(intercell_data)
 #' # [1] "data.frame"
 #' nrow(intercell_data)
