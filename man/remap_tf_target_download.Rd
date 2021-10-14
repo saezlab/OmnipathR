@@ -24,7 +24,7 @@ This function retrieves the full processed TF-target list from the data
 deposited in \url{https://zenodo.org/record/3713238}.
 }
 \examples{
-\dontrun{
+\donttest{
 remap_interactions <- remap_tf_target_download()
 remap_interactions
 # # A tibble: 9,546,470 x 4

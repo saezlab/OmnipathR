@@ -26,7 +26,7 @@ Downloads all pathway diagrams in the KEGG Pathways database in KGML
 format and processes the XML to extract the interactions.
 }
 \examples{
-\dontrun{
+\donttest{
 kegg_pw <- kegg_pathways_download(simplify = TRUE)
 kegg_pw
 # # A tibble: 6,765 x 6

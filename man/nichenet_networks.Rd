@@ -54,7 +54,7 @@ data is highly customizable, see the documentation of the related
 functions.
 }
 \examples{
-\dontrun{
+\donttest{
 networks <- nichenet_networks()
 dplyr::sample_n(networks$gr_network, 10)
 # # A tibble: 10 x 4

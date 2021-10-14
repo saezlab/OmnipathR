@@ -98,7 +98,7 @@
 #' \link{nichenet_test}}.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' nichenet_results <- nichenet_main(
 #'     # altering some network resource parameters, the rest
 #'     # of the resources will be loaded according to the defaults
@@ -298,7 +298,7 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 #'     corresponding to every input etc.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks()
 #' expression <- nichenet_expression_data()
 #' optimization_results <- nichenet_optimization(networks, expression)
@@ -449,7 +449,7 @@ nichenet_optimization <- function(
 #'
 #' @examples
 #' expression <- nichenet_expression_data()
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks()
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
@@ -542,7 +542,7 @@ nichenet_build_model <- function(
 #' @return A matrix containing ligand-target probability scores.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks()
 #' expression <- nichenet_expression_data()
 #' optimization_results <- nichenet_optimization(networks, expression)
@@ -633,7 +633,7 @@ nichenet_ligand_target_matrix <- function(
 #'     columns ligand, target and weight (i.e. regulatory potential score)).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks()
 #' expression <- nichenet_expression_data()
 #' optimization_results <- nichenet_optimization(networks, expression)
@@ -752,7 +752,7 @@ nichenet_ligand_activities <- function(
 #'     potential score).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks()
 #' expression <- nichenet_expression_data()
 #' optimization_results <- nichenet_optimization(networks, expression)
@@ -868,7 +868,7 @@ nichenet_results_dir <- function(){
 #'     networks.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks()
 #' dplyr::sample_n(networks$gr_network, 10)
 #' # # A tibble: 10 x 4
@@ -1103,7 +1103,7 @@ nichenet_lr_network <- function(
 #'     suitable for use with NicheNet.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load everything with the default parameters:
 #' gr_network <- nichenet_gr_network()
 #'
@@ -1173,7 +1173,7 @@ nichenet_gr_network <- function(
 #'     NicheNet.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # load the ligand-receptor network with the default parameters:
 #' lr_network <- nichenet_network(network_type = 'lr')
 #' }
@@ -1750,7 +1750,7 @@ nichenet_signaling_network_evex <- function(
 #'     suitable for use with NicheNet.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ib_signaling_network <- nichenet_signaling_network_inbiomap()
 #' }
 #'
@@ -2023,7 +2023,7 @@ nichenet_gr_network_htridb <- function(){
 #'     TF census.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # use only max. top 100 targets for each TF:
 #' remap_gr_network <- nichenet_gr_network_remap(top_targets = 100)
 #' }
@@ -2264,7 +2264,7 @@ nichenet_expression_data <- function(){
 #' @param tiny Logical: compile an even smaller network.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' networks <- nichenet_networks_small(tiny = TRUE)
 #' expression <- nichenet_expression_data()
 #' expression <- nichenet_remove_orphan_ligands(
@@ -2393,7 +2393,7 @@ nichenet_networks_small <- function(tiny = FALSE){
 #'     `weighted_networks` and `ligand_target_matrix`.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' nnt <- nichenet_test()
 #' }
 #'
@@ -2428,7 +2428,7 @@ nichenet_test <- function(...){
 #' @return Returns \code{NULL}.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' nichenet_workarounds()
 #' }
 #'

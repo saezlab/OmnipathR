@@ -28,7 +28,7 @@ the TF is included in the TF census (Vaquerizas et al. 2009). The code for
 filtering is adapted from DoRothEA, written by Christian Holland.
 }
 \examples{
-\dontrun{
+\donttest{
 remap_interactions <- remap_filtered()
 nrow(remap_interactions)
 # [1] 145680

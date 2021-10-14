@@ -53,7 +53,7 @@ Builds gene regulatory network prior knowledge for NicheNet using multiple
 resources.
 }
 \examples{
-\dontrun{
+\donttest{
 # load everything with the default parameters:
 gr_network <- nichenet_gr_network()
 

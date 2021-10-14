@@ -40,7 +40,7 @@ weights, basedon a collection of experiments where the effect of a ligand
 on gene expression was measured.
 }
 \examples{
-\dontrun{
+\donttest{
 networks <- nichenet_networks()
 expression <- nichenet_expression_data()
 optimization_results <- nichenet_optimization(networks, expression)

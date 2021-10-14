@@ -44,7 +44,7 @@
 #' CRAN).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Download post-translational modifications:
 #' enzsub <- import_omnipath_enzsub(resources = c("PhosphoSite", "SIGNOR"))
 #'

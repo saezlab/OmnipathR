@@ -21,7 +21,7 @@ The config as a list.
 Restores the built-in default values of all config parameters
 }
 \examples{
-\dontrun{
+\donttest{
 # restore the defaults and write them to the default config file:
 omnipath_reset_config()
 omnipath_save_config()

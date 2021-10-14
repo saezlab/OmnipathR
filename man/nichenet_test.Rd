@@ -33,7 +33,7 @@ entire system might be somehow stateful. You can ignore the \code{
 Parallelization was not stopped} warnings on repeated runs.
 }
 \examples{
-\dontrun{
+\donttest{
 nnt <- nichenet_test()
 }
 

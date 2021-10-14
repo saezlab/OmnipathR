@@ -17,7 +17,7 @@ After this operation the cache directory will be completely empty,
 except an empty cache database file.
 }
 \examples{
-\dontrun{
+\donttest{
 omnipath_cache_wipe()
 # the cache is completely empty:
 print(omnipath.env$cache)

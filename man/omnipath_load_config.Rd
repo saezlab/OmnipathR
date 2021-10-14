@@ -27,7 +27,7 @@ Invisibly returns the config as a list.
 Load the package configuration from a config file
 }
 \examples{
-\dontrun{
+\donttest{
 # load the config from a custom config file:
 omnipath_load_config(path = 'my_custom_omnipath_config.yml')
 }

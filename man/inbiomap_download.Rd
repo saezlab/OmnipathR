@@ -17,7 +17,7 @@ Downloads the data by \code{\link{inbiomap_raw}}, extracts the
 UniProt IDs, Gene Symbols and scores and removes the irrelevant columns.
 }
 \examples{
-\dontrun{
+\donttest{
 inbiomap_interactions <- inbiomap_download()
 inbiomap_interactions
 }

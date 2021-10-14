@@ -38,7 +38,7 @@
 #' @return A data frame (tibble) of interactions.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' kegg_pw <- kegg_pathways_download(simplify = TRUE)
 #' kegg_pw
 #' # # A tibble: 6,765 x 6
@@ -631,7 +631,7 @@ kegg_info_tbl <- function(tbl){
 #' @return A data frame (tibble) with UniProt IDs and pathway names.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' kegg_pw_annot <- kegg_pathway_annotations()
 #' kegg_pw_annot
 #' # # A tibble: 7,341 x 4

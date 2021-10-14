@@ -51,7 +51,7 @@ come from cache), and the newly build GO slim will overwrite the cache
 instance.
 }
 \examples{
-\dontrun{
+\donttest{
 goslim <- go_annot_slim(organism = 'human', slim = 'generic')
 goslim
 # # A tibble: 276,371 x 8
