@@ -354,6 +354,9 @@ translate_ids <- function(
 }
 
 
+#' Try how non standard evaluation works
+#'
+#' @noRd
 nse_test <- function(a, ..., b = FALSE){
 
     print(a)

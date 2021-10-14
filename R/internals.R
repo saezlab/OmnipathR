@@ -184,9 +184,9 @@ download_base <- function(
         use_httr
     ){
 
-        fun <- function(url, post = NULL, ...){
+        reader <- fun %||% identity
 
-            reader <- fun %||% identity
+        fun <- function(url, post = NULL, ...){
 
             http_param %<>% ensure_list_2
             content_param %<>% ensure_list_2
