@@ -609,7 +609,7 @@ by removing some columns, adding less annotations, or using smaller networks
 ```{r build-paths}
 library(stringr)
 
-steps <- 3
+steps <- 2 # to avoid OOM
 
 paths <-
     seq(0, steps) %>%
