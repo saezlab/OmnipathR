@@ -854,19 +854,20 @@ omnipath_cache_latest_or_new <- function(
 #' @return Object loaded from the cache RDS file.
 #'
 #' @examples
-#' \dontrun{
-#' # works only if you have already this item in the cache
-#' intercell_data <- omnipath_cache_load(url = paste0(
+#' url <- paste0(
 #'     'https://omnipathdb.org/intercell?resources=Adhesome,Almen2009,',
 #'     'Baccin2019,CSPA,CellChatDB&license=academic'
-#' ))
+#' )
+#' result <- read.delim(url, sep = '\t')
+#' omnipath_cache_save(result, url = url)
+#' # works only if you have already this item in the cache
+#' intercell_data <- omnipath_cache_load()
 #' class(intercell_data)
 #' # [1] "data.frame"
 #' nrow(intercell_data)
 #' # [1] 16622
 #' attr(intercell_data, 'origin')
 #' # [1] "cache"
-#' }
 #'
 #' # basic example of saving and loading to and from the cache:
 #' bioc_url <- 'https://bioconductor.org/'
@@ -957,7 +958,6 @@ omnipath_cache_load <- function(
 #' @return Invisibly returns the `data`.
 #'
 #' @examples
-#' \dontrun{
 #' mydata <- data.frame(a = c(1, 2, 3), b = c('a', 'b', 'c'))
 #' omnipath_cache_save(mydata, url = 'some_dummy_address')
 #' from_cache <- omnipath_cache_load(url = 'some_dummy_address')
@@ -968,7 +968,6 @@ omnipath_cache_load <- function(
 #' # 3 3 c
 #' attr(from_cache, 'origin')
 #' # [1] "cache"
-#' }
 #'
 #' # basic example of saving and loading to and from the cache:
 #' bioc_url <- 'https://bioconductor.org/'
@@ -1033,9 +1032,9 @@ omnipath_cache_save <- function(
 #'     version item.
 #'
 #' @examples
-#' \dontrun{
-#' omnipath_cache_move_in('some/file.zip', url = 'the_download_address')
-#' }
+#' path <- tempfile()
+#' saveRDS(rnorm(100), file = path)
+#' omnipath_cache_move_in(path, url = 'the_download_address')
 #'
 #' # basic example of moving a file to the cache:
 #'

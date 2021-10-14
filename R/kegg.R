@@ -199,10 +199,8 @@ kegg_pathway_list <- function(){
 #'     extracted from the KGML file.
 #'
 #' @examples
-#' \dontrun{
 #' tgf_pathway <- kegg_pathway_download('hsa04350')
 #' tgf_pathway
-#' }
 #' # # A tibble: 50 x 12
 #' #    source target type  effect arrow relation_id kegg_id_source
 #' #    <chr>  <chr>  <chr> <chr>  <chr> <chr>       <chr>
@@ -336,11 +334,9 @@ kegg_pathway_download <- function(
 #'     pathway doesn't contain any relation, returns \code{NULL}.
 #'
 #' @examples
-#' \dontrun{
 #' hsa04350 <- kegg_pathway_download('hsa04350', process = FALSE)
 #' tgf_pathway <- kegg_process(hsa04350$entries, hsa04350$relations)
 #' tgf_pathway
-#' }
 #' # # A tibble: 50 x 12
 #' #    source target type  effect arrow relation_id kegg_id_source
 #' #    <chr>  <chr>  <chr> <chr>  <chr> <chr>       <chr>

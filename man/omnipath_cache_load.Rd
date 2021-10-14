@@ -31,19 +31,20 @@ Object loaded from the cache RDS file.
 Loads the object from RDS format.
 }
 \examples{
-\dontrun{
-# works only if you have already this item in the cache
-intercell_data <- omnipath_cache_load(url = paste0(
+url <- paste0(
     'https://omnipathdb.org/intercell?resources=Adhesome,Almen2009,',
     'Baccin2019,CSPA,CellChatDB&license=academic'
-))
+)
+result <- read.delim(url, sep = '\t')
+omnipath_cache_save(result, url = url)
+# works only if you have already this item in the cache
+intercell_data <- omnipath_cache_load()
 class(intercell_data)
 # [1] "data.frame"
 nrow(intercell_data)
 # [1] 16622
 attr(intercell_data, 'origin')
 # [1] "cache"
-}
 
 # basic example of saving and loading to and from the cache:
 bioc_url <- 'https://bioconductor.org/'
