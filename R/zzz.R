@@ -26,7 +26,7 @@
     patch_logger()
     omnipath_init_log(pkgname = pkgname)
 
-    if(Sys.info()['user'] == 'biocbuild'){
+    if(Sys.info()['user'] %in% c('biocbuild', 'omnipath')){
 
         omnipath_set_console_loglevel('trace')
 
