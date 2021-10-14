@@ -218,6 +218,7 @@ omnipath_msg <- function(level, ...){
 #'
 #' @return The value from the evaluated expression.
 #'
+#' @importFrom utils flush.console
 #' @noRd
 no_colorout <- function(ex){
 

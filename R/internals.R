@@ -120,7 +120,8 @@ url_parser <- function(
 #' @return The output of the downloader function \code{fun}.
 #'
 #' @importFrom logger log_level log_error log_warn log_trace
-#' @importFrom httr POST GET content write_disk add_headers status_code
+#' @importFrom httr POST GET content write_disk
+#' @importFrom httr add_headers status_code headers
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec %||%
 #'
@@ -206,7 +207,7 @@ download_base <- function(
 
             if(http_status != 200L){
 
-                log_warning(msg)
+                log_warn(msg)
                 stop(msg)
 
             }
