@@ -235,7 +235,7 @@ omnipath_load_config <- function(
 
     # ensure the `omnipath.` prefix for all parameter keys
     names(this_config) <- ifelse(
-        startsWith(names(this_config), 'omnipath.'),
+        startsWith(as.character(names(this_config)), 'omnipath.'),
         names(this_config),
         sprintf('omnipath.%s', names(this_config))
     )
