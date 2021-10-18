@@ -1,4 +1,11 @@
-## OmnipathR v2.99.19
+## OmnipathR v3.2.0
+
++ New resource: PrePPI
++ Configuration option to completely disable logging to file
++ New vignettes: Path reconstruction, and Bioconductor 2021 Workshop
++ Many minor bugfixes and improvements
+
+## OmnipathR v2.99.19 (v3.0.0)
 
 + NicheNet pipeline works
 + Fixed an error which resulted value 1 in the `n_references` columns
