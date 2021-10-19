@@ -221,6 +221,7 @@ kegg_pathway_list <- function(){
 #' @importFrom tidyr unnest_wider separate_rows
 #' @importFrom dplyr mutate row_number
 #' @importFrom tibble tibble
+#' @importFrom logger log_error log_trace
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{kegg_process}}}
@@ -244,15 +245,54 @@ kegg_pathway_download <- function(
         )
     )
 
-    path <-
-        download_to_cache(
-            url_key = 'kegg_kgml',
-            url_param = list(pathway_id),
-            http_param = exec(add_headers, !!!req_hdrs),
-            ext = 'xml'
+    kgml <- tryCatch(
+
+        {
+
+            download_to_cache(
+                url_key = 'kegg_kgml',
+                url_param = list(pathway_id),
+                http_param = exec(add_headers, !!!req_hdrs),
+                ext = 'xml'
+            ) %>%
+            read_xml
+
+        },
+
+        error = function(err){
+
+            log_error(
+                paste0(
+                    'Failed to download KEGG pathway `%s` (URL: %s). ',
+                    'Unless you provided an invalid pathway_id or there ',
+                    'is a problem with your network connection, this is a ',
+                    'known issue on Windows and we will try to fix it as ',
+                    'soon as possible. The original error message was: %s'
+                ),
+                pathway_id,
+                get_url(key = 'kegg_kgml', param = list(pathway_id)),
+                err
+            )
+
+            return(NULL)
+
+        }
+
+    )
+
+    if(is.null(kgml)){
+
+        log_trace('Exiting `kegg_pathway_download` due to previous error.')
+
+        result <- `if`(
+            process,
+            tibble(),
+            list(entries = tibble(), relations = tibble())
         )
 
-    kgml <- path %>% read_xml
+        return(result)
+
+    }
 
     entries <-
         kgml %>%
