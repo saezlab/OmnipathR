@@ -144,6 +144,8 @@ download_base <- function(
     ...
 ){
 
+    on.exit(close_connection(url))
+
     if(!is.null(init_url)){
 
         init_response <- download_base(

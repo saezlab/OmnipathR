@@ -46,29 +46,60 @@
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr cols col_character col_number
 #' @importFrom tidyr separate_rows
+#' @importFrom tibble tibble
+#' @importFrom logger log_error
 guide2pharma_download <- function(){
 
     # NSE vs. R CMD check workaround
     ligand_gene_symbol <- target_gene_symbol <- NULL
 
-    'guide2pharma' %>%
-    generic_downloader(
-        reader_param = list(
-            col_types = cols(
-                ligand_context = col_character(),
-                receptor_site = col_character(),
-                target_ligand = col_character(),
-                target_ligand_id = col_character(),
-                target_ligand_pubchem_sid = col_number(),
-                target_ligand_gene_symbol = col_character(),
-                target_ligand_uniprot = col_character(),
-                target_ligand_ensembl_gene_id = col_character()
+    tryCatch(
+
+        {
+
+            'guide2pharma' %>%
+            generic_downloader(
+                reader_param = list(
+                    col_types = cols(
+                        ligand_context = col_character(),
+                        receptor_site = col_character(),
+                        target_ligand = col_character(),
+                        target_ligand_id = col_character(),
+                        target_ligand_pubchem_sid = col_number(),
+                        target_ligand_gene_symbol = col_character(),
+                        target_ligand_uniprot = col_character(),
+                        target_ligand_ensembl_gene_id = col_character()
+                    )
+                ),
+                resource = 'Guide to Pharmacology (IUPHAR/BPS)'
+            ) %>%
+            separate_rows(ligand_gene_symbol, sep = '\\|') %>%
+            separate_rows(target_gene_symbol, sep = '\\|') %T>%
+            load_success()
+
+        },
+
+        error = function(err){
+
+            'guide2pharma' %>%
+            get_url %>%
+            close_connection
+
+            log_error(
+                paste0(
+                    'Failed to download data from Guide to Pharmacology ',
+                    '(guidetopharmacology.org). Most likely it is due to ',
+                    'a temporary issue with the server`s SSL certificate. ',
+                    'Returning an empty data frame. The original error ',
+                    'message was: %s'
+                ),
+                err
             )
-        ),
-        resource = 'Guide to Pharmacology (IUPHAR/BPS)'
-    ) %>%
-    separate_rows(ligand_gene_symbol, sep = '\\|') %>%
-    separate_rows(target_gene_symbol, sep = '\\|') %T>%
-    load_success()
+
+            tibble()
+
+        }
+
+    )
 
 }
