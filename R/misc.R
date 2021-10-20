@@ -636,3 +636,47 @@ as_type <- function(var, type){
     }
 
 }
+
+
+#' Retrieve the open connection(s) pointing to URI
+#'
+#' @param uri Character: path or URL the connection points to.
+#'
+#' @return A list of connection objects.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom tibble rownames_to_column
+#' @importFrom dplyr filter pull
+#' @importFrom purrr map
+#' @noRd
+get_connections <- function(uri){
+
+    showConnections(all = TRUE) %>%
+    as.data.frame %>%
+    rownames_to_column('con_id') %>%
+    filter(description == uri) %>%
+    pull(con_id) %>%
+    as.integer %>%
+    map(getConnection)
+
+}
+
+
+#' Closes the open connection(s) pointing to URI
+#'
+#' @param uri Character: path or URL the connection points to.
+#'
+#' @return Invisible `NULL`.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr walk
+#' @noRd
+close_connection <- function(uri){
+
+    uri %>%
+    get_connections %>%
+    walk(close)
+
+    invisible(NULL)
+
+}
