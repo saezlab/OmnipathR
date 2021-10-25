@@ -88,7 +88,7 @@
     ],
     "kegg_list": "http://www.genome.jp/kegg/pathway.html",
     "kegg_kgml": [
-        "http://www.kegg.jp/kegg-bin/download?entry=%s&format=kgml"
+        "https://www.kegg.jp/kegg-bin/download?entry=%s&format=kgml"
     ],
     "kegg_pathway": [
         "https://www.genome.jp/kegg-bin/show_pathway?",
