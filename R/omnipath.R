@@ -205,6 +205,7 @@ import_omnipath <- function(
     result %<>% cast_logicals(logicals)
     result %<>% strip_resource_labels(references_by_resource)
     result %<>% apply_exclude(exclude)
+    result %<>% deserialize_extra_attrs()
 
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references
@@ -505,6 +506,30 @@ apply_exclude <- function(data, exclude){
             )
         )
     )
+
+}
+
+
+#' Converts the extra_attrs column from JSON encoded to list
+#'
+#' @param data A data frame from the OmniPath web service.
+#'
+#' @return The input data frame with the extra_attrs column converted
+#'     to list.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate
+#' @importFrom jsonlite fromJSON
+#' @importFrom purrr map
+#' @noRd
+deserialize_extra_attrs <- function(data){
+
+    data %>%
+    {`if`(
+        'extra_attrs' %in% colnames(.),
+        mutate(., extra_attrs = map(extra_attrs, fromJSON)),
+        .
+    )}
 
 }
 
