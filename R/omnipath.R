@@ -3704,6 +3704,17 @@ extra_attrs <- function(data){
 #'     type if one interaction might have multiple values of the attribute,
 #'     or character type if
 #'
+#' @examples
+#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' extra_attrs_to_cols(i, Cellinker_type, Macrophage_type)
+#' extra_attrs_to_cols(
+#'     i,
+#'     Cellinker_type,
+#'     Macrophage_type,
+#'     flatten = TRUE,
+#'     keep_empty = FALSE
+#' )
+#'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang enquos !!!
 #' @importFrom purrr reduce map_chr

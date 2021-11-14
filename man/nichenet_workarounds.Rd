@@ -21,7 +21,7 @@ just because we don't want to load datasets from another package without
 the user knowing about it.
 }
 \examples{
-\donttest{
+\dontrun{
 nichenet_workarounds()
 }
 

@@ -35,7 +35,7 @@ Looks up a record in the cache and returns its latest valid version. If
 the record doesn't exist or no valid version available, creates a new one.
 }
 \examples{
-\donttest{
+\dontrun{
 # retrieve the latest version of the first cache record
 # found by the search keyword "bioplex"
 latest_bioplex <-

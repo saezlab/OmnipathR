@@ -127,7 +127,7 @@ omnipath_get_config_path <- function(user = FALSE){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # after this, all downloads will default to commercial licenses
 #' # i.e. the resources that allow only academic use will be excluded:
 #' options(omnipath.license = 'commercial')
@@ -177,7 +177,7 @@ omnipath_save_config <- function(
 #' @return Invisibly returns the config as a list.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # load the config from a custom config file:
 #' omnipath_load_config(path = 'my_custom_omnipath_config.yml')
 #' }
@@ -284,7 +284,7 @@ omnipath_env_config <- function(){
 #'     the R options.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # restore the defaults and write them to the default config file:
 #' omnipath_reset_config()
 #' omnipath_save_config()

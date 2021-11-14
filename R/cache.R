@@ -326,7 +326,7 @@ omnipath_cache_search <- function(pattern, ...){
 #' @return Invisibly returns the cache database (list of cache records).
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # remove all cache data from the BioPlex database
 #' cache_records <- omnipath_cache_search(
 #'     'bioplex',
@@ -579,7 +579,7 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' omnipath_cache_wipe()
 #' # the cache is completely empty:
 #' print(omnipath.env$cache)
@@ -651,7 +651,7 @@ omnipath_cache_clean <- function(){
 #' @return Invisibl returns the cache database (list of cache records).
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' omnipath_cache_autoclean()
 #' }
 #'
@@ -760,7 +760,7 @@ omnipath_cache_get <- function(
 #' @return A cache version item.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # retrieve the latest version of the first cache record
 #' # found by the search keyword "bioplex"
 #' latest_bioplex <-

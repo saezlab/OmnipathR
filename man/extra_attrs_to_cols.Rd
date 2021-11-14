@@ -26,6 +26,18 @@ Data frame with the new column created; the new column is list
 \description{
 New columns from extra attributes
 }
+\examples{
+i <- import_omnipath_interactions(fields = 'extra_attrs')
+extra_attrs_to_cols(i, Cellinker_type, Macrophage_type)
+extra_attrs_to_cols(
+    i,
+    Cellinker_type,
+    Macrophage_type,
+    flatten = TRUE,
+    keep_empty = FALSE
+)
+
+}
 \seealso{
 \itemize{
     \item{\code{\link{extra_attrs}}}

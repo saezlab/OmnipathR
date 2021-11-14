@@ -18,7 +18,7 @@ Downloads all KEGG pathways and creates a table of protein-pathway
 annotations.
 }
 \examples{
-\donttest{
+\dontrun{
 kegg_pw_annot <- kegg_pathway_annotations()
 kegg_pw_annot
 # # A tibble: 7,341 x 4

@@ -40,7 +40,7 @@
 #' @seealso \code{\link{inbiomap_download}}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' inbiomap_psimitab <- inbiomap_raw()
 #' }
 inbiomap_raw <- function(curl_verbose = FALSE){
@@ -141,7 +141,7 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @seealso \code{\link{inbiomap_raw}}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' inbiomap_interactions <- inbiomap_download()
 #' inbiomap_interactions
 #' }

@@ -54,7 +54,7 @@ A named list with `ligand_activities` (a tibble giving several
 Calls the NicheNet ligand activity analysis
 }
 \examples{
-\donttest{
+\dontrun{
 networks <- nichenet_networks()
 expression <- nichenet_expression_data()
 optimization_results <- nichenet_optimization(networks, expression)

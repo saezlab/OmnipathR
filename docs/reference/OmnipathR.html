@@ -127,7 +127,7 @@ Denes Turei &lt;<a href="mailto:turei.denes@gmail.com">turei.denes@gmail.com</a>
     </div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples" aria-hidden="true"></a>Examples</h2>
-    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \donttest{</span></span>
+    <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># Download post-translational modifications:</span></span>
 <span class="r-in"><span class="va">enzsub</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PhosphoSite"</span>, <span class="st">"SIGNOR"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
@@ -140,21 +140,17 @@ Denes Turei &lt;<a href="mailto:turei.denes@gmail.com">turei.denes@gmail.com</a>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Print some interactions:</span></span>
 <span class="r-in"><span class="fu"><a href="print_interactions.html">print_interactions</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ptms</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in head(ptms)</span> object 'ptms' not found</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># interactions with references:</span></span>
 <span class="r-in"><span class="fu"><a href="print_interactions.html">print_interactions</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">ptms</span><span class="op">)</span>,writeRefs<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in tail(ptms)</span> object 'ptms' not found</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># find interactions between kinase and substrate:</span></span>
 <span class="r-in"><span class="fu"><a href="print_interactions.html">print_interactions</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">ptms</span>,<span class="va">enzyme_genesymbol</span><span class="op">==</span><span class="st">"MAP2K1"</span>,</span>
 <span class="r-in">   <span class="va">substrate_genesymbol</span><span class="op">==</span><span class="st">"MAPK3"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::filter(ptms, enzyme_genesymbol == "MAP2K1", substrate_genesymbol ==     "MAPK3")</span> object 'ptms' not found</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># find shortest paths on the directed network between proteins</span></span>
 <span class="r-in"><span class="fu"><a href="print_path_es.html">print_path_es</a></span><span class="op">(</span><span class="fu">shortest_paths</span><span class="op">(</span><span class="va">OPI_g</span>, from <span class="op">=</span> <span class="st">"TYRO3"</span>, to <span class="op">=</span> <span class="st">"STAT3"</span>,</span>
 <span class="r-in">   output <span class="op">=</span> <span class="st">'epath'</span><span class="op">)</span><span class="op">$</span><span class="va">epath</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">OPI_g</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in shortest_paths(OPI_g, from = "TYRO3", to = "STAT3", output = "epath")</span> could not find function "shortest_paths"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># find all shortest paths between proteins</span></span>
 <span class="r-in"><span class="fu"><a href="print_path_vs.html">print_path_vs</a></span><span class="op">(</span></span>
@@ -165,8 +161,7 @@ Denes Turei &lt;<a href="mailto:turei.denes@gmail.com">turei.denes@gmail.com</a>
 <span class="r-in">    <span class="op">)</span><span class="op">$</span><span class="va">res</span>,</span>
 <span class="r-in">    <span class="va">enzsub_g</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in all_shortest_paths(enzsub_g, from = "SRC", to = "STAT1")</span> could not find function "all_shortest_paths"</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
   </div>

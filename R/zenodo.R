@@ -38,7 +38,7 @@
 #' @param ... Passed to \code{archive_extractor}
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # an example from the OmnipathR::remap_tf_target_download function:
 #' remap_dorothea <- zenodo_download(
 #'     zenodo_record = 3713238,

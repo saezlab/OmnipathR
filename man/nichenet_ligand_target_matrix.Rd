@@ -35,7 +35,7 @@ A matrix containing ligand-target probability scores.
 Creates a NicheNet ligand-target matrix
 }
 \examples{
-\donttest{
+\dontrun{
 networks <- nichenet_networks()
 expression <- nichenet_expression_data()
 optimization_results <- nichenet_optimization(networks, expression)

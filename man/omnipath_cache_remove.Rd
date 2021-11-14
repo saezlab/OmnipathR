@@ -43,7 +43,7 @@ age, or contents having a more recent version, one specific item, or
 wipe the entire cache.
 }
 \examples{
-\donttest{
+\dontrun{
 # remove all cache data from the BioPlex database
 cache_records <- omnipath_cache_search(
     'bioplex',
