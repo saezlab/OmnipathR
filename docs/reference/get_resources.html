@@ -20,7 +20,7 @@ query type and optionally for a dataset within that."><meta property="og:image" 
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <button type="button" id="version-badge" class="badge badge-default d-none d-lg-block" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Released version">3.1.2</button>
+    <button type="button" id="version-badge" class="badge badge-default d-none d-lg-block" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Released version">3.3.2</button>
 
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto ml-3"><li class="active nav-item">
@@ -106,22 +106,22 @@ search for some generic categories e.g. `ligand` or `receptor`.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [5] "ARN"                         "Adhesome"                   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [7] "AlzPathway"                  "BEL-Large-Corpus_ProtMapper"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [9] "Baccin2019"                  "BioGRID"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [11] "BioGRID_ICELLNET"            "CA1"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [13] "CancerCellMap"               "CellChatDB"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [11] "CA1"                         "CancerCellMap"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13] "CellCall"                    "CellChatDB"                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [15] "CellChatDB-cofactors"        "CellPhoneDB"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [17] "CellPhoneDB_ICELLNET"        "CellTalkDB"                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] "DEPOD"                       "DIP"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [21] "DLRP_talklr"                 "DOMINO"                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [23] "DeathDomain"                 "Dinarello2013_ICELLNET"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] "DoRothEA"                    "DoRothEA-reviews_DoRothEA"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [27] "ELM"                         "EMBRACE"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [29] "ENCODE-distal"               "ENCODE-proximal"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "ENCODE_tf-mirna"             "FANTOM4_DoRothEA"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] "Fantom5_LRdb"                "GO-lig-rec_ICELLNET"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [17] "CellPhoneDB_Cellinker"       "CellTalkDB"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] "Cellinker"                   "DEPOD"                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [21] "DIP"                         "DLRP_Cellinker"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [23] "DLRP_talklr"                 "DOMINO"                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] "DeathDomain"                 "DoRothEA"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [27] "DoRothEA-reviews_DoRothEA"   "ELM"                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [29] "EMBRACE"                     "ENCODE-distal"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] "ENCODE-proximal"             "ENCODE_tf-mirna"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [33] "FANTOM4_DoRothEA"            "Fantom5_LRdb"               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [35] "Guide2Pharma"                "Guide2Pharma_CellPhoneDB"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "Guide2Pharma_ICELLNET"       "Guide2Pharma_LRdb"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "Guide2Pharma_Cellinker"      "Guide2Pharma_LRdb"          </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [39] "Guide2Pharma_talklr"         "HOCOMOCO_DoRothEA"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "HPMR"                        "HPMR_ICELLNET"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [41] "HPMR"                        "HPMR_Cellinker"             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [43] "HPMR_LRdb"                   "HPMR_talklr"                </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [45] "HPRD"                        "HPRD-phos"                  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [47] "HPRD_KEA"                    "HPRD_LRdb"                  </span>
@@ -130,50 +130,45 @@ search for some generic categories e.g. `ligand` or `receptor`.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [53] "HuRI"                        "I2D_CellPhoneDB"            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "ICELLNET"                    "IMEx_CellPhoneDB"           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [57] "InnateDB"                    "InnateDB-All_CellPhoneDB"   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [59] "InnateDB_CellPhoneDB"        "InnateDB_ICELLNET"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "InnateDB_SignaLink3"         "IntAct"                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [63] "IntAct_CellPhoneDB"          "IntAct_DoRothEA"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] "JASPAR_DoRothEA"             "KEA"                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] "KEGG-MEDICUS"                "Kinexus_KEA"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [69] "Kirouac2010"                 "Kirouac2010_ICELLNET"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] "LMPID"                       "LRdb"                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "Li2012"                      "Lit-BM-17"                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [75] "LncRNADisease"               "MIMP"                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [77] "MINT_CellPhoneDB"            "MPPI"                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] "Macrophage"                  "Macrophage_ICELLNET"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "MatrixDB"                    "MatrixDB_CellPhoneDB"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [83] "NCI-PID_ProtMapper"          "NFIRegulomeDB_DoRothEA"     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] "NRF2ome"                     "NetPath"                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [87] "NetworKIN_KEA"               "ORegAnno"                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] "ORegAnno_DoRothEA"           "PAZAR"                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "PAZAR_DoRothEA"              "PhosphoNetworks"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [93] "PhosphoPoint"                "PhosphoSite"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [95] "PhosphoSite_KEA"             "PhosphoSite_MIMP"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] "PhosphoSite_ProtMapper"      "PhosphoSite_noref"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [99] "ProtMapper"                  "REACH_ProtMapper"           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "RLIMS-P_ProtMapper"          "Ramilowski2015"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [103] "Ramilowski2015_Baccin2019"   "Ramilowski2015_ICELLNET"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [105] "ReMap_DoRothEA"              "Reactome_ICELLNET"          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [107] "Reactome_LRdb"               "Reactome_ProtMapper"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109] "Reactome_SignaLink3"         "RegNetwork_DoRothEA"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [111] "SIGNOR"                      "SIGNOR_ICELLNET"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [113] "SIGNOR_ProtMapper"           "SPIKE"                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [115] "SPIKE_ICELLNET"              "STRING_ICELLNET"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [117] "STRING_talklr"               "SignaLink3"                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [119] "SignaLink3_ICELLNET"         "Sparser_ProtMapper"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121] "TCRcuration_SignaLink3"      "TFactS_DoRothEA"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [123] "TFe_DoRothEA"                "TRED_DoRothEA"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [125] "TRIP"                        "TRRD_DoRothEA"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127] "TRRUST_DoRothEA"             "TransmiR"                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [129] "UniProt_CellPhoneDB"         "UniProt_LRdb"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [131] "Wang"                        "Wojtowicz2020"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [133] "connectomeDB2020"            "dbPTM"                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [135] "iPTMnet"                     "iTALK"                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [137] "lncrnadb"                    "miR2Disease"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [139] "miRDeathDB"                  "miRTarBase"                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [141] "miRecords"                   "ncRDeathDB"                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [143] "phosphoELM"                  "phosphoELM_KEA"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] "phosphoELM_MIMP"             "talklr"                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [59] "InnateDB_CellPhoneDB"        "InnateDB_SignaLink3"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] "IntAct"                      "IntAct_CellPhoneDB"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [63] "IntAct_DoRothEA"             "JASPAR_DoRothEA"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [65] "KEA"                         "KEGG-MEDICUS"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] "Kinexus_KEA"                 "Kirouac2010"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [69] "LMPID"                       "LRdb"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] "Li2012"                      "Lit-BM-17"                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "LncRNADisease"               "MIMP"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [75] "MINT_CellPhoneDB"            "MPPI"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [77] "Macrophage"                  "MatrixDB"                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] "MatrixDB_CellPhoneDB"        "NCI-PID_ProtMapper"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [81] "NFIRegulomeDB_DoRothEA"      "NRF2ome"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [83] "NetPath"                     "NetworKIN_KEA"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] "ORegAnno"                    "ORegAnno_DoRothEA"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [87] "PAZAR"                       "PAZAR_DoRothEA"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [89] "PhosphoNetworks"             "PhosphoPoint"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "PhosphoSite"                 "PhosphoSite_KEA"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [93] "PhosphoSite_MIMP"            "PhosphoSite_ProtMapper"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [95] "PhosphoSite_noref"           "ProtMapper"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] "REACH_ProtMapper"            "RLIMS-P_ProtMapper"         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [99] "Ramilowski2015"              "Ramilowski2015_Baccin2019"  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [101] "ReMap_DoRothEA"              "Reactome_LRdb"              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [103] "Reactome_ProtMapper"         "Reactome_SignaLink3"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [105] "RegNetwork_DoRothEA"         "SIGNOR"                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [107] "SIGNOR_ProtMapper"           "SPIKE"                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [109] "STRING_talklr"               "SignaLink3"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [111] "Sparser_ProtMapper"          "TCRcuration_SignaLink3"     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [113] "TFactS_DoRothEA"             "TFe_DoRothEA"               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [115] "TRED_DoRothEA"               "TRIP"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [117] "TRRD_DoRothEA"               "TRRUST_DoRothEA"            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [119] "TransmiR"                    "UniProt_CellPhoneDB"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [121] "UniProt_LRdb"                "Wang"                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [123] "Wojtowicz2020"               "connectomeDB2020"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [125] "dbPTM"                       "iPTMnet"                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [127] "iTALK"                       "miR2Disease"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [129] "miRDeathDB"                  "ncRDeathDB"                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [131] "phosphoELM"                  "phosphoELM_KEA"             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [133] "phosphoELM_MIMP"             "scConnect"                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [135] "talklr"                     </span>
 </code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
