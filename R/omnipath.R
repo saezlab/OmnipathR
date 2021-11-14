@@ -3656,3 +3656,35 @@ omnipath_download <- function(url, fun, ...) {
     return(result)
 
 }
+
+
+#' Extra attribute names in an interaction data frame
+#'
+#' Interaction data frames might have an `extra_attrs` column if this field
+#' has been requested in the query by passing the `fields = 'extra_attrs'
+#' argument. This column contains resource specific attributes for the
+#' interactions. The names of the attributes consist of the name of the
+#' resource and the name of the attribute, separated by an underscore.
+#' This function returns the names of the extra attributes available in
+#' the provided data frame.
+#'
+#' @return Character: the names of the extra attributes in the data frame.
+#'
+#' @examples
+#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' extra_attrs(i)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull
+#' @importFrom purrr map
+#' @export
+extra_attrs <- function(data){
+
+    data %>%
+    {`if`(
+        'extra_attrs' %in% colnames(data),
+        pull(., extra_attrs) %>% map(names) %>% unlist() %>% unique(),
+        character(0)
+    )}
+
+}
