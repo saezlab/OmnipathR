@@ -526,7 +526,7 @@ deserialize_extra_attrs <- function(data){
 
     data %>%
     {`if`(
-        'extra_attrs' %in% colnames(.),
+        has_extra_attrs(.),
         mutate(., extra_attrs = map(extra_attrs, fromJSON)),
         .
     )}
@@ -3682,9 +3682,62 @@ extra_attrs <- function(data){
 
     data %>%
     {`if`(
-        'extra_attrs' %in% colnames(data),
+        has_extra_attrs(data),
         pull(., extra_attrs) %>% map(names) %>% unlist() %>% unique(),
         character(0)
     )}
+
+}
+
+
+#' New column from one extra attribute
+#'
+#' @return Data frame with the new column created; the new column is list
+#'     type if one interaction might have multiple values of the attribute,
+#'     or character type if
+#'
+#' @importFrom magrittr %>% is_less_than
+#' @importFrom rlang sym !! :=
+#' @importFrom purrr map map_int pluck
+#' @importFrom dplyr first mutate pull
+#' @export
+extra_attr_to_column <- function(data, attr){
+
+    attr_str <- .nse_ensure_str(!!enquo(attr))
+    attr <- as.symbol(attr_str)
+
+    data %>%
+    {`if`(
+        has_extra_attrs(data),
+        mutate(
+            .,
+            !!attr := map(extra_attrs, pluck, attr_str)
+        ) %>%
+        {`if`(
+            pull(., !!attr) %>%
+                map_int(length) %>%
+                magrittr::is_less_than(2) %>%
+                all,
+            mutate(., !!attr := map(!!attr, first) %>% null_to_na %>% unlist),
+            .
+        )},
+        .
+    )}
+
+}
+
+
+#' Tells if an interaction data frame has an extra_attrs column
+#'
+#' @return Logical: TRUE if the data frame has the "extra_attrs" column.
+#'
+#' @examples
+#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' has_extra_attrs(i)
+#'
+#' @export
+has_extra_attrs <- function(data){
+
+    'extra_attrs' %in% colnames(data)
 
 }
