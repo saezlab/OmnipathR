@@ -3692,12 +3692,15 @@ extra_attrs <- function(data){
 
 #' New column from one extra attribute
 #'
+#' @param data An interaction data frame.
+#' @param attr The name of an extra attribute; NSE is supported.
+#'
 #' @return Data frame with the new column created; the new column is list
 #'     type if one interaction might have multiple values of the attribute,
 #'     or character type if
 #'
 #' @importFrom magrittr %>% is_less_than
-#' @importFrom rlang sym !! :=
+#' @importFrom rlang sym !! := enquo
 #' @importFrom purrr map map_int pluck
 #' @importFrom dplyr first mutate pull
 #' @export
@@ -3729,6 +3732,8 @@ extra_attr_to_column <- function(data, attr){
 
 #' Tells if an interaction data frame has an extra_attrs column
 #'
+#' @param data An interaction data frame.
+#'
 #' @return Logical: TRUE if the data frame has the "extra_attrs" column.
 #'
 #' @examples
@@ -3739,5 +3744,38 @@ extra_attr_to_column <- function(data, attr){
 has_extra_attrs <- function(data){
 
     'extra_attrs' %in% colnames(data)
+
+}
+
+
+#' Interaction records having an extra attribute
+#'
+#' @param data An interaction data frame.
+#' @param attr The name of an extra attribute; NSE is supported.
+#'
+#' @return The data frame filtered to the records having the extra attribute.
+#'
+#' @examples
+#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' with_extra_attr(i, Macrophage_type)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter pull
+#' @importFrom purrr map_lgl
+#' @export
+with_extra_attr <- function(data, attr){
+
+    attr_str <- .nse_ensure_str(!!enquo(attr))
+
+    data %>%
+    {`if`(
+        has_extra_attrs(.),
+        filter(
+            .,
+            pull(., 'extra_attrs') %>%
+            map_lgl(function(x){attr_str %in% names(x)})
+        ),
+        .
+    )}
 
 }
