@@ -680,3 +680,18 @@ close_connection <- function(uri){
     invisible(NULL)
 
 }
+
+
+#' Replace NULL elements by NAs in a list
+#'
+#' @param l A list.
+#'
+#' @return A list with NULL elements replaced by NAs.
+#'
+#' @importFrom purrr map
+#' @noRd
+null_to_na <- function(l){
+
+    map(l, function(x){`if`(is.null(x), NA, x)})
+
+}
