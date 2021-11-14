@@ -3694,6 +3694,9 @@ extra_attrs <- function(data){
 #'
 #' @param data An interaction data frame.
 #' @param attr The name of an extra attribute; NSE is supported.
+#' @param flatten Logical: unnest the list column even if some records have
+#'     multiple values for the attributes; these will yield multiple records
+#'     in the resulted data frame.
 #'
 #' @return Data frame with the new column created; the new column is list
 #'     type if one interaction might have multiple values of the attribute,
@@ -3703,8 +3706,12 @@ extra_attrs <- function(data){
 #' @importFrom rlang sym !! := enquo
 #' @importFrom purrr map map_int pluck
 #' @importFrom dplyr first mutate pull
+#' @importFrom tidyr unnest
 #' @export
-extra_attr_to_column <- function(data, attr){
+extra_attr_to_column <- function(data, attr, flatten = FALSE){
+
+    # NSE vs. R CMD check workaround
+    extra_attrs <- NULL
 
     attr_str <- .nse_ensure_str(!!enquo(attr))
     attr <- as.symbol(attr_str)
@@ -3717,12 +3724,21 @@ extra_attr_to_column <- function(data, attr){
             !!attr := map(extra_attrs, pluck, attr_str)
         ) %>%
         {`if`(
-            pull(., !!attr) %>%
-                map_int(length) %>%
-                magrittr::is_less_than(2) %>%
-                all,
-            mutate(., !!attr := map(!!attr, first) %>% null_to_na %>% unlist),
-            .
+            flatten,
+            unnest(., !!attr, keep_empty = TRUE),
+            {`if`(
+                pull(., !!attr) %>%
+                    map_int(length) %>%
+                    magrittr::is_less_than(2) %>%
+                    all,
+                mutate(
+                    .,
+                    !!attr := map(!!attr, first) %>%
+                        null_to_na %>%
+                        unlist
+                ),
+                .
+            )}
         )},
         .
     )}
