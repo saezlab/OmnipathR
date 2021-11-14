@@ -3841,7 +3841,7 @@ has_extra_attrs <- function(data){
 #'
 #' @examples
 #' i <- import_omnipath_interactions(fields = 'extra_attrs')
-#' with_extra_attr(i, Macrophage_type)
+#' with_extra_attrs(i, Macrophage_type)
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter pull
