@@ -3690,6 +3690,51 @@ extra_attrs <- function(data){
 }
 
 
+#' New columns from extra attributes
+#'
+#' @param data An interaction data frame.
+#' @param ... The names of the extra attributes; NSE is supported.
+#' @param flatten Logical: unnest the list column even if some records have
+#'     multiple values for the attributes; these will yield multiple records
+#'     in the resulted data frame.
+#' @param keep_empty Logical: if `flatten` is `TRUE`, shall we keep the
+#'     records which do not have the attribute?
+#'
+#' @return Data frame with the new column created; the new column is list
+#'     type if one interaction might have multiple values of the attribute,
+#'     or character type if
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang enquos !!!
+#' @importFrom purrr reduce map_chr
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{extra_attrs}}}
+#'     \item{\code{\link{has_extra_attrs}}}
+#'     \item{\code{\link{with_extra_attrs}}}
+#' }
+extra_attrs_to_cols <- function(
+    data,
+    ...,
+    flatten = FALSE,
+    keep_empty = TRUE
+){
+
+    if(!keep_empty){
+
+        data %<>% with_extra_attrs(!!!enquos(...))
+    }
+
+    map_chr(enquos(...), .nse_ensure_str) %>%
+    reduce(
+        .extra_attr_to_col,
+        .init = data,
+        flatten = flatten
+    )
+
+}
+
+
 #' New column from one extra attribute
 #'
 #' @param data An interaction data frame.
@@ -3697,6 +3742,8 @@ extra_attrs <- function(data){
 #' @param flatten Logical: unnest the list column even if some records have
 #'     multiple values for the attributes; these will yield multiple records
 #'     in the resulted data frame.
+#' @param keep_empty Logical: if `flatten` is `TRUE`, shall we keep the
+#'     records which do not have the attribute?
 #'
 #' @return Data frame with the new column created; the new column is list
 #'     type if one interaction might have multiple values of the attribute,
@@ -3707,8 +3754,13 @@ extra_attrs <- function(data){
 #' @importFrom purrr map map_int pluck
 #' @importFrom dplyr first mutate pull
 #' @importFrom tidyr unnest
-#' @export
-extra_attr_to_column <- function(data, attr, flatten = FALSE){
+#' @noRd
+.extra_attr_to_col <- function(
+    data,
+    attr,
+    flatten = FALSE,
+    keep_empty = TRUE
+){
 
     # NSE vs. R CMD check workaround
     extra_attrs <- NULL
@@ -3725,7 +3777,7 @@ extra_attr_to_column <- function(data, attr, flatten = FALSE){
         ) %>%
         {`if`(
             flatten,
-            unnest(., !!attr, keep_empty = TRUE),
+            unnest(., !!attr, keep_empty = keep_empty),
             {`if`(
                 pull(., !!attr) %>%
                     map_int(length) %>%
@@ -3757,6 +3809,11 @@ extra_attr_to_column <- function(data, attr, flatten = FALSE){
 #' has_extra_attrs(i)
 #'
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{extra_attrs}}}
+#'     \item{\code{\link{extra_attrs_to_cols}}}
+#'     \item{\code{\link{with_extra_attrs}}}
+#' }
 has_extra_attrs <- function(data){
 
     'extra_attrs' %in% colnames(data)
@@ -3764,10 +3821,10 @@ has_extra_attrs <- function(data){
 }
 
 
-#' Interaction records having an extra attribute
+#' Interaction records having certain extra attributes
 #'
 #' @param data An interaction data frame.
-#' @param attr The name of an extra attribute; NSE is supported.
+#' @param ... The name(s) of the extra attributes; NSE is supported.
 #'
 #' @return The data frame filtered to the records having the extra attribute.
 #'
@@ -3777,11 +3834,17 @@ has_extra_attrs <- function(data){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter pull
-#' @importFrom purrr map_lgl
+#' @importFrom purrr map_lgl map_chr
+#' @importFrom rlang enquos
 #' @export
-with_extra_attr <- function(data, attr){
+#' @seealso \itemize{
+#'     \item{\code{\link{extra_attrs}}}
+#'     \item{\code{\link{has_extra_attrs}}}
+#'     \item{\code{\link{extra_attrs_to_cols}}}
+#' }
+with_extra_attrs <- function(data, ...){
 
-    attr_str <- .nse_ensure_str(!!enquo(attr))
+    attrs_str <- map_chr(enquos(...), .nse_ensure_str)
 
     data %>%
     {`if`(
@@ -3789,7 +3852,14 @@ with_extra_attr <- function(data, attr){
         filter(
             .,
             pull(., 'extra_attrs') %>%
-            map_lgl(function(x){attr_str %in% names(x)})
+            map_lgl(
+                function(x){
+                    attrs_str %>%
+                    intersect(names(x)) %>%
+                    length %>%
+                    as.logical
+                }
+            )
         ),
         .
     )}

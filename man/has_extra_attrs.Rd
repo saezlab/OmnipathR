@@ -20,3 +20,10 @@ i <- import_omnipath_interactions(fields = 'extra_attrs')
 has_extra_attrs(i)
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{extra_attrs}}}
+    \item{\code{\link{extra_attrs_to_cols}}}
+    \item{\code{\link{with_extra_attrs}}}
+}
+}
