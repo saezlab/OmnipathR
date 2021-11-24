@@ -148,7 +148,7 @@ interaction_graph <- function(interactions = interactions){
 #' indicating if we are dealing with the interactions dataset or the PTMs
 #' dataset.
 #'
-#' @importFrom igraph graph_from_data_frame E
+#' @importFrom igraph graph_from_data_frame E ecount
 #' @importFrom dplyr select
 #' @importFrom rlang .data
 #'
@@ -203,12 +203,19 @@ format_graph_edges <- function(df_interact, flag){
         vertices = op_dfs$nodes
     )
 
-    igraph::E(op_g)$sources <- strsplit(igraph::E(op_g)$sources, ';')
+    has_edges <- ecount(op_g) > 0L
 
-    if('references' %in% colnames(df_interact)){
-        igraph::E(op_g)$references <- strsplit(
-            igraph::E(op_g)$references, ';'
-        )
+    if(has_edges) {
+
+        igraph::E(op_g)$sources <- strsplit(igraph::E(op_g)$sources, ';')
+
+        if('references' %in% colnames(df_interact)) {
+
+            igraph::E(op_g)$references <- strsplit(
+                igraph::E(op_g)$references, ';'
+            )
+        }
+
     }
 
     return(op_g)
