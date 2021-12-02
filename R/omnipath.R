@@ -771,34 +771,6 @@ get_resources <- function(
 }
 
 
-#' Create a vector with dataset names from an environment with logical
-#' variables.
-#'
-#' @param envir Environment from the calling function where dataset names
-#'     present as logical variables.
-#'
-#' @importFrom magrittr %>%
-#' @importFrom purrr keep
-#'
-#' @noRd
-select_interaction_datasets <- function(envir){
-
-    envir %>%
-    as.list %>%
-    `[`(
-        c(
-            'omnipath',
-            'pathwayextra',
-            'kinaseextra',
-            'ligrecextra'
-        )
-    ) %>%
-    keep(identity) %>%
-    names
-
-}
-
-
 # Aliases (old names) to be deprecated
 #' @rdname get_intercell_generic_categories
 #' @param ... Passed to \code{get_intercell_generic_categories}.

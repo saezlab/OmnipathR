@@ -1000,3 +1000,31 @@ get_interaction_databases <- function(...){
     .Deprecated("get_interaction_resources")
     get_interaction_resources(...)
 }
+
+
+#' Create a vector with dataset names from an environment with logical
+#' variables.
+#'
+#' @param envir Environment from the calling function where dataset names
+#'     present as logical variables.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr keep
+#'
+#' @noRd
+select_interaction_datasets <- function(envir){
+
+    envir %>%
+    as.list %>%
+    `[`(
+        c(
+            'omnipath',
+            'pathwayextra',
+            'kinaseextra',
+            'ligrecextra'
+        )
+    ) %>%
+    keep(identity) %>%
+    names
+
+}
