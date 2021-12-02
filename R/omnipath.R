@@ -510,30 +510,6 @@ apply_exclude <- function(data, exclude){
 }
 
 
-#' Converts the extra_attrs column from JSON encoded to list
-#'
-#' @param data A data frame from the OmniPath web service.
-#'
-#' @return The input data frame with the extra_attrs column converted
-#'     to list.
-#'
-#' @importFrom magrittr %>%
-#' @importFrom dplyr mutate
-#' @importFrom jsonlite fromJSON
-#' @importFrom purrr map
-#' @noRd
-deserialize_extra_attrs <- function(data){
-
-    data %>%
-    {`if`(
-        has_extra_attrs(.),
-        mutate(., extra_attrs = map(extra_attrs, fromJSON)),
-        .
-    )}
-
-}
-
-
 #' Removes the resource labels from references (PubMed IDs) in the
 #' interactions and enzyme-substrate data frames.
 #'
