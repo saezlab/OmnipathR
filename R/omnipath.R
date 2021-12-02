@@ -20,9 +20,9 @@
 #
 
 
-########## ########## ########## ##########
-########## Generic non exported functions #
-########## ########## ########## ##########
+########## ########## ########## #############################
+########## Generic, non exported, OmniPath related functions #
+########## ########## ########## #############################
 
 utils::globalVariables(
     c("category", "uniprot", "genesymbol", "annotations",
@@ -768,18 +768,6 @@ get_resources <- function(
         ))
     )
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname get_intercell_generic_categories
-#' @param ... Passed to \code{get_intercell_generic_categories}.
-#' @export
-#'
-#' @noRd
-get_intercell_classes <- function(...){
-    .Deprecated("get_intercell_generic_categories")
-    get_intercell_generic_categories(...)
 }
 
 

@@ -1167,3 +1167,15 @@ get_intercell_generic_categories <- function(){
         )
     )
 }
+
+
+# Aliases (old names) to be deprecated
+#' @rdname get_intercell_generic_categories
+#' @param ... Passed to \code{get_intercell_generic_categories}.
+#' @export
+#'
+#' @noRd
+get_intercell_classes <- function(...){
+    .Deprecated("get_intercell_generic_categories")
+    get_intercell_generic_categories(...)
+}
