@@ -1179,3 +1179,154 @@ get_intercell_classes <- function(...){
     .Deprecated("get_intercell_generic_categories")
     get_intercell_generic_categories(...)
 }
+
+
+#' Curated ligand-receptor interactions
+#'
+#' The OmniPath \emph{intercell} database annotates individual proteins and
+#' complexes, and we combine these annotations with network interactions
+#' on the client side, using \code{\link{import_intercell_network}}. The
+#' architecture of this database is complex, aiming to cover a broad range
+#' of knowledge on various levels of details and confidence. We can use the
+#' \code{\link{filter_intercell}} and \code{\link{filter_intercell_network}}
+#' functions for automated, data driven quality filtering, in order to
+#' enrich the cell-cell communication network in higher confidence
+#' interactions. However, for many users, a simple combination of the
+#' most established, expert curated ligand-receptor resources, provided
+#' by this function, fits better their purpose.
+#'
+#' @param curated_resources Character vector of the resource names which
+#'     are considered to be expert curated. You can include any
+#'     post-translational network resource here, but if you include non
+#'     ligand-receptor or non curated resources, the result will not
+#'     fulfill the original intention of this function.
+#' @param cellphonedb Logical: include the curated interactions from
+#'     CellPhoneDB (not the whole CellPhoneDB but a subset of it).
+#' @param signalink Logical: include the ligand-receptor interactions
+#'     from SignaLink. These are all expert curated.
+#' @param ramilowski Logical: Ramilowski2015 is not fully curated and
+#'     we can not separate only the curated interactions. However, it
+#'     has been the most often used ligand-receptor resource for many
+#'     years, hence we expect that some users prefer to use it. By
+#'     default it is disabled in this function.
+#'
+#' @details
+#' Some resources are a mixture of curated and bulk imported interactions,
+#' and sometimes it's not trivial to separate these, we take care of these
+#' here. This function does not use the \emph{intercell} database of
+#' OmniPath, but retrieves and filters a handful of network resources. The
+#' returned data frame has the layout of \emph{interactions} (network) data
+#' frames, and the \emph{source} and \emph{target} partners implicitly
+#' correspond to \emph{ligand} and \emph{receptor.} The data frame shows
+#' all resources and references for all interactions, but each interaction
+#' is supported by at least one ligand-receptor resource which is supposed
+#' to based on expert curation in a ligand-receptor context.
+#'
+#' @return A data frame similar to \emph{interactions} (network) data frames,
+#'     the \emph{source} and \emph{target} partners being ligand and
+#'     receptor, respectively.
+#'
+#' @examples
+#' lr <- curated_ligand_receptor_interactions()
+#' lr
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr bind_rows distinct across
+#' @importFrom tidyselect everything
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{filter_intercell_network}}}
+#'     \item{\code{\link{annotated_network}}}
+#'     \item{\code{\link{import_post_translational_interactions}}}
+#'     \item{\code{\link{import_ligrecextra_interactions}}}
+#' }
+curated_ligand_receptor_interactions <- function(
+    curated_resources = c(
+        'Guide2Pharma', 'HPMR', 'ICELLNET',
+        'CellTalkDB', 'CellChatDB'
+    ),
+    cellphonedb = TRUE,
+    signalink = TRUE,
+    ramilowski = FALSE
+){
+
+    curated_resources %>%
+    {`if`(ramilowski, union(., 'Ramilowski2015'), .)} %>%
+    {`if`(
+        length(.) > 0L,
+        import_post_translational_interactions(
+            # fully curated, ligand-receptor only resources
+            resources = .
+        ),
+        NULL
+    )} %>%
+    {`if`(
+        cellphonedb,
+        bind_rows(., cellphonedb_curated()),
+        .
+    )} %>%
+    {`if`(
+        signalink,
+        bind_rows(., signalink_ligrec()),
+        .
+    )} %>%
+    distinct(across(everything()))
+
+}
+
+
+#' Curated interactions from CellPhoneDB
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_detect
+#' @importFrom dplyr filter
+#'
+#' @noRd
+cellphonedb_curated <- function(){
+
+    # NSE vs. R CMD check workaround
+    sources <- NULL
+
+    import_post_translational_interactions(
+        resources = 'CellPhoneDB'
+    ) %>%
+    filter(
+        # these are the interactions which are curated by
+        # the CellPhoneDB team (labelled as "curated" in
+        # cellphonedb/src/core/data/interaction_input.csv)
+        !str_detect(sources, '_CellPhoneDB')
+    )
+
+}
+
+
+#' Ligand-receptor interactions from SignaLink
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter select
+#'
+#' @noRd
+signalink_ligrec <- function(){
+
+    # NSE vs. R CMD check workaround
+    function_source <- function_target <- NULL
+
+    annotated_network(
+        network = 'SignaLink3',
+        annot = 'SignaLink_function'
+    ) %>%
+    filter(
+        # these interactions are directly expert curated in a
+        # ligand-receptor context, and contain some well established
+        # ligand inputs of the most important canonical pathways
+        function_source == 'Ligand' &
+        function_target == 'Receptor'
+    ) %>%
+    select(
+        -function_source,
+        -function_target
+    )
+
+}
