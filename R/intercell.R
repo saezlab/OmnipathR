@@ -706,3 +706,464 @@ filter_intercell <- function(
     return(data)
 
 }
+
+
+#' Quality filter an intercell network
+#'
+#' The intercell database  of OmniPath covers a very broad range of possible
+#' ways of cell to cell communication, and the pieces of information, such as
+#' localization, topology, function and interaction, are combined from many,
+#' often independent sources. This unavoidably result some weird and
+#' unexpected combinations which are false positives in the context of
+#' intercellular communication. \code{\link{import_intercell_network}}
+#' provides a shortcut (\code{high_confidence}) to do basic quality filtering.
+#' For custom filtering or experimentation with the parameters we offer this
+#' function.
+#'
+#' @param network An intercell network data frame, as provided by
+#'     \code{\link{import_intercell_network}}, without \code{simplify}.
+#' @param transmitter_topology Character vector: topologies allowed for the
+#'     entities in transmitter role. Abbreviations allowed: "sec", "pmtm"
+#'     and "pmp".
+#' @param receiver_topology Same as \code{transmitter_topology} for the
+#'     entities in the receiver role.
+#' @param min_curation_effort Numeric: a minimum value of curation effort
+#'     (resource-reference pairs) for network interactions. Use zero to
+#'     disable filtering.
+#' @param min_resources Numeric: minimum number of resources for
+#'     interactions. The value 1 means no filtering.
+#' @param min_references Numeric: minimum number of references for
+#'     interactions. Use zero to disable filtering.
+#' @param min_provenances Numeric: minimum number of provenances (either
+#'     resources or references) for interactions. Use zero or one to
+#'     disable filtering.
+#' @param consensus_percentile Numeric: percentile threshold for the consensus
+#'     score of generic categories in intercell annotations. The consensus
+#'     score is the number of resources supporting the classification of an
+#'     entity into a category based on combined information of many resources.
+#'     Here you can apply a cut-off, keeping only the annotations supported
+#'     by a higher number of resources than a certain percentile of each
+#'     category. If \code{NULL} no filtering will be performed. The value is
+#'     either in the 0-1 range, or will be divided by 100 if greater than 1.
+#'     The percentiles will be calculated against the generic composite
+#'     categories and then will be applied to their resource specific
+#'     annotations and specific child categories.
+#' @param loc_consensus_percentile Numeric: similar to
+#'     \code{consensus_percentile} for major localizations. For example, with
+#'     a value of 50, the secreted, plasma membrane transmembrane or
+#'     peripheral attributes will be \code{TRUE} only where at least 50
+#'     percent of the resources support these.
+#' @param ligand_receptor Logical. If \code{TRUE}, only \emph{ligand} and
+#'     \emph{receptor} annotations will be used instead of the more generic
+#'     \emph{transmitter} and \emph{receiver} categories.
+#' @param simplify Logical: keep only the most often used columns. This
+#'     function combines a network data frame with two copies of the
+#'     intercell annotation data frames, all of them already having quite
+#'     some columns. With this option we keep only the names of the
+#'     interacting pair, their intercellular communication roles, and the
+#'     minimal information of the origin of both the interaction and
+#'     the annotations.
+#' @param unique_pairs Logical: instead of having separate rows for each
+#'     pair of annotations, drop the annotations and reduce the data frame to
+#'     unique interacting pairs. See \code{\link{unique_intercell_network}}
+#'     for details.
+#' @param omnipath Logical: shortcut to include the \emph{omnipath} dataset
+#'     in the interactions query.
+#' @param ligrecextra Logical: shortcut to include the \emph{ligrecextra}
+#'     dataset in the interactions query.
+#' @param kinaseextra Logical: shortcut to include the \emph{kinaseextra}
+#'     dataset in the interactions query.
+#' @param pathwayextra Logical: shortcut to include the \emph{pathwayextra}
+#'     dataset in the interactions query.
+#' @param ... If \code{simplify} or \code{unique_pairs} is \code{TRUE},
+#'     additional column  names can be passed here to \code{dplyr::select}
+#'     on the final data frame. Otherwise ignored.
+#'
+#' @return An intercell network data frame filtered.
+#'
+#' @examples
+#' icn <- import_intercell_network()
+#' icn_f <- filter_intercell_network(
+#'     icn,
+#'     consensus_percentile = 75,
+#'     min_provenances = 3,
+#'     simplify = TRUE
+#' )
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select distinct filter inner_join left_join
+#' @importFrom rlang !!! parse_expr exprs syms
+#' @importFrom logger log_warn
+#' @importFrom purrr walk
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{simplify_intercell_network}}}
+#' }
+filter_intercell_network <- function(
+    network,
+    transmitter_topology = c(
+        'secreted',
+        'plasma_membrane_transmembrane',
+        'plasma_membrane_peripheral'
+    ),
+    receiver_topology = 'plasma_membrane_transmembrane',
+    min_curation_effort = 2,
+    min_resources = 1,
+    min_references = 0,
+    min_provenances = 1,
+    consensus_percentile = 50,
+    loc_consensus_percentile = 30,
+    ligand_receptor = FALSE,
+    simplify = FALSE,
+    unique_pairs = FALSE,
+    omnipath = TRUE,
+    ligrecextra = TRUE,
+    kinaseextra = FALSE,
+    pathwayextra = FALSE,
+    ...
+){
+
+    # NSE vs. R CMD check workaround
+    parent <- curation_effort <- n_resources <- n_references <- NULL
+
+    major_locations <- c(
+        'secreted',
+        'plasma_membrane_transmembrane',
+        'plasma_membrane_peripheral'
+    )
+
+    consensus <-
+        import_omnipath_intercell(
+            consensus_percentile = consensus_percentile,
+            loc_consensus_percentile = loc_consensus_percentile
+        )
+
+    consensus_annot <-
+        consensus %>%
+        select(uniprot, parent) %>%
+        distinct
+
+    consensus_loc <-
+        consensus %>%
+        select(uniprot, !!!syms(major_locations)) %>%
+        distinct
+
+    topology_short <-
+        major_locations %>%
+        set_names(c('sec', 'pmtm', 'pmp'))
+    topologies <- unlist(topology_short)
+    check_topo <- function(x){
+        if(!x %in% topologies){
+            log_warn('Unknown topology: %s', x)
+        }
+    }
+
+    datasets <-
+        environment() %>%
+        select_interaction_datasets
+
+    missing_datasets <- datasets %>% setdiff(colnames(network))
+
+    if(length(missing_datasets)){
+
+        msg <- sprintf(
+            paste0(
+                'filter_intercell_network: cannot select %s %s, ',
+                'apparently %s %s not included in the original ',
+                'download.'
+            ),
+            missing_datasets %>%
+            plural('dataset'),
+            missing_datasets %>%
+            pretty_list,
+            missing_datasets %>%
+            plural('this', 'these'),
+            missing_datasets %>%
+            plural('was', 'were')
+        )
+        log_warn(msg)
+        warning(msg)
+
+    }
+
+    transmitter_topology %<>%
+        recode(!!!topology_short) %>%
+        walk(check_topo) %>%
+        intersect(topologies) %>%
+        sprintf('%s_intercell_source', .) %>%
+        paste(collapse = ' | ')
+
+    receiver_topology %<>%
+        recode(!!!topology_short) %>%
+        walk(check_topo) %>%
+        intersect(topologies) %>%
+        sprintf('%s_intercell_target', .) %>%
+        paste(collapse = ' | ')
+
+    datasets %<>%
+        intersect(colnames(network)) %>%
+        paste(collapse = ' | ')
+
+    network %>%
+    {`if`(
+        is.null(loc_consensus_percentile),
+        .,
+        select(
+            .,
+            -(!!!exprs(sprintf('%s_intercell_source', major_locations))),
+            -(!!!exprs(sprintf('%s_intercell_target', major_locations)))
+        ) %>%
+        left_join(consensus_loc, by = c('source' = 'uniprot')) %>%
+        left_join(consensus_loc, by = c('target' = 'uniprot'),
+            suffix = c('_intercell_source', '_intercell_target')
+        )
+    )} %>%
+    filter(eval(parse_expr(receiver_topology))) %>%
+    filter(eval(parse_expr(transmitter_topology))) %>%
+    filter(eval(parse_expr(datasets))) %>%
+    filter(
+        curation_effort >= min_curation_effort &
+        n_resources >= min_resources &
+        n_references >= min_references &
+        (
+            n_resources >= min_provenances |
+            n_references >= min_provenances
+        )
+    ) %>%
+    inner_join(
+        consensus_annot,
+        by = c(
+            'parent_intercell_source' = 'parent',
+            'source' = 'uniprot'
+        )
+    ) %>%
+    inner_join(
+        consensus_annot,
+        by = c(
+            'parent_intercell_target' = 'parent',
+            'target' = 'uniprot'
+        )
+    ) %>%
+    {`if`(
+        ligand_receptor,
+        filter(
+            .,
+            parent_intercell_source == 'ligand' &
+            parent_intercell_target == 'receptor'
+        ),
+        .
+    )} %>%
+    {`if`(
+        simplify,
+        simplify_intercell_network(., ...),
+        .
+    )} %>%
+    {`if`(
+        unique_pairs,
+        unique_intercell_network(., ...),
+        .
+    )}
+
+}
+
+
+#' Simplify an intercell network
+#'
+#' The intercellular communication network data frames, created by
+#' \code{\link{import_intercell_network}}, are combinations of a network data
+#' frame with two copies of the intercell annotation data frames, all of them
+#' already having quite some columns. Here we keep only the names of the
+#' interacting pair, their intercellular communication roles, and the minimal
+#' information of the origin of both the interaction and the annotations.
+#' Optionally further columns can be selected.
+#'
+#' @param network An intercell network data frame, as provided by
+#'     \code{\link{import_intercell_network}}.
+#' @param ... Optional, further columns to select.
+#'
+#' @return An intercell network data frame with some columns removed.
+#'
+#' @examples
+#' icn <- import_intercell_network()
+#' icn_s <- simplify_intercell_network(icn)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select
+#' @importFrom rlang ensyms !!!
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{filter_intercell_network}}}
+#' }
+simplify_intercell_network <- function(network, ...){
+
+    # NSE vs. R CMD check workaround
+    source <- target <- source_genesymbol <- target_genesymbol <-
+    category_intercell_source <- database_intercell_source <-
+    category_intercell_target <- database_intercell_target <-
+    is_directed <- is_stimulation <- is_inhibition <-
+    sources <- references <- NULL
+
+    simplify_cols <-
+        alist(
+            source,
+            target,
+            source_genesymbol,
+            target_genesymbol,
+            category_intercell_source,
+            database_intercell_source,
+            category_intercell_target,
+            database_intercell_target,
+            is_directed,
+            is_stimulation,
+            is_inhibition,
+            sources,
+            references
+        ) %>%
+        c(ensyms(...)) %>%
+        unique
+
+    network %>%
+    select(!!!simplify_cols)
+
+}
+
+
+#' Unique intercellular interactions
+#'
+#' In the intercellular network data frames produced by \code{
+#' \link{import_intercell_network}}, by default each pair of annotations for
+#' an interaction is represented in a separate row. This function drops the
+#' annotations and keeps only the distinct interacting pairs.
+#'
+#' @param network An intercellular network data frame as produced by
+#'     \code{\link{import_intercell_network}}.
+#' @param ... Additional columns to keep. Note: if these have multiple
+#'     values for an interacting pair, only the first row will be
+#'     preserved.
+#'
+#' @return A data frame with interacting pairs and interaction attributes.
+#'
+#' @examples
+#' icn <- import_intercell_network()
+#' icn_unique <- unique_intercell_network(icn)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select distinct
+#' @importFrom rlang !!!
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{simplify_intercell_network}}}
+#'     \item{\code{\link{filter_intercell_network}}}
+#' }
+unique_intercell_network <- function(network, ...){
+
+    # NSE vs. R CMD check workaround
+    source <- target <- source_genesymbol <- target_genesymbol <-
+    is_directed <- is_stimulation <- is_inhibition <-
+    sources <- references <- NULL
+
+    cols <-
+        alist(
+            source,
+            target,
+            source_genesymbol,
+            target_genesymbol,
+            is_directed,
+            is_stimulation,
+            is_inhibition,
+            sources,
+            references
+        ) %>%
+        c(ensyms(...)) %>%
+        unique
+
+    network %>%
+    select(!!!cols) %>%
+    distinct(source, target)
+
+}
+
+
+#' Categories in the intercell database of OmniPath
+#'
+#' Retrieves a list of categories from \url{https://omnipath.org/intercell}.
+#'
+#' @return character vector with the different intercell categories
+#' @export
+#'
+#' @examples
+#' get_intercell_categories()
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_intercell}}}
+#'     \item{\code{\link{get_intercell_generic_categories}}}
+#' }
+get_intercell_categories <- function(){
+
+    return(
+        unique(
+            import_omnipath('intercell_summary', license = NA)$category
+        )
+    )
+
+}
+
+
+#' Full list of intercell categories and resources
+#'
+#' @return A data frame of categories and resources.
+#'
+#' @examples
+#' ic_cat <- intercell_categories()
+#' ic_cat
+#' # # A tibble: 1,125 x 3
+#' #    category                parent                  database
+#' #    <chr>                   <chr>                   <chr>
+#' #  1 transmembrane           transmembrane           UniProt_location
+#' #  2 transmembrane           transmembrane           UniProt_topology
+#' #  3 transmembrane           transmembrane           UniProt_keyword
+#' #  4 transmembrane           transmembrane_predicted Phobius
+#' #  5 transmembrane_phobius   transmembrane_predicted Almen2009
+#' # # . with 1,120 more rows
+#'
+#' @export
+intercell_categories <- function(){
+
+    import_omnipath('intercell_summary', license = NA)
+
+}
+
+#' Retrieves a list of the generic categories in the intercell database
+#' of OmniPath
+#'
+#' Retrieves a list of the generic categories from
+#' \url{https://omnipath.org/intercell}.
+#'
+#' @return character vector with the different intercell main classes
+#' @export
+#'
+#' @examples
+#' get_intercell_generic_categories()
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_intercell}}}
+#'     \item{\code{\link{get_intercell_categories}}}
+#' }
+#'
+#' @aliases get_intercell_classes
+get_intercell_generic_categories <- function(){
+
+    return(
+        unique(
+            import_omnipath('intercell_summary', license = NA)$parent
+        )
+    )
+}
