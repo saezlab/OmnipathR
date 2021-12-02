@@ -510,43 +510,6 @@ apply_exclude <- function(data, exclude){
 }
 
 
-#' Removes the resource labels from references (PubMed IDs) in the
-#' interactions and enzyme-substrate data frames.
-#'
-#' @noRd
-strip_resource_labels <- function(
-    data,
-    references_by_resource = FALSE,
-    colname = 'references',
-    inplace = TRUE,
-    method = NULL
-){
-
-    if(!references_by_resource && colname %in% names(data)){
-
-        result <- split_unique_join(
-            gsub(
-                '[-\\w]*:?(\\d+)',
-                '\\1',
-                data[[colname]],
-                perl = TRUE
-            ),
-            method = method
-        )
-
-        if(inplace){
-            data[[colname]] <- result
-        }else{
-            return(result)
-        }
-
-    }
-
-    return(data)
-
-}
-
-
 #' For a character vector splits each element and re-joins sorted unique
 #' values.
 #'
