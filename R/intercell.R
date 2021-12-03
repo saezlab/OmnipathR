@@ -1231,7 +1231,7 @@ get_intercell_classes <- function(...){
 #' lr
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr bind_rows distinct across
+#' @importFrom dplyr filter select bind_rows distinct across
 #' @importFrom tidyselect everything
 #' @export
 #'
@@ -1252,14 +1252,27 @@ curated_ligand_receptor_interactions <- function(
     ramilowski = FALSE
 ){
 
+    # NSE vs. R CMD check workaround
+    CellChatDB_category <- extra_attrs <- NULL
+
     curated_resources %>%
     {`if`(ramilowski, union(., 'Ramilowski2015'), .)} %>%
     {`if`(
         length(.) > 0L,
         import_post_translational_interactions(
             # fully curated, ligand-receptor only resources
-            resources = .
-        ),
+            resources = .,
+            fields = 'extra_attrs'
+        ) %>%
+        extra_attrs_to_cols(CellChatDB_category) %>%
+        filter(
+            CellChatDB_category %in% c(
+                NA,
+                'Cell-Cell Contact',
+                'Secreted Signaling'
+            )
+        ) %>%
+        select(-CellChatDB_category, -extra_attrs),
         NULL
     )} %>%
     {`if`(
@@ -1281,23 +1294,27 @@ curated_ligand_receptor_interactions <- function(
 #'
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_detect
-#' @importFrom dplyr filter
+#' @importFrom dplyr filter select
 #'
 #' @noRd
 cellphonedb_curated <- function(){
 
     # NSE vs. R CMD check workaround
-    sources <- NULL
+    sources <- CellPhoneDB_type <- extra_attrs <- NULL
 
     import_post_translational_interactions(
-        resources = 'CellPhoneDB'
+        resources = 'CellPhoneDB',
+        fields = 'extra_attrs'
     ) %>%
+    extra_attrs_to_cols(CellPhoneDB_type) %>%
     filter(
         # these are the interactions which are curated by
         # the CellPhoneDB team (labelled as "curated" in
         # cellphonedb/src/core/data/interaction_input.csv)
-        !str_detect(sources, '_CellPhoneDB')
-    )
+        !str_detect(sources, '_CellPhoneDB') &
+        CellPhoneDB_type == 'ligand-receptor'
+    ) %>%
+    select(-CellPhoneDB_type, -extra_attrs)
 
 }
 
