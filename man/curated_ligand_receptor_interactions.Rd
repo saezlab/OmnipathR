@@ -5,9 +5,11 @@
 \title{Curated ligand-receptor interactions}
 \usage{
 curated_ligand_receptor_interactions(
-  curated_resources = c("Guide2Pharma", "HPMR", "ICELLNET", "CellTalkDB", "CellChatDB",
-    "connectomeDB2020"),
+  curated_resources = c("Guide2Pharma", "HPMR", "ICELLNET", "Kirouac2010",
+    "CellTalkDB", "CellChatDB", "connectomeDB2020"),
   cellphonedb = TRUE,
+  cellinker = TRUE,
+  talklr = TRUE,
   signalink = TRUE
 )
 }
@@ -19,10 +21,17 @@ ligand-receptor or non curated resources, the result will not
 fulfill the original intention of this function.}
 
 \item{cellphonedb}{Logical: include the curated interactions from
-CellPhoneDB (not the whole CellPhoneDB but a subset of it).}
+\emph{CellPhoneDB} (not the whole \emph{CellPhoneDB} but a subset
+of it).}
+
+\item{cellinker}{Logical: include the curated interactions from
+\emph{Cellinker} (not the whole \emph{Cellinker} but a subset of it).}
+
+\item{talklr}{Logical: include the curated interactions from
+\emph{talklr} (not the whole \emph{talklr} but a subset of it).}
 
 \item{signalink}{Logical: include the ligand-receptor interactions
-from SignaLink. These are all expert curated.}
+from \emph{SignaLink.} These are all expert curated.}
 }
 \value{
 A data frame similar to \emph{interactions} (network) data frames,

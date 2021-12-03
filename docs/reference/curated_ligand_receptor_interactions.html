@@ -106,9 +106,11 @@ by this function, fits better their purpose.</p>
 
     <div id="ref-usage" class="ref-usage section level2 sourceCode">
     <pre class="sourceCode r"><code><span class="fu">curated_ligand_receptor_interactions</span><span class="op">(</span>
-  curated_resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Guide2Pharma"</span>, <span class="st">"HPMR"</span>, <span class="st">"ICELLNET"</span>, <span class="st">"CellTalkDB"</span>, <span class="st">"CellChatDB"</span>,
-    <span class="st">"connectomeDB2020"</span><span class="op">)</span>,
+  curated_resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Guide2Pharma"</span>, <span class="st">"HPMR"</span>, <span class="st">"ICELLNET"</span>, <span class="st">"Kirouac2010"</span>,
+    <span class="st">"CellTalkDB"</span>, <span class="st">"CellChatDB"</span>, <span class="st">"connectomeDB2020"</span><span class="op">)</span>,
   cellphonedb <span class="op">=</span> <span class="cn">TRUE</span>,
+  cellinker <span class="op">=</span> <span class="cn">TRUE</span>,
+  talklr <span class="op">=</span> <span class="cn">TRUE</span>,
   signalink <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre>
     </div>
@@ -122,10 +124,17 @@ ligand-receptor or non curated resources, the result will not
 fulfill the original intention of this function.</p></dd>
     <dt class="col-sm-3 section level2" id="pkg-arg-cellphonedb">cellphonedb</dt>
       <dd class="col-sm-9" id="ref-arguments desc"><p>Logical: include the curated interactions from
-CellPhoneDB (not the whole CellPhoneDB but a subset of it).</p></dd>
+<em>CellPhoneDB</em> (not the whole <em>CellPhoneDB</em> but a subset
+of it).</p></dd>
+    <dt class="col-sm-3 section level2" id="pkg-arg-cellinker">cellinker</dt>
+      <dd class="col-sm-9" id="ref-arguments desc"><p>Logical: include the curated interactions from
+<em>Cellinker</em> (not the whole <em>Cellinker</em> but a subset of it).</p></dd>
+    <dt class="col-sm-3 section level2" id="pkg-arg-talklr">talklr</dt>
+      <dd class="col-sm-9" id="ref-arguments desc"><p>Logical: include the curated interactions from
+<em>talklr</em> (not the whole <em>talklr</em> but a subset of it).</p></dd>
     <dt class="col-sm-3 section level2" id="pkg-arg-signalink">signalink</dt>
       <dd class="col-sm-9" id="ref-arguments desc"><p>Logical: include the ligand-receptor interactions
-from SignaLink. These are all expert curated.</p></dd>
+from <em>SignaLink.</em> These are all expert curated.</p></dd>
     </dl><div class="ref-section section level2" id="section-value">
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value" aria-hidden="true"></a>Value</h2>
 
@@ -161,9 +170,8 @@ to based on expert curation in a ligand-receptor context.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples" aria-hidden="true"></a>Examples</h2>
     <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">lr</span> <span class="op">&lt;-</span> <span class="fu">curated_ligand_receptor_interactions</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> The output colorization was canceled. isatty(stdout()) returned FALSE.</span>
 <span class="r-in"><span class="va">lr</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5,292 x 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5,611 x 15</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    source target source_genesymbol target_genesymbol is_directed is_stimulation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP23 Q13507 CALM1             TRPC3                       1              0</span>
@@ -176,7 +184,7 @@ to based on expert curation in a ligand-receptor context.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P78504 P46531 JAG1              NOTCH1                      1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P41221 Q14332 WNT5A             FZD2                        1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q9GZX6 Q08334 IL22              IL10RB                      1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5,282 more rows, and 9 more variables: is_inhibition &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5,601 more rows, and 9 more variables: is_inhibition &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_direction &lt;dbl&gt;, consensus_stimulation &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_inhibition &lt;dbl&gt;, sources &lt;chr&gt;, references &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;, n_resources &lt;int&gt;</span></span>

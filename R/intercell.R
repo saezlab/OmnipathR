@@ -1201,9 +1201,14 @@ get_intercell_classes <- function(...){
 #'     ligand-receptor or non curated resources, the result will not
 #'     fulfill the original intention of this function.
 #' @param cellphonedb Logical: include the curated interactions from
-#'     CellPhoneDB (not the whole CellPhoneDB but a subset of it).
+#'     \emph{CellPhoneDB} (not the whole \emph{CellPhoneDB} but a subset
+#'     of it).
+#' @param cellinker Logical: include the curated interactions from
+#'     \emph{Cellinker} (not the whole \emph{Cellinker} but a subset of it).
+#' @param talklr Logical: include the curated interactions from
+#'     \emph{talklr} (not the whole \emph{talklr} but a subset of it).
 #' @param signalink Logical: include the ligand-receptor interactions
-#'     from SignaLink. These are all expert curated.
+#'     from \emph{SignaLink.} These are all expert curated.
 #'
 #' @details
 #' Some resources are a mixture of curated and bulk imported interactions,
@@ -1227,6 +1232,7 @@ get_intercell_classes <- function(...){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter select bind_rows distinct across
+#' @importFrom purrr reduce
 #' @importFrom tidyselect everything
 #' @export
 #'
@@ -1239,10 +1245,12 @@ get_intercell_classes <- function(...){
 #' }
 curated_ligand_receptor_interactions <- function(
     curated_resources = c(
-        'Guide2Pharma', 'HPMR', 'ICELLNET',
+        'Guide2Pharma', 'HPMR', 'ICELLNET', 'Kirouac2010',
         'CellTalkDB', 'CellChatDB', 'connectomeDB2020'
     ),
     cellphonedb = TRUE,
+    cellinker = TRUE,
+    talklr = TRUE,
     signalink = TRUE
 ){
 
@@ -1268,10 +1276,16 @@ curated_ligand_receptor_interactions <- function(
         select(-CellChatDB_category, -extra_attrs),
         NULL
     )} %>%
-    {`if`(
-        cellphonedb,
-        bind_rows(., cellphonedb_curated()),
-        .
+    {reduce(
+        c('cellphonedb', 'cellinker', 'talklr'),
+        function(d, resource){
+            `if`(
+                get(resource),
+                bind_rows(d, get(sprintf('%s_curated', resource))()),
+                d
+            )
+        },
+        .init = .
     )} %>%
     {`if`(
         signalink,
@@ -1310,6 +1324,64 @@ cellphonedb_curated <- function(){
     select(-CellPhoneDB_type, -extra_attrs)
 
 }
+
+
+#' Curated interactions from Cellinker
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_detect
+#' @importFrom dplyr filter select
+#'
+#' @noRd
+cellinker_curated <- function(){
+
+    # NSE vs. R CMD check workaround
+    sources <- Cellinker_type <- extra_attrs <- NULL
+
+    lr_types <- c(
+        'Cytokine-cytokine receptor interaction',
+        'Secreted protein to receptor interaction'
+    )
+
+    import_post_translational_interactions(
+        resources = 'Cellinker',
+        fields = 'extra_attrs'
+    ) %>%
+    extra_attrs_to_cols(Cellinker_type) %>%
+    filter(
+        # these are the interactions which are curated by
+        # the CellPhoneDB team (labelled as "curated" in
+        # cellphonedb/src/core/data/interaction_input.csv)
+        !str_detect(sources, '_Cellinker') &
+        Cellinker_type %in% lr_types
+    ) %>%
+    select(-Cellinker_type, -extra_attrs)
+
+}
+
+
+#' Curated interactions from talklr
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_detect
+#' @importFrom dplyr filter select
+#'
+#' @noRd
+talklr_curated <- function(){
+
+    # NSE vs. R CMD check workaround
+    references <- extra_attrs <- NULL
+
+    import_post_translational_interactions(
+        resources = 'talklr',
+        fields = 'extra_attrs'
+    ) %>%
+    filter_extra_attrs(talklr_putative = 0) %>%
+    filter(str_detect(references, 'talklr:')) %>%
+    select(-extra_attrs)
+
+}
+
 
 
 #' Ligand-receptor interactions from SignaLink
