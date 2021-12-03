@@ -1204,11 +1204,6 @@ get_intercell_classes <- function(...){
 #'     CellPhoneDB (not the whole CellPhoneDB but a subset of it).
 #' @param signalink Logical: include the ligand-receptor interactions
 #'     from SignaLink. These are all expert curated.
-#' @param ramilowski Logical: Ramilowski2015 is not fully curated and
-#'     we can not separate only the curated interactions. However, it
-#'     has been the most often used ligand-receptor resource for many
-#'     years, hence we expect that some users prefer to use it. By
-#'     default it is disabled in this function.
 #'
 #' @details
 #' Some resources are a mixture of curated and bulk imported interactions,
@@ -1245,18 +1240,16 @@ get_intercell_classes <- function(...){
 curated_ligand_receptor_interactions <- function(
     curated_resources = c(
         'Guide2Pharma', 'HPMR', 'ICELLNET',
-        'CellTalkDB', 'CellChatDB'
+        'CellTalkDB', 'CellChatDB', 'connectomeDB2020'
     ),
     cellphonedb = TRUE,
-    signalink = TRUE,
-    ramilowski = FALSE
+    signalink = TRUE
 ){
 
     # NSE vs. R CMD check workaround
     CellChatDB_category <- extra_attrs <- NULL
 
     curated_resources %>%
-    {`if`(ramilowski, union(., 'Ramilowski2015'), .)} %>%
     {`if`(
         length(.) > 0L,
         import_post_translational_interactions(

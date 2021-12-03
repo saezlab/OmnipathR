@@ -5,10 +5,10 @@
 \title{Curated ligand-receptor interactions}
 \usage{
 curated_ligand_receptor_interactions(
-  curated_resources = c("Guide2Pharma", "HPMR", "ICELLNET", "CellTalkDB", "CellChatDB"),
+  curated_resources = c("Guide2Pharma", "HPMR", "ICELLNET", "CellTalkDB", "CellChatDB",
+    "connectomeDB2020"),
   cellphonedb = TRUE,
-  signalink = TRUE,
-  ramilowski = FALSE
+  signalink = TRUE
 )
 }
 \arguments{
@@ -23,12 +23,6 @@ CellPhoneDB (not the whole CellPhoneDB but a subset of it).}
 
 \item{signalink}{Logical: include the ligand-receptor interactions
 from SignaLink. These are all expert curated.}
-
-\item{ramilowski}{Logical: Ramilowski2015 is not fully curated and
-we can not separate only the curated interactions. However, it
-has been the most often used ligand-receptor resource for many
-years, hence we expect that some users prefer to use it. By
-default it is disabled in this function.}
 }
 \value{
 A data frame similar to \emph{interactions} (network) data frames,
