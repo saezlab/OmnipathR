@@ -64,6 +64,13 @@ deserialize_extra_attrs <- function(data){
 #' @importFrom dplyr pull
 #' @importFrom purrr map
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{extra_attrs_to_cols}}}
+#'     \item{\code{\link{has_extra_attrs}}}
+#'     \item{\code{\link{with_extra_attrs}}}
+#'     \item{\code{\link{filter_extra_attrs}}}
+#'     \item{\code{\link{extra_attr_values}}}
+#' }
 extra_attrs <- function(data){
 
     data %>%
@@ -109,6 +116,8 @@ extra_attrs <- function(data){
 #'     \item{\code{\link{extra_attrs}}}
 #'     \item{\code{\link{has_extra_attrs}}}
 #'     \item{\code{\link{with_extra_attrs}}}
+#'     \item{\code{\link{filter_extra_attrs}}}
+#'     \item{\code{\link{extra_attr_values}}}
 #' }
 extra_attrs_to_cols <- function(
     data,
@@ -210,6 +219,8 @@ extra_attrs_to_cols <- function(
 #'     \item{\code{\link{extra_attrs}}}
 #'     \item{\code{\link{extra_attrs_to_cols}}}
 #'     \item{\code{\link{with_extra_attrs}}}
+#'     \item{\code{\link{filter_extra_attrs}}}
+#'     \item{\code{\link{extra_attr_values}}}
 #' }
 has_extra_attrs <- function(data){
 
@@ -238,27 +249,187 @@ has_extra_attrs <- function(data){
 #'     \item{\code{\link{extra_attrs}}}
 #'     \item{\code{\link{has_extra_attrs}}}
 #'     \item{\code{\link{extra_attrs_to_cols}}}
+#'     \item{\code{\link{filter_extra_attrs}}}
+#'     \item{\code{\link{extra_attr_values}}}
 #' }
 with_extra_attrs <- function(data, ...){
+
+    must_have_extra_attrs(data)
 
     attrs_str <- map_chr(enquos(...), .nse_ensure_str)
 
     data %>%
-    {`if`(
-        has_extra_attrs(.),
-        filter(
-            .,
-            pull(., 'extra_attrs') %>%
-            map_lgl(
-                function(x){
-                    attrs_str %>%
-                    intersect(names(x)) %>%
-                    length %>%
-                    as.logical
-                }
+    filter(
+        pull(., 'extra_attrs') %>%
+        map_lgl(
+            function(x){
+                attrs_str %>%
+                intersect(names(x)) %>%
+                length %>%
+                as.logical
+            }
+        )
+    )
+
+}
+
+
+#' Filter interactions by extra attribute values
+#'
+#' @param data An interaction data frame with \emph{extra_attrs} column.
+#' @param ... Extra attribute names and values. The contents of the extra
+#'     attribute \emph{name} for each record will be checked against the
+#'     values provided. The check by default is a set intersection: if any
+#'     element is common between the user provided values and the values of
+#'     the extra attribute for the record, the record will be matched.
+#'     Alternatively, any value can be a custom function which accepts
+#'     the value of the extra attribute and returns a single logical
+#'     value. Finally, if the extra attribute name starts with a dot,
+#'     the result of the check will be negated.
+#' @param na_ok Logical: keep the records which do not have the extra
+#'     attribute. Typically these are the records which are not from the
+#'     resource providing the extra attribute.
+#'
+#' @return The input data frame with records removed according to the
+#'     filtering criteria.
+#'
+#' @examples
+#' cl <- import_post_translational_interactions(
+#'     resources = 'Cellinker',
+#'     fields = 'extra_attrs'
+#' )
+#' # Only cell adhesion interactions from Cellinker
+#' filter_extra_attrs(cl, Cellinker_type = 'Cell adhesion')
+#'
+#' op <- import_omnipath_interactions(fields = 'extra_attrs')
+#' # Any mechanism except phosphorylation
+#' filter_extra_attrs(op, .SIGNOR_mechanism = 'phosphorylation')
+#'
+#' @importFrom magrittr %>% %<>% not
+#' @importFrom purrr reduce2 map_lgl compose pluck
+#' @importFrom stringr str_replace str_starts
+#' @importFrom dplyr first
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{extra_attrs}}}
+#'     \item{\code{\link{has_extra_attrs}}}
+#'     \item{\code{\link{extra_attrs_to_cols}}}
+#'     \item{\code{\link{with_extra_attrs}}}
+#'     \item{\code{\link{extra_attr_values}}}
+#' }
+filter_extra_attrs <- function(data, ..., na_ok = TRUE){
+
+    must_have_extra_attrs(data)
+
+    list(...) %>%
+    reduce2(
+
+        names(.),
+
+        function(d, val, key){
+
+            negate <- `if`(str_starts(key, '\\.'), not, identity)
+            key %<>% str_replace('^\\.', '')
+
+            check <-
+                `if`(
+                    is.function(val),
+                    val,
+                    compose(
+                        ~ .x > 0,
+                        length,
+                        ~ intersect(.x, val)
+                    )
+                ) %>%
+                compose(negate, .) %>%
+                {`if`(na_ok, ~ first(is.na(.x)) || .(.x), .)}
+
+            d %>%
+            filter(
+                map_lgl(
+                    extra_attrs,
+                    compose(
+                        check,
+                        ~ pluck(.x, key)
+                    )
+                )
             )
-        ),
-        .
-    )}
+
+        },
+
+        .init = data
+
+    )
+
+}
+
+
+#' Possible values of an extra attribute
+#'
+#' Extracts all unique values of an extra attribute occuring in this data
+#' frame.
+#'
+#' @details
+#' Note, at the end we unlist the result, which means it works well
+#' for attributes which are atomic vectors but gives not so useful result
+#' if the attribute values are more complex objects. As the time of
+#' writing this, no such complex extra attribute exist in OmniPath.
+#'
+#' @param data An interaction data frame with \emph{extra_attrs} column.
+#' @param key The name of an extra attribute.
+#'
+#' @return A vector, most likely character, with the unique values of the
+#'     extra attribute occuring in the data frame.
+#'
+#' @examples
+#' op <- import_omnipath_interactions(fields = 'extra_attrs')
+#' extra_attr_values(op, SIGNOR_mechanism)
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull
+#' @importFrom purrr map pluck discard compose
+#' @importFrom rlang !! enquo
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{extra_attrs_to_cols}}}
+#'     \item{\code{\link{has_extra_attrs}}}
+#'     \item{\code{\link{with_extra_attrs}}}
+#'     \item{\code{\link{filter_extra_attrs}}}
+#'     \item{\code{\link{extra_attrs}}}
+#' }
+extra_attr_values <- function(data, key){
+
+    # NSE vs. R CMD check workaround
+    extra_attrs <- NULL
+
+    key <- .nse_ensure_str(!!enquo(key))
+
+    data %>%
+    must_have_extra_attrs %>%
+    pull(extra_attrs) %>%
+    map(pluck, key) %>%
+    discard(compose(all, is.na)) %>%
+    unlist %>%
+    unique
+
+}
+
+
+#' Raise an error if the data frame has no extra_attrs column
+#'
+#' @param data A data frame.
+#'
+#' @return Invisibly returns the input data frame.
+#'
+#' @noRd
+must_have_extra_attrs <- function(data){
+
+    if(!has_extra_attrs(data)){
+
+        stop('Data frame has no "extra_attrs" column.')
+
+    }
+
+    invisible(data)
 
 }

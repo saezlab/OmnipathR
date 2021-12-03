@@ -25,5 +25,7 @@ has_extra_attrs(i)
     \item{\code{\link{extra_attrs}}}
     \item{\code{\link{extra_attrs_to_cols}}}
     \item{\code{\link{with_extra_attrs}}}
+    \item{\code{\link{filter_extra_attrs}}}
+    \item{\code{\link{extra_attr_values}}}
 }
 }
