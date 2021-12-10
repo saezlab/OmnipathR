@@ -1230,9 +1230,9 @@ get_intercell_classes <- function(...){
 #' lr <- curated_ligand_receptor_interactions()
 #' lr
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% equals
 #' @importFrom dplyr filter select bind_rows distinct across
-#' @importFrom purrr reduce
+#' @importFrom purrr reduce discard
 #' @importFrom tidyselect everything
 #' @export
 #'
@@ -1254,26 +1254,16 @@ curated_ligand_receptor_interactions <- function(
     signalink = TRUE
 ){
 
-    # NSE vs. R CMD check workaround
-    CellChatDB_category <- extra_attrs <- NULL
+    cellchatdb <- 'CellChatDB' %in% curated_resources
 
     curated_resources %>%
+    discard(equals, 'CellChatDB') %>%
     {`if`(
         length(.) > 0L,
         import_post_translational_interactions(
             # fully curated, ligand-receptor only resources
-            resources = .,
-            fields = 'extra_attrs'
-        ) %>%
-        extra_attrs_to_cols(CellChatDB_category) %>%
-        filter(
-            CellChatDB_category %in% c(
-                NA,
-                'Cell-Cell Contact',
-                'Secreted Signaling'
-            )
-        ) %>%
-        select(-CellChatDB_category, -extra_attrs),
+            resources = .
+        ),
         NULL
     )} %>%
     {reduce(
@@ -1286,6 +1276,11 @@ curated_ligand_receptor_interactions <- function(
             )
         },
         .init = .
+    )} %>%
+    {`if`(
+        cellchatdb,
+        bind_rows(., cellchatdb_ligrec()),
+        .
     )} %>%
     {`if`(
         signalink,
@@ -1322,6 +1317,34 @@ cellphonedb_curated <- function(){
         CellPhoneDB_type == 'ligand-receptor'
     ) %>%
     select(-CellPhoneDB_type, -extra_attrs)
+
+}
+
+
+#' Ligand-receptor interactions from CellChatDB
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter select
+#' @noRd
+cellchatdb_ligrec <- function(){
+
+    # NSE vs. R CMD check workaround
+    CellChatDB_category <- extra_attrs <- NULL
+
+    import_post_translational_interactions(
+        # fully curated, ligand-receptor only resources
+        resources = 'CellChatDB',
+        fields = 'extra_attrs'
+    ) %>%
+    extra_attrs_to_cols(CellChatDB_category) %>%
+    filter(
+        CellChatDB_category %in% c(
+            NA,
+            'Cell-Cell Contact',
+            'Secreted Signaling'
+        )
+    ) %>%
+    select(-CellChatDB_category, -extra_attrs)
 
 }
 
