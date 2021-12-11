@@ -1230,7 +1230,7 @@ get_intercell_classes <- function(...){
 #' lr <- curated_ligand_receptor_interactions()
 #' lr
 #'
-#' @importFrom magrittr %>% equals
+#' @importFrom magrittr %>% %<>% equals
 #' @importFrom dplyr filter select bind_rows distinct across
 #' @importFrom purrr reduce discard
 #' @importFrom tidyselect everything
@@ -1256,14 +1256,13 @@ curated_ligand_receptor_interactions <- function(
 
     cellchatdb <- 'CellChatDB' %in% curated_resources
 
+    curated_resources %<>% discard(equals, 'CellChatDB')
+
     curated_resources %>%
-    discard(equals, 'CellChatDB') %>%
     {`if`(
         length(.) > 0L,
-        import_post_translational_interactions(
-            # fully curated, ligand-receptor only resources
-            resources = .
-        ),
+        import_post_translational_interactions(resources = .) %>%
+        with_references(resources = curated_resources),
         NULL
     )} %>%
     {reduce(
