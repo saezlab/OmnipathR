@@ -1325,7 +1325,7 @@ cellphonedb_curated <- function(){
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter select
 #' @noRd
-cellchatdb_ligrec <- function(){
+cellchatdb_ligrec <- function(curated = TRUE){
 
     # NSE vs. R CMD check workaround
     CellChatDB_category <- extra_attrs <- NULL
@@ -1343,7 +1343,8 @@ cellchatdb_ligrec <- function(){
             'Secreted Signaling'
         )
     ) %>%
-    select(-CellChatDB_category, -extra_attrs)
+    select(-CellChatDB_category, -extra_attrs) %>%
+    {`if`(curated, with_references(., resources = 'CellChatDB'), .)}
 
 }
 
@@ -1377,7 +1378,8 @@ cellinker_curated <- function(){
         !str_detect(sources, '_Cellinker') &
         Cellinker_type %in% lr_types
     ) %>%
-    select(-Cellinker_type, -extra_attrs)
+    select(-Cellinker_type, -extra_attrs) %>%
+    with_references(resources = 'Cellinker')
 
 }
 
