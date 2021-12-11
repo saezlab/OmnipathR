@@ -1028,3 +1028,67 @@ select_interaction_datasets <- function(envir){
     names
 
 }
+
+
+#' Interactions having references
+#'
+#' @param data An interaction data frame.
+#' @param resources Character: consider only these resources. If `NULL`,
+#'     records with any reference will be accepted.
+#'
+#' @return A subset of the input interaction data frame.
+#'
+#' @examples
+#' cc <- import_post_translational_interactions(resources = 'CellChatDB')
+#' with_references(cc, 'CellChatDB')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr bind_rows distinct across
+#' @importFrom purrr map
+#' @importFrom tidyselect everything
+#' @export
+with_references <- function(data, resources = NULL){
+
+    resources %>%
+    ensure_list %>%
+    map(
+        .with_references,
+        data = data
+    ) %>%
+    bind_rows() %>%
+    distinct(across(everything()))
+
+}
+
+
+#' Interactions having references
+#'
+#' @param data An interaction data frame.
+#' @param resource Character: consider only this resource. If `NULL`, records
+#'     with any reference will be accepted.
+#'
+#' @return A subset of the input interaction data frame.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_detect
+#' @importFrom dplyr filter
+#' @noRd
+.with_references <- function(data, resource = NULL){
+
+    predicate <- `if`(
+        is.null(resource),
+        function(references){
+            !is.na(references)
+        },
+        function(references){
+            str_detect(
+                references,
+                sprintf('%s[^:]*:', resource)
+            )
+        }
+    )
+
+    data %>%
+    filter(predicate(references))
+
+}
