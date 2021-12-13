@@ -38,7 +38,7 @@ by this function, fits better their purpose."><meta property="og:image" content=
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <button type="button" id="version-badge" class="badge badge-default d-none d-lg-block" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Released version">3.3.3</button>
+    <button type="button" id="version-badge" class="badge badge-default d-none d-lg-block" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Released version">3.3.5</button>
 
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto ml-3"><li class="active nav-item">
@@ -86,7 +86,7 @@ by this function, fits better their purpose."><meta property="og:image" content=
   <div class="col-md-9 contents">
     <img src="../package-logo.png" class="pkg-logo" alt=""><div class="page-header pb-2 mt-4 mb-2 border-bottom toc-ignore">
     <h1 class="display-4">Curated ligand-receptor interactions</h1>
-    <small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/master/R/intercell.R"><code>R/intercell.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/master/R/intercell_curated.R"><code>R/intercell_curated.R</code></a></small>
     <div class="d-none name"><code>curated_ligand_receptor_interactions.Rd</code></div>
     </div>
 
@@ -165,26 +165,27 @@ to based on expert curation in a ligand-receptor context.</p>
 <li><p><code><a href="annotated_network.html">annotated_network</a></code></p></li>
 <li><p><code><a href="import_post_translational_interactions.html">import_post_translational_interactions</a></code></p></li>
 <li><p><code><a href="import_ligrecextra_interactions.html">import_ligrecextra_interactions</a></code></p></li>
+<li><p><code><a href="curated_ligrec_stats.html">curated_ligrec_stats</a></code></p></li>
 </ul></div>
     </div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples" aria-hidden="true"></a>Examples</h2>
     <div class="ref-examples sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">lr</span> <span class="op">&lt;-</span> <span class="fu">curated_ligand_receptor_interactions</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">lr</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5,611 x 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5,140 x 15</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    source target source_genesymbol target_genesymbol is_directed is_stimulation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP23 Q13507 CALM1             TRPC3                       1              0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P60903 Q9H1D0 S100A10           TRPV6                       1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Q9Y219 P46531 JAG2              NOTCH1                      1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> O00548 P46531 DLL1              NOTCH1                      1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P05019 P08069 IGF1              IGF1R                       1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P08069 P05019 IGF1R             IGF1                        1              0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P46531 P78504 NOTCH1            JAG1                        1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P78504 P46531 JAG1              NOTCH1                      1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P41221 Q14332 WNT5A             FZD2                        1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q9GZX6 Q08334 IL22              IL10RB                      1              1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5,601 more rows, and 9 more variables: is_inhibition &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P01588 P19235 EPO               EPOR                        1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Q9H2A7 O00574 CXCL16            CXCR6                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P21583 P10721 KITLG             KIT                         1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Q07325 P49682 CXCL9             CXCR3                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P13501 P51681 CCL5              CCR5                        1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P80075 P51681 CCL8              CCR5                        1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P13236 P51681 CCL4              CCR5                        1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P05231 P40189 IL6               IL6ST                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P02778 P49682 CXCL10            CXCR3                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P01148 P30968 GNRH1             GNRHR                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5,130 more rows, and 9 more variables: is_inhibition &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_direction &lt;dbl&gt;, consensus_stimulation &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_inhibition &lt;dbl&gt;, sources &lt;chr&gt;, references &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;, n_resources &lt;int&gt;</span></span>
