@@ -336,7 +336,7 @@ signalink_ligrec <- function(){
 curated_ligrec_stats <- function(...){
 
     # NSE vs. R CMD check workaround
-    resource <- NULL
+    resource <- data <- NULL
 
     curated <- curated_ligand_receptor_interactions(...)
 
