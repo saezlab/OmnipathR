@@ -6,6 +6,10 @@
 \usage{
 extra_attrs(data)
 }
+\arguments{
+\item{data}{An interaction data frame, as provided by any of the
+\code{import...interactions} functions.}
+}
 \value{
 Character: the names of the extra attributes in the data frame.
 }
