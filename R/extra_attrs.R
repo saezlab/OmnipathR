@@ -54,6 +54,9 @@ deserialize_extra_attrs <- function(data){
 #' This function returns the names of the extra attributes available in
 #' the provided data frame.
 #'
+#' @param data An interaction data frame, as provided by any of the
+#'     \code{import...interactions} functions.
+#'
 #' @return Character: the names of the extra attributes in the data frame.
 #'
 #' @examples
