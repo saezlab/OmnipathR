@@ -345,7 +345,9 @@ Another example with tissue expression from Human Protein Atlas:
 ```{r hpa-tissue}
 hpa_tissue <- import_omnipath_annotations(
     resources = 'HPA_tissue',
-    wide = TRUE
+    wide = TRUE,
+    # Limiting to a handful of proteins for a faster vignette build:
+    proteins = c('DLL1', 'MEIS2', 'PHOX2A', 'BACH1', 'KLF11', 'FOXO3', 'MEFV')
 )
 hpa_tissue
 ```
