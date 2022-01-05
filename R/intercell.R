@@ -597,20 +597,62 @@ import_intercell_network <- function(
 }
 
 
-## Filtering intercell records according to the categories and/or classes
-## selected
-#TODO: actually this we could export as it might be useful for users
-## Filters an intercell data table according to various criteria
-#' Filters intercell annotations
+#' Filter intercell annotations
 #'
 #' Filters a data frame retrieved by \code{\link{import_omnipath_intercell}}.
+#'
+#' @param data An intercell annotation data frame as provided by
+#'     \code{\link{import_omnipath_intercell}}.
+#' @param categories Character: allow only these values in the \code{category}
+#'     column.
+#' @param resources Character: allow records only from these resources.
+#' @param parent Character: filter for records with these parent categories.
+#' @param scope Character: filter for records with these annotation scopes.
+#'     Possible values are \code{generic} and \code{specific}.
+#' @param aspect Character: filter for records with these annotation aspects.
+#'     Possible values are \code{functional} and \code{locational}.
+#' @param source Character: filter for records with these annotation sources.
+#'     Possible values are \code{composite} and \code{resource_specific}.
+#' @param transmitter Logical: if \code{TRUE} only transmitters, if
+#'     \code{FALSE} only non-transmitters will be selected, if \code{NULL}
+#'     it has no effect.
+#' @param receiver Logical: works the same way as \code{transmitters}.
+#' @param secreted Logical: works the same way as \code{transmitters}.
+#' @param plasma_membrane_peripheral Logical: works the same way as
+#'     \code{transmitters}.
+#' @param plasma_membrane_transmembrane Logical: works the same way as
+#'     \code{transmitters}.
+#' @param proteins Character: filter for annotations of these proteins.
+#'     Gene symbols or UniProt IDs can be used.
+#' @param causality Character: filter for records with these causal roles.
+#'     Possible values are \code{transmitter} and \code{receiver}. The filter
+#'     applied simultaneously to the \code{transmitter} and \code{receiver}
+#'     arguments, it's just a different notation for the same thing.
+#' @param topology Character: filter for records with these localization
+#'     topologies. Possible values are \code{secreced},
+#'     \code{plasma_membrane_peripheral} and
+#'     \code{plasma_membrane_transmembrane}; the shorter notations \code{sec},
+#'     \code{pmp} and \code{pmtm} can be used. Has the same effect as the
+#'     logical type arguments, just uses a different notation.
+#' @param ... Ignored.
+#'
+#' @return The intercell annotation data frame filtered according to the
+#'     specified conditions.
+#'
+#' @examples
+#' ic <- import_omnipath_intercell()
+#' ic <- filter_intercell(
+#'     ic,
+#'     transmitter = TRUE,
+#'     secreted = TRUE,
+#'     scope = "specific"
+#' )
 #'
 #' @importFrom dplyr recode rename_all
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data set_names
-#'
-#'
-#' @noRd
+#' @importFrom stringr str_detect
+#' @export
 filter_intercell <- function(
     data,
     categories = NULL,
@@ -629,6 +671,9 @@ filter_intercell <- function(
     topology = NULL,
     ...
 ){
+
+    args <- environment() %>% as.list()
+    args$cats <- args$categories
 
     before <- nrow(data)
 
@@ -658,23 +703,25 @@ filter_intercell <- function(
             receiver = 'rec'
         )
 
+    print(args$cats)
+
     data <-
         data %>%
         filter(
-            (is.null(categories) | category %in% categories) &
-            (is.null(parent) | .data$parent %in% parent) &
-            (is.null(scope) | .data$scope %in% scope) &
-            (is.null(aspect) | .data$aspect %in% aspect) &
-            (is.null(source) | .data$source %in% source) &
-            (is.null(transmitter) | .data$transmitter) &
-            (is.null(receiver) | .data$receiver) &
-            (is.null(secreted) | .data$secreted) &
+            (is.null(args$cats) | category %in% args$cats) &
+            (is.null(args$parent) | .data$parent %in% args$parent) &
+            (is.null(args$scope) | .data$scope %in% args$scope) &
+            (is.null(args$aspect) | .data$aspect %in% aspect) &
+            (is.null(args$source) | .data$source %in% source) &
+            (is.null(args$transmitter) | .data$transmitter) &
+            (is.null(args$receiver) | .data$receiver) &
+            (is.null(args$secreted) | .data$secreted) &
             (
-                is.null(plasma_membrane_peripheral) |
+                is.null(args$plasma_membrane_peripheral) |
                 .data$plasma_membrane_peripheral
             ) &
             (
-                is.null(plasma_membrane_transmembrane) |
+                is.null(args$plasma_membrane_transmembrane) |
                 .data$plasma_membrane_transmembrane
             ) &
             (
@@ -698,8 +745,9 @@ filter_intercell <- function(
 
     message(
         sprintf(
-            'Removed %d records from intercell data.',
-            before - after
+            'Removed %d and kept %d records of intercell data.',
+            before - after,
+            after
         )
     )
 
