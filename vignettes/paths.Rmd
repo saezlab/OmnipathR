@@ -415,8 +415,10 @@ tf_target <-
         # examples here run faster; feel free to remove it,
         # then you will have more gene regulatory interactions
         # from a variety of databases
-        datasets = 'dorothea',
-        entity_types = 'protein'
+        datasets = 'tf_target',
+        entity_types = 'protein',
+        # A workaround to mitigate a temporary issue (05/01/2022)
+        resources = c('ORegAnno', 'PAZAR')
     )
 ```
 
@@ -487,7 +489,9 @@ tf_target %<>%
         sources,
         references,
         curation_effort,
-        dorothea_level,
+        # Workaround to mitigate a temporary issue with
+        # DoRothEA data in OmniPath (05/01/2022)
+        # dorothea_level,
         n_references,
         n_resources
     ) %>%
