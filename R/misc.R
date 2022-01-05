@@ -651,6 +651,9 @@ as_type <- function(var, type){
 #' @noRd
 get_connections <- function(uri){
 
+    # NSE vs. R CMD check workaround
+    description <- con_id <- NULL
+
     showConnections(all = TRUE) %>%
     as.data.frame %>%
     rownames_to_column('con_id') %>%
