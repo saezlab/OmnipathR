@@ -17,7 +17,7 @@ template:
   params:
     ganalytics: UA-119440867-10
     highlightcss: false
-  bootstrap: 4
+  bootstrap: 5
   bootswatch: cosmo
   bslib:
     primary: "#007B7F"
