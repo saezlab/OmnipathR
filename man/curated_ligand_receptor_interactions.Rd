@@ -44,12 +44,12 @@ complexes, and we combine these annotations with network interactions
 on the client side, using \code{\link{import_intercell_network}}. The
 architecture of this database is complex, aiming to cover a broad range
 of knowledge on various levels of details and confidence. We can use the
-\code{\link{filter_intercell}} and \code{\link{filter_intercell_network}}
-functions for automated, data driven quality filtering, in order to
-enrich the cell-cell communication network in higher confidence
-interactions. However, for many users, a simple combination of the
-most established, expert curated ligand-receptor resources, provided
-by this function, fits better their purpose.
+\code{\link{intercell_consensus_filter}} and
+\code{\link{filter_intercell_network}} functions for automated, data
+driven quality filtering, in order to enrich the cell-cell communication
+network in higher confidence interactions. However, for many users, a
+simple combination of the most established, expert curated ligand-receptor
+resources, provided by this function, fits better their purpose.
 }
 \details{
 Some resources are a mixture of curated and bulk imported interactions,
