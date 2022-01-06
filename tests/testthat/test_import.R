@@ -131,7 +131,7 @@ test_items <- list(
     kinaseextra_interactions = list(datasets = 'kinaseextra'),
     pathwayextra_interactions = list(datasets = 'pathwayextra'),
     ligrecextra_interactions = list(datasets = 'ligrecextra'),
-    dorothea_interactions = list(datasets = 'dorothea'),
+    # dorothea_interactions = list(datasets = 'dorothea'),
     tf_target_interactions = list(datasets = 'tf_target'),
     tf_mirna_interactions = list(datasets = 'tf_mirna'),
     mirnatarget_interactions = list(datasets = 'mirnatarget')
