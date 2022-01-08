@@ -337,16 +337,20 @@ select and print the most confident interactions for a given TF.
 ```{r dorothea}
 ## We query and store the interactions into a dataframe
 interactions <- import_dorothea_interactions(
-    resources=c("DoRothEA"),
+    resources = c("DoRothEA"),
     dorothea_levels = 'A',
-    organism=9606
+    organism = 9606
+)
+
+## Until the DoRothEA issue gets fixed we have this here:
+interactions <- import_transcriptional_interactions(
+    resources = c("ORegAnno", "DoRothEA")
 )
 
 ## We select the most confident interactions for a given TF and we print
 ## the interactions to check the way it regulates its different targets
-interactions_A_GLI1 <- dplyr::filter(
+interactions_A_GLI1  <- dplyr::filter(
     interactions,
-    dorothea_level == "A",
     source_genesymbol == "GLI1"
 )
 
@@ -366,9 +370,8 @@ the miRNA targeting *GLI1* and the genes regulated by this TF.
 
 ```{r mirnatarget}
 ## We query and store the interactions into a dataframe
-interactions <- import_mirnatarget_interactions(
-    resources = c("miRTarBase", "miRecords")
-)
+interactions <-
+  import_mirnatarget_interactions(resources = c("miR2Disease", "miRDeathDB"))
 
 ## We select the interactions where a miRNA is interacting with the TF
 ## used in the previous code chunk and we print these interactions.
