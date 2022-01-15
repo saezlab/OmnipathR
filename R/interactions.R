@@ -857,6 +857,74 @@ import_lncrna_mrna_interactions <- function(
 }
 
 
+#' Interactions from the small molecule-protein dataset of OmniPath
+#'
+#' Imports the dataset from:
+#' \url{https://omnipathdb.org/interactions?datasets=small_molecule},
+#' which contains small molecule-protein interactions. Small molecules
+#' can be metabolites, intrinsic ligands or drug compounds.
+#'
+#' @param resources interactions not reported in these databases are
+#'     removed. See \code{\link{get_interaction_resources}} for more
+#'     information.
+#' @param organism Interactions are available for human, mouse and rat.
+#'     Choose among: 9606 human (default), 10116 rat and 10090 Mouse.
+#' @param fields Optional fields to be added.
+#' @param default_fields whether to include the default fields (columns) for
+#'     the query type. If FALSE, only the fields defined by the user in the
+#'     `fields` argument will be added.
+#' @param references_by_resource If \code{FALSE}, removes the resource name
+#'     prefixes from the references (PubMed IDs); this way the information
+#'     which reference comes from which resource will be lost and the PubMed
+#'     IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
+#' @param ... optional additional arguments
+#'
+#' @return A dataframe of small molecule-protein interactions
+#'
+#' @examples
+#' # What are the targets of aspirin?
+#' interactions <-
+#'     import_small_molecule_protein_interactions(
+#'         sources = 'ASPIRIN'
+#'     )
+#' # The prostaglandin synthases:
+#' interactions
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
+#' }
+import_small_molecule_protein_interactions <- function(
+    resources = NULL,
+    organism = 9606,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
+    exclude = NULL,
+    ...
+){
+
+    result <- import_omnipath(
+        query_type = 'interactions',
+        resources = resources,
+        organism = organism,
+        datasets = 'small_molecule',
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
+        exclude = exclude,
+        ...
+    )
+
+    return(result)
+
+}
+
+
 #' Imports all interaction datasets available in OmniPath
 #'
 #' The interaction datasets currently available in OmniPath:
