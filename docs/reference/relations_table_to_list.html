@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,11 +110,11 @@ its argument `tables` is <code>TRUE</code>).</p></dd>
 <span class="r-in"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></span><span class="op">(</span><span class="va">goslim_url</span>, <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/write_disk.html" class="external-link">write_disk</a></span><span class="op">(</span><span class="va">path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Response [http://current.geneontology.org/ontology/subsets/goslim_generic.obo]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Date: 2022-01-05 15:29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Date: 2022-01-15 18:56</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Status: 200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Content-Type: text/obo</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Size: 111 kB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ON DISK&gt;  /tmp/Rtmpl6r4mr/fileea8991f684cb0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ON DISK&gt;  /tmp/RtmpREf8yx/file6920539334e08</span>
 <span class="r-in"><span class="va">obo</span> <span class="op">&lt;-</span> <span class="fu"><a href="obo_parser.html">obo_parser</a></span><span class="op">(</span><span class="va">path</span>, tables <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">rel_list</span> <span class="op">&lt;-</span> <span class="fu">relations_table_to_list</span><span class="op">(</span><span class="va">obo</span><span class="op">$</span><span class="va">relations</span><span class="op">)</span></span>

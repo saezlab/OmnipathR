@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,10 +116,10 @@ versions with `ready` (completed download) status are selected</p></dd>
 <span class="r-in"><span class="va">version</span> <span class="op">&lt;-</span> <span class="fu"><a href="omnipath_cache_latest_or_new.html">omnipath_cache_latest_or_new</a></span><span class="op">(</span>url <span class="op">=</span> <span class="va">bioc_url</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></span><span class="op">(</span><span class="va">bioc_url</span>, <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/write_disk.html" class="external-link">write_disk</a></span><span class="op">(</span><span class="va">version</span><span class="op">$</span><span class="va">path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Response [https://bioconductor.org/]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Date: 2022-01-05 23:51</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Date: 2022-01-15 19:12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Status: 200</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Content-Type: text/html</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Size: 16.7 kB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Size: 16.9 kB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ON DISK&gt;  /home/denes/.cache/OmnipathR/41346a00fb20d2a9df03aa70cf4d50bf88ab154a-1</span>
 <span class="r-in"><span class="fu"><a href="omnipath_cache_download_ready.html">omnipath_cache_download_ready</a></span><span class="op">(</span><span class="va">version</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">record</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html" class="external-link">first</a></span><span class="op">(</span><span class="fu"><a href="omnipath_cache_search.html">omnipath_cache_search</a></span><span class="op">(</span><span class="st">'biocond'</span><span class="op">)</span><span class="op">)</span></span>

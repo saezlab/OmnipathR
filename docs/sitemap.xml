@@ -79,6 +79,12 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/consensuspathdb_raw_table.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/curated_ligand_receptor_interactions.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/curated_ligrec_stats.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/descendants.html</loc>
   </url>
   <url>
@@ -91,7 +97,25 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/evex_download.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/extra_attr_to_column.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/extra_attr_values.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/extra_attrs.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/extra_attrs_to_cols.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/filter_by_resource.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/filter_extra_attrs.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/filter_intercell.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/filter_intercell_network.html</loc>
@@ -154,6 +178,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/harmonizome_download.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/has_extra_attrs.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/hpo_download.html</loc>
   </url>
   <url>
@@ -200,6 +227,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/import_post_translational_interactions.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/import_small_molecule_protein_interactions.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/import_tf_mirna_interactions.html</loc>
@@ -545,6 +575,12 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/walk_ontology_tree.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/with_extra_attrs.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/with_references.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/zenodo_download.html</loc>

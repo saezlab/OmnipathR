@@ -22,7 +22,7 @@ downloaded data."><meta property="og:image" content="https://saezlab.github.io/O
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,20 +114,20 @@ annotations from one resource, otherwise a list of wide format tibbles.</p>
 <span class="r-in"><span class="va">disgenet</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="st">'DisGeNet'</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">disgenet</span> <span class="op">&lt;-</span> <span class="fu">pivot_annotations</span><span class="op">(</span><span class="va">disgenet</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">disgenet</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 126,447 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 126,588 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    uniprot genesymbol entity_type disease      type  score dsi   dpi   nof_pmids</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P04217  A1BG       protein     Schizophren… dise… 0.3   0.7   0.538 1        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P04217  A1BG       protein     Hepatomegaly phen… 0.3   0.7   0.538 1        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P01023  A2M        protein     Hepatolenti… dise… 0.3   0.529 0.769 1        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> P01023  A2M        protein     Lung diseas… group 0.32  0.529 0.769 1        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P01023  A2M        protein     Acute Kidne… dise… 0.3   0.529 0.769 1        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P01023  A2M        protein     Presenile d… dise… 0.3   0.529 0.769 3        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P01023  A2M        protein     Malignant t… dise… 0.31  0.529 0.769 1        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P01023  A2M        protein     Familial Al… dise… 0.31  0.529 0.769 3        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P01023  A2M        protein     Alzheimer D… dise… 0.37  0.529 0.769 3        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P01023  A2M        protein     Malignant n… dise… 0.3   0.529 0.769 2        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 126,437 more rows, and 2 more variables: nof_snps &lt;chr&gt;, source &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P01023  A2M        protein     Fibrosis, L… dise… 0.3   0.529 0.769 1        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> P01023  A2M        protein     Acute kidne… dise… 0.3   0.529 0.769 1        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P01023  A2M        protein     Mental Depr… dise… 0.3   0.529 0.769 2        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P01023  A2M        protein     Nephrotic S… group 0.51  0.529 0.769 1        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P01023  A2M        protein     Acute Kidne… dise… 0.3   0.529 0.769 1        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P01023  A2M        protein     Alzheimer D… dise… 0.3   0.529 0.769 3        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P01023  A2M        protein     Lung Neopla… group 0.3   0.529 0.769 2        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P01023  A2M        protein     Familial Al… dise… 0.31  0.529 0.769 3        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 126,578 more rows, and 2 more variables: nof_snps &lt;chr&gt;, source &lt;chr&gt;</span></span>
 <span class="r-in"><span class="co"># # A tibble: 119,551 x 10</span></span>
 <span class="r-in"><span class="co">#    uniprot genesymbol entity_type disease score dsi   dpi   nof_pmids</span></span>
 <span class="r-in"><span class="co">#    &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;</span></span>

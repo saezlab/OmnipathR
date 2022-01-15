@@ -22,7 +22,7 @@ also need it in list format."><meta property="og:image" content="https://saezlab
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -127,15 +127,17 @@ and "children".</p></dd>
 <span class="r-in">    <span class="st">"http://current.geneontology.org/ontology/subsets/goslim_generic.obo"</span></span>
 <span class="r-in"><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></span><span class="op">(</span><span class="va">goslim_url</span>, <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/write_disk.html" class="external-link">write_disk</a></span><span class="op">(</span><span class="va">path</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Response [http://current.geneontology.org/ontology/subsets/goslim_generic.obo]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Date: 2022-01-05 15:29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Status: 200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Content-Type: text/obo</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Size: 111 kB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ON DISK&gt;  /tmp/Rtmpl6r4mr/fileea89975ee8715</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in curl::curl_fetch_disk(url, x$path, handle = handle):</span> Timeout was reached: [current.geneontology.org] Resolving timed out after 10000 milliseconds</span>
 <span class="r-in"><span class="va">obo</span> <span class="op">&lt;-</span> <span class="fu"><a href="obo_parser.html">obo_parser</a></span><span class="op">(</span><span class="va">path</span>, tables <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion to integer range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to min; returning Inf</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>no non-missing arguments to max; returning -Inf</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Problem with `mutate()` column `term`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> `term = cut(row, c(terms$row - 1, Inf), terms$value, right = FALSE)`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> 'length.out' must be a non-negative number</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">rel_tbl</span> <span class="op">&lt;-</span> <span class="fu">relations_list_to_table</span><span class="op">(</span><span class="va">obo</span><span class="op">$</span><span class="va">relations</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in direction %||% attr(relations, "direction"):</span> object 'obo' not found</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

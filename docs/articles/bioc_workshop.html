@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -276,25 +276,32 @@
 </li>
 </ul>
 </li>
+<li>Small molecule-protein interactions <em>(small_molecule_protein)</em>
+<ul>
+<li>
+<strong>small_molecule:</strong> metabolites, intrinsic ligands or drug compounds targeting human proteins <a href="https://saezlab.github.io/OmnipathR/reference/import_small_molecule_protein_interactions.html">import_small_molecule_protein_interactions</a>
+</li>
+</ul>
+</li>
 </ul>
 <p>Not individual interactions but resource are classified into the datasets above, so these can overlap. Each interaction type and dataset has its dedicated function in <code>OmnipathR</code>, above we provide links to their help pages. As an example, let’s see the gene regulatory interactions:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gri</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_transcriptional_interactions.html">import_transcriptional_interactions</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">gri</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 62,752 × 16</span></span>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 74,513 × 16</span></span>
 <span class="co">##    source target source_genesymbol target_genesymbol is_directed is_stimulation is_inhibition consensus_direc…</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> P35869 P04798 AHR               CYP1A1                      1              1             0                1</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> P35869 P05177 AHR               CYP1A2                      1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> P35869 Q16678 AHR               CYP1B1                      1              1             0                1</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> P35869 P01100 AHR               FOS                         1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> P35869 Q07889 AHR               SOS1                        1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> P35869 P19224 AHR               UGT1A6                      1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> P10275 O15439 AR                ABCC4                       1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> P10275 P61221 AR                ABCE1                       1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> P10275 P08910 AR                ABHD2                       1              0             0                0</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> P10275 O14639 AR                ABLIM1                      1              0             0                0</span>
-<span class="co">## <span style="color: #949494;"># … with 62,742 more rows, and 8 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> P35869 Q9ULH1 AHR               ASAP1                       1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> P35869 P04798 AHR               CYP1A1                      1              1             0                1</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> P35869 P05177 AHR               CYP1A2                      1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> P35869 Q16678 AHR               CYP1B1                      1              1             0                1</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> P35869 P11308 AHR               ERG                         1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> P35869 P01100 AHR               FOS                         1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> P35869 P01106 AHR               MYC                         1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> P35869 Q07889 AHR               SOS1                        1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> P35869 P19224 AHR               UGT1A6                      1              0             0                0</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> P35869 Q14135 AHR               VGLL4                       1              0             0                0</span>
+<span class="co">## <span style="color: #949494;"># … with 74,503 more rows, and 8 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   sources &lt;chr&gt;, references &lt;chr&gt;, curation_effort &lt;dbl&gt;, dorothea_level &lt;chr&gt;, n_references &lt;chr&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   n_resources &lt;int&gt;</span></span></code></pre>
 <p>The interaction data frame contains the UniProt IDs and Gene Symbols of the interacting partners, the list of resources and references (PubMed IDs) for each interaction, and whether the interaction is directed, stimulatory or inhibitory.</p>
@@ -305,17 +312,17 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gr_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span><span class="va">gri</span><span class="op">)</span>
 <span class="va">gr_graph</span></code></pre></div>
-<pre><code><span class="co">## IGRAPH bf03f6b DN-- 14671 62752 -- </span>
+<pre><code><span class="co">## IGRAPH 273b80a DN-- 15084 74513 -- </span>
 <span class="co">## + attr: name (v/c), up_ids (v/c), is_directed (e/n), is_stimulation (e/n), is_inhibition (e/n),</span>
 <span class="co">## | consensus_direction (e/n), consensus_stimulation (e/n), consensus_inhibition (e/n), sources</span>
 <span class="co">## | (e/x), references (e/x), curation_effort (e/n), dorothea_level (e/c), n_references (e/c),</span>
 <span class="co">## | n_resources (e/n)</span>
-<span class="co">## + edges from bf03f6b (vertex names):</span>
-<span class="co">##  [1] AHR-&gt;CYP1A1   AHR-&gt;CYP1A2   AHR-&gt;CYP1B1   AHR-&gt;FOS      AHR-&gt;SOS1     AHR-&gt;UGT1A6   AR -&gt;ABCC4   </span>
-<span class="co">##  [8] AR -&gt;ABCE1    AR -&gt;ABHD2    AR -&gt;ABLIM1   AR -&gt;ACOXL    AR -&gt;ACP3     AR -&gt;ACSL1    AR -&gt;ACTA1   </span>
-<span class="co">## [15] AR -&gt;ADAMTS4  AR -&gt;ADAMTSL1 AR -&gt;ADGRG6   AR -&gt;ADGRV1   AR -&gt;ADIPOR1  AR -&gt;AFDN     AR -&gt;AFF1    </span>
-<span class="co">## [22] AR -&gt;AFF3     AR -&gt;AGAP1    AR -&gt;AKAP13   AR -&gt;AKAP6    AR -&gt;AKAP7    AR -&gt;AKAP7    AR -&gt;AKR1B1  </span>
-<span class="co">## [29] AR -&gt;ALCAM    AR -&gt;ALDH1A2  AR -&gt;ALDH1A3  AR -&gt;ALK      AR -&gt;AMH      AR -&gt;AMOTL1   AR -&gt;ANAPC10 </span>
+<span class="co">## + edges from 273b80a (vertex names):</span>
+<span class="co">##  [1] AHR-&gt;ASAP1    AHR-&gt;CYP1A1   AHR-&gt;CYP1A2   AHR-&gt;CYP1B1   AHR-&gt;ERG      AHR-&gt;FOS      AHR-&gt;MYC     </span>
+<span class="co">##  [8] AHR-&gt;SOS1     AHR-&gt;UGT1A6   AHR-&gt;VGLL4    AR -&gt;ABCC4    AR -&gt;ABCE1    AR -&gt;ABHD2    AR -&gt;ABLIM1  </span>
+<span class="co">## [15] AR -&gt;ACAD10   AR -&gt;ACOXL    AR -&gt;ACP3     AR -&gt;ACSL1    AR -&gt;ACTA1    AR -&gt;ADAMTS4  AR -&gt;ADAMTSL1</span>
+<span class="co">## [22] AR -&gt;ADGRG6   AR -&gt;ADGRV1   AR -&gt;ADIPOR1  AR -&gt;AFDN     AR -&gt;AFF1     AR -&gt;AFF3     AR -&gt;AGAP1   </span>
+<span class="co">## [29] AR -&gt;AHSG     AR -&gt;AKAP13   AR -&gt;AKAP6    AR -&gt;AKAP7    AR -&gt;AKAP7    AR -&gt;AKR1B1   AR -&gt;AKR1C3  </span>
 <span class="co">## + ... omitted several edges</span></code></pre>
 <p>On this network we can use <code>OmnipathR</code>’s <code>find_all_paths</code> function, which is able to look up all paths up to a certain length between two set of nodes:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -335,7 +342,7 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">enz_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">enz_sub</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 42,162 × 12</span></span>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 42,248 × 12</span></span>
 <span class="co">##    enzyme substrate enzyme_genesymbol substrate_genesymbol residue_type residue_offset modification    sources</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
 <span class="co">## <span style="color: #BCBCBC;"> 1</span> P06239 O14543    LCK               SOCS3                Y                       204 phosphorylation KEA;MI…</span>
@@ -348,16 +355,16 @@
 <span class="co">## <span style="color: #BCBCBC;"> 8</span> P06241 O15117    FYN               FYB1                 Y                       571 phosphorylation Phosph…</span>
 <span class="co">## <span style="color: #BCBCBC;"> 9</span> P06241 O15117    FYN               FYB1                 Y                       771 phosphorylation Phosph…</span>
 <span class="co">## <span style="color: #BCBCBC;">10</span> P06241 O15117    FYN               FYB1                 Y                       559 phosphorylation Phosph…</span>
-<span class="co">## <span style="color: #949494;"># … with 42,152 more rows, and 4 more variables: references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;,</span></span>
+<span class="co">## <span style="color: #949494;"># … with 42,238 more rows, and 4 more variables: references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   n_resources &lt;int&gt;</span></span></code></pre>
 <p>This data frame also can be converted to an igraph object:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">es_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enzsub_graph.html">enzsub_graph</a></span><span class="op">(</span><span class="va">enz_sub</span><span class="op">)</span>
 <span class="va">es_graph</span></code></pre></div>
-<pre><code><span class="co">## IGRAPH f2d5f75 DN-- 4680 42162 -- </span>
+<pre><code><span class="co">## IGRAPH 6ef9c4c DN-- 4700 42248 -- </span>
 <span class="co">## + attr: name (v/c), up_ids (v/c), residue_type (e/c), residue_offset (e/n), modification (e/c),</span>
 <span class="co">## | sources (e/x), references (e/x), curation_effort (e/n), n_references (e/c), n_resources (e/n)</span>
-<span class="co">## + edges from f2d5f75 (vertex names):</span>
+<span class="co">## + edges from 6ef9c4c (vertex names):</span>
 <span class="co">##  [1] LCK  -&gt;SOCS3  LCK  -&gt;SOCS3  SRC  -&gt;TERT   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  </span>
 <span class="co">##  [8] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  </span>
 <span class="co">## [15] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  </span>
@@ -376,20 +383,20 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cplx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_complexes.html">import_omnipath_complexes</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">cplx</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 32,535 × 7</span></span>
-<span class="co">##    name         components    components_genesy… stoichiometry sources       references    identifiers        </span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> NFY          P23511_P2520… NFYA_NFYB_NFYC     1:1:1         CORUM;Comple… 15243141;937… CORUM:4478;Complea…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> mTORC2       P68104_P8529… DEPTOR_EEF1A1_MLS… 0:0:0:0:0     SIGNOR        <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C2   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> mTORC1       P42345_Q8N12… AKT1S1_DEPTOR_MLS… 0:0:0:0:0     SIGNOR        <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C3   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> SCF-betaTRCP P63208_Q1361… BTRC_CUL1_SKP1     1:1:1         CORUM;Comple… 9990852       CORUM:227;Compleat…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> CBP/p300     Q09472_Q92793 CREBBP_EP300       0:0           SIGNOR        <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C6   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> P300/PCAF    Q09472_Q9279… CREBBP_EP300_KAT2B 0:0:0         SIGNOR        <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C7   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> SMAD2/SMAD4  Q13485_Q15796 SMAD2_SMAD4        1:2           ComplexPorta… 12923550;406… PDB:1u7v;SIGNOR:SI…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> SMAD3/SMAD4  P84022_Q13485 SMAD3_SMAD4        2:1           ComplexPorta… 12923550;406… PDB:1U7F;PDB:1u7f;…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> SMAD4/JUN    P05412_Q13485 JUN_SMAD4          0:0           SIGNOR        <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C10  </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> SMAD2/SMURF2 Q15796_Q9HAU4 SMAD2_SMURF2       1:1           Compleat;SIG… 11389444      Compleat:HC501;SIG…</span>
-<span class="co">## <span style="color: #949494;"># … with 32,525 more rows</span></span></code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 32,761 × 7</span></span>
+<span class="co">##    name         components     components_genesym… stoichiometry sources      references    identifiers       </span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> NFY          P23511_P25208… NFYA_NFYB_NFYC      1:1:1         CORUM;Compl… 14755292;152… CORUM:4478;Comple…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> mTORC2       P42345_P68104… DEPTOR_EEF1A1_MLST… 0:0:0:0:0:0   SIGNOR       <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C2  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> mTORC1       P42345_Q8N122… AKT1S1_DEPTOR_MLST… 0:0:0:0:0     SIGNOR       <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C3  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> SCF-betaTRCP P63208_Q13616… BTRC_CUL1_SKP1      1:1:1         CORUM;Compl… 9990852       CORUM:227;Complea…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> CBP/p300     Q09472_Q92793  CREBBP_EP300        0:0           SIGNOR       <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C6  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> P300/PCAF    Q09472_Q92793… CREBBP_EP300_KAT2B  0:0:0         SIGNOR       <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C7  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> SMAD2/SMAD4  Q13485_Q15796  SMAD2_SMAD4         1:2           ComplexPort… 4065410;1292… PDB:1u7v;SIGNOR:S…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> SMAD3/SMAD4  P84022_Q13485  SMAD3_SMAD4         2:1           ComplexPort… 4065410;1292… PDB:1U7F;PDB:1u7f…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> SMAD4/JUN    P05412_Q13485  JUN_SMAD4           0:0           SIGNOR       <span style="color: #BB0000;">NA</span>            SIGNOR:SIGNOR-C10 </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> SMAD2/SMURF2 Q15796_Q9HAU4  SMAD2_SMURF2        1:1           Compleat;SI… 11389444      Compleat:HC501;SI…</span>
+<span class="co">## <span style="color: #949494;"># … with 32,751 more rows</span></span></code></pre>
 <p>The resulted data frame provides the constitution and stoichiometry of protein complexes, with references.</p>
 </div>
 <div class="section level3">
@@ -402,20 +409,20 @@
     wide <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span>
 <span class="va">uniprot_loc</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 64,247 × 5</span></span>
-<span class="co">##    uniprot genesymbol entity_type location      features</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Q8NB16  MLKL       protein     Cell membrane <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Q8NB16  MLKL       protein     Nucleus       <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Q8NB16  MLKL       protein     Cytoplasm     <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> O94851  MICAL2     protein     Nucleus       <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q8TDZ2  MICAL1     protein     Midbody       <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q8TDZ2  MICAL1     protein     Cytoskeleton  <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q8TDZ2  MICAL1     protein     Cytoplasm     <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Q9NPJ6  MED4       protein     Nucleus       <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Q8N635  MEIOB      protein     Chromosome    <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> Q8N635  MEIOB      protein     Nucleus       <span style="color: #BB0000;">NA</span>      </span>
-<span class="co">## <span style="color: #949494;"># … with 64,237 more rows</span></span></code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 64,573 × 5</span></span>
+<span class="co">##    uniprot genesymbol entity_type location            features                   </span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> Q96NG5  ZNF558     protein     Nucleus             <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> Q6ZN19  ZNF841     protein     Nucleus             <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> Q86XN6  ZNF761     protein     Nucleus             <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> A8MUZ8  ZNF705G    protein     Nucleus             <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q08ER8  ZNF543     protein     Nucleus             <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q9GZX5  ZNF350     protein     Nucleus             <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q9GZX5  ZNF350     protein     Nucleus matrix      <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> Q9GZP7  VN1R1      protein     Cell membrane       Multi-pass membrane protein</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> Q3MJ13  WDR72      protein     Cytoplasmic vesicle <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> Q9NY84  VNN3       protein     Secreted            <span style="color: #BB0000;">NA</span>                         </span>
+<span class="co">## <span style="color: #949494;"># … with 64,563 more rows</span></span></code></pre>
 <p>The <code>entity_type</code> field can be protein, mirna or complex. Protein complexes mostly annotated based on the consensus of their members, we should be aware that this is an <em>in silico</em> inference.</p>
 <p>In case of spelling mistake either in parameter names or values <code>OmnipathR</code> either corrects the mistake or gives a warning or error:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -447,20 +454,20 @@
     proteins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'DLL1'</span>, <span class="st">'MEIS2'</span>, <span class="st">'PHOX2A'</span>, <span class="st">'BACH1'</span>, <span class="st">'KLF11'</span>, <span class="st">'FOXO3'</span>, <span class="st">'MEFV'</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="va">hpa_tissue</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 489 × 15</span></span>
-<span class="co">##    uniprot genesymbol entity_type organ  tissue    level status prognostic favourable pathology n_not_detected</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> O43524  FOXO3      protein     skin 1 fibrobla… Medi… Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> O43524  FOXO3      protein     spleen cells in… Medi… Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> O43524  FOXO3      protein     place… syncytio… High  Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> O43524  FOXO3      protein     duode… glandula… High  Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> O43524  FOXO3      protein     lung … lung can… Low   <span style="color: #BB0000;">NA</span>     False      True       True      0             </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> O43524  FOXO3      protein     adipo… adipocyt… Medi… Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> O43524  FOXO3      protein     tonsil germinal… Not … Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> O43524  FOXO3      protein     cauda… glial ce… Low   Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> O43524  FOXO3      protein     saliv… glandula… Medi… Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> O43524  FOXO3      protein     hippo… glial ce… Not … Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
-<span class="co">## <span style="color: #949494;"># … with 479 more rows, and 4 more variables: n_low &lt;chr&gt;, n_medium &lt;chr&gt;, n_high &lt;chr&gt;, score &lt;chr&gt;</span></span></code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 529 × 15</span></span>
+<span class="co">##    uniprot genesymbol entity_type organ   tissue   level status prognostic favourable pathology n_not_detected</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> O43524  FOXO3      protein     duoden… glandul… High  Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> O43524  FOXO3      protein     prosta… glandul… Medi… Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> O43524  FOXO3      protein     urothe… urothel… Medi… <span style="color: #BB0000;">NA</span>     False      True       True      3             </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> O43524  FOXO3      protein     nasoph… respira… Low   Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> O43524  FOXO3      protein     testis  elongat… Not … Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> O43524  FOXO3      protein     testis… testis … High  <span style="color: #BB0000;">NA</span>     False      True       True      0             </span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> O43524  FOXO3      protein     hippoc… glial c… Not … Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> O43524  FOXO3      protein     rectum  glandul… High  Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> O43524  FOXO3      protein     skin 2  melanoc… High  Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> O43524  FOXO3      protein     skin 1  vascula… Not … Suppo… False      False      False     <span style="color: #BB0000;">NA</span>            </span>
+<span class="co">## <span style="color: #949494;"># … with 519 more rows, and 4 more variables: n_low &lt;chr&gt;, n_medium &lt;chr&gt;, n_high &lt;chr&gt;, score &lt;chr&gt;</span></span></code></pre>
 <p>And pathway annotations from SignaLink:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">slk_pathw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_annotations.html">import_omnipath_annotations</a></span><span class="op">(</span>
@@ -468,20 +475,20 @@
     wide <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span>
 <span class="va">slk_pathw</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 2,444 × 4</span></span>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 2,447 × 4</span></span>
 <span class="co">##    uniprot genesymbol entity_type pathway                 </span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   </span>
 <span class="co">## <span style="color: #BCBCBC;"> 1</span> P20963  CD247      protein     T-cell receptor         </span>
 <span class="co">## <span style="color: #BCBCBC;"> 2</span> P43403  ZAP70      protein     Receptor tyrosine kinase</span>
 <span class="co">## <span style="color: #BCBCBC;"> 3</span> P43403  ZAP70      protein     T-cell receptor         </span>
 <span class="co">## <span style="color: #BCBCBC;"> 4</span> Q9NYJ8  TAB2       protein     JAK/STAT                </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q9NYJ8  TAB2       protein     Innate immune pathways  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q9NYJ8  TAB2       protein     Toll-like receptor      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q9NYJ8  TAB2       protein     Receptor tyrosine kinase</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> O43318  MAP3K7     protein     Toll-like receptor      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> O43318  MAP3K7     protein     B-cell receptor         </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> O43318  MAP3K7     protein     WNT                     </span>
-<span class="co">## <span style="color: #949494;"># … with 2,434 more rows</span></span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q9NYJ8  TAB2       protein     Toll-like receptor      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q9NYJ8  TAB2       protein     Receptor tyrosine kinase</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q9NYJ8  TAB2       protein     Innate immune pathways  </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> O43318  MAP3K7     protein     WNT                     </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> O43318  MAP3K7     protein     TNF pathway             </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> O43318  MAP3K7     protein     TGF                     </span>
+<span class="co">## <span style="color: #949494;"># … with 2,437 more rows</span></span></code></pre>
 <div class="section level4">
 <h4 id="combining-networks-with-annotations">Combining networks with annotations<a class="anchor" aria-label="anchor" href="#combining-networks-with-annotations"></a>
 </h4>
@@ -491,12 +498,12 @@
 
 <span class="va">network_slk_pw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/annotated_network.html">annotated_network</a></span><span class="op">(</span><span class="va">network</span>, <span class="st">'SignaLink_pathway'</span><span class="op">)</span>
 <span class="va">network_slk_pw</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 82,438 × 17</span></span>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 82,713 × 17</span></span>
 <span class="co">##    source target source_genesymbol target_genesymbol is_directed is_stimulation is_inhibition consensus_direc…</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> P0DP24 P48995 CALM2             TRPC1                       1              0             1                1</span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> P0DP25 P48995 CALM3             TRPC1                       1              0             1                1</span>
 <span class="co">## <span style="color: #BCBCBC;"> 2</span> P0DP23 P48995 CALM1             TRPC1                       1              0             1                1</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> P0DP25 P48995 CALM3             TRPC1                       1              0             1                1</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> P0DP24 P48995 CALM2             TRPC1                       1              0             1                1</span>
 <span class="co">## <span style="color: #BCBCBC;"> 4</span> Q03135 P48995 CAV1              TRPC1                       1              1             0                1</span>
 <span class="co">## <span style="color: #BCBCBC;"> 5</span> P14416 P48995 DRD2              TRPC1                       1              1             0                1</span>
 <span class="co">## <span style="color: #BCBCBC;"> 6</span> Q99750 P48995 MDFI              TRPC1                       1              0             1                1</span>
@@ -504,7 +511,7 @@
 <span class="co">## <span style="color: #BCBCBC;"> 8</span> P29966 P48995 MARCKS            TRPC1                       1              0             1                1</span>
 <span class="co">## <span style="color: #BCBCBC;"> 9</span> Q13255 P48995 GRM1              TRPC1                       1              1             0                1</span>
 <span class="co">## <span style="color: #BCBCBC;">10</span> Q13586 P48995 STIM1             TRPC1                       1              1             0                1</span>
-<span class="co">## <span style="color: #949494;"># … with 82,428 more rows, and 9 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,</span></span>
+<span class="co">## <span style="color: #949494;"># … with 82,703 more rows, and 9 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   sources &lt;chr&gt;, references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;, n_resources &lt;int&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   pathway_source &lt;chr&gt;, pathway_target &lt;chr&gt;</span></span></code></pre>
 </div>
@@ -516,26 +523,26 @@
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ic</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_intercell.html">import_omnipath_intercell</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">ic</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 323,304 × 15</span></span>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 323,572 × 15</span></span>
 <span class="co">##    category  parent  database  scope aspect source  uniprot genesymbol entity_type consensus_score transmitter</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> transmem… transm… UniProt_… gene… locat… resour… Q8NH02  OR2T29     protein                   5 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> transmem… transm… UniProt_… gene… locat… resour… Q96RD3  OR52E6     protein                   5 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> transmem… transm… UniProt_… gene… locat… resour… P41587  VIPR2      protein                   5 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> transmem… transm… UniProt_… gene… locat… resour… Q9Y2W3  SLC45A1    protein                   5 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> transmem… transm… UniProt_… gene… locat… resour… Q96HG1  SMIM10     protein                   6 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> transmem… transm… UniProt_… gene… locat… resour… Q7L1W4  LRRC8D     protein                   6 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> transmem… transm… UniProt_… gene… locat… resour… Q7L0J3  SV2A       protein                   6 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> transmem… transm… UniProt_… gene… locat… resour… Q6PJW8  CNST       protein                   7 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> transmem… transm… UniProt_… gene… locat… resour… O75923  DYSF       protein                   8 FALSE      </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> transmem… transm… UniProt_… gene… locat… resour… O00461  GOLIM4     protein                   8 FALSE      </span>
-<span class="co">## <span style="color: #949494;"># … with 323,294 more rows, and 4 more variables: receiver &lt;lgl&gt;, secreted &lt;lgl&gt;,</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> transmem… transm… UniProt_… gene… locat… resour… Q9P0S3  ORMDL1     protein                   5 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> transmem… transm… UniProt_… gene… locat… resour… P26951  IL3RA      protein                   7 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> transmem… transm… UniProt_… gene… locat… resour… Q96CH1  GPR146     protein                   6 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> transmem… transm… UniProt_… gene… locat… resour… Q7Z442  PKD1L2     protein                   6 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> transmem… transm… UniProt_… gene… locat… resour… Q6UXU6  TMEM92     protein                   6 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> transmem… transm… UniProt_… gene… locat… resour… Q8IV01  SYT12      protein                   5 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> transmem… transm… UniProt_… gene… locat… resour… Q12913  PTPRJ      protein                   7 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> transmem… transm… UniProt_… gene… locat… resour… Q6UW88  EPGN       protein                   7 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> transmem… transm… UniProt_… gene… locat… resour… Q8TDU5  VN1R17P    protein                   4 FALSE      </span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> transmem… transm… UniProt_… gene… locat… resour… Q9P2W7  B3GAT1     protein                   7 FALSE      </span>
+<span class="co">## <span style="color: #949494;"># … with 323,562 more rows, and 4 more variables: receiver &lt;lgl&gt;, secreted &lt;lgl&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   plasma_membrane_transmembrane &lt;lgl&gt;, plasma_membrane_peripheral &lt;lgl&gt;</span></span></code></pre>
 <p>This data frame is about individual proteins. To create a network of intercellular communication, we provide the <code>import_intercell_network</code> function:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">icn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_intercell_network.html">import_intercell_network</a></span><span class="op">(</span>high_confidence <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">icn</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 17,974 × 45</span></span>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 17,964 × 45</span></span>
 <span class="co">##    category_intercell_source parent_intercel… source target category_interc… parent_intercel… target_genesymb…</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
 <span class="co">## <span style="color: #BCBCBC;"> 1</span> activating_cofactor       receptor_regula… O14786 P35968 adhesion         adhesion         KDR             </span>
@@ -548,7 +555,7 @@
 <span class="co">## <span style="color: #BCBCBC;"> 8</span> activating_cofactor       receptor_regula… P08138 P05067 adhesion         adhesion         APP             </span>
 <span class="co">## <span style="color: #BCBCBC;"> 9</span> activating_cofactor       receptor_regula… P08138 P05067 cell_adhesion    cell_adhesion    APP             </span>
 <span class="co">## <span style="color: #BCBCBC;">10</span> activating_cofactor       receptor_regula… P08138 P05067 receptor         receptor         APP             </span>
-<span class="co">## <span style="color: #949494;"># … with 17,964 more rows, and 38 more variables: source_genesymbol &lt;chr&gt;, is_directed &lt;dbl&gt;,</span></span>
+<span class="co">## <span style="color: #949494;"># … with 17,954 more rows, and 38 more variables: source_genesymbol &lt;chr&gt;, is_directed &lt;dbl&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   is_stimulation &lt;dbl&gt;, is_inhibition &lt;dbl&gt;, consensus_direction &lt;dbl&gt;, consensus_stimulation &lt;dbl&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   consensus_inhibition &lt;dbl&gt;, omnipath &lt;lgl&gt;, ligrecextra &lt;lgl&gt;, sources &lt;chr&gt;, references &lt;chr&gt;,</span></span>
 <span class="co">## <span style="color: #949494;">#   curation_effort &lt;dbl&gt;, n_references &lt;chr&gt;, n_resources &lt;int&gt;, database_intercell_source &lt;chr&gt;,</span></span>
@@ -573,24 +580,25 @@
 <p>The list of available resources for each query type can be retrieved by the <code>get_..._resources</code> function. For example, the annotation resources are:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_annotation_resources.html">get_annotation_resources</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "Adhesome"             "Almen2009"            "Baccin2019"           "CancerGeneCensus"    </span>
-<span class="co">##  [5] "CancerSEA"            "CellCall"             "CellCellInteractions" "CellChatDB"          </span>
-<span class="co">##  [9] "CellChatDB_complex"   "Cellinker"            "Cellinker_complex"    "CellPhoneDB"         </span>
-<span class="co">## [13] "CellPhoneDB_complex"  "CellTalkDB"           "ComPPI"               "connectomeDB2020"    </span>
-<span class="co">## [17] "CORUM_Funcat"         "CORUM_GO"             "CSPA"                 "CSPA_celltype"       </span>
-<span class="co">## [21] "DGIdb"                "DisGeNet"             "EMBRACE"              "Exocarta"            </span>
-<span class="co">## [25] "GO_Intercell"         "GPCRdb"               "Guide2Pharma"         "HGNC"                </span>
-<span class="co">## [29] "HPA_secretome"        "HPA_subcellular"      "HPA_tissue"           "HPMR"                </span>
-<span class="co">## [33] "HumanCellMap"         "ICELLNET"             "ICELLNET_complex"     "Integrins"           </span>
-<span class="co">## [37] "IntOGen"              "iTALK"                "KEGG-PC"              "kinase.com"          </span>
-<span class="co">## [41] "Kirouac2010"          "LOCATE"               "LRdb"                 "Matrisome"           </span>
-<span class="co">## [45] "MatrixDB"             "MCAM"                 "Membranome"           "MSigDB"              </span>
-<span class="co">## [49] "NetPath"              "OPM"                  "Phobius"              "Phosphatome"         </span>
-<span class="co">## [53] "Ramilowski_location"  "Ramilowski2015"       "scConnect"            "scConnect_complex"   </span>
-<span class="co">## [57] "SignaLink_function"   "SignaLink_pathway"    "SIGNOR"               "Surfaceome"          </span>
-<span class="co">## [61] "talklr"               "TCDB"                 "TFcensus"             "TopDB"               </span>
-<span class="co">## [65] "UniProt_family"       "UniProt_keyword"      "UniProt_location"     "UniProt_tissue"      </span>
-<span class="co">## [69] "UniProt_topology"     "Vesiclepedia"         "Zhong2015"</span></code></pre>
+<pre><code><span class="co">##  [1] "Adhesome"             "Almen2009"            "Baccin2019"           "CancerDrugsDB"       </span>
+<span class="co">##  [5] "CancerGeneCensus"     "CancerSEA"            "CellCall"             "CellCellInteractions"</span>
+<span class="co">##  [9] "CellChatDB"           "CellChatDB_complex"   "Cellinker"            "Cellinker_complex"   </span>
+<span class="co">## [13] "CellPhoneDB"          "CellPhoneDB_complex"  "CellTalkDB"           "ComPPI"              </span>
+<span class="co">## [17] "connectomeDB2020"     "CORUM_Funcat"         "CORUM_GO"             "CSPA"                </span>
+<span class="co">## [21] "CSPA_celltype"        "DGIdb"                "DisGeNet"             "EMBRACE"             </span>
+<span class="co">## [25] "Exocarta"             "GO_Intercell"         "GPCRdb"               "Guide2Pharma"        </span>
+<span class="co">## [29] "HGNC"                 "HPA_secretome"        "HPA_subcellular"      "HPA_tissue"          </span>
+<span class="co">## [33] "HPMR"                 "HumanCellMap"         "ICELLNET"             "ICELLNET_complex"    </span>
+<span class="co">## [37] "Integrins"            "IntOGen"              "iTALK"                "KEGG-PC"             </span>
+<span class="co">## [41] "kinase.com"           "Kirouac2010"          "LOCATE"               "LRdb"                </span>
+<span class="co">## [45] "Matrisome"            "MatrixDB"             "MCAM"                 "Membranome"          </span>
+<span class="co">## [49] "MSigDB"               "NetPath"              "OPM"                  "Phobius"             </span>
+<span class="co">## [53] "Phosphatome"          "PROGENy"              "Ramilowski_location"  "Ramilowski2015"      </span>
+<span class="co">## [57] "scConnect"            "scConnect_complex"    "SignaLink_function"   "SignaLink_pathway"   </span>
+<span class="co">## [61] "SIGNOR"               "Surfaceome"           "talklr"               "TCDB"                </span>
+<span class="co">## [65] "TFcensus"             "TopDB"                "UniProt_family"       "UniProt_keyword"     </span>
+<span class="co">## [69] "UniProt_location"     "UniProt_tissue"       "UniProt_topology"     "Vesiclepedia"        </span>
+<span class="co">## [73] "Zhong2015"</span></code></pre>
 <p>Categories in the <code>intercell</code> query also can be listed:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_intercell_generic_categories.html">get_intercell_generic_categories</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -682,9 +690,9 @@
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">go_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/relations_table_to_graph.html">relations_table_to_graph</a></span><span class="op">(</span><span class="va">go</span><span class="op">$</span><span class="va">rel_tbl_c2p</span><span class="op">)</span>
 <span class="va">go_graph</span></code></pre></div>
-<pre><code><span class="co">## IGRAPH 14c2fd4 DN-- 43789 86549 -- </span>
+<pre><code><span class="co">## IGRAPH 84b5a1f DN-- 43789 86549 -- </span>
 <span class="co">## + attr: name (v/c), relation (e/c)</span>
-<span class="co">## + edges from 14c2fd4 (vertex names):</span>
+<span class="co">## + edges from 84b5a1f (vertex names):</span>
 <span class="co">##  [1] GO:0000001-&gt;GO:0048308 GO:0000001-&gt;GO:0048311 GO:0000002-&gt;GO:0007005 GO:0000003-&gt;GO:0008150</span>
 <span class="co">##  [5] GO:0000006-&gt;GO:0005385 GO:0000007-&gt;GO:0005385 GO:0000009-&gt;GO:0000030 GO:0000010-&gt;GO:0004659</span>
 <span class="co">##  [9] GO:0000011-&gt;GO:0007033 GO:0000011-&gt;GO:0048308 GO:0000012-&gt;GO:0006281 GO:0000014-&gt;GO:0004520</span>
@@ -735,7 +743,7 @@
 <span class="co">## [1] "ready"</span>
 <span class="co">## </span>
 <span class="co">## $c80a1943db40b7d3e23dcaa2afb68d3c37342458$versions$`1`$dl_finished</span>
-<span class="co">## [1] "2022-01-06 01:00:32 CET"</span>
+<span class="co">## [1] "2022-01-15 20:14:37 CET"</span>
 <span class="co">## </span>
 <span class="co">## </span>
 <span class="co">## </span>
@@ -765,13 +773,13 @@
 <span class="co">## [1] "/home/denes/.cache/OmnipathR/f4de1f63d60f35d18bb262dd6de84d1cccd9cc97-1.rds"</span>
 <span class="co">## </span>
 <span class="co">## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$dl_started</span>
-<span class="co">## [1] "2022-01-06 01:03:01 CET"</span>
+<span class="co">## [1] "2022-01-15 20:17:27 CET"</span>
 <span class="co">## </span>
 <span class="co">## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$status</span>
 <span class="co">## [1] "ready"</span>
 <span class="co">## </span>
 <span class="co">## $f4de1f63d60f35d18bb262dd6de84d1cccd9cc97$versions$`1`$dl_finished</span>
-<span class="co">## [1] "2022-01-06 01:03:01 CET"</span></code></pre>
+<span class="co">## [1] "2022-01-15 20:17:27 CET"</span></code></pre>
 <p>The configuration can be set by <code>options</code>, all options are prefixed with <code>omnipath.</code>, and can be saved by <code>omnipath_save_config</code>. For example, to exclude all OmniPath resources which don’t allow for-profit use:</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>omnipath.license <span class="op">=</span> <span class="st">'commercial'</span><span class="op">)</span></code></pre></div>
@@ -804,7 +812,7 @@
 <span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">## </span>
 <span class="co">## other attached packages:</span>
-<span class="co">## [1] OmnipathR_3.3.7  BiocStyle_2.22.0</span>
+<span class="co">## [1] OmnipathR_3.3.8  BiocStyle_2.22.0</span>
 <span class="co">## </span>
 <span class="co">## loaded via a namespace (and not attached):</span>
 <span class="co">##  [1] progress_1.2.2      tidyselect_1.1.1    xfun_0.29           bslib_0.3.1         purrr_0.3.4        </span>
