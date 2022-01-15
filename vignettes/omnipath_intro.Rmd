@@ -11,10 +11,17 @@ author:
   affiliation: Institute for Computational Biomedicine, Heidelberg University
 package: OmnipathR
 output:
-  BiocStyle::html_document
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
+    toc: true
+    toc_depth: 2
+    number_sections: false
+    fig_caption: true
+pkgdown:
+  as_is: true
 bibliography: Bioc.bib
 abstract: |
-    This vignette describes how to use the `r Biocpkg("OmnipathR")`
+    This vignette describes how to use the `r BiocStyle::Biocpkg("OmnipathR")`
     package to retrieve information from the OmniPath database:
     <https://omnipathdb.org/>.
     In addition, it includes some utility functions to filter
@@ -27,19 +34,18 @@ vignette: |
 
 # Introduction
 
-`r Biocpkg("OmnipathR")` is an _R_ package built to provide easy access to
+`r BiocStyle::Biocpkg("OmnipathR")` is an _R_ package built to provide easy access to
 the data stored in the OmniPath webservice [@Turei2016]:
 
 <http://omnipathdb.org/>
 
 The webservice implements a very simple REST style API. This package make
 requests by the HTTP protocol to retreive the data. Hence, fast Internet
-access is required for a proper use of `r Biocpkg("OmnipathR")`.
-
+access is required for a proper use of `r BiocStyle::Biocpkg("OmnipathR")`.
 
 ## Query types
 
-`r Biocpkg("OmnipathR")` can retrieve five different types of data:
+`r BiocStyle::Biocpkg("OmnipathR")` can retrieve five different types of data:
 
 * **Interactions**: protein-protein interactions organized in different
 datasets:
@@ -56,6 +62,8 @@ datasets:
     + **tf-miRNA**: transcription factor-miRNA interactions
     + **miRNA-target**: miRNA-mRNA interactions.
     + **lncRNA-mRNA**: lncRNA-mRNA interactions.
+    + **small molecule-protein**: interactions between small molecules
+    (metabolites, intrinsic ligands, drug compounds) and proteins.
 
 
 * **Post-translational modifications (PTMs)**: It provides
@@ -89,10 +97,7 @@ integrated in Omnipath, please visit:
 + <http://omnipathdb.org/>
 + <http://omnipathdb.org/info>
 
-```{r, fig1, dpi=300, fig.width=10, fig.height=10,
-fig.cap="Overview of the resources featured in OmniPath. Causal resources
-(including activity-flow and enzyme-substrate resources) can provide
-direction (*) or sign and direction (+) of interactions.", echo=FALSE}
+```{r fig1, fig.cap="Overview of the resources featured in OmniPath. Causal resources (including activity-flow and enzyme-substrate resources) can provide direction (*) or sign and direction (+) of interactions.", echo=FALSE}
 library(knitr)
 knitr::include_graphics("../man/figures/page1_1.png")
 ```
@@ -108,9 +113,9 @@ In case you work with mouse omics data you might do better to translate your
 dataset to human (for example using the pypath.homology module,
 <https://github.com/saezlab/pypath/>) and use human interaction data.
 
-# Installation of the `r Biocpkg("OmnipathR")` package
+# Installation of the `r BiocStyle::Biocpkg("OmnipathR")` package
 
-First of all, you need a current version of _R_. `r Biocpkg("OmnipathR")`
+First of all, you need a current version of _R_. `r BiocStyle::Biocpkg("OmnipathR")`
 is a freely available package deposited on _Bioconductor_ and
 [GitHub](https://github.com/saezlab/OmnipathR). You can install it by running
 the following commands on an _R_ console:
@@ -133,7 +138,7 @@ library(gprofiler2)
 
 # Usage Examples
 In the following paragraphs, we provide some examples to describe how to use
-the `r Biocpkg("OmnipathR")` package to retrieve different types of
+the `r BiocStyle::Biocpkg("OmnipathR")` package to retrieve different types of
 information from **Omnipath** webserver. In addition, we play around with the
 data aiming at obtaining some biological relevant information.
 
@@ -179,7 +184,7 @@ visualization, but also allows applying graph theory methods to mine the
 biological information they contain.
 
 We convert here our set of interactions to a network/graph
-(`r CRANpkg("igraph")`object). Then, we apply two very common approaches to
+(`r BiocStyle::CRANpkg("igraph")`object). Then, we apply two very common approaches to
 extract information from a biological network:
 
 + **Shortest Paths**: finding a path between two nodes (proteins) going
@@ -211,7 +216,7 @@ other than to those in other groups (clusters). Since proteins interact to
 perform their functions, proteins within the same cluster are likely to be
 implicated in similar biological tasks. Figure \@ref(fig:fig2) shows the
 subgraph containing the proteins and interactions of a specifc protein, ERBB2
-The `r CRANpkg("igraph")` package contains functions to apply sevaral
+The `r BiocStyle::CRANpkg("igraph")` package contains functions to apply sevaral
 different cluster methods on graphs (visit <https://igraph.org/r/doc/> for
 detailed information.)
 
@@ -231,10 +236,7 @@ module_graph <- induced_subgraph(OPI_g_undirected,
     V(OPI_g)$name[which(cl_results$membership == cluster_id)])
 ```
 
-```{r fig2, fig.width=10, fig.height=5, dpi=300, echo = FALSE,
-    fig.cap="ERBB2 associated cluser. Subnetwork extracted from the
-    interactions graph representing the cluster where we can find the
-    gene *ERBB2* (yellow node)"}
+```{r fig2, echo = FALSE, fig.cap="ERBB2 associated cluser. Subnetwork extracted from the interactions graph representing the cluster where we can find the gene *ERBB2* (yellow node)"}
 ## We print that cluster with its interactions.
 par(mar=c(0.1,0.1,0.1,0.1))
 plot(module_graph, vertex.label.color="black",vertex.frame.color="#ffffff",
@@ -315,8 +317,7 @@ Induced_Network <-  dNetInduce(g=OPI_g,
     remove.loops=FALSE, largest.comp=FALSE)
 ```
 
-```{r fig3, dpi=300, echo = FALSE, fig.cap="Ligand-receptor interactions for
-    the ADM2 ligand."}
+```{r fig3, echo = FALSE, fig.cap="Ligand-receptor interactions for the ADM2 ligand."}
 ## We print the induced network
 par(mar=c(0.1,0.1,0.1,0.1))
 plot(Induced_Network, vertex.label.color="black",
@@ -385,9 +386,7 @@ OPI_g_1 <- interaction_graph(interactions = interactions_miRNA_GLI1)
 OPI_g_2 <- interaction_graph(interactions = interactions_miRNA_GLI1)
 ```
 
-```{r fig4, dpi=300, echo = FALSE, fig.cap="miRNA-TF-target network. Schematic
-network of the miRNA (red square nodes) targeting \textit{GLI1} (yellow
-node) and the genes regulated by this TF (blue round nodes)."}
+```{r fig4, echo = FALSE, fig.cap="miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targeting \textit{GLI1} (yellow node) and the genes regulated by this TF (blue round nodes)."}
 ## We print the union of both previous graphs
 par(mar=c(0.1,0.1,0.1,0.1))
 plot(OPI_g_1 %u% OPI_g_2, vertex.label.color="black",
@@ -398,6 +397,23 @@ plot(OPI_g_1 %u% OPI_g_2, vertex.label.color="black",
     vertex.shape = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
     "vrectangle","circle"),edge.width=0.8)
 ```
+
+### Small molecule-protein dataset
+
+This new dataset has been first added to OmniPath in January 2022. It is still
+quite small: 3.5k interactions from three resources (SIGNOR, CancerDrugsDB
+and Cellinker), but has prospects of a great growth in the future. As an
+example, lets look for targets of a cancer drug, the MEK inhibitor Trametinib:
+
+```{r small-molecules}
+trametinib_interactions <- import_small_molecule_protein_interactions(
+    sources = 'TRAMETINIB'
+)
+print_interactions(trametinib_interactions)
+```
+
+Note, the human readable compound names are not reliable, use PubChem CIDs
+instead.
 
 ## Post-translational modifications (PTMs)
 
@@ -661,10 +677,10 @@ while (!is.null(dev.list()))  dev.off()
 ```
 
 # Conclusion
-`r Biocpkg("OmnipathR")` provides access to the wealth of data stored in the
+`r BiocStyle::Biocpkg("OmnipathR")` provides access to the wealth of data stored in the
 OmniPath webservice <http://omnipathdb.org/> from the _R_ enviroment.
 In addition, it contains some utility functions for visualization, filtering
-and analysis. The main strength of `r Biocpkg("OmnipathR")` is the
+and analysis. The main strength of `r BiocStyle::Biocpkg("OmnipathR")` is the
 straightforward transformation of the different OmniPath data into commonly
 used _R_ objects, such as dataframes and graphs. Consequently, it allows an
 easy integration of the different types of data and a gateway to the vast
