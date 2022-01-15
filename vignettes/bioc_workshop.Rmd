@@ -211,6 +211,10 @@ type of evidences. A full list of network datasets:
 * lncRNA interactions *(lncrna_post_transcriptional)*
   - **lncrna_mrna:** literature curated lncRNA-mRNA interactions
     [import_lncrna_mrna_interactions](https://saezlab.github.io/OmnipathR/reference/import_lncrna_mrna_interactions.html)
+* Small molecule-protein interactions *(small_molecule_protein)*
+  - **small_molecule:** metabolites, intrinsic ligands or drug compounds
+    targeting human proteins
+    [import_small_molecule_protein_interactions](https://saezlab.github.io/OmnipathR/reference/import_small_molecule_protein_interactions.html)
 
 Not individual interactions but resource are classified into the datasets
 above, so these can overlap. Each interaction type and dataset has its
