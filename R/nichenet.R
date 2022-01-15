@@ -1620,11 +1620,13 @@ nichenet_signaling_network_vinayagam <- function(...){
 #'     suitable for use with NicheNet.
 #'
 #' @examples
+#' \dontrun{
 #' # use some parameters stricter than default:
 #' cpdb_signaling_network <- nichenet_signaling_network_cpdb(
 #'     complex_max_size = 2,
 #'     min_score = .99
 #' )
+#' }
 #'
 #' @importFrom dplyr select mutate distinct
 #' @importFrom magrittr %>%
