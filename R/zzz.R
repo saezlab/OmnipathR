@@ -26,7 +26,9 @@
     patch_logger()
     omnipath_init_log(pkgname = pkgname)
 
-    if(Sys.info()['user'] %in% c('biocbuild', 'omnipath')){
+    buildserver <- Sys.info()['user'] %in% c('biocbuild', 'omnipath')
+
+    if(buildserver){
 
         omnipath_set_console_loglevel('trace')
 
@@ -39,5 +41,16 @@
     .load_id_types(pkgname)
 
     logger::log_info('Welcome to OmnipathR!')
+
+    if(buildserver){
+
+        omnipath_unlock_cache_db()
+
+        logger::log_trace(
+            'Cache locked: %s',
+            file.exists(omnipath_cache_lock_path())
+        )
+
+    }
 
 }
