@@ -20,11 +20,13 @@ comes from complex expansion. Find out more at
 \url{http://cpdb.molgen.mpg.de/}.
 }
 \examples{
+\dontrun{
 # use some parameters stricter than default:
 cpdb_signaling_network <- nichenet_signaling_network_cpdb(
     complex_max_size = 2,
     min_score = .99
 )
+}
 
 }
 \seealso{
