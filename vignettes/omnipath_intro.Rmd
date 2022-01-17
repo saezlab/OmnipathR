@@ -99,7 +99,7 @@ integrated in Omnipath, please visit:
 
 ```{r fig1, fig.cap="Overview of the resources featured in OmniPath. Causal resources (including activity-flow and enzyme-substrate resources) can provide direction (*) or sign and direction (+) of interactions.", echo=FALSE}
 library(knitr)
-knitr::include_graphics("../man/figures/page1_1.png")
+knitr::include_graphics("man/figures/page1_1.png")
 ```
 
 

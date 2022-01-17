@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^_pkgdown\.yml$
-^docs$
+^doc.*$
 ^pkgdown$
 ^OmnipathR.Rcheck.*$
 ^OmnipathR-manual.*$
