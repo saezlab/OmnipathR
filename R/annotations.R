@@ -290,16 +290,16 @@ annotation_categories <- function(){
 #' disgenet <- import_omnipath_annotations(resources = 'DisGeNet')
 #' disgenet <- pivot_annotations(disgenet)
 #' disgenet
-#' # # A tibble: 119,551 x 10
-#' #    uniprot genesymbol entity_type disease score dsi   dpi   nof_pmids
-#' #    <chr>   <chr>      <chr>       <chr>   <chr> <chr> <chr> <chr>
-#' #  1 P04217  A1BG       protein     Schizo… 0.3   0.857 0.172 1
-#' #  2 P04217  A1BG       protein     Hepato… 0.3   0.857 0.172 1
-#' #  3 P01023  A2M        protein     alpha-… 0.31  0.564 0.724 0
-#' #  4 P01023  A2M        protein     Fibros… 0.3   0.564 0.724 1
-#' #  5 P01023  A2M        protein     Hepato… 0.3   0.564 0.724 1
-#' # # . with 119,541 more rows, and 2 more variables: nof_snps <chr>,
-#' # #   source <chr>
+#' # # A tibble: 126,588 × 11
+#' #    uniprot genesymbol entity_type disease      type  score   dsi   dpi
+#' #    <chr>   <chr>      <chr>       <chr>        <chr> <dbl> <dbl> <dbl>
+#' #  1 P04217  A1BG       protein     Schizophren. dise.  0.3  0.7   0.538
+#' #  2 P04217  A1BG       protein     Hepatomegaly phen.  0.3  0.7   0.538
+#' #  3 P01023  A2M        protein     Fibrosis, L. dise.  0.3  0.529 0.769
+#' #  4 P01023  A2M        protein     Acute kidne. dise.  0.3  0.529 0.769
+#' #  5 P01023  A2M        protein     Mental Depr. dise.  0.3  0.529 0.769
+#' # # . with 126,583 more rows, and 3 more variables: nof_pmids <dbl>,
+#' # #   nof_snps <dbl>, source <chr>
 #'
 #' # multiple resources: the result is a list
 #' annotations <- import_omnipath_annotations(
@@ -326,6 +326,7 @@ annotation_categories <- function(){
 #' @importFrom dplyr select pull group_split
 #' @importFrom purrr map
 #' @importFrom rlang set_names
+#' @importFrom readr type_convert cols
 #'
 #' @seealso \code{\link{import_omnipath_annotations}}
 pivot_annotations <- function(annotations){
@@ -361,7 +362,8 @@ pivot_annotations <- function(annotations){
                 names_from = 'label',
                 values_from = 'value'
             ) %>%
-            select(-record_id)
+            select(-record_id) %>%
+            type_convert(col_types = cols())
         )
 
     }
