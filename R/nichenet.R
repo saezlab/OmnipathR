@@ -972,14 +972,16 @@ nichenet_networks <- function(
 #' # load everything with the default parameters:
 #' # we don't load inBio Map due to the - hopefully
 #' # temporary - issues of their server
-#' sig_network <- nichenet_signaling_network(inbiomap = NULL)
+#' sig_network <- nichenet_signaling_network(inbiomap = NULL, cpdb = NULL)
 #'
 #' # override parameters for some resources:
 #' sig_network <- nichenet_signaling_network(
 #'     omnipath = list(resources = c('SIGNOR', 'SignaLink3', 'SPIKE')),
 #'     pathwaycommons = NULL,
 #'     harmonizome = list(datasets = c('phosphositeplus', 'depod')),
-#'     cpdb = list(complex_max_size = 1, min_score = .98),
+#'     # we can not include this in everyday tests as it takes too long:
+#'     # cpdb = list(complex_max_size = 1, min_score = .98),
+#'     cpdb = NULL,
 #'     evex = list(min_confidence = 1.5),
 #'     inbiomap = NULL
 #' )
