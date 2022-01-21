@@ -321,7 +321,7 @@ annotation_categories <- function(){
 #' # # . with 815 more rows
 #'
 #' @export
-#' @importFrom magrittr %>% is_greater_than
+#' @importFrom magrittr %>% %<>% is_greater_than
 #' @importFrom tidyr pivot_wider
 #' @importFrom dplyr select pull group_split
 #' @importFrom purrr map
@@ -332,7 +332,7 @@ annotation_categories <- function(){
 pivot_annotations <- function(annotations){
 
     # NSE vs. R CMD check workaround
-    record_id <- NULL
+    record_id <- entity_type <- NULL
 
     more_than_one_resources <-
         annotations %>%
@@ -350,15 +350,23 @@ pivot_annotations <- function(annotations){
 
     }else{
 
+        id_cols <- c(
+            'record_id',
+            'uniprot',
+            'genesymbol'
+        )
+        entity_type_field <- 'entity_type' %in% annotations$label
+        id_cols %<>% {`if`(entity_type_field, ., c(., 'entity_type'))}
+
         (
             annotations %>%
+            {`if`(
+                entity_type_field,
+                select(., -entity_type),
+                .
+            )} %>%
             tidyr::pivot_wider(
-                id_cols = c(
-                    'record_id',
-                    'uniprot',
-                    'genesymbol',
-                    'entity_type'
-                ),
+                id_cols = id_cols,
                 names_from = 'label',
                 values_from = 'value'
             ) %>%
