@@ -9,7 +9,8 @@ extra_attrs_to_cols(data, ..., flatten = FALSE, keep_empty = TRUE)
 \arguments{
 \item{data}{An interaction data frame.}
 
-\item{...}{The names of the extra attributes; NSE is supported.}
+\item{...}{The names of the extra attributes; NSE is supported. Custom
+column names can be provided as argument names.}
 
 \item{flatten}{Logical: unnest the list column even if some records have
 multiple values for the attributes; these will yield multiple records

@@ -89,7 +89,8 @@ extra_attrs <- function(data){
 #' New columns from extra attributes
 #'
 #' @param data An interaction data frame.
-#' @param ... The names of the extra attributes; NSE is supported.
+#' @param ... The names of the extra attributes; NSE is supported. Custom
+#'     column names can be provided as argument names.
 #' @param flatten Logical: unnest the list column even if some records have
 #'     multiple values for the attributes; these will yield multiple records
 #'     in the resulted data frame.
@@ -113,7 +114,7 @@ extra_attrs <- function(data){
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang enquos !!!
-#' @importFrom purrr reduce map_chr
+#' @importFrom purrr reduce2 map_chr
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{extra_attrs}}}
@@ -135,7 +136,8 @@ extra_attrs_to_cols <- function(
     }
 
     map_chr(enquos(...), .nse_ensure_str) %>%
-    reduce(
+    reduce2(
+        if_null(names(.), .),
         .extra_attr_to_col,
         .init = data,
         flatten = flatten
@@ -158,7 +160,7 @@ extra_attrs_to_cols <- function(
 #'     type if one interaction might have multiple values of the attribute,
 #'     or character type if
 #'
-#' @importFrom magrittr %>% is_less_than
+#' @importFrom magrittr %>% %<>% is_less_than
 #' @importFrom rlang sym !! := enquo
 #' @importFrom purrr map map_int pluck
 #' @importFrom dplyr first mutate pull
@@ -167,6 +169,7 @@ extra_attrs_to_cols <- function(
 .extra_attr_to_col <- function(
     data,
     attr,
+    col_name = NULL,
     flatten = FALSE,
     keep_empty = TRUE
 ){
@@ -176,25 +179,27 @@ extra_attrs_to_cols <- function(
 
     attr_str <- .nse_ensure_str(!!enquo(attr))
     attr <- as.symbol(attr_str)
+    col_name %<>% if_null(attr_str)
+    col <- as.symbol(col_name)
 
     data %>%
     {`if`(
         has_extra_attrs(data),
         mutate(
             .,
-            !!attr := map(extra_attrs, pluck, attr_str)
+            !!col := map(extra_attrs, pluck, attr_str)
         ) %>%
         {`if`(
             flatten,
-            unnest(., !!attr, keep_empty = keep_empty),
+            unnest(., !!col, keep_empty = keep_empty),
             {`if`(
-                pull(., !!attr) %>%
+                pull(., !!col) %>%
                     map_int(length) %>%
                     magrittr::is_less_than(2) %>%
                     all,
                 mutate(
                     .,
-                    !!attr := map(!!attr, first) %>%
+                    !!col := map(!!col, first) %>%
                         null_to_na %>%
                         unlist
                 ),
