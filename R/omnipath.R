@@ -82,7 +82,6 @@ utils::globalVariables(
     'sources',
     'targets',
     'residues',
-    'modification',
     'scope',
     'aspect',
     'source',
@@ -96,7 +95,8 @@ utils::globalVariables(
     'topology',
     'causality',
     'license',
-    'password'
+    'password',
+    'types'
 )
 
 
@@ -113,7 +113,9 @@ utils::globalVariables(
     dataset = 'datasets',
     directions = 'directed',
     entity_type = 'entity_types',
-    signs = 'signed'
+    signs = 'signed',
+    modification = 'types',
+    type = 'types'
 )
 
 
