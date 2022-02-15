@@ -1,0 +1,308 @@
+---
+title: "Resource specific interaction attributes"
+author:
+  - name: Denes Turei
+    email: turei.denes@gmail.com
+    correspondance: true
+    affiliation: Institute for Computational Biomedicine, Heidelberg University
+institute:
+  - unihd: Institute for Computational Biomedicine, Heidelberg University
+package: OmnipathR
+output:
+  BiocStyle::html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+abstract: |
+  OmniPath provides a broad variety of protein annotations, but for
+  interactions, until recently, only a standard set of essential attributes
+  (direction, effect, etc) and a handful of others (e.g. DoRothEA confidence
+  level) were available. The newly introduced `extra_attrs` column consists of
+  JSON encoded custom, resource specific attributes from network databases.
+  We also revised the processing of these resources to ensure that we include
+  as many useful attributes as possible. In the OmnipathR package we added a
+  few new functions to support the processing of the JSON encoded column:
+  to scan it for keys and values, and to extract specific variables of
+  interest into new columns. We give a brief overview of these here.
+vignette: |
+  %\VignetteIndexEntry{Extra attributes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+fig_width: 9
+fig_height: 7
+---
+
+# Loading a network
+
+```{r message=FALSE, warning=FALSE}
+library(OmnipathR)
+```
+
+First we retrieve the complete directed PPI network. Importantly, the extra
+attributes are only included if the `fields = "extra_attrs"` argument is
+provided.
+
+```{r load-interactions}
+i <- import_post_translational_interactions(fields = 'extra_attrs')
+dplyr::select(i, source_genesymbol, target_genesymbol, extra_attrs)
+```
+
+Above we see, the `extra_attrs` column is a list type column. Each list
+is a nested list itself, containing the extra attributes from all resources,
+as it was extracted from the JSON.
+
+# Which extra attributes are available?
+
+Which attributes present in the network depends only on the interactions: if
+none of the interactions is from the `SPIKE` database, obviously the
+`SPIKE_mechanism` won't be present. The names of the extra attributes consist
+of the name of the resource and the name of the attribute, separated by an
+underscore. The resource name never contains underscore, while some attribute
+names do. To list the extra attributes available in a particular data frame
+use the `extra_attrs` function:
+
+```{r list-extra-attrs}
+extra_attrs(i)
+```
+
+The labels listed here are the top level keys in the lists in the
+`extra_attrs` column. Note, the coverage of these variables varies a lot,
+typically in agreement with the size of the resource.
+
+# Inspecting one attribute
+
+The values of each extra attribute, in theory, can be arbitrarily complex
+nested lists, but in reality, these are most often simple numeric, logical
+or character values or vectors. To see the unique values of one attribute
+use the `extra_attr_values` function. Let's see the values of the
+`SIGNOR_mechanism` attribute:
+
+```{r extra-attr-values}
+extra_attr_values(i, SIGNOR_mechanism)
+```
+
+The values are provided as they are in the original resource, including
+potential typos and inconsistencies, e.g. see above the capitalized vs.
+lowercase forms of each value.
+
+# Converting extra attributes to columns
+
+To make use of the attributes, it is convenient to extract the interesting
+ones into separate columns of the data frame. With the `extra_attrs_to_cols`
+function multiple attributes can be converted in a single call. Custom column
+names can be passed by argument names. As an example, let's extract two
+attributes:
+
+```{r to-cols}
+i0 <- extra_attrs_to_cols(
+    i,
+    si_mechanism = SIGNOR_mechanism,
+    ma_mechanism = Macrophage_type,
+    keep_empty = FALSE
+)
+
+dplyr::select(
+    i0,
+    source_genesymbol,
+    target_genesymbol,
+    si_mechanism,
+    ma_mechanism
+)
+```
+
+Above we disabled the `keep_empty` option, otherwise the new columns would
+have `NULL` values for most of the records, simply because out of the 80k
+interactions in the data frame only a few thousands are from either SIGNOR
+or Macrophage. The new columns are list type, individual values are character
+vectors. Let's look into one value:
+
+```{r single-value-vector}
+dplyr::pull(i0, si_mechanism)[[7]]
+```
+
+Here we have two values, but only because the inconsistent names in the
+resource.
+
+Depending on downstream methods, atomic columns might be preferable instead
+of lists. In this case one interaction record might yield multiple rows in
+the resulted data frame, depending on the number of attributes it has. To
+have atomic columns, use the `flatten` option:
+
+```{r to-cols-flatten}
+i1 <- extra_attrs_to_cols(
+    i,
+    si_mechanism = SIGNOR_mechanism,
+    ma_mechanism = Macrophage_type,
+    keep_empty = FALSE,
+    flatten = TRUE
+)
+
+dplyr::select(
+    i1,
+    source_genesymbol,
+    target_genesymbol,
+    si_mechanism,
+    ma_mechanism
+)
+```
+
+# Filtering records based on extra attributes
+
+Another useful application of extra attributes is filtering the records of
+the interactions data frame. The `with_extra_attrs` function filters to
+records which have certain extra attributes. For example, to have only
+interactions with `SIGNOR_mechanism` given:
+
+```{r with-attrs-1}
+nrow(with_extra_attrs(i, SIGNOR_mechanism))
+```
+
+This results around 11 thousands rows. Filtering for multiple attributes the
+records which have at least one of them will be selected. Adding some more
+attributes results more interactions:
+
+```{r with-attrs-2}
+nrow(with_extra_attrs(i, SIGNOR_mechanism, CA1_effect, Li2012_mechanism))
+```
+
+It is possible to filter the records not only by the names but the values
+of the extra attributes. Let's select the interactions which are
+phosphorylation according to SIGNOR:
+
+```{r signor-phos-1}
+phos <- c('phosphorylation', 'Phosphorylation')
+
+si_phos <- filter_extra_attrs(i, SIGNOR_mechanism = phos)
+
+dplyr::select(si_phos, source_genesymbol, target_genesymbol)
+```
+
+# Example: finding ubiquitination interactions
+
+First let's search for the word "ubiquitination" in the attributes. Below
+is a slow but simple solution:
+
+```{r search-attr}
+keys <- extra_attrs(i)
+keys_ubi <- purrr::keep(
+    keys,
+    function(k){
+        any(stringr::str_detect(extra_attr_values(i, !!k), 'biqu'))
+    }
+)
+keys_ubi
+```
+
+We found five attributes that have at least one value which matches "biqu".
+Next take a look at their values:
+
+```{r search-values}
+ubi <- rlang::set_names(
+    purrr::map(
+        keys_ubi,
+        function(k){
+            stringr::str_subset(extra_attr_values(i, !!k), 'biqu')
+        }
+    ),
+    keys_ubi
+)
+ubi
+```
+
+Actually to match all ubiquitination interactions, it's enough to filter for
+"ubiquitination" in its lowercase and capitalized forms (note, we could also
+include deubiqutination and polyubiquitination):
+
+```{r filter-ubi}
+ubi_kws <- c('ubiquitination', 'Ubiquitination')
+
+i_ubi <-
+    dplyr::distinct(
+        dplyr::bind_rows(
+            purrr::map(
+                keys_ubi,
+                function(k){
+                    filter_extra_attrs(i, !!k := ubi_kws, na_ok = FALSE)
+                }
+            )
+        )
+    )
+
+dplyr::select(i_ubi, source_genesymbol, target_genesymbol)
+```
+
+We found 405 ubiquitination interactions. We had to use `map`, `bind_rows`
+and `distinct` because otherwise `filter_extra_attrs` would return the
+intersection of the matches, instead of their union.
+
+In this data frame we have 150 unique ubiquitin E3 ligases:
+
+```{r count-e3}
+length(unique(i_ubi$source_genesymbol))
+```
+
+UniProt annotates E3 ligases by the "Ubl conjugation" keyword. We can check
+how many of those 150 proteins have this annotation:
+
+```{r match-e3}
+uniprot_kws <- import_omnipath_annotations(
+    resources = 'UniProt_keyword',
+    entity_type = 'protein',
+    wide = TRUE
+)
+
+e3_ligases <- dplyr::pull(
+    dplyr::filter(uniprot_kws, keyword == 'Ubl conjugation'),
+    genesymbol
+)
+
+length(e3_ligases)
+length(intersect(unique(i_ubi$source_genesymbol), e3_ligases))
+length(setdiff(unique(i_ubi$source_genesymbol), e3_ligases))
+```
+
+We retrieved 2503 E3 ligases from UniProt. 83 of these has substrates in
+the interaction database, while 67 of the effectors of the interactions are
+not annotated in UniProt.
+
+In the OmniPath enzyme-substrate database we collect ubiquitination
+interactions from enzyme-PTM resources. However, these contain only a small
+number of interactions:
+
+```{r ubi-es}
+es_ubi <- import_omnipath_enzsub(types = 'ubiquitination')
+es_ubi
+```
+
+With only two exception, all these have been recovered by using the extra
+attributes from the network database:
+
+```{r match-es}
+es_i_ubi <-
+    dplyr::inner_join(
+        es_ubi,
+        i_ubi,
+        by = c(
+            'enzyme_genesymbol' = 'source_genesymbol',
+            'substrate_genesymbol' = 'target_genesymbol'
+        )
+    )
+
+nrow(dplyr::distinct(dplyr::select(es_i_ubi, enzyme, substrate, residue_offset)))
+```
+
+# Session information
+
+```{r session}
+sessionInfo()
+```
