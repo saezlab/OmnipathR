@@ -317,6 +317,7 @@ with_extra_attrs <- function(data, ...){
 #' @importFrom purrr reduce2 map_lgl compose pluck
 #' @importFrom stringr str_replace str_starts
 #' @importFrom dplyr first
+#' @importFrom rlang list2
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{extra_attrs}}}
@@ -329,7 +330,7 @@ filter_extra_attrs <- function(data, ..., na_ok = TRUE){
 
     must_have_extra_attrs(data)
 
-    list(...) %>%
+    list2(...) %>%
     reduce2(
 
         names(.),
