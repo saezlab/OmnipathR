@@ -420,13 +420,13 @@ if_empty <- function(value1, value2){
 
 #' Returns `value1` if it's not NULL or zero length otherwise `value2`
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% extract
 #'
 #' @noRd
 if_null_len0 <- function(value1, value2){
 
     value1 %>%
-    {is.null(.) || length(.) == 0} %>%
+    {is.null(.) || length(.) == 0 || extract(., 1) == ''} %>%
     `if`(value2, value1)
 
 }

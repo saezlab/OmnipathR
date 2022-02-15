@@ -137,7 +137,7 @@ extra_attrs_to_cols <- function(
 
     map_chr(enquos(...), .nse_ensure_str) %>%
     reduce2(
-        if_null(names(.), .),
+        if_null_len0(names(.), .),
         .extra_attr_to_col,
         .init = data,
         flatten = flatten
@@ -179,7 +179,7 @@ extra_attrs_to_cols <- function(
 
     attr_str <- .nse_ensure_str(!!enquo(attr))
     attr <- as.symbol(attr_str)
-    col_name %<>% if_null(attr_str)
+    col_name %<>% if_null_len0(attr_str)
     col <- as.symbol(col_name)
 
     data %>%
