@@ -32,5 +32,5 @@ omnipath_show_db()
 
 }
 \seealso{
-\code{\link{omnipath_show_db}}.
+\code{\link{omnipath_show_db}, \link{get_db}}
 }

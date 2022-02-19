@@ -210,7 +210,7 @@ db_lifetime_hook <- function(){
 #' @importFrom logger log_fatal log_info
 #' @importFrom rlang exec !!!
 #' @export
-#' @seealso  \code{\link{omnipath_show_db}}.
+#' @seealso  \code{\link{omnipath_show_db}, \link{get_db}}
 load_db <- function(key, param = list()){
 
     db_exists(key)
