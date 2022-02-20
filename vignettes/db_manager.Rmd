@@ -1,0 +1,141 @@
+---
+title: "The database manager in OmnipathR"
+author:
+  - name: Denes Turei
+    email: turei.denes@gmail.com
+    correspondance: true
+    affiliation: Institute for Computational Biomedicine, Heidelberg University
+institute:
+  - unihd: Institute for Computational Biomedicine, Heidelberg University
+package: OmnipathR
+output:
+  BiocStyle::html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+abstract: |
+  The database manager is an API within OmnipathR which is able to load
+  various datasets, keep track of their usage and remove them after an
+  expiry period. Currently it supports a few Gene Ontology and UniProt
+  datasets, but easily can be extended to cover all datasets in the
+  package.
+vignette: |
+  %\VignetteIndexEntry{Extra attributes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+fig_width: 9
+fig_height: 7
+---
+
+# Available datasets
+
+To see a full list of datasets call the `omnipath_show_db` function:
+
+```{r pipe, include=FALSE}
+`%>%` <- magrittr::`%>%`
+```
+
+```{r show}
+library(OmnipathR)
+omnipath_show_db()
+```
+
+It returns a tibble where each dataset has a human readable name and a key
+which can be used to refer to it. We can also check here if the dataset is
+currently loaded, the time it's been last used, the loader function and its
+arguments.
+
+# Access a dataset
+
+Datasets can be accessed by the `get_db` function. Ideally you should call
+this function every time you use the dataset. The first time it will be
+loaded, the subsequent times the already loaded dataset will be returned.
+This way each access is registered and extends the expiry time. Let's load
+the human UniProt-GeneSymbol table. Above we see its key is `up_gs_human`.
+
+```{r get}
+up_gs <- get_db('up_gs_human')
+up_gs
+```
+
+This dataset is a two columns data frame of SwissProt IDs and Gene Symbols.
+Looking again at the datasets, we find that this dataset is loaded now and
+the `last_used` timestamp is set to the time we called `get_db`:
+
+```{r show-2}
+omnipath_show_db()
+```
+
+The above table contains also a reference to the dataset, and the arguments
+passed to the loader function:
+
+```{r show-3}
+d <- omnipath_show_db()
+d %>% dplyr::pull(db) %>% magrittr::extract2(16)
+d %>% dplyr::pull(latest_param) %>% magrittr::extract2(16)
+```
+
+If we call `get_db` again, the timestamp is updated, resetting the expiry
+counter:
+
+```{r sleep, include=FALSE}
+# some sleep time to make sure we see a time difference
+Sys.sleep(10)
+```
+
+```{r expiry}
+up_gs <- get_db('up_gs_human')
+omnipath_show_db()
+```
+
+# Where are the loaded datasets?
+
+The loaded datasets live in an environment which belong to the OmnipathR
+package. Normally users don't need to access this environment. As we see
+below, `omnipath_show_db` presents us all information availble by directly
+looking at the environment:
+
+```{r env}
+OmnipathR:::omnipath.env$db$up_gs_human
+```
+
+# How to extend the expiry period?
+
+The default expiry of datasets is given by the option `omnipath.db_lifetime`.
+By calling `omnipath_save_config` this option is saved to the default config
+file and will be valid in all subsequent sessions. Otherwise it's valid only
+in the current session.
+
+```{r lifetime, eval=FALSE}
+options(omnipath.db_lifetime = 600)
+omnipath_save_config()
+```
+
+# Where are the datasets defined?
+
+The built-in dataset definitions are in a JSON file shipped with the package.
+Easiest way to see it is by [the git web interface][1].
+
+# How to add custom datasets?
+
+Currently no API available for this, but it would be super easy to implement.
+It would be matter of providing a JSON similar to the above, or calling a
+function. Please open an issue if you are interested in this feature.
+
+# Session information
+
+```{r session}
+sessionInfo()
+```
+
+[1]: https://github.com/saezlab/OmnipathR/blob/master/inst/db/db_def.json
