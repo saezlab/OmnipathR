@@ -75,7 +75,7 @@
         "https://zenodo.org/record/3260758/files/expression_settings.rds"
     ],
     "hpo": [
-        "https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/",
+        "https://ci.monarchinitiative.org/job/hpo.annotations/",
         "lastSuccessfulBuild/artifact/rare-diseases/util/annotation/",
         "genes_to_phenotype.txt"
     ],
