@@ -30,7 +30,7 @@ abstract: |
   datasets, but easily can be extended to cover all datasets in the
   package.
 vignette: |
-  %\VignetteIndexEntry{Extra attributes}
+  %\VignetteIndexEntry{Database manager}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 fig_width: 9
