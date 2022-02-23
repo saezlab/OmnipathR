@@ -99,5 +99,9 @@
     "preppi": [
         "https://honiglab.c2b2.columbia.edu/PrePPI/ref/",
         "preppi_final600.txt.tar.gz"
+    ],
+    "preppi_rescued": [
+        "https://rescued.omnipathdb.org/",
+        "preppi_final600.txt.tar.gz"
     ]
 }
