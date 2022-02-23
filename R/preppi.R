@@ -82,7 +82,7 @@ preppi_download <- function(...){
     # NSE vs. R CMD check workaround
     dbs <- pubs <- NULL
 
-    'preppi' %>%
+    'preppi_rescued' %>%
     archive_extractor(
         path = 'preppi_final600.txt',
         reader = read_tsv,
