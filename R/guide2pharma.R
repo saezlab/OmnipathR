@@ -60,6 +60,7 @@ guide2pharma_download <- function(){
             'guide2pharma' %>%
             generic_downloader(
                 reader_param = list(
+                    comment = '##',
                     col_types = cols(
                         ligand_context = col_character(),
                         receptor_site = col_character(),
