@@ -74,8 +74,16 @@ guide2pharma_download <- function(){
                 ),
                 resource = 'Guide to Pharmacology (IUPHAR/BPS)'
             ) %>%
-            separate_rows(ligand_gene_symbol, sep = '\\|') %>%
-            separate_rows(target_gene_symbol, sep = '\\|') %T>%
+            {copy_attrs(
+                separate_rows(., ligand_gene_symbol, sep = '\\|'),
+                .,
+                c('origin', 'source')
+            )} %>%
+            {copy_attrs(
+                separate_rows(., target_gene_symbol, sep = '\\|'),
+                .,
+                c('origin', 'source')
+            )} %T>%
             load_success()
 
         },
