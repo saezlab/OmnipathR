@@ -284,17 +284,18 @@ url_rds <- function(URL){
 #'
 #' @param data A data frame.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
 #' @importFrom rlang %||%
 #'
 #' @noRd
-load_success <- function(data){
+load_success <- function(data, resource = NULL, from_cache = NULL){
 
-    from_cache <- data %>% is_from_cache
+    from_cache %<>% if_null(data %>% is_from_cache)
+    resource %<>% if_null(if_null_len0(attr(data, 'source'), 'Unknown source'))
 
     '%s: %sloaded %d records%s' %>%
     sprintf(
-        if_null_len0(attr(data, 'source'), 'Unknown source'),
+        resource,
         `if`(from_cache, '', 'down'),
         data %>% {if_null(nrow(.), length(.))} %||% 0,
         `if`(from_cache, ' from cache', '')
