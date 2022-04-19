@@ -250,9 +250,11 @@ nichenet_main <- function(
 #' @return The same list as `expression` with certain elements removed.
 #'
 #' @examples
+#' \dontrun{
 #' lr_network <- nichenet_lr_network()
 #' expression <- nichenet_expression_data()
 #' expression <- nichenet_remove_orphan_ligands(expression, lr_network)
+#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -448,8 +450,8 @@ nichenet_optimization <- function(
 #'     `optimized_parameters`.
 #'
 #' @examples
-#' expression <- nichenet_expression_data()
 #' \dontrun{
+#' expression <- nichenet_expression_data()
 #' networks <- nichenet_networks()
 #' optimization_results <- nichenet_optimization(networks, expression)
 #' nichenet_model <- nichenet_build_model(optimization_results, networks)
@@ -2262,6 +2264,7 @@ nichenet_common_postprocess <- function(
 #'     expression data and key variables about the experiment.
 #'
 #' @examples
+#' \dontrun{
 #' exp_data <- nichenet_expression_data()
 #' head(names(exp_data))
 #' # [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"
@@ -2271,6 +2274,7 @@ nichenet_common_postprocess <- function(
 #' #       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"
 #' # spectrum_Ifng
 #' #       "IFNG"
+#' }
 #'
 #' @importFrom magrittr %T>%
 #' @export
