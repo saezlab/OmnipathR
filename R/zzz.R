@@ -35,6 +35,14 @@
     }
 
     omnipath_init_cache()
+
+    if(buildserver) {
+
+        logger::log_trace('Running on a build server, wiping cache.')
+        omnipath_cache_wipe()
+
+    }
+
     omnipath_init_db(pkgname)
     .load_magic_bytes(pkgname)
     .load_urls(pkgname)
