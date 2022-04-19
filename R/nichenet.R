@@ -1792,6 +1792,8 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter
+#' @importFrom logger log_trace
+#' @importFrom purrr map map2
 #' @seealso \code{\link{nichenet_lr_network}, \link{guide2pharma_download}}
 nichenet_lr_network_guide2pharma <- function(){
 
@@ -1799,7 +1801,36 @@ nichenet_lr_network_guide2pharma <- function(){
     target_species <- ligand_species <- ligand_gene_symbol <-
         target_gene_symbol <- NULL
 
-    guide2pharma_download() %>%
+    g <- guide2pharma_download()
+
+    logger::log_trace('Size of G2P data: %s', paste(dim(g), collapse = ', '))
+    logger::log_trace(
+        'Column names of G2P data: %s',
+        paste(colnames(g), collapse= ', ')
+    )
+    logger::log_trace(
+        'Cache versions: %s',
+        paste(
+            names(omnipath_cache_search('guide')[[1]]$versions),
+            collapse = ', '
+        )
+    )
+    purrr::map(
+        omnipath_cache_search('guide')[[1]]$versions,
+        function(this_version){
+            logger::log_trace(
+                'Download info: %s',
+                this_version %>%
+                purrr::map2(
+                    names(.),
+                    function(v, k){sprintf('%s=%s', k, v)}
+                ) %>%
+                paste(collapse = ', ')
+            )
+        }
+    )
+
+    g %>%
     filter(
         target_species == 'Human' &
         ligand_species == 'Human'
