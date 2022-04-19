@@ -279,7 +279,7 @@ download_base <- function(
 
                 log_warn(msg)
                 # to avoid too fast retries
-                Sys.sleep(1)
+                Sys.sleep(getOption('omnipath.retry_downloads_in_seconds'))
 
             }
 
