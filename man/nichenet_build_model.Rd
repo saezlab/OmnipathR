@@ -24,8 +24,8 @@ A named list with two elements: `weighted_networks` and
 Construct a NicheNet ligand-target model
 }
 \examples{
-expression <- nichenet_expression_data()
 \dontrun{
+expression <- nichenet_expression_data()
 networks <- nichenet_networks()
 optimization_results <- nichenet_optimization(networks, expression)
 nichenet_model <- nichenet_build_model(optimization_results, networks)

@@ -18,6 +18,7 @@ retrieves the original expression data, deposited in Zenodo
 (\url{https://zenodo.org/record/3260758}).
 }
 \examples{
+\dontrun{
 exp_data <- nichenet_expression_data()
 head(names(exp_data))
 # [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"
@@ -27,5 +28,6 @@ purrr::map_chr(head(exp_data), 'from')
 #       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"
 # spectrum_Ifng
 #       "IFNG"
+}
 
 }
