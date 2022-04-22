@@ -71,6 +71,9 @@ LR_RESOURCES <- c(
 #'     \emph{talklr} (not the whole \emph{talklr} but a subset of it).
 #' @param signalink Logical: include the ligand-receptor interactions
 #'     from \emph{SignaLink.} These are all expert curated.
+#' @param ... Passed to \code{\link{import_post_translational_interactions}}:
+#'     further parameters for the interaction data. Should not contain
+#'     `resources` argument as that would interfere with the downstream calls.
 #'
 #' @details
 #' Some resources are a mixture of curated and bulk imported interactions,
@@ -114,7 +117,8 @@ curated_ligand_receptor_interactions <- function(
     cellphonedb = TRUE,
     cellinker = TRUE,
     talklr = TRUE,
-    signalink = TRUE
+    signalink = TRUE,
+    ...
 ){
 
     cellchatdb <- 'CellChatDB' %in% curated_resources
@@ -124,7 +128,7 @@ curated_ligand_receptor_interactions <- function(
     curated_resources %>%
     {`if`(
         length(.) > 0L,
-        import_post_translational_interactions(resources = .) %>%
+        import_post_translational_interactions(resources = ., ...) %>%
         with_references(resources = curated_resources),
         NULL
     )} %>%
@@ -133,7 +137,7 @@ curated_ligand_receptor_interactions <- function(
         function(d, resource){
             `if`(
                 get(resource),
-                bind_rows(d, get(sprintf('%s_curated', resource))()),
+                bind_rows(d, get(sprintf('%s_curated', resource))(...)),
                 d
             )
         },
@@ -141,12 +145,12 @@ curated_ligand_receptor_interactions <- function(
     )} %>%
     {`if`(
         cellchatdb,
-        bind_rows(., cellchatdb_ligrec()),
+        bind_rows(., cellchatdb_ligrec(...)),
         .
     )} %>%
     {`if`(
         signalink,
-        bind_rows(., signalink_ligrec()),
+        bind_rows(., signalink_ligrec(...)),
         .
     )} %>%
     distinct(across(everything()))
@@ -156,19 +160,25 @@ curated_ligand_receptor_interactions <- function(
 
 #' Curated interactions from CellPhoneDB
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang exec !!!
 #' @importFrom stringr str_detect
 #' @importFrom dplyr filter select
 #'
 #' @noRd
-cellphonedb_curated <- function(){
+cellphonedb_curated <- function(...){
 
     # NSE vs. R CMD check workaround
     sources <- CellPhoneDB_type <- extra_attrs <- NULL
 
-    import_post_translational_interactions(
+    args <- list(...)
+    keep_eattrs <- 'extra_attrs' %in% names(args)
+    args$fields %<>% c('extra_attrs') %>% unique
+
+    exec(
+        import_post_translational_interactions,
         resources = 'CellPhoneDB',
-        fields = 'extra_attrs'
+        !!!args
     ) %>%
     extra_attrs_to_cols(CellPhoneDB_type) %>%
     filter(
@@ -178,25 +188,32 @@ cellphonedb_curated <- function(){
         !str_detect(sources, '_CellPhoneDB') &
         CellPhoneDB_type == 'ligand-receptor'
     ) %>%
-    select(-CellPhoneDB_type, -extra_attrs)
+    select(-CellPhoneDB_type) %>%
+    {`if`(keep_eattrs, ., select(., -extra_attrs))}
 
 }
 
 
 #' Ligand-receptor interactions from CellChatDB
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang exec !!!
 #' @importFrom dplyr filter select
 #' @noRd
-cellchatdb_ligrec <- function(curated = TRUE){
+cellchatdb_ligrec <- function(curated = TRUE, ...){
 
     # NSE vs. R CMD check workaround
     CellChatDB_category <- extra_attrs <- NULL
 
-    import_post_translational_interactions(
+    args <- list(...)
+    keep_eattrs <- 'extra_attrs' %in% names(args)
+    args$fields %<>% c('extra_attrs') %>% unique
+
+    exec(
+        import_post_translational_interactions,
         # fully curated, ligand-receptor only resources
         resources = 'CellChatDB',
-        fields = 'extra_attrs'
+        !!!args
     ) %>%
     extra_attrs_to_cols(CellChatDB_category) %>%
     filter(
@@ -206,7 +223,8 @@ cellchatdb_ligrec <- function(curated = TRUE){
             'Secreted Signaling'
         )
     ) %>%
-    select(-CellChatDB_category, -extra_attrs) %>%
+    select(-CellChatDB_category) %>%
+    {`if`(keep_eattrs, ., select(., -extra_attrs))} %>%
     {`if`(curated, with_references(., resources = 'CellChatDB'), .)}
 
 }
@@ -214,12 +232,13 @@ cellchatdb_ligrec <- function(curated = TRUE){
 
 #' Curated interactions from Cellinker
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang exec !!!
 #' @importFrom stringr str_detect
 #' @importFrom dplyr filter select
 #'
 #' @noRd
-cellinker_curated <- function(){
+cellinker_curated <- function(...){
 
     # NSE vs. R CMD check workaround
     sources <- Cellinker_type <- extra_attrs <- NULL
@@ -229,9 +248,14 @@ cellinker_curated <- function(){
         'Secreted protein to receptor interaction'
     )
 
-    import_post_translational_interactions(
+    args <- list(...)
+    keep_eattrs <- 'extra_attrs' %in% names(args)
+    args$fields %<>% c('extra_attrs') %>% unique
+
+    exec(
+        import_post_translational_interactions,
         resources = 'Cellinker',
-        fields = 'extra_attrs'
+        !!!args
     ) %>%
     extra_attrs_to_cols(Cellinker_type) %>%
     filter(
@@ -241,7 +265,8 @@ cellinker_curated <- function(){
         !str_detect(sources, '_Cellinker') &
         Cellinker_type %in% lr_types
     ) %>%
-    select(-Cellinker_type, -extra_attrs) %>%
+    select(-Cellinker_type) %>%
+    {`if`(keep_eattrs, ., select(., -extra_attrs))} %>%
     with_references(resources = 'Cellinker')
 
 }
@@ -249,23 +274,29 @@ cellinker_curated <- function(){
 
 #' Curated interactions from talklr
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang exec !!!
 #' @importFrom stringr str_detect
 #' @importFrom dplyr filter select
 #'
 #' @noRd
-talklr_curated <- function(){
+talklr_curated <- function(...){
 
     # NSE vs. R CMD check workaround
     references <- extra_attrs <- NULL
 
-    import_post_translational_interactions(
+    args <- list(...)
+    keep_eattrs <- 'extra_attrs' %in% names(args)
+    args$fields %<>% c('extra_attrs') %>% unique
+
+    exec(
+        import_post_translational_interactions,
         resources = 'talklr',
-        fields = 'extra_attrs'
+        !!!args
     ) %>%
     filter_extra_attrs(talklr_putative = 0) %>%
     filter(str_detect(references, 'talklr:')) %>%
-    select(-extra_attrs)
+    {`if`(keep_eattrs, ., select(., -extra_attrs))}
 
 }
 
@@ -277,14 +308,15 @@ talklr_curated <- function(){
 #' @importFrom dplyr filter select
 #'
 #' @noRd
-signalink_ligrec <- function(){
+signalink_ligrec <- function(...){
 
     # NSE vs. R CMD check workaround
     function_source <- function_target <- NULL
 
     annotated_network(
         network = 'SignaLink3',
-        annot = 'SignaLink_function'
+        annot = 'SignaLink_function',
+        network_args = list(...)
     ) %>%
     filter(
         # these interactions are directly expert curated in a

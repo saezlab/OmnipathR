@@ -10,7 +10,8 @@ curated_ligand_receptor_interactions(
   cellphonedb = TRUE,
   cellinker = TRUE,
   talklr = TRUE,
-  signalink = TRUE
+  signalink = TRUE,
+  ...
 )
 }
 \arguments{
@@ -32,6 +33,10 @@ of it).}
 
 \item{signalink}{Logical: include the ligand-receptor interactions
 from \emph{SignaLink.} These are all expert curated.}
+
+\item{...}{Passed to \code{\link{import_post_translational_interactions}}:
+further parameters for the interaction data. Should not contain
+`resources` argument as that would interfere with the downstream calls.}
 }
 \value{
 A data frame similar to \emph{interactions} (network) data frames,

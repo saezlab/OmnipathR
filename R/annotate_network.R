@@ -44,6 +44,10 @@
 #'     available resources call \code{\link{get_annotation_resources}}), or
 #'     an annotation data frame. If the data frame contains more than one
 #'     resources, only the first one will be used.
+#' @param network_args List: if `network` is a resource name, pass these
+#'     additional arguments to \code{\link{import_omnipath_interactions}}.
+#' @param annot_args List: if `annot` is a resource name, pass these
+#'     additional arguments to \code{\link{import_omnipath_annotations}}.
 #' @param ... Column names selected from the annotation data frame (passed
 #'     to \code{dplyr::select}, if empty all columns will be selected.)
 #'
@@ -56,12 +60,14 @@
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom checkmate assert_data_frame
-#' @importFrom rlang enexprs !!!
+#' @importFrom rlang enexprs !!! exec
 #' @importFrom dplyr select left_join
 #' @export
 annotated_network <- function(
     network = NULL,
     annot = NULL,
+    network_args = list(),
+    annot_args = list(),
     ...
 ){
 
@@ -74,7 +80,7 @@ annotated_network <- function(
     {`if`(is.character(.), list(resources = .), .)} %>%
     {`if`(
         just_a_list(.),
-        do.call(import_omnipath_interactions, .),
+        exec(import_omnipath_interactions, !!!., !!!network_args),
         .
     )} %>%
     assert_data_frame
@@ -82,7 +88,7 @@ annotated_network <- function(
     annot %<>%
     {`if`(
         is.character(.),
-        import_omnipath_annotations(resources = .),
+        exec(import_omnipath_annotations, resources = ., !!!annot_args),
         .
     )} %>%
     {`if`('record_id' %in% names(.), pivot_annotations(.), .)} %>%

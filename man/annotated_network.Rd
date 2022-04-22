@@ -4,7 +4,13 @@
 \alias{annotated_network}
 \title{Network interactions with annotations}
 \usage{
-annotated_network(network = NULL, annot = NULL, ...)
+annotated_network(
+  network = NULL,
+  annot = NULL,
+  network_args = list(),
+  annot_args = list(),
+  ...
+)
 }
 \arguments{
 \item{network}{Behaviour depends on type: if list, will be passed as
@@ -18,6 +24,12 @@ resources.}
 available resources call \code{\link{get_annotation_resources}}), or
 an annotation data frame. If the data frame contains more than one
 resources, only the first one will be used.}
+
+\item{network_args}{List: if `network` is a resource name, pass these
+additional arguments to \code{\link{import_omnipath_interactions}}.}
+
+\item{annot_args}{List: if `annot` is a resource name, pass these
+additional arguments to \code{\link{import_omnipath_annotations}}.}
 
 \item{...}{Column names selected from the annotation data frame (passed
 to \code{dplyr::select}, if empty all columns will be selected.)}
