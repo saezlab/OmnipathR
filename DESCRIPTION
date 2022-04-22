@@ -67,6 +67,7 @@ Imports:
     tidyselect,
     tools,
     utils,
+    withr,
     xml2,
     yaml
 Suggests:
