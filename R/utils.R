@@ -32,7 +32,7 @@
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' interactions <- import_omnipath_interactions(references_by_resource = FALSE)
+#' interactions <- import_omnipath_interactions()
 #' pubmed_open(interactions$references[1])
 #'
 #' @importFrom magrittr %<>% %>%
