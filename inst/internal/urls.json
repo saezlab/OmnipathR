@@ -103,5 +103,8 @@
     "preppi_rescued": [
         "https://rescued.omnipathdb.org/",
         "preppi_final600.txt.tar.gz"
+    ],
+    "ensembl_organisms": [
+        "https://www.ensembl.org/info/about/species.html"
     ]
 }

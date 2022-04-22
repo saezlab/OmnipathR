@@ -217,5 +217,16 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "organisms": {
+        "name": ["Ensembl organism names"],
+        "last_used": [],
+        "lifetime": 10800,
+        "package": [],
+        "loader": "taxon_names_table",
+        "loader_param": {},
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }

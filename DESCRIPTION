@@ -60,6 +60,7 @@ Imports:
     readr(>= 2.0.0),
     readxl,
     rlang,
+    rvest,
     stats,
     stringr,
     tibble,
@@ -72,6 +73,7 @@ Imports:
     yaml
 Suggests:
     BiocStyle,
+    biomaRt,
     bookdown,
     dnet,
     ggplot2,
