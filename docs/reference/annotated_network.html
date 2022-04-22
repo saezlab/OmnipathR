@@ -36,14 +36,14 @@ function."><meta property="og:image" content="https://saezlab.github.io/Omnipath
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.25</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
@@ -51,7 +51,9 @@ function."><meta property="og:image" content="https://saezlab.github.io/Omnipath
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
     <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
@@ -110,7 +112,13 @@ function.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">annotated_network</span><span class="op">(</span>network <span class="op">=</span> <span class="cn">NULL</span>, annot <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">annotated_network</span><span class="op">(</span>
+  network <span class="op">=</span> <span class="cn">NULL</span>,
+  annot <span class="op">=</span> <span class="cn">NULL</span>,
+  network_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
+  annot_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -127,6 +135,12 @@ resources.</p></dd>
 available resources call <code><a href="get_annotation_resources.html">get_annotation_resources</a></code>), or
 an annotation data frame. If the data frame contains more than one
 resources, only the first one will be used.</p></dd>
+<dt>network_args</dt>
+<dd><p>List: if `network` is a resource name, pass these
+additional arguments to <code><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></code>.</p></dd>
+<dt>annot_args</dt>
+<dd><p>List: if `annot` is a resource name, pass these
+additional arguments to <code><a href="import_omnipath_annotations.html">import_omnipath_annotations</a></code>.</p></dd>
 <dt>...</dt>
 <dd><p>Column names selected from the annotation data frame (passed
 to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>, if empty all columns will be selected.)</p></dd>
@@ -141,6 +155,7 @@ to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="exte
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">signalink_with_pathways</span> <span class="op">&lt;-</span></span>
 <span class="r-in">    <span class="fu">annotated_network</span><span class="op">(</span><span class="st">'SignaLink3'</span>, <span class="st">'SignaLink_pathway'</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> The output colorization was canceled. isatty(stdout()) returned FALSE.</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -153,7 +168,8 @@ to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="exte
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
     </footer></div>
