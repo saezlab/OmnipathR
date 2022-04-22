@@ -91,3 +91,116 @@ ensembl_organisms <- function(){
     )
 
 }
+
+
+#' Query the Ensembl BioMart web service
+#'
+#' @param attrs Character vector: one or more Ensembl attribute names.
+#' @param filters Character vector: one or more Ensembl filter names.
+#' @param transcript Logical: include Ensembl transcript IDs in the result.
+#' @param peptide Logical: include Ensembl peptide IDs in the result.
+#' @param gene Logical: include Ensembl gene IDs in the result.
+#' @param dataset Character: An Ensembl dataset name.
+#'
+#' @return Data frame with the query result
+#'
+#' @examples
+#' cel_genes <- biomart_query(
+#'     attrs = c("external_gene_name", "start_position", "end_position"),
+#'     gene = TRUE,
+#'     dataset = "celegans_gene_ensembl"
+#' )
+#' cel
+#' # # A tibble: 46,934 × 4
+#' #   ensembl_gene_id external_gene_name start_position end_position
+#' #   <chr>           <chr>                       <dbl>        <dbl>
+#' # 1 WBGene00000001  aap-1                     5107843      5110183
+#' # 2 WBGene00000002  aat-1                     9599178      9601695
+#' # 3 WBGene00000003  aat-2                     9244402      9246360
+#' # 4 WBGene00000004  aat-3                     2552260      2557736
+#' # 5 WBGene00000005  aat-4                     6272529      6275721
+#' # # . with 46,924 more rows
+#'
+#' @importFrom magrittr %<>% %>% %T>%
+#' @importFrom purrr map_chr
+#' @importFrom readr cols col_character read_tsv type_convert
+#' @importFrom dplyr slice_tail slice_head
+#' @importFrom logger log_warn
+#' @export
+biomart_query <- function(
+    attrs,
+    filters = NULL,
+    transcript = FALSE,
+    peptide = FALSE,
+    gene = FALSE,
+    dataset = 'hsapiens_gene_ensembl'
+){
+
+    TEMPLATE <- biomart_xml_template()
+    FILTER_TEMPLATE <- '<Filter name="%s" excluded="0"/>' %>% indent(8L)
+    ATTR_TEMPLATE <- '<Attribute name="%s"/>' %>% indent(8L)
+
+    local_env <- environment()
+
+    attrs %<>%
+        {`if`(peptide, c('ensembl_peptide_id',. ), .)} %>%
+        {`if`(transcript, c('ensembl_transcript_id', .), .)} %>%
+        {`if`(gene, c('ensembl_gene_id', .), .)} %>%
+        assign('col_names', ., envir = local_env) %>%
+        map_chr(~sprintf(ATTR_TEMPLATE, .x)) %>%
+        paste0(collapse = '\n')
+
+    filters %<>%
+        map_chr(~sprintf(FILTER_TEMPLATE, .x)) %>%
+        paste0(collapse = '\n') %>%
+        {`if`(nchar(.), sprintf('\n%s', .), .)}
+
+    query <-
+        TEMPLATE %>%
+        sprintf(dataset, attrs, filters)
+
+    'biomart' %>%
+    generic_downloader(
+        url_param = list(query),
+        reader = function(...){suppressWarnings(read_tsv(...))},
+        reader_param = list(
+            col_names = col_names,
+            col_types = cols(.default = col_character()),
+            progress = FALSE
+        )
+    ) %>%
+    {`if`(
+        slice_tail(., n = 1L) %>% first %>% equals('[success]'),
+        slice_head(., n = -1L),
+        {
+            log_warn(
+                'BioMart: missing success flag, data might be incomplete!'
+            )
+            .
+        }
+    )} %>%
+    type_convert(col_types = cols()) %T>%
+    load_success()
+
+}
+
+
+#' BioMart query XML template
+#'
+#' @return The XML as a single character string.
+#'
+#' @importFrom utils packageName
+#' @importFrom magrittr %>%
+#' @importFrom readr read_file
+#' @noRd
+biomart_xml_template <- function(){
+
+    system.file(
+        'internal',
+        'biomart.xml',
+        package = utils::packageName(),
+        mustWork = TRUE
+    ) %>%
+    read_file
+
+}

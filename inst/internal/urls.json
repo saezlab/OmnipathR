@@ -106,5 +106,8 @@
     ],
     "ensembl_organisms": [
         "https://www.ensembl.org/info/about/species.html"
+    ],
+    "biomart": [
+        "http://www.ensembl.org/biomart/martservice?query=%s"
     ]
 }
