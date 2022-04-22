@@ -252,10 +252,10 @@ The above pipeline was inspired by the post of Denes Turei available
 
 # References
 
-[1] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, O Ivanova, A Gabor,
-D Modos, T Korcsmaros and J Saez-Rodriguez (2020) Integrated intra- and
-intercellular signaling knowledge for multicellular omics analysis. _bioRxiv_
-2020.08.03.221242
+[1] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, M Klein, O Ivanova,
+M Olbei, A Gabor, F Theis, D Modos, T Korcsmaros and J Saez-Rodriguez (2021)
+Integrated intra- and intercellular signaling knowledge for multicellular
+omics analysis. _Molecular Systems Biology_ 17:e9923
 
 [2] D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath: guidelines and
 gateway for literature-curated signaling pathway resources. _Nature Methods_
