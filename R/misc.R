@@ -699,3 +699,22 @@ null_to_na <- function(l){
     map(l, function(x){`if`(is.null(x), NA, x)})
 
 }
+
+
+#' Add indentation in front of lines
+#'
+#' @param lines Character vector.
+#' @param depth Integer: number of spaces.
+#'
+#' @return Character vector of indented lines.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+indent <- function(lines, depth = 4L){
+
+    ' ' %>%
+    rep(depth) %>%
+    paste(collapse = '') %>%
+    paste0(lines)
+
+}
