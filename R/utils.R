@@ -38,7 +38,7 @@
 #' @importFrom magrittr %<>% %>%
 #' @importFrom logger log_error
 #' @importFrom withr local_options
-#' @importFrom stringr str_split
+#' @importFrom stringr str_split str_replace_all
 #' @importFrom purrr walk
 #' @importFrom utils browseURL
 #' @export
@@ -62,6 +62,7 @@ pubmed_open <- function(pmids, browser = NULL, sep = ';', max_pages = 25L){
     as.character %>%
     stringr::str_split(sep) %>%
     unlist %>%
+    stringr::str_replace_all('[^:;]*+:(\\d+)', '\\1') %>%
     unique %>%
     {`if`(
         length(.) > max_pages,
