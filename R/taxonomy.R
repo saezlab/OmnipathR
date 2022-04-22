@@ -26,8 +26,8 @@
 #'     and the NCBI Taxonomy IDs converted to character.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate rename_with bind_cols
-#' @importFrom tidyselect across where everything
+#' @importFrom dplyr mutate rename_with bind_cols across
+#' @importFrom tidyselect vars_select_helpers everything
 #' @importFrom stringr str_to_lower
 #' @noRd
 taxon_names_table <- function(){
@@ -36,7 +36,7 @@ taxon_names_table <- function(){
     {bind_cols(
         mutate(
             .,
-            across(where(is.character), str_to_lower),
+            across(vars_select_helpers$where(is.character), str_to_lower),
             ncbi_tax_id = as.character(ncbi_tax_id)
         ) %>%
         rename_with(.fn = paste, .cols = everything(), 'l', sep = '_'),
