@@ -77,29 +77,31 @@ are the identifier type abbreviations used in the UniProt API, please
 refer to the table here: \url{https://www.uniprot.org/help/api_idmapping}.
 In addition, simple synonyms are available which realize a uniform API
 for the uploadlists and UniProt query based backends. These are the
-followings:\preformatted{| OmnipathR      | Uploadlists          | UniProt query           |
-| -------------- | -------------------- | ----------------------- |
-| uniprot        | ACC                  | id                      |
-| uniprot_entry  | ID                   | entry name              |
-| genesymbol     | GENENAME             | genes(PREFERRED)        |
-| genesymbol_syn |                      | genes(ALTERNATIVE)      |
-| hgnc           | HGNC_ID              | database(HGNC)          |
-| entrez         | P_ENTREZGENEID       | database(geneid)        |
-| ensg           | ENSEMBLGENOME_ID     |                         |
-| enst           | ENSEMBL_TRS_ID       | database(ensembl)       |
-| ensp           | ENSEMBL_PRO_ID       |                         |
-| ensgt          | ENSEMBLGENOME_TRS_ID |                         |
-| ensgp          | ENSEMBLGENOME_PRO_ID |                         |
-| ensembl        | ENSEMBL_ID           |                         |
-| protein_name   |                      | protein names           |
-| refseqp        | P_REFSEQ_AC          | database(refseq)        |
-| refseqn        | REFSEQ_NT_ID         |                         |
-| embl           | EMBL                 | database(embl)          |
-| embl_id        | EMBL_ID              |                         |
-| gi             | P_GI                 |                         |
-| pir            | PIR                  |                         |
-| pdb            | PDB_ID               |                         |
+followings:\tabular{llll}{
+   \strong{OmnipathR} \tab \strong{Uploadlists} \tab \strong{UniProt query} \tab \strong{Ensembl BioMart} \cr
+   uniprot \tab ACC \tab id \tab uniprotswissprot \cr
+   uniprot_entry \tab ID \tab entry name \tab  \cr
+   trembl \tab \emph{reviewed = FALSE} \tab \emph{reviewed = FALSE} \tab uniprotsptrembl \cr
+   genesymbol \tab GENENAME \tab genes(PREFERRED) \tab external_gene_name \cr
+   genesymbol_syn \tab  \tab genes(ALTERNATIVE) \tab external_synonym \cr
+   hgnc \tab HGNC_ID \tab database(HGNC) \tab hgnc_symbol \cr
+   entrez \tab P_ENTREZGENEID \tab database(geneid) \tab  \cr
+   ensg \tab ENSEMBLGENOME_ID \tab  \tab ensembl_gene_id \cr
+   enst \tab ENSEMBL_TRS_ID \tab database(ensembl) \tab ensembl_transcript_id \cr
+   ensp \tab ENSEMBL_PRO_ID \tab  \tab ensembl_peptide_id \cr
+   ensgt \tab ENSEMBLGENOME_TRS_ID \tab  \tab  \cr
+   ensgp \tab ENSEMBLGENOME_PRO_ID \tab  \tab  \cr
+   ensembl \tab ENSEMBL_ID \tab  \tab ensembl_gene_id \cr
+   protein_name \tab  \tab protein names \tab  \cr
+   refseqp \tab P_REFSEQ_AC \tab database(refseq) \tab  \cr
+   ipro \tab  \tab  \tab interpro \cr
+   ipro_desc \tab  \tab  \tab interpro_description \cr
+   ipro_sdesc \tab  \tab  \tab interpro_short_description \cr
+   wikigene \tab  \tab  \tab wikigene_name \cr
+   rnacentral \tab  \tab  \tab rnacentral \cr
+   gene_desc \tab  \tab  \tab description \cr
 }
+
 
 The mapping between identifiers can be ambiguous. In this case one row
 in the original data frame yields multiple rows or elements in the

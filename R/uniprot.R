@@ -220,28 +220,29 @@ uniprot_id_mapping_table <- function(
 #' for the uploadlists and UniProt query based backends. These are the
 #' followings:
 #'
-#'     | OmnipathR      | Uploadlists          | UniProt query           |
-#'     | -------------- | -------------------- | ----------------------- |
-#'     | uniprot        | ACC                  | id                      |
-#'     | uniprot_entry  | ID                   | entry name              |
-#'     | genesymbol     | GENENAME             | genes(PREFERRED)        |
-#'     | genesymbol_syn |                      | genes(ALTERNATIVE)      |
-#'     | hgnc           | HGNC_ID              | database(HGNC)          |
-#'     | entrez         | P_ENTREZGENEID       | database(geneid)        |
-#'     | ensg           | ENSEMBLGENOME_ID     |                         |
-#'     | enst           | ENSEMBL_TRS_ID       | database(ensembl)       |
-#'     | ensp           | ENSEMBL_PRO_ID       |                         |
-#'     | ensgt          | ENSEMBLGENOME_TRS_ID |                         |
-#'     | ensgp          | ENSEMBLGENOME_PRO_ID |                         |
-#'     | ensembl        | ENSEMBL_ID           |                         |
-#'     | protein_name   |                      | protein names           |
-#'     | refseqp        | P_REFSEQ_AC          | database(refseq)        |
-#'     | refseqn        | REFSEQ_NT_ID         |                         |
-#'     | embl           | EMBL                 | database(embl)          |
-#'     | embl_id        | EMBL_ID              |                         |
-#'     | gi             | P_GI                 |                         |
-#'     | pir            | PIR                  |                         |
-#'     | pdb            | PDB_ID               |                         |
+#' | **OmnipathR**  | **Uploadlists**      | **UniProt query**  | **Ensembl BioMart**        |
+#' |----------------|----------------------|--------------------|----------------------------|
+#' | uniprot        | ACC                  | id                 | uniprotswissprot           |
+#' | uniprot_entry  | ID                   | entry name         |                            |
+#' | trembl         | *reviewed = FALSE*   | *reviewed = FALSE* | uniprotsptrembl            |
+#' | genesymbol     | GENENAME             | genes(PREFERRED)   | external_gene_name         |
+#' | genesymbol_syn |                      | genes(ALTERNATIVE) | external_synonym           |
+#' | hgnc           | HGNC_ID              | database(HGNC)     | hgnc_symbol                |
+#' | entrez         | P_ENTREZGENEID       | database(geneid)   |                            |
+#' | ensg           | ENSEMBLGENOME_ID     |                    | ensembl_gene_id            |
+#' | enst           | ENSEMBL_TRS_ID       | database(ensembl)  | ensembl_transcript_id      |
+#' | ensp           | ENSEMBL_PRO_ID       |                    | ensembl_peptide_id         |
+#' | ensgt          | ENSEMBLGENOME_TRS_ID |                    |                            |
+#' | ensgp          | ENSEMBLGENOME_PRO_ID |                    |                            |
+#' | ensembl        | ENSEMBL_ID           |                    | ensembl_gene_id            |
+#' | protein_name   |                      | protein names      |                            |
+#' | refseqp        | P_REFSEQ_AC          | database(refseq)   |                            |
+#' | ipro           |                      |                    | interpro                   |
+#' | ipro_desc      |                      |                    | interpro_description       |
+#' | ipro_sdesc     |                      |                    | interpro_short_description |
+#' | wikigene       |                      |                    | wikigene_name              |
+#' | rnacentral     |                      |                    | rnacentral                 |
+#' | gene_desc      |                      |                    | description                |
 #'
 #' The mapping between identifiers can be ambiguous. In this case one row
 #' in the original data frame yields multiple rows or elements in the

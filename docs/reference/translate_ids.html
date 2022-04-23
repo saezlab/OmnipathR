@@ -20,14 +20,14 @@ identifiers."><meta property="og:image" content="https://saezlab.github.io/Omnip
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.25</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
@@ -35,8 +35,11 @@ identifiers."><meta property="og:image" content="https://saezlab.github.io/Omnip
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
     <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
+    <a class="dropdown-item" href="../articles/mouse.html">Working with mouse, rat and other organisms</a>
     <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     <a class="dropdown-item" href="../articles/paths.html">Pathway construction</a>
@@ -90,6 +93,7 @@ identifiers.</p>
   <span class="va">d</span>,
   <span class="va">...</span>,
   uploadlists <span class="op">=</span> <span class="cn">FALSE</span>,
+  ensembl <span class="op">=</span> <span class="cn">FALSE</span>,
   keep_untranslated <span class="op">=</span> <span class="cn">TRUE</span>,
   return_df <span class="op">=</span> <span class="cn">FALSE</span>,
   organism <span class="op">=</span> <span class="fl">9606</span>,
@@ -119,6 +123,8 @@ If any of the provided ID types is only available in the uploadlists
 service, it will be automatically selected. The plain query interface
 is preferred because in the long term, with caching, it requires
 less download and data storage.</p></dd>
+<dt>ensembl</dt>
+<dd><p>Logical: use data from Ensembl BioMart instead of UniProt.</p></dd>
 <dt>keep_untranslated</dt>
 <dd><p>In case the output is a data frame, keep the
 records where the source identifier could not be translated. At
@@ -154,31 +160,7 @@ are the identifier type abbreviations used in the UniProt API, please
 refer to the table here: <a href="https://www.uniprot.org/help/api_idmapping" class="external-link">https://www.uniprot.org/help/api_idmapping</a>.
 In addition, simple synonyms are available which realize a uniform API
 for the uploadlists and UniProt query based backends. These are the
-followings:</p><div class="sourceCode"><pre><code>| OmnipathR      | Uploadlists          | UniProt query           |
-| -------------- | -------------------- | ----------------------- |
-| uniprot        | ACC                  | id                      |
-| uniprot_entry  | ID                   | entry name              |
-| genesymbol     | GENENAME             | genes(PREFERRED)        |
-| genesymbol_syn |                      | genes(ALTERNATIVE)      |
-| hgnc           | HGNC_ID              | database(HGNC)          |
-| entrez         | P_ENTREZGENEID       | database(geneid)        |
-| ensg           | ENSEMBLGENOME_ID     |                         |
-| enst           | ENSEMBL_TRS_ID       | database(ensembl)       |
-| ensp           | ENSEMBL_PRO_ID       |                         |
-| ensgt          | ENSEMBLGENOME_TRS_ID |                         |
-| ensgp          | ENSEMBLGENOME_PRO_ID |                         |
-| ensembl        | ENSEMBL_ID           |                         |
-| protein_name   |                      | protein names           |
-| refseqp        | P_REFSEQ_AC          | database(refseq)        |
-| refseqn        | REFSEQ_NT_ID         |                         |
-| embl           | EMBL                 | database(embl)          |
-| embl_id        | EMBL_ID              |                         |
-| gi             | P_GI                 |                         |
-| pir            | PIR                  |                         |
-| pdb            | PDB_ID               |                         |
-</code></pre></div>
-
-<p>The mapping between identifiers can be ambiguous. In this case one row
+followings:</p><table class="table table"><tr><td><strong>OmnipathR</strong></td><td><strong>Uploadlists</strong></td><td><strong>UniProt query</strong></td><td><strong>Ensembl BioMart</strong></td></tr><tr><td>uniprot</td><td>ACC</td><td>id</td><td>uniprotswissprot</td></tr><tr><td>uniprot_entry</td><td>ID</td><td>entry name</td><td></td></tr><tr><td>trembl</td><td><em>reviewed = FALSE</em></td><td><em>reviewed = FALSE</em></td><td>uniprotsptrembl</td></tr><tr><td>genesymbol</td><td>GENENAME</td><td>genes(PREFERRED)</td><td>external_gene_name</td></tr><tr><td>genesymbol_syn</td><td></td><td>genes(ALTERNATIVE)</td><td>external_synonym</td></tr><tr><td>hgnc</td><td>HGNC_ID</td><td>database(HGNC)</td><td>hgnc_symbol</td></tr><tr><td>entrez</td><td>P_ENTREZGENEID</td><td>database(geneid)</td><td></td></tr><tr><td>ensg</td><td>ENSEMBLGENOME_ID</td><td></td><td>ensembl_gene_id</td></tr><tr><td>enst</td><td>ENSEMBL_TRS_ID</td><td>database(ensembl)</td><td>ensembl_transcript_id</td></tr><tr><td>ensp</td><td>ENSEMBL_PRO_ID</td><td></td><td>ensembl_peptide_id</td></tr><tr><td>ensgt</td><td>ENSEMBLGENOME_TRS_ID</td><td></td><td></td></tr><tr><td>ensgp</td><td>ENSEMBLGENOME_PRO_ID</td><td></td><td></td></tr><tr><td>ensembl</td><td>ENSEMBL_ID</td><td></td><td>ensembl_gene_id</td></tr><tr><td>protein_name</td><td></td><td>protein names</td><td></td></tr><tr><td>refseqp</td><td>P_REFSEQ_AC</td><td>database(refseq)</td><td></td></tr><tr><td>ipro</td><td></td><td></td><td>interpro</td></tr><tr><td>ipro_desc</td><td></td><td></td><td>interpro_description</td></tr><tr><td>ipro_sdesc</td><td></td><td></td><td>interpro_short_description</td></tr><tr><td>wikigene</td><td></td><td></td><td>wikigene_name</td></tr><tr><td>rnacentral</td><td></td><td></td><td>rnacentral</td></tr><tr><td>gene_desc</td><td></td><td></td><td>description</td></tr></table><p>The mapping between identifiers can be ambiguous. In this case one row
 in the original data frame yields multiple rows or elements in the
 returned data frame or vector(s).</p>
     </div>
@@ -217,7 +199,8 @@ returned data frame or vector(s).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
     </footer></div>
