@@ -24,3 +24,10 @@ ncbi_taxid(c(9606, "cat", "doggy"))
 # [1] 9606 9685   NA
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{latin_name}}}
+    \item{\code{\link{common_name}}}
+    \item{\code{\link{ensembl_name}}}
+}
+}

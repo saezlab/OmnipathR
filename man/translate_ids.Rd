@@ -122,5 +122,6 @@ d
 \itemize{
 \item{\code{\link{uniprot_id_mapping_table}}}
 \item{\code{\link{uniprot_full_id_mapping_table}}}
+\item{\code{\link{ensembl_id_mapping_table}}}
 }
 }

@@ -269,6 +269,7 @@ uniprot_id_mapping_table <- function(
 #' @seealso \itemize{
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#'     \item{\code{\link{ensembl_id_mapping_table}}}
 #' }
 #' @md
 translate_ids <- function(
@@ -492,7 +493,11 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 #' #  5 Q8NGC1 390439
 #' # # . with 20,713 more rows
 #'
-#' @seealso \code{\link{translate_ids}}
+#' @seealso \itemize{
+#'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{ensembl_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#' }
 uniprot_full_id_mapping_table <- function(
     to,
     from = 'id',
@@ -558,8 +563,14 @@ uniprot_full_id_mapping_table <- function(
 #' @importFrom rlang %||% !! sym enquo
 #' @importFrom logger log_trace
 #' @importFrom dplyr pull
-#'
 #' @noRd
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#'     \item{\code{\link{ensembl_id_mapping_table}}}
+#' }
 id_translation_table <- function(
     from,
     to,

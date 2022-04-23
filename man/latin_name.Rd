@@ -24,3 +24,10 @@ latin_name(c(9606, "cat", "doggy"))
 # [1] "Homo sapiens" "Felis catus"  NA
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{ncbi_taxid}}}
+    \item{\code{\link{common_name}}}
+    \item{\code{\link{ensembl_name}}}
+}
+}

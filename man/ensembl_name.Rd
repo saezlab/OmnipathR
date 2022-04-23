@@ -24,3 +24,10 @@ ensembl_name(c("human", "kitten", "cow"))
 # [1] "hsapiens" NA  "btaurus"
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{ncbi_taxid}}}
+    \item{\code{\link{common_name}}}
+    \item{\code{\link{latin_name}}}
+}
+}

@@ -22,3 +22,10 @@ common_name(c(10090, "cjacchus", "Vicugna pacos"))
 # [1] "Mouse" "White-tufted-ear marmoset" "Alpaca"
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{ncbi_taxid}}}
+    \item{\code{\link{latin_name}}}
+    \item{\code{\link{ensembl_name}}}
+}
+}

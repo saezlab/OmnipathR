@@ -117,6 +117,12 @@ taxon_name <- function(name, name_type){
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_chr
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{ncbi_taxid}}}
+#'     \item{\code{\link{common_name}}}
+#'     \item{\code{\link{ensembl_name}}}
+#' }
 latin_name <- function(name){
 
     name %>%
@@ -142,6 +148,12 @@ latin_name <- function(name){
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_chr
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{latin_name}}}
+#'     \item{\code{\link{common_name}}}
+#'     \item{\code{\link{ensembl_name}}}
+#' }
 ncbi_taxid <- function(name){
 
     name %>%
@@ -168,6 +180,12 @@ ncbi_taxid <- function(name){
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_chr
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{ncbi_taxid}}}
+#'     \item{\code{\link{common_name}}}
+#'     \item{\code{\link{latin_name}}}
+#' }
 ensembl_name <- function(name){
 
     name %>%
@@ -191,6 +209,12 @@ ensembl_name <- function(name){
 #' @importFrom magrittr %>%
 #' @importFrom purrr map_chr
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{ncbi_taxid}}}
+#'     \item{\code{\link{latin_name}}}
+#'     \item{\code{\link{ensembl_name}}}
+#' }
 common_name <- function(name){
 
     name %>%

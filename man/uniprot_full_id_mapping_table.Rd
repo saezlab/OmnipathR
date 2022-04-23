@@ -57,5 +57,9 @@ uniprot_entrez
 
 }
 \seealso{
-\code{\link{translate_ids}}
+\itemize{
+    \item{\code{\link{translate_ids}}}
+    \item{\code{\link{ensembl_id_mapping_table}}}
+    \item{\code{\link{uniprot_id_mapping_table}}}
+}
 }

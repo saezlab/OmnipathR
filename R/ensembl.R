@@ -217,8 +217,12 @@ biomart_xml_template <- function(){
 #'
 #' @return A data frame (tibble) with columns `From` and `To`.
 #'
+#' @details The arguments \code{to} and \code{from} can be provided either
+#' as character or as symbol (NSE). Their possible values are either Ensembl
+#' attribute names or synonyms listed at \code{\link{translate_ids}}.
+#'
 #' @examples
-#' ensp_up <- ensembl_id_mapping_table('ensp')
+#' ensp_up <- ensembl_id_mapping_table("ensp")
 #' ensp_up
 #' # # A tibble: 119,129 × 2
 #' #    From   To
@@ -233,7 +237,7 @@ biomart_xml_template <- function(){
 #' @importFrom dplyr recode
 #' @importFrom magrittr %>%
 #' @importFrom rlang enquo !! !!! set_names
-#' @importFrom log_warn log_trace
+#' @importFrom logger log_warn log_trace
 #' @importFrom tibble tibble
 #' @export
 #'
@@ -295,9 +299,16 @@ ensembl_id_mapping_table <- function(
 
 }
 
-
+#' Ensembl dataset name from organism
+#'
 #' @param organism Character or integer: an organism (taxon) name or
 #'     identifier. If an Ensembl dataset name is provided
+#'
+#' @return Character: name of an ensembl dataset.
+#'
+#' @examples
+#' ensembl_dataset(10090)
+#' # [1] "mmusculus_gene_ensembl"
 #'
 #' @importFrom magrittr %>% %T>%
 #' @export
