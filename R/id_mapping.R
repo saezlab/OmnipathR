@@ -606,10 +606,10 @@ ensembl_id_mapping_table <- function(
 
     to <-
         .nse_ensure_str(!!enquo(to)) %>%
-        get_field_name()
+        ensembl_id_type()
     from <-
         .nse_ensure_str(!!enquo(from)) %>%
-        get_field_name()
+        ensembl_id_type()
 
     organism %<>% ensembl_name_warn
 
@@ -636,5 +636,104 @@ ensembl_id_mapping_table <- function(
         dataset = dataset
     ) %>%
     set_names(c('From', 'To'))
+
+}
+
+
+#' Ensembl identifier type label
+#'
+#' @param label Character: an ID type label, as shown in the table at
+#'     \code{\link{translate_ids}}
+#'
+#' @return Character: the Ensembl specific ID type label, or the input
+#'     unchanged if it could not be translated (still might be a valid
+#'     identifier name). These labels should be valid Ensembl attribute
+#'     names, directly usable in Ensembl queries.
+#'
+#' @examples
+#' ensembl_id_type("uniprot")
+#' # [1] "uniprotswissprot"
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{uploadlists_id_type}}}
+#' }
+ensembl_id_type <- function(label){
+
+    resource_id_type(label, 'ensembl')
+
+}
+
+
+
+#' UniProt identifier type label
+#'
+#' @param label Character: an ID type label, as shown in the table at
+#'     \code{\link{translate_ids}}
+#'
+#' @return Character: the UniProt specific ID type label, or the input
+#'     unchanged if it could not be translated (still might be a valid
+#'     identifier name). This is the label that one can use in UniProt
+#'     REST queries.
+#'
+#' @examples
+#' ensembl_id_type("entrez")
+#' # [1] "database(GeneID)"
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uploadlists_id_type}}}
+#' }
+uniprot_id_type <- function(label){
+
+    resource_id_type(label, 'uniprot')
+
+}
+
+
+#' UniProt Uploadlists identifier type label
+#'
+#' @param label Character: an ID type label, as shown in the table at
+#'     \code{\link{translate_ids}}
+#'
+#' @return Character: the UniProt Uploadlists specific ID type label, or
+#'     the input unchanged if it could not be translated (still might be
+#'     a valid identifier name). This is the label that one can use in
+#'     UniProt Uploadlists (ID Mapping) queries.
+#'
+#' @examples
+#' ensembl_id_type("entrez")
+#' # [1] "P_ENTREZGENEID"
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uniprot_id_type}}}
+#' }
+uploadlists_id_type <- function(label){
+
+    resource_id_type(label, 'uploadlists')
+
+}
+
+
+#' Resource specific identifier type label
+#'
+#' @param label Character: an ID type label, as shown in the table at
+#'     \code{\link{translate_ids}}
+#'
+#' @return Character: the resource specific ID type label, or the input
+#'     unchanged if it could not be translated (still might be a valid)
+#'     identifier name).
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang !!!
+#' @importFrom dplyr recode
+#' @noRd
+resource_id_type <- function(label, resource){
+
+    label %>% recode(!!!omnipath.env$id_types[[resource]])
 
 }
