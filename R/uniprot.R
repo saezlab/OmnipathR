@@ -186,6 +186,7 @@ uniprot_id_mapping_table <- function(
 #'     service, it will be automatically selected. The plain query interface
 #'     is preferred because in the long term, with caching, it requires
 #'     less download and data storage.
+#' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
 #' @param keep_untranslated In case the output is a data frame, keep the
 #'     records where the source identifier could not be translated. At
 #'     these records the target identifier will be NA.
@@ -273,6 +274,7 @@ translate_ids <- function(
     d,
     ...,
     uploadlists = FALSE,
+    ensembl = FALSE,
     keep_untranslated = TRUE,
     return_df = FALSE,
     organism = 9606,
@@ -322,6 +324,7 @@ translate_ids <- function(
             translation_table <- id_translation_table(
                 !!sym(from_type),
                 !!sym(to_type),
+                ensembl = ensembl,
                 uploadlists = uploadlists,
                 identifiers = d %>% pull(!!sym(from_col)),
                 organism = organism,
@@ -560,15 +563,29 @@ id_translation_table <- function(
     from,
     to,
     uploadlists = FALSE,
+    ensembl = FALSE,
     identifiers = NULL,
-    organism = 9606,
+    organism = 9606L,
     reviewed = TRUE
 ){
 
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
-    if(
+    if(ensembl){
+
+        log_trace(
+            'ID translation table: from `%s` to `%s`, using Ensembl BioMart.',
+            from, to
+        )
+
+        ensembl_id_mapping_table(
+            to = !!sym(to),
+            from = !!sym(from),
+            organism = organism
+        )
+
+    }else if(
         uploadlists || (
             (
                 !id_type_in(from, 'uniprot') ||
@@ -585,13 +602,13 @@ id_translation_table <- function(
         )
 
         result <-
-        identifiers %>%
-        {
-            . %||%
-            all_uniprots(organism = organism, reviewed = reviewed) %>%
-            pull(1)
-        } %>%
-        uniprot_id_mapping_table(!!sym(from), !!sym(to))
+            identifiers %>%
+            {
+                . %||%
+                all_uniprots(organism = organism, reviewed = reviewed) %>%
+                pull(1)
+            } %>%
+            uniprot_id_mapping_table(!!sym(from), !!sym(to))
 
     }else{
 
@@ -601,12 +618,12 @@ id_translation_table <- function(
         )
 
         result <-
-        uniprot_full_id_mapping_table(
-            to = !!sym(to),
-            from = !!sym(from),
-            reviewed = reviewed,
-            organism = organism
-        )
+            uniprot_full_id_mapping_table(
+                to = !!sym(to),
+                from = !!sym(from),
+                reviewed = reviewed,
+                organism = organism
+            )
 
     }
 

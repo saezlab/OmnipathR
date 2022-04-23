@@ -8,6 +8,7 @@ translate_ids(
   d,
   ...,
   uploadlists = FALSE,
+  ensembl = FALSE,
   keep_untranslated = TRUE,
   return_df = FALSE,
   organism = 9606,
@@ -34,6 +35,8 @@ If any of the provided ID types is only available in the uploadlists
 service, it will be automatically selected. The plain query interface
 is preferred because in the long term, with caching, it requires
 less download and data storage.}
+
+\item{ensembl}{Logical: use data from Ensembl BioMart instead of UniProt.}
 
 \item{keep_untranslated}{In case the output is a data frame, keep the
 records where the source identifier could not be translated. At
