@@ -427,7 +427,11 @@ if_empty <- function(value1, value2){
 if_null_len0 <- function(value1, value2){
 
     value1 %>%
-    {is.null(.) || length(.) == 0 || extract(., 1) == ''} %>%
+    {
+        is.null(.) ||
+        length(.) == 0 ||
+        !is.na(extract(., 1)) && extract(., 1) == ''
+    } %>%
     `if`(value2, value1)
 
 }
