@@ -31,5 +31,27 @@
         "hgnc": "HGNC_ID",
         "pdb": "PDB_ID",
         "genesymbol": "GENENAME"
+    },
+    "ensembl": {
+        "hgnc_symbol": "hgnc_symbol",
+        "rnacentral": "rnacentral",
+        "hgnc_trans_name": "hgnc_trans_name",
+        "wikigene_name": "wikigene_name",
+        "gene_name": "external_gene_name",
+        "genesymbol": "external_gene_name",
+        "transcript_name": "external_transcript_name",
+        "gene_description": "description",
+        "gene_synonym": "external_synonym",
+        "interpro_description": "interpro_description",
+        "interpro": "interpro",
+        "interpro_short_description": "interpro_short_description",
+        "enst": "ensembl_transcript_id",
+        "ensg": "ensembl_gene_id",
+        "ensp": "ensembl_peptide_id",
+        "ensembl_gene_id": "ensembl_gene_id",
+        "ensembl_transcript_id": "ensembl_transcript_id",
+        "ensembl_peptide_id": "ensembl_peptide_id",
+        "uniprot": "uniprotswissprot",
+        "trembl": "uniprotsptrembl"
     }
 }
