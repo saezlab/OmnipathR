@@ -204,3 +204,121 @@ biomart_xml_template <- function(){
     read_file
 
 }
+
+
+#' Identifier translation table from Ensembl
+#'
+#' @param to Character or symbol: target ID type. See Details for possible
+#'     values.
+#' @param from Character or symbol: source ID type. See Details for possible
+#'     values.
+#' @param organism Character or integer: NCBI Taxonomy ID or name of the
+#'     organism (by default 9606 for human).
+#'
+#' @return A data frame (tibble) with columns `From` and `To`.
+#'
+#' @examples
+#' ensp_up <- ensembl_id_mapping_table('ensp')
+#' ensp_up
+#' # # A tibble: 119,129 × 2
+#' #    From   To
+#' #    <chr>  <chr>
+#' #  1 P03886 ENSP00000354687
+#' #  2 P03891 ENSP00000355046
+#' #  3 P00395 ENSP00000354499
+#' #  4 P00403 ENSP00000354876
+#' #  5 P03928 ENSP00000355265
+#' # # . with 119,124 more rows
+#'
+#' @importFrom dplyr recode
+#' @importFrom magrittr %>%
+#' @importFrom rlang enquo !! !!! set_names
+#' @importFrom log_warn log_trace
+#' @importFrom tibble tibble
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#' }
+ensembl_id_mapping_table <- function(
+    to,
+    from = 'uniprot',
+    organism = 9606
+){
+
+    get_field_name <- function(label){
+
+        label %>% recode(!!!omnipath.env$id_types$ensembl)
+
+    }
+
+    to <-
+        .nse_ensure_str(!!enquo(to)) %>%
+        get_field_name()
+    from <-
+        .nse_ensure_str(!!enquo(from)) %>%
+        get_field_name()
+
+    e_organism <- ensembl_name(organism)
+
+    if(is.na(e_organism)){
+
+        log_warn(
+            paste0(
+                'Could not find Ensembl name for organism `%s`. ',
+                'Returning empty table.'
+            ),
+            as.character(organism)
+        )
+
+        return(tibble(From = character(0), To = character(0)))
+
+    }
+
+    log_trace(
+        paste0(
+            'Creating ID mapping table from `%s` to `%s`, ',
+            'for organism %s'
+        ),
+        from, to, organism
+    )
+
+    dataset <- ensembl_dataset(organism)
+
+    biomart_query(
+        attrs = c(from, to),
+        dataset = dataset
+    ) %>%
+    set_names(c('From', 'To'))
+
+}
+
+
+#' @param organism Character or integer: an organism (taxon) name or
+#'     identifier. If an Ensembl dataset name is provided
+#'
+#' @importFrom magrittr %>% %T>%
+#' @export
+ensembl_dataset <- function(organism) {
+
+    organism %>%
+    as.character %>%
+    {`if`(
+        endsWith(., '_gene_ensembl'),
+        .,
+        ensembl_name(.) %T>%
+        {`if`(
+            is.na(.),
+            log_warn(
+                'Could not find Ensembl name for organism `%s`.',
+                organism
+            ),
+            {}
+        )} %>%
+        sprintf('%s_gene_ensembl', .)
+
+    )}
+
+}
