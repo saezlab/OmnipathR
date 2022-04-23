@@ -125,7 +125,7 @@ ensembl_organisms <- function(){
 #' @importFrom purrr map_chr
 #' @importFrom readr cols col_character read_tsv type_convert
 #' @importFrom dplyr slice_tail slice_head
-#' @importFrom logger log_warn
+#' @importFrom logger log_warn log_trace
 #' @export
 biomart_query <- function(
     attrs,
@@ -159,6 +159,8 @@ biomart_query <- function(
         TEMPLATE %>%
         sprintf(dataset, attrs, filters)
 
+    log_trace('BioMart query: %s', query)
+
     'biomart' %>%
     generic_downloader(
         url_param = list(query),
@@ -174,7 +176,8 @@ biomart_query <- function(
         slice_head(., n = -1L),
         {
             log_warn(
-                'BioMart: missing success flag, data might be incomplete!'
+                'BioMart: missing success flag, data might ',
+                'be incomplete or contain error message!'
             )
             .
         }
@@ -265,17 +268,11 @@ ensembl_id_mapping_table <- function(
         .nse_ensure_str(!!enquo(from)) %>%
         get_field_name()
 
-    e_organism <- ensembl_name(organism)
+    organism %<>% ensembl_name_warn
 
-    if(is.na(e_organism)){
+    if(is.na(organism)){
 
-        log_warn(
-            paste0(
-                'Could not find Ensembl name for organism `%s`. ',
-                'Returning empty table.'
-            ),
-            as.character(organism)
-        )
+        log_warn('Returning empty table.')
 
         return(tibble(From = character(0), To = character(0)))
 
@@ -319,17 +316,142 @@ ensembl_dataset <- function(organism) {
     {`if`(
         endsWith(., '_gene_ensembl'),
         .,
-        ensembl_name(.) %T>%
-        {`if`(
-            is.na(.),
-            log_warn(
-                'Could not find Ensembl name for organism `%s`.',
-                organism
-            ),
-            {}
-        )} %>%
+        ensembl_name_warn(.) %>%
         sprintf('%s_gene_ensembl', .)
+    )}
 
+}
+
+
+#' Same as ensembl_name but warns upon failure
+#'
+#' @importFrom logger log_warn
+#' @noRd
+ensembl_name_warn <- function(name){
+
+    ensname <- ensembl_name(name)
+
+    if(is.na(ensname)){
+
+        log_warn(
+            'Could not find Ensembl name for organism `%s`.',
+            as.character(name)
+        )
+
+    }
+
+    ensname
+
+}
+
+
+#' Orthologous gene pairs from Ensembl
+#'
+#' @param organism_a Character or integer: organism name or identifier for
+#'     the left side organism. We query the Ensembl dataset of this organism
+#'     and add the orthologues of the other organism to it. Ideally this is
+#'     the organism you translate from.
+#' @param organism_b Character or integer: organism name or identifier for
+#'     the right side organism. We add orthology information of this organism
+#'     to the gene records of the left side organism.
+#' @param attrs_a Further attributes about organism_a genes. Will be simply
+#'     added to the attributes list.
+#' @param attrs_b Further attributes about organism_b genes (orthologues).
+#'     The available attributes are: "associated_gene_name", "chromosome",
+#'     "chrom_start", "chrom_end",  "wga_coverage", "goc_score", "perc_id_r1",
+#'     "perc_id", "subtype". Attributes included by default: "ensembl_gene",
+#'     "ensembl_peptide", "canonical_transcript_protein",
+#'     "orthology_confidence" and "orthology_type".
+#' @param colrename Logical: replace prefixes from organism_b attribute
+#'     column names, so the returned table always have the same column
+#'     names, no matter the organism. E.g. for mouse these columns all
+#'     have the prefix "mmusculus_homolog_", which this option changes
+#'     to "b_".
+#'
+#' @details Only the records with orthology information are returned. The
+#'     order of columns is the following: defaults of organism_a, extra
+#'     attributes of organism_b, defaults of organism_b, extra attributes
+#'     of organism_b.
+#'
+#' @examples
+#' \dontrun{
+#' sffish <- ensembl_homology(
+#'     organism_b = 'Siamese fighting fish',
+#'     attrs_a = 'external_gene_name',
+#'     attrs_b = 'associated_gene_name'
+#' )
+#' sffish
+#' # # A tibble: 175,608 × 10
+#' #    ensembl_gene_id ensembl_transcript_id ensembl_peptide. external_gene_n.
+#' #    <chr>           <chr>                 <chr>            <chr>
+#' #  1 ENSG00000277196 ENST00000621424       ENSP00000481127  NA
+#' #  2 ENSG00000277196 ENST00000615165       ENSP00000482462  NA
+#' #  3 ENSG00000278817 ENST00000613204       ENSP00000482514  NA
+#' #  4 ENSG00000274847 ENST00000400754       ENSP00000478910  MAFIP
+#' #  5 ENSG00000273748 ENST00000612919       ENSP00000479921  NA
+#' # # . with 175,603 more rows, and 6 more variables:
+#' # #   b_ensembl_peptide <chr>, b_ensembl_gene <chr>,
+#' # #   b_orthology_type <chr>, b_orthology_confidence <dbl>,
+#' # #   b_canonical_transcript_protein <chr>, b_associated_gene_name <chr>
+#' #
+#' }
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom dplyr rename_with
+#' @importFrom stringr str_replace
+#' @importFrom logger log_trace
+#' @export
+ensembl_homology <- function(
+    organism_a = 9606,
+    organism_b = 10090,
+    attrs_a = NULL,
+    attrs_b = NULL,
+    colrename = TRUE
+){
+
+    HOMOLOGY_ATTRS_DEFAULT <- c(
+        'homolog_ensembl_peptide',
+        'homolog_ensembl_gene',
+        'homolog_orthology_type',
+        'homolog_orthology_confidence',
+        'homolog_canonical_transcript_protein'
+    )
+
+    organism_a %<>% ensembl_name_warn
+    organism_b %<>% ensembl_name_warn
+    dataset <- organism_a %>% ensembl_dataset
+    filters <- organism_b %>% sprintf('with_%s_homolog', .)
+
+    attrs_b %<>% map_chr(~sprintf('homolog_%s', .x))
+
+    attrs <-
+        HOMOLOGY_ATTRS_DEFAULT %>%
+        c(attrs_b) %>%
+        map_chr(~sprintf('%s_%s', organism_b, .x)) %>%
+        c(attrs_a, .)
+
+    log_trace(
+        'Querying orthology data from Ensembl, attributes: %s.',
+        paste(attrs, collapse = ', ')
+    )
+
+    biomart_query(
+        attrs = attrs,
+        filters = filters,
+        transcript = TRUE,
+        peptide = TRUE,
+        gene = TRUE,
+        dataset = dataset
+    ) %>%
+    {`if`(
+        colrename,
+        rename_with(
+            .,
+            str_replace,
+            pattern = sprintf('%s_homolog_', organism_b),
+            replacement = 'b_'
+        ),
+        .
     )}
 
 }
