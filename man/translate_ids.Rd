@@ -86,10 +86,10 @@ followings:\tabular{llll}{
    genesymbol_syn \tab  \tab genes(ALTERNATIVE) \tab external_synonym \cr
    hgnc \tab HGNC_ID \tab database(HGNC) \tab hgnc_symbol \cr
    entrez \tab P_ENTREZGENEID \tab database(GeneID) \tab  \cr
-   ensembl \tab ENSEMBL_ID \tab database(Ensembl) \tab ensembl_gene_id \cr
-   ensg \tab ENSEMBL_ID \tab database(Ensembl) \tab ensembl_gene_id \cr
+   ensembl \tab ENSEMBL_ID \tab  \tab ensembl_gene_id \cr
+   ensg \tab ENSEMBL_ID \tab  \tab ensembl_gene_id \cr
    enst \tab ENSEMBL_TRS_ID \tab database(Ensembl) \tab ensembl_transcript_id \cr
-   ensp \tab ENSEMBL_PRO_ID \tab database(Ensembl) \tab ensembl_peptide_id \cr
+   ensp \tab ENSEMBL_PRO_ID \tab  \tab ensembl_peptide_id \cr
    ensgg \tab ENSEMBLGENOME_ID \tab  \tab  \cr
    ensgt \tab ENSEMBLGENOME_TRS_ID \tab  \tab  \cr
    ensgp \tab ENSEMBLGENOME_PRO_ID \tab  \tab  \cr

@@ -76,6 +76,7 @@ uniprot_id_mapping_table <- function(
     chunk_size %<>% if_null(getOption('omnipath.uploadlists_chunk_size'))
 
     identifiers %>%
+    unique %>%
     sort %>%
     chunks(chunk_size) %>%
     map(.uniprot_id_mapping_table, from, to) %>%
@@ -99,7 +100,7 @@ uniprot_id_mapping_table <- function(
 ){
 
     from %<>% uploadlists_id_type
-    to %<>% uploadlists_id_type
+    to   %<>% uploadlists_id_type
 
     post <- list(
         from = from,
@@ -190,10 +191,10 @@ uniprot_id_mapping_table <- function(
 #' | genesymbol_syn |                      | genes(ALTERNATIVE) | external_synonym           |
 #' | hgnc           | HGNC_ID              | database(HGNC)     | hgnc_symbol                |
 #' | entrez         | P_ENTREZGENEID       | database(GeneID)   |                            |
-#' | ensembl        | ENSEMBL_ID           | database(Ensembl)  | ensembl_gene_id            |
-#' | ensg           | ENSEMBL_ID           | database(Ensembl)  | ensembl_gene_id            |
+#' | ensembl        | ENSEMBL_ID           |                    | ensembl_gene_id            |
+#' | ensg           | ENSEMBL_ID           |                    | ensembl_gene_id            |
 #' | enst           | ENSEMBL_TRS_ID       | database(Ensembl)  | ensembl_transcript_id      |
-#' | ensp           | ENSEMBL_PRO_ID       | database(Ensembl)  | ensembl_peptide_id         |
+#' | ensp           | ENSEMBL_PRO_ID       |                    | ensembl_peptide_id         |
 #' | ensgg          | ENSEMBLGENOME_ID     |                    |                            |
 #' | ensgt          | ENSEMBLGENOME_TRS_ID |                    |                            |
 #' | ensgp          | ENSEMBLGENOME_PRO_ID |                    |                            |
@@ -354,9 +355,9 @@ translate_ids <- function(
 #' please refer to \code{\link{translate_ids}}.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate rename filter recode
+#' @importFrom dplyr mutate rename filter
 #' @importFrom tidyr separate_rows
-#' @importFrom rlang !! !!! enquo
+#' @importFrom rlang !! enquo
 #' @importFrom logger log_trace
 #' @export
 #'
@@ -388,20 +389,10 @@ uniprot_full_id_mapping_table <- function(
     # NSE vs. R CMD check workaround
     From <- To <- NULL
 
-    get_field_name <- function(label){
-
-        label %>% recode(!!!omnipath.env$id_types$uniprot)
-
-    }
-
     strip_semicol <- function(v){sub(';$', '', v)}
 
-    to <-
-        .nse_ensure_str(!!enquo(to)) %>%
-        get_field_name()
-    from <-
-        .nse_ensure_str(!!enquo(from)) %>%
-        get_field_name()
+    to   <- .nse_ensure_str(!!enquo(to))   %>% uniprot_id_type
+    from <- .nse_ensure_str(!!enquo(from)) %>% uniprot_id_type
 
     log_trace(
         paste0(
@@ -471,11 +462,12 @@ id_translation_table <- function(
             from, to
         )
 
-        ensembl_id_mapping_table(
-            to = !!sym(to),
-            from = !!sym(from),
-            organism = organism
-        )
+        result <-
+            ensembl_id_mapping_table(
+                to = !!sym(to),
+                from = !!sym(from),
+                organism = organism
+            )
 
     }else if(
         uploadlists || (

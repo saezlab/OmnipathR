@@ -5,7 +5,7 @@
 \title{Query the Ensembl BioMart web service}
 \usage{
 biomart_query(
-  attrs,
+  attrs = NULL,
   filters = NULL,
   transcript = FALSE,
   peptide = FALSE,
