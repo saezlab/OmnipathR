@@ -125,10 +125,10 @@ ensembl_organisms <- function(){
 #' @importFrom purrr map_chr
 #' @importFrom readr cols col_character read_tsv type_convert
 #' @importFrom dplyr slice_tail slice_head
-#' @importFrom logger log_warn log_trace
+#' @importFrom logger log_warn log_trace log_error
 #' @export
 biomart_query <- function(
-    attrs,
+    attrs = NULL,
     filters = NULL,
     transcript = FALSE,
     peptide = FALSE,
@@ -154,6 +154,14 @@ biomart_query <- function(
         assign('col_names', ., envir = local_env) %>%
         map_chr(~sprintf(ATTR_TEMPLATE, .x)) %>%
         paste0(collapse = '\n')
+
+    if(!length(attrs)){
+
+        msg <- 'BioMart: the query must contain at least one attribute.'
+        log_error(msg)
+        stop(msg)
+
+    }
 
     filters %<>%
         map_chr(~sprintf(FILTER_TEMPLATE, .x)) %>%
