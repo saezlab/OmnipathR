@@ -751,3 +751,22 @@ resource_id_type <- function(label, resource){
     label %>% recode(!!!omnipath.env$id_types[[resource]])
 
 }
+
+
+#' Is it a valid identifier type?
+#'
+#' @param label Character: identifier type label.
+#'
+#' @return Logical: true if label is a registered identifier type.
+#'
+#' @importFrom magrittr %>% is_in
+#' @importFrom purrr map
+#' @noRd
+is_id_type <- function(label){
+
+    omnipath.env$id_types %>%
+    map(names) %>%
+    unlist %>%
+    is_in(label, .)
+
+}
