@@ -770,3 +770,40 @@ is_id_type <- function(label){
     is_in(label, .)
 
 }
+
+#' Looks like a UniProt ID?
+#'
+#' This function checks only the format of the IDs, no guarantee that these
+#' IDs exist in UniProt.
+#'
+#' @param identifiers Character: one or more identifiers (typically a single
+#'     string, a vector or a data frame column).
+#'
+#' @return Logical: true if all elements in the input (except NAs) looks like
+#'     valid UniProt IDs.
+#'
+#' @examples
+#' is_uniprot(all_uniprot_acs())
+#' # [1] TRUE
+#' is_uniprot("P00533")
+#' # [1] TRUE
+#' is_uniprot("pizza")
+#' # [1] FALSE
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr discard
+#' @importFrom stringr str_detect
+#' @export
+is_uniprot <- function(identifiers){
+
+    reuni <- paste0(
+        '^[OPQ][0-9][A-Z0-9]{3}[0-9]|',
+        '[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}$'
+    )
+
+    identifiers %>%
+    discard(is.na) %>%
+    str_detect(reuni) %>%
+    all
+
+}
