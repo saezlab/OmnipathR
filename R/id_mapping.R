@@ -45,7 +45,7 @@
 #' message about the cache origin is not guaranteed to be correct (most
 #' of the times it is still correct).
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
 #' @importFrom purrr map
 #' @importFrom dplyr bind_rows
 #' @importFrom rlang !!
@@ -67,15 +67,17 @@ uniprot_id_mapping_table <- function(
     identifiers,
     from,
     to,
-    chunk_size = 5000
+    chunk_size = NULL
 ){
 
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
+    chunk_size %<>% if_null(getOption('omnipath.uploadlists_chunk_size'))
+
     identifiers %>%
     sort %>%
-    chunks(5000) %>%
+    chunks(chunk_size) %>%
     map(.uniprot_id_mapping_table, from, to) %>%
     bind_rows() %T>%
     load_success()
@@ -85,9 +87,7 @@ uniprot_id_mapping_table <- function(
 
 #' R CMD check workaround, see details at \code{uniprot_id_mapping_table}
 #'
-#' @importFrom magrittr %T>% %<>%
-#' @importFrom rlang !!!
-#' @importFrom dplyr recode
+#' @importFrom magrittr %<>%
 #' @importFrom logger log_trace
 #'
 #' @noRd
@@ -98,10 +98,8 @@ uniprot_id_mapping_table <- function(
     .subdomain = 'www'
 ){
 
-    id_types <- omnipath.env$id_types$uploadlists
-
-    from %<>% recode(!!!id_types)
-    to %<>% recode(!!!id_types)
+    from %<>% uploadlists_id_type
+    to %<>% uploadlists_id_type
 
     post <- list(
         from = from,
@@ -191,14 +189,17 @@ uniprot_id_mapping_table <- function(
 #' | genesymbol     | GENENAME             | genes(PREFERRED)   | external_gene_name         |
 #' | genesymbol_syn |                      | genes(ALTERNATIVE) | external_synonym           |
 #' | hgnc           | HGNC_ID              | database(HGNC)     | hgnc_symbol                |
-#' | entrez         | P_ENTREZGENEID       | database(geneid)   |                            |
-#' | ensg           | ENSEMBLGENOME_ID     |                    | ensembl_gene_id            |
-#' | enst           | ENSEMBL_TRS_ID       | database(ensembl)  | ensembl_transcript_id      |
-#' | ensp           | ENSEMBL_PRO_ID       |                    | ensembl_peptide_id         |
+#' | entrez         | P_ENTREZGENEID       | database(GeneID)   |                            |
+#' | ensembl        | ENSEMBL_ID           | database(Ensembl)  | ensembl_gene_id            |
+#' | ensg           | ENSEMBL_ID           | database(Ensembl)  | ensembl_gene_id            |
+#' | enst           | ENSEMBL_TRS_ID       | database(Ensembl)  | ensembl_transcript_id      |
+#' | ensp           | ENSEMBL_PRO_ID       | database(Ensembl)  | ensembl_peptide_id         |
+#' | ensgg          | ENSEMBLGENOME_ID     |                    |                            |
 #' | ensgt          | ENSEMBLGENOME_TRS_ID |                    |                            |
 #' | ensgp          | ENSEMBLGENOME_PRO_ID |                    |                            |
-#' | ensembl        | ENSEMBL_ID           |                    | ensembl_gene_id            |
 #' | protein_name   |                      | protein names      |                            |
+#' | pir            | PIR                  | database(PIR)      |                            |
+#' | ccds           |                      | database(CCDS)     |                            |
 #' | refseqp        | P_REFSEQ_AC          | database(refseq)   |                            |
 #' | ipro           |                      |                    | interpro                   |
 #' | ipro_desc      |                      |                    | interpro_description       |
@@ -206,6 +207,11 @@ uniprot_id_mapping_table <- function(
 #' | wikigene       |                      |                    | wikigene_name              |
 #' | rnacentral     |                      |                    | rnacentral                 |
 #' | gene_desc      |                      |                    | description                |
+#' | wormbase       |                      | database(WormBase) |                            |
+#' | flybase        |                      | database(FlyBase)  |                            |
+#' | xenbase        |                      | database(Xenbase)  |                            |
+#' | zfin           |                      | database(ZFIN)     |                            |
+#' | pbd            | PBD_ID               | database(PDB)      | pbd                        |
 #'
 #' The mapping between identifiers can be ambiguous. In this case one row
 #' in the original data frame yields multiple rows or elements in the
@@ -490,10 +496,12 @@ id_translation_table <- function(
         result <-
             identifiers %>%
             {
-                . %||%
-                all_uniprots(organism = organism, reviewed = reviewed) %>%
-                pull(1)
+                . %||% (
+                    all_uniprots(organism = organism, reviewed = reviewed) %>%
+                    pull(1L)
+                )
             } %>%
+            unique %>%
             uniprot_id_mapping_table(!!sym(from), !!sym(to))
 
     }else{

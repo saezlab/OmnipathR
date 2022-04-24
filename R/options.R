@@ -49,8 +49,8 @@
     omnipath.retry_downloads = 3,
     omnipath.retry_downloads_in_seconds = 5,
     omnipath.db_lifetime = 300,
-    omnipath.nichenet_results_dir = 'nichenet_results'
-
+    omnipath.nichenet_results_dir = 'nichenet_results',
+    omnipath.uploadlists_chunk_size = 5000
 )
 
 
