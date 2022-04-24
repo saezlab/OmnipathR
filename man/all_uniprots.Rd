@@ -2,7 +2,7 @@
 % Please edit documentation in R/uniprot.R
 \name{all_uniprots}
 \alias{all_uniprots}
-\title{A table with all UniProt IDs}
+\title{A table with all UniProt records}
 \usage{
 all_uniprots(fields = "id", reviewed = TRUE, organism = 9606)
 }
@@ -14,8 +14,7 @@ possible values please refer to
 \item{reviewed}{Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
 or both (`NULL`).}
 
-\item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
-9606 for human).}
+\item{organism}{Character or integer: name or identifier of the organism.}
 }
 \value{
 Data frame (tibble) with the requested UniProt entries and fields.
@@ -24,8 +23,8 @@ Data frame (tibble) with the requested UniProt entries and fields.
 Retrieves a table from UniProt with all proteins for a certain organism.
 }
 \examples{
-human_swissprot_ac <- all_uniprots(fields = 'entry name')
-human_swissprot_ac
+human_swissprot_entries <- all_uniprots(fields = 'entry name')
+human_swissprot_entries
 # # A tibble: 20,396 x 1
 #    `Entry name`
 #    <chr>

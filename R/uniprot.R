@@ -33,7 +33,34 @@ nse_test <- function(a, ..., b = FALSE){
 }
 
 
-#' A table with all UniProt IDs
+#' All UniProt ACs for one organism
+#'
+#' @param organism Character or integer: name or identifier of the organism.
+#' @param reviewed Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
+#'     or both (`NULL`).
+#'
+#' @return Character vector of UniProt accession numbers.
+#'
+#' @examples
+#' human_swissprot_acs <- all_uniprot_acs()
+#' human_swissprot_acs[1:5]
+#' # [1] "P51451" "A6H8Y1" "O60885" "Q9Y3X0" "P22223"
+#' length(human_swissprot_acs)
+#' # [1] 20376
+#' mouse_swissprot_acs <- all_uniprot_acs("mouse")
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom dplyr pull
+#' @export
+all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
+
+    organism %<>% ncbi_taxid
+    all_uniprots(organism = organism, reviewed = reviewed) %>% pull(1L)
+
+}
+
+
+#' A table with all UniProt records
 #'
 #' Retrieves a table from UniProt with all proteins for a certain organism.
 #'
@@ -42,17 +69,17 @@ nse_test <- function(a, ..., b = FALSE){
 #'     \url{https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}
 #' @param reviewed Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
 #'     or both (`NULL`).
-#' @param organism Integer, NCBI Taxonomy ID of the organism (by default
-#'     9606 for human).
+#' @param organism Character or integer: name or identifier of the organism.
 #'
 #' @return Data frame (tibble) with the requested UniProt entries and fields.
 #'
+#' @importFrom magrittr %<>%
 #' @importFrom rlang exec !!!
 #' @export
 #'
 #' @examples
-#' human_swissprot_ac <- all_uniprots(fields = 'entry name')
-#' human_swissprot_ac
+#' human_swissprot_entries <- all_uniprots(fields = 'entry name')
+#' human_swissprot_entries
 #' # # A tibble: 20,396 x 1
 #' #    `Entry name`
 #' #    <chr>
@@ -64,6 +91,7 @@ nse_test <- function(a, ..., b = FALSE){
 #' # # . with 20,386 more rows
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
 
+    organism %<>% ncbi_taxid
     exec(.all_uniprots, !!!as.list(environment()))
 
 }
