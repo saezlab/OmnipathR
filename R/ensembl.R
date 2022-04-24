@@ -139,6 +139,11 @@ biomart_query <- function(
     TEMPLATE <- biomart_xml_template()
     FILTER_TEMPLATE <- '<Filter name="%s" excluded="0"/>' %>% indent(8L)
     ATTR_TEMPLATE <- '<Attribute name="%s"/>' %>% indent(8L)
+    NCBI_TAX_ID <-
+        dataset %>%
+        str_split('_', simplify = TRUE) %>%
+        first %>%
+        ncbi_taxid
 
     local_env <- environment()
 
@@ -182,7 +187,8 @@ biomart_query <- function(
             .
         }
     )} %>%
-    type_convert(col_types = cols()) %T>%
+    type_convert(col_types = cols()) %>%
+    `attr<-`('oraganism', NCBI_TAX_ID) %T>%
     load_success()
 
 }
