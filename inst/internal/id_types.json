@@ -4,13 +4,22 @@
         "genesymbol": "genes(PREFERRED)",
         "genesymbol_syn": "genes(ALTERNATIVE)",
         "hgnc": "database(HGNC)",
-        "embl": "database(embl)",
-        "entrez": "database(geneid)",
-        "refseqp": "database(refseq)",
-        "enst": "database(ensembl)",
+        "embl": "database(EMBL)",
+        "refseqp": "database(RefSeq)",
+        "enst": "database(Ensembl)",
+        "ensg": "database(Ensembl)",
+        "ensp": "database(Ensembl)",
+        "ensembl": "database(Ensembl)",
         "uniprot_entry": "entry name",
         "uniprot": "id",
-        "protein_name": "protein names"
+        "protein_name": "protein names",
+        "pir": "database(PIR)",
+        "ccds": "database(CCDS)",
+        "flybase": "database(FlyBase)",
+        "wormbase": "database(WormBase)",
+        "zfin": "database(ZFIN)",
+        "xenbase": "database(Xenbase)",
+        "pbd": "database(PDB)"
     },
     "uploadlists": {
         "uniprot": "ACC",
@@ -25,7 +34,8 @@
         "ensembl": "ENSEMBL_ID",
         "ensp": "ENSEMBL_PRO_ID",
         "enst": "ENSEMBL_TRS_ID",
-        "ensg": "ENSEMBLGENOME_ID",
+        "ensg": "ENSEMBL_ID",
+        "ensgg": "ENSEMBLGENOME_ID",
         "ensgp": "ENSEMBLGENOME_PRO_ID",
         "ensgt": "ENSEMBLGENOME_TRS_ID",
         "hgnc": "HGNC_ID",
@@ -45,6 +55,7 @@
         "ipro_desc": "interpro_description",
         "ipro": "interpro",
         "ipro_sdesc": "interpro_short_description",
+        "ensembl": "ensembl_gene_id",
         "enst": "ensembl_transcript_id",
         "ensg": "ensembl_gene_id",
         "ensp": "ensembl_peptide_id",
@@ -52,6 +63,7 @@
         "ensembl_transcript_id": "ensembl_transcript_id",
         "ensembl_peptide_id": "ensembl_peptide_id",
         "uniprot": "uniprotswissprot",
-        "trembl": "uniprotsptrembl"
+        "trembl": "uniprotsptrembl",
+        "pbd": "pbd"
     }
 }
