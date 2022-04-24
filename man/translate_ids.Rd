@@ -85,14 +85,17 @@ followings:\tabular{llll}{
    genesymbol \tab GENENAME \tab genes(PREFERRED) \tab external_gene_name \cr
    genesymbol_syn \tab  \tab genes(ALTERNATIVE) \tab external_synonym \cr
    hgnc \tab HGNC_ID \tab database(HGNC) \tab hgnc_symbol \cr
-   entrez \tab P_ENTREZGENEID \tab database(geneid) \tab  \cr
-   ensg \tab ENSEMBLGENOME_ID \tab  \tab ensembl_gene_id \cr
-   enst \tab ENSEMBL_TRS_ID \tab database(ensembl) \tab ensembl_transcript_id \cr
-   ensp \tab ENSEMBL_PRO_ID \tab  \tab ensembl_peptide_id \cr
+   entrez \tab P_ENTREZGENEID \tab database(GeneID) \tab  \cr
+   ensembl \tab ENSEMBL_ID \tab database(Ensembl) \tab ensembl_gene_id \cr
+   ensg \tab ENSEMBL_ID \tab database(Ensembl) \tab ensembl_gene_id \cr
+   enst \tab ENSEMBL_TRS_ID \tab database(Ensembl) \tab ensembl_transcript_id \cr
+   ensp \tab ENSEMBL_PRO_ID \tab database(Ensembl) \tab ensembl_peptide_id \cr
+   ensgg \tab ENSEMBLGENOME_ID \tab  \tab  \cr
    ensgt \tab ENSEMBLGENOME_TRS_ID \tab  \tab  \cr
    ensgp \tab ENSEMBLGENOME_PRO_ID \tab  \tab  \cr
-   ensembl \tab ENSEMBL_ID \tab  \tab ensembl_gene_id \cr
    protein_name \tab  \tab protein names \tab  \cr
+   pir \tab PIR \tab database(PIR) \tab  \cr
+   ccds \tab  \tab database(CCDS) \tab  \cr
    refseqp \tab P_REFSEQ_AC \tab database(refseq) \tab  \cr
    ipro \tab  \tab  \tab interpro \cr
    ipro_desc \tab  \tab  \tab interpro_description \cr
@@ -100,6 +103,11 @@ followings:\tabular{llll}{
    wikigene \tab  \tab  \tab wikigene_name \cr
    rnacentral \tab  \tab  \tab rnacentral \cr
    gene_desc \tab  \tab  \tab description \cr
+   wormbase \tab  \tab database(WormBase) \tab  \cr
+   flybase \tab  \tab database(FlyBase) \tab  \cr
+   xenbase \tab  \tab database(Xenbase) \tab  \cr
+   zfin \tab  \tab database(ZFIN) \tab  \cr
+   pbd \tab PBD_ID \tab database(PDB) \tab pbd \cr
 }
 
 

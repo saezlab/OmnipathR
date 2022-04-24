@@ -442,7 +442,7 @@ uniprot_full_id_mapping_table <- function(
 #' @importFrom magrittr %>%
 #' @importFrom rlang %||% !! sym enquo
 #' @importFrom logger log_trace
-#' @importFrom dplyr pull
+#' @importFrom dplyr pull rename relocate
 #' @noRd
 #'
 #' @seealso \itemize{
@@ -493,6 +493,14 @@ id_translation_table <- function(
             from, to
         )
 
+        swap <- length(identifiers) > 10000L && to == 'uniprot'
+
+        if(swap){
+            to <- from
+            from <- 'uniprot'
+            identifiers <- NULL
+        }
+
         result <-
             identifiers %>%
             {
@@ -502,7 +510,13 @@ id_translation_table <- function(
                 )
             } %>%
             unique %>%
-            uniprot_id_mapping_table(!!sym(from), !!sym(to))
+            uniprot_id_mapping_table(!!sym(from), !!sym(to)) %>%
+            {`if`(
+                swap,
+                rename(., From = To, To = From) %>%
+                relocate(From, .before = To),
+                .
+            )}
 
     }else{
 

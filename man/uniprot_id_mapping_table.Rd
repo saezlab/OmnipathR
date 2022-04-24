@@ -5,7 +5,7 @@
 \title{Retrieves an identifier translation table from the UniProt uploadlists
 service}
 \usage{
-uniprot_id_mapping_table(identifiers, from, to, chunk_size = 5000)
+uniprot_id_mapping_table(identifiers, from, to, chunk_size = NULL)
 }
 \arguments{
 \item{identifiers}{Character vector of identifiers}
