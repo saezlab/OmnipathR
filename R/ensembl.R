@@ -155,7 +155,7 @@ biomart_query <- function(
         map_chr(~sprintf(ATTR_TEMPLATE, .x)) %>%
         paste0(collapse = '\n')
 
-    if(!length(attrs)){
+    if(!nchar(attrs)){
 
         msg <- 'BioMart: the query must contain at least one attribute.'
         log_error(msg)
@@ -191,6 +191,9 @@ biomart_query <- function(
             log_warn(
                 'BioMart: missing success flag, data might ',
                 'be incomplete or contain error message!'
+            )
+            log_warn(
+                .[[1]]
             )
             .
         }
