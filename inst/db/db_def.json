@@ -228,5 +228,33 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "swissprots": {
+        "name": ["All SwissProt ACs"],
+        "last_used": [],
+        "lifetime": 10800,
+        "package": [],
+        "loader": "all_uniprot_acs",
+        "loader_param": {
+            "reviewed": true,
+            "organism": 9606
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "trembls": {
+        "name": ["All TrEMBL ACs"],
+        "last_used": [],
+        "lifetime": 10800,
+        "package": [],
+        "loader": "all_uniprot_acs",
+        "loader_param": {
+            "reviewed": false,
+            "organism": 9606
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }
