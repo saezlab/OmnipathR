@@ -84,7 +84,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">biomart_query</span><span class="op">(</span>
-  <span class="va">attrs</span>,
+  attrs <span class="op">=</span> <span class="cn">NULL</span>,
   filters <span class="op">=</span> <span class="cn">NULL</span>,
   transcript <span class="op">=</span> <span class="cn">FALSE</span>,
   peptide <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -120,7 +120,6 @@
 <span class="r-in">    gene <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in">    dataset <span class="op">=</span> <span class="st">"celegans_gene_ensembl"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> The output colorization was canceled. isatty(stdout()) returned FALSE.</span>
 <span class="r-in"><span class="va">cel</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 46,934 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ensembl_gene_id external_gene_name start_position end_position</span>
