@@ -258,17 +258,19 @@ load_db <- function(key, param = list()){
 #'
 #' @importFrom logger log_fatal log_info
 #' @importFrom rlang exec !!!
-#' @importFrom magrittr %<>%
+#' @importFrom magrittr %<>% %>%
 #' @export
 #' @seealso  \code{\link{omnipath_show_db}}.
-get_db <- function(key, param = NULL, reload = FALSE){
+get_db <- function(key, param = NULL, reload = FALSE, ...){
 
     db_exists(key)
 
     omnipath.env$db[[key]]$last_used <- Sys.time()
     dbdef <- omnipath.env$db[[key]]
 
-    if(!is.null(param) && reload && dbdef$loaded){
+    param %<>% if_null(list()) %>% c(list(...))
+
+    if(length(param) != 0 && dbdef$loaded){
 
         loader <- get(dbdef$loader)
         param %<>% add_defaults(loader, dbdef$loader_param)

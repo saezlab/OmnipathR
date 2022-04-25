@@ -414,7 +414,7 @@ kegg_process <- function(
 
     }
 
-    uniprots <- get_db('up_gs_human')
+    uniprots <- get_db('up_gs', organism = 9606)
 
     entries %<>%
         separate_rows(genesymbol, sep = '[, ]+') %>%

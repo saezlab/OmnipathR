@@ -204,8 +204,8 @@
         "loaded": false,
         "db": []
     },
-    "up_gs_human": {
-        "name": ["UniProt-GeneSymbol table (human)"],
+    "up_gs": {
+        "name": ["UniProt-GeneSymbol table"],
         "last_used": [],
         "lifetime": [],
         "package": [],
