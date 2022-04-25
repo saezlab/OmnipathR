@@ -594,7 +594,7 @@ id_type_in <- function(id_type, service){
 #' #  5 P03928 ENSP00000355265
 #' # # . with 119,124 more rows
 #'
-#' @importFrom dplyr recode
+#' @importFrom dplyr recode distinct
 #' @importFrom magrittr %>%
 #' @importFrom rlang enquo !! !!! set_names
 #' @importFrom logger log_warn log_trace
@@ -649,7 +649,8 @@ ensembl_id_mapping_table <- function(
         attrs = c(from, to),
         dataset = dataset
     ) %>%
-    set_names(c('From', 'To'))
+    set_names(c('From', 'To')) %>%
+    distinct
 
 }
 
@@ -780,7 +781,8 @@ is_id_type <- function(label){
 #'     string, a vector or a data frame column).
 #'
 #' @return Logical: true if all elements in the input (except NAs) looks like
-#'     valid UniProt IDs.
+#'     valid UniProt IDs. If the input is not a character vector, `FALSE`
+#'     is returned.
 #'
 #' @examples
 #' is_uniprot(all_uniprot_acs())
@@ -802,8 +804,12 @@ is_uniprot <- function(identifiers){
     )
 
     identifiers %>%
-    discard(is.na) %>%
-    str_detect(reuni) %>%
-    all
+    {`if`(
+        is.character(.),
+        discard(., is.na) %>%
+        str_detect(reuni) %>%
+        all,
+        FALSE
+    )}
 
 }
