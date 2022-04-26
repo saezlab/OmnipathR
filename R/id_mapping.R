@@ -80,7 +80,8 @@ uniprot_id_mapping_table <- function(
     sort %>%
     chunks(chunk_size) %>%
     map(.uniprot_id_mapping_table, from, to) %>%
-    bind_rows() %T>%
+    bind_rows() %>%
+    trim_and_distinct %T>%
     load_success()
 
 }
@@ -391,6 +392,17 @@ uniprot_full_id_mapping_table <- function(
 
     strip_semicol <- function(v){sub(';$', '', v)}
 
+    ids <- c(
+        .nse_ensure_str(!!enquo(to)),
+        .nse_ensure_str(!!enquo(from))
+    )
+
+    reviewed <- `if`(
+        'trembl' %in% ids,
+        FALSE,
+        `if`('swissprot' %in% ids, TRUE, reviewed)
+    )
+
     to   <- .nse_ensure_str(!!enquo(to))   %>% uniprot_id_type
     from <- .nse_ensure_str(!!enquo(from)) %>% uniprot_id_type
 
@@ -411,7 +423,29 @@ uniprot_full_id_mapping_table <- function(
     ) %>%
     separate_rows(From, sep = ';') %>%
     separate_rows(To, sep = ';') %>%
-    filter(!is.na(From) & !is.na(To))
+    filter(!is.na(From) & !is.na(To)) %>%
+    trim_and_distinct
+
+}
+
+
+#' Trim padding whitespace and makes the records unique
+#'
+#' @param d A data frame with character columns.
+#'
+#' @return The same data frame with trailing and leading whitespaces removed
+#'     and unique records.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate across
+#' @importFrom tidyselect everything
+#' @importFrom stringr str_trim
+#' @noRd
+trim_and_distinct <- function(d){
+
+    d %>%
+    mutate(across(everything(), str_trim)) %>%
+    distinct
 
 }
 
@@ -527,7 +561,8 @@ id_translation_table <- function(
 
     }
 
-    return(result)
+    result %>%
+    trim_and_distinct
 
 }
 
@@ -650,7 +685,7 @@ ensembl_id_mapping_table <- function(
         dataset = dataset
     ) %>%
     set_names(c('From', 'To')) %>%
-    distinct
+    trim_and_distinct
 
 }
 
@@ -811,5 +846,148 @@ is_uniprot <- function(identifiers){
         all,
         FALSE
     )}
+
+}
+
+
+uniprot_cleanup <- function(d, ..., organism = 9606){
+
+    organism %<>% ncbi_taxid
+
+    swissprots <- get_db('swissprots', organism = organism)
+    trembls <- get_db('trembls', organism = organism)
+
+    d %>%
+    pmap(...)
+
+}
+
+
+uniprot_genesymbol_cleanup <- function(
+    uniprots,
+    organism = 9606,
+    only_trembls = TRUE
+){
+
+    organism %<>% ncbi_taxid
+
+    uniprots %>%
+    {`if`(only_trembls, trembls_only(.), .)} %>%
+    tibble(input = .) %>%
+    translate_ids()
+
+}
+
+
+#' Retain only TrEMBL IDs
+#'
+#' @param uniprots Character vector of UniProt IDs.
+#' @param organism Character or integer: name or identifier of the organism.
+#'
+#' @return Character vector with only TrEMBL IDs.
+#'
+#' @examples
+#' trembls_only(c("Q05BL1", "A0A654IBU3", "P00533"))
+#' # [1] "Q05BL1" "A0A654IBU3"
+#'
+#' @importFrom magrittr %<>% %>% is_in
+#' @importFrom purrr keep
+#' @export
+trembls_only <- function(uniprots, organism = 9606){
+
+    uniprots %>%
+    only_id_type('trembls', organism = organism)
+
+}
+
+
+#' Retain only SwissProt IDs
+#'
+#' @param uniprots Character vector of UniProt IDs.
+#' @param organism Character or integer: name or identifier of the organism.
+#'
+#' @return Character vector with only SwissProt IDs.
+#'
+#' @examples
+#' swissprots_only(c("Q05BL1", "A0A654IBU3", "P00533"))
+#' # [1] "P00533"
+#'
+#' @importFrom magrittr %<>% %>% is_in
+#' @importFrom purrr keep
+#' @export
+swissprots_only <- function(uniprots, organism = 9606){
+
+    uniprots %>%
+    only_id_type('swissprots', organism = organism)
+
+}
+
+
+#' @importFrom magrittr %>%
+#' @importFrom purrr keep
+#' @noRd
+only_id_type <- function(identifiers, id_type, organism = 9606){
+
+    identifiers %>%
+    keep(is_id_type, id_type = id_type, organism = organism)
+}
+
+
+#' Check for SwissProt IDs
+#'
+#' @param uniprots Character vector of UniProt IDs.
+#' @param organism Character or integer: name or identifier of the organism.
+#'
+#' @return Logical vector TRUE for SwissProt IDs and FALSE for any other
+#'     element.
+#'
+#' @examples
+#' is_swissprot(c("Q05BL1", "A0A654IBU3", "P00533"))
+#' # [1] FALSE FALSE TRUE
+#'
+#' @importFrom magrittr %<>% %>% is_in
+#' @importFrom purrr keep
+#' @export
+is_swissprot <- function(uniprots, organism = 9606){
+
+    uniprots %>%
+    is_id_type('swissprots', organism = organism)
+
+}
+
+
+#' Check for TrEMBL IDs
+#'
+#' @param uniprots Character vector of UniProt IDs.
+#' @param organism Character or integer: name or identifier of the organism.
+#'
+#' @return Logical vector TRUE for TrEMBL IDs and FALSE for any other
+#'     element.
+#'
+#' @examples
+#' is_trembl(c("Q05BL1", "A0A654IBU3", "P00533"))
+#' # [1] TRUE TRUE FALSE
+#'
+#' @importFrom magrittr %<>% %>% is_in
+#' @importFrom purrr keep
+#' @export
+is_trembl <- function(uniprots, organism = 9606){
+
+    uniprots %>%
+    is_id_type('trembls', organism = organism)
+
+}
+
+
+#' @importFrom magrittr %<>% %>% is_in
+#' @noRd
+is_id_type <- function(identifiers, id_type, organism = 9606){
+
+    organism %<>% ncbi_taxid
+
+    all_ids <- get_db(id_type, organism = organism)
+
+    identifiers %>%
+    is_in(all_ids)
 
 }
