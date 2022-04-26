@@ -863,6 +863,51 @@ uniprot_cleanup <- function(d, ..., organism = 9606){
 }
 
 
+#' TrEMBL to SwissProt by gene names
+#'
+#' @param uniprots Character vector possibly containing TrEMBL IDs.
+#' @param organism Character or integer: organism name or identifier.
+#' @param only_trembls Attempt to convert only known TrEMBL IDs of the
+#'     organism. This is the recommended practice.
+#'
+#' @return Data frame with two columns: "input" and "output". The first one
+#'     contains all identifiers from the input vector `uniprots`. The second
+#'     one has the corresponding identifiers which are either SwissProt IDs
+#'     with gene names identical to the TrEMBL IDs in the input, or if no
+#'     such records are available, the output has the input items unchanged.
+#'
+#' @details
+#' Sometimes one gene or protein is represented by multiple identifiers in
+#' UniProt. These are typically slightly different isoforms, some of them
+#' having TrEMBL IDs, some of the SwissProt. For the purposes of most systems
+#' biology application, the most important is to identify the protein or gene
+#' in a way that we can recognize it in other datasets. Unfortunately UniProt
+#' or Ensembl do not seem to offer solution for this issue. Hence, if we find
+#' that a TrEMBL ID has a gene name which is also associated with a SwissProt
+#' ID, we replace this TrEMBL ID by that SwissProt. There might be a minor
+#' difference in their sequence, but most of the omics analyses do not even
+#' consider isoforms. And it is quite possible that later UniProt will convert
+#' the TrEMBL record to an isoform within the SwissProt record. Typically
+#' this translation is not so important (but still beneficial) for human,
+#' but for other organisms it is critical especially when translating from
+#' foreign identifiers.
+#'
+#' This function accepts a mixed input of UniProt IDs and provides a distinct
+#' translation table that you can use to translate your data.
+#'
+#' @examples
+#' \dontrun{
+#' uniprot_genesymbol_cleanup('Q6PB82', organism = 10090)
+#' # # A tibble: 1 × 2
+#' #   input  output
+#' #   <chr>  <chr>
+#' # 1 Q6PB82 O70405
+#' }
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom tibble tibble
+#' @importFrom dplyr mutate select distinct full_join
+#' @export
 uniprot_genesymbol_cleanup <- function(
     uniprots,
     organism = 9606,
@@ -871,10 +916,21 @@ uniprot_genesymbol_cleanup <- function(
 
     organism %<>% ncbi_taxid
 
+    uniprots %<>% unique
+
     uniprots %>%
-    {`if`(only_trembls, trembls_only(.), .)} %>%
+    {`if`(only_trembls, trembls_only(., organism = organism), .)} %>%
     tibble(input = .) %>%
-    translate_ids()
+    translate_ids(input = trembl, genesymbol, organism = organism) %>%
+    translate_ids(genesymbol, swissprot, organism = organism) %>%
+    full_join(
+        uniprots %>%
+        tibble(input = .),
+        by = c('input')
+    ) %>%
+    mutate(output = ifelse(is.na(swissprot), input, swissprot)) %>%
+    select(input, output) %>%
+    distinct
 
 }
 
