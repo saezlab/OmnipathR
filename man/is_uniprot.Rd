@@ -12,7 +12,8 @@ string, a vector or a data frame column).}
 }
 \value{
 Logical: true if all elements in the input (except NAs) looks like
-    valid UniProt IDs.
+    valid UniProt IDs. If the input is not a character vector, `FALSE`
+    is returned.
 }
 \description{
 This function checks only the format of the IDs, no guarantee that these

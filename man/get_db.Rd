@@ -4,7 +4,7 @@
 \alias{get_db}
 \title{Access a built in database}
 \usage{
-get_db(key, param = NULL, reload = FALSE)
+get_db(key, param = NULL, reload = FALSE, ...)
 }
 \arguments{
 \item{key}{Character: the key of the database to load. For a list of
