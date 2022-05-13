@@ -89,6 +89,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # these proteins are ULK1, IFNG, EGFR, TGFB1, IL1R1
 #' human_uniprots <- c("O75385", "P01579", "P00533", "P01137", "P14778")
 #' homology_translate(human_uniprots)
 #' }

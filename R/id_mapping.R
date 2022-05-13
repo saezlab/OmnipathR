@@ -850,15 +850,46 @@ is_uniprot <- function(identifiers){
 }
 
 
+#' @importFrom magrittr %<>% %>%
+#' @importFrom rlang enquos !! sym :=
+#' @importFrom purrr reduce map
+#' @importFrom dplyr left_join rename pull first mutate n
+#' @importFrom utils tail
+#' @importFrom tidyselect ends_with
+#' @export
 uniprot_cleanup <- function(d, ..., organism = 9606){
 
+    SUFFIX <- '__uniprot_cleanup'
+
     organism %<>% ncbi_taxid
+
+    columns <-
+        enquos(...) %>%
+        map(.nse_ensure_str)
+
+    result_col <- columns %>% first
+    columns %<>% tail(-1L)
 
     swissprots <- get_db('swissprots', organism = organism)
     trembls <- get_db('trembls', organism = organism)
 
-    d %>%
-    pmap(...)
+    columns %>%
+    reduce(
+        function(d, col){
+            d %>%
+            left_join(
+                d %>%
+                pull(col) %>%
+                uniprot_genesymbol_cleanup(organism = organism) %>%
+                rename(!!sym(sprintf('%s%s', col, SUFFIX)) := output),
+                by = c(!!sym(col) := input)
+            )
+        },
+        .init = d %>% mutate(record_id = 1L:n())
+    ) %>%
+    mutate(
+        !!sym(result_col) := c(ends_with(SUFFIX))
+    )
 
 }
 
@@ -985,7 +1016,7 @@ swissprots_only <- function(uniprots, organism = 9606){
 only_id_type <- function(identifiers, id_type, organism = 9606){
 
     identifiers %>%
-    keep(is_id_type, id_type = id_type, organism = organism)
+    keep(is_id_of_type, id_type = id_type, organism = organism)
 }
 
 
@@ -1007,7 +1038,7 @@ only_id_type <- function(identifiers, id_type, organism = 9606){
 is_swissprot <- function(uniprots, organism = 9606){
 
     uniprots %>%
-    is_id_type('swissprots', organism = organism)
+    is_id_of_type('swissprots', organism = organism)
 
 }
 
@@ -1030,14 +1061,14 @@ is_swissprot <- function(uniprots, organism = 9606){
 is_trembl <- function(uniprots, organism = 9606){
 
     uniprots %>%
-    is_id_type('trembls', organism = organism)
+    is_id_of_type('trembls', organism = organism)
 
 }
 
 
 #' @importFrom magrittr %<>% %>% is_in
 #' @noRd
-is_id_type <- function(identifiers, id_type, organism = 9606){
+is_id_of_type <- function(identifiers, id_type, organism = 9606){
 
     organism %<>% ncbi_taxid
 
