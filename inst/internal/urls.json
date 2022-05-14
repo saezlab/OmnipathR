@@ -109,5 +109,8 @@
     ],
     "biomart": [
         "http://www.ensembl.org/biomart/martservice?query=%s"
+    ],
+    "homologene": [
+        "https://ftp.ncbi.nih.gov/pub/HomoloGene/current/homologene.data"
     ]
 }
