@@ -263,6 +263,7 @@ translate_ids <- function(
         set_names(names(.) %||% unlist(.)) %>%
         set_names(ifelse(nchar(names(.)), names(.), unlist(.)))
 
+    organism <- .nse_ensure_str(!!enquo(organism)) %>% ncbi_taxid
     id_cols <- names(ids)
     id_types <- unlist(ids)
     from_col <- id_cols[1]

@@ -51,3 +51,9 @@ chimp_human
 # # . with 17,732 more rows
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{homologene_raw}}}
+    \item{\code{\link{homologene_uniprot_orthology}}}
+}
+}

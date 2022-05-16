@@ -117,6 +117,10 @@ homologene_raw <- function(){
 #' @importFrom magrittr %>%
 #' @importFrom dplyr inner_join filter select group_by mutate n ungroup
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{homologene_raw}}}
+#'     \item{\code{\link{homologene_uniprot_orthology}}}
+#' }
 homologene_download <- function(
     target = 10090L,
     source = 9606L,
@@ -143,5 +147,73 @@ homologene_download <- function(
         group_by(., hgroup) %>% mutate(hgroup_size = n()) %>% ungroup,
         .
     )}
+
+}
+
+
+#' Orthology table with UniProt IDs
+#'
+#' Orthologous pairs of UniProt IDs for a pair of organisms, based on NCBI
+#' HomoloGene data.
+#'
+#' @param target Character or integer: name or ID of the target organism.
+#' @param source Character or integer: name or ID of the source organism.
+#' @param by Symbol or character: the identifier type in NCBI HomoloGene
+#'     to use. Possible values are "refseqp", "entrez", "genesymbol", "gi".
+#' @param ... Further arguments passed to \code{\link{translate_ids}}.
+#'
+#' @return A data frame with orthologous pairs of UniProt IDs.
+#'
+#' @examples
+#' homologene_uniprot_orthology(by = genesymbol)
+#' # # A tibble: 14,235 × 2
+#' #    source target
+#' #    <chr>  <chr>
+#' #  1 P11310 P45952
+#' #  2 P49748 P50544
+#' #  3 P24752 Q8QZT1
+#' #  4 Q04771 P37172
+#' #  5 Q16586 P82350
+#' # # . with 14,230 more rows
+#'
+#' @importFrom rlang !! enquo sym :=
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select filter distinct
+#' @export
+homologene_uniprot_orthology <- function(
+    target = 10090L,
+    source = 9606L,
+    by = entrez,
+    ...
+){
+
+    # NSE vs. R CMD check workaround
+    uniprot <- NULL
+
+    by <- .nse_ensure_str(!!enquo(by))
+    source <- .nse_ensure_str(!!enquo(source)) %>% ncbi_taxid
+    target <- .nse_ensure_str(!!enquo(target)) %>% ncbi_taxid
+
+    homologene_download(
+        target = !!target,
+        source = !!source,
+        id_type = !!sym(by)
+    ) %>%
+    translate_ids(
+        !!sym(sprintf('%s_source', by)) := !!sym(by),
+        source = uniprot,
+        organism = !!source,
+        ...
+    ) %>%
+    translate_ids(
+        !!sym(sprintf('%s_target', by)) := !!sym(by),
+        target = uniprot,
+        organism = !!target,
+        ...
+    ) %>%
+    select(source, target) %>%
+    filter(!is.na(source) & !is.na(target)) %>%
+    distinct
+
 
 }
