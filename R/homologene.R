@@ -87,6 +87,9 @@ homologene_raw <- function(){
 #' @param source Character or integer: name or ID of the source organism.
 #' @param id_type Symbol or character: identifier type, possible values are
 #'     "genesymbol", "entrez", "refseqp" or "gi".
+#' @param hgroup_size Logical: include a column with the size of the homology
+#'     groups. This column distinguishes one-to-one and one-to-many or
+#'     many-to-many mappings.
 #'
 #' @details
 #' The operation of this function is symmetric, *source* and *target* are
@@ -112,13 +115,17 @@ homologene_raw <- function(){
 #'
 #' @importFrom rlang !! enquo sym
 #' @importFrom magrittr %>%
-#' @importFrom dplyr inner_join filter select
+#' @importFrom dplyr inner_join filter select group_by mutate n ungroup
 #' @export
 homologene_download <- function(
     target = 10090L,
     source = 9606L,
-    id_type = 'genesymbol'
+    id_type = 'genesymbol',
+    hgroup_size = FALSE
 ){
+
+    # NSE vs. R CMD check workaround
+    hgroup <- NULL
 
     source <- .nse_ensure_str(!!enquo(source)) %>% ncbi_taxid
     target <- .nse_ensure_str(!!enquo(target)) %>% ncbi_taxid
@@ -130,6 +137,11 @@ homologene_download <- function(
         filter(., ncbi_taxid == target) %>% select(hgroup, !!sym(id_type)),
         by = 'hgroup',
         suffix = c('_source', '_target')
+    )} %>%
+    {`if`(
+        hgroup_size,
+        group_by(., hgroup) %>% mutate(hgroup_size = n()) %>% ungroup,
+        .
     )}
 
 }

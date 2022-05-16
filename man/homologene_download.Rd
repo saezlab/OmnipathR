@@ -4,7 +4,12 @@
 \alias{homologene_download}
 \title{Orthology table for a pair of organisms}
 \usage{
-homologene_download(target = 10090L, source = 9606L, id_type = "genesymbol")
+homologene_download(
+  target = 10090L,
+  source = 9606L,
+  id_type = "genesymbol",
+  hgroup_size = FALSE
+)
 }
 \arguments{
 \item{target}{Character or integer: name or ID of the target organism.}
@@ -13,6 +18,10 @@ homologene_download(target = 10090L, source = 9606L, id_type = "genesymbol")
 
 \item{id_type}{Symbol or character: identifier type, possible values are
 "genesymbol", "entrez", "refseqp" or "gi".}
+
+\item{hgroup_size}{Logical: include a column with the size of the homology
+groups. This column distinguishes one-to-one and one-to-many or
+many-to-many mappings.}
 }
 \value{
 A data frame with orthologous identifiers between the two organisms.
