@@ -305,7 +305,7 @@ ensembl_name_warn <- function(name){
 #'
 #' @examples
 #' \dontrun{
-#' sffish <- ensembl_homology(
+#' sffish <- ensembl_orthology(
 #'     organism_b = 'Siamese fighting fish',
 #'     attrs_a = 'external_gene_name',
 #'     attrs_b = 'associated_gene_name'
@@ -331,7 +331,7 @@ ensembl_name_warn <- function(name){
 #' @importFrom stringr str_replace
 #' @importFrom logger log_trace
 #' @export
-ensembl_homology <- function(
+ensembl_orthology <- function(
     organism_a = 9606,
     organism_b = 10090,
     attrs_a = NULL,
@@ -383,5 +383,18 @@ ensembl_homology <- function(
         ),
         .
     )}
+
+}
+
+
+
+#' @export
+ensembl_uniprot_orthology <- function(
+    target = 10090L,
+    source = 9606L,
+    ...
+){
+
+
 
 }
