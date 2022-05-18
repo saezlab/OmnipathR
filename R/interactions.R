@@ -36,7 +36,7 @@
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Interactions are available for human, mouse and rat.
 #' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param datasets Names of the interaction datasts to download: omnipath
+#' @param datasets Names of the interaction datasets to download: omnipath
 #' (by default). Other possiblites are: pathwayextra, kinaseextra,
 #' ligrecextra, dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna.
 #' The user can select multiple datasets as for example: c('omnipath',
