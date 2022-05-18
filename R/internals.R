@@ -124,6 +124,7 @@ url_parser <- function(
 #' @importFrom httr add_headers status_code headers
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec %||%
+#' @importFrom curl curl new_handle
 #'
 #' @noRd
 download_base <- function(
@@ -203,7 +204,11 @@ download_base <- function(
 
             }
 
-            response <- exec(http_method, url = url, !!!http_param)
+            response <- exec(
+                http_method,
+                url = curl_wrap_url(url),
+                !!!http_param
+            )
             http_status <- status_code(response)
             msg <- sprintf('HTTP %i', http_status)
 
@@ -252,10 +257,14 @@ download_base <- function(
 
         log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
 
-        resp <- exec(fun, url, !!!args)
+        the_url <- `if`(
+            getNamespaceName(environment(fun)) %in% c('readr', 'httr'),
+            curl_wrap_url(url),
+            url
+        )
 
         result <- tryCatch(
-            exec(fun, url, !!!args),
+            exec(fun, the_url, !!!args),
             error = identity
         )
 
@@ -292,6 +301,23 @@ download_base <- function(
     }
 
     return(result)
+
+}
+
+
+#' Converts URL to curl connection and sets curl options on it
+#'
+#' @importFrom magrittr %>%
+#' @importFrom curl curl new_handle
+#' @noRd
+curl_wrap_url <- function(url){
+
+    url %>%
+    curl(
+        handle = new_handle(
+            CONNECTTIMEOUT = getOption('omnipath.connect_timeout')
+        )
+    )
 
 }
 
