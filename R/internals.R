@@ -258,6 +258,7 @@ download_base <- function(
         log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
 
         the_url <- `if`(
+            is.primitive(fun) ||
             getNamespaceName(environment(fun)) %in% c('readr', 'httr'),
             curl_wrap_url(url),
             url
