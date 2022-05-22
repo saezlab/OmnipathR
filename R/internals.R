@@ -124,7 +124,7 @@ url_parser <- function(
 #' @importFrom httr add_headers status_code headers
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec %||%
-#' @importFrom curl curl new_handle
+#' @importFrom curl new_handle
 #'
 #' @noRd
 download_base <- function(
@@ -196,7 +196,24 @@ download_base <- function(
             http_method <- `if`(is.null(post), GET, POST)
             http_param$body <- post
             req_headers %<>% list_null
-            http_param %<>% c(list(add_headers(.headers = req_headers)))
+            http_param %<>% c(list(
+                add_headers(.headers = req_headers),
+                # we create new handle in each call just to be able to set
+                # a custom connect timeout; the benefit of this is
+                # questionnable, maybe we should just remove this;
+                # then we can simply do:
+                # http_param %<>% c(list(add_headers(.headers = req_headers)))
+                handle = structure(
+                    list(
+                        handle = new_handle(
+                            CONNECTTIMEOUT =
+                                getOption('omnipath.connect_timeout')
+                        ),
+                        url = (httr%:::%handle_name)(url)
+                    ),
+                    class = 'handle'
+                )
+            ))
 
             if(!is.null(path)){
 
@@ -206,7 +223,7 @@ download_base <- function(
 
             response <- exec(
                 http_method,
-                url = curl_wrap_url(url),
+                url = url,
                 !!!http_param
             )
             http_status <- status_code(response)
@@ -258,8 +275,8 @@ download_base <- function(
         log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
 
         the_url <- `if`(
-            is.primitive(fun) ||
-            getNamespaceName(environment(fun)) %in% c('readr', 'httr'),
+            isNamespace(environment(fun)) &&
+            getNamespaceName(environment(fun)) == 'readr',
             curl_wrap_url(url),
             url
         )
