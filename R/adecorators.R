@@ -29,6 +29,7 @@
 #'
 #' This has any relevance only in rare cases with OS networking issues.
 #'
+#' @importFrom logger log_trace
 #' @noRd
 uniprot_domains <- decorator %@% function(FUN){
 
@@ -44,6 +45,13 @@ uniprot_domains <- decorator %@% function(FUN){
             if(!inherits(result, 'error')){
 
                 break
+
+            }else{
+
+                log_trace(
+                    'Failed download attempt: `%s`.',
+                    conditionMessage(result)
+                )
 
             }
 

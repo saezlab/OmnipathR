@@ -45,7 +45,7 @@
 #' message about the cache origin is not guaranteed to be correct (most
 #' of the times it is still correct).
 #'
-#' @importFrom magrittr %<>% %>%
+#' @importFrom magrittr %<>% %>% %T>%
 #' @importFrom purrr map
 #' @importFrom dplyr bind_rows
 #' @importFrom rlang !!
@@ -76,7 +76,8 @@ uniprot_id_mapping_table <- function(
     chunk_size %<>% if_null(getOption('omnipath.uploadlists_chunk_size'))
 
     identifiers %>%
-    unique %>%
+    unique %T>%
+    {log_trace('Querying UniProt Uploadlists with %i IDs.', length(.))} %>%
     sort %>%
     chunks(chunk_size) %>%
     map(.uniprot_id_mapping_table, from, to) %>%
