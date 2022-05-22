@@ -217,7 +217,7 @@ homology_translate <- function(
     }
 
     # homology table from Ensembl, filtered:
-    ensembl_homology(
+    ensembl_orthology(
         organism_a = source,
         organism_b = target
     ) %>%
