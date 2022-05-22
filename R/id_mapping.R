@@ -20,8 +20,10 @@
 #
 
 
-#' Retrieves an identifier translation table from the UniProt uploadlists
-#' service
+#' ID translation data from UniProt Uploadlists
+#'
+#' Retrieves an identifier translation table from the UniProt Uploadlists
+#' service.
 #'
 #' @param identifiers Character vector of identifiers
 #' @param from Character or symbol: type of the identifiers provided.
@@ -521,12 +523,21 @@ id_translation_table <- function(
             from, to
         )
 
-        swap <- length(identifiers) > 10000L && to == 'uniprot'
+        swap <-
+            (
+                length(identifiers) > 10000L ||
+                is.null(identifiers)
+            ) &&
+            to == 'uniprot'
 
         if(swap){
             to <- from
             from <- 'uniprot'
             identifiers <- NULL
+            log_trace(
+                'Querying Uploadlists by all UniProts, ',
+                'swapping the table later.'
+            )
         }
 
         result <-
