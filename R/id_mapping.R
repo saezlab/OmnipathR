@@ -364,6 +364,7 @@ translate_ids <- function(
 #' @importFrom tidyr separate_rows
 #' @importFrom rlang !! enquo
 #' @importFrom logger log_trace
+#' @importFrom stringr str_extract
 #' @export
 #'
 #' @examples
@@ -396,6 +397,8 @@ uniprot_full_id_mapping_table <- function(
 
     strip_semicol <- function(v){sub(';$', '', v)}
 
+    reens <- 'ENS[A-Z]+\\d+'
+
     ids <- c(
         .nse_ensure_str(!!enquo(to)),
         .nse_ensure_str(!!enquo(from))
@@ -409,6 +412,9 @@ uniprot_full_id_mapping_table <- function(
 
     to   <- .nse_ensure_str(!!enquo(to))   %>% uniprot_id_type
     from <- .nse_ensure_str(!!enquo(from)) %>% uniprot_id_type
+
+    to_ens <- to == 'database(Ensembl)'
+    from_ens <- from == 'database(Ensembl)'
 
     log_trace(
         paste0(
@@ -428,6 +434,8 @@ uniprot_full_id_mapping_table <- function(
     separate_rows(From, sep = ';') %>%
     separate_rows(To, sep = ';') %>%
     filter(!is.na(From) & !is.na(To)) %>%
+    {`if`(from_ens, mutate(., From = str_extract(From, reens)), .)} %>%
+    {`if`(to_ens, mutate(., To = str_extract(To, reens)), .)} %>%
     trim_and_distinct
 
 }
