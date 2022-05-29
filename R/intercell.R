@@ -20,6 +20,17 @@
 #
 
 
+TOPOLOGIES <-
+    c(
+        'secreted',
+        'plasma_membrane_transmembrane',
+        'plasma_membrane_peripheral'
+    )
+
+TOPOLOGIES_SHORT <-
+    rlang::set_names(TOPOLOGIES, c('sec', 'pmtm', 'pmp'))
+
+
 #' Imports OmniPath intercell annotations
 #'
 #' Imports the OmniPath intercellular communication role annotation database
@@ -125,8 +136,8 @@ import_omnipath_intercell <- function(
     result <-
         do.call(import_omnipath, args) %>%
         intercell_consensus_filter(
-            consensus_percentile,
-            loc_consensus_percentile
+            percentile = consensus_percentile,
+            loc_percentile = loc_consensus_percentile
         )
 
     return(result)
@@ -210,21 +221,15 @@ intercell_consensus_filter <- function(
 
     if(!is.null(loc_percentile)){
 
-        major_locations <- c(
-            'secreted',
-            'plasma_membrane_transmembrane',
-            'plasma_membrane_peripheral'
-        )
-
         locations <- import_omnipath_intercell(
             aspect = 'locational',
-            parent = major_locations,
+            parent = TOPOLOGIES,
             consensus_percentile = loc_percentile
         )
 
         data %<>%
         {reduce(
-            major_locations,
+            TOPOLOGIES,
             function(data, loc){
 
                 in_location <-
@@ -649,7 +654,7 @@ import_intercell_network <- function(
 #' )
 #'
 #' @importFrom dplyr recode rename_all
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %<>%
 #' @importFrom rlang .data set_names
 #' @importFrom stringr str_detect
 #' @export
@@ -677,11 +682,11 @@ filter_intercell <- function(
 
     before <- nrow(data)
 
-    topology <-
-        data.frame(set_names(
-            as.list(topology),
-            rep(TRUE, length(topology))
-        )) %>%
+    topology %<>%
+        {data.frame(set_names(
+            as.list(.),
+            rep(TRUE, length(.))
+        ))} %>%
         rename_all(
             recode,
             secreted = 'sec',
@@ -689,14 +694,12 @@ filter_intercell <- function(
             plasma_membrane_transmembrane = 'pmtm'
         )
 
-    if('both' %in% causality){
-        causality <- c('transmitter', 'receiver')
-    }
-    causality <-
-        data.frame(set_names(
-            as.list(causality),
-            rep(TRUE, length(causality))
-        )) %>%
+    causality %<>%
+        {`if`('both' %in% ., c('transmitter', 'receiver'), .)} %>%
+        {data.frame(set_names(
+            as.list(.),
+            rep(TRUE, length(.))
+        ))} %>%
         rename_all(
             recode,
             transmitter = 'trans',
@@ -877,12 +880,6 @@ filter_intercell_network <- function(
     # NSE vs. R CMD check workaround
     parent <- curation_effort <- n_resources <- n_references <- NULL
 
-    major_locations <- c(
-        'secreted',
-        'plasma_membrane_transmembrane',
-        'plasma_membrane_peripheral'
-    )
-
     consensus <-
         import_omnipath_intercell(
             consensus_percentile = consensus_percentile,
@@ -896,13 +893,11 @@ filter_intercell_network <- function(
 
     consensus_loc <-
         consensus %>%
-        select(uniprot, !!!syms(major_locations)) %>%
+        select(uniprot, !!!syms(TOPOLOGIES)) %>%
         distinct
 
-    topology_short <-
-        major_locations %>%
-        set_names(c('sec', 'pmtm', 'pmp'))
-    topologies <- unlist(topology_short)
+    topologies <- unlist(TOPOLOGIES_SHORT)
+
     check_topo <- function(x){
         if(!x %in% topologies){
             log_warn('Unknown topology: %s', x)
@@ -938,14 +933,14 @@ filter_intercell_network <- function(
     }
 
     transmitter_topology %<>%
-        recode(!!!topology_short) %>%
+        topology_long %>%
         walk(check_topo) %>%
         intersect(topologies) %>%
         sprintf('%s_intercell_source', .) %>%
         paste(collapse = ' | ')
 
     receiver_topology %<>%
-        recode(!!!topology_short) %>%
+        topology_long %>%
         walk(check_topo) %>%
         intersect(topologies) %>%
         sprintf('%s_intercell_target', .) %>%
@@ -961,8 +956,8 @@ filter_intercell_network <- function(
         .,
         select(
             .,
-            -(!!!exprs(sprintf('%s_intercell_source', major_locations))),
-            -(!!!exprs(sprintf('%s_intercell_target', major_locations)))
+            -(!!!exprs(sprintf('%s_intercell_source', TOPOLOGIES))),
+            -(!!!exprs(sprintf('%s_intercell_target', TOPOLOGIES)))
         ) %>%
         left_join(consensus_loc, by = c('source' = 'uniprot')) %>%
         left_join(consensus_loc, by = c('target' = 'uniprot'),
@@ -1226,4 +1221,21 @@ get_intercell_generic_categories <- function(){
 get_intercell_classes <- function(...){
     .Deprecated("get_intercell_generic_categories")
     get_intercell_generic_categories(...)
+}
+
+
+#' Short to long topology names
+#'
+#' @param topologies Character vector of short topology names. Long names and
+#'     any other strings will be left intact.
+#'
+#' @importFrom rlang !!!
+#' @importFrom ddplyr recode
+#' @importFrom magrittr %>%
+#' @noRd
+topology_long <- function(topologies){
+
+    topologies %>%
+    recode(!!!TOPOLOGIES_SHORT)
+
 }
