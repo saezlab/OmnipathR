@@ -23,7 +23,8 @@
 .onLoad <- function(libname, pkgname){
 
     omnipath_init_config()
-    patch_logger()
+    patch_logger_metavar()
+    patch_logger_appender()
     omnipath_init_log(pkgname = pkgname)
 
     buildserver <- Sys.info()['user'] %in% c('biocbuild', 'omnipath')

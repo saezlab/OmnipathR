@@ -243,7 +243,7 @@ no_colorout <- function(ex){
 #' @importFrom magrittr %<>%
 #' @importFrom logger appender_console
 #' @noRd
-patch_logger <- function(){
+patch_logger_appender <- function(){
 
     ns <- loadNamespace('logger')
 
@@ -261,6 +261,31 @@ patch_logger <- function(){
 
     patch_ns('appender_console', appender_patched, ns)
     patch_ns('appender_stderr', appender_patched, ns)
+
+}
+
+
+#' Parches logger::deparse_to_one_line
+#'
+#' @noRd
+patch_logger_metavar <- function(){
+
+    ns <- loadNamespace('logger')
+
+    deparse_to_one_line <- function(x){
+
+        return('')
+
+#         gsub(
+#             '\\s+',
+#             ' ',
+#             paste(deparse(x), collapse = ' '),
+#             perl = TRUE
+#         )
+
+    }
+
+    patch_ns('deparse_to_one_line', deparse_to_one_line, ns)
 
 }
 
