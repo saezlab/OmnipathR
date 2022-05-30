@@ -90,7 +90,8 @@ TOPOLOGIES_SHORT <-
 #' @examples
 #' intercell <- import_omnipath_intercell(categories = 'ecm')
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %<>% %>%
+#' @importFrom purrr reduce
 #' @export
 #'
 #' @seealso \itemize{
@@ -121,6 +122,27 @@ import_omnipath_intercell <- function(
     ...
 ){
 
+    topology %<>%
+        topology_long %>%
+        {reduce(
+            TOPOLOGIES,
+            function(topos, topo){
+                arg_value <- get(topo)
+                `if`(
+                    is.null(arg_value),
+                    topos,
+                    `if`(
+                        arg_value,
+                        union(topos, topo),
+                        setdiff(topos, topo)
+                    )
+                )
+            },
+            .init = .
+        )}
+
+    print(topology)
+
     args <- c(as.list(environment()), list(...))
     args$query_type <- 'intercell'
     args$logicals <- c(
@@ -137,7 +159,8 @@ import_omnipath_intercell <- function(
         do.call(import_omnipath, args) %>%
         intercell_consensus_filter(
             percentile = consensus_percentile,
-            loc_percentile = loc_consensus_percentile
+            loc_percentile = loc_consensus_percentile,
+            topology = topology
         )
 
     return(result)
@@ -179,13 +202,14 @@ import_omnipath_intercell <- function(
 #' @importFrom dplyr group_by filter ungroup bind_rows
 #' @importFrom dplyr select distinct inner_join pull
 #' @importFrom stats quantile
-#' @importFrom rlang !! := sym
+#' @importFrom rlang !! := sym eval_tidy parse_expr
 #' @importFrom purrr reduce
 #' @export
 intercell_consensus_filter <- function(
     data,
     percentile = NULL,
-    loc_percentile = NULL
+    loc_percentile = NULL,
+    topology = NULL
 ){
 
     # NSE vs. R CMD check workaround
@@ -243,6 +267,14 @@ intercell_consensus_filter <- function(
 
             },
             .init = .
+        )} %>%
+        {`if`(
+            is.null(topology),
+            .,
+            filter(
+                .,
+                eval_tidy(parse_expr(paste(topology, collapse = ' | ')))
+            )
         )}
 
     }
@@ -1236,6 +1268,6 @@ get_intercell_classes <- function(...){
 topology_long <- function(topologies){
 
     topologies %>%
-    recode(!!!TOPOLOGIES_SHORT)
+    {`if`(is.null(.), ., recode(., !!!TOPOLOGIES_SHORT))}
 
 }

@@ -4,7 +4,12 @@
 \alias{intercell_consensus_filter}
 \title{Quality filter for intercell annotations}
 \usage{
-intercell_consensus_filter(data, percentile = NULL, loc_percentile = NULL)
+intercell_consensus_filter(
+  data,
+  percentile = NULL,
+  loc_percentile = NULL,
+  topology = NULL
+)
 }
 \arguments{
 \item{data}{A data frame with intercell annotations, as provided by
