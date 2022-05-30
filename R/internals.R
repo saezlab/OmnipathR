@@ -196,6 +196,7 @@ download_base <- function(
             http_method <- `if`(is.null(post), GET, POST)
             http_param$body <- post
             req_headers %<>% list_null
+
             http_param %<>% c(list(
                 add_headers(.headers = req_headers),
                 # we create new handle in each call just to be able to set
