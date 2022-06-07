@@ -77,6 +77,7 @@ annotated_network <- function(
     annot_sel <- enexprs(...)
 
     network %<>%
+    if_null(list()) %>%
     {`if`(is.character(.), list(resources = .), .)} %>%
     {`if`(
         just_a_list(.),
@@ -86,6 +87,7 @@ annotated_network <- function(
     assert_data_frame
 
     annot %<>%
+    if_null(list()) %>%
     {`if`(
         is.character(.),
         exec(import_omnipath_annotations, resources = ., !!!annot_args),
