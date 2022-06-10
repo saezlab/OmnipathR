@@ -45,6 +45,8 @@
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr cols col_character col_number
+#' @importFrom dplyr rename_with
+#' @importFrom stringr str_to_lower str_replace_all
 #' @importFrom tidyr separate_rows
 #' @importFrom tibble tibble
 #' @importFrom logger log_error
@@ -60,20 +62,26 @@ guide2pharma_download <- function(){
             'guide2pharma' %>%
             generic_downloader(
                 reader_param = list(
-                    comment = '##',
+                    comment = '"#',
                     col_types = cols(
-                        ligand_context = col_character(),
-                        receptor_site = col_character(),
-                        target_ligand = col_character(),
-                        target_ligand_id = col_character(),
-                        target_ligand_pubchem_sid = col_number(),
-                        target_ligand_gene_symbol = col_character(),
-                        target_ligand_uniprot = col_character(),
-                        target_ligand_ensembl_gene_id = col_character()
+                        `Target ID` = col_character(),
+                        `Target Subunit IDs` = col_character(),
+                        `Target Ligand ID` = col_character(),
+                        `Target Ligand Subunit IDs` = col_character(),
+                        `Ligand Context` = col_character(),
+                        `Receptor Site` = col_character(),
+                        `Target Ligand` = col_character(),
+                        `Target Ligand ID` = col_character(),
+                        `Target Ligand PubChem SID` = col_character(),
+                        `Ligand PubChem SID` = col_character(),
+                        `Target Ligand Gene Symbol` = col_character(),
+                        `Target Ligand UniProt ID` = col_character(),
+                        `Target Ligand Ensembl Gene ID` = col_character()
                     )
                 ),
                 resource = 'Guide to Pharmacology (IUPHAR/BPS)'
             ) %>%
+            rename_with(~str_replace_all(str_to_lower(.), ' ', '_')) %>%
             {copy_attrs(
                 separate_rows(., ligand_gene_symbol, sep = '\\|'),
                 .,
@@ -98,7 +106,8 @@ guide2pharma_download <- function(){
                 paste0(
                     'Failed to download data from Guide to Pharmacology ',
                     '(guidetopharmacology.org). Most likely it is due to ',
-                    'a temporary issue with the server`s SSL certificate. ',
+                    'a temporary issue with the server`s SSL certificate, ',
+                    'or an update in their data format. ',
                     'Returning an empty data frame. The original error ',
                     'message was: %s'
                 ),
