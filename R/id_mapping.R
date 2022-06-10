@@ -397,8 +397,6 @@ uniprot_full_id_mapping_table <- function(
 
     strip_semicol <- function(v){sub(';$', '', v)}
 
-    reens <- 'ENS[A-Z]+\\d+'
-
     ids <- c(
         .nse_ensure_str(!!enquo(to)),
         .nse_ensure_str(!!enquo(from))
@@ -413,6 +411,7 @@ uniprot_full_id_mapping_table <- function(
     to   <- .nse_ensure_str(!!enquo(to))   %>% uniprot_id_type
     from <- .nse_ensure_str(!!enquo(from)) %>% uniprot_id_type
 
+    reens <- 'ENS[A-Z]+\\d+'
     to_ens <- to == 'database(Ensembl)'
     from_ens <- from == 'database(Ensembl)'
 
@@ -1097,5 +1096,37 @@ is_id_of_type <- function(identifiers, id_type, organism = 9606){
 
     identifiers %>%
     is_in(all_ids)
+
+}
+
+
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang !! enquo
+#' @importFrom dplyr bind_rows select distinct mutate group_by filter ungroup
+#' @export
+ensembl_uniprot <- function(ens_id_type = 'ensg', organism = 9606L){
+
+    dataset <- organism %>% ensembl_dataset
+
+    ens_id_type <- .nse_ensure_str(!!enquo(ens_id_type))
+
+    biomart_query(
+        attrs = c('uniprotswissprot', 'uniprotsptrembl'),
+        gene = ens_id_type %in% c('gene', 'ensg'),
+        transcript = ens_id_type %in% c('transcript', 'enst'),
+        peptide = ens_id_type %in% c('protein', 'peptide', 'ensp'),
+        dataset = dataset
+    ) %>%
+    {bind_rows(
+        select(., ensembl = 1L, uniprot = 2L),
+        select(., ensembl = 1L, uniprot = 3L)
+    )} %>%
+    distinct %>%
+    mutate(is_trembl = is_trembl(uniprot)) %>%
+    group_by(ensembl) %>%
+    filter(all(is_trembl) | !is_trembl) %>%
+    ungroup %>%
+    filter(!is.na(uniprot))
+
 
 }
