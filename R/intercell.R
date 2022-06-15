@@ -1262,7 +1262,7 @@ get_intercell_classes <- function(...){
 #'     any other strings will be left intact.
 #'
 #' @importFrom rlang !!!
-#' @importFrom ddplyr recode
+#' @importFrom dplyr recode
 #' @importFrom magrittr %>%
 #' @noRd
 topology_long <- function(topologies){
