@@ -83,15 +83,11 @@ consensuspathdb_download <- function(
 
     cpdb_raw <- consensuspathdb_raw_table()
 
-    print('uniprot')
-
     uniprot_genesymbol <- cpdb_raw %>%
         separate_rows(participants, sep = '[,\\.]') %>%
         pull(participants) %>%
         unique() %>%
         uniprot_id_mapping_table(from = 'ACC', to = 'GENENAME')
-
-    print('uniprot ready')
 
     cpdb_raw %>%
     filter(

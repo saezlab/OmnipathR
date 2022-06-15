@@ -141,8 +141,6 @@ import_omnipath_intercell <- function(
             .init = .
         )}
 
-    print(topology)
-
     args <- c(as.list(environment()), list(...))
     args$query_type <- 'intercell'
     args$logicals <- c(
@@ -737,8 +735,6 @@ filter_intercell <- function(
             transmitter = 'trans',
             receiver = 'rec'
         )
-
-    print(args$cats)
 
     data <-
         data %>%
