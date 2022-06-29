@@ -605,7 +605,7 @@ count_references <- function(data){
             is.na(references),
             0,
             strip_resource_labels(
-                references,
+                .,
                 inplace = FALSE,
                 method = n_distinct
             )
