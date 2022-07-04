@@ -762,3 +762,22 @@ homology_translate <- function(
 
 
 }
+
+
+#' Helper function to show available organisms via OmnipathR's homologene resource
+#'
+#' @importFrom OmnipathR homologene_raw
+#'
+#' @export
+show_homologene <- function(){
+    homologene_raw() %>%
+        pull(ncbi_taxid) %>%
+        unique %>%
+        tibble(ncbi_taxid = .,
+               name = common_name(.),
+               latin = latin_name(.)) %>%
+        na.omit() %>%
+        arrange(name) %>%
+        print(n=nrow(.))
+}
+
