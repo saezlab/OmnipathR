@@ -31,8 +31,8 @@ decomplexify <- function(resource,
                              names_to = NULL) %>%
                 tidyr::drop_na(all_of(col)) %>%
                 distinct() %>%
-                mutate_at(.vars = c(col),
-                          ~str_replace(., "COMPLEX:", ""))
+                mutate(across(c(col, col.complex),
+                              ~str_replace(., "COMPLEX:", "")))
         })
     return(resource)
 }
@@ -253,7 +253,7 @@ get_homologene_dict <- function(entities,
 #' can translate both the ligand and receptor, and vice versa.
 #'
 #' @noRd
-.bind_dicts <- function(main_entity, secondary_entity, columns){
+.bind_dicts <- function(main_entity, secondary_entity){
     main_entity %>%
         group_by_all() %>%
         group_split() %>%
@@ -272,10 +272,11 @@ op_resource <-
     select(genesymbol, pathway)
 columns <- c("genesymbol")
 
+# LIANA
 op_resource <- liana::select_resource("Consensus")[[1]]
+columns <- c("target_genesymbol", "source_genesymbol")
 
 # Params
-columns <- c("target_genesymbol", "source_genesymbol")
 target_organism <- 10090
 max_homologs <- 5
 .missing_fun <- NULL
@@ -347,6 +348,8 @@ op_notmany <- minres %>%
 
 # homologous omnipath resource (with 1to1 alone)
 or_notmany <- op_notmany %>%
+    # join back missing cols
+    left_join(op_resource, by = columns) %>%
     .handle_complexes(symbols_dict = symbols_dict,
                       .missing_fun = .missing_fun,
                       columns=columns)
@@ -358,9 +361,9 @@ op_1many <- anti_join(minres,
 
 # Recursively translate the 1many resource
 op_one2_many <- op_1many %>%
-    liana::decomplexify() %>%
-    group_split(source_genesymbol_complex,
-                target_genesymbol_complex)
+    liana::decomplexify(columns = columns) %>%
+    group_by(across(ends_with("complex"))) %>%
+    group_split()
 
 # On all one2many !!!
 suppressWarnings(pb <- dplyr::progress_estimated(length(op_one2_many)))
@@ -368,19 +371,23 @@ or_many <- op_one2_many %>%
     map(function(op_row.decomp){
         if(verbose) pb$tick()$print()
 
+        # create dictonary by row
         dicts_row <- .create_row_dict(symbols_dict,
                                       op_row.decomp,
                                       entity_2many)
 
-
         # The tibble to be translated to all homologs
-        op_row <- inner_join(op_row.decomp, op_1many,
+        op_row <- inner_join(op_row.decomp,
+                             op_1many,
                              by = columns) %>%
             # recomplexify
             select(-columns) %>%
             rename_with(~gsub("_complex", "", .x),
                         ends_with("complex")) %>%
-            distinct()
+            distinct() %>%
+            # join back remainder of cols
+            left_join(op_resource,
+                      by = columns)
 
         # Return all matches for all homologs
         or_row <- map(dicts_row, function(d){
@@ -392,8 +399,7 @@ or_many <- op_one2_many %>%
             bind_rows() %>%
             distinct()
     }) %>%
-    bind_rows() %>%
-    select(-ends_with("complex"))
+    bind_rows()
 
 # Bind 1to1 and 1tomany
 or_resource <- bind_rows(or_notmany, or_many) %>%
@@ -403,9 +409,45 @@ or_resource <- bind_rows(or_notmany, or_many) %>%
 
 
 ### create row dict revamp ----
+op_row.decomp <- op_one2_many[[31]]
+
 dicts_row <- .create_row_dict(symbols_dict,
                               op_row.decomp,
                               entity_2many)
+
+dicts_row2 <- .create_row_dict2(symbols_dict,
+                              op_row.decomp,
+                              entity_2many)
+
+
+.create_row_dict2 <- function(symbols_dict,
+                              op_row.decomp,
+                              entity_2many
+                              ){
+
+    logical_row <- map_lgl(columns, function(col){
+        any(op_row.decomp[[col]] %in% entity_2many)
+    })
+
+    dicts_row <- map(columns, function(col){
+        symbols_dict[names(symbols_dict) %in% op_row.decomp[[col]]] %>%
+            enframe(name = "genesymbol_source", value = "genesymbol_target")
+    })
+
+    # if only 1 col -> return dict
+    if(length(columns)==1){
+        symbols_dict[names(symbols_dict) %in% op_row.decomp[[columns]]] %>%
+            enframe(name = "genesymbol_source", value = "genesymbol_target")
+
+    } else if(all(logical_row)){ # if all columns have 1-to-many
+        c(.bind_dicts(dicts_row[[1]], dicts_row[[2]]),
+          .bind_dicts(dicts_row[[2]], dicts_row[[1]]))
+    } else{ # main entity is the one with 1-to-many
+        .bind_dicts(main_entity = keep(dicts_row, logical_row) %>% pluck(1),
+                    secondary_entity = discard(dicts_row, logical_row) %>% pluck(1))
+    }
+}
+
 
 
 
@@ -418,15 +460,17 @@ dicts_row <- map(columns, function(col){
         enframe(name = "genesymbol_source", value = "genesymbol_target")
     })
 
-# if only 1 entity -> return dict
+# if only 1 col -> return dict
+if(length(columns)==1){
+    symbols_dict[names(symbols_dict) %in% op_row.decomp[[columns]]] %>%
+        enframe(name = "genesymbol_source", value = "genesymbol_target")
 
-
-# if all columns have 1-to-many
-if(all(logical_row)){
-
-} else{
-    .bind_dicts(keep(dicts_row, logical_row) %>% pluck(1),
-                discard(dicts_row, logical_row) %>% pluck(1))
+} else if(all(logical_row)){ # if all columns have 1-to-many
+    c(.bind_dicts(dicts_row[[1]], dicts_row[[2]]),
+      .bind_dicts(dicts_row[[2]], dicts_row[[1]]))
+} else{ # main entity is the one with 1-to-many
+    .bind_dicts(main_entity = keep(dicts_row, logical_row) %>% pluck(1),
+                secondary_entity = discard(dicts_row, logical_row) %>% pluck(1))
 }
 
 
@@ -436,7 +480,7 @@ if(all(logical_row)){
 
 
 
-if(length(dicts_row) > 1){
+if(length(dicts_row)==1){
 
 }
 
