@@ -31,7 +31,7 @@ decomplexify <- function(resource,
                              names_to = NULL) %>%
                 tidyr::drop_na(all_of(col)) %>%
                 distinct() %>%
-                mutate(across(c(col, col.complex),
+                mutate(across(all_of(c(col, col.complex)),
                               ~str_replace(., "COMPLEX:", "")))
         })
     return(resource)
@@ -204,37 +204,39 @@ get_homologene_dict <- function(entities,
 #' @param symbols_dict the human to mouse dict (should be a vect)
 #' @param op_row.decomp decomp omni (we need all genes)
 #' @param entity_2many entities that match to many homologs
+#' @param columns columns
 #'
 #' @return a dictionary for the provided interaction
 #'
 #' @noRd
 .create_row_dict <- function(symbols_dict,
                              op_row.decomp,
-                             entity_2many
-                             ){
-    # do the ligand or receptor posses homologs
-    is.l.2many <- any(op_row.decomp$source_genesymbol %in% entity_2many)
-    is.r.2many <- any(op_row.decomp$target_genesymbol %in% entity_2many)
+                             entity_2many,
+                             columns){
 
-    # Ligands
-    dicts_row.l <-
-        symbols_dict[names(symbols_dict) %in% op_row.decomp$source_genesymbol] %>%
-        enframe(name = "genesymbol_source", value = "genesymbol_target")
-    # Receptors
-    dicts_row.r <-
-        symbols_dict[names(symbols_dict) %in% op_row.decomp$target_genesymbol] %>%
-        enframe(name = "genesymbol_source", value = "genesymbol_target")
+    logical_row <- map_lgl(columns, function(col){
+        any(op_row.decomp[[col]] %in% entity_2many)
+    })
 
-    if(all(is.l.2many, is.r.2many)){
-        c( # both
-            .bind_dicts(dicts_row.l, dicts_row.r),
-            .bind_dicts(dicts_row.r, dicts_row.l)
-        )
+    dicts_row <- map(columns, function(col){
+        symbols_dict[names(symbols_dict) %in% op_row.decomp[[col]]] %>%
+            enframe(name = "genesymbol_source", value = "genesymbol_target")
+    })
 
-    } else if(is.l.2many){
-        .bind_dicts(dicts_row.l, dicts_row.r)
-    } else if(is.r.2many){
-        .bind_dicts(dicts_row.r, dicts_row.l)
+    # if only 1 col -> return dict
+    if(length(columns)==1){
+        symbols_dict[names(symbols_dict) %in% op_row.decomp[[columns]]] %>%
+            enframe(name = "genesymbol_source", value = "genesymbol_target") %>%
+            group_by_all() %>%
+            group_split() %>%
+            map(~deframe(.x))
+
+    } else if(all(logical_row)){ # if all columns have 1-to-many
+        c(.bind_dicts(dicts_row[[1]], dicts_row[[2]]),
+          .bind_dicts(dicts_row[[2]], dicts_row[[1]]))
+    } else{ # main entity is the one with 1-to-many
+        .bind_dicts(main_entity = keep(dicts_row, logical_row) %>% pluck(1),
+                    secondary_entity = discard(dicts_row, logical_row) %>% pluck(1))
     }
 }
 
@@ -283,6 +285,9 @@ max_homologs <- 5
 verbose <- TRUE
 
 ### FUN
+op_resource %<>% mutate(across(all_of(columns),
+                               ~str_replace(., "COMPLEX:", "")))
+
 # Minimum column set resource
 minres <- op_resource %>% select(!!columns)
 
@@ -314,7 +319,7 @@ if(is.null(.missing_fun)){
     missing <- decomp %>%
         # check if neither is in missing entities
         mutate(lr_present = !if_any(columns, function(x) x %in% missing_entities)) %>%
-        group_by(across(ends_with("complex"))) %>%
+        group_by(across(all_of(ends_with("complex")))) %>%
         summarise(all_present = mean(lr_present), .groups = "keep") %>%
         # only keep those that are present
         filter(all_present < 1) %>%
@@ -374,7 +379,8 @@ or_many <- op_one2_many %>%
         # create dictonary by row
         dicts_row <- .create_row_dict(symbols_dict,
                                       op_row.decomp,
-                                      entity_2many)
+                                      entity_2many,
+                                      columns)
 
         # The tibble to be translated to all homologs
         op_row <- inner_join(op_row.decomp,
@@ -408,45 +414,16 @@ or_resource <- bind_rows(or_notmany, or_many) %>%
 
 
 
+
+
 ### create row dict revamp ----
-op_row.decomp <- op_one2_many[[31]]
+op_row.decomp <- op_one2_many[[7]]
 
 dicts_row <- .create_row_dict(symbols_dict,
                               op_row.decomp,
                               entity_2many)
 
-dicts_row2 <- .create_row_dict2(symbols_dict,
-                              op_row.decomp,
-                              entity_2many)
 
-
-.create_row_dict2 <- function(symbols_dict,
-                              op_row.decomp,
-                              entity_2many
-                              ){
-
-    logical_row <- map_lgl(columns, function(col){
-        any(op_row.decomp[[col]] %in% entity_2many)
-    })
-
-    dicts_row <- map(columns, function(col){
-        symbols_dict[names(symbols_dict) %in% op_row.decomp[[col]]] %>%
-            enframe(name = "genesymbol_source", value = "genesymbol_target")
-    })
-
-    # if only 1 col -> return dict
-    if(length(columns)==1){
-        symbols_dict[names(symbols_dict) %in% op_row.decomp[[columns]]] %>%
-            enframe(name = "genesymbol_source", value = "genesymbol_target")
-
-    } else if(all(logical_row)){ # if all columns have 1-to-many
-        c(.bind_dicts(dicts_row[[1]], dicts_row[[2]]),
-          .bind_dicts(dicts_row[[2]], dicts_row[[1]]))
-    } else{ # main entity is the one with 1-to-many
-        .bind_dicts(main_entity = keep(dicts_row, logical_row) %>% pluck(1),
-                    secondary_entity = discard(dicts_row, logical_row) %>% pluck(1))
-    }
-}
 
 
 
