@@ -20,43 +20,6 @@
 #
 
 
-#' Decorator for trying UniProt subdomains
-#'
-#' This has any relevance only in rare cases with OS networking issues.
-#'
-#' @noRd
-uniprot_domains <- decorator %@% function(FUN){
-
-    function(...){
-
-        for(subd in c('www', 'pir3')){
-
-            result <- tryCatch(
-                FUN(..., .subdomain = subd),
-                error = identity
-            )
-
-            if(!inherits(result, 'error')){
-
-                break
-
-            }
-
-        }
-
-        if(inherits(result, 'error')){
-
-            stop(conditionMessage(result))
-
-        }
-
-        return(result)
-
-    }
-
-}
-
-
 #' Retrieves an identifier translation table from the UniProt uploadlists
 #' service
 #'
