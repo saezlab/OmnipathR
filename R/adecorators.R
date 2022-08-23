@@ -35,7 +35,7 @@ uniprot_domains <- decorator %@% function(FUN){
 
     function(...){
 
-        for(subd in c('www', 'pir3')){
+        for(subd in c('legacy', 'www', 'pir3')){
 
             result <- tryCatch(
                 FUN(..., .subdomain = subd),
