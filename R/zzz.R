@@ -40,7 +40,21 @@
     if(buildserver) {
 
         logger::log_trace('Running on a build server, wiping cache.')
-        omnipath_cache_wipe()
+        cachedir <- omnipath_get_cachedir()
+        logger::log_trace('Cache is at `%s`.', cachedir)
+        logger::log_trace('Contains %i files.', length(list.files(cachedir)))
+        logger::log_trace(
+            'Cache is locked: %s.',
+            'cache.lock' %in% list.files(cachedir)
+        )
+        tryCatch(
+            omnipath_cache_wipe(),
+            error = function(e){
+                logger::log_error('Failed to wipe cache: %s.', e)
+                logger::log_trace('On a build server, unlocking cache db.')
+            }
+        )
+        omnipath_unlock_cache_db()
 
     }
 
