@@ -38,6 +38,7 @@
 }
 
 
+#' @noRd
 .ensure_dir <- function(path){
 
     dir_path <- dirname(path)
@@ -48,6 +49,56 @@
     }else{
         logger::log_warn('Failed to create directory `%s`', dir_path)
     }
+
+}
+
+
+#' @noRd
+.path_writable <- function(path){
+
+    path_prev <- ''
+
+    while(is.character(path) && path != path_prev){
+
+        if(file.access(path, mode = 2L) == 0L) {
+
+            return(TRUE)
+
+        }else if(file.exists(path)){
+
+            return(FALSE)
+
+        }else{
+
+            prev_path <- path
+            path <- dirname(path)
+
+        }
+
+    }
+
+    return(FALSE)
+
+}
+
+
+#' @noRd
+.ensure_safe_path <- function(path, directory = FALSE){
+
+    if(!.path_writable(path)){
+
+        fname <- `if`(directory, '', basename(path))
+        fallback_path <- file.path(tempdir(check = TRUE), fname)
+        warning(sprintf(
+            'OmnipathR: Falling back to path `%s` instead of `%s`.',
+            fallback_path,
+            path
+        ))
+        path <- fallback_path
+
+    }
+
+    path
 
 }
 

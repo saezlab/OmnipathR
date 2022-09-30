@@ -60,6 +60,7 @@ omnipath_init_cache <- function(){
 omnipath_default_cachedir <- function(){
 
     user_cache_dir() %>%
+    .ensure_safe_path(directory = TRUE) %>%
     file.path('OmnipathR') %>%
     normalizePath(mustWork = FALSE) %>%
     suppressWarnings()

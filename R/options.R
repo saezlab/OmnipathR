@@ -100,6 +100,7 @@ omnipath_get_default_config_path <- function(user = FALSE){
 #' @examples
 #' omnipath_get_config_path()
 #'
+#' @importFrom magrittr %>%
 #' @export
 omnipath_get_config_path <- function(user = FALSE){
 
@@ -111,7 +112,12 @@ omnipath_get_config_path <- function(user = FALSE){
         ifnotfound = Sys.getenv('OMNIPATHR_CONFIG')
     )[[1]]
 
-    `if`(nchar(config_path) > 0, config_path, config_path_default)
+    `if`(
+        nchar(config_path) > 0,
+        config_path,
+        config_path_default
+    ) %>%
+    .ensure_safe_path
 
 }
 
@@ -144,22 +150,29 @@ omnipath_save_config <- function(
         local = FALSE
     ){
 
-    path <- `if`(
-        is.null(path),
+    path <-
         `if`(
-            local,
-            .omnipath_local_config_fname,
-            omnipath_get_config_path()
-        ),
-        path
-    )
-    .ensure_dir(path)
+            is.null(path),
+            `if`(
+                local,
+                .omnipath_local_config_fname,
+                omnipath_get_config_path()
+            ),
+            path
+        ) %>%
+        .ensure_safe_path
 
-    omnipath_options_to_config()
-    this_config <- list()
-    this_config[[title]] <- omnipath.env$config
+    if(.path_writable(path)){
 
-    write_yaml(this_config, file = path)
+        .ensure_dir(path)
+
+        omnipath_options_to_config()
+        this_config <- list()
+        this_config[[title]] <- omnipath.env$config
+
+        write_yaml(this_config, file = path)
+
+    }
 
 }
 
@@ -195,18 +208,24 @@ omnipath_load_config <- function(
         ...
     ){
 
-    path <- `if`(
-        is.null(path),
-        omnipath_get_config_path(user = user),
-        path
-    )
+    path <-
+        `if`(
+            is.null(path),
+            omnipath_get_config_path(user = user),
+            path
+        ) %>%
+        .ensure_safe_path
 
-    yaml_config <- yaml.load_file(input = path, ...)
+    yaml_config <- `if`(
+        file.exists(path),
+        yaml.load_file(input = path, ...),
+        list()
+    )
 
     # Earlier we had the URLs in the config. Then I realized it's not a
     # good practice, and apart from not having them any more, here we
     # remove them from existing configs.
-    if(yaml_config %>% map_lgl(is.list) %>% all){
+    if(.path_writable(path) && yaml_config %>% map_lgl(is.list) %>% all){
 
         yaml_config %<>% map(
             ~`[`(
@@ -411,7 +430,12 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
                 sprintf('omnipathr-%s.log', format(Sys.time(), "%Y%m%d-%H%M"))
             ) %>%
             absolute_path() %T>%
-            {dir.create(dirname(.), showWarnings = FALSE, recursive = TRUE)}
+            {dir.create(
+                dirname(.),
+                showWarnings = FALSE,
+                recursive = TRUE
+            )} %>%
+            .ensure_safe_path
 
     }
 
