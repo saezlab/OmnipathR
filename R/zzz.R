@@ -25,6 +25,7 @@
     omnipath_init_config()
     patch_logger()
     omnipath_init_log(pkgname = pkgname)
+    logger::log_info('Welcome to OmnipathR!')
 
     buildserver <- Sys.info()['user'] %in% c('biocbuild', 'omnipath')
 
@@ -47,8 +48,6 @@
     .load_magic_bytes(pkgname)
     .load_urls(pkgname)
     .load_id_types(pkgname)
-
-    logger::log_info('Welcome to OmnipathR!')
 
     if(buildserver){
 

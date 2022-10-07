@@ -1738,14 +1738,13 @@ omnipath_url_to_list <- function(url, post = NULL, payload = NULL){
 
 #' Reads the cache DB contents from the disk to the memory
 #'
-#' @importFrom jsonlite fromJSON
-#'
+#' @importFrom magrittr %>%
 #' @noRd
 omnipath_read_cache_db <- function(){
 
     omnipath.env$cache <-
         omnipath_cache_db_path() %>%
-        jsonlite::fromJSON() %>%
+        safe_json() %>%
         omnipath_cache_timestamps()
 
 }

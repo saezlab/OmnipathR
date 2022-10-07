@@ -809,7 +809,6 @@ update_source_attrs <- function(obj, ...){
 #' Called only in the package loading process.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom jsonlite fromJSON
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate
 #' @importFrom tidyr unnest_longer unnest_wider
@@ -828,7 +827,7 @@ update_source_attrs <- function(obj, ...){
             package = pkgname,
             mustWork = TRUE
         ) %>%
-        fromJSON(simplifyDataFrame = FALSE) %>%
+        safe_json(simplifyDataFrame = FALSE) %>%
         tibble(magic = .) %>%
         mutate(ext = names(magic)) %>%
         unnest_longer(magic) %>%

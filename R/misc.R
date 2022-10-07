@@ -699,3 +699,31 @@ null_to_na <- function(l){
     map(l, function(x){`if`(is.null(x), NA, x)})
 
 }
+
+
+#' Read a JSON
+#'
+#' @importFrom jsonlite validate fromJSON
+#' @noRd
+safe_json <- function(path, encoding = 'UTF-8', ...){
+
+    lines <- suppressWarnings(readLines(con = path, encoding = encoding))
+
+    json_ok <- jsonlite::validate(txt = lines)
+
+    if(!json_ok){
+
+        msg <- sprintf(
+            'Falied to read JSON from `%s` (file exists: %s)',
+            path,
+            file.exists(path)
+        )
+
+        logger::log_warn(msg)
+        warning(msg)
+
+    }
+
+    jsonlite::fromJSON(txt = `if`(json_ok, lines, '[]'), ...)
+
+}
