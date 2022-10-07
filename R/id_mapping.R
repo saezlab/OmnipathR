@@ -604,7 +604,7 @@ id_type_in <- function(id_type, service){
 
 #' Read ID type information
 #'
-#' @importFrom jsonlite fromJSON
+#' @importFrom magrittr %>%
 #'
 #' @noRd
 .load_id_types <- function(pkgname){
@@ -616,7 +616,7 @@ id_type_in <- function(id_type, service){
             package = pkgname,
             mustWork = TRUE
         ) %>%
-        fromJSON()
+        safe_json()
 
 }
 

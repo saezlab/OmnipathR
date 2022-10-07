@@ -969,7 +969,6 @@ import_small_molecule_protein_interactions <- function(
 #' )
 #'
 #' @importFrom magrittr %<>% %>%
-#' @importFrom jsonlite fromJSON
 #' @export
 #'
 #' @seealso \itemize{
@@ -992,7 +991,7 @@ import_all_interactions <- function(
 
     url <- paste0(options('omnipath.url'), 'queries/interactions?format=json')
     all_datasets <-
-        fromJSON(txt = url)$datasets %>%
+        safe_json(path = url)$datasets %>%
         setdiff(exclude)
 
     # it does not make sense without the type field

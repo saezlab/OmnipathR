@@ -23,7 +23,6 @@
 #' Populates the database register with the built in database definitions
 #'
 #' @importFrom magrittr %>% %<>%
-#' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #' @importFrom later create_loop global_loop
 #' @noRd
@@ -36,7 +35,7 @@ omnipath_init_db <- function(pkgname){
             package = pkgname,
             mustWork = TRUE
         ) %>%
-        fromJSON() %>%
+        safe_json() %>%
         map(
             function(dbdef){
                 dbdef$lifetime %<>% if_empty(

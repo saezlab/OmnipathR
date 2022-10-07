@@ -37,7 +37,6 @@
 #' @return a character vector with resource names
 #'
 #' @export
-#' @importFrom jsonlite fromJSON
 #'
 #' @examples
 #' get_resources(query_type = 'interactions')
@@ -70,7 +69,7 @@ get_resources <- function(
         query_type
     )
 
-    resources <- jsonlite::fromJSON(txt = 'https://omnipathdb.org/resources')
+    resources <- safe_json(txt = 'https://omnipathdb.org/resources')
 
     return(
         sort(Filter(

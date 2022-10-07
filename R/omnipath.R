@@ -185,7 +185,7 @@ import_omnipath <- function(
         show_col_types = FALSE
     )
     json_defaults <- list(
-        fun = jsonlite::fromJSON
+        fun = safe_json
     )
     download_args <- modifyList(
         `if`(

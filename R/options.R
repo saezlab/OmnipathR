@@ -389,7 +389,6 @@ omnipath_options_to_config <- function(){
 
 #' Populates the URL register
 #'
-#' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #'
 #' @noRd
@@ -402,7 +401,7 @@ omnipath_options_to_config <- function(){
             package = pkgname,
             mustWork = TRUE
         ) %>%
-        fromJSON(simplifyVector = TRUE) %>%
+        safe_json(simplifyVector = TRUE) %>%
         map(paste0, collapse = '')
 
 }
