@@ -201,7 +201,7 @@ download_base <- function(
             req_headers %<>% list_null
 
             http_param %<>% c(list(
-                add_headers(.headers = req_headers),
+                add_headers(.headers = unlist(req_headers)),
                 # we create new handle in each call just to be able to set
                 # a custom connect timeout; the benefit of this is
                 # questionnable, maybe we should just remove this;
