@@ -38,3 +38,5 @@ vignettes/figure
 ^man/figures.*$
 ^\.git_fetch_output\.txt$
 ^\.git_merge_output\.txt$
+^docs
+^attic
