@@ -69,7 +69,8 @@ get_resources <- function(
         query_type
     )
 
-    resources <- safe_json(path = 'https://omnipathdb.org/resources')
+    resources_url <- sprintf('%s/resources', getOption('omnipath.url'))
+    resources <- safe_json(path = resources_url)
 
     return(
         sort(Filter(
