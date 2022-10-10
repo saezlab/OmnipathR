@@ -248,6 +248,8 @@ load_db <- function(key, param = list()){
 #'     different functions with different parameters access the database
 #'     repeatedly and request reload the frequent reloads might cost
 #'     substantial time and resource use.
+#' @param ... Arguments for the loader function of the database. These
+#'     override the default arguments.
 #'
 #' @return An object with the database contents. The exact format depends
 #'     on the database, most often it is a data frame or a list.

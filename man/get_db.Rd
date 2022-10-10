@@ -22,6 +22,9 @@ from the parameters used the last time the database was loaded. If
 different functions with different parameters access the database
 repeatedly and request reload the frequent reloads might cost
 substantial time and resource use.}
+
+\item{...}{Arguments for the loader function of the database. These
+override the default arguments.}
 }
 \value{
 An object with the database contents. The exact format depends
