@@ -497,6 +497,9 @@ id_translation_table <- function(
     reviewed = TRUE
 ){
 
+    # NSE vs. R CMD check workaround
+    To <- From <- NULL
+
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
@@ -883,6 +886,9 @@ is_uniprot <- function(identifiers){
 #' @noRd
 uniprot_cleanup <- function(d, ..., organism = 9606){
 
+    # NSE vs. R CMD check workaround
+    input <- output <- NULL
+
     SUFFIX <- '__uniprot_cleanup'
 
     organism %<>% ncbi_taxid
@@ -968,6 +974,9 @@ uniprot_genesymbol_cleanup <- function(
     organism = 9606,
     only_trembls = TRUE
 ){
+
+    # NSE vs. R CMD check workaround
+    trembl <- swissprot <- input <- output <- NULL
 
     organism %<>% ncbi_taxid
 
@@ -1113,6 +1122,9 @@ is_id_of_type <- function(identifiers, id_type, organism = 9606){
 #' @importFrom dplyr bind_rows select distinct mutate group_by filter ungroup
 #' @noRd
 ensembl_uniprot <- function(ens_id_type = 'ensg', organism = 9606L){
+
+    # NSE vs. R CMD check workaround
+    ensembl <- NULL
 
     dataset <- organism %>% ensembl_dataset
 

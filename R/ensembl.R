@@ -65,6 +65,9 @@ ensembl_organisms_raw <- function(){
 #' @export
 ensembl_organisms <- function(){
 
+    # NSE vs. R CMD check workaround
+    `Common name` <- `Scientific name` <- `Taxon ID` <- ensembl_id <- NULL
+
     SPECIALS <- list(
         bixbtaurus = 'bihybrid'
     )
@@ -135,6 +138,9 @@ biomart_query <- function(
     gene = FALSE,
     dataset = 'hsapiens_gene_ensembl'
 ){
+
+    # NSE vs. R CMD check workaround
+    col_names <- NULL
 
     TEMPLATE <- biomart_xml_template()
     FILTER_TEMPLATE <- '<Filter name="%s" excluded="0"/>' %>% indent(8L)

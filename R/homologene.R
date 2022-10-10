@@ -188,7 +188,7 @@ homologene_uniprot_orthology <- function(
 ){
 
     # NSE vs. R CMD check workaround
-    uniprot <- NULL
+    entrez <- uniprot <- NULL
 
     by <- .nse_ensure_str(!!enquo(by))
     source <- .nse_ensure_str(!!enquo(source)) %>% ncbi_taxid

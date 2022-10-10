@@ -191,6 +191,9 @@ download_base <- function(
 
         fun <- function(url, post = NULL, ...){
 
+            # NSE vs. R CMD check workaround
+            httr <- handle_name <- NULL
+
             http_param %<>% ensure_list_2
             content_param %<>% ensure_list_2
             http_method <- `if`(is.null(post), GET, POST)
