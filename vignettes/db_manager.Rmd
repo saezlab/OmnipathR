@@ -94,7 +94,7 @@ Sys.sleep(10)
 ```
 
 ```{r expiry}
-up_gs <- get_db('up_gs_human')
+up_gs <- get_db('up_gs')
 omnipath_show_db()
 ```
 
@@ -106,7 +106,7 @@ below, `omnipath_show_db` presents us all information availble by directly
 looking at the environment:
 
 ```{r env}
-OmnipathR:::omnipath.env$db$up_gs_human
+OmnipathR:::omnipath.env$db$up_gs
 ```
 
 # How to extend the expiry period?
