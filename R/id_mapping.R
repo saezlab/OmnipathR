@@ -870,13 +870,17 @@ is_uniprot <- function(identifiers){
 }
 
 
+#' Attept to find valid SwissProt IDs
+#'
+#' In preparation, not yet functional
+#'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom rlang enquos !! sym :=
 #' @importFrom purrr reduce map
 #' @importFrom dplyr left_join rename pull first mutate n
 #' @importFrom utils tail
 #' @importFrom tidyselect ends_with
-#' @export
+#' @noRd
 uniprot_cleanup <- function(d, ..., organism = 9606){
 
     SUFFIX <- '__uniprot_cleanup'
@@ -1100,10 +1104,14 @@ is_id_of_type <- function(identifiers, id_type, organism = 9606){
 }
 
 
+#' Ensembl-UniProt identifier table
+#'
+#' In preparation, not yet functional
+#'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !! enquo
 #' @importFrom dplyr bind_rows select distinct mutate group_by filter ungroup
-#' @export
+#' @noRd
 ensembl_uniprot <- function(ens_id_type = 'ensg', organism = 9606L){
 
     dataset <- organism %>% ensembl_dataset

@@ -385,16 +385,3 @@ ensembl_orthology <- function(
     )}
 
 }
-
-
-
-#' @export
-ensembl_uniprot_orthology <- function(
-    target = 10090L,
-    source = 9606L,
-    ...
-){
-
-
-
-}
