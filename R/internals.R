@@ -277,7 +277,8 @@ download_base <- function(
 
         the_url <- `if`(
             isNamespace(environment(fun)) &&
-            getNamespaceName(environment(fun)) == 'readr',
+            getNamespaceName(environment(fun)) == 'readr' &&
+            !endsWith(url, 'gz'),
             curl_wrap_url(url),
             url
         )

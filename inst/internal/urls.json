@@ -80,7 +80,7 @@
         "genes_to_phenotype.txt"
     ],
     "go_annot": [
-        "http://geneontology.org/gene-associations/goa_%s.gaf.gz"
+        "http://current.geneontology.org/annotations/goa_%s.gaf.gz"
     ],
     "go_full": "http://purl.obolibrary.org/obo/go/%s.obo",
     "go_slim": [
