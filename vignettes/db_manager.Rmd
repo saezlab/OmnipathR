@@ -61,10 +61,10 @@ Datasets can be accessed by the `get_db` function. Ideally you should call
 this function every time you use the dataset. The first time it will be
 loaded, the subsequent times the already loaded dataset will be returned.
 This way each access is registered and extends the expiry time. Let's load
-the human UniProt-GeneSymbol table. Above we see its key is `up_gs_human`.
+the human UniProt-GeneSymbol table. Above we see its key is `up_gs`.
 
 ```{r get}
-up_gs <- get_db('up_gs_human')
+up_gs <- get_db('up_gs')
 up_gs
 ```
 
