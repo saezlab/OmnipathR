@@ -110,7 +110,7 @@ ensembl_organisms <- function(){
 #'     gene = TRUE,
 #'     dataset = "celegans_gene_ensembl"
 #' )
-#' cel
+#' cel_genes
 #' # # A tibble: 46,934 × 4
 #' #   ensembl_gene_id external_gene_name start_position end_position
 #' #   <chr>           <chr>                       <dbl>        <dbl>
