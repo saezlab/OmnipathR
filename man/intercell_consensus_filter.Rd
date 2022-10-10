@@ -31,6 +31,10 @@ annotations and specific child categories.}
 localizations. For example, with a value of 50, the secreted, plasma
 membrane transmembrane or peripheral attributes will be \code{TRUE}
 only where at least 50 percent of the resources support these.}
+
+\item{topology}{Character vector: list of allowed topologies, possible
+values are *"secreted"*, *"plasma_membrane_peripheral"* and
+*"plasma_membrane_transmembrane"*.}
 }
 \value{
 The data frame in \code{data} filtered by the consensus scores.
