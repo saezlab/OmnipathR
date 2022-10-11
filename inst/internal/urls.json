@@ -56,7 +56,7 @@
         "art%%3A10.1038%%2Fncomms8866/MediaObjects/",
         "41467_2015_BFncomms8866_MOESM611_ESM.xlsx"
     ],
-    "regnetwork": "http://www.regnetworkweb.org/download/%s.zip",
+    "regnetwork": "https://regnetworkweb.org/download/%s.zip",
     "trrust": [
         "https://www.grnpedia.org/trrust/data/trrust_rawdata.%s.tsv"
     ],
