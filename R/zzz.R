@@ -20,6 +20,9 @@
 #
 
 
+#' @importFrom rmarkdown pandoc_version
+#' @importFrom logger log_trace
+#' @noRd
 .onLoad <- function(libname, pkgname){
 
     omnipath_init_config()
@@ -56,6 +59,9 @@
             }
         )
         omnipath_unlock_cache_db()
+
+        # report pandoc version for Bioc build server debugging
+        logger::log_trace('Pandoc version: `%s`.', pandoc_version())
 
     }
 
