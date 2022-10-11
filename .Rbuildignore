@@ -43,3 +43,4 @@ vignettes/figure
 ^attic
 ^tmppkg
 OmnipathR\.BiocCheck
+^\.bumpversion\.cfg$
