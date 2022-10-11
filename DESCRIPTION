@@ -85,7 +85,6 @@ Suggests:
     parallelMap,
     ParamHelpers,
     Rgraphviz,
-    rmarkdown,
     smoof,
     supraHex,
     testthat
