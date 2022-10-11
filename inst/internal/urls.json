@@ -74,9 +74,7 @@
         "https://zenodo.org/record/3260758/files/expression_settings.rds"
     ],
     "hpo": [
-        "https://ci.monarchinitiative.org/job/hpo.annotations/",
-        "lastSuccessfulBuild/artifact/rare-diseases/util/annotation/",
-        "genes_to_phenotype.txt"
+        "http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt"
     ],
     "go_annot": [
         "http://geneontology.org/gene-associations/goa_%s.gaf.gz"
