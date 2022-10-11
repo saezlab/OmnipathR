@@ -60,6 +60,7 @@ Imports:
     readr(>= 2.0.0),
     readxl,
     rlang,
+    rmarkdown,
     rvest,
     stats,
     stringr,
