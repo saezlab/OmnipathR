@@ -32,6 +32,9 @@
 #' @noRd
 taxon_names_table <- function(){
 
+    # NSE vs. R CMD check workaround
+    ncbi_tax_id <- NULL
+
     ensembl_organisms() %>%
     {bind_cols(
         mutate(

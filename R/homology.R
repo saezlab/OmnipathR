@@ -111,7 +111,7 @@ homology_translate <- function(
 
     # NSE vs. R CMD check workaround
     b_orthology_type <- b_orthology_confidence <- uniprot__homology <-
-    b_ensembl_peptide__homology <- b_ensembl_peptide <- NULL
+    b_ensembl_peptide__homology <- b_ensembl_peptide <- ensp <- NULL
 
     UNIPROT_DEFAULTS <- c('uniprot', 'uniprot', 'genesymbol')
     GENESYMBOL_DEFAULTS <- c('genesymbol')
