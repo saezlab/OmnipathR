@@ -33,6 +33,7 @@ vignettes/figure
 ^archives.*$
 ^.*\.log$
 .*/testdir.*$
+^tests/testthat/_snaps
 .*kate-swp$
 ^omnipathr-log.*$
 ^man/figures.*$
@@ -40,3 +41,5 @@ vignettes/figure
 ^\.git_merge_output\.txt$
 ^docs
 ^attic
+^tmppkg
+OmnipathR\.BiocCheck
