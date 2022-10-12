@@ -457,32 +457,57 @@ null_or_call <- function(value, fun, ...){
 
 #' Returns `value1` if it's not zero length otherwise `value2`
 #'
-#' @importFrom magrittr %>% equals
+#' @importFrom magrittr %>%
 #'
 #' @noRd
 if_empty <- function(value1, value2){
 
     value1 %>%
-    length %>%
-    equals(0) %>%
+    is_empty %>%
     `if`(value2, value1)
+
+}
+
+
+#' Tells if value is NULL or a vector of length zero
+#'
+#' @importFrom magrittr %>% equals
+#'
+#' @noRd
+is_empty <- function(value){
+
+    value %>% length %>% equals(0L)
+
+}
+
+
+
+#' Tells if value is NULL or a vector of length zero or an empty string
+#'
+#' @importFrom magrittr %>% extract
+#'
+#' @noRd
+is_empty_2 <- function(value){
+
+    value %>%
+    {
+        is.null(.) ||
+        length(.) == 0L ||
+        !is.na(extract(., 1L)) && extract(., 1L) == ''
+    }
 
 }
 
 
 #' Returns `value1` if it's not NULL or zero length otherwise `value2`
 #'
-#' @importFrom magrittr %>% extract
+#' @importFrom magrittr %>%
 #'
 #' @noRd
 if_null_len0 <- function(value1, value2){
 
     value1 %>%
-    {
-        is.null(.) ||
-        length(.) == 0 ||
-        !is.na(extract(., 1)) && extract(., 1) == ''
-    } %>%
+    is_empty_2 %>%
     `if`(value2, value1)
 
 }
