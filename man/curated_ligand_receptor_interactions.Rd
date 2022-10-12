@@ -5,8 +5,8 @@
 \title{Curated ligand-receptor interactions}
 \usage{
 curated_ligand_receptor_interactions(
-  curated_resources = c("Guide2Pharma", "HPMR", "ICELLNET", "Kirouac2010",
-    "CellTalkDB", "CellChatDB", "connectomeDB2020"),
+  curated_resources = c("Guide2Pharma", "HPMR", "ICELLNET", "Kirouac2010", "CellTalkDB",
+    "CellChatDB", "connectomeDB2020"),
   cellphonedb = TRUE,
   cellinker = TRUE,
   talklr = TRUE,

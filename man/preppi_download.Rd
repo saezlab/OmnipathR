@@ -26,7 +26,9 @@ in this table are supposed to be correct with a > 0.5 probability.
 PrePPI is a combination of many prediction methods, each resulting a
 score. For an explanation of the scores see
 \url{https://honiglab.c2b2.columbia.edu/hfpd/help/Manual.html}.
-The minimum, median and maximum values of the scores:\preformatted{| Score   | Minimum | Median   | Maximum            |
+The minimum, median and maximum values of the scores:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{| Score   | Minimum | Median   | Maximum            |
 | ------- | ------- | -------- | ------------------ |
 | str     |       0 |     5.5  |           6,495    |
 | protpep |       0 |     3.53 |          38,138    |
@@ -39,7 +41,7 @@ The minimum, median and maximum values of the scores:\preformatted{| Score   | M
 | total   |       0 | 1,292    | 106,197,000,000    |
 | exp     |       1 |   958    |           4,626    |
 | final   |     600 | 1,778    |            4.91e14 |
-}
+}\if{html}{\out{</div>}}
 }
 \examples{
 preppi <- preppi_download()

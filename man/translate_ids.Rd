@@ -74,7 +74,9 @@ are the identifier type abbreviations used in the UniProt API, please
 refer to the table here: \url{https://www.uniprot.org/help/api_idmapping}.
 In addition, simple synonyms are available which realize a uniform API
 for the uploadlists and UniProt query based backends. These are the
-followings:\preformatted{| OmnipathR      | Uploadlists          | UniProt query           |
+followings:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{| OmnipathR      | Uploadlists          | UniProt query           |
 | -------------- | -------------------- | ----------------------- |
 | uniprot        | ACC                  | id                      |
 | uniprot_entry  | ID                   | entry name              |
@@ -96,7 +98,7 @@ followings:\preformatted{| OmnipathR      | Uploadlists          | UniProt query
 | gi             | P_GI                 |                         |
 | pir            | PIR                  |                         |
 | pdb            | PDB_ID               |                         |
-}
+}\if{html}{\out{</div>}}
 
 The mapping between identifiers can be ambiguous. In this case one row
 in the original data frame yields multiple rows or elements in the
