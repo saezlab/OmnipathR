@@ -46,7 +46,7 @@ pubmed_open <- function(pmids, browser = NULL, sep = ';', max_pages = 25L){
 
     browser %<>% if_null(getOption('browser'))
 
-    if(is.null(browser)){
+    if(is_empty_2(browser)){
 
         logger::log_error(
             'To open pages in a web browser, set the `browser` option. ',
@@ -57,6 +57,8 @@ pubmed_open <- function(pmids, browser = NULL, sep = ';', max_pages = 25L){
     }
 
     withr::local_options(browser = browser)
+
+    logger::log_trace('Browser is: `%s`', browser)
 
     pmids %>%
     as.character %>%
