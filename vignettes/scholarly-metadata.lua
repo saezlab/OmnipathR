@@ -22,7 +22,7 @@ local List = require 'pandoc.List'
 -- @param v a metadata value
 -- @treturn string one of `Blocks`, `Inlines`, `List`, `Map`, `string`, `boolean`
 local function metatype (v)
-  if PANDOC_VERSION <= pandoc.types.Version({2, 16, 2}) then
+  if PANDOC_VERSION[1] <= 2 and PANDOC_VERSION[2] <= 16 then
     local metatag = type(v) == 'table' and v.t and v.t:gsub('^Meta', '')
     return metatag and metatag ~= 'Map' and metatag or type(v)
   end
