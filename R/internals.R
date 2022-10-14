@@ -305,7 +305,7 @@ download_base <- function(
             if(attempt == retries){
 
                 log_error(msg)
-                stop(msg)
+                stop(result)
 
             }else{
 
