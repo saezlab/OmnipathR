@@ -49,16 +49,34 @@
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr left_join mutate select
 #' @importFrom readr read_tsv cols col_character
+#' @importFrom tibble tibble
 regnetwork_download <- function(organism = 'human'){
 
     # NSE vs. R CMD check workaround
     source_entrez <- target_entrez <- NULL
 
-    path <-
-        download_to_cache(
-            url_key = 'regnetwork',
-            url_param = list(organism)
+    columns <-
+        c(
+            'source_genesymbol',
+            'source_entrez',
+            'target_genesymbol',
+            'target_entrez'
         )
+
+    path <-
+        tryCatch(
+            {download_to_cache(
+                url_key = 'regnetwork',
+                url_param = list(organism)
+            )},
+            error = regnetwork_error
+        )
+
+    if(is.null(path)){
+
+        return(empty_char_tibble(columns))
+
+    }
 
     con <- unz(path, sprintf('%s.source', organism), open = 'rb')
 
@@ -66,12 +84,7 @@ regnetwork_download <- function(organism = 'human'){
 
     con %>%
     read_tsv(
-        col_names = c(
-            'source_genesymbol',
-            'source_entrez',
-            'target_genesymbol',
-            'target_entrez'
-        ),
+        col_names = columns,
         col_types = cols(
             .default = col_character()
         ),
@@ -121,11 +134,27 @@ regnetwork_directions <- function(organism = 'human'){
     # NSE vs. R CMD check workaround
     effect <- NULL
 
-    path <-
-        download_to_cache(
-            url_key = 'regnetwork',
-            url_param = list('RegulatoryDirections')
+    columns <-
+        c(
+            'source_genesymbol',
+            'source_entrez',
+            'target_genesymbol',
+            'target_entrez',
+            'effect'
         )
+
+    path <-
+        tryCatch(
+            {download_to_cache(
+                url_key = 'regnetwork',
+                url_param = list('RegulatoryDirections')
+            )},
+            error = regnetwork_error
+        )
+
+    if(is.null(path)){
+        return(empty_char_tibble(columns))
+    }
 
     con <-
         path %>%
@@ -137,13 +166,7 @@ regnetwork_directions <- function(organism = 'human'){
     read_delim(
         delim = ' ',
         skip = 1,
-        col_names = c(
-            'source_genesymbol',
-            'source_entrez',
-            'target_genesymbol',
-            'target_entrez',
-            'effect'
-        ),
+        col_names = columns,
         col_types = cols(
             .default = col_character()
         ),
@@ -174,5 +197,65 @@ mirna_or_protein <- function(ids){
         'mirna',
         'protein'
     )
+
+}
+
+
+#' Handling the RegNetwork SSL error
+#'
+#' This error happens because the RegNetwork server is not configured properly
+#' to send its intermediate certificate to clients. The missing intermediate
+#' certificate is the "InCommon RSA Server CA" one.
+#'
+#' @importFrom stringr str_detect
+#' @importFrom logger log_error
+#' @noRd
+regnetwork_error <- function(e){
+
+    cond <- conditionMessage(e)
+
+    if(str_detect(cond, 'SSL')){
+
+        msg <-
+            paste0(
+                'The server at regnetworkweb.org missed to send ',
+                'the InCommon RSA Server CA certificate that is ',
+                'required for the verification of the server`s ',
+                'identity and establishment of a TLS connection. ',
+                'You can work around this issue by adding the ',
+                'InCommon RSA Server CA certificate to the ',
+                'trusted certificate store which is used by the ',
+                'R `curl` package. Now we raise only a warning ',
+                'and return an empty data frame.'
+            ) %>%
+            sprintf('%s The original error: %s', ., cond)
+
+        log_error(msg)
+        warning(msg)
+        return(NULL)
+
+    }else{
+
+        stop(e)
+
+    }
+
+}
+
+
+#' An empty tibble with character type columns
+#'
+#' @param header Character vector: column names.
+#'
+#' @importFrom rlang set_names exec !!!
+#' @importFrom tibble tibble
+#' @noRd
+empty_char_tibble <- function(header){
+
+    character() %>%
+    list() %>%
+    rep(length(header)) %>%
+    set_names(header) %>%
+    exec(tibble, !!!.)
 
 }
