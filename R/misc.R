@@ -826,3 +826,17 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
     jsonlite::fromJSON(txt = `if`(json_ok, lines, '[]'), ...)
 
 }
+
+
+#' Is the package running on a build server?
+#'
+#' Build servers are for automated testing of packages. Bioconductor and
+#' Saez Lab (developers & maintainers of this package) both run their own
+#' build servers.
+#'
+#' @noRd
+.on_buildserver <- function(){
+
+    Sys.info()['user'] %in% c('biocbuild', 'omnipath')
+
+}
