@@ -7,7 +7,7 @@ unexpected combinations which are false positives in the context of
 intercellular communication. import_intercell_network
 provides a shortcut (high_confidence) to do basic quality filtering.
 For custom filtering or experimentation with the parameters we offer this
-function."><title>Quality filter an intercell network — filter_intercell_network • OmnipathR</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Quality filter an intercell network — filter_intercell_network"><meta property="og:description" content="The intercell database  of OmniPath covers a very broad range of possible
+function."><title>Quality filter an intercell network — filter_intercell_network • OmnipathR</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Quality filter an intercell network — filter_intercell_network"><meta property="og:description" content="The intercell database  of OmniPath covers a very broad range of possible
 ways of cell to cell communication, and the pieces of information, such as
 localization, topology, function and interaction, are combined from many,
 often independent sources. This unavoidably result some weird and
@@ -32,7 +32,7 @@ function."><meta property="og:image" content="https://saezlab.github.io/Omnipath
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.21</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,26 +106,26 @@ function.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">filter_intercell_network</span><span class="op">(</span>
-  <span class="va">network</span>,
-  transmitter_topology <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"secreted"</span>, <span class="st">"plasma_membrane_transmembrane"</span>,
-    <span class="st">"plasma_membrane_peripheral"</span><span class="op">)</span>,
-  receiver_topology <span class="op">=</span> <span class="st">"plasma_membrane_transmembrane"</span>,
-  min_curation_effort <span class="op">=</span> <span class="fl">2</span>,
-  min_resources <span class="op">=</span> <span class="fl">1</span>,
-  min_references <span class="op">=</span> <span class="fl">0</span>,
-  min_provenances <span class="op">=</span> <span class="fl">1</span>,
-  consensus_percentile <span class="op">=</span> <span class="fl">50</span>,
-  loc_consensus_percentile <span class="op">=</span> <span class="fl">30</span>,
-  ligand_receptor <span class="op">=</span> <span class="cn">FALSE</span>,
-  simplify <span class="op">=</span> <span class="cn">FALSE</span>,
-  unique_pairs <span class="op">=</span> <span class="cn">FALSE</span>,
-  omnipath <span class="op">=</span> <span class="cn">TRUE</span>,
-  ligrecextra <span class="op">=</span> <span class="cn">TRUE</span>,
-  kinaseextra <span class="op">=</span> <span class="cn">FALSE</span>,
-  pathwayextra <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_intercell_network</span><span class="op">(</span></span>
+<span>  <span class="va">network</span>,</span>
+<span>  transmitter_topology <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"secreted"</span>, <span class="st">"plasma_membrane_transmembrane"</span>,</span>
+<span>    <span class="st">"plasma_membrane_peripheral"</span><span class="op">)</span>,</span>
+<span>  receiver_topology <span class="op">=</span> <span class="st">"plasma_membrane_transmembrane"</span>,</span>
+<span>  min_curation_effort <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  min_resources <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  min_references <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  min_provenances <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  consensus_percentile <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  loc_consensus_percentile <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  ligand_receptor <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  simplify <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  unique_pairs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  omnipath <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ligrecextra <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  kinaseextra <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pathwayextra <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -133,27 +133,41 @@ function.</p>
     <dl><dt>network</dt>
 <dd><p>An intercell network data frame, as provided by
 <code><a href="import_intercell_network.html">import_intercell_network</a></code>, without <code>simplify</code>.</p></dd>
+
+
 <dt>transmitter_topology</dt>
 <dd><p>Character vector: topologies allowed for the
 entities in transmitter role. Abbreviations allowed: "sec", "pmtm"
 and "pmp".</p></dd>
+
+
 <dt>receiver_topology</dt>
 <dd><p>Same as <code>transmitter_topology</code> for the
 entities in the receiver role.</p></dd>
+
+
 <dt>min_curation_effort</dt>
 <dd><p>Numeric: a minimum value of curation effort
 (resource-reference pairs) for network interactions. Use zero to
 disable filtering.</p></dd>
+
+
 <dt>min_resources</dt>
 <dd><p>Numeric: minimum number of resources for
 interactions. The value 1 means no filtering.</p></dd>
+
+
 <dt>min_references</dt>
 <dd><p>Numeric: minimum number of references for
 interactions. Use zero to disable filtering.</p></dd>
+
+
 <dt>min_provenances</dt>
 <dd><p>Numeric: minimum number of provenances (either
 resources or references) for interactions. Use zero or one to
 disable filtering.</p></dd>
+
+
 <dt>consensus_percentile</dt>
 <dd><p>Numeric: percentile threshold for the consensus
 score of generic categories in intercell annotations. The consensus
@@ -166,16 +180,22 @@ either in the 0-1 range, or will be divided by 100 if greater than 1.
 The percentiles will be calculated against the generic composite
 categories and then will be applied to their resource specific
 annotations and specific child categories.</p></dd>
+
+
 <dt>loc_consensus_percentile</dt>
 <dd><p>Numeric: similar to
 <code>consensus_percentile</code> for major localizations. For example, with
 a value of 50, the secreted, plasma membrane transmembrane or
 peripheral attributes will be <code>TRUE</code> only where at least 50
 percent of the resources support these.</p></dd>
+
+
 <dt>ligand_receptor</dt>
 <dd><p>Logical. If <code>TRUE</code>, only <em>ligand</em> and
 <em>receptor</em> annotations will be used instead of the more generic
 <em>transmitter</em> and <em>receiver</em> categories.</p></dd>
+
+
 <dt>simplify</dt>
 <dd><p>Logical: keep only the most often used columns. This
 function combines a network data frame with two copies of the
@@ -184,31 +204,46 @@ some columns. With this option we keep only the names of the
 interacting pair, their intercellular communication roles, and the
 minimal information of the origin of both the interaction and
 the annotations.</p></dd>
+
+
 <dt>unique_pairs</dt>
 <dd><p>Logical: instead of having separate rows for each
 pair of annotations, drop the annotations and reduce the data frame to
 unique interacting pairs. See <code><a href="unique_intercell_network.html">unique_intercell_network</a></code>
 for details.</p></dd>
+
+
 <dt>omnipath</dt>
 <dd><p>Logical: shortcut to include the <em>omnipath</em> dataset
 in the interactions query.</p></dd>
+
+
 <dt>ligrecextra</dt>
 <dd><p>Logical: shortcut to include the <em>ligrecextra</em>
 dataset in the interactions query.</p></dd>
+
+
 <dt>kinaseextra</dt>
 <dd><p>Logical: shortcut to include the <em>kinaseextra</em>
 dataset in the interactions query.</p></dd>
+
+
 <dt>pathwayextra</dt>
 <dd><p>Logical: shortcut to include the <em>pathwayextra</em>
 dataset in the interactions query.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>If <code>simplify</code> or <code>unique_pairs</code> is <code>TRUE</code>,
 additional column  names can be passed here to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>
 on the final data frame. Otherwise ignored.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An intercell network data frame filtered.</p>
+    
+
+<p>An intercell network data frame filtered.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -221,14 +256,14 @@ on the final data frame. Otherwise ignored.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">icn</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_intercell_network.html">import_intercell_network</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">icn_f</span> <span class="op">&lt;-</span> <span class="fu">filter_intercell_network</span><span class="op">(</span></span>
-<span class="r-in">    <span class="va">icn</span>,</span>
-<span class="r-in">    consensus_percentile <span class="op">=</span> <span class="fl">75</span>,</span>
-<span class="r-in">    min_provenances <span class="op">=</span> <span class="fl">3</span>,</span>
-<span class="r-in">    simplify <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">icn</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_intercell_network.html">import_intercell_network</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">icn_f</span> <span class="op">&lt;-</span> <span class="fu">filter_intercell_network</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">icn</span>,</span></span>
+<span class="r-in"><span>    consensus_percentile <span class="op">=</span> <span class="fl">75</span>,</span></span>
+<span class="r-in"><span>    min_provenances <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>    simplify <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -240,8 +275,7 @@ on the final data frame. Otherwise ignored.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer></div>

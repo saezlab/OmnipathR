@@ -25,8 +25,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="OmniPath web service client and more">
@@ -62,7 +62,7 @@
     
     <a class="navbar-brand me-2" href="index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.21</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,6 @@
     <a class="dropdown-item" href="articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     <a class="dropdown-item" href="articles/extra_attrs.html">Resource specific interaction attributes</a>
     <a class="dropdown-item" href="articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
-    <a class="dropdown-item" href="articles/mouse.html">Working with mouse, rat and other organisms</a>
     <a class="dropdown-item" href="articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
     <a class="dropdown-item" href="articles/paths.html">Pathway construction</a>
@@ -128,8 +127,7 @@
 <img src="logo.svg" class="logo" alt=""><h1 id="omnipathr">OmnipathR<a class="anchor" aria-label="anchor" href="#omnipathr"></a>
 </h1>
 </div>
-<p>An <code>R</code> client for the <strong>OmniPath</strong> web
-service and many other resources.</p>
+<p>An <code>R</code> client for the <strong>OmniPath</strong> web service and many other resources.</p>
 <div class="section level2">
 <h2 id="package-contents">Package contents<a class="anchor" aria-label="anchor" href="#package-contents"></a>
 </h2>
@@ -138,18 +136,14 @@ service and many other resources.</p>
 <li>Functions for post-processing OmniPath data</li>
 <li>Ensembl BioMart, UniProt and KEGG clients</li>
 <li>Access to other databases (18+ resources, see below)</li>
-<li>Integration to NicheNet, a method to infer ligand activities from
-transcriptomics data</li>
+<li>Integration to NicheNet, a method to infer ligand activities from transcriptomics data</li>
 </ul>
 <div class="section level3">
 <h3 id="omnipath-web-service-client">OmniPath web service client<a class="anchor" aria-label="anchor" href="#omnipath-web-service-client"></a>
 </h3>
-<p><em>OmnipathR</em> retrieves the data from the OmniPath web service
-at</p>
+<p><em>OmnipathR</em> retrieves the data from the OmniPath web service at</p>
 <p><a href="https://omnipathdb.org/" class="external-link uri">https://omnipathdb.org/</a></p>
-<p>The web service implements a very simple REST style API. This package
-make requests by the HTTP protocol to retreive the data. Hence, fast
-Internet access is required for a proper use of <em>OmnipathR</em>.</p>
+<p>The web service implements a very simple REST style API. This package make requests by the HTTP protocol to retreive the data. Hence, fast Internet access is required for a proper use of <em>OmnipathR</em>.</p>
 <div class="section level4">
 <h4 id="what-is-omnipath">What is OmniPath?<a class="anchor" aria-label="anchor" href="#what-is-omnipath"></a>
 </h4>
@@ -158,58 +152,40 @@ Internet access is required for a proper use of <em>OmnipathR</em>.</p>
 <li>Protein-protein, TF target and miRNA-mRNA interactions</li>
 <li>Enzyme-PTM relationships</li>
 <li>Protein complexes</li>
-<li>Annotations of protein function, structure, localization,
-expression</li>
+<li>Annotations of protein function, structure, localization, expression</li>
 <li>Intercellular communication roles of proteins</li>
 </ul>
-<p>To learn more about OmniPath, you can visit its <a href="https://omnipathdb.org/" class="external-link">website</a>, or read our recent <a href="https://www.embopress.org/doi/full/10.15252/msb.20209923" class="external-link">publication</a>
-or our first <a href="https://www.nature.com/articles/nmeth.4077" class="external-link">paper
-from 2016</a>, especially its <a href="https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4077/MediaObjects/41592_2016_BFnmeth4077_MOESM495_ESM.pdf" class="external-link">supplementary
-material</a>.</p>
+<p>To learn more about OmniPath, you can visit its <a href="https://omnipathdb.org/" class="external-link">website</a>, or read our recent <a href="https://www.embopress.org/doi/full/10.15252/msb.20209923" class="external-link">publication</a> or our first <a href="https://www.nature.com/articles/nmeth.4077" class="external-link">paper from 2016</a>, especially its <a href="https://static-content.springer.com/esm/art%3A10.1038%2Fnmeth.4077/MediaObjects/41592_2016_BFnmeth4077_MOESM495_ESM.pdf" class="external-link">supplementary material</a>.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="access-to-further-resources">Access to further resources<a class="anchor" aria-label="anchor" href="#access-to-further-resources"></a>
 </h3>
-<p>The package provides access to a number of other databases: BioPlex,
-ConsensusPathDB, EVEX, Gene Ontology, Guide to Pharmacology
-(IUPHAR/BPS), Harmonizome, HTRIdb, Human Phenotype Ontology, InWeb
-InBioMap, KEGG Pathway, Pathway Commons, PrePPI, Ramilowski et al. 2015,
-RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al. 2011.</p>
+<p>The package provides access to a number of other databases: BioPlex, ConsensusPathDB, EVEX, Gene Ontology, Guide to Pharmacology (IUPHAR/BPS), Harmonizome, HTRIdb, Human Phenotype Ontology, InWeb InBioMap, KEGG Pathway, Pathway Commons, PrePPI, Ramilowski et al. 2015, RegNetwork, ReMap, TF census, TRRUST and Vinayagam et al. 2011.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The latest version of the reference manual is available from <a href="https://static.omnipathdb.org/omnipathr_manual.pdf" class="external-link uri">https://static.omnipathdb.org/omnipathr_manual.pdf</a>.
-Tutorials can be found at <a href="https://workflows.omnipathdb.org/" class="external-link uri">https://workflows.omnipathdb.org/</a>. Sroll down for quick
-start examples.</p>
+<p>The latest version of the reference manual is available from <a href="https://static.omnipathdb.org/omnipathr_manual.pdf" class="external-link uri">https://static.omnipathdb.org/omnipathr_manual.pdf</a>. Tutorials can be found at <a href="https://workflows.omnipathdb.org/" class="external-link uri">https://workflows.omnipathdb.org/</a>. Sroll down for quick start examples.</p>
 </div>
 <div class="section level2">
 <h2 id="omnipath-query-types">OmniPath query types<a class="anchor" aria-label="anchor" href="#omnipath-query-types"></a>
 </h2>
-<p>We provide here a brief summary about the data available through
-<em>OmnipathR</em>. <em>OmnipathR</em> provides access to 5 types of
-queries:</p>
+<p>We provide here a brief summary about the data available through <em>OmnipathR</em>. <em>OmnipathR</em> provides access to 5 types of queries:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Interactions</strong>: protein-protein interactions from
-different datasets.</li>
+<strong>Interactions</strong>: protein-protein interactions from different datasets.</li>
 <li>
-<strong>Enzyme-substrate</strong>: enzyme-PTM (post-translational
-modification) relationships.</li>
+<strong>Enzyme-substrate</strong>: enzyme-PTM (post-translational modification) relationships.</li>
 <li>
-<strong>Complexes</strong>: comprehensive database of more than
-22000 protein complexes.</li>
+<strong>Complexes</strong>: comprehensive database of more than 22000 protein complexes.</li>
 <li>
-<strong>Annotations</strong>: large variety of data about proteins
-and complexes features.</li>
+<strong>Annotations</strong>: large variety of data about proteins and complexes features.</li>
 <li>
-<strong>Intercell</strong>: information on the roles in
-inter-cellular signaling.</li>
+<strong>Intercell</strong>: information on the roles in inter-cellular signaling.</li>
 </ol>
-<p>For a more detailed information, we recommend you to visit the
-following sites:</p>
+<p>For a more detailed information, we recommend you to visit the following sites:</p>
 <p><a href="https://omnipathdb.org/" class="external-link uri">https://omnipathdb.org/</a></p>
 <p><a href="https://omnipathdb.org/info" class="external-link uri">https://omnipathdb.org/info</a></p>
 <p><a href="https://github.com/saezlab/pypath/blob/master/webservice.rst" class="external-link uri">https://github.com/saezlab/pypath/blob/master/webservice.rst</a></p>
@@ -222,51 +198,42 @@ following sites:</p>
 <div class="section level3">
 <h3 id="from-bioconductor">From Bioconductor<a class="anchor" aria-label="anchor" href="#from-bioconductor"></a>
 </h3>
-<p><em>OmnipathR</em> is a freely available package deposited on
-<em>Bioconductor</em> and <em>Github</em>: (<a href="https://bioconductor.org/" class="external-link uri">https://bioconductor.org/</a>, <a href="https://github.com/saezlab/OmnipathR" class="external-link uri">https://github.com/saezlab/OmnipathR</a>).</p>
-<p>You can install it by running the following commands on a
-<code>R</code> console:</p>
-<pre class="{r}"><code><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span>
-
-<span class="co">## Last release in Bioconductor</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'OmnipathR'</span>, version <span class="op">=</span> <span class="st">'3.12'</span><span class="op">)</span>
-<span class="co">## Development version with the lastest updates</span>
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'OmnipathR'</span>, version <span class="op">=</span> <span class="st">'devel'</span><span class="op">)</span></code></pre>
+<p><em>OmnipathR</em> is a freely available package deposited on <em>Bioconductor</em> and <em>Github</em>: (<a href="https://bioconductor.org/" class="external-link uri">https://bioconductor.org/</a>, <a href="https://github.com/saezlab/OmnipathR" class="external-link uri">https://github.com/saezlab/OmnipathR</a>).</p>
+<p>You can install it by running the following commands on a <code>R</code> console:</p>
+<pre class="{r}"><code><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Last release in Bioconductor</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'OmnipathR'</span>, version <span class="op">=</span> <span class="st">'3.12'</span><span class="op">)</span></span>
+<span><span class="co">## Development version with the lastest updates</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'OmnipathR'</span>, version <span class="op">=</span> <span class="st">'devel'</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="from-github">From github<a class="anchor" aria-label="anchor" href="#from-github"></a>
 </h3>
-<p>We add new features to OmnipathR way more often than the Bioconductor
-release frequency. To make use of the recent developments, you can use
-<code>devtools</code> to install the package directly from github:</p>
-<pre class="{r}"><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
-<span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'saezlab/OmnipathR'</span><span class="op">)</span></code></pre>
+<p>We add new features to OmnipathR way more often than the Bioconductor release frequency. To make use of the recent developments, you can use <code>devtools</code> to install the package directly from github:</p>
+<pre class="{r}"><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'saezlab/OmnipathR'</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
 <h2 id="getting-started-and-some-usage-examples">Getting started and some usage examples<a class="anchor" aria-label="anchor" href="#getting-started-and-some-usage-examples"></a>
 </h2>
-<p>To get started, we strongly recommend to read our main vignette in
-order to deal with the different types of queries and handle the data
-they return:</p>
+<p>To get started, we strongly recommend to read our main vignette in order to deal with the different types of queries and handle the data they return:</p>
 <p><a href="https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html" class="uri">https://saezlab.github.io/OmnipathR/articles/omnipath_intro.html</a></p>
 <p>You can also check the manual:</p>
 <p><a href="https://saezlab.github.io/OmnipathR/reference/index.html" class="uri">https://saezlab.github.io/OmnipathR/reference/index.html</a></p>
 <p>In addition, we provide here some examples for a quick start:</p>
-<pre class="{r}"><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></code></pre>
-<p>Download human protein-protein interactions from the specified
-resources:</p>
-<pre class="{r}"><code><span class="va">interactions</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span>
-    resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SignaLink3'</span>, <span class="st">'PhosphoSite'</span>, <span class="st">'SIGNOR'</span><span class="op">)</span>
-<span class="op">)</span></code></pre>
-<p>Download human enzyme-PTM relationships from the specified
-resources:</p>
-<pre class="{r}"><code><span class="va">enzsub</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PhosphoSite'</span>, <span class="st">'SIGNOR'</span><span class="op">)</span><span class="op">)</span></code></pre>
-<p>Convert both data frames into networks (<code>igraph</code>
-objects)</p>
-<pre class="{r}"><code><span class="va">ptms_g</span> <span class="op">=</span> <span class="fu"><a href="reference/enzsub_graph.html">ptms_graph</a></span><span class="op">(</span>ptms <span class="op">=</span> <span class="va">enzsub</span><span class="op">)</span>
-<span class="va">OPI_g</span> <span class="op">=</span> <span class="fu"><a href="reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span>interactions <span class="op">=</span> <span class="va">interactions</span><span class="op">)</span></code></pre>
+<pre class="{r}"><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></span></code></pre>
+<p>Download human protein-protein interactions from the specified resources:</p>
+<pre class="{r}"><code><span><span class="va">interactions</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span></span>
+<span>    resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SignaLink3'</span>, <span class="st">'PhosphoSite'</span>, <span class="st">'SIGNOR'</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre>
+<p>Download human enzyme-PTM relationships from the specified resources:</p>
+<pre class="{r}"><code><span><span class="va">enzsub</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PhosphoSite'</span>, <span class="st">'SIGNOR'</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<p>Convert both data frames into networks (<code>igraph</code> objects)</p>
+<pre class="{r}"><code><span><span class="va">ptms_g</span> <span class="op">=</span> <span class="fu"><a href="reference/enzsub_graph.html">ptms_graph</a></span><span class="op">(</span>ptms <span class="op">=</span> <span class="va">enzsub</span><span class="op">)</span></span>
+<span><span class="va">OPI_g</span> <span class="op">=</span> <span class="fu"><a href="reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span>interactions <span class="op">=</span> <span class="va">interactions</span><span class="op">)</span></span></code></pre>
 <p>Print some interactions in a nice format:</p>
 <pre class="{r}"><code>print_interactions(head(interactions))
 
@@ -277,8 +244,7 @@ objects)</p>
 5    LYN (P07948)  ==( + )==&gt; TRPV4 (Q9HBA0)           9            2
 6  PTPN1 (P18031)  ==( - )==&gt; TRPV6 (Q9H1D0)           3            2
 3 PRKACA (P17612)  ==( + )==&gt; TRPV1 (Q8NER1)           6            1</code></pre>
-<p>Find interactions between a specific kinase and a specific
-substrate:</p>
+<p>Find interactions between a specific kinase and a specific substrate:</p>
 <pre class="{r}"><code>print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
   substrate_genesymbol=='MAPK3'))
 
@@ -318,31 +284,22 @@ Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 <div class="section level3">
 <h3 id="cytoscape">Cytoscape<a class="anchor" aria-label="anchor" href="#cytoscape"></a>
 </h3>
-<p>The OmniPath Cytoscape app provides access to the interactions,
-enzyme-PTM relationships and some of the annotations:</p>
+<p>The OmniPath Cytoscape app provides access to the interactions, enzyme-PTM relationships and some of the annotations:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>apps.cytoscape.org<span class="sc">/</span>apps<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="customization">Customization<a class="anchor" aria-label="anchor" href="#customization"></a>
 </h3>
-<p>The <a href="https://github.com/saezlab/pypath" class="external-link"><em>pypath</em></a>
-Python module is a tool for building the OmniPath databases in a fully
-customizable way. We recommend to use pypath if you want to:</p>
+<p>The <a href="https://github.com/saezlab/pypath" class="external-link"><em>pypath</em></a> Python module is a tool for building the OmniPath databases in a fully customizable way. We recommend to use pypath if you want to:</p>
 <ul>
 <li>Tailor the database building to your needs</li>
 <li>Include resources not available in the public web service</li>
 <li>Use the rich Python APIs available for the database objects</li>
-<li>Make sure the data from the original sources is the most
-up-to-date</li>
-<li>Use the methods in <code>pypath.inputs</code> to download data from
-resources</li>
-<li>Use the various extra tools in <code>pypath.utils</code>, e.g. for
-identifier translation, homology translation, querying Gene Ontology,
-working with protein sequences, processing BioPAX, etc.</li>
+<li>Make sure the data from the original sources is the most up-to-date</li>
+<li>Use the methods in <code>pypath.inputs</code> to download data from resources</li>
+<li>Use the various extra tools in <code>pypath.utils</code>, e.g. for identifier translation, homology translation, querying Gene Ontology, working with protein sequences, processing BioPAX, etc.</li>
 </ul>
-<p>With <em>pypath</em> it’s also possible to run your own web service
-and serve your custom databases to the <em>OmnipathR</em> R client and
-the <em>omnipath</em> Python cient.</p>
+<p>With <em>pypath</em> it’s also possible to run your own web service and serve your custom databases to the <em>OmnipathR</em> R client and the <em>omnipath</em> Python cient.</p>
 </div>
 </div>
 <div class="section level2">
@@ -403,8 +360,7 @@ the <em>omnipath</em> Python cient.</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

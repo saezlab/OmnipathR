@@ -4,7 +4,7 @@ functions and involvement in biological processes. Gene products across
 many organisms are annotated with the ontology terms. This function
 downloads the gene-ontology term associations for certain model organisms
 or all organisms. For a description of the columns see
-http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/."><title>Gene annotations from Gene Ontology — go_annot_download • OmnipathR</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Gene annotations from Gene Ontology — go_annot_download"><meta property="og:description" content="Gene Ontology is an ontology of gene subcellular localizations, molecular
+http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/."><title>Gene annotations from Gene Ontology — go_annot_download • OmnipathR</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Gene annotations from Gene Ontology — go_annot_download"><meta property="og:description" content="Gene Ontology is an ontology of gene subcellular localizations, molecular
 functions and involvement in biological processes. Gene products across
 many organisms are annotated with the ontology terms. This function
 downloads the gene-ontology term associations for certain model organisms
@@ -26,14 +26,14 @@ http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/."><meta property
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.21</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
@@ -41,7 +41,9 @@ http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/."><meta property
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
     <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
@@ -95,7 +97,7 @@ or all organisms. For a description of the columns see
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">go_annot_download</span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"human"</span>, aspects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="st">"F"</span>, <span class="st">"P"</span><span class="op">)</span>, slim <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">go_annot_download</span><span class="op">(</span>organism <span class="op">=</span> <span class="st">"human"</span>, aspects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C"</span>, <span class="st">"F"</span>, <span class="st">"P"</span><span class="op">)</span>, slim <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -103,60 +105,68 @@ or all organisms. For a description of the columns see
     <dl><dt>organism</dt>
 <dd><p>Character: either "chicken", "cow", "dog", "human", "pig"
 or "uniprot_all".</p></dd>
+
+
 <dt>aspects</dt>
 <dd><p>Character vector with some of the following elements:
 "C" (cellular component), "F" (molecular function) and "P" (biological
 process). Gene Ontology is three separate ontologies called as three
 aspects. By this parameter you can control which aspects to include
 in the output.</p></dd>
+
+
 <dt>slim</dt>
 <dd><p>Character: if not <code>NULL</code>, the name of a GOsubset (slim).
 instead of the full GO annotation, the slim annotation will be
 returned. See details at <code><a href="go_annot_slim.html">go_annot_slim</a></code>. If <code>TRUE</code>,
 the "generic" slim will be used.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble (data frame) of annotations as it is provided by the
+    
+
+<p>A tibble (data frame) of annotations as it is provided by the
     database</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">goa_data</span> <span class="op">&lt;-</span> <span class="fu">go_annot_download</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">goa_data</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 616,308 × 17</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    db        db_object_id db_object_symbol qualifier  go_id db_ref evidence_code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> UniProtKB A0A024RBG1   NUDT4B           enables    GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> UniProtKB A0A024RBG1   NUDT4B           enables    GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> UniProtKB A0A024RBG1   NUDT4B           enables    GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> UniProtKB A0A024RBG1   NUDT4B           enables    GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> UniProtKB A0A024RBG1   NUDT4B           located_in GO:0… GO_RE… IDA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> UniProtKB A0A075B6H7   IGKV3-7          involved_… GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> UniProtKB A0A075B6H7   IGKV3-7          located_in GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> UniProtKB A0A075B6H7   IGKV3-7          part_of    GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> UniProtKB A0A075B6H8   IGKV1D-42        involved_… GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> UniProtKB A0A075B6H8   IGKV1D-42        located_in GO:0… GO_RE… IEA          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 616,298 more rows, and 10 more variables: with_or_from &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   aspect &lt;fct&gt;, db_object_name &lt;chr&gt;, db_object_synonym &lt;chr&gt;,</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">goa_data</span> <span class="op">&lt;-</span> <span class="fu">go_annot_download</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">goa_data</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 635,753 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    db        db_ob…¹ db_ob…² quali…³ go_id db_ref evide…⁴ with_…⁵ aspect db_ob…⁶</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> UniProtKB A0A024… NUDT4B  enables GO:0… GO_RE… IEA     UniPro… F      Diphos…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> UniProtKB A0A024… NUDT4B  enables GO:0… GO_RE… IEA     UniPro… F      Diphos…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> UniProtKB A0A024… NUDT4B  locate… GO:0… GO_RE… IDA     <span style="color: #BB0000;">NA</span>      C      Diphos…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> UniProtKB A0A075… IGKV3-7 involv… GO:0… GO_RE… IEA     UniPro… P      Probab…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> UniProtKB A0A075… IGKV3-7 locate… GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> UniProtKB A0A075… IGKV3-7 part_of GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> UniProtKB A0A075… IGKV1D… involv… GO:0… GO_RE… IEA     UniPro… P      Probab…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> UniProtKB A0A075… IGKV1D… locate… GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> UniProtKB A0A075… IGKV1D… part_of GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> UniProtKB A0A075… IGLV4-… involv… GO:0… GO_RE… IEA     UniPro… P      Immuno…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 635,743 more rows, 7 more variables: db_object_synonym &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   db_object_type &lt;fct&gt;, taxon &lt;fct&gt;, date &lt;date&gt;, assigned_by &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   annotation_extension &lt;chr&gt;, gene_product_from_id &lt;chr&gt;</span></span>
-<span class="r-in"><span class="co"># # A tibble: 606,840 x 17</span></span>
-<span class="r-in"><span class="co">#    db       db_object_id db_object_symbol qualifier go_id   db_ref</span></span>
-<span class="r-in"><span class="co">#    &lt;fct&gt;    &lt;chr&gt;        &lt;chr&gt;            &lt;fct&gt;     &lt;chr&gt;   &lt;chr&gt;</span></span>
-<span class="r-in"><span class="co">#  1 UniProt. A0A024RBG1   NUDT4B           NA        GO:000. GO_REF:00.</span></span>
-<span class="r-in"><span class="co">#  2 UniProt. A0A024RBG1   NUDT4B           NA        GO:000. GO_REF:00.</span></span>
-<span class="r-in"><span class="co">#  3 UniProt. A0A024RBG1   NUDT4B           NA        GO:004. GO_REF:00.</span></span>
-<span class="r-in"><span class="co">#  4 UniProt. A0A024RBG1   NUDT4B           NA        GO:005. GO_REF:00.</span></span>
-<span class="r-in"><span class="co">#  5 UniProt. A0A024RBG1   NUDT4B           NA        GO:005. GO_REF:00.</span></span>
-<span class="r-in"><span class="co"># # . with 606,830 more rows, and 11 more variables:</span></span>
-<span class="r-in"><span class="co"># #   evidence_code &lt;fct&gt;, with_or_from &lt;chr&gt;, aspect &lt;fct&gt;,</span></span>
-<span class="r-in"><span class="co"># #   db_object_name &lt;chr&gt;, db_object_synonym &lt;chr&gt;,</span></span>
-<span class="r-in"><span class="co"># #   db_object_type &lt;fct&gt;, taxon &lt;fct&gt;, date &lt;date&gt;,</span></span>
-<span class="r-in"><span class="co"># #   assigned_by &lt;fct&gt;, annotation_extension &lt;chr&gt;,</span></span>
-<span class="r-in"><span class="co"># #   gene_product_from_id &lt;chr&gt;</span></span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   annotation_extension &lt;chr&gt;, gene_product_from_id &lt;chr&gt;, and abbreviated</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable names ¹​db_object_id, ²​db_object_symbol, ³​qualifier,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​evidence_code, ⁵​with_or_from, ⁶​db_object_name</span></span>
+<span class="r-in"><span><span class="co"># # A tibble: 606,840 x 17</span></span></span>
+<span class="r-in"><span><span class="co">#    db       db_object_id db_object_symbol qualifier go_id   db_ref</span></span></span>
+<span class="r-in"><span><span class="co">#    &lt;fct&gt;    &lt;chr&gt;        &lt;chr&gt;            &lt;fct&gt;     &lt;chr&gt;   &lt;chr&gt;</span></span></span>
+<span class="r-in"><span><span class="co">#  1 UniProt. A0A024RBG1   NUDT4B           NA        GO:000. GO_REF:00.</span></span></span>
+<span class="r-in"><span><span class="co">#  2 UniProt. A0A024RBG1   NUDT4B           NA        GO:000. GO_REF:00.</span></span></span>
+<span class="r-in"><span><span class="co">#  3 UniProt. A0A024RBG1   NUDT4B           NA        GO:004. GO_REF:00.</span></span></span>
+<span class="r-in"><span><span class="co">#  4 UniProt. A0A024RBG1   NUDT4B           NA        GO:005. GO_REF:00.</span></span></span>
+<span class="r-in"><span><span class="co">#  5 UniProt. A0A024RBG1   NUDT4B           NA        GO:005. GO_REF:00.</span></span></span>
+<span class="r-in"><span><span class="co"># # . with 606,830 more rows, and 11 more variables:</span></span></span>
+<span class="r-in"><span><span class="co"># #   evidence_code &lt;fct&gt;, with_or_from &lt;chr&gt;, aspect &lt;fct&gt;,</span></span></span>
+<span class="r-in"><span><span class="co"># #   db_object_name &lt;chr&gt;, db_object_synonym &lt;chr&gt;,</span></span></span>
+<span class="r-in"><span><span class="co"># #   db_object_type &lt;fct&gt;, taxon &lt;fct&gt;, date &lt;date&gt;,</span></span></span>
+<span class="r-in"><span><span class="co"># #   assigned_by &lt;fct&gt;, annotation_extension &lt;chr&gt;,</span></span></span>
+<span class="r-in"><span><span class="co"># #   gene_product_from_id &lt;chr&gt;</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -168,7 +178,7 @@ the "generic" slim will be used.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer></div>
