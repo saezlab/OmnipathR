@@ -240,7 +240,18 @@ omnipath_locked_cache_error <- function(){
         options('omnipath.cache_timeout')[[1]]
     )
     logger::log_fatal(msg)
-    stop(msg)
+
+    if(.on_buildserver()){
+        logger::log_warn(
+            paste0(
+                'Running on a build server: unlocking the cache this time, ',
+                'to work around an issue with Bioc build servers.'
+            )
+        )
+        omnipath_unlock_cache_db()
+    }else{
+        stop(msg)
+    }
 
 }
 
