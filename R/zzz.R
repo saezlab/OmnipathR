@@ -30,7 +30,7 @@
     omnipath_init_log(pkgname = pkgname)
     logger::log_info('Welcome to OmnipathR!')
 
-    buildserver <- Sys.info()['user'] %in% c('biocbuild', 'omnipath')
+    buildserver <- .on_buildserver()
 
     if(buildserver){
 
