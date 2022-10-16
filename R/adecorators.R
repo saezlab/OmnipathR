@@ -28,6 +28,7 @@
 #' Decorator for trying UniProt subdomains
 #'
 #' This has any relevance only in rare cases with OS networking issues.
+#' 10/2022: deprecated since the uniprot api change, should be removed
 #'
 #' @importFrom logger log_trace
 #' @noRd
@@ -35,7 +36,7 @@ uniprot_domains <- decorator %@% function(FUN){
 
     function(...){
 
-        for(subd in c('legacy', 'www', 'pir3')){
+        for(subd in c('legacy')){
 
             result <- tryCatch(
                 FUN(..., .subdomain = subd),

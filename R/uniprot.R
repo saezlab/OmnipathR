@@ -107,7 +107,7 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     fields = 'id',
     reviewed = TRUE,
     organism = 9606,
-    .subdomain = 'www'
+    .subdomain = 'legacy'
 ){
 
     fields <- fields %>% paste(collapse = ',')
