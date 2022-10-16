@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Building protein networks around drug-targets using OmnipathR">
@@ -40,14 +40,14 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.22</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
@@ -56,7 +56,9 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
+    <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
     <a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a>
     <a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a>
     <a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a>
@@ -97,16 +99,23 @@
   </div>
 </nav><div class="container template-article">
 
+
+
+
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Building protein networks around drug-targets using OmnipathR</h1>
-                        <h4 data-toc-skip class="author">Attila Gabor</h4>
+                        <h4 data-toc-skip class="author">Attila
+Gabor</h4>
                   <a class="author_email" href="mailto:#"></a><a href="mailto:attila.gabor@bioquant.uni-heidelberg.de" class="email">attila.gabor@bioquant.uni-heidelberg.de</a>
       
-                              <h4 data-toc-skip class="author">Alberto Valdeolivas</h4>
-                                    <h4 data-toc-skip class="author">Julio Saez-Rodriguez</h4>
+                              <h4 data-toc-skip class="author">Alberto
+Valdeolivas</h4>
+                                    <h4 data-toc-skip class="author">Julio
+Saez-Rodriguez</h4>
             <address class="author_afil">
-      Institute for Computational Biomedicine, Heidelberg University<br><small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/HEAD/vignettes/drug_targets.Rmd" class="external-link"><code>vignettes/drug_targets.Rmd</code></a></small>
+      Institute for Computational Biomedicine, Heidelberg
+University<br><small class="dont-index">Source: <a href="https://github.com/saezlab/OmnipathR/blob/HEAD/vignettes/drug_targets.Rmd" class="external-link"><code>vignettes/drug_targets.Rmd</code></a></small>
       <div class="d-none name"><code>drug_targets.Rmd</code></div>
     </address>
 </div>
@@ -114,282 +123,313 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      <p>Many applications require to connect drugs to proteins in signaling networks. OmnipathR provides easy access to curated pathway resources from OmniPath. Here we use data from DrugBank to find direct protein targets of drugs and to connect them to downstream signaling proteins using OmnipathR.</p>
+      <p>Many applications require to connect drugs to proteins in
+      signaling networks. OmnipathR provides easy access to curated
+      pathway resources from OmniPath. Here we use data from DrugBank to
+      find direct protein targets of drugs and to connect them to
+      downstream signaling proteins using OmnipathR.</p>
     </div>
     
-<div class="section level1">
-<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h1>
-<p>In many applications we would like to understand how a specific drug interacts with the protein signaling network through its targets.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>In many applications we would like to understand how a specific drug
+interacts with the protein signaling network through its targets.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggraph.data-imaginist.com" class="external-link">ggraph</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://igraph.org" class="external-link">igraph</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggraph.data-imaginist.com" class="external-link">ggraph</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="initialise-omnipath-database">Initialise OmniPath database<a class="anchor" aria-label="anchor" href="#initialise-omnipath-database"></a>
-</h1>
-<p>We query protein-protein interactions from the webservice of OmniPath [1,2] at <a href="https://omnipathdb.org/" class="external-link uri">https://omnipathdb.org/</a> using OmnipathR package:</p>
+<div class="section level2">
+<h2 id="initialise-omnipath-database">Initialise OmniPath database<a class="anchor" aria-label="anchor" href="#initialise-omnipath-database"></a>
+</h2>
+<p>We query protein-protein interactions from the webservice of OmniPath
+[1,2] at <a href="https://omnipathdb.org/" class="external-link uri">https://omnipathdb.org/</a> using OmnipathR package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Download protein-protein interactions</span>
-<span class="va">interactions</span> <span class="op">=</span> <span class="fu"><a href="../reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Convert to igraph objects:</span>
-<span class="va">OPI_g</span> <span class="op">=</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span>interactions <span class="op">=</span> <span class="va">interactions</span> <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Download protein-protein interactions</span></span>
+<span><span class="va">interactions</span> <span class="op">=</span> <span class="fu"><a href="../reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Convert to igraph objects:</span></span>
+<span><span class="va">OPI_g</span> <span class="op">=</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span>interactions <span class="op">=</span> <span class="va">interactions</span> <span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="querying-drug-targets">Querying drug targets<a class="anchor" aria-label="anchor" href="#querying-drug-targets"></a>
-</h1>
-<p>For direct drug targets we will use DrugBank [3] database accessed via the <em><a href="https://CRAN.R-project.org/package=dbparser" class="external-link">dbparser</a></em> package. Please note, that the following few chuncks of code is not evaluated. DrugBank requires registrations to access the data, therefore we ask the reader to register at DrugBank and download the data from <a href="https://www.drugbank.ca/releases/latest" class="external-link">here</a>.</p>
+<div class="section level2">
+<h2 id="querying-drug-targets">Querying drug targets<a class="anchor" aria-label="anchor" href="#querying-drug-targets"></a>
+</h2>
+<p>For direct drug targets we will use DrugBank [3] database accessed
+via the <em><a href="https://CRAN.R-project.org/package=dbparser" class="external-link">dbparser</a></em>
+package. Please note, that the following few chuncks of code is not
+evaluated. DrugBank requires registrations to access the data, therefore
+we ask the reader to register at DrugBank and download the data from <a href="https://www.drugbank.ca/releases/latest" class="external-link">here</a>.</p>
 <p>The next block of code is used to process the DrugBank dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/dbparser/" class="external-link">dbparser</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.omegahat.net/RSXML" class="external-link">XML</a></span><span class="op">)</span>
-
-
-<span class="co">## parse data from XML and save it to memory</span>
-<span class="fu">get_xml_db_rows</span><span class="op">(</span><span class="st">"..path-to-DrugBank/full database.xml"</span><span class="op">)</span>
-
-<span class="co">## load drugs data</span>
-<span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu">parse_drug</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">primary_key</span>, <span class="va">name</span><span class="op">)</span>
-<span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">drugs</span>,drug_name <span class="op">=</span> <span class="va">name</span><span class="op">)</span>
-
-<span class="co">## load drug target data</span>
-<span class="va">drug_targets</span> <span class="op">&lt;-</span> <span class="fu">parse_drug_targets</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>,<span class="va">organism</span>,<span class="va">parent_key</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>target_name <span class="op">=</span> <span class="va">name</span><span class="op">)</span>
-
-<span class="co">## load polypeptide data</span>
-<span class="va">drug_peptides</span> <span class="op">&lt;-</span> <span class="fu">parse_drug_targets_polypeptides</span><span class="op">(</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">general_function</span>, <span class="va">specific_function</span>,
-          <span class="va">gene_name</span>, <span class="va">parent_id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>target_name <span class="op">=</span> <span class="va">name</span>, gene_id <span class="op">=</span> <span class="va">id</span><span class="op">)</span>
-
-<span class="co"># join the 3 datasets</span>
-<span class="va">drug_targets_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">drug_targets</span>, <span class="va">drug_peptides</span>,
-                                by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span><span class="op">=</span><span class="st">"parent_id"</span>, <span class="st">"target_name"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">drugs</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parent_key"</span><span class="op">=</span><span class="st">"primary_key"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">other_keys</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/dbparser/" class="external-link">dbparser</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.omegahat.net/RSXML/" class="external-link">XML</a></span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co">## parse data from XML and save it to memory</span></span>
+<span><span class="fu">get_xml_db_rows</span><span class="op">(</span><span class="st">"..path-to-DrugBank/full database.xml"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## load drugs data</span></span>
+<span><span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu">parse_drug</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">primary_key</span>, <span class="va">name</span><span class="op">)</span></span>
+<span><span class="va">drugs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">drugs</span>,drug_name <span class="op">=</span> <span class="va">name</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## load drug target data</span></span>
+<span><span class="va">drug_targets</span> <span class="op">&lt;-</span> <span class="fu">parse_drug_targets</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>,<span class="va">organism</span>,<span class="va">parent_key</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>target_name <span class="op">=</span> <span class="va">name</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## load polypeptide data</span></span>
+<span><span class="va">drug_peptides</span> <span class="op">&lt;-</span> <span class="fu">parse_drug_targets_polypeptides</span><span class="op">(</span><span class="op">)</span>  <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">general_function</span>, <span class="va">specific_function</span>,</span>
+<span>          <span class="va">gene_name</span>, <span class="va">parent_id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>target_name <span class="op">=</span> <span class="va">name</span>, gene_id <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># join the 3 datasets</span></span>
+<span><span class="va">drug_targets_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">drug_targets</span>, <span class="va">drug_peptides</span>,</span>
+<span>                                by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span><span class="op">=</span><span class="st">"parent_id"</span>, <span class="st">"target_name"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">drugs</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parent_key"</span><span class="op">=</span><span class="st">"primary_key"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">other_keys</span><span class="op">)</span></span></code></pre></div>
 <p>Here we declare the names of drugs of interest.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">drug_names</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Valproat"</span>      <span class="op">=</span> <span class="st">"Valproic Acid"</span>,
-               <span class="st">"Diclofenac"</span>    <span class="op">=</span> <span class="st">"Diclofenac"</span>,
-               <span class="st">"Paracetamol"</span>   <span class="op">=</span> <span class="st">"Acetaminophen"</span>,
-               <span class="st">"Ciproflaxin"</span>   <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,
-               <span class="st">"Nitrofurantoin"</span><span class="op">=</span> <span class="st">"Nitrofurantoin"</span>,
-               <span class="st">"Tolcapone"</span>,
-               <span class="st">"Azathioprine"</span>,
-               <span class="st">"Troglitazone"</span>,
-               <span class="st">"Nefazodone"</span>,
-               <span class="st">"Ketoconazole"</span>,
-               <span class="st">"Omeprazole"</span>,
-               <span class="st">"Phenytoin"</span>,
-               <span class="st">"Amiodarone"</span>,
-               <span class="st">"Cisplatin"</span>,
-               <span class="st">"Cyclosporin A"</span>  <span class="op">=</span> <span class="st">"Cyclosporine"</span>,
-               <span class="st">"Verapamil"</span>,
-               <span class="st">"Buspirone"</span>,
-               <span class="st">"Melatonin"</span>,
-               <span class="st">"N-Acetylcysteine"</span><span class="op">=</span> <span class="st">"Acetylcysteine"</span>,
-               <span class="st">"Vitamin C"</span>       <span class="op">=</span> <span class="st">"Ascorbic acid"</span>,
-               <span class="st">"Famotidine"</span>,
-               <span class="st">"Vancomycin"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">drug_names</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Valproat"</span>      <span class="op">=</span> <span class="st">"Valproic Acid"</span>,</span>
+<span>               <span class="st">"Diclofenac"</span>    <span class="op">=</span> <span class="st">"Diclofenac"</span>,</span>
+<span>               <span class="st">"Paracetamol"</span>   <span class="op">=</span> <span class="st">"Acetaminophen"</span>,</span>
+<span>               <span class="st">"Ciproflaxin"</span>   <span class="op">=</span> <span class="st">"Ciprofloxacin"</span>,</span>
+<span>               <span class="st">"Nitrofurantoin"</span><span class="op">=</span> <span class="st">"Nitrofurantoin"</span>,</span>
+<span>               <span class="st">"Tolcapone"</span>,</span>
+<span>               <span class="st">"Azathioprine"</span>,</span>
+<span>               <span class="st">"Troglitazone"</span>,</span>
+<span>               <span class="st">"Nefazodone"</span>,</span>
+<span>               <span class="st">"Ketoconazole"</span>,</span>
+<span>               <span class="st">"Omeprazole"</span>,</span>
+<span>               <span class="st">"Phenytoin"</span>,</span>
+<span>               <span class="st">"Amiodarone"</span>,</span>
+<span>               <span class="st">"Cisplatin"</span>,</span>
+<span>               <span class="st">"Cyclosporin A"</span>  <span class="op">=</span> <span class="st">"Cyclosporine"</span>,</span>
+<span>               <span class="st">"Verapamil"</span>,</span>
+<span>               <span class="st">"Buspirone"</span>,</span>
+<span>               <span class="st">"Melatonin"</span>,</span>
+<span>               <span class="st">"N-Acetylcysteine"</span><span class="op">=</span> <span class="st">"Acetylcysteine"</span>,</span>
+<span>               <span class="st">"Vitamin C"</span>       <span class="op">=</span> <span class="st">"Ascorbic acid"</span>,</span>
+<span>               <span class="st">"Famotidine"</span>,</span>
+<span>               <span class="st">"Vancomycin"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">drug_target_data_sample</span> <span class="op">&lt;-</span> <span class="va">drug_targets_full</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">organism</span> <span class="op">==</span> <span class="st">"Humans"</span>,<span class="va">drug_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">drug_target_data_sample</span> <span class="op">&lt;-</span> <span class="va">drug_targets_full</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">organism</span> <span class="op">==</span> <span class="st">"Humans"</span>,<span class="va">drug_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
 <p>We only use a small sample of the database:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">drug_targets</span> <span class="op">&lt;-</span> <span class="fu">OmnipathR</span><span class="fu">:::</span><span class="va">drug_target_data_sample</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">organism</span> <span class="op">==</span> <span class="st">"Humans"</span>,<span class="va">drug_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">drug_names</span><span class="op">)</span></code></pre></div>
-<div class="section level2">
-<h2 id="quality-control">Quality control<a class="anchor" aria-label="anchor" href="#quality-control"></a>
-</h2>
+<code class="sourceCode R"><span><span class="va">drug_targets</span> <span class="op">&lt;-</span> <span class="fu">OmnipathR</span><span class="fu">:::</span><span class="va">drug_target_data_sample</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">organism</span> <span class="op">==</span> <span class="st">"Humans"</span>,<span class="va">drug_name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">drug_names</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="quality-control">Quality control<a class="anchor" aria-label="anchor" href="#quality-control"></a>
+</h3>
 <p>Check which drug targets are in Omnipath</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">drug_targets</span> <span class="op">&lt;-</span>  <span class="va">drug_targets</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">target_name</span>, <span class="op">-</span><span class="va">organism</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>in_OP <span class="op">=</span> <span class="va">gene_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">interactions</span><span class="op">$</span><span class="va">source</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># not all drug-targets are in OP.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">drug_targets</span><span class="op">$</span><span class="va">in_OP</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] FALSE</span></code></pre>
+<code class="sourceCode R"><span><span class="va">drug_targets</span> <span class="op">&lt;-</span>  <span class="va">drug_targets</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">target_name</span>, <span class="op">-</span><span class="va">organism</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>in_OP <span class="op">=</span> <span class="va">gene_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">interactions</span><span class="op">$</span><span class="va">source</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># not all drug-targets are in OP.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">drug_targets</span><span class="op">$</span><span class="va">in_OP</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] FALSE</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># But each drug has at least one target in OP.</span>
-<span class="va">drug_targets</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">drug_name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">in_OP</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 19 × 2</span></span>
-<span class="co">##    drug_name      `any(in_OP)`</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Acetaminophen  TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Acetylcysteine TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Amiodarone     TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> Ascorbic acid  TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Azathioprine   TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Buspirone      TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Ciprofloxacin  FALSE       </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Cisplatin      TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Diclofenac     TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> Famotidine     TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> Ketoconazole   TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> Melatonin      TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> Nefazodone     TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> Omeprazole     TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">15</span> Phenytoin      TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">16</span> Tolcapone      FALSE       </span>
-<span class="co">## <span style="color: #BCBCBC;">17</span> Troglitazone   TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">18</span> Valproic Acid  TRUE        </span>
-<span class="co">## <span style="color: #BCBCBC;">19</span> Verapamil      TRUE</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># But each drug has at least one target in OP.</span></span>
+<span><span class="va">drug_targets</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">drug_name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">in_OP</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 19 × 2</span></span></span>
+<span><span class="co">##    drug_name      `any(in_OP)`</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Acetaminophen  TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Acetylcysteine TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Amiodarone     TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Ascorbic acid  TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Azathioprine   TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Buspirone      TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Ciprofloxacin  FALSE       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Cisplatin      TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Diclofenac     TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Famotidine     TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> Ketoconazole   TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">12</span> Melatonin      TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">13</span> Nefazodone     TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">14</span> Omeprazole     TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">15</span> Phenytoin      TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">16</span> Tolcapone      FALSE       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">17</span> Troglitazone   TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">18</span> Valproic Acid  TRUE        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">19</span> Verapamil      TRUE</span></span></code></pre>
 </div>
 </div>
-<div class="section level1">
-<h1 id="downstream-signaling-nodes">Downstream signaling nodes<a class="anchor" aria-label="anchor" href="#downstream-signaling-nodes"></a>
-</h1>
-<p>We would like to investigate the effect of the drugs on some selected proteins. For example, the activity of these proteins are measured upon the drug perturbation. We’ll build a network from the drug targets to these selected nodes.</p>
+<div class="section level2">
+<h2 id="downstream-signaling-nodes">Downstream signaling nodes<a class="anchor" aria-label="anchor" href="#downstream-signaling-nodes"></a>
+</h2>
+<p>We would like to investigate the effect of the drugs on some selected
+proteins. For example, the activity of these proteins are measured upon
+the drug perturbation. We’ll build a network from the drug targets to
+these selected nodes.</p>
 <p>First we declare protein of interest (POI):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">POI</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>protein <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NFE2L2"</span>,<span class="st">"HMOX1"</span>,<span class="st">"TP53"</span>,<span class="st">"CDKN1A"</span>,<span class="st">"BTG2"</span>,<span class="st">"NFKB1"</span>,
-                         <span class="st">"ICAM1"</span>,<span class="st">"HSPA5"</span>, <span class="st">"ATF4"</span>,<span class="st">"DDIT3"</span>,<span class="st">"XBP1"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="section level2">
-<h2 id="quality-control-1">Quality control<a class="anchor" aria-label="anchor" href="#quality-control-1"></a>
-</h2>
+<code class="sourceCode R"><span><span class="va">POI</span> <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>protein <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NFE2L2"</span>,<span class="st">"HMOX1"</span>,<span class="st">"TP53"</span>,<span class="st">"CDKN1A"</span>,<span class="st">"BTG2"</span>,<span class="st">"NFKB1"</span>,</span>
+<span>                         <span class="st">"ICAM1"</span>,<span class="st">"HSPA5"</span>, <span class="st">"ATF4"</span>,<span class="st">"DDIT3"</span>,<span class="st">"XBP1"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="quality-control-1">Quality control<a class="anchor" aria-label="anchor" href="#quality-control-1"></a>
+</h3>
 <p>Checking which POI are in Omnipath</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">POI</span> <span class="op">&lt;-</span> <span class="va">POI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>in_OP <span class="op">=</span> <span class="va">protein</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">interactions</span><span class="op">$</span><span class="va">target_genesymbol</span><span class="op">)</span>
-<span class="co"># all POI is in Omnipath</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">POI</span><span class="op">$</span><span class="va">in_OP</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] TRUE</span></code></pre>
+<code class="sourceCode R"><span><span class="va">POI</span> <span class="op">&lt;-</span> <span class="va">POI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>in_OP <span class="op">=</span> <span class="va">protein</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">interactions</span><span class="op">$</span><span class="va">target_genesymbol</span><span class="op">)</span></span>
+<span><span class="co"># all POI is in Omnipath</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">POI</span><span class="op">$</span><span class="va">in_OP</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
 </div>
-<div class="section level1">
-<h1 id="build-network-between-drug-targets-and-poi">Build network between drug targets and POI<a class="anchor" aria-label="anchor" href="#build-network-between-drug-targets-and-poi"></a>
-</h1>
-<p>First, we find paths between the drug targets and the POIs. For the sake of this simplicity we focus on drug targets of one drug, <em>Cisplatin</em>.</p>
+<div class="section level2">
+<h2 id="build-network-between-drug-targets-and-poi">Build network between drug targets and POI<a class="anchor" aria-label="anchor" href="#build-network-between-drug-targets-and-poi"></a>
+</h2>
+<p>First, we find paths between the drug targets and the POIs. For the
+sake of this simplicity we focus on drug targets of one drug,
+<em>Cisplatin</em>.</p>
 <p>The paths are represented by a set of nodes:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">source_nodes</span> <span class="op">&lt;-</span> <span class="va">drug_targets</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">in_OP</span>, <span class="va">drug_name</span><span class="op">==</span><span class="st">"Cisplatin"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">gene_name</span><span class="op">)</span>
-<span class="va">target_nodes</span> <span class="op">&lt;-</span> <span class="va">POI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">in_OP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">protein</span><span class="op">)</span>
-
-<span class="va">collected_path_nodes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="kw">for</span><span class="op">(</span><span class="va">i_source</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">source_nodes</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-
-   <span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/distances.html" class="external-link">shortest_paths</a></span><span class="op">(</span><span class="va">OPI_g</span>, from <span class="op">=</span> <span class="va">source_nodes</span><span class="op">[[</span><span class="va">i_source</span><span class="op">]</span><span class="op">]</span>,
-                           to <span class="op">=</span> <span class="va">target_nodes</span>,
-                           output <span class="op">=</span> <span class="st">'vpath'</span><span class="op">)</span>
-   <span class="va">path_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">paths</span><span class="op">$</span><span class="va">vpath</span>,<span class="va">names</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span>
-   <span class="va">collected_path_nodes</span><span class="op">[[</span><span class="va">i_source</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">path_nodes</span>
-<span class="op">}</span>
-<span class="va">collected_path_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">collected_path_nodes</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>The direct drug targets, the POIs and the intermediate pathway members give rise to the network.</p>
+<code class="sourceCode R"><span><span class="va">source_nodes</span> <span class="op">&lt;-</span> <span class="va">drug_targets</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">in_OP</span>, <span class="va">drug_name</span><span class="op">==</span><span class="st">"Cisplatin"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">gene_name</span><span class="op">)</span></span>
+<span><span class="va">target_nodes</span> <span class="op">&lt;-</span> <span class="va">POI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">in_OP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">protein</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">collected_path_nodes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">for</span><span class="op">(</span><span class="va">i_source</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">source_nodes</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span></span>
+<span>   <span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/distances.html" class="external-link">shortest_paths</a></span><span class="op">(</span><span class="va">OPI_g</span>, from <span class="op">=</span> <span class="va">source_nodes</span><span class="op">[[</span><span class="va">i_source</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>                           to <span class="op">=</span> <span class="va">target_nodes</span>,</span>
+<span>                           output <span class="op">=</span> <span class="st">'vpath'</span><span class="op">)</span></span>
+<span>   <span class="va">path_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">paths</span><span class="op">$</span><span class="va">vpath</span>,<span class="va">names</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>   <span class="va">collected_path_nodes</span><span class="op">[[</span><span class="va">i_source</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">path_nodes</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">collected_path_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">collected_path_nodes</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>The direct drug targets, the POIs and the intermediate pathway
+members give rise to the network.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cisplatin_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">source_nodes</span>,<span class="va">target_nodes</span>, <span class="va">collected_path_nodes</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-   <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">cisplatin_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/subgraph.html" class="external-link">induced_subgraph</a></span><span class="op">(</span>graph <span class="op">=</span> <span class="va">OPI_g</span>,vids <span class="op">=</span> <span class="va">cisplatin_nodes</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cisplatin_nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">source_nodes</span>,<span class="va">target_nodes</span>, <span class="va">collected_path_nodes</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>   <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">cisplatin_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/subgraph.html" class="external-link">induced_subgraph</a></span><span class="op">(</span>graph <span class="op">=</span> <span class="va">OPI_g</span>,vids <span class="op">=</span> <span class="va">cisplatin_nodes</span><span class="op">)</span></span></code></pre></div>
 <p>We annotate the nodes of the network and plot it.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">$</span><span class="va">node_type</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span>
-   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">source_nodes</span>, <span class="st">"direct drug target"</span>,
-   <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">target_nodes</span>,<span class="st">"POI"</span>,<span class="st">"intermediate node"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://ggraph.data-imaginist.com/reference/ggraph.html" class="external-link">ggraph</a></span><span class="op">(</span>
-      <span class="va">cisplatin_network</span>,
-      layout <span class="op">=</span> <span class="st">"lgl"</span>,
-      area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">^</span><span class="fl">2.3</span>,
-      repulserad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">^</span><span class="fl">1.2</span>,
-      coolexp <span class="op">=</span> <span class="fl">1.1</span>
-   <span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_edge_link.html" class="external-link">geom_edge_link</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>
-         start_cap <span class="op">=</span> <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geometry.html" class="external-link">label_rect</a></span><span class="op">(</span><span class="va">node1.name</span><span class="op">)</span>,
-         end_cap <span class="op">=</span> <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geometry.html" class="external-link">label_rect</a></span><span class="op">(</span><span class="va">node2.name</span><span class="op">)</span><span class="op">)</span>,
-         arrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></span><span class="op">(</span>length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">'mm'</span><span class="op">)</span>
-      <span class="op">)</span>,
-      edge_width <span class="op">=</span> <span class="fl">.5</span>,
-      edge_alpha <span class="op">=</span> <span class="fl">.2</span>
-   <span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_node_point.html" class="external-link">geom_node_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">geom_node_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">name</span>, color <span class="op">=</span> <span class="va">node_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete</a></span><span class="op">(</span>
-      guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Node type'</span><span class="op">)</span>
-   <span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span> <span class="op">+</span>
-   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cisplatin induced network"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">$</span><span class="va">node_type</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
+<span>   <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">source_nodes</span>, <span class="st">"direct drug target"</span>,</span>
+<span>   <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">$</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">target_nodes</span>,<span class="st">"POI"</span>,<span class="st">"intermediate node"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggraph.data-imaginist.com/reference/ggraph.html" class="external-link">ggraph</a></span><span class="op">(</span></span>
+<span>      <span class="va">cisplatin_network</span>,</span>
+<span>      layout <span class="op">=</span> <span class="st">"lgl"</span>,</span>
+<span>      area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">^</span><span class="fl">2.3</span>,</span>
+<span>      repulserad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/igraph/man/gorder.html" class="external-link">vcount</a></span><span class="op">(</span><span class="va">cisplatin_network</span><span class="op">)</span><span class="op">^</span><span class="fl">1.2</span>,</span>
+<span>      coolexp <span class="op">=</span> <span class="fl">1.1</span></span>
+<span>   <span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_edge_link.html" class="external-link">geom_edge_link</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>         start_cap <span class="op">=</span> <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geometry.html" class="external-link">label_rect</a></span><span class="op">(</span><span class="va">node1.name</span><span class="op">)</span>,</span>
+<span>         end_cap <span class="op">=</span> <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geometry.html" class="external-link">label_rect</a></span><span class="op">(</span><span class="va">node2.name</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>         arrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></span><span class="op">(</span>length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">'mm'</span><span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      edge_width <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>      edge_alpha <span class="op">=</span> <span class="fl">.2</span></span>
+<span>   <span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_node_point.html" class="external-link">geom_node_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggraph.data-imaginist.com/reference/geom_node_text.html" class="external-link">geom_node_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">name</span>, color <span class="op">=</span> <span class="va">node_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete</a></span><span class="op">(</span></span>
+<span>      guide <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">'Node type'</span><span class="op">)</span></span>
+<span>   <span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cisplatin induced network"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="drug_targets_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
-<p>The above network represents a way how Cisplatin can influence the POIs. One can for example filter out edges based on the number fo resources reporting the edge or based on the number of papers mentioning it. However, this is already covered by previous pypath tutorials.</p>
+<p>The above network represents a way how Cisplatin can influence the
+POIs. One can for example filter out edges based on the number fo
+resources reporting the edge or based on the number of papers mentioning
+it. However, this is already covered by previous pypath tutorials.</p>
 </div>
-<div class="section level1">
-<h1 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
-</h1>
-<p>The above pipeline was inspired by the post of Denes Turei available <a href="https://groups.google.com/forum/#!msg/omnipath/IAV5PEXRyMg/PvwOKkusBQAJ" class="external-link">here</a>.</p>
+<div class="section level2">
+<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
+</h2>
+<p>The above pipeline was inspired by the post of Denes Turei available
+<a href="https://groups.google.com/forum/#!msg/omnipath/IAV5PEXRyMg/PvwOKkusBQAJ" class="external-link">here</a>.</p>
 </div>
-<div class="section level1">
-<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h1>
-<p>[1] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, O Ivanova, A Gabor, D Modos, T Korcsmaros and J Saez-Rodriguez (2020) Integrated intra- and intercellular signaling knowledge for multicellular omics analysis. <em>bioRxiv</em> 2020.08.03.221242</p>
-<p>[2] D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath: guidelines and gateway for literature-curated signaling pathway resources. <em>Nature Methods</em> 13(12)</p>
-<p>[3] Wishart DS, Feunang YD, Guo AC, Lo EJ, Marcu A, Grant JR, Sajed T, Johnson D, Li C, Sayeeda Z, Assempour N, Iynkkaran I, Liu Y, Maciejewski A, Gale N, Wilson A, Chin L, Cummings R, Le D, Pon A, Knox C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for 2018. <em>Nucleic Acids Res.</em> 2017 Nov 8. doi: 10.1093/nar/gkx1037.</p>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>[1] D Turei, A Valdeolivas, L Gul, N Palacio-Escat, M Klein, O
+Ivanova, M Olbei, A Gabor, F Theis, D Modos, T Korcsmaros and J
+Saez-Rodriguez (2021) Integrated intra- and intercellular signaling
+knowledge for multicellular omics analysis. <em>Molecular Systems
+Biology</em> 17:e9923</p>
+<p>[2] D Turei, T Korcsmaros and J Saez-Rodriguez (2016) OmniPath:
+guidelines and gateway for literature-curated signaling pathway
+resources. <em>Nature Methods</em> 13(12)</p>
+<p>[3] Wishart DS, Feunang YD, Guo AC, Lo EJ, Marcu A, Grant JR, Sajed
+T, Johnson D, Li C, Sayeeda Z, Assempour N, Iynkkaran I, Liu Y,
+Maciejewski A, Gale N, Wilson A, Chin L, Cummings R, Le D, Pon A, Knox
+C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for
+2018. <em>Nucleic Acids Res.</em> 2017 Nov 8. doi:
+10.1093/nar/gkx1037.</p>
 </div>
-<div class="section level1 unnumbered">
-<h1 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
-</h1>
-<pre><code><span class="co">## R version 4.1.2 (2021-11-01)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Arch Linux</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS:   /usr/lib/libopenblasp-r0.3.19.so</span>
-<span class="co">## LAPACK: /usr/lib/liblapack.so.3.10.0</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] ggraph_2.0.5     igraph_1.2.11    OmnipathR_3.3.8  ggplot2_3.3.5   </span>
-<span class="co">## [5] dplyr_1.0.7      BiocStyle_2.22.0</span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##  [1] viridis_0.6.2       httr_1.4.2          sass_0.4.0         </span>
-<span class="co">##  [4] tidyr_1.1.4         bit64_4.0.5         vroom_1.5.7        </span>
-<span class="co">##  [7] tidygraph_1.2.0     jsonlite_1.7.2      viridisLite_0.4.0  </span>
-<span class="co">## [10] bslib_0.3.1         assertthat_0.2.1    highr_0.9          </span>
-<span class="co">## [13] BiocManager_1.30.16 cellranger_1.1.0    yaml_2.2.1         </span>
-<span class="co">## [16] progress_1.2.2      ggrepel_0.9.1       pillar_1.6.4       </span>
-<span class="co">## [19] backports_1.4.1     glue_1.6.0          digest_0.6.29      </span>
-<span class="co">## [22] polyclip_1.10-0     checkmate_2.0.0     colorspace_2.0-2   </span>
-<span class="co">## [25] htmltools_0.5.2     pkgconfig_2.0.3     logger_0.2.2       </span>
-<span class="co">## [28] bookdown_0.24       purrr_0.3.4         scales_1.1.1       </span>
-<span class="co">## [31] tweenr_1.0.2        later_1.3.0         tzdb_0.2.0         </span>
-<span class="co">## [34] ggforce_0.3.3       tibble_3.1.6        generics_0.1.1     </span>
-<span class="co">## [37] farver_2.1.0        ellipsis_0.3.2      cachem_1.0.6       </span>
-<span class="co">## [40] withr_2.4.3         cli_3.1.0           magrittr_2.0.1     </span>
-<span class="co">## [43] crayon_1.4.2        readxl_1.3.1        memoise_2.0.1      </span>
-<span class="co">## [46] evaluate_0.14       fs_1.5.2            fansi_0.5.0        </span>
-<span class="co">## [49] MASS_7.3-54         xml2_1.3.3          textshaping_0.3.6  </span>
-<span class="co">## [52] tools_4.1.2         prettyunits_1.1.1   hms_1.1.1          </span>
-<span class="co">## [55] lifecycle_1.0.1     stringr_1.4.0       munsell_0.5.0      </span>
-<span class="co">## [58] compiler_4.1.2      pkgdown_2.0.1       jquerylib_0.1.4    </span>
-<span class="co">## [61] systemfonts_1.0.3   rlang_0.4.12        grid_4.1.2         </span>
-<span class="co">## [64] rappdirs_0.3.3      labeling_0.4.2      rmarkdown_2.11     </span>
-<span class="co">## [67] gtable_0.3.0        DBI_1.1.2           curl_4.3.2         </span>
-<span class="co">## [70] graphlayouts_0.8.0  R6_2.5.1            gridExtra_2.3      </span>
-<span class="co">## [73] knitr_1.37          bit_4.0.4           fastmap_1.1.0      </span>
-<span class="co">## [76] utf8_1.2.2          rprojroot_2.0.2     ragg_1.2.1         </span>
-<span class="co">## [79] readr_2.1.1         desc_1.4.0          stringi_1.7.6      </span>
-<span class="co">## [82] Rcpp_1.0.7          vctrs_0.3.8         tidyselect_1.1.1   </span>
-<span class="co">## [85] xfun_0.29</span></code></pre>
+<div class="section level2">
+<h2 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
+</h2>
+<pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Arch Linux</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/libopenblasp-r0.3.21.so</span></span>
+<span><span class="co">## LAPACK: /usr/lib/liblapack.so.3.10.1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] ggraph_2.1.0     igraph_1.3.5     OmnipathR_3.5.22 ggplot2_3.3.6   </span></span>
+<span><span class="co">## [5] dplyr_1.0.10     BiocStyle_2.25.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##  [1] viridis_0.6.2       httr_1.4.4          sass_0.4.2         </span></span>
+<span><span class="co">##  [4] tidyr_1.2.1         bit64_4.0.5         vroom_1.6.0        </span></span>
+<span><span class="co">##  [7] viridisLite_0.4.1   tidygraph_1.2.2     jsonlite_1.8.2     </span></span>
+<span><span class="co">## [10] bslib_0.4.0         assertthat_0.2.1    highr_0.9          </span></span>
+<span><span class="co">## [13] BiocManager_1.30.18 cellranger_1.1.0    yaml_2.3.5         </span></span>
+<span><span class="co">## [16] progress_1.2.2      ggrepel_0.9.1       pillar_1.8.1       </span></span>
+<span><span class="co">## [19] backports_1.4.1     glue_1.6.2          digest_0.6.29      </span></span>
+<span><span class="co">## [22] polyclip_1.10-0     checkmate_2.1.0     rvest_1.0.3        </span></span>
+<span><span class="co">## [25] colorspace_2.0-3    htmltools_0.5.3     pkgconfig_2.0.3    </span></span>
+<span><span class="co">## [28] logger_0.2.2        bookdown_0.29       purrr_0.3.5        </span></span>
+<span><span class="co">## [31] scales_1.2.1        tweenr_2.0.2        later_1.3.0        </span></span>
+<span><span class="co">## [34] tzdb_0.3.0          ggforce_0.4.1       tibble_3.1.8       </span></span>
+<span><span class="co">## [37] generics_0.1.3      farver_2.1.1        ellipsis_0.3.2     </span></span>
+<span><span class="co">## [40] cachem_1.0.6        withr_2.5.0         cli_3.4.1          </span></span>
+<span><span class="co">## [43] magrittr_2.0.3      crayon_1.5.2        readxl_1.4.1       </span></span>
+<span><span class="co">## [46] memoise_2.0.1       evaluate_0.17       fs_1.5.2           </span></span>
+<span><span class="co">## [49] fansi_1.0.3         MASS_7.3-58.1       xml2_1.3.3         </span></span>
+<span><span class="co">## [52] textshaping_0.3.6   tools_4.2.1         prettyunits_1.1.1  </span></span>
+<span><span class="co">## [55] hms_1.1.2           lifecycle_1.0.3     stringr_1.4.1      </span></span>
+<span><span class="co">## [58] munsell_0.5.0       compiler_4.2.1      pkgdown_2.0.6      </span></span>
+<span><span class="co">## [61] jquerylib_0.1.4     systemfonts_1.0.4   rlang_1.0.6        </span></span>
+<span><span class="co">## [64] grid_4.2.1          rappdirs_0.3.3      labeling_0.4.2     </span></span>
+<span><span class="co">## [67] rmarkdown_2.17      gtable_0.3.1        DBI_1.1.3          </span></span>
+<span><span class="co">## [70] curl_4.3.3          graphlayouts_0.8.2  R6_2.5.1           </span></span>
+<span><span class="co">## [73] gridExtra_2.3       knitr_1.40          bit_4.0.4          </span></span>
+<span><span class="co">## [76] fastmap_1.1.0       utf8_1.2.2          rprojroot_2.0.3    </span></span>
+<span><span class="co">## [79] ragg_1.2.3          readr_2.1.3         desc_1.4.2         </span></span>
+<span><span class="co">## [82] stringi_1.7.8       Rcpp_1.0.9          vctrs_0.4.2        </span></span>
+<span><span class="co">## [85] tidyselect_1.2.0    xfun_0.33</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -404,7 +444,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

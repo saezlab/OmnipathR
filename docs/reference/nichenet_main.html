@@ -7,7 +7,7 @@ functions. After the prior knowledge is ready, it performs parameter
 optimization to build a NicheNet model. This results a weighted ligand-
 target matrix. Then, considering the expressed genes from user provided
 data, a gene set of interest and background genes, it executes the
-NicheNet ligand activity analysis."><title>Executes the full NicheNet pipeline — nichenet_main • OmnipathR</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Executes the full NicheNet pipeline — nichenet_main"><meta property="og:description" content="Builds all prior knowledge data required by NicheNet. For this it calls
+NicheNet ligand activity analysis."><title>Executes the full NicheNet pipeline — nichenet_main • OmnipathR</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Executes the full NicheNet pipeline — nichenet_main"><meta property="og:description" content="Builds all prior knowledge data required by NicheNet. For this it calls
 a multitude of methods to download and combine data from various
 databases according to the settings. The content of the prior knowledge
 data is highly customizable, see the documentation of the related
@@ -32,7 +32,7 @@ NicheNet ligand activity analysis."><meta property="og:image" content="https://s
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.22</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,27 +106,27 @@ NicheNet ligand activity analysis.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nichenet_main</span><span class="op">(</span>
-  only_omnipath <span class="op">=</span> <span class="cn">FALSE</span>,
-  expressed_genes_transmitter <span class="op">=</span> <span class="cn">NULL</span>,
-  expressed_genes_receiver <span class="op">=</span> <span class="cn">NULL</span>,
-  genes_of_interest <span class="op">=</span> <span class="cn">NULL</span>,
-  background_genes <span class="op">=</span> <span class="cn">NULL</span>,
-  use_weights <span class="op">=</span> <span class="cn">TRUE</span>,
-  n_top_ligands <span class="op">=</span> <span class="fl">42</span>,
-  n_top_targets <span class="op">=</span> <span class="fl">250</span>,
-  signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  lr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  small <span class="op">=</span> <span class="cn">FALSE</span>,
-  tiny <span class="op">=</span> <span class="cn">FALSE</span>,
-  make_multi_objective_function_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  objective_function_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  construct_ligand_target_matrix_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  results_dir <span class="op">=</span> <span class="cn">NULL</span>,
-  quality_filter_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nichenet_main</span><span class="op">(</span></span>
+<span>  only_omnipath <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  expressed_genes_transmitter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  expressed_genes_receiver <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  genes_of_interest <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  background_genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  use_weights <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  n_top_ligands <span class="op">=</span> <span class="fl">42</span>,</span>
+<span>  n_top_targets <span class="op">=</span> <span class="fl">250</span>,</span>
+<span>  signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  lr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  small <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  tiny <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  make_multi_objective_function_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  objective_function_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  construct_ligand_target_matrix_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  results_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  quality_filter_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -138,72 +138,111 @@ by the other arguments. By default we use all available resources.
 The networks can be customized on a resource by resource basis, as
 well as providing custom parameters for individual resources, using
 the parameters `signaling_network`, `lr_network` and `gr_network`.</p></dd>
+
+
 <dt>expressed_genes_transmitter</dt>
 <dd><p>Character vector with the gene symbols
 of the genes expressed in the cells transmitting the signal.</p></dd>
+
+
 <dt>expressed_genes_receiver</dt>
 <dd><p>Character vector with the gene symbols
 of the genes expressed in the cells receiving the signal.</p></dd>
+
+
 <dt>genes_of_interest</dt>
 <dd><p>Character vector with the gene symbols of the
 genes of interest. These are the genes in the receiver cell population
 that are potentially affected by ligands expressed by interacting
 cells (e.g. genes differentially expressed upon cell-cell interaction).</p></dd>
+
+
 <dt>background_genes</dt>
 <dd><p>Character vector with the gene symbols of the
 genes to be used as background.</p></dd>
+
+
 <dt>use_weights</dt>
 <dd><p>Logical: calculate and use optimized weights for
 resources (i.e. one resource seems to be better than another, hence
 the former is considered with a higher weight).</p></dd>
+
+
 <dt>n_top_ligands</dt>
 <dd><p>How many of the top ligands to include in the
 ligand-target table.</p></dd>
+
+
 <dt>n_top_targets</dt>
 <dd><p>How many of the top targets (for each of the top
 ligands) to consider in the ligand-target table.</p></dd>
+
+
 <dt>signaling_network</dt>
 <dd><p>A list of parameters for building the signaling
 network, passed to <code><a href="nichenet_signaling_network.html">nichenet_signaling_network</a></code>.</p></dd>
+
+
 <dt>lr_network</dt>
 <dd><p>A list of parameters for building the ligand-receptor
 network, passed to <code><a href="nichenet_lr_network.html">nichenet_lr_network</a></code>.</p></dd>
+
+
 <dt>gr_network</dt>
 <dd><p>A list of parameters for building the gene regulatory
 network, passed to <code><a href="nichenet_gr_network.html">nichenet_gr_network</a></code>.</p></dd>
+
+
 <dt>small</dt>
 <dd><p>Logical: build a small network for testing purposes, using
 only OmniPath data. It is also a high quality network, it is
 reasonable to try the analysis with this small network.</p></dd>
+
+
 <dt>tiny</dt>
 <dd><p>Logical: build an even smaller network for testing
 purposes. As this involves random subsetting, it's not recommended
 to use this network for analysis.</p></dd>
+
+
 <dt>make_multi_objective_function_param</dt>
 <dd><p>Override parameters for
 <code><a href="https://rdrr.io/pkg/smoof/man/makeMultiObjectiveFunction.html" class="external-link">smoof::makeMultiObjectiveFunction</a></code>.</p></dd>
+
+
 <dt>objective_function_param</dt>
 <dd><p>Override additional arguments passed to
 the objective function.</p></dd>
+
+
 <dt>mlrmbo_optimization_param</dt>
 <dd><p>Override arguments for
 <code><a href="https://rdrr.io/pkg/nichenetr/man/mlrmbo_optimization.html" class="external-link">nichenetr::mlrmbo_optimization</a></code>.</p></dd>
+
+
 <dt>construct_ligand_target_matrix_param</dt>
 <dd><p>Override parameters for
 <code><a href="https://rdrr.io/pkg/nichenetr/man/construct_ligand_target_matrix.html" class="external-link">nichenetr::construct_ligand_target_matrix</a></code>.</p></dd>
+
+
 <dt>results_dir</dt>
 <dd><p>Character: path to the directory to save intermediate
 and final outputs from NicheNet methods.</p></dd>
+
+
 <dt>quality_filter_param</dt>
 <dd><p>Arguments for <code>
 <a href="filter_intercell_network.html">filter_intercell_network</a></code> (quality filtering of the OmniPath
 ligand-receptor network). It is recommended to check these parameters
 and apply some quality filtering. The defaults already ensure certain
 filtering, but you might want more relaxed or stringent options.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A named list with the intermediate and final outputs of the
+    
+
+<p>A named list with the intermediate and final outputs of the
     pipeline: `networks`, `expression`, `optimized_parameters`,
     `weighted_networks` and `ligand_target_matrix`.</p>
     </div>
@@ -233,22 +272,22 @@ resources. To run the whole pipeline with tiny networks use <code>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">nichenet_results</span> <span class="op">&lt;-</span> <span class="fu">nichenet_main</span><span class="op">(</span></span>
-<span class="r-in">    <span class="co"># altering some network resource parameters, the rest</span></span>
-<span class="r-in">    <span class="co"># of the resources will be loaded according to the defaults</span></span>
-<span class="r-in">    signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span class="r-in">        cpdb <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># this resource will be excluded</span></span>
-<span class="r-in">        inbiomap <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span class="r-in">        evex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_confidence <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span> <span class="co"># override some parameters</span></span>
-<span class="r-in">    <span class="op">)</span>,</span>
-<span class="r-in">    gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>only_omnipath <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span class="r-in">    n_top_ligands <span class="op">=</span> <span class="fl">20</span>,</span>
-<span class="r-in">    <span class="co"># override the default number of CPU cores to use</span></span>
-<span class="r-in">    mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">nichenet_results</span> <span class="op">&lt;-</span> <span class="fu">nichenet_main</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="co"># altering some network resource parameters, the rest</span></span></span>
+<span class="r-in"><span>    <span class="co"># of the resources will be loaded according to the defaults</span></span></span>
+<span class="r-in"><span>    signaling_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        cpdb <span class="op">=</span> <span class="cn">NULL</span>, <span class="co"># this resource will be excluded</span></span></span>
+<span class="r-in"><span>        inbiomap <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>        evex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>min_confidence <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span> <span class="co"># override some parameters</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span>,</span></span>
+<span class="r-in"><span>    gr_network <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>only_omnipath <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    n_top_ligands <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>    <span class="co"># override the default number of CPU cores to use</span></span></span>
+<span class="r-in"><span>    mlrmbo_optimization_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncores <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -260,8 +299,7 @@ resources. To run the whole pipeline with tiny networks use <code>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer></div>

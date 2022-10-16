@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.21</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.22</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,12 +106,11 @@ or both (`NULL`).</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">human_swissprot_acs</span> <span class="op">&lt;-</span> <span class="fu">all_uniprot_acs</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in (structure(function (...) {    for (subd in c("legacy", "www", "pir3")) {        result &lt;- tryCatch(FUN(..., .subdomain = subd), error = identity)        if (!inherits(result, "error")) {            break        }        else {            log_trace("Failed download attempt: `%s`.", conditionMessage(result))        }    }    if (inherits(result, "error")) {        stop(conditionMessage(result))    }    return(result)}, decorators = list(decorator = uniprot_domains), class = c("function", "decorated")))(fields = "id", reviewed = TRUE, organism = 9606L):</span> Could not resolve host: www.uniprot.orguniprot</span>
 <span class="r-in"><span><span class="va">human_swissprot_acs</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'human_swissprot_acs' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "P63120" "Q96EC8" "Q6ZMS4" "Q8N8L2" "Q15916"</span>
 <span class="r-in"><span><span class="co"># [1] "P51451" "A6H8Y1" "O60885" "Q9Y3X0" "P22223"</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">human_swissprot_acs</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'human_swissprot_acs' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20401</span>
 <span class="r-in"><span><span class="co"># [1] 20376</span></span></span>
 <span class="r-in"><span><span class="va">mouse_swissprot_acs</span> <span class="op">&lt;-</span> <span class="fu">all_uniprot_acs</span><span class="op">(</span><span class="st">"mouse"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>

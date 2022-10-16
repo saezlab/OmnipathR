@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="The database manager in OmnipathR">
@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.3.17</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.5.22</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,11 +103,13 @@
 
 
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>The database manager in OmnipathR</h1>
-                        <h4 data-toc-skip class="author">Denes Turei</h4>
+                        <h4 data-toc-skip class="author">Denes
+Turei</h4>
             <address class="author_afil">
-      Institute for Computational Biomedicine, Heidelberg University<br><a class="author_email" href="mailto:#"></a><a href="mailto:turei.denes@gmail.com" class="email">turei.denes@gmail.com</a>
+      Institute for Computational Biomedicine, Heidelberg
+University<br><a class="author_email" href="mailto:#"></a><a href="mailto:turei.denes@gmail.com" class="email">turei.denes@gmail.com</a>
       </address>
                   
       
@@ -118,257 +120,299 @@
     
         <div class="abstract">
       <p class="abstract">Abstract</p>
-      <p>The database manager is an API within OmnipathR which is able to load various datasets, keep track of their usage and remove them after an expiry period. Currently it supports a few Gene Ontology and UniProt datasets, but easily can be extended to cover all datasets in the package.</p>
+      <p>The database manager is an API within OmnipathR which is able
+      to load various datasets, keep track of their usage and remove
+      them after an expiry period. Currently it supports a few Gene
+      Ontology and UniProt datasets, but easily can be extended to cover
+      all datasets in the package.</p>
     </div>
     
 <div class="section level2">
 <h2 id="available-datasets">Available datasets<a class="anchor" aria-label="anchor" href="#available-datasets"></a>
 </h2>
-<p>To see a full list of datasets call the <code>omnipath_show_db</code> function:</p>
+<p>To see a full list of datasets call the <code>omnipath_show_db</code>
+function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 16 × 10</span></span>
-<span class="co">##    name     last_used lifetime package loader   loader_param latest_param loaded</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> Gene On… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_onto… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">15</span> GO anno… <span style="color: #BB0000;">NA</span>             300 Omnipa… go_anno… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #BCBCBC;">16</span> UniProt… <span style="color: #BB0000;">NA</span>             300 Omnipa… uniprot… <span style="color: #949494;">&lt;named list</span>… <span style="color: #BB0000;">NA</span>           FALSE </span>
-<span class="co">## <span style="color: #949494;"># … with 2 more variables: db &lt;lgl&gt;, key &lt;chr&gt;</span></span></code></pre>
-<p>It returns a tibble where each dataset has a human readable name and a key which can be used to refer to it. We can also check here if the dataset is currently loaded, the time it’s been last used, the loader function and its arguments.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 19 × 10</span></span></span>
+<span><span class="co">##    name   last_…¹ lifet…² package loader loader_param lates…³ loaded db    key  </span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_b…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_f…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_a…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_a…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_s…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_c…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_d…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_c…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_m…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_p…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_m…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">12</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_p…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">13</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_p…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">14</span> Gene … <span style="color: #BB0000;">NA</span>          300 Omnipa… go_on… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    go_y…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">15</span> GO an… <span style="color: #BB0000;">NA</span>          300 Omnipa… go_an… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    goa_…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">16</span> UniPr… <span style="color: #BB0000;">NA</span>          300 Omnipa… unipr… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    up_gs</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">17</span> Ensem… <span style="color: #BB0000;">NA</span>        <span style="text-decoration: underline;">10</span>800 Omnipa… taxon… <span style="color: #949494;">&lt;NULL&gt;</span>       <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    orga…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">18</span> All S… <span style="color: #BB0000;">NA</span>        <span style="text-decoration: underline;">10</span>800 Omnipa… all_u… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    swis…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">19</span> All T… <span style="color: #BB0000;">NA</span>        <span style="text-decoration: underline;">10</span>800 Omnipa… all_u… &lt;named list&gt; <span style="color: #BB0000;">NA</span>      FALSE  <span style="color: #BB0000;">NA</span>    trem…</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​last_used, ²​lifetime, ³​latest_param</span></span></span></code></pre>
+<p>It returns a tibble where each dataset has a human readable name and
+a key which can be used to refer to it. We can also check here if the
+dataset is currently loaded, the time it’s been last used, the loader
+function and its arguments.</p>
 </div>
 <div class="section level2">
 <h2 id="access-a-dataset">Access a dataset<a class="anchor" aria-label="anchor" href="#access-a-dataset"></a>
 </h2>
-<p>Datasets can be accessed by the <code>get_db</code> function. Ideally you should call this function every time you use the dataset. The first time it will be loaded, the subsequent times the already loaded dataset will be returned. This way each access is registered and extends the expiry time. Let’s load the human UniProt-GeneSymbol table. Above we see its key is <code>up_gs_human</code>.</p>
+<p>Datasets can be accessed by the <code>get_db</code> function. Ideally
+you should call this function every time you use the dataset. The first
+time it will be loaded, the subsequent times the already loaded dataset
+will be returned. This way each access is registered and extends the
+expiry time. Let’s load the human UniProt-GeneSymbol table. Above we see
+its key is <code>up_gs</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">up_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_db.html">get_db</a></span><span class="op">(</span><span class="st">'up_gs_human'</span><span class="op">)</span>
-<span class="va">up_gs</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 20,344 × 2</span></span>
-<span class="co">##    From   To     </span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Q96NG5 ZNF558 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Q6ZN19 ZNF841 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Q86XN6 ZNF761 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> A8MUZ8 ZNF705G</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q08ER8 ZNF543 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q9GZX5 ZNF350 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q9GZP7 VN1R1  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Q3MJ13 WDR72  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Q9NY84 VNN3   </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> B1APH4 ZNF487 </span>
-<span class="co">## <span style="color: #949494;"># … with 20,334 more rows</span></span></code></pre>
-<p>This dataset is a two columns data frame of SwissProt IDs and Gene Symbols. Looking again at the datasets, we find that this dataset is loaded now and the <code>last_used</code> timestamp is set to the time we called <code>get_db</code>:</p>
+<code class="sourceCode R"><span><span class="va">up_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_db.html">get_db</a></span><span class="op">(</span><span class="st">'up_gs'</span><span class="op">)</span></span>
+<span><span class="va">up_gs</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 20,372 × 2</span></span></span>
+<span><span class="co">##    From   To     </span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> P63120 ERVK-19</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Q96EC8 YIPF6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Q6ZMS4 ZNF852 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Q8N8L2 ZNF491 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Q15916 ZBTB6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> O60384 ZNF861P</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Q3MIS6 ZNF528 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Q86UK7 ZNF598 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Q6P280 ZNF529 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Q969W1 ZDHHC16</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 20,362 more rows</span></span></span></code></pre>
+<p>This dataset is a two columns data frame of SwissProt IDs and Gene
+Symbols. Looking again at the datasets, we find that this dataset is
+loaded now and the <code>last_used</code> timestamp is set to the time
+we called <code>get_db</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 16 × 10</span></span>
-<span class="co">##    name   last_used           lifetime package  loader loader_param latest_param</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">15</span> GO an… <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_an… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">16</span> UniPr… 2022-02-19 <span style="color: #949494;">15:07:40</span>      300 Omnipat… unipr… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;named list</span>…</span>
-<span class="co">## <span style="color: #949494;"># … with 3 more variables: loaded &lt;lgl&gt;, db &lt;list&gt;, key &lt;chr&gt;</span></span></code></pre>
-<p>The above table contains also a reference to the dataset, and the arguments passed to the loader function:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 19 × 10</span></span></span>
+<span><span class="co">##    name     last_used           lifet…¹ package loader loader_param latest_param</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">12</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">13</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">14</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">15</span> GO anno… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_an… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">16</span> UniProt… 2022-10-16 <span style="color: #949494;">16:23:43</span>     300 Omnipa… unipr… &lt;named list&gt; &lt;named list&gt;</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">17</span> Ensembl… 2022-10-16 <span style="color: #949494;">16:23:42</span>   <span style="text-decoration: underline;">10</span>800 Omnipa… taxon… <span style="color: #949494;">&lt;NULL&gt;</span>       <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">18</span> All Swi… <span style="color: #BB0000;">NA</span>                    <span style="text-decoration: underline;">10</span>800 Omnipa… all_u… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">19</span> All TrE… <span style="color: #BB0000;">NA</span>                    <span style="text-decoration: underline;">10</span>800 Omnipa… all_u… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 3 more variables: loaded &lt;lgl&gt;, db &lt;list&gt;, key &lt;chr&gt;, and abbreviated</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   variable name ¹​lifetime</span></span></span></code></pre>
+<p>The above table contains also a reference to the dataset, and the
+arguments passed to the loader function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">d</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 20,344 × 2</span></span>
-<span class="co">##    From   To     </span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Q96NG5 ZNF558 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Q6ZN19 ZNF841 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Q86XN6 ZNF761 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> A8MUZ8 ZNF705G</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q08ER8 ZNF543 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q9GZX5 ZNF350 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q9GZP7 VN1R1  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Q3MJ13 WDR72  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Q9NY84 VNN3   </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> B1APH4 ZNF487 </span>
-<span class="co">## <span style="color: #949494;"># … with 20,334 more rows</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">d</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 20,372 × 2</span></span></span>
+<span><span class="co">##    From   To     </span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> P63120 ERVK-19</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Q96EC8 YIPF6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Q6ZMS4 ZNF852 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Q8N8L2 ZNF491 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Q15916 ZBTB6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> O60384 ZNF861P</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Q3MIS6 ZNF528 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Q86UK7 ZNF598 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Q6P280 ZNF529 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Q969W1 ZDHHC16</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 20,362 more rows</span></span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">d</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">latest_param</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## $to</span>
-<span class="co">## [1] "genesymbol"</span>
-<span class="co">## </span>
-<span class="co">## $organism</span>
-<span class="co">## [1] 9606</span></code></pre>
-<p>If we call <code>get_db</code> again, the timestamp is updated, resetting the expiry counter:</p>
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">latest_param</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## $to</span></span>
+<span><span class="co">## [1] "genesymbol"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $organism</span></span>
+<span><span class="co">## [1] 9606</span></span></code></pre>
+<p>If we call <code>get_db</code> again, the timestamp is updated,
+resetting the expiry counter:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">up_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_db.html">get_db</a></span><span class="op">(</span><span class="st">'up_gs_human'</span><span class="op">)</span>
-<span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 16 × 10</span></span>
-<span class="co">##    name   last_used           lifetime package  loader loader_param latest_param</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> Gene … <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_on… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">15</span> GO an… <span style="color: #BB0000;">NA</span>                       300 Omnipat… go_an… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">16</span> UniPr… 2022-02-19 <span style="color: #949494;">15:07:50</span>      300 Omnipat… unipr… <span style="color: #949494;">&lt;named list</span>… <span style="color: #949494;">&lt;named list</span>…</span>
-<span class="co">## <span style="color: #949494;"># … with 3 more variables: loaded &lt;lgl&gt;, db &lt;list&gt;, key &lt;chr&gt;</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">up_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_db.html">get_db</a></span><span class="op">(</span><span class="st">'up_gs'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 19 × 10</span></span></span>
+<span><span class="co">##    name     last_used           lifet…¹ package loader loader_param latest_param</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">12</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">13</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">14</span> Gene On… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_on… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">15</span> GO anno… <span style="color: #BB0000;">NA</span>                      300 Omnipa… go_an… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">16</span> UniProt… 2022-10-16 <span style="color: #949494;">16:23:53</span>     300 Omnipa… unipr… &lt;named list&gt; &lt;named list&gt;</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">17</span> Ensembl… 2022-10-16 <span style="color: #949494;">16:23:42</span>   <span style="text-decoration: underline;">10</span>800 Omnipa… taxon… <span style="color: #949494;">&lt;NULL&gt;</span>       <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">18</span> All Swi… <span style="color: #BB0000;">NA</span>                    <span style="text-decoration: underline;">10</span>800 Omnipa… all_u… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">19</span> All TrE… <span style="color: #BB0000;">NA</span>                    <span style="text-decoration: underline;">10</span>800 Omnipa… all_u… &lt;named list&gt; <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 3 more variables: loaded &lt;lgl&gt;, db &lt;list&gt;, key &lt;chr&gt;, and abbreviated</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   variable name ¹​lifetime</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="where-are-the-loaded-datasets">Where are the loaded datasets?<a class="anchor" aria-label="anchor" href="#where-are-the-loaded-datasets"></a>
 </h2>
-<p>The loaded datasets live in an environment which belong to the OmnipathR package. Normally users don’t need to access this environment. As we see below, <code>omnipath_show_db</code> presents us all information availble by directly looking at the environment:</p>
+<p>The loaded datasets live in an environment which belong to the
+OmnipathR package. Normally users don’t need to access this environment.
+As we see below, <code>omnipath_show_db</code> presents us all
+information availble by directly looking at the environment:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">OmnipathR</span><span class="fu">:::</span><span class="va">omnipath.env</span><span class="op">$</span><span class="va">db</span><span class="op">$</span><span class="va">up_gs_human</span></code></pre></div>
-<pre><code><span class="co">## $name</span>
-<span class="co">## [1] "UniProt-GeneSymbol table (human)"</span>
-<span class="co">## </span>
-<span class="co">## $last_used</span>
-<span class="co">## [1] "2022-02-19 15:07:50 CET"</span>
-<span class="co">## </span>
-<span class="co">## $lifetime</span>
-<span class="co">## [1] 300</span>
-<span class="co">## </span>
-<span class="co">## $package</span>
-<span class="co">## [1] "OmnipathR"</span>
-<span class="co">## </span>
-<span class="co">## $loader</span>
-<span class="co">## [1] "uniprot_full_id_mapping_table"</span>
-<span class="co">## </span>
-<span class="co">## $loader_param</span>
-<span class="co">## $loader_param$to</span>
-<span class="co">## [1] "genesymbol"</span>
-<span class="co">## </span>
-<span class="co">## $loader_param$organism</span>
-<span class="co">## [1] 9606</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## $latest_param</span>
-<span class="co">## $latest_param$to</span>
-<span class="co">## [1] "genesymbol"</span>
-<span class="co">## </span>
-<span class="co">## $latest_param$organism</span>
-<span class="co">## [1] 9606</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## $loaded</span>
-<span class="co">## [1] TRUE</span>
-<span class="co">## </span>
-<span class="co">## $db</span>
-<span class="co">## <span style="color: #949494;"># A tibble: 20,344 × 2</span></span>
-<span class="co">##    From   To     </span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> Q96NG5 ZNF558 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> Q6ZN19 ZNF841 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> Q86XN6 ZNF761 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> A8MUZ8 ZNF705G</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> Q08ER8 ZNF543 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> Q9GZX5 ZNF350 </span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> Q9GZP7 VN1R1  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> Q3MJ13 WDR72  </span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> Q9NY84 VNN3   </span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> B1APH4 ZNF487 </span>
-<span class="co">## <span style="color: #949494;"># … with 20,334 more rows</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu">OmnipathR</span><span class="fu">:::</span><span class="va">omnipath.env</span><span class="op">$</span><span class="va">db</span><span class="op">$</span><span class="va">up_gs</span></span></code></pre></div>
+<pre><code><span><span class="co">## $name</span></span>
+<span><span class="co">## [1] "UniProt-GeneSymbol table"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $last_used</span></span>
+<span><span class="co">## [1] "2022-10-16 16:23:53 CEST"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $lifetime</span></span>
+<span><span class="co">## [1] 300</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $package</span></span>
+<span><span class="co">## [1] "OmnipathR"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $loader</span></span>
+<span><span class="co">## [1] "uniprot_full_id_mapping_table"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $loader_param</span></span>
+<span><span class="co">## $loader_param$to</span></span>
+<span><span class="co">## [1] "genesymbol"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $loader_param$organism</span></span>
+<span><span class="co">## [1] 9606</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $latest_param</span></span>
+<span><span class="co">## $latest_param$to</span></span>
+<span><span class="co">## [1] "genesymbol"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $latest_param$organism</span></span>
+<span><span class="co">## [1] 9606</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $loaded</span></span>
+<span><span class="co">## [1] TRUE</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $db</span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 20,372 × 2</span></span></span>
+<span><span class="co">##    From   To     </span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> P63120 ERVK-19</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Q96EC8 YIPF6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Q6ZMS4 ZNF852 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Q8N8L2 ZNF491 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Q15916 ZBTB6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> O60384 ZNF861P</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Q3MIS6 ZNF528 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Q86UK7 ZNF598 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Q6P280 ZNF529 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Q969W1 ZDHHC16</span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 20,362 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="how-to-extend-the-expiry-period">How to extend the expiry period?<a class="anchor" aria-label="anchor" href="#how-to-extend-the-expiry-period"></a>
 </h2>
-<p>The default expiry of datasets is given by the option <code>omnipath.db_lifetime</code>. By calling <code>omnipath_save_config</code> this option is saved to the default config file and will be valid in all subsequent sessions. Otherwise it’s valid only in the current session.</p>
+<p>The default expiry of datasets is given by the option
+<code>omnipath.db_lifetime</code>. By calling
+<code>omnipath_save_config</code> this option is saved to the default
+config file and will be valid in all subsequent sessions. Otherwise it’s
+valid only in the current session.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>omnipath.db_lifetime <span class="op">=</span> <span class="fl">600</span><span class="op">)</span>
-<span class="fu"><a href="../reference/omnipath_save_config.html">omnipath_save_config</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>omnipath.db_lifetime <span class="op">=</span> <span class="fl">600</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/omnipath_save_config.html">omnipath_save_config</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="where-are-the-datasets-defined">Where are the datasets defined?<a class="anchor" aria-label="anchor" href="#where-are-the-datasets-defined"></a>
 </h2>
-<p>The built-in dataset definitions are in a JSON file shipped with the package. Easiest way to see it is by <a href="https://github.com/saezlab/OmnipathR/blob/master/inst/db/db_def.json" class="external-link">the git web interface</a>.</p>
+<p>The built-in dataset definitions are in a JSON file shipped with the
+package. Easiest way to see it is by <a href="https://github.com/saezlab/OmnipathR/blob/master/inst/db/db_def.json" class="external-link">the
+git web interface</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="how-to-add-custom-datasets">How to add custom datasets?<a class="anchor" aria-label="anchor" href="#how-to-add-custom-datasets"></a>
 </h2>
-<p>Currently no API available for this, but it would be super easy to implement. It would be matter of providing a JSON similar to the above, or calling a function. Please open an issue if you are interested in this feature.</p>
+<p>Currently no API available for this, but it would be super easy to
+implement. It would be matter of providing a JSON similar to the above,
+or calling a function. Please open an issue if you are interested in
+this feature.</p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## R version 4.1.2 (2021-11-01)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Arch Linux</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS:   /usr/lib/libopenblasp-r0.3.19.so</span>
-<span class="co">## LAPACK: /usr/lib/liblapack.so.3.10.0</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] OmnipathR_3.3.14 BiocStyle_2.22.0</span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##  [1] progress_1.2.2      tidyselect_1.1.1    xfun_0.29          </span>
-<span class="co">##  [4] bslib_0.3.1         purrr_0.3.4         vctrs_0.3.8        </span>
-<span class="co">##  [7] generics_0.1.1      htmltools_0.5.2     yaml_2.2.1         </span>
-<span class="co">## [10] utf8_1.2.2          rlang_1.0.0         pkgdown_2.0.2      </span>
-<span class="co">## [13] jquerylib_0.1.4     pillar_1.6.4        later_1.3.0        </span>
-<span class="co">## [16] glue_1.6.1          DBI_1.1.2           rappdirs_0.3.3     </span>
-<span class="co">## [19] bit64_4.0.5         readxl_1.3.1        lifecycle_1.0.1    </span>
-<span class="co">## [22] stringr_1.4.0       cellranger_1.1.0    ragg_1.2.1         </span>
-<span class="co">## [25] memoise_2.0.1       evaluate_0.14       knitr_1.37         </span>
-<span class="co">## [28] tzdb_0.2.0          fastmap_1.1.0       curl_4.3.2         </span>
-<span class="co">## [31] fansi_1.0.2         Rcpp_1.0.8          readr_2.1.1        </span>
-<span class="co">## [34] backports_1.4.1     checkmate_2.0.0     BiocManager_1.30.16</span>
-<span class="co">## [37] cachem_1.0.6        desc_1.4.0          vroom_1.5.7        </span>
-<span class="co">## [40] jsonlite_1.7.3      bit_4.0.4           systemfonts_1.0.3  </span>
-<span class="co">## [43] fs_1.5.2            textshaping_0.3.6   hms_1.1.1          </span>
-<span class="co">## [46] digest_0.6.29       stringi_1.7.6       bookdown_0.24      </span>
-<span class="co">## [49] dplyr_1.0.7         rprojroot_2.0.2     cli_3.1.0          </span>
-<span class="co">## [52] tools_4.1.2         magrittr_2.0.1      logger_0.2.2       </span>
-<span class="co">## [55] sass_0.4.0          tibble_3.1.6        tidyr_1.1.4        </span>
-<span class="co">## [58] crayon_1.4.2        pkgconfig_2.0.3     ellipsis_0.3.2     </span>
-<span class="co">## [61] xml2_1.3.3          prettyunits_1.1.1   assertthat_0.2.1   </span>
-<span class="co">## [64] rmarkdown_2.11      httr_1.4.2          R6_2.5.1           </span>
-<span class="co">## [67] igraph_1.2.11       compiler_4.1.2</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Arch Linux</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/libopenblasp-r0.3.21.so</span></span>
+<span><span class="co">## LAPACK: /usr/lib/liblapack.so.3.10.1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] OmnipathR_3.5.22 BiocStyle_2.25.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##  [1] Rcpp_1.0.9          tidyr_1.2.1         prettyunits_1.1.1  </span></span>
+<span><span class="co">##  [4] assertthat_0.2.1    rprojroot_2.0.3     digest_0.6.29      </span></span>
+<span><span class="co">##  [7] utf8_1.2.2          R6_2.5.1            cellranger_1.1.0   </span></span>
+<span><span class="co">## [10] backports_1.4.1     evaluate_0.17       httr_1.4.4         </span></span>
+<span><span class="co">## [13] pillar_1.8.1        rlang_1.0.6         progress_1.2.2     </span></span>
+<span><span class="co">## [16] curl_4.3.3          readxl_1.4.1        jquerylib_0.1.4    </span></span>
+<span><span class="co">## [19] checkmate_2.1.0     rmarkdown_2.17      pkgdown_2.0.6      </span></span>
+<span><span class="co">## [22] textshaping_0.3.6   desc_1.4.2          readr_2.1.3        </span></span>
+<span><span class="co">## [25] stringr_1.4.1       selectr_0.4-2       bit_4.0.4          </span></span>
+<span><span class="co">## [28] igraph_1.3.5        compiler_4.2.1      xfun_0.33          </span></span>
+<span><span class="co">## [31] pkgconfig_2.0.3     systemfonts_1.0.4   htmltools_0.5.3    </span></span>
+<span><span class="co">## [34] tidyselect_1.2.0    tibble_3.1.8        bookdown_0.29      </span></span>
+<span><span class="co">## [37] fansi_1.0.3         crayon_1.5.2        dplyr_1.0.10       </span></span>
+<span><span class="co">## [40] tzdb_0.3.0          withr_2.5.0         later_1.3.0        </span></span>
+<span><span class="co">## [43] rappdirs_0.3.3      jsonlite_1.8.2      lifecycle_1.0.3    </span></span>
+<span><span class="co">## [46] DBI_1.1.3           magrittr_2.0.3      cli_3.4.1          </span></span>
+<span><span class="co">## [49] stringi_1.7.8       vroom_1.6.0         cachem_1.0.6       </span></span>
+<span><span class="co">## [52] fs_1.5.2            xml2_1.3.3          logger_0.2.2       </span></span>
+<span><span class="co">## [55] bslib_0.4.0         ellipsis_0.3.2      ragg_1.2.3         </span></span>
+<span><span class="co">## [58] generics_0.1.3      vctrs_0.4.2         tools_4.2.1        </span></span>
+<span><span class="co">## [61] bit64_4.0.5         glue_1.6.2          purrr_0.3.5        </span></span>
+<span><span class="co">## [64] hms_1.1.2           fastmap_1.1.0       yaml_2.3.5         </span></span>
+<span><span class="co">## [67] BiocManager_1.30.18 rvest_1.0.3         memoise_2.0.1      </span></span>
+<span><span class="co">## [70] knitr_1.40          sass_0.4.2</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -383,7 +427,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
