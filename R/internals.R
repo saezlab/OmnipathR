@@ -20,6 +20,24 @@
 #
 
 
+#' Prepend the current OmniPath server domain to an URL
+#'
+#' @param path_qs Character: part of the URL after the domain: the path and
+#'     the query string.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_replace
+#' @noRd
+omnipath_url <- function(path_qs){
+
+    'omnipath.url' %>%
+    getOption %>%
+    str_replace('/+$', '') %>%
+    c(str_replace(path_qs, '^/+', '')) %>%
+    paste(collapse = '/')
+
+}
+
 
 #' Retrieves an URL from the package's URL register
 #'

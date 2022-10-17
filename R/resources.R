@@ -69,7 +69,7 @@ get_resources <- function(
         query_type
     )
 
-    resources_url <- sprintf('%s/resources', getOption('omnipath.url'))
+    resources_url <- omnipath_url('resources')
     resources <- safe_json(path = resources_url)
 
     return(

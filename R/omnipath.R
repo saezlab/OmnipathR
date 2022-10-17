@@ -170,7 +170,7 @@ import_omnipath <- function(
     param <- c(as.list(environment()), list(...))
     param <- omnipath_check_param(param)
 
-    url <- omnipath_url(param)
+    url <- omnipath_build_url(param)
     download_args_defaults <- list(
         url = url
     )
@@ -363,10 +363,9 @@ omnipath_check_param <- function(param){
 #' @importFrom logger log_warn
 #'
 #' @noRd
-omnipath_url <- function(param){
+omnipath_build_url <- function(param){
 
-    baseurl <- options('omnipath.url')
-    baseurl <- sprintf('%s%s', baseurl, param$query_type)
+    baseurl <- omnipath_url(param$query_type)
 
     unknown_param <- setdiff(
         names(param),

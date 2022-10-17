@@ -989,9 +989,9 @@ import_all_interactions <- function(
     ...
 ){
 
-    url <- paste0(options('omnipath.url'), 'queries/interactions?format=json')
     all_datasets <-
-        safe_json(path = url)$datasets %>%
+        omnipath_url('queries/interactions?format=json') %>%
+        safe_json(path = .)$datasets %>%
         setdiff(exclude)
 
     # it does not make sense without the type field
