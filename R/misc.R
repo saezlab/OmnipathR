@@ -151,11 +151,12 @@ ensure_list <- function(value){
 #'
 #' @return A list
 #'
+#' @importFrom magrittr %>% equals
 #' @noRd
 ensure_list_2 <- function(value){
 
     `if`(
-        class(value)[1] == 'list',
+        class(value)[1] %>% equals('list'),
         value,
         list(value)
     )
