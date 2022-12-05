@@ -44,6 +44,11 @@ utils::globalVariables(
     intercell = 'intercellular communication role records'
 )
 
+.omnipath_qt_nolicense <- c(
+    'annotations_summary',
+    'intercell_summary'
+)
+
 .omnipath_arg_synonyms <- list(
     select_organism = 'organisms',
     filter_databases = 'resources',
@@ -180,7 +185,8 @@ import_omnipath <- function(
         show_col_types = FALSE
     )
     json_defaults <- list(
-        fun = safe_json
+        fun = safe_json,
+        simplifyDataFrame = FALSE
     )
     download_args <- modifyList(
         `if`(
@@ -338,7 +344,10 @@ omnipath_check_param <- function(param){
     for(opt in c('license', 'password')){
 
         param[opt] <- `if`(
-            is.null(param[[opt]]),
+            (
+                is.null(param[[opt]]) &&
+                !param$query_type %in% .omnipath_qt_nolicense
+            ),
             options(sprintf('omnipath.%s', opt)),
             param[[opt]]
         )
@@ -647,7 +656,8 @@ swap_undirected <- function(data){
 #' @param url Character: the URL to download.
 #' @param fun The downloader function. Should be able to accept \code{url}
 #'     as its first argument.
-#' @param ... Passed to \code{fun}.
+#' @param ... Passed to the internal function \code{download_base} and
+#'     from there ultimately to \code{fun}.
 #'
 #' @noRd
 omnipath_download <- function(url, fun, ...) {
@@ -661,7 +671,9 @@ omnipath_download <- function(url, fun, ...) {
 
     }
 
+    print(fun)
     result <- download_base(url, fun, ...)
+    print(substr(result, 1, 100))
 
     omnipath_cache_save(data = result, url = url)
 
