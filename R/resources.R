@@ -86,13 +86,6 @@ get_resources <- function(
 }
 
 
-########## ########## ########## ##########
-########## RESOURCE FILTERING      ########
-########## ########## ########## ##########
-## Non exported functions (package internal functions) to filter PTMs,
-## interactions, complexes and annotations according to the databases passed
-## to the main functions
-
 #' Filters OmniPath data by resources
 #'
 #' Keeps only those records which are supported by any of the resources of
@@ -217,5 +210,55 @@ strip_resource_labels <- function(
     }
 
     return(data)
+
+}
+
+
+#' OmniPath resource information
+#'
+#' The `resources` query type provides resource metadata in JSON format.
+#' Here we retrieve this JSON and return it as a nested list structure.
+#'
+#' @examples
+#' resource_info()
+#'
+#' @export
+resource_info <- function() {
+
+    import_omnipath('resources', format = 'json')
+
+}
+
+
+#' OmniPath query parameters
+#'
+#' All parameter names and their possible values for a query type. Note:
+#' parameters with `NULL` values have too many possible values to list
+#' them.
+#'
+#' @param query_type Character: interactions, annotations, complexes, enz_sub
+#'     or intercell.
+#'
+#' @examples
+#' query_info()
+#'
+#' @importFrom magrittr %>%
+#' @export
+query_info <- function(query_type) {
+
+    query_type %>%
+    sprintf('queries/%s', .) %>%
+    import_omnipath(format = 'json')
+
+}
+
+
+#' Search in OmniPath
+#'
+#' Search for keywords in the resource and attribute names and metadata.
+#'
+search_omnipath <- function(...) {
+
+
 
 }

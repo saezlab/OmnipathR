@@ -19,11 +19,6 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-
-########## ########## ########## #############################
-########## Generic, non exported, OmniPath related functions #
-########## ########## ########## #############################
-
 utils::globalVariables(
     c("category", "uniprot", "genesymbol", "annotations",
     "target", "database", "category_intercell_source", "target_genesymbol",
