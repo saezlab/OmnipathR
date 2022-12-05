@@ -253,6 +253,37 @@ query_info <- function(query_type) {
 }
 
 
+#' Summary of the annotations and intercell database contents
+#'
+#' The `annotations_summary` and `intercell_summary` query types return
+#' detailed information on the contents of these databases. It includes
+#' all the available resources, fields and values in the database.
+#'
+#' @param query_type Character: either "annotations" or "intercell".
+#' @param format Character: either "json" or "tab".
+#'
+#' @return Summary of the database contents: the available resources, fields,
+#'     and their possible values. As a nested list if format is "json",
+#'     otherwise a data frame.
+#'
+#' @examples
+#' database_summary('annotations')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @importFrom stringr str_split
+#' @importFrom rlang set_names
+#' @export
+database_summary <- function(query_type, format = 'json') {
+
+    query_type %>%
+    sprintf('%s_summary', .) %>%
+    import_omnipath(format = format) %>%
+    map(~modifyList(., set_names(str_split(.$value, '#'), 'value')))
+
+}
+
+
 #' Search in OmniPath
 #'
 #' Search for keywords in the resource and attribute names and metadata.
