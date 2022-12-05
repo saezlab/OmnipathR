@@ -803,18 +803,23 @@ indent <- function(lines, depth = 4L){
 
 #' Read a JSON
 #'
+#' @importFrom logger log_trace log_warn
 #' @importFrom jsonlite validate fromJSON
 #' @noRd
 safe_json <- function(path, encoding = 'UTF-8', ...){
 
     lines <- suppressWarnings(readLines(con = path, encoding = encoding))
 
+    log_trace('Reading JSON from `%s` (encoding: %s).', path, encoding)
+
     json_ok <- jsonlite::validate(txt = lines)
+
+    log_trace('JSON validation successful: %s', json_ok)
 
     if(!json_ok){
 
         msg <- sprintf(
-            'Falied to read JSON from `%s` (file exists: %s)',
+            'Failed to read JSON from `%s` (file exists: %s)',
             path,
             file.exists(path)
         )
