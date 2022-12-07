@@ -128,7 +128,8 @@ utils::globalVariables(
     'references_by_resource',
     'add_counts',
     'qt_message',
-    'exclude'
+    'exclude',
+    'extra_attrs'
 )
 
 
@@ -293,6 +294,17 @@ omnipath_check_param <- function(param){
         msg <- 'DoRothEA confidence levels available are A, B, C and D.'
         log_warn(msg)
         warning(msg)
+    }
+
+    # extra_attrs is accepted also as an argument
+    if(
+        !is.null(param$extra_attrs) &&
+        param$extra_attrs
+    ){
+
+        param$fields <- union(param$fields, 'extra_attrs')
+        param$extra_attrs <- NULL
+
     }
 
     # adding default fields if not disabled
