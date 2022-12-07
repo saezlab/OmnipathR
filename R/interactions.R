@@ -1160,3 +1160,33 @@ with_references <- function(data, resources = NULL){
     filter(predicate(references))
 
 }
+
+
+#' Datasets in the OmniPath Interactions database
+#'
+#' @return Character: labels of interaction datasets.
+#'
+#' @examples
+#' interaction_datasets()
+#'
+#' @export
+interaction_datasets <- function() {
+
+    query_info('interactions')$datasets
+
+}
+
+
+#' Interaction types in the OmniPath Interactions database
+#'
+#' @return Character: labels of interaction types.
+#'
+#' @examples
+#' interaction_types()
+#'
+#' @export
+interaction_datasets <- function() {
+
+    query_info('interactions')$types
+
+}
