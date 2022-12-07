@@ -671,9 +671,7 @@ omnipath_download <- function(url, fun, ...) {
 
     }
 
-    print(fun)
     result <- download_base(url, fun, ...)
-    print(substr(result, 1, 100))
 
     omnipath_cache_save(data = result, url = url)
 
