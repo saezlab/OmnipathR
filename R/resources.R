@@ -260,7 +260,7 @@ query_info <- function(query_type) {
 #' all the available resources, fields and values in the database.
 #'
 #' @param query_type Character: either "annotations" or "intercell".
-#' @param format Character: either "json" or "tab".
+#' @param return_df Logical: return a data frame instead of list.
 #'
 #' @return Summary of the database contents: the available resources, fields,
 #'     and their possible values. As a nested list if format is "json",
@@ -270,26 +270,19 @@ query_info <- function(query_type) {
 #' database_summary('annotations')
 #'
 #' @importFrom magrittr %>%
-#' @importFrom purrr map
+#' @importFrom purrr map keep
 #' @importFrom stringr str_split
 #' @importFrom rlang set_names
+#' @importFrom tidyr unnest_wider
+#' @importFrom tibble tibble
 #' @export
-database_summary <- function(query_type, format = 'json') {
+database_summary <- function(query_type, return_df = FALSE) {
 
     query_type %>%
     sprintf('%s_summary', .) %>%
-    import_omnipath(format = format) %>%
-    map(~modifyList(., set_names(str_split(.$value, '#'), 'value')))
-
-}
-
-
-#' Search in OmniPath
-#'
-#' Search for keywords in the resource and attribute names and metadata.
-#'
-search_omnipath <- function(...) {
-
-
+    import_omnipath(format = 'json') %>%
+    map(~modifyList(., set_names(str_split(.$value, '#'), 'value'))) %>%
+    map(~modifyList(., list(value = keep(.$value, ~nchar(.x) > 0L)))) %>%
+    `if`(return_df, tibble(.) %>% unnest_wider(1L), .)
 
 }
