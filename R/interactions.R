@@ -1185,8 +1185,36 @@ interaction_datasets <- function() {
 #' interaction_types()
 #'
 #' @export
-interaction_datasets <- function() {
+interaction_types <- function() {
 
     query_info('interactions')$types
+
+}
+
+
+#' Create a column with dataset names listed
+#'
+#' From logical columns for each dataset, here we create a column that is
+#' a list of character vectors, containing dataset labels.
+#'
+#' @param data Interactions data frame with dataset columns (i.e. queried
+#'     with the option `fields = "datasets"`).
+#' @param remove_logicals Logical: remove the per dataset logical columns.
+#'
+#' @return The input data frame with the new column "datasets" added.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang syms
+#' @importFrom dplyr rowwise mutate c_across select
+#' @importFrom tidyselect all_of
+#' @export
+datasets_one_column <- function(data, remove_logicals = TRUE) {
+
+    dataset_cols <- data %>% colnames %>% intersect(interaction_datasets())
+
+    data %>%
+    rowwise() %>%
+    mutate(datasets = list(dataset_cols[c_across(all_of(dataset_cols))])) %>%
+    `if`(remove_logicals, select(., -dataset_cols), .)
 
 }
