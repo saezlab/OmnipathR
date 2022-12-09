@@ -256,5 +256,18 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "search_index": {
+        "name": ["OmniPath search index"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "build_index",
+        "loader_param": {
+            "rebuild": false
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }
