@@ -43,6 +43,7 @@ build_index <- function(rebuild = FALSE) {
 #' @return Data frame of six columns: resource, dataset, key, value, where,
 #'     database.
 #'
+#' @importFrom magrittr %>% %T>%
 #' @importFrom purrr keep map
 #' @importFrom dplyr mutate bind_rows
 #' @importFrom stringr str_to_lower str_extract
@@ -63,9 +64,8 @@ build_index_impl <- function() {
     ) %>%
     bind_rows() %>%
     mutate(value_lower = str_to_lower(value)) %>%
-    omnipath_cache_save(url = 'omnipath_search_index')
-
-    log_success('Finished building search index.')
+    omnipath_cache_save(url = 'omnipath_search_index') %T>%
+    {log_success('Finished building search index.')}
 
 }
 
