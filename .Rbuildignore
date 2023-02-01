@@ -44,3 +44,8 @@ vignettes/figure
 ^tmppkg
 OmnipathR\.BiocCheck
 ^\.bumpversion\.cfg$
+^tmp.*$
+r-devel-ubuntu.sh
+ssl-issues
+^playground.*$
+^build.*$
