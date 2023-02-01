@@ -535,7 +535,7 @@ split_unique_join <- function(
             x = x,
             method = method,
             sep = sep,
-            outsep = outsep
+            outsep
         )
     )
 
