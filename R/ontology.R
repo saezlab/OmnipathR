@@ -360,9 +360,8 @@ get_ontology_db_variants_graph <- function(){
 #'     target data structure already exists "operations" a zero length
 #'     vector.
 #'
-#' @importFrom magrittr %>% equals
+#' @importFrom magrittr %>% equals extract
 #' @importFrom igraph V shortest_paths degree
-#' @importFrom dplyr first last
 #' @importFrom purrr map_dbl
 #'
 #' @noRd
@@ -386,8 +385,8 @@ ontology_db_transformations <- function(db, fmt, c2p){
     idx <- paths$epath %>% map_dbl(function(e){sum(e$weight)}) %>% which.min
 
     operations <- paths$epath[[idx]]$fun %>% rev
-    start <- paths$vpath[[idx]] %>% last %>% `$`('name')
-    end <- paths$vpath[[idx]] %>% first %>% `$`('name')
+    start <- paths$vpath[[idx]] %>% rev %>% extract(1L) %>% `$`('name')
+    end <- paths$vpath[[idx]] %>% extract(1L) %>% `$`('name')
 
     list(
         operations = operations,
