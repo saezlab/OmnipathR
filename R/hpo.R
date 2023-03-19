@@ -49,7 +49,7 @@
 #' @export
 #' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr mutate across na_if
-#' @importFrom tidyselect where
+#' @importFrom tidyselect vars_select_helpers
 hpo_download <- function(){
 
     'hpo' %>%
@@ -70,7 +70,7 @@ hpo_download <- function(){
         ),
         resource = 'Human Phenotype Ontology'
     ) %>%
-    mutate(across(where(is.character), na_if, '-')) %T>%
+    mutate(across(vars_select_helpers$where(is.character), na_if, '-')) %T>%
     load_success()
 
 }
