@@ -124,7 +124,7 @@ ensembl_organisms <- function(){
 #' # 5 WBGene00000005  aat-4                     6272529      6275721
 #' # # . with 46,924 more rows
 #'
-#' @importFrom magrittr %<>% %>% %T>%
+#' @importFrom magrittr %<>% %>% %T>% extract2 equals
 #' @importFrom purrr map_chr
 #' @importFrom readr cols col_character read_tsv type_convert
 #' @importFrom dplyr slice_tail slice_head
@@ -191,7 +191,7 @@ biomart_query <- function(
         )
     ) %>%
     {`if`(
-        slice_tail(., n = 1L) %>% first %>% equals('[success]'),
+        slice_tail(., n = 1L) %>% extract2(1L) %>% equals('[success]'),
         slice_head(., n = -1L),
         {
             log_warn(
