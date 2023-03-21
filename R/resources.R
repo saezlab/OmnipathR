@@ -153,8 +153,7 @@ filter_by_resource <- function(data, resources = NULL){
 #' resources_colname(co)
 #' # [1] "sources"
 #'
-#' @importFrom magrittr %>%
-#' @importFrom dplyr first
+#' @importFrom magrittr %>% extract
 #' @export
 resources_colname <- function(data){
 
@@ -162,7 +161,7 @@ resources_colname <- function(data){
         c('sources', 'database', 'source'),
         colnames(data)
     ) %>%
-    first
+    extract(1L)
 
 }
 
