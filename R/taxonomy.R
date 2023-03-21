@@ -149,7 +149,7 @@ latin_name <- function(name){
 #' # [1] 9606 9685   NA
 #'
 #' @importFrom magrittr %>%
-#' @importFrom purrr map_chr
+#' @importFrom purrr map_int
 #' @export
 #'
 #' @seealso \itemize{
@@ -160,7 +160,7 @@ latin_name <- function(name){
 ncbi_taxid <- function(name){
 
     name %>%
-    map_chr(taxon_name, 'ncbi') %>%
+    map_int(taxon_name, 'ncbi') %>%
     as.integer
 
 }
