@@ -7,10 +7,12 @@
 search_omnipath(..., rebuild_index = FALSE)
 }
 \arguments{
-\item{rebuild_index}{Logical: rebuild the index even if it could be loaded
-    from the cache.
+\item{...}{Ignored.
 
 Search for keywords in the resource and attribute names and metadata.}
+
+\item{rebuild_index}{Logical: rebuild the index even if it could be loaded
+from the cache.}
 }
 \description{
 Search in OmniPath

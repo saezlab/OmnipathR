@@ -289,11 +289,13 @@ get_index <- function(rebuild = FALSE) {
 #'
 #' @param rebuild_index Logical: rebuild the index even if it could be loaded
 #'     from the cache.
+#' @param ... Ignored.
 #'
 #' Search for keywords in the resource and attribute names and metadata.
 #'
 search_omnipath <- function(..., rebuild_index = FALSE) {
 
+    log_success('Search does not work yet.')
     index <- get_index(rebuild = rebuild_index)
 
 }
