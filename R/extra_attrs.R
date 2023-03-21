@@ -160,10 +160,10 @@ extra_attrs_to_cols <- function(
 #'     type if one interaction might have multiple values of the attribute,
 #'     or character type if
 #'
-#' @importFrom magrittr %>% %<>% is_less_than
+#' @importFrom magrittr %>% %<>% is_less_than extract
 #' @importFrom rlang sym !! := enquo
 #' @importFrom purrr map map_int pluck
-#' @importFrom dplyr first mutate pull
+#' @importFrom dplyr  mutate pull
 #' @importFrom tidyr unnest
 #' @noRd
 .extra_attr_to_col <- function(
@@ -199,7 +199,7 @@ extra_attrs_to_cols <- function(
                     all,
                 mutate(
                     .,
-                    !!col := map(!!col, first) %>%
+                    !!col := map(!!col, ~extract(.x, 1L)) %>%
                         null_to_na %>%
                         unlist
                 ),
