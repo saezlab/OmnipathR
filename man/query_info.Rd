@@ -16,6 +16,8 @@ parameters with `NULL` values have too many possible values to list
 them.
 }
 \examples{
-query_info()
+ia_param <- query_info('interactions')
+ia_param$datasets[1:5]
+[1] "dorothea"    "kinaseextra" "ligrecextra" "lncrna_mrna" "mirnatarget"
 
 }
