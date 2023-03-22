@@ -51,6 +51,9 @@ build_index <- function(rebuild = FALSE) {
 #' @noRd
 build_index_impl <- function() {
 
+    # NSE vs. R CMD check workaround
+    value <- NULL
+
     log_success('Building search index, this may take a few minutes.')
 
     getNamespace('OmnipathR') %>%
@@ -151,7 +154,8 @@ intercell_search_index <- function() {
 interactions_search_index <- function() {
 
     # NSE vs R CMD check workaround
-    dataset <- datasets <- sources <- type <- resource <- NULL
+    dataset <- datasets <- sources <- type <-
+    resource <- attr_key <- value <- NULL
 
     log_info('Building search index for the interactions database.')
 
@@ -220,6 +224,9 @@ interactions_search_index <- function() {
 #' @noRd
 complexes_search_index <- function() {
 
+    # NSE vs. R CMD check workaround
+    name <- value <- resource <- NULL
+
     log_info('Building search index for the complexes database.')
 
     import_omnipath_complexes() %>%
@@ -243,6 +250,9 @@ complexes_search_index <- function() {
 #' @importFrom logger log_info
 #' @noRd
 enzsub_search_index <- function() {
+
+    # NSE vs. R CMD check workaround
+    modification <- resource <- NULL
 
     log_info('Building search index for the enzyme-substrate database.')
 
