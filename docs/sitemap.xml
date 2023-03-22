@@ -100,6 +100,12 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/curated_ligrec_stats.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/database_summary.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/datasets_one_column.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/descendants.html</loc>
   </url>
   <url>
@@ -301,7 +307,13 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/interaction_datasets.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/interaction_graph.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/interaction_types.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/intercell_categories.html</loc>
@@ -586,6 +598,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/pubmed_open.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/query_info.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/ramilowski_download.html</loc>
   </url>
   <url>
@@ -613,7 +628,13 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/remap_tf_target_download.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/resource_info.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/resources_colname.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/search_omnipath.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/simplify_intercell_network.html</loc>
