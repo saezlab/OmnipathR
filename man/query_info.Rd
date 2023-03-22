@@ -18,6 +18,6 @@ them.
 \examples{
 ia_param <- query_info('interactions')
 ia_param$datasets[1:5]
-[1] "dorothea"    "kinaseextra" "ligrecextra" "lncrna_mrna" "mirnatarget"
+# [1] "dorothea"    "kinaseextra" "ligrecextra" "lncrna_mrna" "mirnatarget"
 
 }
