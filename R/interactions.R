@@ -637,7 +637,7 @@ import_transcriptional_interactions <- function(
     is_directed <- NULL
 
     args <- list(...)
-    tr_datasets <- c('dorothea', 'tf_target')
+    tr_datasets <- c('dorothea', 'tf_target', 'collectri')
     args$datasets %<>% {. %||% tr_datasets} %>% intersect(tr_datasets)
 
     result <-
