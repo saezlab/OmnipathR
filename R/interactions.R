@@ -122,6 +122,7 @@ import_omnipath_interactions <- function(
 #'
 #' @examples
 #' pathways <- omnipath()
+#' pathways
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{import_omnipath_interactions}}}
@@ -520,11 +521,12 @@ import_post_translational_interactions <- function(
 #' @param ... optional additional arguments
 #'
 #' @examples
-#' interactions <- import_dorothea_interactions(
+#' dorothea_grn <- import_dorothea_interactions(
 #'     resources = c('DoRothEA', 'ARACNe-GTEx_DoRothEA'),
 #'     organism = 9606,
 #'     dorothea_levels = c('A', 'B', 'C')
 #' )
+#' dorothea_grn
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{collectri}}}
@@ -680,10 +682,11 @@ import_tf_target_interactions <- function(
 #' @return A dataframe containing TF-target interactions.
 #'
 #' @examples
-#' interactions <-
+#' grn <-
 #'     import_transcriptional_interactions(
 #'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
 #'     )
+#' grn
 #'
 #'
 #' @export
@@ -750,6 +753,7 @@ import_transcriptional_interactions <- function(
 #'
 #' @examples
 #' collectri_grn <- collectri()
+#' collectri_grn
 #'
 #' @export
 #' @importFrom rlang exec !!!
