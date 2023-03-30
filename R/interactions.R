@@ -657,6 +657,62 @@ import_transcriptional_interactions <- function(
 }
 
 
+#' TF-target interactions from CollecTRI
+#'
+#' CollecTRI is a comprehensive resource of transcriptional regulation,
+#' published in 2023, consisting of 14 resources and original literature
+#' curation.
+#'
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_resources}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
+#' @param ... Optional additional arguments, passed to
+#'     \code{\link{import_transcriptional_interactions}}.
+#'
+#' @return A dataframe of TF-target interactions.
+#'
+#' @examples
+#' collectri_grn <- collectri()
+#'
+#' @export
+#' @importFrom rlang exec !!!
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_transcriptional_interactions}}}
+#'     \item{\code{\link{dorothea}}}
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
+#' }
+collectri <- function(
+    resources = NULL,
+    organism = 9606L,
+    references_by_resource = TRUE,
+    exclude = NULL,
+    ...
+){
+
+    args <- list(...)
+    args$datasets <- 'collectri'
+
+    exec(
+        import_transcriptional_interactions,
+        exclude = exclude,
+        organism = organism,
+        resources = resources,
+        references_by_resource = references_by_resource,
+        !!!args
+    )
+
+}
+
+
 #' Imports interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
