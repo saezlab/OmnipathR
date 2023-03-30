@@ -418,15 +418,17 @@ import_post_translational_interactions <- function(
 }
 
 
-#' From the OmniPath webservice imports interactions from the
-#' DoRothEA dataset
+#' TF-target interactions from DoRothEA
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=dorothea}
 #' which contains transcription factor (TF)-target interactions from DoRothEA
 #' \url{https://github.com/saezlab/DoRothEA}
+#' DoRothEA is a comprehensive resource of transcriptional regulation,
+#' consisting of 16 original resources, in silico TFBS prediction, gene
+#' expression signatures and ChIP-Seq binding site analysis.
 #'
-#' @return A dataframe containing TF-target interactions from DoRothEA
+#' @return A dataframe of TF-target interactions from DoRothEA
 #' @export
 #'
 #' @param resources interactions not reported in these databases are
@@ -458,14 +460,17 @@ import_post_translational_interactions <- function(
 #' )
 #'
 #' @seealso \itemize{
+#'     \item{\code{\link{collectri}}}
+#'     \item{\code{\link{import_transcriptional_interactions}}}
+#'     \item{\code{\link{import_tf_target_interactions}}}
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_TFregulons_Interactions import_tfregulons_interactions
-import_dorothea_interactions <- function(
+#' @aliases import_tfregulons_interactions import_dorothea_interactions
+dorothea <- function(
     resources = NULL,
     organism = 9606,
     dorothea_levels = c('A', 'B'),
@@ -495,25 +500,25 @@ import_dorothea_interactions <- function(
 
 
 # Aliases (old names) to be deprecated
-#' @rdname import_dorothea_interactions
-#' @param ... Passed to \code{import_dorothea_interactions}.
+#' @rdname dorothea
+#' @param ... Passed to \code{\link{dorothea}}.
 #' @export
 #'
 #' @noRd
-import_TFregulons_Interactions <- function(...){
-    .Deprecated("import_dorothea_interactions")
-    import_dorothea_interactions(...)
+import_dorothea_interactions <- function(...){
+    .Deprecated("dorothea")
+    dorothea(...)
 }
 
 
-#' @rdname import_dorothea_interactions
-#' @param ... Passed to \code{import_dorothea_interactions}.
+#' @rdname dorothea
+#' @param ... Passed to \code{\link{dorothea}}.
 #' @export
 #'
 #' @noRd
 import_tfregulons_interactions <- function(...){
-    .Deprecated("import_dorothea_interactions")
-    import_dorothea_interactions(...)
+    .Deprecated("dorothea")
+    dorothea(...)
 }
 
 
@@ -700,69 +705,6 @@ collectri <- function(
 
     args <- list(...)
     args$datasets <- 'collectri'
-
-    exec(
-        import_transcriptional_interactions,
-        exclude = exclude,
-        organism = organism,
-        resources = resources,
-        references_by_resource = references_by_resource,
-        !!!args
-    )
-
-}
-
-
-#' TF-target interactions from DoRothEA
-#'
-#' DoRothEA is a comprehensive resource of transcriptional regulation,
-#' consisting of 16 original resources, in silico TFBS prediction, gene
-#' expression signatures and ChIP-Seq binding site analysis.
-#'
-#' @param levels Vector detailing the confidence levels of the
-#' interactions to be downloaded. In dorothea, every TF-target interaction
-#' has a confidence score ranging from A to E, being A the most reliable
-#' interactions.
-#' By default we take A and B level interactions (\code{c(A, B)}).
-#' It is to note that E interactions are not available in OmnipathR.
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param ... Optional additional arguments, passed to
-#'     \code{\link{import_transcriptional_interactions}}.
-#'
-#' @return A dataframe of TF-target interactions.
-#'
-#' @examples
-#' dorothea_grn <- dorothea()
-#'
-#' @export
-#' @importFrom rlang exec !!!
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{import_transcriptional_interactions}}}
-#'     \item{\code{\link{collectri}}}
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-dorothea <- function(
-    levels = c('A', 'B'),
-    resources = NULL,
-    organism = 9606L,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    ...
-){
-
-    args <- list(...)
-    args$datasets <- 'dorothea'
 
     exec(
         import_transcriptional_interactions,
