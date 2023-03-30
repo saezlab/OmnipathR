@@ -713,6 +713,69 @@ collectri <- function(
 }
 
 
+#' TF-target interactions from DoRothEA
+#'
+#' DoRothEA is a comprehensive resource of transcriptional regulation,
+#' consisting of 16 original resources, in silico TFBS prediction, gene
+#' expression signatures and ChIP-Seq binding site analysis.
+#'
+#' @param levels Vector detailing the confidence levels of the
+#' interactions to be downloaded. In dorothea, every TF-target interaction
+#' has a confidence score ranging from A to E, being A the most reliable
+#' interactions.
+#' By default we take A and B level interactions (\code{c(A, B)}).
+#' It is to note that E interactions are not available in OmnipathR.
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_resources}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
+#' @param ... Optional additional arguments, passed to
+#'     \code{\link{import_transcriptional_interactions}}.
+#'
+#' @return A dataframe of TF-target interactions.
+#'
+#' @examples
+#' dorothea_grn <- dorothea()
+#'
+#' @export
+#' @importFrom rlang exec !!!
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_transcriptional_interactions}}}
+#'     \item{\code{\link{collectri}}}
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
+#' }
+dorothea <- function(
+    levels = c('A', 'B'),
+    resources = NULL,
+    organism = 9606L,
+    references_by_resource = TRUE,
+    exclude = NULL,
+    ...
+){
+
+    args <- list(...)
+    args$datasets <- 'dorothea'
+
+    exec(
+        import_transcriptional_interactions,
+        exclude = exclude,
+        organism = organism,
+        resources = resources,
+        references_by_resource = references_by_resource,
+        !!!args
+    )
+
+}
+
+
 #' Imports interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
