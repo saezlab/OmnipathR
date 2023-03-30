@@ -93,6 +93,73 @@ import_omnipath_interactions <- function(
 
 }
 
+
+#' Literature curated signaling pathways
+#'
+#' Imports interactions from the `omnipath` dataset of Omnipath, a dataset
+#' that inherits most of its design and contents from the original OmniPath
+#' core from the 2016 publication. This dataset consists of about 40k
+#' interactions.
+#'
+#' @return A dataframe of literature curated, post-translational signaling
+#'     interactions.
+#'
+#' @param resources interactions not reported in these databases are
+#' removed. See \code{\link{get_interaction_resources}} for more information.
+#' @param organism Interactions are available for human, mouse and rat.
+#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param fields The user can define here the fields to be added. If used, set
+#' the next argument, `default_fields`, to FALSE.
+#' @param default_fields whether to include the default fields (columns) for
+#' the query type. If FALSE, only the fields defined by the user in the
+#' `fields` argument will be added.
+#' @param references_by_resource if FALSE, removes the resource name prefixes
+#' from the references (PubMed IDs); this way the information which reference
+#' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param exclude Character: datasets or resources to exclude.
+#' @param ... optional additional arguments, passed to
+#' \code{\link{import_omnipath_interactions}}.
+#'
+#' @examples
+#' pathways <- omnipath()
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{import_post_translational_interactions}}}
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
+#' }
+#'
+#' @importFrom rlang exec !!!
+#' @export
+omnipath <- function(
+    resources = NULL,
+    organism = 9606L,
+    fields = NULL,
+    default_fields = TRUE,
+    references_by_resource = TRUE,
+    exclude = NULL,
+    ...
+){
+
+    args <- list(...)
+    args$datasets <- 'omnipath'
+
+    exec(
+         import_omnipath_interactions,
+         organism = organism,
+         fields = fields,
+         default_fields = default_fields,
+         references_by_resource = references_by_resource,
+         exclude = exclude,
+         !!!args
+    )
+
+}
+
+
 # Aliases (old names) to be deprecated
 #' @rdname import_omnipath_interactions
 #' @param ... Passed to \code{import_omnipath_interactions}.
