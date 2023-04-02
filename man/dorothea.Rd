@@ -59,7 +59,7 @@ consisting of 16 original resources, in silico TFBS prediction, gene
 expression signatures and ChIP-Seq binding site analysis.
 }
 \examples{
-dorothea_grn <- import_dorothea_interactions(
+dorothea_grn <- dorothea(
     resources = c('DoRothEA', 'ARACNe-GTEx_DoRothEA'),
     organism = 9606,
     dorothea_levels = c('A', 'B', 'C')

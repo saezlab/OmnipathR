@@ -521,7 +521,7 @@ import_post_translational_interactions <- function(
 #' @param ... optional additional arguments
 #'
 #' @examples
-#' dorothea_grn <- import_dorothea_interactions(
+#' dorothea_grn <- dorothea(
 #'     resources = c('DoRothEA', 'ARACNe-GTEx_DoRothEA'),
 #'     organism = 9606,
 #'     dorothea_levels = c('A', 'B', 'C')
