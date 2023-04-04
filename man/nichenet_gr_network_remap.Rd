@@ -29,10 +29,8 @@ Builds a gene regulatory network using data from the ReMap database
 and converts it to a format suitable for NicheNet.
 }
 \examples{
-\dontrun{
 # use only max. top 100 targets for each TF:
 remap_gr_network <- nichenet_gr_network_remap(top_targets = 100)
-}
 
 }
 \seealso{

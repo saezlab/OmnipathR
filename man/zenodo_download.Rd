@@ -45,7 +45,6 @@ publications make their datasets available at Zenodo. This function
 downloads an archive from Zenodo and extracts the requested file.
 }
 \examples{
-\dontrun{
 # an example from the OmnipathR::remap_tf_target_download function:
 remap_dorothea <- zenodo_download(
     zenodo_record = 3713238,
@@ -66,6 +65,5 @@ remap_dorothea <- zenodo_download(
     ),
   resource = 'ReMap'
 )
-}
 
 }

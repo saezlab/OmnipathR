@@ -53,7 +53,6 @@ Builds gene regulatory network prior knowledge for NicheNet using multiple
 resources.
 }
 \examples{
-\dontrun{
 # load everything with the default parameters:
 gr_network <- nichenet_gr_network()
 
@@ -65,7 +64,6 @@ gr_network <- nichenet_gr_network(
     remap = NULL,
     regnetwork = NULL,
 )
-}
 
 # use only OmniPath:
 gr_network_omnipath <- nichenet_gr_network(only_omnipath = TRUE)
