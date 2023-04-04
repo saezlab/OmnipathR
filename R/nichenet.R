@@ -1014,6 +1014,8 @@ nichenet_signaling_network <- function(
     only_omnipath = FALSE
 ){
 
+    .slow_doctest()
+
     environment() %>%
     as.list() %>%
     `[[<-`('network_type', 'signaling') %>%
@@ -1070,6 +1072,8 @@ nichenet_lr_network <- function(
     only_omnipath = FALSE,
     quality_filter_param = list()
 ){
+
+    .slow_doctest()
 
     environment() %>%
     as.list() %>%
