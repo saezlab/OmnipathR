@@ -51,6 +51,7 @@ come from cache), and the newly build GO slim will overwrite the cache
 instance.
 }
 \examples{
+\dontrun{
 goslim <- go_annot_slim(organism = 'human', slim = 'generic')
 goslim
 # # A tibble: 276,371 x 8
@@ -63,6 +64,7 @@ goslim
 #  5 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
 # # . with 276,366 more rows, and 2 more variables:
 # #   db_object_synonym <chr>, db_object_type <fct>
+}
 
 }
 \seealso{
