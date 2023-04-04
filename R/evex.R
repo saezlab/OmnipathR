@@ -66,6 +66,9 @@
 #' #   refined_polarity <chr>, source_genesymbol <chr>,
 #' #   target_genesymbol <chr>, references <chr>
 evex_download <- function(
+
+    .slow_doctest()
+
     min_confidence = NULL,
     remove_negatives = TRUE,
     top_confidence = NULL

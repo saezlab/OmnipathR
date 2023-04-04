@@ -50,6 +50,8 @@
 #' @importFrom tidyr separate_rows
 trrust_download <- function(organism = 'human'){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     effect <- reference <- NULL
 

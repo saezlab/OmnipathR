@@ -45,6 +45,8 @@
 #' }
 inbiomap_raw <- function(curl_verbose = FALSE){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     name <- value <- NULL
 
@@ -155,6 +157,8 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' #  5 A0AV96    P0CG48    RBM47        UBC          FALSE     0.144 0.0494
 #' # # . with 625,631 more rows
 inbiomap_download <- function(...){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     score <- id_a <- id_b <- synonyms_a <- synonyms_b <- detection_methods <-

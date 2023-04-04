@@ -47,6 +47,8 @@
 #' @importFrom magrittr %T>%
 htridb_download <- function(){
 
+    .slow_doctest()
+
     suppressWarnings(
         generic_downloader(
             url_key = 'htridb',

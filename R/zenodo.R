@@ -38,7 +38,6 @@
 #' @param ... Passed to \code{archive_extractor}
 #'
 #' @examples
-#' \dontrun{
 #' # an example from the OmnipathR::remap_tf_target_download function:
 #' remap_dorothea <- zenodo_download(
 #'     zenodo_record = 3713238,
@@ -59,7 +58,6 @@
 #'     ),
 #'   resource = 'ReMap'
 #' )
-#' }
 #'
 #' @return A connection
 #'
@@ -76,6 +74,8 @@ zenodo_download <- function(
     url_key_param = list(),
     ...
 ){
+
+    .slow_doctest()
 
     if(
         !is.null(zenodo_record) &&

@@ -47,6 +47,8 @@
 #' @export
 pathwaycommons_download <- function(){
 
+    .slow_doctest()
+
     generic_downloader(
         url_key = 'pathwaycommons',
         reader_param = list(

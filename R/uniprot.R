@@ -54,6 +54,8 @@ nse_test <- function(a, ..., b = FALSE){
 #' @export
 all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
 
+    .slow_doctest()
+
     organism %<>% ncbi_taxid
     all_uniprots(organism = organism, reviewed = reviewed) %>% pull(1L)
 
@@ -90,6 +92,8 @@ all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
 #' #  5 O11G2_HUMAN
 #' # # . with 20,386 more rows
 all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
+
+    .slow_doctest()
 
     organism %<>% ncbi_taxid
     exec(.all_uniprots, !!!as.list(environment()))

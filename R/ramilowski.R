@@ -49,6 +49,8 @@
 #' @importFrom magrittr %T>%
 ramilowski_download <- function(){
 
+    .slow_doctest()
+
     xls_downloader(
         url_key = 'ramilowski',
         sheet = 'All.Pairs',

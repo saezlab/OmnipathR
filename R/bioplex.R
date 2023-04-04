@@ -86,6 +86,8 @@ bioplex_download <- function(version){
 #' }
 bioplex1 <- function(){
 
+    .slow_doctest()
+
     bioplex_download(version = '1.0')
 
 }
@@ -117,6 +119,8 @@ bioplex1 <- function(){
 #'     \item{\code{\link{bioplex_all}}}
 #' }
 bioplex2 <- function(){
+
+    .slow_doctest()
 
     bioplex_download(version = '2.0')
 
@@ -150,6 +154,8 @@ bioplex2 <- function(){
 #' }
 bioplex3 <- function(){
 
+    .slow_doctest()
+
     bioplex_download(version = '3.0')
 
 }
@@ -181,6 +187,8 @@ bioplex3 <- function(){
 #'     \item{\code{\link{bioplex_all}}}
 #' }
 bioplex_hct116_1 <- function(){
+
+    .slow_doctest()
 
     bioplex_download(version = 'HCT116_1.0')
 
@@ -232,6 +240,8 @@ bioplex_hct116_1 <- function(){
 #'     \item{\code{\link{bioplex_hct116_1}}}
 #' }
 bioplex_all <- function(unique = TRUE){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     UniprotA <- UniprotB <- p_wrong <- p_no_interaction <- p_interaction <-

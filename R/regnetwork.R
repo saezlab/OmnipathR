@@ -52,6 +52,8 @@
 #' @importFrom tibble tibble
 regnetwork_download <- function(organism = 'human'){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     source_entrez <- target_entrez <- NULL
 
@@ -130,6 +132,8 @@ regnetwork_download <- function(organism = 'human'){
 #'
 #' @export
 regnetwork_directions <- function(organism = 'human'){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     effect <- NULL

@@ -177,6 +177,8 @@ go_ontology_download <- function(
     )
 ){
 
+    .slow_doctest()
+
     url_key_param <- `if`(is.null(subset), 'full', 'slim')
     url_param <- `if`(is.null(subset), `if`(basic, 'go-basic', 'go'), subset)
 
@@ -230,7 +232,6 @@ go_ontology_download <- function(
 #' instance.
 #'
 #' @examples
-#' \dontrun{
 #' goslim <- go_annot_slim(organism = 'human', slim = 'generic')
 #' goslim
 #' # # A tibble: 276,371 x 8
@@ -243,7 +244,6 @@ go_ontology_download <- function(
 #' #  5 UniPr. A0A024RBG1   NUDT4B           GO:0. C      Diphosphoinosito.
 #' # # . with 276,366 more rows, and 2 more variables:
 #' # #   db_object_synonym <chr>, db_object_type <fct>
-#' }
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang exec !!!
@@ -259,6 +259,8 @@ go_annot_slim <- function(
     aspects = c('C', 'F', 'P'),
     cache = TRUE
 ){
+
+    .slow_doctest()
 
     slim %<>% {`if`(. == TRUE, 'generic', .)}
 

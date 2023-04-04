@@ -79,6 +79,8 @@
 #' @seealso \code{\link{preppi_filter}}
 preppi_download <- function(...){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     dbs <- pubs <- NULL
 
@@ -132,6 +134,8 @@ preppi_download <- function(...){
 #' @export
 #' @seealso \code{\link{preppi_download}}
 preppi_filter <- function(data, ..., .op = '&'){
+
+    .slow_doctest()
 
     list(...) %>%
     extract(

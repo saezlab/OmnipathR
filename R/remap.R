@@ -55,6 +55,8 @@
 #' @seealso \code{\link{remap_tf_target_download}}
 remap_dorothea_download <- function(){
 
+    .slow_doctest()
+
     path <-
         'remap_dorothea' %>%
         download_to_cache()
@@ -107,6 +109,8 @@ remap_dorothea_download <- function(){
 #'     \item{\code{\link{remap_filtered}}}
 #' }
 remap_tf_target_download <- function(){
+
+    .slow_doctest()
 
     zenodo_download(
         zenodo_record = 3713238,
@@ -182,6 +186,8 @@ remap_filtered <- function(
     top_targets = 500,
     only_known_tfs = TRUE
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     `HGNC symbol` <- min_score <- NULL

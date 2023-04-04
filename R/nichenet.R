@@ -250,16 +250,16 @@ nichenet_main <- function(
 #' @return The same list as `expression` with certain elements removed.
 #'
 #' @examples
-#' \dontrun{
 #' lr_network <- nichenet_lr_network()
 #' expression <- nichenet_expression_data()
 #' expression <- nichenet_remove_orphan_ligands(expression, lr_network)
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
 #' @importFrom purrr keep
 nichenet_remove_orphan_ligands <- function(expression, lr_network){
+
+    .slow_doctest()
 
     all_ligands <- lr_network$from %>% unique
 
@@ -1107,7 +1107,6 @@ nichenet_lr_network <- function(
 #'     suitable for use with NicheNet.
 #'
 #' @examples
-#' \dontrun{
 #' # load everything with the default parameters:
 #' gr_network <- nichenet_gr_network()
 #'
@@ -1119,7 +1118,6 @@ nichenet_lr_network <- function(
 #'     remap = NULL,
 #'     regnetwork = NULL,
 #' )
-#' }
 #'
 #' # use only OmniPath:
 #' gr_network_omnipath <- nichenet_gr_network(only_omnipath = TRUE)
@@ -1149,6 +1147,8 @@ nichenet_gr_network <- function(
     only_omnipath = FALSE
 ){
 
+    .slow_doctest()
+
     environment() %>%
     as.list() %>%
     `[[<-`('network_type', 'gr') %>%
@@ -1177,10 +1177,8 @@ nichenet_gr_network <- function(
 #'     NicheNet.
 #'
 #' @examples
-#' \dontrun{
 #' # load the ligand-receptor network with the default parameters:
 #' lr_network <- nichenet_network(network_type = 'lr')
-#' }
 #'
 #' @importFrom purrr map2 discard keep
 #' @importFrom magrittr %>%
@@ -1196,6 +1194,8 @@ nichenet_network <- function(
     quality_filter_param = list(),
     ...
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     from <- to <- NULL
@@ -1624,13 +1624,11 @@ nichenet_signaling_network_vinayagam <- function(...){
 #'     suitable for use with NicheNet.
 #'
 #' @examples
-#' \dontrun{
 #' # use some parameters stricter than default:
 #' cpdb_signaling_network <- nichenet_signaling_network_cpdb(
 #'     complex_max_size = 2,
 #'     min_score = .99
 #' )
-#' }
 #'
 #' @importFrom dplyr select mutate distinct
 #' @importFrom magrittr %>%
@@ -1640,6 +1638,8 @@ nichenet_signaling_network_vinayagam <- function(...){
 #'     \item{\code{\link{consensuspathdb_download}}}
 #' }
 nichenet_signaling_network_cpdb <- function(...){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     in_complex <- genesymbol_a <- genesymbol_b <- from <- to <- NULL
@@ -1690,6 +1690,8 @@ nichenet_signaling_network_evex <- function(
     indirect = FALSE,
     ...
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     coarse_type <- refined_type <- NULL
@@ -1931,6 +1933,8 @@ nichenet_gr_network_harmonizome <- function(
     ...
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     to <- from <- NULL
 
@@ -1972,6 +1976,8 @@ nichenet_gr_network_harmonizome <- function(
 #' }
 nichenet_gr_network_regnetwork <- function(){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     source_type <- target_type <- NULL
 
@@ -2006,6 +2012,8 @@ nichenet_gr_network_regnetwork <- function(){
 #' }
 nichenet_gr_network_trrust <- function(){
 
+    .slow_doctest()
+
     trrust_download() %>%
     nichenet_common_postprocess(
         source = 'trrust',
@@ -2029,6 +2037,8 @@ nichenet_gr_network_trrust <- function(){
 #' @importFrom magrittr %>%
 #' @seealso \code{\link{htridb_download}, \link{nichenet_gr_network}}
 nichenet_gr_network_htridb <- function(){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     SYMBOL_TF <- SYMBOL_TG <- NULL
@@ -2060,10 +2070,8 @@ nichenet_gr_network_htridb <- function(){
 #'     TF census.
 #'
 #' @examples
-#' \dontrun{
 #' # use only max. top 100 targets for each TF:
 #' remap_gr_network <- nichenet_gr_network_remap(top_targets = 100)
-#' }
 #'
 #' @export
 #' @importFrom magrittr %>%
@@ -2076,6 +2084,8 @@ nichenet_gr_network_remap <- function(
     top_targets = 500,
     only_known_tfs = TRUE
 ){
+
+    .slow_doctest()
 
     remap_filtered(
         score = score,
@@ -2122,6 +2132,8 @@ nichenet_gr_network_evex <- function(
     indirect = FALSE,
     regulation_of_expression = FALSE
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     confidence <- coarse_type <- refined_type <- NULL
@@ -2173,6 +2185,8 @@ nichenet_gr_network_pathwaycommons <- function(
     interaction_types = 'controls-expression-of',
     ...
 ){
+
+    .slow_doctest()
 
     nichenet_pathwaycommons_common(
         interaction_types = interaction_types,
@@ -2264,7 +2278,6 @@ nichenet_common_postprocess <- function(
 #'     expression data and key variables about the experiment.
 #'
 #' @examples
-#' \dontrun{
 #' exp_data <- nichenet_expression_data()
 #' head(names(exp_data))
 #' # [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"
@@ -2274,11 +2287,12 @@ nichenet_common_postprocess <- function(
 #' #       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"
 #' # spectrum_Ifng
 #' #       "IFNG"
-#' }
 #'
 #' @importFrom magrittr %T>%
 #' @export
 nichenet_expression_data <- function(){
+
+    .slow_doctest()
 
     generic_downloader(
         url_key = 'nichenet_expression',

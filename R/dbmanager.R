@@ -264,6 +264,8 @@ load_db <- function(key, param = list()){
 #' @seealso  \code{\link{omnipath_show_db}}.
 get_db <- function(key, param = NULL, reload = FALSE, ...){
 
+    .slow_doctest()
+
     db_exists(key)
 
     omnipath.env$db[[key]]$last_used <- Sys.time()

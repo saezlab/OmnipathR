@@ -58,6 +58,8 @@
 #' }
 homologene_raw <- function(){
 
+    .slow_doctest(values = list(ncbi_taxid = 'OmnipathR: no data'))
+
     hdr <- c('hgroup', 'ncbi_taxid', 'entrez', 'genesymbol', 'gi', 'refseqp')
 
     'homologene' %>%
@@ -128,6 +130,8 @@ homologene_download <- function(
     hgroup_size = FALSE
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     hgroup <- NULL
 
@@ -186,6 +190,8 @@ homologene_uniprot_orthology <- function(
     by = entrez,
     ...
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     entrez <- uniprot <- NULL

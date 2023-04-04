@@ -72,6 +72,8 @@ uniprot_id_mapping_table <- function(
     chunk_size = NULL
 ){
 
+    .slow_doctest()
+
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
@@ -257,6 +259,8 @@ translate_ids <- function(
     reviewed = TRUE
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     To <- NULL
 
@@ -391,6 +395,8 @@ uniprot_full_id_mapping_table <- function(
     reviewed = TRUE,
     organism = 9606
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     From <- To <- NULL

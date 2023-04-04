@@ -52,6 +52,8 @@
 #' @importFrom logger log_error
 guide2pharma_download <- function(){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     ligand_gene_symbol <- target_gene_symbol <- NULL
 

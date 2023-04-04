@@ -178,6 +178,8 @@ relations_list_to_table <- function(relations, direction = NULL){
 #' @export
 relations_table_to_graph <- function(relations){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     term2 <- term <- relation <- NULL
 
@@ -434,6 +436,8 @@ ontology_db_transformations <- function(db, fmt, c2p){
 #' }
 get_ontology_db <- function(key, rel_fmt = 'tbl', child_parents = TRUE){
 
+    .slow_doctest()
+
     db <- get_db(key)
 
     transf <- ontology_db_transformations(db, rel_fmt, child_parents)
@@ -524,6 +528,8 @@ walk_ontology_tree <- function(
         'positively_regulates', 'negatively_regulates'
     )
 ){
+
+    .slow_doctest()
 
     db <- get_ontology_db(
         key = db_key,
@@ -662,6 +668,8 @@ descendants <- function(
     )
 ){
 
+    .slow_doctest()
+
     exec(walk_ontology_tree, ancestors = FALSE, !!!as.list(environment()))
 
 }
@@ -710,6 +718,8 @@ ancestors <- function(
     )
 ){
 
+    .slow_doctest()
+
     exec(walk_ontology_tree, ancestors = TRUE, !!!as.list(environment()))
 
 }
@@ -740,6 +750,8 @@ ancestors <- function(
 #' @importFrom tibble tibble
 #' @export
 ontology_name_id <- function(terms, ids = TRUE, db_key = 'go_basic'){
+
+    .slow_doctest()
 
     db <- get_db(db_key)
     to_col <- `if`(ids, 'term', 'name')
@@ -783,6 +795,8 @@ ontology_name_id <- function(terms, ids = TRUE, db_key = 'go_basic'){
 #' @export
 ontology_ensure_id <- function(terms, db_key = 'go_basic'){
 
+    .slow_doctest()
+
     ontology_name_id(terms, db_key = db_key)
 
 }
@@ -807,6 +821,8 @@ ontology_ensure_id <- function(terms, db_key = 'go_basic'){
 #'
 #' @export
 ontology_ensure_name <- function(terms, db_key = 'go_basic'){
+
+    .slow_doctest()
 
     ontology_name_id(terms, ids = FALSE, db_key = db_key)
 

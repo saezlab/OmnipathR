@@ -45,6 +45,8 @@
 #' @export
 vinayagam_download <- function(){
 
+    .slow_doctest()
+
     'vinayagam' %>%
     archive_extractor(
         path = '2001699_Tables_S1_S2_S6.xls',

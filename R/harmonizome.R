@@ -47,6 +47,8 @@
 #' @export
 harmonizome_download <- function(dataset){
 
+    .slow_doctest()
+
     path <-
         download_to_cache(
             url_key = 'harmonizome',

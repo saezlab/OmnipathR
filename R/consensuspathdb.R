@@ -77,6 +77,8 @@ consensuspathdb_download <- function(
     min_score = .9
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     participants <- confidence <- uniprot_a <- uniprot_b <- record_id <-
         in_complex <- To <- NULL
@@ -128,6 +130,8 @@ consensuspathdb_download <- function(
 #' @importFrom magrittr %>%
 #' @export
 consensuspathdb_raw_table <- function(){
+
+    .slow_doctest()
 
     'cpdb' %>%
     generic_downloader(

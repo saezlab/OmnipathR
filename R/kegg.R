@@ -65,6 +65,8 @@
 #' }
 kegg_pathways_download <- function(max_expansion = NULL, simplify = FALSE){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     id <- NULL
 
@@ -138,6 +140,8 @@ kegg_pathways_download <- function(max_expansion = NULL, simplify = FALSE){
 #'     \item{\code{\link{kegg_info}}}
 #' }
 kegg_pathway_list <- function(){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     pathway <- NULL
@@ -234,6 +238,8 @@ kegg_pathway_download <- function(
     max_expansion = NULL,
     simplify = FALSE
 ){
+
+    .slow_doctest(value = list(entries = 'no data', relations = 'no data'))
 
     # NSE vs. R CMD check workaround
     genesymbol <- NULL
@@ -405,6 +411,8 @@ kegg_process <- function(
     simplify = FALSE
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     From <- uniprot_source <- uniprot_target <- relation_id <- NULL
 
@@ -509,6 +517,8 @@ kegg_simplify <- function(tbl, simplify = TRUE){
 #' }
 kegg_open <- function(pathway_id){
 
+    .slow_doctest()
+
     'kegg_pathway' %>%
     url_parser(url_param = list(pathway_id)) %>%
     browseURL
@@ -581,6 +591,8 @@ kegg_picture <- function(pathway_id, path = NULL){
 #'     \item{\code{\link{kegg_open}}}
 #' }
 kegg_info <- function(pathway_id){
+
+    .slow_doctest()
 
     info <- list(
         id = pathway_id,
@@ -691,6 +703,8 @@ kegg_info_tbl <- function(tbl){
 #' @export
 #' @seealso \code{\link{kegg_pathways_download}}
 kegg_pathway_annotations <- function(pathways = NULL){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     uniprot_source <- uniprot_target <- pathway <- pathway_id <-
