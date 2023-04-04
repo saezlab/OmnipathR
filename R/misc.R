@@ -846,3 +846,45 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
     Sys.info()['user'] %in% c('biocbuild', 'omnipath')
 
 }
+
+
+#' Is the package running on a Bioconductor build server?'
+#'
+#' @noRd
+.on_bioc_buildserver <- function(){
+
+    Sys.info()['user'] == 'biocbuild'
+
+}
+
+
+#' Bypass slow doctests
+#'
+#' Makes the calling function return a value, bypassing further execution.
+#' Used in functions that normally take a long time to run, and hence, due
+#' to the 40 minutes timeout on Bioconductor build servers, we can not afford
+#' to run them. We still run these doctests daily on our own build server,
+#' so they fulfill their testing purpose.
+#'
+#' @param value The value to return.
+#'
+#' @return This function does not return anything, its parent returns
+#'     `value`.
+#'
+#' @noRd
+.slow_doctest <- function(value = NULL, env = parent.frame()){
+
+    if(.on_buildserver()){
+
+        log_trace('Bypassing call: `%s`.', deparse(sys.call(-1L)))
+        log_trace(paste(
+            'This behaviour is intended for running R CMD check '
+            'within limited time and is triggered solely by the user name. '
+            'Please report if you see this anywhere outside of a '
+            'Bioconductor build server.'
+        ))
+        do.call(return, list(value), envir = env)
+
+    }
+
+}
