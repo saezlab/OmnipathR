@@ -20,7 +20,7 @@ downloads an archive from Zenodo and extracts the requested file."><meta propert
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,8 +149,7 @@ returned from the options).</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="co"># an example from the OmnipathR::remap_tf_target_download function:</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># an example from the OmnipathR::remap_tf_target_download function:</span></span></span>
 <span class="r-in"><span><span class="va">remap_dorothea</span> <span class="op">&lt;-</span> <span class="fu">zenodo_download</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    zenodo_record <span class="op">=</span> <span class="fl">3713238</span>,</span></span>
 <span class="r-in"><span>    zenodo_fname <span class="op">=</span> <span class="st">'tf_target_sources.zip'</span>,</span></span>
@@ -170,7 +169,7 @@ returned from the options).</p></dd>
 <span class="r-in"><span>    <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  resource <span class="op">=</span> <span class="st">'ReMap'</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in archive_extractor(path = path, url_key = url_key, url_key_param = url_key_param,     url_param = url_param, reader = reader, reader_param = reader_param,     ...):</span> object 'read_tsv' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

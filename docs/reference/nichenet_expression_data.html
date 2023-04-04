@@ -24,7 +24,7 @@ retrieves the original expression data, deposited in Zenodo
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,17 +107,21 @@ retrieves the original expression data, deposited in Zenodo
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">exp_data</span> <span class="op">&lt;-</span> <span class="fu">nichenet_expression_data</span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">exp_data</span> <span class="op">&lt;-</span> <span class="fu">nichenet_expression_data</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "spectrum_Tnf"  "spectrum_Ifng"</span>
 <span class="r-in"><span><span class="co"># [1] "bmp4_tgfb"     "tgfb_bmp4"     "nodal_Nodal"   "spectrum_Il4"</span></span></span>
 <span class="r-in"><span><span class="co"># [5] "spectrum_Tnf"  "spectrum_Ifng"</span></span></span>
 <span class="r-in"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span>, <span class="st">'from'</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     bmp4_tgfb     tgfb_bmp4   nodal_Nodal  spectrum_Il4  spectrum_Tnf </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> spectrum_Ifng </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        "IFNG" </span>
 <span class="r-in"><span><span class="co">#     bmp4_tgfb     tgfb_bmp4   nodal_Nodal  spectrum_Il4  spectrum_Tnf</span></span></span>
 <span class="r-in"><span><span class="co">#       "BMP4"       "TGFB1"       "NODAL"         "IL4"         "TNF"</span></span></span>
 <span class="r-in"><span><span class="co"># spectrum_Ifng</span></span></span>
 <span class="r-in"><span><span class="co">#       "IFNG"</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
