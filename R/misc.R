@@ -878,9 +878,9 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 
         log_trace('Bypassing call: `%s`.', deparse(sys.call(-1L)))
         log_trace(paste(
-            'This behaviour is intended for running R CMD check '
-            'within limited time and is triggered solely by the user name. '
-            'Please report if you see this anywhere outside of a '
+            'This behaviour is intended for running R CMD check ',
+            'within limited time and is triggered solely by the user name. ',
+            'Please report if you see this anywhere outside of a ',
             'Bioconductor build server.'
         ))
         do.call(return, list(value), envir = env)

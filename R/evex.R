@@ -66,13 +66,12 @@
 #' #   refined_polarity <chr>, source_genesymbol <chr>,
 #' #   target_genesymbol <chr>, references <chr>
 evex_download <- function(
-
-    .slow_doctest()
-
     min_confidence = NULL,
     remove_negatives = TRUE,
     top_confidence = NULL
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     negation <- confidence <- source_entrezgene_id <- target_entrezgene_id <-
