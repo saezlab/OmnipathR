@@ -33,7 +33,7 @@ Description: A client for the OmniPath web service
     ligand activity prediction from transcriptomics data, and its
     R implementation `nichenetr` (available only on github).
 License: MIT + file LICENSE
-URL: https://saezlab.github.io/OmnipathR/
+URL: https://r.omnipathdb.org/
 BugReports: https://github.com/saezlab/OmnipathR/issues
 biocViews: GraphAndNetwork, Network, Pathways, Software, ThirdPartyClient,
     DataImport, DataRepresentation, GeneSignaling, GeneRegulation,

@@ -15,7 +15,7 @@
 #  See accompanying file `LICENSE` or find a copy at
 #      https://directory.fsf.org/wiki/License:Expat
 #
-#  Website: https://saezlab.github.io/omnipathr
+#  Website: https://r.omnipathdb.org/
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 #
