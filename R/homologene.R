@@ -58,7 +58,7 @@
 #' }
 homologene_raw <- function(){
 
-    .slow_doctest(values = list(ncbi_taxid = 'OmnipathR: no data'))
+    .slow_doctest(value = list(ncbi_taxid = 'OmnipathR: no data'))
 
     hdr <- c('hgroup', 'ncbi_taxid', 'entrez', 'genesymbol', 'gi', 'refseqp')
 
