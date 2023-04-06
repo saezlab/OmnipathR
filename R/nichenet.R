@@ -1471,6 +1471,8 @@ nichenet_signaling_network_pathwaycommons <- function(
     ...
 ){
 
+    .slow_doctest()
+
     nichenet_pathwaycommons_common(
         interaction_types = interaction_types,
         label = 'signaling'
@@ -1505,6 +1507,8 @@ nichenet_signaling_network_harmonizome <- function(
     ),
     ...
 ){
+
+    .slow_doctest()
 
     dataset_names <- list(
         phosphositeplus = 'PhosphoSite',
@@ -1600,6 +1604,8 @@ harmonizome_nichenet_process <- function(dataset){
 #' @importFrom dplyr mutate select rename distinct
 #' @export
 nichenet_signaling_network_vinayagam <- function(...){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     `Input-node Gene Symbol` <- `Output-node Gene Symbol` <- NULL
@@ -1805,6 +1811,16 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' @seealso \code{\link{nichenet_lr_network}, \link{guide2pharma_download}}
 nichenet_lr_network_guide2pharma <- function(){
 
+    .slow_doctest()
+
+    guide2pharma_download() %>%
+    nichenet_common_postprocess(
+        from_col = `Input-node Gene Symbol`,
+        to_col = `Output-node Gene Symbol`,
+        source = 'guide2pharma',
+        database = 'guide2pharma'
+    )
+
     # NSE vs. R CMD check workaround
     target_species <- ligand_species <- ligand_gene_symbol <-
         target_gene_symbol <- NULL
@@ -1882,6 +1898,8 @@ nichenet_lr_network_guide2pharma <- function(){
 nichenet_lr_network_ramilowski <- function(
     evidences = c('literature supported', 'putative')
 ){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     Pair.Evidence <- Ligand.ApprovedSymbol <- Receptor.ApprovedSymbol <- NULL
