@@ -45,9 +45,6 @@
 #' @export
 #' @importFrom magrittr %T>%
 tfcensus_download <- function(){
-
-    .slow_doctest()
-
     suppressWarnings(
         generic_downloader(
             url_key = 'tfcensus',
