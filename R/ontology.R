@@ -167,8 +167,10 @@ relations_list_to_table <- function(relations, direction = NULL){
 #' on the data frame to reverse the direction.
 #'
 #' @examples
+#' \dontrun{
 #' go <- get_db('go_basic')
 #' go_graph <- relations_table_to_graph(go$relations)
+#' }
 #'
 #' @importFrom logger log_trace
 #' @importFrom magrittr %>%

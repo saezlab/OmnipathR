@@ -37,7 +37,7 @@ the database manager. Each database has a lifetime and will be unloaded
 automatically upon expiry.
 }
 \examples{
-goslim <- get_db('go_slim')
+organisms <- get_db('organisms')
 
 }
 \seealso{

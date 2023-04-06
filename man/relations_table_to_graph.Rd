@@ -23,7 +23,9 @@ graph will be of the same direction. Use \code{\link{swap_relations}}
 on the data frame to reverse the direction.
 }
 \examples{
+\dontrun{
 go <- get_db('go_basic')
 go_graph <- relations_table_to_graph(go$relations)
+}
 
 }

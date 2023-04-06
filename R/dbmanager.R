@@ -255,7 +255,7 @@ load_db <- function(key, param = list()){
 #'     on the database, most often it is a data frame or a list.
 #'
 #' @examples
-#' goslim <- get_db('go_slim')
+#' organisms <- get_db('organisms')
 #'
 #' @importFrom logger log_fatal log_info
 #' @importFrom rlang exec !!!
@@ -263,8 +263,6 @@ load_db <- function(key, param = list()){
 #' @export
 #' @seealso  \code{\link{omnipath_show_db}}.
 get_db <- function(key, param = NULL, reload = FALSE, ...){
-
-    .slow_doctest()
 
     db_exists(key)
 
