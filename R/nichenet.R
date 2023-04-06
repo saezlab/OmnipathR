@@ -1813,14 +1813,6 @@ nichenet_lr_network_guide2pharma <- function(){
 
     .slow_doctest()
 
-    guide2pharma_download() %>%
-    nichenet_common_postprocess(
-        from_col = `Input-node Gene Symbol`,
-        to_col = `Output-node Gene Symbol`,
-        source = 'guide2pharma',
-        database = 'guide2pharma'
-    )
-
     # NSE vs. R CMD check workaround
     target_species <- ligand_species <- ligand_gene_symbol <-
         target_gene_symbol <- NULL
