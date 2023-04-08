@@ -10,6 +10,9 @@ query_info(query_type)
 \item{query_type}{Character: interactions, annotations, complexes, enz_sub
 or intercell.}
 }
+\value{
+A named list with the parameter names and their possible values.
+}
 \description{
 All parameter names and their possible values for a query type. Note:
 parameters with `NULL` values have too many possible values to list

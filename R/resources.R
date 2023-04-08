@@ -218,6 +218,8 @@ strip_resource_labels <- function(
 #' The `resources` query type provides resource metadata in JSON format.
 #' Here we retrieve this JSON and return it as a nested list structure.
 #'
+#' @return A nested list structure with resource metadata.
+#'
 #' @examples
 #' resource_info()
 #'
@@ -237,6 +239,8 @@ resource_info <- function() {
 #'
 #' @param query_type Character: interactions, annotations, complexes, enz_sub
 #'     or intercell.
+#'
+#' @return A named list with the parameter names and their possible values.
 #'
 #' @examples
 #' ia_param <- query_info('interactions')

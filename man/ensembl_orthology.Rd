@@ -38,6 +38,10 @@ names, no matter the organism. E.g. for mouse these columns all
 have the prefix "mmusculus_homolog_", which this option changes
 to "b_".}
 }
+\value{
+A data frame of orthologous gene pairs with gene, transcript
+    and peptide identifiers and confidence values.
+}
 \description{
 Orthologous gene pairs from Ensembl
 }

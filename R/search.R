@@ -301,8 +301,11 @@ get_index <- function(rebuild = FALSE) {
 #'     from the cache.
 #' @param ... Ignored.
 #'
+#' @return Data frame of six columns: resource, dataset, key, value, where.
+#'
 #' Search for keywords in the resource and attribute names and metadata.
 #'
+#' @noRd
 search_omnipath <- function(..., rebuild_index = FALSE) {
 
     log_success('Search does not work yet.')

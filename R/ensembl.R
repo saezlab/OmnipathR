@@ -304,6 +304,9 @@ ensembl_name_warn <- function(name){
 #'     have the prefix "mmusculus_homolog_", which this option changes
 #'     to "b_".
 #'
+#' @return A data frame of orthologous gene pairs with gene, transcript
+#'     and peptide identifiers and confidence values.
+#'
 #' @details Only the records with orthology information are returned. The
 #'     order of columns is the following: defaults of organism_a, extra
 #'     attributes of organism_b, defaults of organism_b, extra attributes

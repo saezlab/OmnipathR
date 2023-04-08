@@ -6,6 +6,9 @@
 \usage{
 resource_info()
 }
+\value{
+A nested list structure with resource metadata.
+}
 \description{
 The `resources` query type provides resource metadata in JSON format.
 Here we retrieve this JSON and return it as a nested list structure.
