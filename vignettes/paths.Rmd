@@ -610,7 +610,7 @@ make sure you have at least 12G of free memory. Higher number of steps
 by removing some columns, adding less annotations, or using smaller networks
 (more stringent queries or subsequent filtering).
 
-```{r build-paths}
+```{r build-paths, eval=FALSE}
 library(stringr)
 
 steps <- 2 # to avoid OOM
