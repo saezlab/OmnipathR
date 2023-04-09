@@ -908,6 +908,8 @@ filter_intercell_network <- function(
     ...
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     parent <- curation_effort <- n_resources <- n_references <- NULL
 
@@ -1076,6 +1078,8 @@ filter_intercell_network <- function(
 #' }
 simplify_intercell_network <- function(network, ...){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     source <- target <- source_genesymbol <- target_genesymbol <-
     category_intercell_source <- database_intercell_source <-
@@ -1138,6 +1142,8 @@ simplify_intercell_network <- function(network, ...){
 #'     \item{\code{\link{filter_intercell_network}}}
 #' }
 unique_intercell_network <- function(network, ...){
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     source <- target <- source_genesymbol <- target_genesymbol <-
