@@ -10,6 +10,9 @@ An object of class \code{list} of length 16.
 \usage{
 .omnipath_options_defaults
 }
+\value{
+Nothing, this is not a function but a list.
+}
 \description{
 These options describe the default settings for OmnipathR so you do not
 need to pass these parameters at each function call.

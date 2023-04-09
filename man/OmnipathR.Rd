@@ -4,6 +4,9 @@
 \name{OmnipathR}
 \alias{OmnipathR}
 \title{The OmnipathR package}
+\value{
+Nothing, this is not a function but a package.
+}
 \description{
 OmnipathR is an R package built to provide easy access to the data stored
 in the OmniPath web service:

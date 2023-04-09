@@ -35,6 +35,8 @@
 #' the ``omnipath.password`` option.
 #' Also if you want the R package to work from another pypath server instead
 #' of omnipathdb.org, you can change the option ``omnipath.url``.
+#'
+#' @return Nothing, this is not a function but a list.
 .omnipath_options_defaults <- list(
     omnipath.url = 'https://omnipathdb.org/',
     omnipath.license = 'academic',

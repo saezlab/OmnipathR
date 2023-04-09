@@ -87,6 +87,7 @@
 #' @docType package
 #' @name OmnipathR
 #' @import logger
+#' @return Nothing, this is not a function but a package.
 NULL
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines
