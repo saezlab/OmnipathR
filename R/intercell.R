@@ -491,6 +491,8 @@ import_intercell_network <- function(
     ...
 ){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     parent <- secreted <- plasma_membrane_transmembrane <-
     plasma_membrane_peripheral <- NULL
