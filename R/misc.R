@@ -494,11 +494,24 @@ is_empty_2 <- function(value){
     {
         is.null(.) ||
         length(.) == 0L ||
+        is_closure(.) ||
         !is.na(extract(., 1L)) && extract(., 1L) == ''
     }
 
 }
 
+
+#' Tells if value is closure-like
+#'
+#' @importFrom magrittr %>% is_in
+#' @noRd
+is_closure <- function(value) {
+
+    value %>%
+    typeof %>%
+    is_in(c('closure', 'special', 'builtin'))
+
+}
 
 #' Returns `value1` if it's not NULL or zero length otherwise `value2`
 #'
