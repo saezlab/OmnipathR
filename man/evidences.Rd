@@ -42,6 +42,9 @@ prevent opening hundreds or thousands of pages at once.}
 Nothing.
 }
 \description{
+Show evidences for an interaction
+}
+\details{
 If the number of references is larger than `max_pages`, the most recent
 ones will be opened. URLs are passed to the browser in order of decreasing
 publication date, though browsers do not seem to respect the order at all.
