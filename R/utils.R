@@ -98,7 +98,7 @@ pubmed_open <- function(pmids, browser = NULL, sep = ';', max_pages = 25L){
 #'     of the partners matter only if `directed` is `TRUE`. For both partners,
 #'     vectors of more than one identifiers can be passed.
 #' @param partner_b Identifier or name of the other interacting partner.
-#' @param interactions: An interaction data frame. If not provided, all
+#' @param interactions An interaction data frame. If not provided, all
 #'     interactions will be loaded within this function, but that takes
 #'     noticeable time. If a `list` is provided, it will be used as
 #'     parameters for \code{\link{import_omnipath_interactions}}. This way
