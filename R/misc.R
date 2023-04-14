@@ -494,8 +494,9 @@ is_empty_2 <- function(value){
     {
         is.null(.) ||
         length(.) == 0L ||
-        is_closure(.) ||
-        !is.na(extract(., 1L)) && extract(., 1L) == ''
+        !is_closure(.) &&
+        !is.na(extract(., 1L)) &&
+        extract(., 1L) == ''
     }
 
 }
