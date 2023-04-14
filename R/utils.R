@@ -183,7 +183,7 @@ evidences <- function(
         {`if`(
             open,
             head(., n = max_pages) %>%
-            pubmed_open,
+            pubmed_open(browser = browser, max_pages = max_pages),
             .
         )},
         log_success(
