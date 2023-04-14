@@ -180,8 +180,12 @@ evidences <- function(
         sort(decreasing = TRUE) %>%
         as.character %T>%
         {log_success('Found %i references.', length(.))} %>%
-        head(n = max_pages) %>%
-        pubmed_open,
+        {`if`(
+            open,
+            head(., n = max_pages) %>%
+            pubmed_open,
+            .
+        )},
         log_success(
             'No interaction between %s and %s.',
             partner_a,
