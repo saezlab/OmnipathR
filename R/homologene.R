@@ -223,3 +223,38 @@ homologene_uniprot_orthology <- function(
 
 
 }
+
+
+#' Organisms in NCBI HomoloGene
+#'
+#' @param name_type Character: type of the returned name or identifier.
+#'     Many synonyms are accepted, the shortest ones: "latin", "ncbi",
+#'     "common", "ensembl". Case unsensitive.
+#'
+#' @details Not all NCBI Taxonomy IDs can be translated to common or
+#'     latin names. It means some organisms will be missing if translated
+#'     to those name types. In the future we will address this issue, until
+#'     then if you want to see all organisms use NCBI Taxonomy IDs.
+#'
+#' @return A character vector of organism names.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull arrange
+#' @importFrom tibble tibble
+#' @importFrom rlang !! enquo
+#' @importFrom purrr map_chr
+#' @export
+homologene_organisms <- function(name_type = 'ncbi'){
+
+    name_type_s = .nse_ensure_str(!!enquo(name_type))
+
+    homologene_raw() %>%
+        pull(ncbi_taxid) %>%
+        unique %>%
+        {`if`(
+            name_type_s != 'ncbi',
+            map_chr(taxon_name, name_type = !!enquo(name_type)),
+            .
+        )}
+
+}
