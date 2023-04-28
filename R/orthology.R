@@ -186,7 +186,6 @@ complex_orthology <- function(
 
     }
 
-    cplex_table <<-
     identifiers %>%
     tibble(source = .) %>%
     filter(str_detect(source, '_')) %>%
