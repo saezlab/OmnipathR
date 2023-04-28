@@ -269,5 +269,32 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "homologene": {
+        "name": ["NCBI HomoloGene"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "homologene_download",
+        "loader_param": {
+            "rebuild": false
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
+    },
+    "homologene_uniprot": {
+        "name": ["NCBI HomoloGene (UniProt)"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "homologene_uniprot_orthology",
+        "loader_param": {
+            "rebuild": false
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
+
 }
