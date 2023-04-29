@@ -26,6 +26,177 @@ ORTHO_COMP_OTM_COL <- 'omnipathr_complex_onetomany'
 CPLEX_PREFIX <- 'COMPLEX:'
 
 
+
+#' Translate identifiers between organisms by orthologous gene pairs
+#'
+#' Translates identifiers between organisms using orthology data from NCBI
+#' HomoloGene.
+#'
+#' @param data Data frame or character vector.
+#' @param ... Column specification: from zero to up to three arguments, with
+#'     or without names. NSE is supported. Arguments beyond the third one
+#'     will be ignored.
+#'     \itemize{
+#'         \item{
+#'             The name of the arguments should be column names, the
+#'             values identifier types, either as character or as symbols.
+#'         }
+#'         \item{
+#'             Arguments without names assumed to be both column names and
+#'             identifier types, e.g. a column called "uniprot" containing
+#'             UniProt IDs.
+#'         }
+#'         \item{
+#'             The first column spefication describes the source column,
+#'             with identifiers of the source organism. This column must
+#'             exist in the data and this will be the input of the homology
+#'             translation. This column will be removed from the returned
+#'             data frame.
+#'         }
+#'         \item{
+#'             In case of "uniprot", the source column name can be anything,
+#'             if it contains only UniProt IDs it will be handled accordingly.
+#'         }
+#'         \item{
+#'             In case of "genesymbol", is enough if the source column name
+#'             contains the word "genesymbol", e.g. "ligand_genesymbol".
+#'         }
+#'         \item{
+#'             The second column spefication describes the target column,
+#'             with its name and identifier type. If not provided, both
+#'             the column name and type will be the same as the source
+#'         }
+#'         \item{
+#'             Optionally a third column can be specified with another
+#'             identifier type. This is convenient if you want, for example
+#'             also Gene Symbols along with UniProt IDs.
+#'         }
+#'         \item{
+#'             If no specification provided, the input assumed to have
+#'             a column named either "uniprot" or "genesymbol", or be
+#'             a character vector of UniProt IDs or Gene Symbols.
+#'         }
+#'     }
+#' @param target Character or integer: name or identifier of the target
+#'     organism (the one we translate to). The default target organism is
+#'     mouse.
+#' @param source Character or integer: name of identifier of the source
+#'     organism (the one the IDs in the input data belong to). The default
+#'     source organism is human.
+#'
+#' @export
+orthology_translate <- function(
+    data,
+    ...,
+    target = 10090,
+    source = 9606
+) {
+
+
+    UNIPROT_DEFAULTS <- c('uniprot', 'uniprot', 'genesymbol')
+    GENESYMBOL_DEFAULTS <- c('genesymbol')
+    HOMOLOGENE_ID_TYPES <- c('uniprot', 'genesymbol', 'entrez', 'refseq', 'gi')
+
+    ids <-
+        enquos(...) %>%
+        map(.nse_ensure_str) %>%
+        if_null_len0(
+            `if`(
+                'uniprot' %in% colnames(data) || is_uniprot(data),
+                UNIPROT_DEFAULTS,
+                GENESYMBOL_DEFAULTS
+            )
+        ) %>%
+        set_names(names(.) %||% unlist(.)) %>%
+        set_names(ifelse(nchar(names(.)), names(.), unlist(.)))
+
+    id_cols <- names(ids)
+    id_types <- unlist(ids)
+
+    if(length(id_cols) == 1L || id_cols[2] == '.replace'){
+
+        id_cols[2] <- id_cols[1]
+        id_types[2] <- id_types[1]
+
+    }
+
+    target_col <- id_cols[2]
+    target_id_type <- id_types[2]
+
+    target2_col <- id_cols[3]
+    target2_id_type <- sym(id_types[3])
+    target2_col_tmp <- sym(sprintf('%s__tmp', target2_col))
+
+    source_col <- id_cols[1]
+    source_col_pos <- data %>% colnames %>% {which(. == source_col_str)}
+
+    # to handle single vectors as inputs, we convert them to data frames
+    vector_input <- !is.data.frame(data)
+
+    if(vector_input){
+
+        data <- tibble(!!sym(source_col) := data)
+
+    }
+
+    # have to keep these to move the new column
+    # to the position of the original column
+    before_col <-
+        data %>% colnames %>%
+        extract(source_col_pos - 1L) %>%
+        {`if`(length(.) == 0L, NULL, .)}
+    after_col <-
+        data %>% colnames %>%
+        extract(source_col_pos + 1L) %>%
+        if_null_len0(NA) %>% # this happens if the input is vector
+        {`if`(is.na(.) || !is.null(before_col), NULL, .)}
+
+    # trying to be smart: if the name is not a registered ID type, but
+    # "genesymbol" is in the name then we assume it's genesymbol, otherwise
+    # if the column contains UniProt IDs, we know it's uniprot, and finally
+    # we fall back to the provided value, it still might be a non registered
+    # ID type
+    source_id_type <-
+        id_types[1] %>%
+        {`if`(
+            is_id_type(.),
+            .,
+            `if`(
+                str_detect(., 'genesymbol'),
+                'genesymbol',
+                `if`(
+                    is_uniprot(data$.),
+                    'uniprot',
+                    .
+                )
+            )
+        )}
+
+    source_ncbi <- ncbi_taxid(source)
+    target_ncbi <- ncbi_taxid(target)
+
+    # if we start from anything else than UniProt,
+    # first we have to translate it to UniProt:
+    if(source_id_type != 'uniprot'){
+
+        source_uniprot <- sprintf('%s_uniprot', source_col_str)
+
+        d %<>%
+            translate_ids(
+                !!source_col := source_id_type,
+                !!sym(source_uniprot) := 'uniprot',
+                organism = source_ncbi
+            ) %>%
+            select(-!!source_col)
+
+        source_col_str <- source_uniprot
+        source_col <- sym(source_col_str)
+
+    }
+
+}
+
+
 #' Translate a column of identifiers by orthologous gene pairs
 #'
 #' @param data A data frame with the column to be translated.
@@ -49,7 +220,7 @@ CPLEX_PREFIX <- 'COMPLEX:'
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom dplyr inner_join left_join relocate mutate pull
-#' @importFrom dplyr filter rename group_by select ungroup
+#' @importFrom dplyr filter rename group_by select ungroup n
 #' @importFrom rlang sym !! := enquo
 #' @importFrom tidyselect any_of
 #' @export
@@ -156,13 +327,13 @@ orthology_translate_column <- function(
 #'     To impose no limits on one-to-many mapping, set this argument to
 #'     `FALSE`.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% extract
 #' @importFrom tibble tibble
 #' @importFrom tidyr separate_rows unnest_longer
-#' @importFrom dplyr filter mutate left_join n pull group_by distinct
+#' @importFrom dplyr filter mutate left_join n pull group_by distinct rowwise
 #' @importFrom dplyr ungroup mutate_all distinct c_across summarise_at
 #' @importFrom tidyselect everything
-#' @importFrom rlang set_names !! sym
+#' @importFrom rlang set_names !! := sym
 #' @importFrom stringr str_detect str_replace
 #' @noRd
 complex_orthology <- function(
@@ -170,6 +341,9 @@ complex_orthology <- function(
     identifiers,
     one_to_many = 1L
 ) {
+
+    # NSE vs. R CMD check workaround
+    components <- NULL
 
     has_prefix <- identifiers %>% str_detect(CPLEX_PREFIX) %>% any
 
