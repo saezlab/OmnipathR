@@ -110,6 +110,7 @@ ptms_graph <- function(...){
 #' g <- interaction_graph(interactions)
 #'
 #' @seealso \itemize{
+#'     \item{\code{\link{graph_interaction}}}
 #'     \item{\code{\link{import_omnipath_interactions}}}
 #'     \item{\code{\link{import_pathwayextra_interactions}}}
 #'     \item{\code{\link{import_kinaseextra_interactions}}}
@@ -376,5 +377,50 @@ giant_component <- function(graph){
     graph %>%
     components() %>%
     {induced_subgraph(graph, which(.$members == which.max(.$csize)))}
+
+}
+
+
+subnetwork <- function(
+    interactions,
+    nodes = NULL,
+    return_df = TRUE
+) {
+
+}
+
+
+#' Interactions data frame from igraph graph object
+#'
+#' Convert an igraph graph object to interaction data frame. This is the
+#' reverse of the operation done by thje \code{\link{interaction_graph}}
+#' function. Networks can be easily converted to igraph objects, then
+#' you can make use of all igaph methods, and at the end, get back the
+#' interactions in a data frame, along with all new edge and node attributes.
+#'
+#' @param graph An igraph graph object created formerly from an OmniPath
+#'     interactions data frame.
+#' @param implode Logical: restore the original state of the list type
+#'     columns by imploding them to character vectors, subitems separated
+#'     by semicolons.
+#'
+#' @return An interaction data frame.
+#'
+#' @importFrom igraph as_data_frame
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate across
+#' @importFrom purrr map_chr
+#' @importFrom tidyselect where
+#' @export
+#' @seealso \code{\link{interaction_graph}}
+graph_interaction <- function(graph, implode = FALSE) {
+
+    graph %>%
+    as_data_frame %>%
+    {`if`(
+        implode,
+        mutate(., across(where(is.list), map_chr, paste, collapse = ';')),
+        .
+    )}
 
 }
