@@ -381,16 +381,52 @@ giant_component <- function(graph){
 }
 
 
+#' Extract a custom subnetwork from a large network
+#'
+#' @param network Either an OmniPath interaction data frame, or an igraph
+#'     graph object.
+#' @param nodes Character or integer vector: names, identifiers or indices
+#'     of the nodes to build the subnetwork around.
+#' @param order Integer: order of neighbourhood around nodes; i.e., number
+#'     of steps starting from the provided nodes.
+#' @param mode Character: "all", "out" or "in". Follow directed edges from
+#'     the provided nodes in any, outbound or inbound direction, respectively.
+#' @param mindist Integer: The minimum distance to include the vertex in the
+#'     result.
+#' @param return_df Logical: return an interaction data frame instead of an
+#'     igraph object.
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom igraph is_igraph ego induced_subgraph
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{graph_interaction}}}
+#'     \item{\code{\link{show_network}}}
+#' }
 subnetwork <- function(
-    interactions,
+    network,
     nodes = NULL,
+    order = 1L,
+    mode = 'all',
+    mindist = 0L,
     return_df = TRUE
 ) {
+
+    network %<>% {`if`(!is_igraph(.), interaction_graph(.), .)}
+    nodes %<>% igraph_vs(network)
+
+    network %>%
+    ego(nodes = nodes, mode = mode, order = order, mindist = mindist) %>%
+    unlist %>%
+    unique %>%
+    induced_subgraph(network, vids = .) %>%
+    {`if`(return_df, graph_interaction(.), .)}
 
 }
 
 
-#' Interactions data frame from igraph graph object
+#' Interaction data frame from igraph graph object
 #'
 #' Convert an igraph graph object to interaction data frame. This is the
 #' reverse of the operation done by thje \code{\link{interaction_graph}}
@@ -407,16 +443,34 @@ subnetwork <- function(
 #' @return An interaction data frame.
 #'
 #' @importFrom igraph as_data_frame
+#' @importFrom tibble as_tibble
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate across
+#' @importFrom dplyr mutate across rename inner_join select
 #' @importFrom purrr map_chr
-#' @importFrom tidyselect where
+#' @importFrom tidyselect where everything
 #' @export
 #' @seealso \code{\link{interaction_graph}}
 graph_interaction <- function(graph, implode = FALSE) {
 
+    # NSE vs. R CMD check workaround
+    from <- to <- source <- target <- up_ids_source <- up_ids_target <- NULL
+
     graph %>%
-    as_data_frame %>%
+    as_data_frame(what = 'both') %>%
+    {inner_join(
+        inner_join(.$edges, .$vertices, by = c('from' = 'name')),
+        .$vertices,
+        by = c('to' = 'name'),
+        suffix = c('_source', '_target')
+    )} %>%
+    as_tibble %>%
+    rename(
+        source = up_ids_source,
+        target = up_ids_target,
+        source_genesymbol = from,
+        target_genesymbol = to
+    ) %>%
+    select(source, target, everything()) %>%
     {`if`(
         implode,
         mutate(., across(where(is.list), map_chr, paste, collapse = ';')),

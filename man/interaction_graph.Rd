@@ -33,6 +33,7 @@ g <- interaction_graph(interactions)
 }
 \seealso{
 \itemize{
+    \item{\code{\link{graph_interaction}}}
     \item{\code{\link{import_omnipath_interactions}}}
     \item{\code{\link{import_pathwayextra_interactions}}}
     \item{\code{\link{import_kinaseextra_interactions}}}
