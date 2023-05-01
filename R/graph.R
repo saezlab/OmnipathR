@@ -397,7 +397,7 @@ giant_component <- function(graph){
 #'     igraph object.
 #'
 #' @importFrom magrittr %>% %<>%
-#' @importFrom igraph is_igraph ego induced_subgraph
+#' @importFrom igraph ego induced_subgraph
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{interaction_graph}}}
@@ -413,7 +413,7 @@ subnetwork <- function(
     return_df = TRUE
 ) {
 
-    network %<>% {`if`(!is_igraph(.), interaction_graph(.), .)}
+    network %<>% ensure_igraph
     nodes %<>% igraph_vs(network)
 
     network %>%
@@ -422,6 +422,23 @@ subnetwork <- function(
     unique %>%
     induced_subgraph(network, vids = .) %>%
     {`if`(return_df, graph_interaction(.), .)}
+
+}
+
+
+#' Converts a network to igraph object unless it is already one
+#'
+#' @param network Either an OmniPath interaction data frame, or an igraph
+#'     graph object.
+#'
+#' @return An igraph graph object.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom igraph is_igraph
+#' @export
+ensure_igraph <- function(network) {
+
+    network %>% {`if`(is_igraph(.), ., interaction_graph(.))}
 
 }
 
