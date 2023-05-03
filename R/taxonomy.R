@@ -64,15 +64,15 @@ taxon_names_table <- function(){
 
 #' Translate between organism names
 #'
-#' Conversion between common English, latin (scientific), Ensembl and NCBI
-#' taxon names and identifiers.
+#' Conversion between common English, latin (scientific), Ensembl,
+#' Orthologous Matrix (OMA) and NCBI taxon names and identifiers.
 #'
 #' @param name Character or integer: the name to be converted. Can be any
 #'     of the types, if it's already the target type, it will be returned
 #'     with no change. Case unsensitive.
 #' @param name_type Character: type of the returned name or identifier.
 #'     Many synonyms are accepted, the shortest ones: "latin", "ncbi",
-#'     "common", "ensembl". Case unsensitive.
+#'     "common", "ensembl" and "oma". Case unsensitive.
 #'
 #' @return Character or integer of length 1 or 0: the matched name of the
 #'     requested name type.
@@ -96,7 +96,9 @@ taxon_name <- function(name, name_type){
         taxid = 'ncbi_tax_id',
         common = 'common_name',
         english = 'common_name',
-        ensembl = 'ensembl_id'
+        ensembl = 'ensembl_id',
+        oma = 'oma_code',
+        oma_name = 'oma_code'
     )
 
     name_type <-
@@ -236,5 +238,37 @@ common_name <- function(name){
 
     name %>%
     map_chr(taxon_name, 'common')
+
+}
+
+
+#' Orthologous Matrix (OMA) codes of organisms
+#'
+#' Note: OMA species codes are whenever possible identical to UniProt codes.
+#'
+#' @param name Vector with any kind of organism name or identifier, can be
+#'     also mixed type.
+#'
+#' @return A character vector with the Orthologous Matrix (OMA) codes of the
+#'     organisms.
+#'
+#' @examples
+#' oma_code(c(10090, "cjacchus", "Vicugna pacos"))
+#' # [1] "MOUSE" "CALJA" "VICPA"
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map_chr
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{ncbi_taxid}}}
+#'     \item{\code{\link{latin_name}}}
+#'     \item{\code{\link{ensembl_name}}}
+#'     \item{code{\link{common_name}}}
+#' }
+oma_code <- function(name) {
+
+    name %>%
+    map_chr(taxon_name, 'oma')
 
 }
