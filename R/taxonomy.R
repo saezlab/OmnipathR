@@ -26,16 +26,30 @@
 #'     and the NCBI Taxonomy IDs converted to character.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate rename_with bind_cols across
+#' @importFrom dplyr mutate rename_with bind_cols across full_join select
 #' @importFrom tidyselect vars_select_helpers everything
 #' @importFrom stringr str_to_lower
 #' @noRd
 taxon_names_table <- function(){
 
     # NSE vs. R CMD check workaround
-    ncbi_tax_id <- NULL
+    ncbi_tax_id <- oma_version <- genome_source <-
+    latin_name.x <- latin_name.y <- NULL
 
     ensembl_organisms() %>%
+    full_join(
+        oma_organisms() %>%
+        select(-genome_source, -oma_version),
+        by = 'ncbi_tax_id'
+    ) %>%
+    mutate(
+        latin_name = ifelse(
+            is.na(latin_name.y),
+            latin_name.x,
+            latin_name.y
+        )
+    ) %>%
+    select(-latin_name.x, -latin_name.y) %>%
     {bind_cols(
         mutate(
             .,
@@ -64,7 +78,7 @@ taxon_names_table <- function(){
 #'     requested name type.
 #'
 #' @examples
-#' latin_name("human", "latin")
+#' taxon_name("human", "latin")
 #' # [1] "Homo sapiens"
 #'
 #' @importFrom magrittr %<>% %>%

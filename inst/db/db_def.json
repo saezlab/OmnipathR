@@ -219,7 +219,7 @@
         "db": []
     },
     "organisms": {
-        "name": ["Ensembl organism names"],
+        "name": ["Ensembl and OMA organism names"],
         "last_used": [],
         "lifetime": 10800,
         "package": [],
