@@ -109,5 +109,13 @@
     ],
     "homologene": [
         "https://ftp.ncbi.nih.gov/pub/HomoloGene/current/homologene.data"
+    ],
+    "oma_species": ["https://omabrowser.org/All/oma-species.txt"],
+    "oma_groups": ["https://omabrowser.org/All/oma-groups.txt.gz"],
+    "oma_pairs": ["https://omabrowser.org/All/oma-pairs.txt.gz"],
+    "oma_hogs": ["https://omabrowser.org/All/oma-hogs.orthoXML.gz"],
+    "oma_pairwise": [
+        "https://omabrowser.org/cgi-bin/gateway.pl?",
+        "f=PairwiseOrthologs&p1=%s&p2=%s&p3=%s"
     ]
 }
