@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@
 <li><p><code><a href="import_kinaseextra_interactions.html">import_kinaseextra_interactions</a></code></p></li>
 <li><p><code><a href="import_ligrecextra_interactions.html">import_ligrecextra_interactions</a></code></p></li>
 <li><p><code><a href="import_post_translational_interactions.html">import_post_translational_interactions</a></code></p></li>
-<li><p><code><a href="import_dorothea_interactions.html">import_dorothea_interactions</a></code></p></li>
+<li><p><code><a href="dorothea.html">import_dorothea_interactions</a></code></p></li>
 <li><p><code><a href="import_tf_target_interactions.html">import_tf_target_interactions</a></code></p></li>
 <li><p><code><a href="import_transcriptional_interactions.html">import_transcriptional_interactions</a></code></p></li>
 <li><p><code><a href="import_mirnatarget_interactions.html">import_mirnatarget_interactions</a></code></p></li>
@@ -111,11 +111,12 @@
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index">
-<ul><li><p><code><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></code></p></li>
+<ul><li><p><code><a href="graph_interaction.html">graph_interaction</a></code></p></li>
+<li><p><code><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></code></p></li>
 <li><p><code><a href="import_pathwayextra_interactions.html">import_pathwayextra_interactions</a></code></p></li>
 <li><p><code><a href="import_kinaseextra_interactions.html">import_kinaseextra_interactions</a></code></p></li>
 <li><p><code><a href="import_ligrecextra_interactions.html">import_ligrecextra_interactions</a></code></p></li>
-<li><p><code><a href="import_dorothea_interactions.html">import_dorothea_interactions</a></code></p></li>
+<li><p><code><a href="dorothea.html">import_dorothea_interactions</a></code></p></li>
 <li><p><code><a href="import_mirnatarget_interactions.html">import_mirnatarget_interactions</a></code></p></li>
 <li><p><code><a href="import_all_interactions.html">import_all_interactions</a></code></p></li>
 <li><p><code><a href="giant_component.html">giant_component</a></code></p></li>
@@ -126,7 +127,9 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">interactions</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SignaLink3'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> The output colorization was canceled. isatty(stdout()) returned FALSE.</span>
 <span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">interaction_graph</span><span class="op">(</span><span class="va">interactions</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.data.frame(x):</span> object 'interactions' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

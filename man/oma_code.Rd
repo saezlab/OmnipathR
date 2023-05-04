@@ -27,6 +27,6 @@ oma_code(c(10090, "cjacchus", "Vicugna pacos"))
     \item{\code{\link{ncbi_taxid}}}
     \item{\code{\link{latin_name}}}
     \item{\code{\link{ensembl_name}}}
-    \item{code{\link{common_name}}}
+    \item{\code{\link{common_name}}}
 }
 }

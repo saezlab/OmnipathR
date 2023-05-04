@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -248,6 +248,11 @@ copy/pasted into the BMA canvas</dd>
         <dd>Orthologous gene pairs from Ensembl</dd>
       </dl><dl><dt>
           
+          <code><a href="ensure_igraph.html">ensure_igraph()</a></code> 
+        </dt>
+        <dd>Converts a network to igraph object unless it is already one</dd>
+      </dl><dl><dt>
+          
           <code><a href="enzsub_graph.html">enzsub_graph()</a></code> 
         </dt>
         <dd>Enzyme-substrate graph</dd>
@@ -384,6 +389,11 @@ OmniPath</dd>
           <code><a href="go_ontology_download.html">go_ontology_download()</a></code> 
         </dt>
         <dd>The Gene Ontology tree</dd>
+      </dl><dl><dt>
+          
+          <code><a href="graph_interaction.html">graph_interaction()</a></code> 
+        </dt>
+        <dd>Interaction data frame from igraph graph object</dd>
       </dl><dl><dt>
           
           <code><a href="guide2pharma_download.html">guide2pharma_download()</a></code> 
@@ -802,6 +812,21 @@ NicheNet</dd>
         <dd>Generic OBO parser</dd>
       </dl><dl><dt>
           
+          <code><a href="oma_code.html">oma_code()</a></code> 
+        </dt>
+        <dd>Orthologous Matrix (OMA) codes of organisms</dd>
+      </dl><dl><dt>
+          
+          <code><a href="oma_organisms.html">oma_organisms()</a></code> 
+        </dt>
+        <dd>Organism identifiers from the Orthologous Matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="oma_pairwise.html">oma_pairwise()</a></code> 
+        </dt>
+        <dd>Orthologous gene pairs between two organisms</dd>
+      </dl><dl><dt>
+          
           <code><a href="omnipath.html">omnipath()</a></code> 
         </dt>
         <dd>Literature curated signaling pathways</dd>
@@ -973,6 +998,11 @@ database</dd>
         <dd>Translate between ontology IDs and names</dd>
       </dl><dl><dt>
           
+          <code><a href="orthology_translate.html">orthology_translate()</a></code> 
+        </dt>
+        <dd>Translate identifiers between organisms by orthologous gene pairs</dd>
+      </dl><dl><dt>
+          
           <code><a href="orthology_translate_column.html">orthology_translate_column()</a></code> 
         </dt>
         <dd>Translate a column of identifiers by orthologous gene pairs</dd>
@@ -1088,9 +1118,19 @@ database</dd>
         <dd>Name of the column with the resources</dd>
       </dl><dl><dt>
           
+          <code><a href="show_network.html">show_network()</a></code> 
+        </dt>
+        <dd>Visualize node neighborhood with SigmaJS</dd>
+      </dl><dl><dt>
+          
           <code><a href="simplify_intercell_network.html">simplify_intercell_network()</a></code> 
         </dt>
         <dd>Simplify an intercell network</dd>
+      </dl><dl><dt>
+          
+          <code><a href="subnetwork.html">subnetwork()</a></code> 
+        </dt>
+        <dd>Extract a custom subnetwork from a large network</dd>
       </dl><dl><dt>
           
           <code><a href="swap_relations.html">swap_relations()</a></code> 
