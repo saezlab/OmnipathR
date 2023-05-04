@@ -7,9 +7,10 @@
 orthology_translate_column(
   data,
   column,
-  id_type,
-  target_organism,
-  source_organism = 9606L,
+  id_type = NULL,
+  target_organism = "mouse",
+  source_organism = "human",
+  resource = "oma",
   replace = FALSE,
   one_to_many = NULL,
   keep_untranslated = FALSE,
@@ -23,9 +24,21 @@ orthology_translate_column(
 \item{column}{Name of a character column with identifiers of the source
 organism of type `id_type`.}
 
+\item{id_type}{Type of identifiers in `column`. Available ID types include
+"uniprot", "entrez", "ensg", "refseq" and "swissprot" for OMA, and
+"uniprot", "entrez", "genesymbol", "refseq" and "gi" for NCBI
+HomoloGene. If you want to translate an ID type not directly available
+in your preferred resource, use first \code{\link{translate_ids}}
+to translate to an ID type directly available in the orthology resource.
+If not provided, it is assumed the column name is the ID type.}
+
 \item{target_organism}{Name or NCBI Taxonomy ID of the target organism.}
 
 \item{source_organism}{Name or NCBI Taxonomy ID of the source organism.}
+
+\item{resource}{Character: source of the orthology mapping. Currently
+Orthologous Matrix (OMA) and NCBI HomoloGene are available, refer to
+them by "oma" and "homologene", respectively.}
 
 \item{replace}{Logical or character: replace the column with the translated
 identifiers, or create a new column. If it is character, the}

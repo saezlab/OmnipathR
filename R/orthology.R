@@ -202,8 +202,18 @@ orthology_translate <- function(
 #' @param data A data frame with the column to be translated.
 #' @param column Name of a character column with identifiers of the source
 #'     organism of type `id_type`.
+#' @param id_type Type of identifiers in `column`. Available ID types include
+#'     "uniprot", "entrez", "ensg", "refseq" and "swissprot" for OMA, and
+#'     "uniprot", "entrez", "genesymbol", "refseq" and "gi" for NCBI
+#'     HomoloGene. If you want to translate an ID type not directly available
+#'     in your preferred resource, use first \code{\link{translate_ids}}
+#'     to translate to an ID type directly available in the orthology resource.
+#'     If not provided, it is assumed the column name is the ID type.
 #' @param target_organism Name or NCBI Taxonomy ID of the target organism.
 #' @param source_organism Name or NCBI Taxonomy ID of the source organism.
+#' @param resource Character: source of the orthology mapping. Currently
+#'     Orthologous Matrix (OMA) and NCBI HomoloGene are available, refer to
+#'     them by "oma" and "homologene", respectively.
 #' @param replace Logical or character: replace the column with the translated
 #'     identifiers, or create a new column. If it is character, the
 #' @param one_to_many Integer: maximum number of orthologous pairs for one
@@ -227,9 +237,10 @@ orthology_translate <- function(
 orthology_translate_column <- function(
         data,
         column,
-        id_type,
-        target_organism,
-        source_organism = 9606L,
+        id_type = NULL,
+        target_organism = 'mouse',
+        source_organism = 'human',
+        resource = 'oma',
         replace = FALSE,
         one_to_many = NULL,
         keep_untranslated = FALSE,
@@ -237,9 +248,9 @@ orthology_translate_column <- function(
         uniprot_by_id_type = 'entrez'
 ) {
 
-    uniprot <- id_type == 'uniprot'
     column <- .nse_ensure_str(!!enquo(column))
-    id_type <- .nse_ensure_str(!!enquo(id_type))
+    id_type <- .nse_ensure_str(!!enquo(id_type)) %>% if_null(column)
+    uniprot <- id_type == 'uniprot'
     unirprot_by_id_type <- .nse_ensure_str(!!enquo(uniprot_by_id_type))
     target_organism %<>% ncbi_taxid
     source_organism %<>% ncbi_taxid
@@ -256,23 +267,37 @@ orthology_translate_column <- function(
             )
         )}
 
-    homologene_param <-
+    orthology_param <-
         list(
-            source = source_organism,
-            target = target_organism
+            source_organism,
+            target_organism
         ) %>%
-        c(
-            `if`(
-                uniprot,
-                list(by = uniprot_by_id_type),
-                list(id_type = id_type)
-            )
-        )
+        set_names(`if`(
+            resource == 'oma',
+            c('organism_a', 'organism_b'),
+            c('source', 'target')
+        )) %>%
+        {`if`(
+            resource == 'homologene',
+            c(
+                .,
+                `if`(
+                    uniprot,
+                    list(by = uniprot_by_id_type),
+                    list(id_type = id_type)
+                )
+            ),
+           .
+        )}
 
-    db_name <- `if`(uniprot, 'homologene_uniprot', 'homologene')
+    db_name <- `if`(
+        resource == 'oma',
+        'oma',
+        `if`(uniprot, 'homologene_uniprot', 'homologene')
+    )
 
-    hg <-
-        get_db(db_name, param = homologene_param) %>%
+    orthologous_pairs <-
+        get_db(db_name, param = orthology_param) %>%
         select(-any_of('hgroup')) %>%
         set_names(c(ORTHO_SOURCE_COL, ORTHO_TARGET_COL)) %>%
         {`if`(
@@ -296,7 +321,10 @@ orthology_translate_column <- function(
 
     data %>%
     mutate(!!sym(ORTHO_GROUP_COL) := 1L:n()) %>%
-    join(hg, by = join_by(!!sym(column) == !!sym(ORTHO_SOURCE_COL))) %>%
+    join(
+         orthologous_pairs,
+         by = join_by(!!sym(column) == !!sym(ORTHO_SOURCE_COL))
+    ) %>%
     relocate(ORTHO_TARGET_COL, .after = column) %>%
     {`if`(
         column == target_column,

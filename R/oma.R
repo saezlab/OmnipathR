@@ -143,7 +143,7 @@ oma_pairwise <- function(
     filter(
         !str_detect(id_organism_a, sprintf('%s\\d+', organism_a)) &
         !str_detect(id_organism_b, sprintf('%s\\d+', organism_b)) &
-        mappping %in% mappings
+        mapping %in% mappings
     ) %>%
     {`if`(only_ids, select(., id_organism_a, id_organism_b), .)}
 
