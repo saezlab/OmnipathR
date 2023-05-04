@@ -295,6 +295,18 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "oma": {
+        "name": ["Orthologous Matrix (OMA) gene pairs"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "oma_pairwise",
+        "loader_param": {
+            "rebuild": false
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
-
 }
