@@ -66,5 +66,15 @@
         "uniprot": "uniprotswissprot",
         "trembl": "uniprotsptrembl",
         "pbd": "pbd"
+    },
+    "oma": {
+        "source": "Source",
+        "source_ac": "SourceAC",
+        "swissprot": "SwissProt",
+        "oma": "OMA",
+        "uniprot": "UniProt",
+        "refseq": "Refseq_AC",
+        "entrez": "EntrezGene",
+        "ensg": "EnsemblGene"
     }
 }
