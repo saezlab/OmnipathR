@@ -84,7 +84,7 @@ CPLEX_PREFIX <- 'COMPLEX:'
 #'     organism (the one the IDs in the input data belong to). The default
 #'     source organism is human.
 #'
-#' @export
+#' @noRd
 orthology_translate <- function(
     data,
     ...,
@@ -215,7 +215,8 @@ orthology_translate <- function(
 #'     Orthologous Matrix (OMA) and NCBI HomoloGene are available, refer to
 #'     them by "oma" and "homologene", respectively.
 #' @param replace Logical or character: replace the column with the translated
-#'     identifiers, or create a new column. If it is character, the
+#'     identifiers, or create a new column. If it is character, it will be
+#'     used as the name of the new column.
 #' @param one_to_many Integer: maximum number of orthologous pairs for one
 #'     gene of the source organism.
 #' @param keep_untranslated Logical: keep records without orthologous pairs.

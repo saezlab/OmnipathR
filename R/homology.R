@@ -99,7 +99,7 @@
 #' @importFrom rlang enquos !! enquo sym %||% :=
 #' @importFrom dplyr rename_with inner_join rename filter select mutate pull
 #' @importFrom tidyselect ends_with
-#' @export
+#' @noRd
 homology_translate <- function(
     d,
     ...,

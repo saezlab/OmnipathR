@@ -41,7 +41,8 @@ Orthologous Matrix (OMA) and NCBI HomoloGene are available, refer to
 them by "oma" and "homologene", respectively.}
 
 \item{replace}{Logical or character: replace the column with the translated
-identifiers, or create a new column. If it is character, the}
+identifiers, or create a new column. If it is character, it will be
+used as the name of the new column.}
 
 \item{one_to_many}{Integer: maximum number of orthologous pairs for one
 gene of the source organism.}
