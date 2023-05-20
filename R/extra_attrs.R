@@ -43,11 +43,12 @@ deserialize_extra_attrs <- function(data){
 #'
 #' @return The input data frame with the JSON column converted to list.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr mutate
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
 #' @importFrom rlang !! enquo sym :=
+#' @importFrom logger log_trace
 #' @noRd
 deserialize_json_col <- function(data, col) {
 
@@ -56,7 +57,9 @@ deserialize_json_col <- function(data, col) {
     data %>%
     {`if`(
         has_column(., col),
-        mutate(., !!sym(col) := map(!!sym(col), fromJSON)),
+        identity(.) %T>%
+        {log_trace('Converting JSON column `%s` to list.', col)} %>%
+        mutate(!!sym(col) := map(!!sym(col), fromJSON)),
         .
     )}
 
