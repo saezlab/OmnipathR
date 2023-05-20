@@ -210,6 +210,7 @@ import_omnipath <- function(
     result %<>% strip_resource_labels(references_by_resource)
     result %<>% apply_exclude(exclude)
     result %<>% deserialize_extra_attrs()
+    result %<>% deserialize_evidences()
 
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references
