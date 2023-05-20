@@ -13,6 +13,7 @@ import_all_interactions(
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,
+  strict_evidences = FALSE,
   ...
 )
 
@@ -41,6 +42,10 @@ the query type. If FALSE, only the fields defined by the user in the
 \item{references_by_resource}{if FALSE, removes the resource name prefixes
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
+
+\item{strict_evidences}{Logical: restrict the evidences to the queried
+datasets and resources. If set to FALSE, the directions and effect signs
+and references might be based on other datasets and resources.}
 
 \item{...}{Passed to \code{import_all_interactions}.}
 }

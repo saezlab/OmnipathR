@@ -9,6 +9,7 @@ import_post_translational_interactions(
   organism = 9606,
   exclude = NULL,
   references_by_resource = TRUE,
+  strict_evidences = FALSE,
   ...
 )
 }
@@ -24,6 +25,10 @@ Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
 \item{references_by_resource}{if FALSE, removes the resource name prefixes
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
+
+\item{strict_evidences}{Logical: restrict the evidences to the queried
+datasets and resources. If set to FALSE, the directions and effect signs
+and references might be based on other datasets and resources.}
 
 \item{...}{optional additional arguments}
 }

@@ -23,21 +23,50 @@
 #' Converts the extra_attrs column from JSON encoded to list
 #'
 #' @param data A data frame from the OmniPath web service.
+#' @param ... Passed to `jsonlite::fromJSON`.
 #'
 #' @return The input data frame with the extra_attrs column converted
 #'     to list.
 #'
 #' @importFrom magrittr %>%
+#' @noRd
+deserialize_extra_attrs <- function(data, ...){
+
+    data %>%
+    deserialize_json_col('extra_attrs', ...)
+
+}
+
+
+#' Converts a JSON encoded column to list
+#'
+#' @param data A data frame.
+#' @param col Character or symbol: name of the JSON encoded column.
+#' @param ... Passed to `jsonlite::fromJSON`.
+#'
+#' @return The input data frame with the JSON column converted to list.
+#'
+#' @importFrom magrittr %>% %T>%
 #' @importFrom dplyr mutate
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
+#' @importFrom rlang !! enquo sym := !!! list2
+#' @importFrom logger log_trace
 #' @noRd
-deserialize_extra_attrs <- function(data){
+deserialize_json_col <- function(data, col, ...) {
+
+    col <- .nse_ensure_str(!!enquo(col))
+
+    fromjson_args <-
+        list2(...) %>%
+        add_defaults(fromJSON, list(simplifyVector = FALSE))
 
     data %>%
     {`if`(
-        has_extra_attrs(.),
-        mutate(., extra_attrs = map(extra_attrs, fromJSON)),
+        has_column(., col),
+        identity(.) %T>%
+        {log_trace('Converting JSON column `%s` to list.', col)} %>%
+        mutate(!!sym(col) := map(!!sym(col), fromJSON, !!!fromjson_args)),
         .
     )}
 
@@ -222,6 +251,7 @@ extra_attrs_to_cols <- function(
 #' i <- import_omnipath_interactions(fields = 'extra_attrs')
 #' has_extra_attrs(i)
 #'
+#' @importFrom magrittr %>%
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{extra_attrs}}}
@@ -232,10 +262,19 @@ extra_attrs_to_cols <- function(
 #' }
 has_extra_attrs <- function(data){
 
-    'extra_attrs' %in% colnames(data)
+    data %>% has_column('extra_attrs')
 
 }
 
+
+#' Tells if a column exists in the data frame
+#'
+#' @noRd
+has_column <- function(data, col) {
+
+    col %in% colnames(data)
+
+}
 
 #' Interaction records having certain extra attributes
 #'

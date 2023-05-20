@@ -50,6 +50,9 @@
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -74,10 +77,11 @@ import_omnipath_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -86,10 +90,9 @@ import_omnipath_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -117,6 +120,9 @@ import_omnipath_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments, passed to
 #' \code{\link{import_omnipath_interactions}}.
 #'
@@ -142,6 +148,7 @@ omnipath <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -149,13 +156,14 @@ omnipath <- function(
     args$datasets <- 'omnipath'
 
     exec(
-         import_omnipath_interactions,
-         organism = organism,
-         fields = fields,
-         default_fields = default_fields,
-         references_by_resource = references_by_resource,
-         exclude = exclude,
-         !!!args
+        import_omnipath_interactions,
+        organism = organism,
+        fields = fields,
+        default_fields = default_fields,
+        references_by_resource = references_by_resource,
+        exclude = exclude,
+        strict_evidences = strict_evidences,
+        !!!args
     )
 
 }
@@ -209,6 +217,9 @@ import_OmniPath_Interactions <- function(...){
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -233,10 +244,11 @@ import_pathwayextra_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -245,10 +257,9 @@ import_pathwayextra_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -290,6 +301,9 @@ import_PathwayExtra_Interactions <- function(...){
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... Optional additional arguments.
 #'
 #' @examples
@@ -314,10 +328,11 @@ import_kinaseextra_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -326,10 +341,9 @@ import_kinaseextra_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -370,6 +384,9 @@ import_KinaseExtra_Interactions <- function(...){
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -393,10 +410,11 @@ import_ligrecextra_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -405,10 +423,9 @@ import_ligrecextra_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -442,6 +459,9 @@ import_LigrecExtra_Interactions <- function(...){
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @importFrom rlang %||% exec !!!
@@ -462,6 +482,7 @@ import_post_translational_interactions <- function(
     organism = 9606,
     exclude = NULL,
     references_by_resource = TRUE,
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -476,7 +497,8 @@ import_post_translational_interactions <- function(
             resources = resources,
             organism = organism,
             references_by_resource = references_by_resource,
-            exclude = exclude
+            exclude = exclude,
+            strict_evidences = strict_evidences
         )
     )
 
@@ -518,6 +540,11 @@ import_post_translational_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources. In case of
+#' DoRothEA this is not desirable for most of the applications. For most of
+#' the other interaction querying functions it is `FALSE` by default.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -547,6 +574,7 @@ dorothea <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = TRUE,
     ...
 ){
 
@@ -560,6 +588,7 @@ dorothea <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
 
@@ -615,6 +644,9 @@ import_tfregulons_interactions <- function(...){
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... Optional additional arguments
 #'
 #' @examples
@@ -636,6 +668,7 @@ import_tf_target_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -648,6 +681,7 @@ import_tf_target_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
 
@@ -677,6 +711,9 @@ import_tf_target_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... Optional additional arguments.
 #'
 #' @return A dataframe containing TF-target interactions.
@@ -706,6 +743,7 @@ import_transcriptional_interactions <- function(
     dorothea_levels = c('A', 'B'),
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -724,6 +762,7 @@ import_transcriptional_interactions <- function(
             organism = organism,
             resources = resources,
             references_by_resource = references_by_resource,
+            strict_evidences = strict_evidences,
             !!!args
         )
 
@@ -746,6 +785,11 @@ import_transcriptional_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources. In case of
+#' CollecTRI this is not desirable for most of the applications. For most of
+#' the other interaction querying functions it is `FALSE` by default.
 #' @param ... Optional additional arguments, passed to
 #'     \code{\link{import_transcriptional_interactions}}.
 #'
@@ -771,6 +815,7 @@ collectri <- function(
     organism = 9606L,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = TRUE,
     ...
 ){
 
@@ -783,6 +828,7 @@ collectri <- function(
         organism = organism,
         resources = resources,
         references_by_resource = references_by_resource,
+        strict_evidences = strict_evidences,
         !!!args
     )
 
@@ -810,6 +856,9 @@ collectri <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -833,6 +882,7 @@ import_mirnatarget_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -845,6 +895,7 @@ import_mirnatarget_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
 
@@ -886,6 +937,9 @@ import_miRNAtarget_Interactions <- function(...){
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -907,10 +961,11 @@ import_tf_mirna_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -919,10 +974,9 @@ import_tf_mirna_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -948,6 +1002,9 @@ import_tf_mirna_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -969,10 +1026,11 @@ import_lncrna_mrna_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -981,10 +1039,9 @@ import_lncrna_mrna_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -1010,6 +1067,9 @@ import_lncrna_mrna_interactions <- function(
 #'     which reference comes from which resource will be lost and the PubMed
 #'     IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe of small molecule-protein interactions
@@ -1037,10 +1097,11 @@ import_small_molecule_protein_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = FALSE,
     ...
 ){
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -1049,10 +1110,9 @@ import_small_molecule_protein_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
-
-    return(result)
 
 }
 
@@ -1092,6 +1152,9 @@ import_small_molecule_protein_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -1118,6 +1181,7 @@ import_all_interactions <- function(
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -1130,7 +1194,7 @@ import_all_interactions <- function(
     # it does not make sense without the type field
     fields %<>% c('type', 'dorothea_level') %>% unique
 
-    result <- import_omnipath(
+    import_omnipath(
         query_type = 'interactions',
         resources = resources,
         organism = organism,
@@ -1140,9 +1204,9 @@ import_all_interactions <- function(
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,
+        strict_evidences = strict_evidences,
         ...
     )
-    return(result)
 
 }
 

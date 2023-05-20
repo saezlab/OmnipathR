@@ -129,7 +129,10 @@ utils::globalVariables(
     'add_counts',
     'qt_message',
     'exclude',
-    'extra_attrs'
+    'extra_attrs',
+    'evidences',
+    'json_param',
+    'strict_evidences'
 )
 
 
@@ -144,6 +147,7 @@ utils::globalVariables(
 #' @importFrom tibble as_tibble
 #' @importFrom readr read_tsv cols col_character
 #' @importFrom utils modifyList
+#' @importFrom rlang !!!
 #'
 #' @noRd
 import_omnipath <- function(
@@ -162,6 +166,8 @@ import_omnipath <- function(
     license = NULL,
     password = NULL,
     exclude = NULL,
+    json_param = list(),
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -209,7 +215,15 @@ import_omnipath <- function(
     result %<>% cast_logicals(logicals)
     result %<>% strip_resource_labels(references_by_resource)
     result %<>% apply_exclude(exclude)
-    result %<>% deserialize_extra_attrs()
+    result %<>% deserialize_extra_attrs(!!!param$json_param)
+    result %<>% deserialize_evidences(!!!param$json_param)
+
+    if(strict_evidences && query_type == 'interactions') {
+        result %<>% only_from(
+            datasets = param$datasets,
+            resources = param$resources
+        )
+    }
 
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references
@@ -254,6 +268,7 @@ import_omnipath <- function(
 #' the download function.
 #' Not exported.
 #'
+#' @importFrom magrittr %<>%
 #' @importFrom logger log_warn
 #'
 #' @noRd
@@ -296,15 +311,20 @@ omnipath_check_param <- function(param){
         warning(msg)
     }
 
-    # extra_attrs is accepted also as an argument
-    if(
-        !is.null(param$extra_attrs) &&
-        param$extra_attrs
-    ){
+    # extra_attrs and evidences are accepted also as an argument
+    for(name in c('extra_attrs', 'evidences')) {
 
-        param$fields <- union(param$fields, 'extra_attrs')
-        param$extra_attrs <- NULL
+        if(if_null(param[[name]], FALSE)) {
 
+            param$fields %<>% union(name)
+            param[[name]] <- NULL
+
+        }
+
+    }
+
+    if(param$strict_evidences) {
+        param$fields %<>% union('evidences')
     }
 
     # adding default fields if not disabled

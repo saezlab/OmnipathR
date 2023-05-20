@@ -12,6 +12,7 @@ import_ligrecextra_interactions(
   default_fields = TRUE,
   references_by_resource = TRUE,
   exclude = NULL,
+  strict_evidences = FALSE,
   ...
 )
 }
@@ -34,6 +35,10 @@ from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.}
 
 \item{exclude}{Character: datasets or resources to exclude.}
+
+\item{strict_evidences}{Logical: restrict the evidences to the queried
+datasets and resources. If set to FALSE, the directions and effect signs
+and references might be based on other datasets and resources.}
 
 \item{...}{optional additional arguments}
 }
