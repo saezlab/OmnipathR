@@ -28,16 +28,35 @@
 #'     to list.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate
-#' @importFrom jsonlite fromJSON
-#' @importFrom purrr map
 #' @noRd
 deserialize_extra_attrs <- function(data){
 
     data %>%
+    deserialize_json_col('extra_attrs')
+
+}
+
+
+#' Converts a JSON encoded column to list
+#'
+#' @param data A data frame.
+#'
+#' @return The input data frame with the JSON column converted to list.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate
+#' @importFrom jsonlite fromJSON
+#' @importFrom purrr map
+#' @importFrom rlang !! enquo sym :=
+#' @noRd
+deserialize_json_col <- function(data, col) {
+
+    col <- .nse_ensure_str(!!enquo(col))
+
+    data %>%
     {`if`(
-        has_extra_attrs(.),
-        mutate(., extra_attrs = map(extra_attrs, fromJSON)),
+        has_column(., col),
+        mutate(., !!sym(col) := map(!!sym(col), fromJSON)),
         .
     )}
 
@@ -222,6 +241,7 @@ extra_attrs_to_cols <- function(
 #' i <- import_omnipath_interactions(fields = 'extra_attrs')
 #' has_extra_attrs(i)
 #'
+#' @importFrom magrittr %>%
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{extra_attrs}}}
@@ -232,10 +252,19 @@ extra_attrs_to_cols <- function(
 #' }
 has_extra_attrs <- function(data){
 
-    'extra_attrs' %in% colnames(data)
+    data %>% has_column('extra_attrs')
 
 }
 
+
+#' Tells if a column exists in the data frame
+#'
+#' @noRd
+has_column <- function(data, col) {
+
+    col %in% colnames(data)
+
+}
 
 #' Interaction records having certain extra attributes
 #'
