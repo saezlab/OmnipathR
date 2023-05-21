@@ -51,6 +51,31 @@ has_evidences <- function(data){
 }
 
 
+#' Check for "evidences" column, throw an error if it is missing
+#'
+#' @importFrom magrittr %>% extract
+#' @noRd
+must_have_evidences <- function(data, env = parent.frame()){
+
+    if(!has_evidences(data)) {
+
+        parent_call <- sys.call(-1L)
+
+        m <-
+            paste(
+                '`%s` can be called only on data',
+                'frames with `evidences` column.'
+            ) %>%
+            sprintf(parent_call %>% as.character %>% extract(1L))
+
+        log_error(m)
+        do.call(stop, list(m), envir = env)
+
+    }
+
+}
+
+
 #' Separate evidences by direction and effect sign
 #'
 #' @param data An interaction data frame with "evidences" column.
@@ -70,6 +95,8 @@ has_evidences <- function(data){
 #' @importFrom rlang exec !!!
 #' @export
 unnest_evidences <- function(data, longer = FALSE) {
+
+    must_have_evidences(data)
 
     unnest_method <- `if`(longer, unnest_longer, unnest_wider)
     unnest_args <- `if`(longer, list(indices_to = 'direction'), list())
