@@ -130,6 +130,7 @@ utils::globalVariables(
     'qt_message',
     'exclude',
     'extra_attrs',
+    'evidences',
     'json_param'
 )
 
@@ -300,14 +301,15 @@ omnipath_check_param <- function(param){
         warning(msg)
     }
 
-    # extra_attrs is accepted also as an argument
-    if(
-        !is.null(param$extra_attrs) &&
-        param$extra_attrs
-    ){
+    # extra_attrs and evidences are accepted also as an argument
+    for(name in c('extra_attrs', 'evidences')) {
 
-        param$fields <- union(param$fields, 'extra_attrs')
-        param$extra_attrs <- NULL
+        if(if_null(param[[name]], FALSE)) {
+
+            param$fields <- union(param$fields, name)
+            param[[name]] <- NULL
+
+        }
 
     }
 
