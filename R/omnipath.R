@@ -129,7 +129,8 @@ utils::globalVariables(
     'add_counts',
     'qt_message',
     'exclude',
-    'extra_attrs'
+    'extra_attrs',
+    'json_param'
 )
 
 
@@ -144,6 +145,7 @@ utils::globalVariables(
 #' @importFrom tibble as_tibble
 #' @importFrom readr read_tsv cols col_character
 #' @importFrom utils modifyList
+#' @importFrom rlang !!!
 #'
 #' @noRd
 import_omnipath <- function(
@@ -162,6 +164,7 @@ import_omnipath <- function(
     license = NULL,
     password = NULL,
     exclude = NULL,
+    json_param = list(),
     ...
 ){
 
@@ -209,8 +212,8 @@ import_omnipath <- function(
     result %<>% cast_logicals(logicals)
     result %<>% strip_resource_labels(references_by_resource)
     result %<>% apply_exclude(exclude)
-    result %<>% deserialize_extra_attrs()
-    result %<>% deserialize_evidences()
+    result %<>% deserialize_extra_attrs(!!!param$json_param)
+    result %<>% deserialize_evidences(!!!param$json_param)
 
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references

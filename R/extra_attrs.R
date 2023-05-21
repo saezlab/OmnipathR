@@ -23,16 +23,17 @@
 #' Converts the extra_attrs column from JSON encoded to list
 #'
 #' @param data A data frame from the OmniPath web service.
+#' @param ... Passed to `jsonlite::fromJSON`.
 #'
 #' @return The input data frame with the extra_attrs column converted
 #'     to list.
 #'
 #' @importFrom magrittr %>%
 #' @noRd
-deserialize_extra_attrs <- function(data){
+deserialize_extra_attrs <- function(data, ...){
 
     data %>%
-    deserialize_json_col('extra_attrs')
+    deserialize_json_col('extra_attrs', ...)
 
 }
 
@@ -40,6 +41,8 @@ deserialize_extra_attrs <- function(data){
 #' Converts a JSON encoded column to list
 #'
 #' @param data A data frame.
+#' @param col Character or symbol: name of the JSON encoded column.
+#' @param ... Passed to `jsonlite::fromJSON`.
 #'
 #' @return The input data frame with the JSON column converted to list.
 #'
@@ -47,19 +50,23 @@ deserialize_extra_attrs <- function(data){
 #' @importFrom dplyr mutate
 #' @importFrom jsonlite fromJSON
 #' @importFrom purrr map
-#' @importFrom rlang !! enquo sym :=
+#' @importFrom rlang !! enquo sym := !!! list2
 #' @importFrom logger log_trace
 #' @noRd
-deserialize_json_col <- function(data, col) {
+deserialize_json_col <- function(data, col, ...) {
 
     col <- .nse_ensure_str(!!enquo(col))
+
+    fromjson_args <-
+        list2(...) %>%
+        add_defaults(fromJSON, list(simplifyVector = FALSE))
 
     data %>%
     {`if`(
         has_column(., col),
         identity(.) %T>%
         {log_trace('Converting JSON column `%s` to list.', col)} %>%
-        mutate(!!sym(col) := map(!!sym(col), fromJSON)),
+        mutate(!!sym(col) := map(!!sym(col), fromJSON, !!!fromjson_args)),
         .
     )}
 
