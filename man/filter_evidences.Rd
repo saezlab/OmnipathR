@@ -25,3 +25,10 @@ The input data frame with the evidences in the selected columns
 \description{
 Filter evidences by dataset and resource
 }
+\seealso{
+\itemize{
+    \item{\code{\link{only_from}}}
+    \item{\code{\link{unnest_evidences}}}
+    \item{\code{\link{from_evidences}}}
+}
+}

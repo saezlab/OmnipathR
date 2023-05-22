@@ -107,6 +107,12 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #' @importFrom tidyr unnest_longer unnest_wider
 #' @importFrom rlang exec !!!
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{only_from}}}
+#'     \item{\code{\link{filter_evidences}}}
+#'     \item{\code{\link{from_evidences}}}
+#' }
 unnest_evidences <- function(data, longer = FALSE) {
 
     must_have_evidences(data)
@@ -140,6 +146,12 @@ unnest_evidences <- function(data, longer = FALSE) {
 #' @importFrom dplyr mutate across
 #' @importFrom logger log_trace
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{only_from}}}
+#'     \item{\code{\link{unnest_evidences}}}
+#'     \item{\code{\link{from_evidences}}}
+#' }
 filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
 
     columns <-
@@ -234,8 +246,12 @@ filter_evs_lst <- function(lst, datasets, resources, columns) {
 #' function will help you do so. Still, in most of the applications the best is
 #' to use the interaction data as it is returned by the web service.
 #'
+#' \strong{Note:} This function is automatically applied if the
+#' `strict_evidences` argument is passed to any function querying interactions
+#' (e.g. \code{\link{import_omnipath_interactions}}).
+#'
 #' @examples
-#' ci <- collectri()
+#' ci <- collectri(evidences = TRUE)
 #' ci <- only_from(ci, datasets = 'collectri')
 #'
 #' @importFrom magrittr %>%
@@ -244,6 +260,12 @@ filter_evs_lst <- function(lst, datasets, resources, columns) {
 #' @importFrom dplyr select
 #' @importFrom tidyselect any_of
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{filter_evidences}}}
+#'     \item{\code{\link{unnest_evidences}}}
+#'     \item{\code{\link{from_evidences}}}
+#' }
 only_from <- function(data, datasets = NULL, resources = NULL) {
 
     if(is.null(datasets) && is.null(resources)) {
@@ -271,6 +293,14 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 
 #' Recreate interaction records from evidences columns
 #'
+#' @param data An interaction data frame from the OmniPath web service with
+#'     evidences column.
+#'
+#' @return A copy of the input data frame with all the standard columns
+#'     describing the direction, effect, resources and references of the
+#'     interactions recreated based on the contents of the nested list
+#'     evidences column(s).
+#'
 #' @details
 #' The OmniPath interaction data frames specify interactions primarily by
 #' three columns: "is_directed", "is_stimulation" and "is_inhibition".
@@ -285,10 +315,45 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #' This function is able to do the latter. It expects either an "evidences"
 #' column or evidences in their wide format 4 columns layout. It overwrites
 #' the standard columns of interaction records based on data extracted from
-#' the evidences.
+#' the evidences, including the "curation_effort" and "consensus..." columns.
 #'
+#' \strong{Note:} The "curation_effort" might be calculated slightly
+#' differently from the version included in the OmniPath web service. Here
+#' we count the resources and the also add the number of references for each
+#' resource. E.g. a resource without any literatur reference counts as 1,
+#' while a resource with 3 references adds 4 to the value of the curation
+#' effort.
+#'
+#' \strong{Note:} If the "evidences" column has been already unnested to
+#' multiple columns ("positive", "negative", etc.) by
+#' \code{\link{unnest_evidences}}, then these will be used;
+#' otherwise, the column will be unnested within this function.
+#'
+#' \strong{Note:} This function (or rather its wrapper,
+#' \code{\link{only_from}}) is automatically applied if the `strict_evidences`
+#' argument is passed to any function querying interactions (e.g.
+#' \code{\link{import_omnipath_interactions}}).
+#'
+#' @examples
+#' ci <- collectri(evidences = TRUE)
+#' ci <- filter_evidences(datasets = 'collectri')
+#' ci <- from_evidences(ci)
+#' # the two lines above are equivalent to only_from(ci)
+#' # and all the three lines above is equivalent to:
+#' # collectri(strict_evidences = TRUE)
+#'
+#' @importFrom magrittr %>%
 #' @importFrom stringr str_detect
-#' @noRd
+#' @importFrom purrr map_lgl
+#' @importFrom dplyr select mutate left_join
+#' @importFrom tidyr replace_na
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{filter_evidences}}}
+#'     \item{\code{\link{unnest_evidences}}}
+#'     \item{\code{\link{only_from}}}
+#' }
 from_evidences <- function(data) {
 
     must_have_evidences(data, wide_ok = TRUE)

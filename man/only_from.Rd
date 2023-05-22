@@ -34,9 +34,20 @@ column preserves all the details about interaction provenances. In cases
 when you want to use a faithful copy of a certain resource or dataset, this
 function will help you do so. Still, in most of the applications the best is
 to use the interaction data as it is returned by the web service.
+
+\strong{Note:} This function is automatically applied if the
+`strict_evidences` argument is passed to any function querying interactions
+(e.g. \code{\link{import_omnipath_interactions}}).
 }
 \examples{
-ci <- collectri()
+ci <- collectri(evidences = TRUE)
 ci <- only_from(ci, datasets = 'collectri')
 
+}
+\seealso{
+\itemize{
+    \item{\code{\link{filter_evidences}}}
+    \item{\code{\link{unnest_evidences}}}
+    \item{\code{\link{from_evidences}}}
+}
 }

@@ -23,3 +23,10 @@ omnipath <- unnest_evidences(omnipath)
 colnames(omnipath)
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{only_from}}}
+    \item{\code{\link{filter_evidences}}}
+    \item{\code{\link{from_evidences}}}
+}
+}
