@@ -268,6 +268,7 @@ import_omnipath <- function(
 #' the download function.
 #' Not exported.
 #'
+#' @importFrom magrittr %<>%
 #' @importFrom logger log_warn
 #'
 #' @noRd
@@ -315,11 +316,15 @@ omnipath_check_param <- function(param){
 
         if(if_null(param[[name]], FALSE)) {
 
-            param$fields <- union(param$fields, name)
+            param$fields %<>% union(name)
             param[[name]] <- NULL
 
         }
 
+    }
+
+    if(param$strict_evidences) {
+        param$fields %<>% union('evidences')
     }
 
     # adding default fields if not disabled
