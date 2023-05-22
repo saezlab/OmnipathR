@@ -302,8 +302,25 @@ from_evidences <- function(data) {
         is_stimulation = as.integer(map_lgl(positive, ~length(.x) > 0L)),
         is_inhibition = as.integer(map_lgl(negative, ~length(.x) > 0L)),
         sources = resources_from(., EVIDENCES_KEYS),
-        references = references_from(., EVIDENCES_KEYS, prefix = prefix)
-    )
+        references = references_from(., EVIDENCES_KEYS, prefix = prefix),
+        ce_positive = curation_effort_from(., positive),
+        ce_negative = curation_effort_from(., negative),
+        ce_directed = curation_effort_from(., directed),
+        curation_effort = curation_effort_from(., EVIDENCES_KEYS),
+        consensus_stimulation = as.integer(ce_positive >= ce_negative),
+        consensus_inhibition = as.integer(ce_positive <= ce_negative)
+    ) %>%
+    left_join(
+        select(., source = target, target = source, ce_directed),
+        by = c('source', 'target')
+    ) %>%
+    mutate(
+        consensus_direction =
+            (ce_directed.x >= ce_directed.y) %>%
+            replace_na(TRUE) %>%
+            as.integer
+    ) %>%
+    select(-ce_positive, -ce_negative, -ce_directed.x, -ce_directed.y)
 
 }
 
@@ -382,5 +399,26 @@ chr_from <- function(data, ..., fn, collapse = ';') {
     data %>%
     select(...) %>%
     pmap_chr(map_fn)
+
+}
+
+
+#' Curation effort from a set of evidence list columns
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select
+#' @importFrom purrr pmap_int map_int
+#' @noRd
+curation_effort_from <- function(data, ...) {
+
+    ce <- function(...) {
+        c(...) %>%
+        map_int(~length(.x$references) + 1L) %>%
+        sum
+    }
+
+    data %>%
+    select(...) %>%
+    pmap_int(ce)
 
 }
