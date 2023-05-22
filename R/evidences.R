@@ -245,6 +245,12 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 
     has_wide <- data %>% has_evidences_wide
 
+    log_trace(
+        'Restricting interaction records to datasets: %s; and resources %s',
+        paste(if_null(datasets, 'any'), collapse = ', '),
+        paste(if_null(resources, 'any'), collapse = ', ')
+    )
+
     data %>%
     {`if`(has_wide, ., unnest_evidences(.))} %>%
     filter_evidences(datasets = datasets, resources = resources) %>%
