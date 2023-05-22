@@ -154,6 +154,9 @@ unnest_evidences <- function(data, longer = FALSE) {
 #' }
 filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
 
+    # NSE vs. R CMD check workaround
+    .x <- NULL
+
     columns <-
         expr(...) %>%
         eval_select(data) %>%
@@ -355,6 +358,10 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #'     \item{\code{\link{only_from}}}
 #' }
 from_evidences <- function(data) {
+
+    # NSE vs. R CMD check workaround
+    target <- ce_directed <- ce_positive <- positive <- negative <- .x <-
+    directed <- ce_negative <- ce_directed.x <- ce_directed.y <- NULL
 
     must_have_evidences(data, wide_ok = TRUE)
 
