@@ -20,7 +20,7 @@ The datasets are "omnipath", "kinaseextra", "pathwayextra" and
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,6 +93,7 @@ The datasets are "omnipath", "kinaseextra", "pathwayextra" and
 <span>  organism <span class="op">=</span> <span class="fl">9606</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  strict_evidences <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -117,6 +118,12 @@ Choose among: 9606 human (default), 10116 rat and 10090 Mouse</p></dd>
 <dd><p>if FALSE, removes the resource name prefixes
 from the references (PubMed IDs); this way the information which reference
 comes from which resource will be lost and the PubMed IDs will be unique.</p></dd>
+
+
+<dt>strict_evidences</dt>
+<dd><p>Logical: restrict the evidences to the queried
+datasets and resources. If set to FALSE, the directions and effect signs
+and references might be based on other datasets and resources.</p></dd>
 
 
 <dt>...</dt>

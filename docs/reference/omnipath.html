@@ -22,7 +22,7 @@ interactions."><meta property="og:image" content="https://saezlab.github.io/Omni
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,6 +98,7 @@ interactions.</p>
 <span>  default_fields <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  strict_evidences <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -135,6 +136,12 @@ comes from which resource will be lost and the PubMed IDs will be unique.</p></d
 <dd><p>Character: datasets or resources to exclude.</p></dd>
 
 
+<dt>strict_evidences</dt>
+<dd><p>Logical: restrict the evidences to the queried
+datasets and resources. If set to FALSE, the directions and effect signs
+and references might be based on other datasets and resources.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>optional additional arguments, passed to
 <code><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></code>.</p></dd>
@@ -163,11 +170,11 @@ comes from which resource will be lost and the PubMed IDs will be unique.</p></d
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">pathways</span> <span class="op">&lt;-</span> <span class="fu">omnipath</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pathways</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 40,014 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 81,529 × 15</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    source target sourc…¹ targe…² is_di…³ is_st…⁴ is_in…⁵ conse…⁶ conse…⁷ conse…⁸</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP25 P48995 CALM3   TRPC1         1       0       1       1       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P0DP23 P48995 CALM1   TRPC1         1       0       1       1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP23 P48995 CALM1   TRPC1         1       0       1       1       0       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P0DP25 P48995 CALM3   TRPC1         1       0       1       1       0       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P0DP24 P48995 CALM2   TRPC1         1       0       1       1       0       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Q03135 P48995 CAV1    TRPC1         1       1       0       1       1       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P14416 P48995 DRD2    TRPC1         1       1       0       1       1       0</span>
@@ -176,8 +183,8 @@ comes from which resource will be lost and the PubMed IDs will be unique.</p></d
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P29966 P48995 MARCKS  TRPC1         1       0       1       1       0       1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Q13255 P48995 GRM1    TRPC1         1       1       0       1       1       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q13586 P48995 STIM1   TRPC1         1       1       0       1       1       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 40,004 more rows, 5 more variables: sources &lt;chr&gt;, references &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   curation_effort &lt;dbl&gt;, n_references &lt;dbl&gt;, n_resources &lt;int&gt;, and</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 81,519 more rows, 5 more variables: sources &lt;chr&gt;, references &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   curation_effort &lt;dbl&gt;, n_references &lt;int&gt;, n_resources &lt;int&gt;, and</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​source_genesymbol, ²​target_genesymbol,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​is_directed, ⁴​is_stimulation, ⁵​is_inhibition, ⁶​consensus_direction,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁷​consensus_stimulation, ⁸​consensus_inhibition</span></span>

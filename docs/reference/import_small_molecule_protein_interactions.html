@@ -22,7 +22,7 @@ can be metabolites, intrinsic ligands or drug compounds."><meta property="og:ima
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,6 +98,7 @@ can be metabolites, intrinsic ligands or drug compounds.</p>
 <span>  default_fields <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  strict_evidences <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -136,6 +137,12 @@ IDs will be unique.</p></dd>
 <dd><p>Character: datasets or resources to exclude.</p></dd>
 
 
+<dt>strict_evidences</dt>
+<dd><p>Logical: restrict the evidences to the queried
+datasets and resources. If set to FALSE, the directions and effect signs
+and references might be based on other datasets and resources.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>optional additional arguments</p></dd>
 
@@ -165,16 +172,12 @@ IDs will be unique.</p></dd>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># The prostaglandin synthases:</span></span></span>
 <span class="r-in"><span><span class="va">interactions</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 15</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   source target source…¹ targe…² is_di…³ is_st…⁴ is_in…⁵ conse…⁶ conse…⁷ conse…⁸</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   <span style="text-decoration: underline;">2</span>244 P23219 ASPIRIN  PTGS1         1       0       1       1       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   <span style="text-decoration: underline;">2</span>244 P35354 ASPIRIN  PTGS2         1       0       1       1       0       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5 more variables: sources &lt;chr&gt;, references &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   curation_effort &lt;dbl&gt;, n_references &lt;int&gt;, n_resources &lt;int&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​source_genesymbol, ²​target_genesymbol,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​is_directed, ⁴​is_stimulation, ⁵​is_inhibition, ⁶​consensus_direction,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁷​consensus_stimulation, ⁸​consensus_inhibition</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 0 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 14 variables: source &lt;chr&gt;, target &lt;chr&gt;, source_genesymbol &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_genesymbol &lt;chr&gt;, is_directed &lt;chr&gt;, is_stimulation &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_inhibition &lt;chr&gt;, consensus_direction &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_stimulation &lt;chr&gt;, consensus_inhibition &lt;chr&gt;, sources &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   references &lt;chr&gt;, curation_effort &lt;chr&gt;, n_references &lt;lgl&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

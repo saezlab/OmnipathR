@@ -339,10 +339,11 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #'
 #' @examples
 #' ci <- collectri(evidences = TRUE)
+#' ci <- unnest_evidences(ci)
 #' ci <- filter_evidences(datasets = 'collectri')
 #' ci <- from_evidences(ci)
-#' # the two lines above are equivalent to only_from(ci)
-#' # and all the three lines above is equivalent to:
+#' # the three lines above are equivalent to only_from(ci)
+#' # and all the four lines above is equivalent to:
 #' # collectri(strict_evidences = TRUE)
 #'
 #' @importFrom magrittr %>%
