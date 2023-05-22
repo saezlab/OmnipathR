@@ -138,6 +138,7 @@ unnest_evidences <- function(data, longer = FALSE) {
 #' @importFrom rlang expr
 #' @importFrom tidyselect eval_select
 #' @importFrom dplyr mutate across
+#' @importFrom logger log_trace
 #' @export
 filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
 
@@ -150,6 +151,13 @@ filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
             c('evidences') %>%
             intersect(colnames(data))
         )
+
+    log_trace(
+        'Filtering evidence columns: %s; to datasets: %s; and resources: %s',
+        paste(columns, collapse = ', '),
+        paste(if_null(datasets, 'any'), collapse = ', '),
+        paste(if_null(resources, 'any'), collapse = ', ')
+    )
 
     data %>%
     mutate(across(columns, ~filter_evs_lst(.x, datasets, resources, columns)))
