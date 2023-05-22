@@ -131,7 +131,8 @@ utils::globalVariables(
     'exclude',
     'extra_attrs',
     'evidences',
-    'json_param'
+    'json_param',
+    'strict_evidences'
 )
 
 
@@ -166,6 +167,7 @@ import_omnipath <- function(
     password = NULL,
     exclude = NULL,
     json_param = list(),
+    strict_evidences = FALSE,
     ...
 ){
 
@@ -215,6 +217,13 @@ import_omnipath <- function(
     result %<>% apply_exclude(exclude)
     result %<>% deserialize_extra_attrs(!!!param$json_param)
     result %<>% deserialize_evidences(!!!param$json_param)
+
+    if(strict_evidences && query_type == 'interactions') {
+        result %<>% only_from(
+            datasets = param$datasets,
+            resources = param$resources
+        )
+    }
 
     if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
         result %<>% count_references
