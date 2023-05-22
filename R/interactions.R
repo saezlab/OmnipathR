@@ -518,6 +518,11 @@ import_post_translational_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources. In case of
+#' DoRothEA this is not desirable for most of the applications. For most of
+#' the other interaction querying functions it is `FALSE` by default.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -547,6 +552,7 @@ dorothea <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = TRUE,
     ...
 ){
 
@@ -560,6 +566,7 @@ dorothea <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         exclude = exclude,
+        strict_evidences = strict_evidences,
         ...
     )
 
@@ -746,6 +753,11 @@ import_transcriptional_interactions <- function(
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
 #' @param exclude Character: datasets or resources to exclude.
+#' @param strict_evidences Logical: restrict the evidences to the queried
+#' datasets and resources. If set to FALSE, the directions and effect signs
+#' and references might be based on other datasets and resources. In case of
+#' CollecTRI this is not desirable for most of the applications. For most of
+#' the other interaction querying functions it is `FALSE` by default.
 #' @param ... Optional additional arguments, passed to
 #'     \code{\link{import_transcriptional_interactions}}.
 #'
@@ -771,6 +783,7 @@ collectri <- function(
     organism = 9606L,
     references_by_resource = TRUE,
     exclude = NULL,
+    strict_evidences = TRUE,
     ...
 ){
 
@@ -783,6 +796,7 @@ collectri <- function(
         organism = organism,
         resources = resources,
         references_by_resource = references_by_resource,
+        strict_evidences = strict_evidences,
         !!!args
     )
 
