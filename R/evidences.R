@@ -392,7 +392,9 @@ from_evidences <- function(data) {
             replace_na(TRUE) %>%
             as.integer
     ) %>%
-    select(-ce_positive, -ce_negative, -ce_directed.x, -ce_directed.y)
+    select(-ce_positive, -ce_negative, -ce_directed.x, -ce_directed.y) %>%
+    {`if`('n_references' %in% names(.), count_references(.), .)} %>%
+    {`if`('n_resources' %in% names(.), count_resources(.), .)}
 
 }
 
