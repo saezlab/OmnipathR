@@ -373,6 +373,8 @@ chr_from <- function(data, ..., fn, collapse = ';') {
     map_fn <- function(...) {
         c(...) %>%
         map_chr(fn) %>%
+        unique %>%
+        sort %>%
         paste(collapse = collapse) %>%
         if_null_len0('')
     }
