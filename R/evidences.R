@@ -242,6 +242,7 @@ filter_evs_lst <- function(lst, datasets, resources, columns) {
 #' @importFrom rlang as_function
 #' @importFrom purrr keep
 #' @importFrom dplyr select
+#' @importFrom tidyselect any_of
 #' @export
 only_from <- function(data, datasets = NULL, resources = NULL) {
 
@@ -263,7 +264,7 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
     {`if`(has_wide, ., unnest_evidences(.))} %>%
     filter_evidences(datasets = datasets, resources = resources) %>%
     from_evidences() %>%
-    {`if`(has_wide, ., select(-EVIDENCE_KEYS))}
+    {`if`(has_wide, ., select(., -any_of(EVIDENCES_KEYS)))}
 
 }
 
