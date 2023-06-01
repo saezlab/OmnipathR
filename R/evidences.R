@@ -97,9 +97,11 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #' @return The data frame with new columns or new rows by direction and sign.
 #'
 #' @examples
+#' \dontrun{
 #' omnipath <- import_omnipath_interactions(fields = 'evidences')
 #' omnipath <- unnest_evidences(omnipath)
 #' colnames(omnipath)
+#' }
 #'
 #' @importFrom magrittr %>% extract
 #' @importFrom dplyr mutate
@@ -118,7 +120,11 @@ unnest_evidences <- function(data, longer = FALSE) {
     must_have_evidences(data)
 
     unnest_method <- `if`(longer, unnest_longer, unnest_wider)
-    unnest_args <- `if`(longer, list(indices_to = 'direction'), list())
+    unnest_args <- `if`(
+        longer,
+        list(indices_to = 'direction'),
+        list(simplify = FALSE)
+    )
 
     data %>%
     mutate(evidences = map(evidences, extract, EVIDENCES_KEYS)) %>%
@@ -175,7 +181,7 @@ filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
     )
 
     data %>%
-    mutate(across(columns, ~filter_evs_lst(.x, datasets, resources, columns)))
+    mutate(across(columns, ~filter_evs_lst(.x, datasets, resources)))
 
 }
 
@@ -185,7 +191,7 @@ filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
 #' @importFrom magrittr %>% is_in not
 #' @importFrom purrr map2 keep map
 #' @noRd
-filter_evs_lst <- function(lst, datasets, resources, columns) {
+filter_evs_lst <- function(lst, datasets, resources) {
 
     filter_evs <- function(x) {
 
@@ -254,8 +260,10 @@ filter_evs_lst <- function(lst, datasets, resources, columns) {
 #' (e.g. \code{\link{import_omnipath_interactions}}).
 #'
 #' @examples
+#' \dontrun{
 #' ci <- collectri(evidences = TRUE)
 #' ci <- only_from(ci, datasets = 'collectri')
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang as_function
@@ -338,6 +346,7 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #' \code{\link{import_omnipath_interactions}}).
 #'
 #' @examples
+#' \dontrun{
 #' ci <- collectri(evidences = TRUE)
 #' ci <- unnest_evidences(ci)
 #' ci <- filter_evidences(datasets = 'collectri')
@@ -345,6 +354,7 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #' # the three lines above are equivalent to only_from(ci)
 #' # and all the four lines above is equivalent to:
 #' # collectri(strict_evidences = TRUE)
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_detect
