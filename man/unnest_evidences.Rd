@@ -18,9 +18,11 @@ The data frame with new columns or new rows by direction and sign.
 Separate evidences by direction and effect sign
 }
 \examples{
+\dontrun{
 omnipath <- import_omnipath_interactions(fields = 'evidences')
 omnipath <- unnest_evidences(omnipath)
 colnames(omnipath)
+}
 
 }
 \seealso{

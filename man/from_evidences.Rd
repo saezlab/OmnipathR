@@ -53,12 +53,15 @@ argument is passed to any function querying interactions (e.g.
 \code{\link{import_omnipath_interactions}}).
 }
 \examples{
+\dontrun{
 ci <- collectri(evidences = TRUE)
+ci <- unnest_evidences(ci)
 ci <- filter_evidences(datasets = 'collectri')
 ci <- from_evidences(ci)
-# the two lines above are equivalent to only_from(ci)
-# and all the three lines above is equivalent to:
+# the three lines above are equivalent to only_from(ci)
+# and all the four lines above is equivalent to:
 # collectri(strict_evidences = TRUE)
+}
 
 }
 \seealso{
