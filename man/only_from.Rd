@@ -40,8 +40,10 @@ to use the interaction data as it is returned by the web service.
 (e.g. \code{\link{import_omnipath_interactions}}).
 }
 \examples{
+\dontrun{
 ci <- collectri(evidences = TRUE)
 ci <- only_from(ci, datasets = 'collectri')
+}
 
 }
 \seealso{
