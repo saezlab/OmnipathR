@@ -236,7 +236,7 @@ uniprot_id_mapping_table <- function(
 #'
 #' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym
 #' @importFrom magrittr %>% %<>%
-#' @importFrom dplyr pull left_join inner_join rename
+#' @importFrom dplyr pull left_join inner_join mutate
 #' @importFrom purrr map reduce2
 #' @importFrom logger log_fatal
 #' @importFrom utils tail
@@ -317,7 +317,8 @@ translate_ids <- function(
                 translation_table,
                 by = 'From' %>% set_names(from_col)
             ) %>%
-            rename(!!sym(to_col) := To)
+            mutate(!!sym(to_col) := To) %>%
+            select(-To)
 
         },
         .init = .
