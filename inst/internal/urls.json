@@ -27,6 +27,10 @@
     "uniprot_uploadlists": [
         "https://%s.uniprot.org/uploadlists/"
     ],
+    "new_uniprot" : [
+        "https://rest.uniprot.org/uniprotkb/stream?",
+        "format=tsv&fields=%s&query=organism_id:%d%s"
+    ],
     "inbiomap": [
         "https://inbio-discover.com/api/data/map_public/",
         "2016_09_12/inBio_Map_core_2016_09_12.tar.gz"
