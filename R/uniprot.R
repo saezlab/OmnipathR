@@ -68,19 +68,20 @@ all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
 #'
 #' @param fields Character vector of fields as defined by UniProt. For
 #'     possible values please refer to
-#'     \url{https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}
+#'     \url{https://www.uniprot.org/help/return_fields}
 #' @param reviewed Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
 #'     or both (`NULL`).
 #' @param organism Character or integer: name or identifier of the organism.
 #'
 #' @return Data frame (tibble) with the requested UniProt entries and fields.
 #'
-#' @importFrom magrittr %<>%
+#' @importFrom magrittr %<>% %T>% %>%
 #' @importFrom rlang exec !!!
+#' @importFrom logger log_trace
 #' @export
 #'
 #' @examples
-#' human_swissprot_entries <- all_uniprots(fields = 'entry name')
+#' human_swissprot_entries <- all_uniprots(fields = 'id')
 #' human_swissprot_entries
 #' # # A tibble: 20,396 x 1
 #' #    `Entry name`
@@ -91,28 +92,15 @@ all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
 #' #  4 O10S1_HUMAN
 #' #  5 O11G2_HUMAN
 #' # # . with 20,386 more rows
-all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
+all_uniprots <- function(
+    fields = 'accession',
+    reviewed = TRUE,
+    organism = 9606L
+){
 
     .slow_doctest()
 
     organism %<>% ncbi_taxid
-    exec(.all_uniprots, !!!as.list(environment()))
-
-}
-
-
-#' R CMD check workaround, see details at \code{all_uniprots}
-#'
-#' @importFrom magrittr %>% %T>%
-#' @importFrom logger log_trace
-#'
-#' @noRd
-.all_uniprots <- uniprot_domains %@% function(
-    fields = 'id',
-    reviewed = TRUE,
-    organism = 9606,
-    .subdomain = 'legacy'
-){
 
     fields <- fields %>% paste(collapse = ',')
 
@@ -127,12 +115,12 @@ all_uniprots <- function(fields = 'id', reviewed = TRUE, organism = 9606){
     reviewed <- `if`(
         is.null(reviewed),
         '',
-        sprintf(' AND reviewed:%s', `if`(reviewed, 'yes', 'no'))
+        sprintf(' AND reviewed:%s', `if`(reviewed, 'true', 'false'))
     )
 
     generic_downloader(
-        url_key = 'all_uniprots',
-        url_param = list(.subdomain, fields, organism, reviewed),
+        url_key = 'new_uniprot',
+        url_param = list(fields, organism, reviewed),
         reader_param = list(progress = FALSE),
         resource = 'UniProt'
     ) %T>%

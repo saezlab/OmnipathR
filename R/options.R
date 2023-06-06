@@ -53,7 +53,9 @@
     omnipath.db_lifetime = 300,
     omnipath.nichenet_results_dir = 'nichenet_results',
     omnipath.uploadlists_chunk_size = 5000,
-    omnipath.connect_timeout = 10
+    omnipath.connect_timeout = 10,
+    omnipath.uniprot_idmapping_poll_interval = 3,
+    omnipath.uniprot_idmapping_timeout = 30
 )
 
 

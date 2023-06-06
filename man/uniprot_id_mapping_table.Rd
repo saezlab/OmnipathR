@@ -2,7 +2,7 @@
 % Please edit documentation in R/id_mapping.R
 \name{uniprot_id_mapping_table}
 \alias{uniprot_id_mapping_table}
-\title{ID translation data from UniProt Uploadlists}
+\title{ID translation data from UniProt ID Mapping}
 \usage{
 uniprot_id_mapping_table(identifiers, from, to, chunk_size = NULL)
 }
@@ -23,14 +23,14 @@ A data frame (tibble) with columns `From` and `To`, the
     identifiers provided and the corresponding target IDs, respectively.
 }
 \description{
-Retrieves an identifier translation table from the UniProt Uploadlists
-service.
+Retrieves an identifier translation table from the UniProt ID Mapping
+service (https://www.uniprot.org/help/id_mapping).
 }
 \details{
 This function uses the uploadlists service of UniProt to obtain identifier
 translation tables. The possible values for `from` and `to` are the
 identifier type abbreviations used in the UniProt API, please refer to
-the table here: \url{https://www.uniprot.org/help/api_idmapping} or
+the table here: \code{\link{uniprot_idmapping_id_types}} or
 the table of synonyms supported by the current package:
 \code{\link{translate_ids}}.
 Note: if the number of identifiers is larger than the chunk size the log

@@ -4,11 +4,13 @@
 \alias{uploadlists_id_type}
 \title{UniProt Uploadlists identifier type label}
 \usage{
-uploadlists_id_type(label)
+uploadlists_id_type(label, side = "from")
 }
 \arguments{
 \item{label}{Character: an ID type label, as shown in the table at
 \code{\link{translate_ids}}}
+
+\item{side}{Character: either "from" or "to": direction of the mapping.}
 }
 \value{
 Character: the UniProt Uploadlists specific ID type label, or
@@ -21,7 +23,7 @@ UniProt Uploadlists identifier type label
 }
 \examples{
 ensembl_id_type("entrez")
-# [1] "P_ENTREZGENEID"
+# [1] "GeneID"
 
 }
 \seealso{

@@ -6,7 +6,7 @@
 \usage{
 uniprot_full_id_mapping_table(
   to,
-  from = "id",
+  from = "accession",
   reviewed = TRUE,
   organism = 9606
 )
