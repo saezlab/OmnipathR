@@ -395,7 +395,7 @@ translate_ids <- function(
 #' }
 uniprot_full_id_mapping_table <- function(
     to,
-    from = 'id',
+    from = 'accession',
     reviewed = TRUE,
     organism = 9606
 ){
@@ -422,8 +422,8 @@ uniprot_full_id_mapping_table <- function(
     from <- .nse_ensure_str(!!enquo(from)) %>% uniprot_id_type
 
     reens <- 'ENS[A-Z]+\\d+'
-    to_ens <- to == 'database(Ensembl)'
-    from_ens <- from == 'database(Ensembl)'
+    to_ens <- to == 'xref_ensembl'
+    from_ens <- from == 'xref_ensembl'
 
     log_trace(
         paste0(
