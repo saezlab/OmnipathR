@@ -20,10 +20,10 @@
 #
 
 
-#' ID translation data from UniProt Uploadlists
+#' ID translation data from UniProt ID Mapping
 #'
-#' Retrieves an identifier translation table from the UniProt Uploadlists
-#' service.
+#' Retrieves an identifier translation table from the UniProt ID Mapping
+#' service (https://www.uniprot.org/help/id_mapping).
 #'
 #' @param identifiers Character vector of identifiers
 #' @param from Character or symbol: type of the identifiers provided.
@@ -40,7 +40,7 @@
 #' This function uses the uploadlists service of UniProt to obtain identifier
 #' translation tables. The possible values for `from` and `to` are the
 #' identifier type abbreviations used in the UniProt API, please refer to
-#' the table here: \url{https://www.uniprot.org/help/api_idmapping} or
+#' the table here: \code{\link{uniprot_idmapping_id_types}} or
 #' the table of synonyms supported by the current package:
 #' \code{\link{translate_ids}}.
 #' Note: if the number of identifiers is larger than the chunk size the log
@@ -81,7 +81,7 @@ uniprot_id_mapping_table <- function(
 
     identifiers %>%
     unique %T>%
-    {log_trace('Querying UniProt Uploadlists with %i IDs.', length(.))} %>%
+    {log_trace('Querying UniProt ID Mapping with %i IDs.', length(.))} %>%
     sort %>%
     chunks(chunk_size) %>%
     map(.uniprot_id_mapping_table, from, to) %>%
@@ -94,15 +94,17 @@ uniprot_id_mapping_table <- function(
 
 #' R CMD check workaround, see details at \code{uniprot_id_mapping_table}
 #'
-#' @importFrom magrittr %<>%
-#' @importFrom logger log_trace
+#' @importFrom magrittr %<>% extract2 %>%
+#' @importFrom httr POST GET accept_json content
+#' @importFrom logger log_trace log_error
+#' @importFrom stringr str_replace
+#' @importFrom readr read_tsv cols
 #'
 #' @noRd
-.uniprot_id_mapping_table <- uniprot_domains %@% function(
+.uniprot_id_mapping_table <- function(
     identifiers,
     from,
-    to,
-    .subdomain = 'www'
+    to
 ){
 
     from %<>% uploadlists_id_type
@@ -111,22 +113,137 @@ uniprot_id_mapping_table <- function(
     post <- list(
         from = from,
         to = to,
-        format = 'tab',
-        query = paste(identifiers, collapse = ' ')
+        ids = paste(identifiers, collapse = ' ')
     )
 
     log_trace(
-        'UniProt uploadlists: querying `%s` to `%s`, %d identifiers.',
+        'UniProt id-mapping: querying `%s` to `%s`, %d identifiers.',
         from, to, length(identifiers)
     )
 
-    generic_downloader(
-        url_key = 'uniprot_uploadlists',
-        url_param = list(.subdomain),
+    run_url <- url_parser(url_key = 'uniprot_idmapping_run')
+
+    version <- omnipath_cache_latest_or_new(
+        url = run_url,
         post = post,
-        content_param = list(encoding = 'ASCII'),
-        resource = 'UniProt'
+        ext = 'tsv'
     )
+
+    from_cache <- version$status == CACHE_STATUS$READY
+
+    if(!from_cache){
+
+        run_result <-
+            POST(run_url, body = post, accept_json()) %>%
+            content(as = 'parsed')
+
+        if(!is.null(run_result$messages)) {
+            msg <- run_result$messages %>%
+                paste(collapse = ' ') %>%
+                sprintf('Error at querying UniProt ID mapping: %s', .)
+            log_error(msg)
+            stop(msg)
+        }
+
+        jobid <- run_result$jobId
+
+        poll_interval <- getOption('omnipath.uniprot_idmapping_poll_interval')
+        timeout <- getOption('omnipath.uniprot_idmapping_timeout')
+        max_polls <- ceiling(timeout / poll_interval)
+
+        for(i in 1L:max_polls) {
+
+            status_url <-
+                url_parser(
+                    url_key = 'uniprot_idmapping_poll',
+                    url_param = list(jobid)
+                )
+
+            log_trace('Polling `%s`', status_url)
+
+            status <-
+                GET(status_url, accept_json()) %>%
+                content(as = 'parsed')
+
+            if(!is.null(status$results) || !is.null(status$failedIds)){
+                break
+            }else if(!is.null(status$messages)){
+                msg <- sprintf(
+                    'Error at querying UniProt ID mapping: %s',
+                    status$messages
+                )
+                log_error(msg)
+                stop(msg)
+
+            }
+
+            Sys.sleep(poll_interval)
+
+        }
+
+        log_trace(
+            'UniProt ID mapping job is ready, getting results URL: `%s`',
+            jobid
+        )
+
+        result_url <-
+            url_parser(
+                url_key = 'uniprot_idmapping_details',
+                url_param = list(jobid)
+            ) %>%
+            GET(accept_json()) %>%
+            content(as = 'parsed') %>%
+            extract2('redirectURL') %>%
+            str_replace('/idmapping/results/', '/idmapping/stream/') %>%
+            str_replace('/results/', '/results/stream/') %>%
+            sprintf('%s?format=tsv', .)
+
+        log_trace(
+            'Retrieving UniProt ID mapping results from: `%s`',
+            result_url
+        )
+
+        path <- download_base(url = result_url, path = version$path)
+
+        omnipath_cache_download_ready(version)
+
+    }
+
+    version$path %>%
+    read_tsv(col_types = cols(), progress = FALSE) %>%
+    origin_cache(from_cache) %>%
+    source_attrs('UniProt', run_url)
+
+
+}
+
+
+#' ID types available in the UniProt ID Mapping service
+#'
+#' @examples
+#' uniprot_idmapping_id_types()
+#'
+#' @importFrom magrittr %>% %T>% extract2
+#' @importFrom tidyr unnest_wider unnest_longer
+#' @importFrom tibble tibble
+#' @importFrom jsonlite fromJSON
+#' @export
+uniprot_idmapping_id_types <- function() {
+
+    url_key <- 'uniprot_idmapping_id_types'
+
+    generic_downloader(
+        url_key = url_key,
+        reader = fromJSON,
+        reader_param = list(simplifyDataFrame = FALSE)
+    ) %>%
+    extract2('groups') %>%
+    tibble(groups = .) %>%
+    unnest_wider(col = groups) %>%
+    unnest_longer(col = items) %>%
+    unnest_wider(col = items) %>%
+    source_attrs('UniProt', get_url(url_key)) %T>%
+    load_success()
 
 }
 
@@ -780,6 +897,7 @@ uniprot_id_type <- function(label){
 #'
 #' @param label Character: an ID type label, as shown in the table at
 #'     \code{\link{translate_ids}}
+#' @param side Character: either "from" or "to": direction of the mapping.
 #'
 #' @return Character: the UniProt Uploadlists specific ID type label, or
 #'     the input unchanged if it could not be translated (still might be
@@ -788,16 +906,21 @@ uniprot_id_type <- function(label){
 #'
 #' @examples
 #' ensembl_id_type("entrez")
-#' # [1] "P_ENTREZGENEID"
+#' # [1] "GeneID"
 #'
 #' @export
+#' @importFrom magrittr %>%
+#' @importFrom dplyr recode
+#' @importFrom rlang !!!
 #' @seealso \itemize{
 #'     \item{\code{\link{ensembl_id_type}}}
 #'     \item{\code{\link{uniprot_id_type}}}
 #' }
-uploadlists_id_type <- function(label){
+uploadlists_id_type <- function(label, side = 'from'){
 
-    resource_id_type(label, 'uploadlists')
+    label %>%
+    recode(!!!omnipath.env$id_types[[sprintf('uniprot_%s', side)]]) %>%
+    resource_id_type('uploadlists')
 
 }
 

@@ -4,7 +4,7 @@
 \alias{all_uniprots}
 \title{A table with all UniProt records}
 \usage{
-all_uniprots(fields = "id", reviewed = TRUE, organism = 9606)
+all_uniprots(fields = "accession", reviewed = TRUE, organism = 9606L)
 }
 \arguments{
 \item{fields}{Character vector of fields as defined by UniProt. For
