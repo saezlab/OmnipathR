@@ -231,7 +231,7 @@ orthology_translate <- function(
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom dplyr inner_join left_join relocate mutate pull
-#' @importFrom dplyr filter rename group_by select ungroup n
+#' @importFrom dplyr filter rename group_by select ungroup n join_by
 #' @importFrom rlang sym !! := enquo
 #' @importFrom tidyselect any_of
 #' @export
