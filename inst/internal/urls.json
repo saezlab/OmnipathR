@@ -27,6 +27,21 @@
     "uniprot_uploadlists": [
         "https://%s.uniprot.org/uploadlists/"
     ],
+    "uniprot_idmapping_run": [
+        "https://rest.uniprot.org/idmapping/run"
+    ],
+    "uniprot_idmapping_poll": [
+        "https://rest.uniprot.org/idmapping/status/%s"
+    ],
+    "uniprot_idmapping_details": [
+        "https://rest.uniprot.org/idmapping/details/%s"
+    ],
+    "uniprot_idmapping_fetch": [
+        "https://rest.uniprot.org/idmapping/stream/%s"
+    ],
+    "uniprot_idmapping_id_types": [
+        "https://rest.uniprot.org/configure/idmapping/fields"
+    ],
     "new_uniprot" : [
         "https://rest.uniprot.org/uniprotkb/stream?",
         "format=tsv&fields=%s&query=organism_id:%d%s"
