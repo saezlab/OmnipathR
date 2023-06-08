@@ -395,7 +395,7 @@ download_to_cache <- function(
         url_param = url_param
     )
 
-    version <- omnipath_cache_latest_or_new(url = url, ext = ext)
+    version <- omnipath_cache_latest_or_new(url = url, post =post, ext = ext)
 
     from_cache <- version$status == CACHE_STATUS$READY
 
