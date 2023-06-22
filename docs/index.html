@@ -62,7 +62,7 @@
     
     <a class="navbar-brand me-2" href="index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -200,21 +200,23 @@
 </h3>
 <p><em>OmnipathR</em> is a freely available package deposited on <em>Bioconductor</em> and <em>Github</em>: (<a href="https://bioconductor.org/" class="external-link uri">https://bioconductor.org/</a>, <a href="https://github.com/saezlab/OmnipathR" class="external-link uri">https://github.com/saezlab/OmnipathR</a>).</p>
 <p>You can install it by running the following commands on a <code>R</code> console:</p>
-<pre class="{r}"><code><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Last release in Bioconductor</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'OmnipathR'</span>, version <span class="op">=</span> <span class="st">'3.12'</span><span class="op">)</span></span>
-<span><span class="co">## Development version with the lastest updates</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">'OmnipathR'</span>, version <span class="op">=</span> <span class="st">'devel'</span><span class="op">)</span></span></code></pre>
+<p>```{r} if (!requireNamespace(‘BiocManager’, quietly = TRUE)) install.packages(‘BiocManager’)</p>
 </div>
-<div class="section level3">
-<h3 id="from-github">From github<a class="anchor" aria-label="anchor" href="#from-github"></a>
-</h3>
-<p>We add new features to OmnipathR way more often than the Bioconductor release frequency. To make use of the recent developments, you can use <code>devtools</code> to install the package directly from github:</p>
-<pre class="{r}"><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'saezlab/OmnipathR'</span><span class="op">)</span></span></code></pre>
 </div>
+<div class="section level2">
+<h2 id="last-release-in-bioconductor">Last release in Bioconductor<a class="anchor" aria-label="anchor" href="#last-release-in-bioconductor"></a>
+</h2>
+<p>BiocManager::install(‘OmnipathR’, version = ‘3.12’) ## Development version with the lastest updates BiocManager::install(‘OmnipathR’, version = ‘devel’)</p>
+<pre><code>
+### From github
+
+We add new features to OmnipathR way more often than the Bioconductor release
+frequency. To make use of the recent developments, you can use `devtools` to
+install the package directly from github:
+
+```{r}
+require(devtools)
+install_github('saezlab/OmnipathR')</code></pre>
 </div>
 <div class="section level2">
 <h2 id="getting-started-and-some-usage-examples">Getting started and some usage examples<a class="anchor" aria-label="anchor" href="#getting-started-and-some-usage-examples"></a>
@@ -224,28 +226,19 @@
 <p>You can also check the manual:</p>
 <p><a href="https://saezlab.github.io/OmnipathR/reference/index.html" class="uri">https://saezlab.github.io/OmnipathR/reference/index.html</a></p>
 <p>In addition, we provide here some examples for a quick start:</p>
-<pre class="{r}"><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.omnipathdb.org/" class="external-link">OmnipathR</a></span><span class="op">)</span></span></code></pre>
+<p><code>{r} library(OmnipathR)</code></p>
 <p>Download human protein-protein interactions from the specified resources:</p>
-<pre class="{r}"><code><span><span class="va">interactions</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span></span>
-<span>    resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'SignaLink3'</span>, <span class="st">'PhosphoSite'</span>, <span class="st">'SIGNOR'</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre>
+<p><code>{r} interactions &lt;- import_omnipath_interactions(     resources = c('SignaLink3', 'PhosphoSite', 'SIGNOR') )</code></p>
 <p>Download human enzyme-PTM relationships from the specified resources:</p>
-<pre class="{r}"><code><span><span class="va">enzsub</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span>resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'PhosphoSite'</span>, <span class="st">'SIGNOR'</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-<p>Convert both data frames into networks (<code>igraph</code> objects)</p>
-<pre class="{r}"><code><span><span class="va">ptms_g</span> <span class="op">=</span> <span class="fu"><a href="reference/enzsub_graph.html">ptms_graph</a></span><span class="op">(</span>ptms <span class="op">=</span> <span class="va">enzsub</span><span class="op">)</span></span>
-<span><span class="va">OPI_g</span> <span class="op">=</span> <span class="fu"><a href="reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span>interactions <span class="op">=</span> <span class="va">interactions</span><span class="op">)</span></span></code></pre>
-<p>Print some interactions in a nice format:</p>
-<pre class="{r}"><code>print_interactions(head(interactions))
-
-          source interaction         target n_resources n_references
-4    SRC (P12931)  ==( + )==&gt; TRPV1 (Q8NER1)           9            6
-2  PRKG1 (Q13976)  ==( - )==&gt; TRPC6 (Q9Y210)           7            5
-1  PRKG1 (Q13976)  ==( - )==&gt; TRPC3 (Q13507)           9            2
-5    LYN (P07948)  ==( + )==&gt; TRPV4 (Q9HBA0)           9            2
-6  PTPN1 (P18031)  ==( - )==&gt; TRPV6 (Q9H1D0)           3            2
-3 PRKACA (P17612)  ==( + )==&gt; TRPV1 (Q8NER1)           6            1</code></pre>
-<p>Find interactions between a specific kinase and a specific substrate:</p>
-<pre class="{r}"><code>print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
+<p><code>{r} enzsub &lt;- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))</code></p>
+<p>Convert both data frames into networks (<code>igraph</code> objects) <code>{r} ptms_g = ptms_graph(ptms = enzsub) OPI_g = interaction_graph(interactions = interactions)</code></p>
+<p>Print some interactions in a nice format: ```{r} print_interactions(head(interactions))</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>      source interaction         target n_resources n_references</span></code></pre></div>
+<p>4 SRC (P12931) ==( + )==&gt; TRPV1 (Q8NER1) 9 6 2 PRKG1 (Q13976) ==( - )==&gt; TRPC6 (Q9Y210) 7 5 1 PRKG1 (Q13976) ==( - )==&gt; TRPC3 (Q13507) 9 2 5 LYN (P07948) ==( + )==&gt; TRPV4 (Q9HBA0) 9 2 6 PTPN1 (P18031) ==( - )==&gt; TRPV6 (Q9H1D0) 3 2 3 PRKACA (P17612) ==( + )==&gt; TRPV1 (Q8NER1) 6 1</p>
+<pre><code>
+Find interactions between a specific kinase and a specific substrate:
+```{r}
+print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
   substrate_genesymbol=='MAPK3'))
 
            enzyme interaction           substrate    modification n_resources
@@ -254,16 +247,13 @@
 3 MAP2K1 (Q02750)       ====&gt; MAPK3_Y210 (P27361) phosphorylation           2
 4 MAP2K1 (Q02750)       ====&gt; MAPK3_T207 (P27361) phosphorylation           2
 </code></pre>
-<p>Find shortest paths on the directed network between proteins:</p>
-<pre class="{r}"><code>print_path_es(shortest_paths(OPI_g,from = 'TYRO3',to = 'STAT3',
-    output = 'epath')$epath[[1]],OPI_g)
-
-           source interaction          target n_resources n_references
-1  TYRO3 (Q06418)  ==( ? )==&gt;   AKT1 (P31749)           2            0
-2   AKT1 (P31749)  ==( - )==&gt; DAB2IP (Q5VWQ8)           3            1
-3 DAB2IP (Q5VWQ8)  ==( - )==&gt;  STAT3 (P40763)           1            1</code></pre>
-<p>Find all shortest paths between proteins:</p>
-<pre class="{r}"><code>print_path_vs(all_shortest_paths(OPI_g,from = 'DYRK2',to = 'MAPKAPK2')$res,OPI_g)
+<p>Find shortest paths on the directed network between proteins: ```{r} print_path_es(shortest_paths(OPI_g,from = ‘TYRO3’,to = ‘STAT3’, output = ‘epath’)$epath[<a href="https://omnipathdb.org/" class="external-link">1</a>],OPI_g)</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>       source interaction          target n_resources n_references</span></code></pre></div>
+<p>1 TYRO3 (Q06418) ==( ? )==&gt; AKT1 (P31749) 2 0 2 AKT1 (P31749) ==( - )==&gt; DAB2IP (Q5VWQ8) 3 1 3 DAB2IP (Q5VWQ8) ==( - )==&gt; STAT3 (P40763) 1 1</p>
+<pre><code>
+Find all shortest paths between proteins:
+```{r}
+print_path_vs(all_shortest_paths(OPI_g,from = 'DYRK2',to = 'MAPKAPK2')$res,OPI_g)
 Pathway 1: DYRK2 -&gt; TBK1 -&gt; NFKB1 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2
 Pathway 2: DYRK2 -&gt; TBK1 -&gt; AKT3 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2
 Pathway 3: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; MAP3K8 -&gt; MAPK3 -&gt; MAPKAPK2
@@ -279,13 +269,13 @@ Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 <h3 id="python">Python<a class="anchor" aria-label="anchor" href="#python"></a>
 </h3>
 <p>A similar web service client is available for Python:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>saezlab<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>saezlab<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cytoscape">Cytoscape<a class="anchor" aria-label="anchor" href="#cytoscape"></a>
 </h3>
 <p>The OmniPath Cytoscape app provides access to the interactions, enzyme-PTM relationships and some of the annotations:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>apps.cytoscape.org<span class="sc">/</span>apps<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>apps.cytoscape.org<span class="sc">/</span>apps<span class="sc">/</span>omnipath<span class="sc">&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="customization">Customization<a class="anchor" aria-label="anchor" href="#customization"></a>

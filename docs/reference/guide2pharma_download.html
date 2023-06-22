@@ -18,7 +18,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,26 +100,26 @@ database</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">g2p_data</span> <span class="op">&lt;-</span> <span class="fu">guide2pharma_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">g2p_data</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22,867 × 41</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    target        targe…¹ targe…² targe…³ targe…⁴ targe…⁵ targe…⁶ targe…⁷ targe…⁸</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 12S-LOX       1387    <span style="color: #BB0000;">NA</span>      ALOX12  P18054  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 15-LOX-1      1388    <span style="color: #BB0000;">NA</span>      ALOX15  P16050  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 15-LOX-1      1388    <span style="color: #BB0000;">NA</span>      ALOX15  P16050  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 15-LOX-1      1388    <span style="color: #BB0000;">NA</span>      ALOX15  P16050  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 15-LOX-1      1388    <span style="color: #BB0000;">NA</span>      ALOX15  P16050  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 15-LOX-2      1389    <span style="color: #BB0000;">NA</span>      ALOX15B O15296  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 15-LOX-2      1389    <span style="color: #BB0000;">NA</span>      ALOX15B O15296  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 3-Mercaptopy… 1446    <span style="color: #BB0000;">NA</span>      MPST    P25325  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 3-phosphoino… 1519    <span style="color: #BB0000;">NA</span>      PDPK1   O15530  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 3-phosphoino… 1519    <span style="color: #BB0000;">NA</span>      PDPK1   O15530  ENSG00… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22,857 more rows, 32 more variables: target_ligand_gene_symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_ligand_uniprot_id &lt;chr&gt;, target_ligand_ensembl_gene_id &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_ligand_pubchem_sid &lt;chr&gt;, target_species &lt;chr&gt;, ligand &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ligand_id &lt;dbl&gt;, ligand_subunit_ids &lt;chr&gt;, ligand_gene_symbol &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ligand_species &lt;chr&gt;, ligand_pubchem_sid &lt;chr&gt;, approved &lt;lgl&gt;, type &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   action &lt;chr&gt;, action_comment &lt;chr&gt;, selectivity &lt;chr&gt;, endogenous &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   primary_target &lt;lgl&gt;, concentration_range &lt;chr&gt;, affinity_units &lt;chr&gt;, …</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 23,508 × 42</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    target      target_id target_subunit_ids target_gene_symbol target_uniprot_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 12S-LOX     1387      <span style="color: #BB0000;">NA</span>                 ALOX12             P18054           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 15-LOX-1    1388      <span style="color: #BB0000;">NA</span>                 ALOX15             P16050           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 15-LOX-1    1388      <span style="color: #BB0000;">NA</span>                 ALOX15             P16050           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 15-LOX-1    1388      <span style="color: #BB0000;">NA</span>                 ALOX15             P16050           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 15-LOX-1    1388      <span style="color: #BB0000;">NA</span>                 ALOX15             P16050           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 15-LOX-2    1389      <span style="color: #BB0000;">NA</span>                 ALOX15B            O15296           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 15-LOX-2    1389      <span style="color: #BB0000;">NA</span>                 ALOX15B            O15296           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 3-Mercapto… 1446      <span style="color: #BB0000;">NA</span>                 MPST               P25325           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 3-phosphoi… 1519      <span style="color: #BB0000;">NA</span>                 PDPK1              O15530           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 3-phosphoi… 1519      <span style="color: #BB0000;">NA</span>                 PDPK1              O15530           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 23,498 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 37 more variables: target_ensembl_gene_id &lt;chr&gt;, target_ligand &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_ligand_id &lt;chr&gt;, target_ligand_subunit_ids &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_ligand_gene_symbol &lt;chr&gt;, target_ligand_uniprot_id &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_ligand_ensembl_gene_id &lt;chr&gt;, target_ligand_pubchem_sid &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_species &lt;chr&gt;, ligand_id &lt;dbl&gt;, ligand &lt;chr&gt;, ligand_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ligand_subunit_ids &lt;chr&gt;, ligand_gene_symbol &lt;chr&gt;, ligand_species &lt;chr&gt;, …</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 21,586 x 38</span></span></span>
 <span class="r-in"><span><span class="co">#    target target_id target_gene_sym. target_uniprot target_ensembl_.</span></span></span>
 <span class="r-in"><span><span class="co">#    &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;</span></span></span>

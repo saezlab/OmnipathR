@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,18 +138,18 @@ University<br><a class="author_email" href="mailto:#"></a><a href="mailto:turei.
 <h2 id="loading-a-network">Loading a network<a class="anchor" aria-label="anchor" href="#loading-a-network"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.omnipathdb.org/" class="external-link">OmnipathR</a></span><span class="op">)</span></span></code></pre></div>
 <p>First we retrieve the complete directed PPI network. Importantly, the
 extra attributes are only included if the
 <code>fields = "extra_attrs"</code> argument is provided.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_post_translational_interactions.html">import_post_translational_interactions</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="st">'extra_attrs'</span><span class="op">)</span></span>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">source_genesymbol</span>, <span class="va">target_genesymbol</span>, <span class="va">extra_attrs</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 80,237 × 3</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 134,282 × 3</span></span></span>
 <span><span class="co">##    source_genesymbol target_genesymbol extra_attrs     </span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> CALM3             TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> CALM1             TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> CALM1             TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> CALM3             TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 3</span> CALM2             TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 4</span> CAV1              TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 5</span> DRD2              TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
@@ -158,7 +158,7 @@ extra attributes are only included if the
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MARCKS            TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> TRPC1             GRM1              <span style="color: #949494;">&lt;named list [0]&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> GRM1              TRPC1             <span style="color: #949494;">&lt;named list [1]&gt;</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 80,227 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #949494;"># ℹ 134,272 more rows</span></span></span></code></pre>
 <p>Above we see, the <code>extra_attrs</code> column is a list type
 column. Each list is a nested list itself, containing the extra
 attributes from all resources, as it was extracted from the JSON.</p>
@@ -181,14 +181,16 @@ the extra attributes available in a particular data frame use the
 <span><span class="co">##  [5] "PhosphoSite_evidence"       "HPRD-phos_mechanism"       </span></span>
 <span><span class="co">##  [7] "Li2012_mechanism"           "Li2012_route"              </span></span>
 <span><span class="co">##  [9] "SPIKE_effect"               "SPIKE_mechanism"           </span></span>
-<span><span class="co">## [11] "CA1_effect"                 "CA1_type"                  </span></span>
-<span><span class="co">## [13] "Macrophage_type"            "Macrophage_location"       </span></span>
-<span><span class="co">## [15] "ACSN_effect"                "Cellinker_type"            </span></span>
-<span><span class="co">## [17] "CellChatDB_category"        "talklr_putative"           </span></span>
-<span><span class="co">## [19] "CellPhoneDB_type"           "Ramilowski2015_source"     </span></span>
-<span><span class="co">## [21] "ARN_effect"                 "ARN_is_direct"             </span></span>
-<span><span class="co">## [23] "ARN_is_directed"            "NRF2ome_effect"            </span></span>
-<span><span class="co">## [25] "NRF2ome_is_direct"          "NRF2ome_is_directed"</span></span></code></pre>
+<span><span class="co">## [11] "SPIKE_LC_effect"            "SPIKE_LC_mechanism"        </span></span>
+<span><span class="co">## [13] "CA1_effect"                 "CA1_type"                  </span></span>
+<span><span class="co">## [15] "Macrophage_type"            "Macrophage_location"       </span></span>
+<span><span class="co">## [17] "ACSN_effect"                "Cellinker_type"            </span></span>
+<span><span class="co">## [19] "CellChatDB_category"        "talklr_putative"           </span></span>
+<span><span class="co">## [21] "CellPhoneDB_type"           "Ramilowski2015_source"     </span></span>
+<span><span class="co">## [23] "HPMR_partner_role"          "ARN_effect"                </span></span>
+<span><span class="co">## [25] "ARN_is_direct"              "ARN_is_directed"           </span></span>
+<span><span class="co">## [27] "NRF2ome_effect"             "NRF2ome_is_direct"         </span></span>
+<span><span class="co">## [29] "NRF2ome_is_directed"</span></span></code></pre>
 <p>The labels listed here are the top level keys in the lists in the
 <code>extra_attrs</code> column. Note, the coverage of these variables
 varies a lot, typically in agreement with the size of the resource.</p>
@@ -206,32 +208,35 @@ Let’s see the values of the <code>SIGNOR_mechanism</code> attribute:</p>
 <pre><code><span><span class="co">##  [1] "phosphorylation"                    "binding"                           </span></span>
 <span><span class="co">##  [3] "dephosphorylation"                  "Phosphorylation"                   </span></span>
 <span><span class="co">##  [5] "ubiquitination"                     "N/A"                               </span></span>
-<span><span class="co">##  [7] "Physical Interaction"               "cleavage"                          </span></span>
-<span><span class="co">##  [9] "Proteolytic Processing"             "deubiquitination"                  </span></span>
-<span><span class="co">## [11] "Deubiqitination"                    "relocalization"                    </span></span>
-<span><span class="co">## [13] "Ubiquitination"                     "Dephosphorylation"                 </span></span>
+<span><span class="co">##  [7] "Physical Interaction"               "Proteolytic Processing"            </span></span>
+<span><span class="co">##  [9] "cleavage"                           "Ubiquitination"                    </span></span>
+<span><span class="co">## [11] "Deubiqitination"                    "deubiquitination"                  </span></span>
+<span><span class="co">## [13] "relocalization"                     "Dephosphorylation"                 </span></span>
 <span><span class="co">## [15] "Other"                              "guanine nucleotide exchange factor"</span></span>
 <span><span class="co">## [17] "Transcription Regulation"           "gtpase-activating protein"         </span></span>
 <span><span class="co">## [19] "Indirect"                           ""                                  </span></span>
 <span><span class="co">## [21] "Sumoylation"                        "sumoylation"                       </span></span>
-<span><span class="co">## [23] "palmitoylation"                     "demethylation"                     </span></span>
-<span><span class="co">## [25] "Demethylation"                      "mRNA stability"                    </span></span>
-<span><span class="co">## [27] "methylation"                        "Methylation"                       </span></span>
-<span><span class="co">## [29] "hydroxylation"                      "Acetylation"                       </span></span>
-<span><span class="co">## [31] "acetylation"                        "deacetylation"                     </span></span>
-<span><span class="co">## [33] "Deacetylation"                      "Translational Regulation"          </span></span>
-<span><span class="co">## [35] "Protein Degradation"                "s-nitrosylation"                   </span></span>
-<span><span class="co">## [37] "phosphomotif_binding"               "chemical activation"               </span></span>
-<span><span class="co">## [39] "Proteolytic Cleavage"               "glycosylation"                     </span></span>
-<span><span class="co">## [41] "post transcriptional regulation"    "catalytic activity"                </span></span>
-<span><span class="co">## [43] "neddylation"                        "Neddylation"                       </span></span>
-<span><span class="co">## [45] "tyrosination"                       "lipidation"                        </span></span>
-<span><span class="co">## [47] "ADP-ribosylation"                   "desumoylation"                     </span></span>
-<span><span class="co">## [49] "isomerization"                      "post translational modification"   </span></span>
-<span><span class="co">## [51] "carboxylation"                      "Alkylation"                        </span></span>
-<span><span class="co">## [53] "chemical inhibition"                "oxidation"                         </span></span>
-<span><span class="co">## [55] "translation regulation"             "Carboxylation"                     </span></span>
-<span><span class="co">## [57] "destabilization"</span></span></code></pre>
+<span><span class="co">## [23] "palmitoylation"                     "Acetylation"                       </span></span>
+<span><span class="co">## [25] "acetylation"                        "polyubiquitination"                </span></span>
+<span><span class="co">## [27] "Demethylation"                      "demethylation"                     </span></span>
+<span><span class="co">## [29] "mRNA stability"                     "methylation"                       </span></span>
+<span><span class="co">## [31] "Methylation"                        "trimethylation"                    </span></span>
+<span><span class="co">## [33] "hydroxylation"                      "monoubiquitination"                </span></span>
+<span><span class="co">## [35] "Deacetylation"                      "deacetylation"                     </span></span>
+<span><span class="co">## [37] "Translational Regulation"           "Protein Degradation"               </span></span>
+<span><span class="co">## [39] "Glycosylation"                      "s-nitrosylation"                   </span></span>
+<span><span class="co">## [41] "phosphomotif_binding"               "chemical activation"               </span></span>
+<span><span class="co">## [43] "Proteolytic Cleavage"               "tyrosination"                      </span></span>
+<span><span class="co">## [45] "post transcriptional regulation"    "post translational modification"   </span></span>
+<span><span class="co">## [47] "translation regulation"             "carboxylation"                     </span></span>
+<span><span class="co">## [49] "neddylation"                        "Carboxylation"                     </span></span>
+<span><span class="co">## [51] "desumoylation"                      "glycosylation"                     </span></span>
+<span><span class="co">## [53] "ADP-ribosylation"                   "stabilization"                     </span></span>
+<span><span class="co">## [55] "catalytic activity"                 "deglycosylation"                   </span></span>
+<span><span class="co">## [57] "destabilization"                    "chemical inhibition"               </span></span>
+<span><span class="co">## [59] "isomerization"                      "Neddylation"                       </span></span>
+<span><span class="co">## [61] "lipidation"                         "chemical modification"             </span></span>
+<span><span class="co">## [63] "oxidation"                          "Alkylation"</span></span></code></pre>
 <p>The values are provided as they are in the original resource,
 including potential typos and inconsistencies, e.g. see above the
 capitalized vs. lowercase forms of each value.</p>
@@ -259,20 +264,20 @@ argument names. As an example, let’s extract two attributes:</p>
 <span>    <span class="va">si_mechanism</span>,</span>
 <span>    <span class="va">ma_mechanism</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 11,638 × 4</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 61,406 × 4</span></span></span>
 <span><span class="co">##    source_genesymbol target_genesymbol si_mechanism ma_mechanism</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> PRKG1             TRPC3             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKG1             TRPC7             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> OS9               TRPV4             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> PTPN1             TRPV6             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> RACK1             TRPM6             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> PRKACA            MCOLN1            <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> MAPK14            MAPKAPK2          <span style="color: #949494;">&lt;chr [2]&gt;</span>    <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MAPKAPK2          HNRNPA0           <span style="color: #949494;">&lt;chr [2]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MAPKAPK2          PARN              <span style="color: #949494;">&lt;chr [2]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> JAK2              EPOR              <span style="color: #949494;">&lt;chr [2]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 11,628 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> PRKG1             TRPC3             <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKG1             TRPC7             <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> OS9               TRPV4             <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> PTPN1             TRPV6             <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> RACK1             TRPM6             <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> PRKACA            MCOLN1            <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> MAPK14            MAPKAPK2          <span style="color: #949494;">&lt;list [1]&gt;</span>   <span style="color: #949494;">&lt;list [1]&gt;</span>  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MAPKAPK2          HNRNPA0           <span style="color: #949494;">&lt;list [2]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MAPKAPK2          PARN              <span style="color: #949494;">&lt;list [2]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> JAK2              EPOR              <span style="color: #949494;">&lt;list [2]&gt;</span>   <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 61,396 more rows</span></span></span></code></pre>
 <p>Above we disabled the <code>keep_empty</code> option, otherwise the
 new columns would have <code>NULL</code> values for most of the records,
 simply because out of the 80k interactions in the data frame only a few
@@ -281,7 +286,8 @@ type, individual values are character vectors. Let’s look into one
 value:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">i0</span>, <span class="va">si_mechanism</span><span class="op">)</span><span class="op">[[</span><span class="fl">7</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "phosphorylation" "Phosphorylation"</span></span></code></pre>
+<pre><code><span><span class="co">## [[1]]</span></span>
+<span><span class="co">## [1] "phosphorylation"</span></span></code></pre>
 <p>Here we have two values, but only because the inconsistent names in
 the resource.</p>
 <p>Depending on downstream methods, atomic columns might be preferable
@@ -305,20 +311,20 @@ option:</p>
 <span>    <span class="va">si_mechanism</span>,</span>
 <span>    <span class="va">ma_mechanism</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 13,409 × 4</span></span></span>
-<span><span class="co">##    source_genesymbol target_genesymbol si_mechanism      ma_mechanism   </span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> PRKG1             TRPC3             phosphorylation   <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKG1             TRPC7             phosphorylation   <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> OS9               TRPV4             binding           <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> PTPN1             TRPV6             dephosphorylation <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> RACK1             TRPM6             binding           <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> PRKACA            MCOLN1            phosphorylation   <span style="color: #BB0000;">NA</span>             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> MAPK14            MAPKAPK2          phosphorylation   Phosphorylation</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MAPK14            MAPKAPK2          phosphorylation   Phosphorylation</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MAPK14            MAPKAPK2          Phosphorylation   Phosphorylation</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> MAPK14            MAPKAPK2          Phosphorylation   Phosphorylation</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 13,399 more rows</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 63,434 × 4</span></span></span>
+<span><span class="co">##    source_genesymbol target_genesymbol si_mechanism ma_mechanism</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> PRKG1             TRPC3             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKG1             TRPC7             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> OS9               TRPV4             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> PTPN1             TRPV6             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> RACK1             TRPM6             <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> PRKACA            MCOLN1            <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> MAPK14            MAPKAPK2          <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MAPKAPK2          HNRNPA0           <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MAPKAPK2          HNRNPA0           <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> MAPKAPK2          PARN              <span style="color: #949494;">&lt;chr [1]&gt;</span>    <span style="color: #949494;">&lt;NULL&gt;</span>      </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 63,424 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="filtering-records-based-on-extra-attributes">Filtering records based on extra attributes<a class="anchor" aria-label="anchor" href="#filtering-records-based-on-extra-attributes"></a>
@@ -330,13 +336,13 @@ certain extra attributes. For example, to have only interactions with
 <code>SIGNOR_mechanism</code> given:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/with_extra_attrs.html">with_extra_attrs</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">SIGNOR_mechanism</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 11340</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 61111</span></span></code></pre>
 <p>This results around 11 thousands rows. Filtering for multiple
 attributes the records which have at least one of them will be selected.
 Adding some more attributes results more interactions:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/with_extra_attrs.html">with_extra_attrs</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">SIGNOR_mechanism</span>, <span class="va">CA1_effect</span>, <span class="va">Li2012_mechanism</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 12247</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 62017</span></span></code></pre>
 <p>It is possible to filter the records not only by the names but the
 values of the extra attributes. Let’s select the interactions which are
 phosphorylation according to SIGNOR:</p>
@@ -346,20 +352,20 @@ phosphorylation according to SIGNOR:</p>
 <span><span class="va">si_phos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/filter_extra_attrs.html">filter_extra_attrs</a></span><span class="op">(</span><span class="va">i</span>, SIGNOR_mechanism <span class="op">=</span> <span class="va">phos</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">si_phos</span>, <span class="va">source_genesymbol</span>, <span class="va">target_genesymbol</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4,255 × 2</span></span></span>
-<span><span class="co">##    source_genesymbol target_genesymbol</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> PRKG1             TRPC3            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKG1             TRPC7            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> PRKACA            MCOLN1           </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> MAPK14            MAPKAPK2         </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> MAPKAPK2          HNRNPA0          </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> MAPKAPK2          PARN             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> JAK2              EPOR             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MAPK14            ZFP36            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MAPKAPK2          ZFP36            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> AKT1              CHUK             </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 4,245 more rows</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4,353 × 2</span></span></span>
+<span><span class="co">##    source_genesymbol                                target_genesymbol</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> PRKG1                                            TRPC3            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKG1                                            TRPC7            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> PRKACA                                           MCOLN1           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> MAPK14                                           MAPKAPK2         </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> MAPKAPK2                                         HNRNPA0          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> MAPKAPK2                                         PARN             </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> JAK2                                             EPOR             </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> MAPK14                                           ZFP36            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> MAPKAPK2                                         ZFP36            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> PRKAA1_PRKAA2_PRKAB1_PRKAB2_PRKAG1_PRKAG2_PRKAG3 CRTC2            </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 4,343 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="example-finding-ubiquitination-interactions">Example: finding ubiquitination interactions<a class="anchor" aria-label="anchor" href="#example-finding-ubiquitination-interactions"></a>
@@ -376,7 +382,7 @@ Below is a slow but simple solution:</p>
 <span><span class="op">)</span></span>
 <span><span class="va">keys_ubi</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "SIGNOR_mechanism"    "HPRD-phos_mechanism" "SPIKE_mechanism"    </span></span>
-<span><span class="co">## [4] "CA1_type"            "Macrophage_type"</span></span></code></pre>
+<span><span class="co">## [4] "SPIKE_LC_mechanism"  "CA1_type"            "Macrophage_type"</span></span></code></pre>
 <p>We found five attributes that have at least one value which matches
 “biqu”. Next take a look at their values:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -391,12 +397,16 @@ Below is a slow but simple solution:</p>
 <span><span class="op">)</span></span>
 <span><span class="va">ubi</span></span></code></pre></div>
 <pre><code><span><span class="co">## $SIGNOR_mechanism</span></span>
-<span><span class="co">## [1] "ubiquitination"   "deubiquitination" "Ubiquitination"  </span></span>
+<span><span class="co">## [1] "ubiquitination"     "Ubiquitination"     "deubiquitination"  </span></span>
+<span><span class="co">## [4] "polyubiquitination" "monoubiquitination"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $`HPRD-phos_mechanism`</span></span>
 <span><span class="co">## [1] "Ubiquitination"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $SPIKE_mechanism</span></span>
+<span><span class="co">## [1] "Ubiquitination"     "Polyubiquitination"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $SPIKE_LC_mechanism</span></span>
 <span><span class="co">## [1] "Ubiquitination"     "Polyubiquitination"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $CA1_type</span></span>
@@ -424,20 +434,20 @@ polyubiquitination):</p>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">i_ubi</span>, <span class="va">source_genesymbol</span>, <span class="va">target_genesymbol</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 405 × 2</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 49,308 × 2</span></span></span>
 <span><span class="co">##    source_genesymbol target_genesymbol</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> NUMB              NOTCH1           </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> PRKN              RANBP2           </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> PRKN              SNCA             </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> FBXW7             MYC              </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> UBE2T             FANCL            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> BIRC2             TRAF2            </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> TRAF2             MAP3K14          </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> TRAF6             MAP3K7           </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> XIAP              DIABLO           </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> TRAF2             RIPK1            </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 395 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> BTRC_CUL1_SKP1    PER2             </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> PRKN              RANBP2           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> PRKN              SNCA             </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> FBXW7             MYC              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> UBE2T             FANCL            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> BIRC2             TRAF2            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> TRAF2             MAP3K14          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> TRAF6             MAP3K7           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> BTRC_CUL1_SKP1    WEE1             </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 49,298 more rows</span></span></span></code></pre>
 <p>We found 405 ubiquitination interactions. We had to use
 <code>map</code>, <code>bind_rows</code> and <code>distinct</code>
 because otherwise <code>filter_extra_attrs</code> would return the
@@ -445,7 +455,7 @@ intersection of the matches, instead of their union.</p>
 <p>In this data frame we have 150 unique ubiquitin E3 ligases:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">i_ubi</span><span class="op">$</span><span class="va">source_genesymbol</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 150</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 365</span></span></code></pre>
 <p>UniProt annotates E3 ligases by the “Ubl conjugation” keyword. We can
 check how many of those 150 proteins have this annotation:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -461,13 +471,13 @@ check how many of those 150 proteins have this annotation:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">e3_ligases</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 2517</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 2542</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">i_ubi</span><span class="op">$</span><span class="va">source_genesymbol</span><span class="op">)</span>, <span class="va">e3_ligases</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 84</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 106</span></span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">i_ubi</span><span class="op">$</span><span class="va">source_genesymbol</span><span class="op">)</span>, <span class="va">e3_ligases</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 66</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 259</span></span></code></pre>
 <p>We retrieved 2503 E3 ligases from UniProt. 83 of these has substrates
 in the interaction database, while 67 of the effectors of the
 interactions are not annotated in UniProt.</p>
@@ -477,23 +487,23 @@ small number of interactions:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">es_ubi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_omnipath_enzsub.html">import_omnipath_enzsub</a></span><span class="op">(</span>types <span class="op">=</span> <span class="st">'ubiquitination'</span><span class="op">)</span></span>
 <span><span class="va">es_ubi</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 52 × 12</span></span></span>
-<span><span class="co">##    enzyme substrate enzyme_gen…¹ subst…² resid…³ resid…⁴ modif…⁵ sources refer…⁶</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Q8IUD6 O95786    RNF135       DDX58   K           907 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Q8IUD6 O95786    RNF135       DDX58   K           909 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Q8IYW5 P16104    RNF168       H2AX    K            14 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Q8NG06 O95786    TRIM58       DDX58   K           172 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Q969H0 P23769    FBXW7        GATA2   T           176 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Q969V5 P31749    MUL1         AKT1    K           284 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Q96J02 Q7Z434    ITCH         MAVS    K           371 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Q96J02 Q7Z434    ITCH         MAVS    K           420 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Q96PU5 P35240    NEDD4L       NF2     K           396 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> Q9C0C9 O43541    UBE2O        SMAD6   K           173 ubiqui… SIGNOR  SIGNOR…</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 42 more rows, 3 more variables: curation_effort &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   n_references &lt;int&gt;, n_resources &lt;int&gt;, and abbreviated variable names</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ¹​enzyme_genesymbol, ²​substrate_genesymbol, ³​residue_type, ⁴​residue_offset,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ⁵​modification, ⁶​references</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 70 × 12</span></span></span>
+<span><span class="co">##    enzyme substrate enzyme_genesymbol substrate_genesymbol residue_type</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Q12933 Q13546    TRAF2             RIPK1                K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Q8IUD6 O95786    RNF135            RIGI                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Q8IUD6 O95786    RNF135            RIGI                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> P60604 Q92813    UBE2G2            DIO2                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> P60604 Q92813    UBE2G2            DIO2                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Q13489 Q13546    BIRC3             RIPK1                K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Q96J02 Q7Z434    ITCH              MAVS                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Q96J02 Q7Z434    ITCH              MAVS                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Q66K89 P04637    E4F1              TP53                 K           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Q66K89 P04637    E4F1              TP53                 K           </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 60 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 7 more variables: residue_offset &lt;dbl&gt;, modification &lt;chr&gt;, sources &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;int&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   n_resources &lt;int&gt;</span></span></span></code></pre>
 <p>With only two exception, all these have been recovered by using the
 extra attributes from the network database:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
@@ -508,19 +518,19 @@ extra attributes from the network database:</p>
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">es_i_ubi</span>, <span class="va">enzyme</span>, <span class="va">substrate</span>, <span class="va">residue_offset</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 50</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 57</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.2.2 (2022-10-31)</span></span>
+<pre><code><span><span class="co">## R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Arch Linux</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /usr/lib/libopenblasp-r0.3.21.so</span></span>
+<span><span class="co">## BLAS:   /usr/lib/libopenblas.so.0.3 </span></span>
 <span><span class="co">## LAPACK: /usr/lib/liblapack.so.3.11.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
@@ -531,36 +541,39 @@ extra attributes from the network database:</p>
 <span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
 <span><span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span></span>
 <span><span class="co">## </span></span>
+<span><span class="co">## time zone: Europe/Berlin</span></span>
+<span><span class="co">## tzcode source: system (glibc)</span></span>
+<span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] OmnipathR_3.7.8  BiocStyle_2.26.0</span></span>
+<span><span class="co">## [1] OmnipathR_3.9.6  BiocStyle_2.28.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] Rcpp_1.0.10         tidyr_1.3.0         prettyunits_1.1.1  </span></span>
-<span><span class="co">##  [4] rprojroot_2.0.3     digest_0.6.31       utf8_1.2.3         </span></span>
-<span><span class="co">##  [7] R6_2.5.1            cellranger_1.1.0    backports_1.4.1    </span></span>
-<span><span class="co">## [10] evaluate_0.20       httr_1.4.4          pillar_1.8.1       </span></span>
-<span><span class="co">## [13] rlang_1.0.6         progress_1.2.2      curl_5.0.0         </span></span>
-<span><span class="co">## [16] readxl_1.4.2        jquerylib_0.1.4     checkmate_2.1.0    </span></span>
-<span><span class="co">## [19] rmarkdown_2.20      pkgdown_2.0.7       textshaping_0.3.6  </span></span>
-<span><span class="co">## [22] desc_1.4.2          readr_2.1.4         stringr_1.5.0      </span></span>
-<span><span class="co">## [25] igraph_1.4.0        bit_4.0.5           compiler_4.2.2     </span></span>
-<span><span class="co">## [28] xfun_0.37           pkgconfig_2.0.3     systemfonts_1.0.4  </span></span>
-<span><span class="co">## [31] htmltools_0.5.4     tidyselect_1.2.0    tibble_3.1.8       </span></span>
-<span><span class="co">## [34] bookdown_0.32       fansi_1.0.4         crayon_1.5.2       </span></span>
-<span><span class="co">## [37] dplyr_1.1.0         tzdb_0.3.0          withr_2.5.0        </span></span>
-<span><span class="co">## [40] later_1.3.0         rappdirs_0.3.3      jsonlite_1.8.4     </span></span>
-<span><span class="co">## [43] lifecycle_1.0.3     magrittr_2.0.3      cli_3.6.0          </span></span>
-<span><span class="co">## [46] stringi_1.7.12      vroom_1.6.1         cachem_1.0.6       </span></span>
-<span><span class="co">## [49] fs_1.6.1            xml2_1.3.3          logger_0.2.2       </span></span>
-<span><span class="co">## [52] bslib_0.4.2         ellipsis_0.3.2      ragg_1.2.5         </span></span>
-<span><span class="co">## [55] generics_0.1.3      vctrs_0.5.2         tools_4.2.2        </span></span>
-<span><span class="co">## [58] bit64_4.0.5         glue_1.6.2          purrr_1.0.1        </span></span>
-<span><span class="co">## [61] hms_1.1.2           parallel_4.2.2      fastmap_1.1.0      </span></span>
-<span><span class="co">## [64] yaml_2.3.7          BiocManager_1.30.19 rvest_1.0.3        </span></span>
-<span><span class="co">## [67] memoise_2.0.1       knitr_1.42          sass_0.4.5</span></span></code></pre>
+<span><span class="co">##  [1] tidyr_1.3.0         rappdirs_0.3.3      sass_0.4.6         </span></span>
+<span><span class="co">##  [4] utf8_1.2.3          generics_0.1.3      xml2_1.3.4         </span></span>
+<span><span class="co">##  [7] stringi_1.7.12      hms_1.1.3           digest_0.6.31      </span></span>
+<span><span class="co">## [10] magrittr_2.0.3      evaluate_0.21       bookdown_0.34      </span></span>
+<span><span class="co">## [13] fastmap_1.1.1       cellranger_1.1.0    rprojroot_2.0.3    </span></span>
+<span><span class="co">## [16] jsonlite_1.8.4      progress_1.2.2      backports_1.4.1    </span></span>
+<span><span class="co">## [19] BiocManager_1.30.20 rvest_1.0.3         httr_1.4.6         </span></span>
+<span><span class="co">## [22] purrr_1.0.1         fansi_1.0.4         textshaping_0.3.6  </span></span>
+<span><span class="co">## [25] jquerylib_0.1.4     cli_3.6.1           rlang_1.1.1        </span></span>
+<span><span class="co">## [28] crayon_1.5.2        bit64_4.0.5         withr_2.5.0        </span></span>
+<span><span class="co">## [31] cachem_1.0.8        yaml_2.3.7          parallel_4.3.0     </span></span>
+<span><span class="co">## [34] tools_4.3.0         tzdb_0.4.0          memoise_2.0.1      </span></span>
+<span><span class="co">## [37] checkmate_2.2.0     dplyr_1.1.2         curl_5.0.0         </span></span>
+<span><span class="co">## [40] vctrs_0.6.2         logger_0.2.2        R6_2.5.1           </span></span>
+<span><span class="co">## [43] lifecycle_1.0.3     stringr_1.5.0       bit_4.0.5          </span></span>
+<span><span class="co">## [46] fs_1.6.2            vroom_1.6.3         ragg_1.2.5         </span></span>
+<span><span class="co">## [49] pkgconfig_2.0.3     desc_1.4.2          pkgdown_2.0.7      </span></span>
+<span><span class="co">## [52] bslib_0.4.2         pillar_1.9.0        later_1.3.1        </span></span>
+<span><span class="co">## [55] glue_1.6.2          Rcpp_1.0.10         systemfonts_1.0.4  </span></span>
+<span><span class="co">## [58] xfun_0.39           tibble_3.2.1        tidyselect_1.2.0   </span></span>
+<span><span class="co">## [61] knitr_1.43          htmltools_0.5.5     igraph_1.4.3       </span></span>
+<span><span class="co">## [64] rmarkdown_2.22      readr_2.1.4         compiler_4.3.0     </span></span>
+<span><span class="co">## [67] prettyunits_1.1.1   readxl_1.4.2</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

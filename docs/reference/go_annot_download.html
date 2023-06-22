@@ -26,7 +26,7 @@ http://geneontology.org/docs/go-annotation-file-gaf-format-2.2/."><meta property
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,24 +134,23 @@ the "generic" slim will be used.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">goa_data</span> <span class="op">&lt;-</span> <span class="fu">go_annot_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">goa_data</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 630,196 × 17</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    db        db_ob…¹ db_ob…² quali…³ go_id db_ref evide…⁴ with_…⁵ aspect db_ob…⁶</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> UniProtKB A0A024… NUDT4B  enables GO:0… GO_RE… IEA     UniPro… F      Diphos…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> UniProtKB A0A024… NUDT4B  enables GO:0… GO_RE… IEA     UniPro… F      Diphos…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> UniProtKB A0A024… NUDT4B  locate… GO:0… GO_RE… IDA     <span style="color: #BB0000;">NA</span>      C      Diphos…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> UniProtKB A0A075… IGKV3-7 involv… GO:0… GO_RE… IEA     UniPro… P      Probab…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> UniProtKB A0A075… IGKV3-7 locate… GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> UniProtKB A0A075… IGKV3-7 part_of GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> UniProtKB A0A075… IGKV1D… involv… GO:0… GO_RE… IEA     UniPro… P      Probab…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> UniProtKB A0A075… IGKV1D… locate… GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> UniProtKB A0A075… IGKV1D… part_of GO:0… GO_RE… IEA     UniPro… C      Probab…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> UniProtKB A0A075… IGLV4-… involv… GO:0… GO_RE… IEA     UniPro… P      Immuno…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 630,186 more rows, 7 more variables: db_object_synonym &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   db_object_type &lt;fct&gt;, taxon &lt;fct&gt;, date &lt;date&gt;, assigned_by &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   annotation_extension &lt;chr&gt;, gene_product_from_id &lt;chr&gt;, and abbreviated</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable names ¹​db_object_id, ²​db_object_symbol, ³​qualifier,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​evidence_code, ⁵​with_or_from, ⁶​db_object_name</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 632,318 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    db        db_object_id db_object_symbol qualifier  go_id db_ref evidence_code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> UniProtKB A0A024RBG1   NUDT4B           enables    GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> UniProtKB A0A024RBG1   NUDT4B           enables    GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> UniProtKB A0A024RBG1   NUDT4B           located_in GO:0… GO_RE… IDA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> UniProtKB A0A075B6H7   IGKV3-7          involved_… GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> UniProtKB A0A075B6H7   IGKV3-7          located_in GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> UniProtKB A0A075B6H7   IGKV3-7          part_of    GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> UniProtKB A0A075B6H8   IGKV1D-42        involved_… GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> UniProtKB A0A075B6H8   IGKV1D-42        located_in GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> UniProtKB A0A075B6H8   IGKV1D-42        part_of    GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> UniProtKB A0A075B6H9   IGLV4-69         involved_… GO:0… GO_RE… IEA          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 632,308 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: with_or_from &lt;chr&gt;, aspect &lt;fct&gt;, db_object_name &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   db_object_synonym &lt;chr&gt;, db_object_type &lt;fct&gt;, taxon &lt;fct&gt;, date &lt;date&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   assigned_by &lt;fct&gt;, annotation_extension &lt;chr&gt;, gene_product_from_id &lt;chr&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 606,840 x 17</span></span></span>
 <span class="r-in"><span><span class="co">#    db       db_object_id db_object_symbol qualifier go_id   db_ref</span></span></span>
 <span class="r-in"><span><span class="co">#    &lt;fct&gt;    &lt;chr&gt;        &lt;chr&gt;            &lt;fct&gt;     &lt;chr&gt;   &lt;chr&gt;</span></span></span>

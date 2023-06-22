@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -198,7 +198,7 @@ overridden here, for example, for the <code>mlrbo_optimization</code> we
 override the <code>ncores</code> argument, and exclude CPDB from the
 signaling network and set the confidence threshold for EVEX.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.omnipathdb.org/" class="external-link">OmnipathR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/saeyslab/nichenetr" class="external-link">nichenetr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nichenet_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nichenet_main.html">nichenet_main</a></span><span class="op">(</span></span>
@@ -276,7 +276,7 @@ runs the pipeline with a highly reduced number of parameters and
 iteration steps in the optimization. Also it inputs dummy gene sets as
 genes of interest and background genes.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://saezlab.github.io/OmnipathR/">OmnipathR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r.omnipathdb.org/" class="external-link">OmnipathR</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nichenet_workarounds.html">nichenet_workarounds</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nichenet_test.html">nichenet_test</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -566,12 +566,12 @@ study</a>.</p>
 <div class="section level2">
 <h2 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<pre><code><span><span class="co">## R version 4.2.2 (2022-10-31)</span></span>
+<pre><code><span><span class="co">## R version 4.3.0 (2023-04-21)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Arch Linux</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /usr/lib/libopenblasp-r0.3.21.so</span></span>
+<span><span class="co">## BLAS:   /usr/lib/libopenblas.so.0.3 </span></span>
 <span><span class="co">## LAPACK: /usr/lib/liblapack.so.3.11.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
@@ -582,25 +582,28 @@ study</a>.</p>
 <span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
 <span><span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span></span>
 <span><span class="co">## </span></span>
+<span><span class="co">## time zone: Europe/Berlin</span></span>
+<span><span class="co">## tzcode source: system (glibc)</span></span>
+<span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] BiocStyle_2.26.0</span></span>
+<span><span class="co">## [1] BiocStyle_2.28.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] knitr_1.42          magrittr_2.0.3      R6_2.5.1           </span></span>
-<span><span class="co">##  [4] ragg_1.2.5          rlang_1.0.6         fastmap_1.1.0      </span></span>
-<span><span class="co">##  [7] stringr_1.5.0       tools_4.2.2         xfun_0.37          </span></span>
-<span><span class="co">## [10] cli_3.6.0           jquerylib_0.1.4     systemfonts_1.0.4  </span></span>
-<span><span class="co">## [13] htmltools_0.5.4     yaml_2.3.7          digest_0.6.31      </span></span>
-<span><span class="co">## [16] rprojroot_2.0.3     lifecycle_1.0.3     pkgdown_2.0.7      </span></span>
-<span><span class="co">## [19] bookdown_0.32       textshaping_0.3.6   purrr_1.0.1        </span></span>
-<span><span class="co">## [22] BiocManager_1.30.19 vctrs_0.5.2         sass_0.4.5         </span></span>
-<span><span class="co">## [25] fs_1.6.1            memoise_2.0.1       glue_1.6.2         </span></span>
-<span><span class="co">## [28] cachem_1.0.6        evaluate_0.20       rmarkdown_2.20     </span></span>
-<span><span class="co">## [31] stringi_1.7.12      compiler_4.2.2      bslib_0.4.2        </span></span>
-<span><span class="co">## [34] desc_1.4.2          jsonlite_1.8.4</span></span></code></pre>
+<span><span class="co">##  [1] vctrs_0.6.2         cli_3.6.1           knitr_1.43         </span></span>
+<span><span class="co">##  [4] rlang_1.1.1         xfun_0.39           stringi_1.7.12     </span></span>
+<span><span class="co">##  [7] purrr_1.0.1         textshaping_0.3.6   jsonlite_1.8.4     </span></span>
+<span><span class="co">## [10] glue_1.6.2          rprojroot_2.0.3     htmltools_0.5.5    </span></span>
+<span><span class="co">## [13] ragg_1.2.5          sass_0.4.6          rmarkdown_2.22     </span></span>
+<span><span class="co">## [16] evaluate_0.21       jquerylib_0.1.4     fastmap_1.1.1      </span></span>
+<span><span class="co">## [19] lifecycle_1.0.3     yaml_2.3.7          memoise_2.0.1      </span></span>
+<span><span class="co">## [22] bookdown_0.34       BiocManager_1.30.20 stringr_1.5.0      </span></span>
+<span><span class="co">## [25] compiler_4.3.0      fs_1.6.2            systemfonts_1.0.4  </span></span>
+<span><span class="co">## [28] digest_0.6.31       R6_2.5.1            magrittr_2.0.3     </span></span>
+<span><span class="co">## [31] bslib_0.4.2         tools_4.3.0         pkgdown_2.0.7      </span></span>
+<span><span class="co">## [34] cachem_1.0.8        desc_1.4.2</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

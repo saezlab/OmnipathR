@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@ following functions:</p><ul><li><p><code><a href="import_omnipath_enzsub.html">i
 <li><p><code><a href="import_kinaseextra_interactions.html">import_kinaseextra_interactions</a></code></p></li>
 <li><p><code><a href="import_ligrecextra_interactions.html">import_ligrecextra_interactions</a></code></p></li>
 <li><p><code><a href="import_post_translational_interactions.html">import_post_translational_interactions</a></code></p></li>
-<li><p><code><a href="import_dorothea_interactions.html">import_dorothea_interactions</a></code></p></li>
+<li><p><code><a href="dorothea.html">import_dorothea_interactions</a></code></p></li>
 <li><p><code><a href="import_tf_target_interactions.html">import_tf_target_interactions</a></code></p></li>
 <li><p><code><a href="import_transcriptional_interactions.html">import_transcriptional_interactions</a></code></p></li>
 <li><p><code><a href="import_mirnatarget_interactions.html">import_mirnatarget_interactions</a></code></p></li>
@@ -131,16 +131,14 @@ following functions:</p><ul><li><p><code><a href="import_omnipath_enzsub.html">i
 <span class="r-in"><span><span class="fu">print_interactions</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">enzsub</span><span class="op">)</span>, writeRefs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `is_stimulation`.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   enzyme           interaction substrate         modif…¹ n_res…² n_ref…³ refer…⁴</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> TYRO3 (Q06418)   ====&gt;       PLCG1_Y771 (P191… phosph…       1       8 KEA:12…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> TYK2 (P29597)    ====&gt;       STAT5B_Y699 (P51… phosph…       1       3 KEA:10…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> TYK2 (P29597)    ====&gt;       IL13RA1_Y402 (P7… phosph…       1       1 KEA:10…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> WNK1 (Q9H4A3)    ====&gt;       OSR1_T185 (Q8TAX… phosph…       1       1 KEA:18…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> WNK1 (Q9H4A3)    ====&gt;       WNK4_S335 (Q96J9… phosph…       1       1 KEA:15…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> MAP3K20 (Q9NYL2) ====&gt;       CDS1_T68 (Q92903) phosph…       1       1 KEA:10…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​modification, ²​n_resources, ³​n_references,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​references</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   enzyme  interaction substrate modification n_resources n_references references</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> TYRO3 … ====&gt;       PLCG1_Y7… phosphoryla…           1            8 KEA:12601…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> TYK2 (… ====&gt;       STAT5B_Y… phosphoryla…           1            3 KEA:10830…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> TYK2 (… ====&gt;       IL13RA1_… phosphoryla…           1            1 KEA:10409…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> WNK1 (… ====&gt;       OSR1_T18… phosphoryla…           1            1 KEA:18270…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> WNK1 (… ====&gt;       WNK4_S33… phosphoryla…           1            1 KEA:15883…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> MAP3K2… ====&gt;       CDS1_T68… phosphoryla…           1            1 KEA:10973…</span>
 <span class="r-in"><span><span class="fu">print_interactions</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>        <span class="va">enzsub</span>,</span></span>

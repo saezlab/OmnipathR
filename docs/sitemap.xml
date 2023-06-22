@@ -85,6 +85,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/bma_motif_vs.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/collectri.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/common_name.html</loc>
   </url>
   <url>
@@ -107,6 +110,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/descendants.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/dorothea.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/dot-omnipath_options_defaults.html</loc>
@@ -136,10 +142,16 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/ensembl_orthology.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/ensure_igraph.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/enzsub_graph.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/evex_download.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/evidences.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/extra_attr_to_column.html</loc>
@@ -157,6 +169,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/filter_by_resource.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/filter_evidences.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/filter_extra_attrs.html</loc>
   </url>
   <url>
@@ -167,6 +182,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/find_all_paths.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/from_evidences.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/get_annotation_resources.html</loc>
@@ -217,6 +235,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/go_ontology_download.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/graph_interaction.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/guide2pharma_download.html</loc>
   </url>
   <url>
@@ -227,6 +248,9 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/homologene_download.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/homologene_organisms.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/homologene_raw.html</loc>
@@ -469,6 +493,18 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/obo_parser.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/oma_code.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/oma_organisms.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/oma_pairwise.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/omnipath.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/omnipath_cache_autoclean.html</loc>
   </url>
   <url>
@@ -559,6 +595,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/omnipath_unlock_cache_db.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/only_from.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/ontology_ensure_id.html</loc>
   </url>
   <url>
@@ -566,6 +605,12 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/ontology_name_id.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/orthology_translate.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/orthology_translate_column.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/pathwaycommons_download.html</loc>
@@ -637,7 +682,13 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/search_omnipath.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/show_network.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/simplify_intercell_network.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/subnetwork.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/swap_relations.html</loc>
@@ -670,7 +721,13 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/uniprot_id_type.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/uniprot_idmapping_id_types.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/unique_intercell_network.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/unnest_evidences.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/uploadlists_id_type.html</loc>

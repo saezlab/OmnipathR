@@ -20,7 +20,7 @@ function retrieves Supplementary Table 2 from the article
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,20 +103,21 @@ function retrieves Supplementary Table 2 from the article
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tfcensus</span> <span class="op">&lt;-</span> <span class="fu">tfcensus_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tfcensus</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,987 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Class `Ensembl ID`    `IPI ID`                Inter…¹ Inter…² HGNC …³ Tissu…⁴</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> a     ENSG00000001167 IPI00218470;IPI00333568 <span style="color: #BB0000;">NA</span>      IPR001… NFYA    <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> a     ENSG00000004848 IPI00045066             IPR000… <span style="color: #BB0000;">NA</span>      ARX     <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> a     ENSG00000005073 IPI00010754;IPI00807582 IPR001… <span style="color: #BB0000;">NA</span>      HOXA11  uterus </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> a     ENSG00000005513 IPI00299069;IPI00386303 IPR000… <span style="color: #BB0000;">NA</span>      SOX8    <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> a     ENSG00000005889 IPI00012336;IPI0016938… IPR007… IPR006… ZFX     general</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> a     ENSG00000006377 IPI00008195             IPR000… <span style="color: #BB0000;">NA</span>      DLX6    <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> a     ENSG00000006468 IPI00221065;IPI0030643… IPR000… <span style="color: #BB0000;">NA</span>      ETV1    adrena…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> a     ENSG00000007372 IPI00218800;IPI0044907… IPR001… <span style="color: #BB0000;">NA</span>      PAX6    <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> a     ENSG00000007866 IPI00385455;IPI0041234… <span style="color: #BB0000;">NA</span>      IPR000… TEAD3   placen…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> a     ENSG00000007968 IPI00290548             IPR003… IPR015… E2F2    <span style="color: #BB0000;">NA</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1,977 more rows, and abbreviated variable names ¹​`Interpro DBD`,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​`Interpro DNA-binding family`, ³​`HGNC symbol`, ⁴​`Tissue-specificity`</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Class `Ensembl ID`    `IPI ID`          `Interpro DBD` Interpro DNA-binding…¹</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> a     ENSG00000001167 IPI00218470;IPI0… <span style="color: #BB0000;">NA</span>             IPR001289             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> a     ENSG00000004848 IPI00045066       IPR000047;IPR… <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> a     ENSG00000005073 IPI00010754;IPI0… IPR001356;IPR… <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> a     ENSG00000005513 IPI00299069;IPI0… IPR000910;IPR… <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> a     ENSG00000005889 IPI00012336;IPI0… IPR007087;IPR… IPR006794             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> a     ENSG00000006377 IPI00008195       IPR000047;IPR… <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> a     ENSG00000006468 IPI00221065;IPI0… IPR000418;IPR… <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> a     ENSG00000007372 IPI00218800;IPI0… IPR001356;IPR… <span style="color: #BB0000;">NA</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> a     ENSG00000007866 IPI00385455;IPI0… <span style="color: #BB0000;">NA</span>             IPR000818;IPR016361   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> a     ENSG00000007968 IPI00290548       IPR003316;IPR… IPR015633             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1,977 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ abbreviated name: ¹​`Interpro DNA-binding family`</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: `HGNC symbol` &lt;chr&gt;, `Tissue-specificity` &lt;chr&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 1,987 x 7</span></span></span>
 <span class="r-in"><span><span class="co">#    Class `Ensembl ID` `IPI ID` `Interpro DBD` `Interpro DNA-b.</span></span></span>
 <span class="r-in"><span><span class="co">#    &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;</span></span></span>

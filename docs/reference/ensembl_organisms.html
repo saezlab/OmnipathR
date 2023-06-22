@@ -18,7 +18,7 @@ latin (scientific) names, Ensembl organism IDs and NCBI taxonomy IDs."><meta pro
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,19 +100,19 @@ latin (scientific) names, Ensembl organism IDs and NCBI taxonomy IDs.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ens_org</span> <span class="op">&lt;-</span> <span class="fu">ensembl_organisms</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ens_org</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 314 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    common_name                    latin_name                 ncbi_tax_id ensem…¹</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Abingdon island giant tortoise Chelonoidis abingdonii          <span style="text-decoration: underline;">106</span>734 cabing…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> African ostrich                Struthio camelus australis      <span style="text-decoration: underline;">441</span>894 scaust…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Agassiz's desert tortoise      Gopherus agassizii               <span style="text-decoration: underline;">38</span>772 gagass…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Algerian mouse                 Mus spretus                      <span style="text-decoration: underline;">10</span>096 mspret…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Alpaca                         Vicugna pacos                    <span style="text-decoration: underline;">30</span>538 vpacos </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Alpine marmot                  Marmota marmota marmota           <span style="text-decoration: underline;">9</span>994 mmmarm…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Amazon molly                   Poecilia formosa                 <span style="text-decoration: underline;">48</span>698 pformo…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> American beaver                Castor canadensis                <span style="text-decoration: underline;">51</span>338 ccanad…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> American bison                 Bison bison bison                <span style="text-decoration: underline;">43</span>346 bbbison</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> American black bear            Ursus americanus                  <span style="text-decoration: underline;">9</span>643 uameri…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 304 more rows, and abbreviated variable name ¹​ensembl_id</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    common_name                    latin_name              ncbi_tax_id ensembl_id</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Abingdon island giant tortoise Chelonoidis abingdonii       <span style="text-decoration: underline;">106</span>734 cabingdon…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> African ostrich                Struthio camelus austr…      <span style="text-decoration: underline;">441</span>894 scaustral…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Agassiz's desert tortoise      Gopherus agassizii            <span style="text-decoration: underline;">38</span>772 gagassizii</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Algerian mouse                 Mus spretus                   <span style="text-decoration: underline;">10</span>096 mspretus  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Alpaca                         Vicugna pacos                 <span style="text-decoration: underline;">30</span>538 vpacos    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Alpine marmot                  Marmota marmota marmota        <span style="text-decoration: underline;">9</span>994 mmmarmota </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Amazon molly                   Poecilia formosa              <span style="text-decoration: underline;">48</span>698 pformosa  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> American beaver                Castor canadensis             <span style="text-decoration: underline;">51</span>338 ccanadens…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> American bison                 Bison bison bison             <span style="text-decoration: underline;">43</span>346 bbbison   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> American black bear            Ursus americanus               <span style="text-decoration: underline;">9</span>643 uamerican…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 304 more rows</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

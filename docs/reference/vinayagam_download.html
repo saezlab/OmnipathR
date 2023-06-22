@@ -18,7 +18,7 @@ Find out more at https://doi.org/10.1126/scisignal.2001699."><meta property="og:
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,20 +100,20 @@ Find out more at <a href="https://doi.org/10.1126/scisignal.2001699" class="exte
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">vinayagam_interactions</span> <span class="op">&lt;-</span> <span class="fu">vinayagam_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">vinayagam_interactions</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 34,814 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    `Input-node Gene Symbol` `Input-node GeneID` Output-node Ge…¹ Outpu…² Edge …³</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> C1orf103                               <span style="text-decoration: underline;">55</span>791 MNAT1               <span style="text-decoration: underline;">4</span>331   0.984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> MAST2                                  <span style="text-decoration: underline;">23</span>139 DYNLL1              <span style="text-decoration: underline;">8</span>655   0.743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> RAB22A                                 <span style="text-decoration: underline;">57</span>403 APPL2              <span style="text-decoration: underline;">55</span>198   0.558</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TRAP1                                  <span style="text-decoration: underline;">10</span>131 EXT2                <span style="text-decoration: underline;">2</span>132   0.951</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> STAT2                                   <span style="text-decoration: underline;">6</span>773 COPS4              <span style="text-decoration: underline;">51</span>138   0.743</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> BMPR2                                    659 TUBB              <span style="text-decoration: underline;">203</span>068   0.901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> FYN                                     <span style="text-decoration: underline;">2</span>534 SNCA                <span style="text-decoration: underline;">6</span>622   0.862</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> PARD6B                                 <span style="text-decoration: underline;">84</span>612 PARD6A             <span style="text-decoration: underline;">50</span>855   0.855</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> CHUK                                    <span style="text-decoration: underline;">1</span>147 PRKCI               <span style="text-decoration: underline;">5</span>584   0.901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TRAF2                                   <span style="text-decoration: underline;">7</span>186 FXR2                <span style="text-decoration: underline;">9</span>513   0.988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 34,804 more rows, and abbreviated variable names</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ¹​`Output-node Gene Symbol`, ²​`Output-node GeneID`, ³​`Edge direction score`</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    `Input-node Gene Symbol` `Input-node GeneID` `Output-node Gene Symbol`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> C1orf103                               <span style="text-decoration: underline;">55</span>791 MNAT1                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> MAST2                                  <span style="text-decoration: underline;">23</span>139 DYNLL1                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> RAB22A                                 <span style="text-decoration: underline;">57</span>403 APPL2                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> TRAP1                                  <span style="text-decoration: underline;">10</span>131 EXT2                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> STAT2                                   <span style="text-decoration: underline;">6</span>773 COPS4                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> BMPR2                                    659 TUBB                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> FYN                                     <span style="text-decoration: underline;">2</span>534 SNCA                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> PARD6B                                 <span style="text-decoration: underline;">84</span>612 PARD6A                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> CHUK                                    <span style="text-decoration: underline;">1</span>147 PRKCI                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TRAF2                                   <span style="text-decoration: underline;">7</span>186 FXR2                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 34,804 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: `Output-node GeneID` &lt;dbl&gt;, `Edge direction score` &lt;dbl&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 34,814 x 5</span></span></span>
 <span class="r-in"><span><span class="co">#    `Input-node Gen. `Input-node Gen. `Output-node Ge. `Output-node Ge.</span></span></span>
 <span class="r-in"><span><span class="co">#    &lt;chr&gt;                       &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;</span></span></span>

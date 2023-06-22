@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,20 +100,19 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">oma_organisms</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,565 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    oma_code ncbi_tax_id latin_name                               genom…¹ oma_v…²</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ABSGL           <span style="text-decoration: underline;">4</span>829 Absidia glauca                           Ensemb… Ensemb…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ACAM1         <span style="text-decoration: underline;">329</span>726 Acaryochloris marina (strain MBIC 11017) Genome… 18-MAR…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ACAPL         <span style="text-decoration: underline;">133</span>434 Acanthaster planci                       Refseq  Refseq…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ACCPU         <span style="text-decoration: underline;">522</span>306 Accumulibacter phosphatis (strain UW-1)  EBI     15-MAY…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ACEAZ         <span style="text-decoration: underline;">574</span>087 Acetohalobium arabaticum (strain ATCC 4… EBI     09-JAN…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ACECE         <span style="text-decoration: underline;">720</span>554 Acetivibrio clariflavus (strain DSM 197… EBI     23-JUL…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ACEMN         <span style="text-decoration: underline;">891</span>968 Acetomicrobium mobile (strain ATCC BAA-… EBI     23-JUL…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ACEP3         <span style="text-decoration: underline;">634</span>452 Acetobacter pasteurianus (strain NBRC 1… Genome… 24-NOV…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ACESD         <span style="text-decoration: underline;">499</span>177 Acetoanaerobium sticklandii (strain ATC… EBI     15-OCT…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ACET1         <span style="text-decoration: underline;">637</span>887 Acetivibrio thermocellus (strain DSM 13… EBI     22-MAY…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 2,555 more rows, and abbreviated variable names ¹​genome_source,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​oma_version</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    oma_code ncbi_tax_id latin_name                     genome_source oma_version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ABSGL           <span style="text-decoration: underline;">4</span>829 Absidia glauca                 EnsemblGenom… Ensembl Fu…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ACAM1         <span style="text-decoration: underline;">329</span>726 Acaryochloris marina (strain … Genome Revie… 18-MAR-200…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ACAPL         <span style="text-decoration: underline;">133</span>434 Acanthaster planci             Refseq        Refseq; OK…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ACCPU         <span style="text-decoration: underline;">522</span>306 Accumulibacter phosphatis (st… EBI           15-MAY-201…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ACEAZ         <span style="text-decoration: underline;">574</span>087 Acetohalobium arabaticum (str… EBI           09-JAN-201…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ACECE         <span style="text-decoration: underline;">720</span>554 Acetivibrio clariflavus (stra… EBI           23-JUL-201…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ACEMN         <span style="text-decoration: underline;">891</span>968 Acetomicrobium mobile (strain… EBI           23-JUL-201…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ACEP3         <span style="text-decoration: underline;">634</span>452 Acetobacter pasteurianus (str… Genome Revie… 24-NOV-200…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ACESD         <span style="text-decoration: underline;">499</span>177 Acetoanaerobium sticklandii (… EBI           15-OCT-201…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ACET1         <span style="text-decoration: underline;">637</span>887 Acetivibrio thermocellus (str… EBI           22-MAY-201…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2,555 more rows</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

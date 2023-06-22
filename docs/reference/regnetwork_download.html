@@ -22,7 +22,7 @@ regnetwork_directions are included in the result."><meta property="og:image" con
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,20 +112,20 @@ information about effect signs (stimulation or inhibition), provided by
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">regn_interactions</span> <span class="op">&lt;-</span> <span class="fu">regnetwork_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">regn_interactions</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 372,778 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    source_genesymbol source_entrez target_genes…¹ targe…² effect sourc…³ targe…⁴</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> USF1              7391          S100A6         6277        <span style="color: #BB0000;">NA</span> protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> USF1              7391          DUSP1          1843        <span style="color: #BB0000;">NA</span> protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> USF1              7391          C4A            720         <span style="color: #BB0000;">NA</span> protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> USF1              7391          ABCA1          19          <span style="color: #BB0000;">NA</span> protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TP53              7157          TP73           7161         1 protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TP53              7157          SIAH1          6477         1 protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TP53              7157          PMAIP1         5366         1 protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TP53              7157          EI24           9538         1 protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TP53              7157          CDKN1A         1026         1 protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TP53              7157          CCNG1          900          1 protein protein</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 372,768 more rows, and abbreviated variable names ¹​target_genesymbol,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​target_entrez, ³​source_type, ⁴​target_type</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    source_genesymbol source_entrez target_genesymbol target_entrez effect</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> USF1              7391          S100A6            6277              <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> USF1              7391          DUSP1             1843              <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> USF1              7391          C4A               720               <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> USF1              7391          ABCA1             19                <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> TP53              7157          TP73              7161               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> TP53              7157          SIAH1             6477               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> TP53              7157          PMAIP1            5366               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TP53              7157          EI24              9538               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> TP53              7157          CDKN1A            1026               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> TP53              7157          CCNG1             900                1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 372,768 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: source_type &lt;chr&gt;, target_type &lt;chr&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 372,778 x 7</span></span></span>
 <span class="r-in"><span><span class="co">#    source_genesymb. source_entrez target_genesymb. target_entrez</span></span></span>
 <span class="r-in"><span><span class="co">#    &lt;chr&gt;            &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;</span></span></span>

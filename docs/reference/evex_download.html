@@ -20,7 +20,7 @@ and combines the interactions and references into a single data frame."><meta pr
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,23 +126,22 @@ attribute set.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">evex_interactions</span> <span class="op">&lt;-</span> <span class="fu">evex_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">evex_interactions</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 368,297 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    general_eve…¹ sourc…² targe…³ confi…⁴ negat…⁵ specu…⁶ coars…⁷ coars…⁸ refin…⁹</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>            98 8651    6774     -<span style="color: #BB0000;">1.45</span>        0       0 Regula… Unspec… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>           100 8431    6774     -<span style="color: #BB0000;">1.45</span>        0       0 Regula… Unspec… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>           205 6261    6263      0.370       0       0 Binding Neutral Binding</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>           435 1044    1045     -<span style="color: #BB0000;">1.09</span>        0       0 Regula… Positi… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>           440 1045    1044     -<span style="color: #BB0000;">1.09</span>        0       0 Regula… Positi… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>           507 3596    952      -<span style="color: #BB0000;">1.67</span>        0       0 Regula… Unspec… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>           559 5592    5329     -<span style="color: #BB0000;">0.326</span>       0       0 Regula… Unspec… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>           575 85004   2255     -<span style="color: #BB0000;">1.31</span>        0       0 Regula… Negati… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>           657 2321    7422     -<span style="color: #BB0000;">1.32</span>        0       0 Regula… Unspec… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>           664 2321    7422     -<span style="color: #BB0000;">0.544</span>       0       1 Regula… Unspec… Regula…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 368,287 more rows, 4 more variables: refined_polarity &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_genesymbol &lt;chr&gt;, target_genesymbol &lt;chr&gt;, references &lt;chr&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​general_event_id, ²​source_entrezgene_id,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​target_entrezgene_id, ⁴​confidence, ⁵​negation, ⁶​speculation, ⁷​coarse_type,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁸​coarse_polarity, ⁹​refined_type</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    general_event_id source_entrezgene_id target_entrezgene_id confidence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>               98 8651                 6774                     -<span style="color: #BB0000;">1.45</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>              100 8431                 6774                     -<span style="color: #BB0000;">1.45</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>              205 6261                 6263                      0.370</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>              435 1044                 1045                     -<span style="color: #BB0000;">1.09</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>              440 1045                 1044                     -<span style="color: #BB0000;">1.09</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>              507 3596                 952                      -<span style="color: #BB0000;">1.67</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>              559 5592                 5329                     -<span style="color: #BB0000;">0.326</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>              575 85004                2255                     -<span style="color: #BB0000;">1.31</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>              657 2321                 7422                     -<span style="color: #BB0000;">1.32</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>              664 2321                 7422                     -<span style="color: #BB0000;">0.544</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 368,287 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: negation &lt;dbl&gt;, speculation &lt;dbl&gt;, coarse_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   coarse_polarity &lt;chr&gt;, refined_type &lt;chr&gt;, refined_polarity &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_genesymbol &lt;chr&gt;, target_genesymbol &lt;chr&gt;, references &lt;chr&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 368,297 x 13</span></span></span>
 <span class="r-in"><span><span class="co">#   general_event_id source_entrezge. target_entrezge. confidence negation</span></span></span>
 <span class="r-in"><span><span class="co">#               &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;                 &lt;dbl&gt;    &lt;dbl&gt;</span></span></span>

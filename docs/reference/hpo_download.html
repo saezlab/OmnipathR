@@ -24,7 +24,7 @@ https://hpo.jax.org/app/."><meta property="og:image" content="https://saezlab.gi
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,22 +109,21 @@ database</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">hpo_data</span> <span class="op">&lt;-</span> <span class="fu">hpo_download</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">hpo_data</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 268,983 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    entrez_gene…¹ entre…² hpo_t…³ hpo_t…⁴ frequ…⁵ frequ…⁶ info_…⁷ gd_so…⁸ disea…⁹</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Hypopl… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Hyperg… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Primar… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Autoso… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Microc… <span style="color: #BB0000;">NA</span>      HP:004… <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Seizure <span style="color: #BB0000;">NA</span>      HP:004… <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Short … <span style="color: #BB0000;">NA</span>      HP:004… <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>          <span style="text-decoration: underline;">8</span>192 CLPP    HP:000… Congen… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      mim2ge… OMIM:6…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>          <span style="text-decoration: underline;">8</span>195 MKKS    HP:000… High p… <span style="color: #BB0000;">NA</span>      HP:004… <span style="color: #BB0000;">NA</span>      orphad… ORPHA:…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>          <span style="text-decoration: underline;">8</span>195 MKKS    HP:000… Brachy… <span style="color: #BB0000;">NA</span>      HP:004… <span style="color: #BB0000;">NA</span>      orphad… ORPHA:…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 268,973 more rows, and abbreviated variable names ¹​entrez_gene_id,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​entrez_gene_symbol, ³​hpo_term_id, ⁴​hpo_term_name, ⁵​frequency_raw,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁶​frequency_hpo, ⁷​info_gd_source, ⁸​gd_source, ⁹​disease_id</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 293,469 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    entrez_gene_id entrez_gene_symbol hpo_term_id hpo_term_name     frequency_raw</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>             10 NAT2               HP:0000007  Autosomal recess… <span style="color: #BB0000;">NA</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>             10 NAT2               HP:0001939  Abnormality of m… <span style="color: #BB0000;">NA</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>             16 AARS1              HP:0002460  Distal muscle we… 15/15        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>             16 AARS1              HP:0002451  Limb dystonia     3/3          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>             16 AARS1              HP:0010871  Sensory ataxia    1/2          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>             16 AARS1              HP:0009886  Trichorrhexis no… 1/2          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>             16 AARS1              HP:0002421  Poor head control HP:0040283   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>             16 AARS1              HP:0001298  Encephalopathy    HP:0040281   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>             16 AARS1              HP:0001290  Generalized hypo… HP:0040282   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>             16 AARS1              HP:0001273  Abnormal corpus … HP:0040283   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 293,459 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: frequency_hpo &lt;chr&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 231,738 x 9</span></span></span>
 <span class="r-in"><span><span class="co">#    entrez_gene_id entrez_gene_symb. hpo_term_id hpo_term_name</span></span></span>
 <span class="r-in"><span><span class="co">#             &lt;dbl&gt; &lt;chr&gt;             &lt;chr&gt;       &lt;chr&gt;</span></span></span>

@@ -20,7 +20,7 @@ The "Taxon ID" column contains the NCBI Taxonomy identifiers.'><meta property="o
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,21 +103,21 @@ The "Taxon ID" column contains the NCBI Taxonomy identifiers.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ens_org</span> <span class="op">&lt;-</span> <span class="fu">ensembl_organisms_raw</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ens_org</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 314 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    `Common name`         Scien…¹ Taxon…² Ensem…³ Acces…⁴ Geneb…⁵ Varia…⁶ Regul…⁷</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Abingdon island gian… Chelon…  <span style="text-decoration: underline;">106</span>734 ASM359… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> African ostrich       Struth…  <span style="text-decoration: underline;">441</span>894 ASM698… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Agassiz's desert tor… Gopher…   <span style="text-decoration: underline;">38</span>772 ASM289… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Algerian mouse        Mus sp…   <span style="text-decoration: underline;">10</span>096 SPRET_… GCA_00… Extern… -       Y      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Alpaca                Vicugn…   <span style="text-decoration: underline;">30</span>538 vicPac1 -       A gene… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Alpine marmot         Marmot…    <span style="text-decoration: underline;">9</span>994 marMar… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Amazon molly          Poecil…   <span style="text-decoration: underline;">48</span>698 Poecil… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> American beaver       Castor…   <span style="text-decoration: underline;">51</span>338 C.can_… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> American bison        Bison …   <span style="text-decoration: underline;">43</span>346 Bison_… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> American black bear   Ursus …    <span style="text-decoration: underline;">9</span>643 ASM334… GCA_00… Full g… -       -      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 304 more rows, and abbreviated variable names ¹​`Scientific name`,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​`Taxon ID`, ³​`Ensembl Assembly`, ⁴​Accession, ⁵​`Genebuild Method`,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁶​`Variation database`, ⁷​`Regulation database`</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    `Common name`       `Scientific name` `Taxon ID` `Ensembl Assembly` Accession</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Abingdon island gi… Chelonoidis abin…     <span style="text-decoration: underline;">106</span>734 ASM359739v1        GCA_0035…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> African ostrich     Struthio camelus…     <span style="text-decoration: underline;">441</span>894 ASM69896v1         GCA_0006…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Agassiz's desert t… Gopherus agassiz…      <span style="text-decoration: underline;">38</span>772 ASM289641v1        GCA_0028…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Algerian mouse      Mus spretus            <span style="text-decoration: underline;">10</span>096 SPRET_EiJ_v1       GCA_0016…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Alpaca              Vicugna pacos          <span style="text-decoration: underline;">30</span>538 vicPac1            -        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Alpine marmot       Marmota marmota …       <span style="text-decoration: underline;">9</span>994 marMar2.1          GCA_0014…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Amazon molly        Poecilia formosa       <span style="text-decoration: underline;">48</span>698 Poecilia_formosa-… GCA_0004…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> American beaver     Castor canadensis      <span style="text-decoration: underline;">51</span>338 C.can_genome_v1.0  GCA_0019…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> American bison      Bison bison bison      <span style="text-decoration: underline;">43</span>346 Bison_UMD1.0       GCA_0007…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> American black bear Ursus americanus        <span style="text-decoration: underline;">9</span>643 ASM334442v1        GCA_0033…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 304 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: `Genebuild Method` &lt;chr&gt;, `Variation database` &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `Regulation database` &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,16 +112,11 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">omnipath</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="st">'evidences'</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">omnipath</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="st">'evidences'</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">omnipath</span> <span class="op">&lt;-</span> <span class="fu">unnest_evidences</span><span class="op">(</span><span class="va">omnipath</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">omnipath</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "source"                "target"                "source_genesymbol"    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "target_genesymbol"     "is_directed"           "is_stimulation"       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "is_inhibition"         "consensus_direction"   "consensus_stimulation"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "consensus_inhibition"  "positive"              "negative"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "directed"              "undirected"            "sources"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "references"            "curation_effort"       "n_references"         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "n_resources"          </span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

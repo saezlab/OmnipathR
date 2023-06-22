@@ -20,7 +20,7 @@ UniProt IDs."><meta property="og:image" content="https://saezlab.github.io/Omnip
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.7.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -139,22 +139,22 @@ and effect sign.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">hsa04350</span> <span class="op">&lt;-</span> <span class="fu"><a href="kegg_pathway_download.html">kegg_pathway_download</a></span><span class="op">(</span><span class="st">'hsa04350'</span>, process <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tgf_pathway</span> <span class="op">&lt;-</span> <span class="fu">kegg_process</span><span class="op">(</span><span class="va">hsa04350</span><span class="op">$</span><span class="va">entries</span>, <span class="va">hsa04350</span><span class="op">$</span><span class="va">relations</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tgf_pathway</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 53 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    source target type  effect     arrow relati…¹ kegg_…² genes…³ unipr…⁴ kegg_…⁵</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 51     49     PPrel activation --&gt;   hsa0435… hsa:70… TGFB1   P01137  hsa:70…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 57     55     PPrel activation --&gt;   hsa0435… hsa:15… GDF7    Q7Z4P5  hsa:26…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 34     32     PPrel activation --&gt;   hsa0435… hsa:36… INHBA   P08476  hsa:92…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 20     17     PPrel activation --&gt;   hsa0435… hsa:48… NODAL   Q96S42  hsa:92…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 60     46     PPrel activation --&gt;   hsa0435… hsa:40… SMAD1   Q15797  hsa:40…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 43     41     PPrel activation --&gt;   hsa0435… hsa:40… SMAD2   Q15796  hsa:40…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 22     16     PPrel activation --&gt;   hsa0435… hsa:40… SMAD2   Q15796  hsa:40…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 19     15     PPrel activation --&gt;   hsa0435… hsa:40… SMAD2   Q15796  hsa:40…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 27     26     PPrel inhibition --|   hsa0435… hsa:46… MYC     P01106  hsa:10…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 47     43     PPrel inhibition --|   hsa0435… hsa:40… SMAD6   O43541  hsa:40…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 43 more rows, 2 more variables: genesymbol_target &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   uniprot_target &lt;chr&gt;, and abbreviated variable names ¹​relation_id,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​kegg_id_source, ³​genesymbol_source, ⁴​uniprot_source, ⁵​kegg_id_target</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 55 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    source target type  effect arrow relation_id kegg_id_source genesymbol_source</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 51     49     PPrel activ… --&gt;   hsa04350:1  hsa:7040 hsa:… TGFB1            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 57     55     PPrel activ… --&gt;   hsa04350:2  hsa:151449 hs… GDF7             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 34     32     PPrel activ… --&gt;   hsa04350:3  hsa:3624 hsa:… INHBA            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 20     17     PPrel activ… --&gt;   hsa04350:4  hsa:4838       NODAL            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 60     46     PPrel activ… --&gt;   hsa04350:5  hsa:4086 hsa:… SMAD1            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 43     41     PPrel activ… --&gt;   hsa04350:6  hsa:4087 hsa:… SMAD2            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 22     16     PPrel activ… --&gt;   hsa04350:7  hsa:4087 hsa:… SMAD2            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 19     15     PPrel activ… --&gt;   hsa04350:8  hsa:4087 hsa:… SMAD2            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 27     26     PPrel inhib… --|   hsa04350:11 hsa:4609       MYC              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 47     43     PPrel inhib… --|   hsa04350:13 hsa:4091 hsa:… SMAD6            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 45 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: uniprot_source &lt;chr&gt;, kegg_id_target &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   genesymbol_target &lt;chr&gt;, uniprot_target &lt;chr&gt;</span></span>
 <span class="r-in"><span><span class="co"># # A tibble: 50 x 12</span></span></span>
 <span class="r-in"><span><span class="co">#    source target type  effect arrow relation_id kegg_id_source</span></span></span>
 <span class="r-in"><span><span class="co">#    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;</span></span></span>
