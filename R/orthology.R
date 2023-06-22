@@ -218,10 +218,12 @@ orthology_translate <- function(
 #'     identifiers, or create a new column. If it is character, it will be
 #'     used as the name of the new column.
 #' @param one_to_many Integer: maximum number of orthologous pairs for one
-#'     gene of the source organism.
+#'     gene of the source organism. Genes mapping to higher number of
+#'     orthologues will be dropped.
 #' @param keep_untranslated Logical: keep records without orthologous pairs.
-#'     If `replace` is TRUE, this option is ignoredx, and untranslated records
-#'     will be dropped.
+#'     If `replace` is TRUE, this option is ignored, and untranslated records
+#'     will be dropped. Genes with more than `one_to_many` orthologues will
+#'     always be dropped.
 #' @param translate_complexes Logical: translate the complexes by translating
 #'     their components.
 #' @param uniprot_by_id_type Character: translate NCBI HomoloGene to UniProt
