@@ -9,7 +9,7 @@ all_uniprots(fields = "accession", reviewed = TRUE, organism = 9606L)
 \arguments{
 \item{fields}{Character vector of fields as defined by UniProt. For
 possible values please refer to
-\url{https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}}
+\url{https://www.uniprot.org/help/return_fields}}
 
 \item{reviewed}{Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
 or both (`NULL`).}
@@ -23,7 +23,7 @@ Data frame (tibble) with the requested UniProt entries and fields.
 Retrieves a table from UniProt with all proteins for a certain organism.
 }
 \examples{
-human_swissprot_entries <- all_uniprots(fields = 'entry name')
+human_swissprot_entries <- all_uniprots(fields = 'id')
 human_swissprot_entries
 # # A tibble: 20,396 x 1
 #    `Entry name`

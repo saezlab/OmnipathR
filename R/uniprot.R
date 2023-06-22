@@ -68,7 +68,7 @@ all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
 #'
 #' @param fields Character vector of fields as defined by UniProt. For
 #'     possible values please refer to
-#'     \url{https://www.uniprot.org/help/uniprotkb\%5Fcolumn\%5Fnames}
+#'     \url{https://www.uniprot.org/help/return_fields}
 #' @param reviewed Retrieve only reviewed (`TRUE`), only unreviewed (`FALSE`)
 #'     or both (`NULL`).
 #' @param organism Character or integer: name or identifier of the organism.
@@ -81,7 +81,7 @@ all_uniprot_acs <- function(organism = 9606, reviewed = TRUE){
 #' @export
 #'
 #' @examples
-#' human_swissprot_entries <- all_uniprots(fields = 'entry name')
+#' human_swissprot_entries <- all_uniprots(fields = 'id')
 #' human_swissprot_entries
 #' # # A tibble: 20,396 x 1
 #' #    `Entry name`
