@@ -389,14 +389,14 @@ interactions:</p>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> P01106                O14746 MYC               TERT                        1              1             0</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 2</span> P17947                P02818 SPI1              BGLAP                       1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> COMPLEX:P17535        P05412 JUND              JUN                         1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> COMPLEX:P05412_P53539 P05412 FOSB_JUN          JUN                         1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> COMPLEX:P15408_P17275 P05412 FOSL2_JUNB        JUN                         1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> COMPLEX:P01100_P17535 P05412 FOS_JUND          JUN                         1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> COMPLEX:P17275_P53539 P05412 FOSB_JUNB         JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> COMPLEX:P15407_P17275 P05412 FOSL1_JUNB        JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> COMPLEX:P01100_P05412 P05412 FOS_JUN           JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> COMPLEX:P01100_P17275 P05412 FOS_JUNB          JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> COMPLEX:P15408_P17535 P05412 FOSL2_JUND        JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> COMPLEX:P05412_P15408 P05412 FOSL2_JUN         JUN                         1              1             0</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> COMPLEX:P05412        P05412 JUN               JUN                         1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> COMPLEX:P15408_P17535 P05412 FOSL2_JUND        JUN                         1              1             0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> COMPLEX:P05412_P17535 P05412 JUN_JUND          JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> COMPLEX:P17275_P53539 P05412 FOSB_JUNB         JUN                         1              1             0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> COMPLEX:P17275        P05412 JUNB              JUN                         1              1             0</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 121,651 more rows</span></span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 9 more variables: consensus_direction &lt;dbl&gt;, consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   sources &lt;chr&gt;, references &lt;chr&gt;, curation_effort &lt;dbl&gt;, dorothea_level &lt;chr&gt;, n_references &lt;dbl&gt;,</span></span></span>
@@ -413,16 +413,16 @@ you can make use of the graph and visualization methods of igraph:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gr_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/interaction_graph.html">interaction_graph</a></span><span class="op">(</span><span class="va">gri</span><span class="op">)</span></span>
 <span><span class="va">gr_graph</span></span></code></pre></div>
-<pre><code><span><span class="co">## IGRAPH 937b882 DN-- 15621 121661 -- </span></span>
+<pre><code><span><span class="co">## IGRAPH d7a8366 DN-- 15621 121661 -- </span></span>
 <span><span class="co">## + attr: name (v/c), up_ids (v/c), is_directed (e/n), is_stimulation (e/n), is_inhibition (e/n),</span></span>
 <span><span class="co">## | consensus_direction (e/n), consensus_stimulation (e/n), consensus_inhibition (e/n), sources</span></span>
 <span><span class="co">## | (e/x), references (e/x), curation_effort (e/n), dorothea_level (e/c), n_references (e/n),</span></span>
 <span><span class="co">## | n_resources (e/n)</span></span>
-<span><span class="co">## + edges from 937b882 (vertex names):</span></span>
-<span><span class="co">##  [1] MYC       -&gt;TERT  SPI1      -&gt;BGLAP JUND      -&gt;JUN   FOSB_JUN  -&gt;JUN   FOSL2_JUNB-&gt;JUN  </span></span>
-<span><span class="co">##  [6] FOS_JUND  -&gt;JUN   FOSB_JUNB -&gt;JUN   JUN       -&gt;JUN   FOSL2_JUND-&gt;JUN   JUN_JUND  -&gt;JUN  </span></span>
-<span><span class="co">## [11] FOSL1_JUND-&gt;JUN   FOSB_JUND -&gt;JUN   FOS_JUN   -&gt;JUN   FOSL2_JUN -&gt;JUN   JUNB_JUND -&gt;JUN  </span></span>
-<span><span class="co">## [16] FOSL1_JUN -&gt;JUN   JUNB      -&gt;JUN   JUN_JUNB  -&gt;JUN   FOSL1_JUNB-&gt;JUN   FOS_JUNB  -&gt;JUN  </span></span>
+<span><span class="co">## + edges from d7a8366 (vertex names):</span></span>
+<span><span class="co">##  [1] MYC       -&gt;TERT  SPI1      -&gt;BGLAP FOSL1_JUNB-&gt;JUN   FOS_JUN   -&gt;JUN   FOS_JUNB  -&gt;JUN  </span></span>
+<span><span class="co">##  [6] FOSL2_JUND-&gt;JUN   FOSL2_JUN -&gt;JUN   JUN       -&gt;JUN   FOSB_JUNB -&gt;JUN   JUNB      -&gt;JUN  </span></span>
+<span><span class="co">## [11] FOSL2_JUNB-&gt;JUN   JUND      -&gt;JUN   JUN_JUND  -&gt;JUN   JUNB_JUND -&gt;JUN   FOSL1_JUND-&gt;JUN  </span></span>
+<span><span class="co">## [16] FOSL1_JUN -&gt;JUN   FOSB_JUND -&gt;JUN   FOSB_JUN  -&gt;JUN   JUN_JUNB  -&gt;JUN   FOS_JUND  -&gt;JUN  </span></span>
 <span><span class="co">## [21] SMAD3     -&gt;JUN   SMAD4     -&gt;JUN   STAT5A    -&gt;IL2   STAT5B    -&gt;IL2   WT1       -&gt;NR0B1</span></span>
 <span><span class="co">## + ... omitted several edges</span></span></code></pre>
 <p>On this network we can use <code>OmnipathR</code>’s
@@ -467,10 +467,10 @@ additional information about the PTM types and residues.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">es_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/enzsub_graph.html">enzsub_graph</a></span><span class="op">(</span><span class="va">enz_sub</span><span class="op">)</span></span>
 <span><span class="va">es_graph</span></span></code></pre></div>
-<pre><code><span><span class="co">## IGRAPH c4fc530 DN-- 4793 43269 -- </span></span>
+<pre><code><span><span class="co">## IGRAPH e07fc34 DN-- 4793 43269 -- </span></span>
 <span><span class="co">## + attr: name (v/c), up_ids (v/c), residue_type (e/c), residue_offset (e/n), modification (e/c),</span></span>
 <span><span class="co">## | sources (e/x), references (e/x), curation_effort (e/n), n_references (e/n), n_resources (e/n)</span></span>
-<span><span class="co">## + edges from c4fc530 (vertex names):</span></span>
+<span><span class="co">## + edges from e07fc34 (vertex names):</span></span>
 <span><span class="co">##  [1] LCK  -&gt;SOCS3  LCK  -&gt;SOCS3  SRC  -&gt;TERT   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  </span></span>
 <span><span class="co">##  [8] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  </span></span>
 <span><span class="co">## [15] FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1   FYN  -&gt;FYB1  </span></span>
@@ -493,10 +493,10 @@ to enzyme-PTM relationships:</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 35,459 × 7</span></span></span>
 <span><span class="co">##    name         components                 components_genesymbols stoichiometry sources references identifiers</span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> NFY          P23511_P25208_Q13952       NFYA_NFYB_NFYC         1:1:1         CORUM;… 9372932;1… Compleat:H…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> NFY          P23511_P25208_Q13952       NFYA_NFYB_NFYC         1:1:1         CORUM;… 9372932;1… CORUM:4478…</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 2</span> mTORC2       P42345_P68104_P85299_Q6R3… DEPTOR_EEF1A1_MLST8_M… 0:0:0:0:0:0   SIGNOR  <span style="color: #BB0000;">NA</span>         SIGNOR:SIG…</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 3</span> mTORC1       P42345_Q8N122_Q8TB45_Q96B… AKT1S1_DEPTOR_MLST8_M… 0:0:0:0:0     SIGNOR  <span style="color: #BB0000;">NA</span>         SIGNOR:SIG…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> SCF-betaTRCP P63208_Q13616_Q9Y297       BTRC_CUL1_SKP1         1:1:1         CORUM;… 9990852    Compleat:H…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> SCF-betaTRCP P63208_Q13616_Q9Y297       BTRC_CUL1_SKP1         1:1:1         CORUM;… 9990852    CORUM:227;…</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 5</span> CBP/p300     Q09472_Q92793              CREBBP_EP300           0:0           SIGNOR  <span style="color: #BB0000;">NA</span>         SIGNOR:SIG…</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 6</span> P300/PCAF    Q09472_Q92793_Q92831       CREBBP_EP300_KAT2B     0:0:0         SIGNOR  <span style="color: #BB0000;">NA</span>         SIGNOR:SIG…</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 7</span> SMAD2/SMAD4  Q13485_Q15796              SMAD2_SMAD4            1:2           Comple… 12923550;… PDB:1u7v;S…</span></span>
@@ -858,9 +858,9 @@ object. All these can have two directions: child-to-parent
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">go_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/relations_table_to_graph.html">relations_table_to_graph</a></span><span class="op">(</span><span class="va">go</span><span class="op">$</span><span class="va">rel_tbl_c2p</span><span class="op">)</span></span>
 <span><span class="va">go_graph</span></span></code></pre></div>
-<pre><code><span><span class="co">## IGRAPH 7f51bfb DN-- 42950 83975 -- </span></span>
+<pre><code><span><span class="co">## IGRAPH e408235 DN-- 42950 83975 -- </span></span>
 <span><span class="co">## + attr: name (v/c), relation (e/c)</span></span>
-<span><span class="co">## + edges from 7f51bfb (vertex names):</span></span>
+<span><span class="co">## + edges from e408235 (vertex names):</span></span>
 <span><span class="co">##  [1] GO:0000001-&gt;GO:0048308 GO:0000001-&gt;GO:0048311 GO:0000002-&gt;GO:0007005 GO:0000003-&gt;GO:0008150</span></span>
 <span><span class="co">##  [5] GO:0000006-&gt;GO:0005385 GO:0000007-&gt;GO:0005385 GO:0000009-&gt;GO:0000030 GO:0000010-&gt;GO:0004659</span></span>
 <span><span class="co">##  [9] GO:0000011-&gt;GO:0007033 GO:0000011-&gt;GO:0048308 GO:0000012-&gt;GO:0006281 GO:0000014-&gt;GO:0004520</span></span>
@@ -918,7 +918,7 @@ cache files by <code><a href="../reference/omnipath_cache_search.html">omnipath_
 <span><span class="co">## [1] "ready"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $c80a1943db40b7d3e23dcaa2afb68d3c37342458$versions$`1`$dl_finished</span></span>
-<span><span class="co">## [1] "2023-06-22 12:50:58 CEST"</span></span>
+<span><span class="co">## [1] "2023-07-31 17:56:28 CEST"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## </span></span>
@@ -948,13 +948,13 @@ cache files by <code><a href="../reference/omnipath_cache_search.html">omnipath_
 <span><span class="co">## [1] "/home/denes/.cache/OmnipathR/8e1fed15bbe7704374f40d278e719e18b4a9d60f-1.rds"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $`8e1fed15bbe7704374f40d278e719e18b4a9d60f`$versions$`1`$dl_started</span></span>
-<span><span class="co">## [1] "2023-06-22 12:59:46 CEST"</span></span>
+<span><span class="co">## [1] "2023-07-31 18:55:59 CEST"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $`8e1fed15bbe7704374f40d278e719e18b4a9d60f`$versions$`1`$status</span></span>
 <span><span class="co">## [1] "ready"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $`8e1fed15bbe7704374f40d278e719e18b4a9d60f`$versions$`1`$dl_finished</span></span>
-<span><span class="co">## [1] "2023-06-22 12:59:46 CEST"</span></span></code></pre>
+<span><span class="co">## [1] "2023-07-31 18:56:00 CEST"</span></span></code></pre>
 <p>The configuration can be set by <code>options</code>, all options are
 prefixed with <code>omnipath.</code>, and can be saved by
 <code>omnipath_save_config</code>. For example, to exclude all OmniPath

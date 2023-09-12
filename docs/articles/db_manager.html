@@ -167,7 +167,7 @@ its key is <code>up_gs</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">up_gs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_db.html">get_db</a></span><span class="op">(</span><span class="st">'up_gs'</span><span class="op">)</span></span>
 <span><span class="va">up_gs</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 20,394 × 2</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 20,396 × 2</span></span></span>
 <span><span class="co">##    From       To     </span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> A0A087X1C5 CYP2D7 </span></span>
@@ -179,8 +179,8 @@ its key is <code>up_gs</code>.</p>
 <span><span class="co">## <span style="color: #BCBCBC;"> 7</span> A0A1B0GTW7 CIROP  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> A0AV02     SLC12A8</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> A0AV96     RBM47  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> A0AVF1     TTC26  </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 20,384 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> A0AVF1     IFT56  </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 20,386 more rows</span></span></span></code></pre>
 <p>This dataset is a two columns data frame of SwissProt IDs and Gene
 Symbols. Looking again at the datasets, we find that this dataset is
 loaded now and the <code>last_used</code> timestamp is set to the time
@@ -207,7 +207,7 @@ arguments passed to the loader function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/omnipath_show_db.html">omnipath_show_db</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">d</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 20,394 × 2</span></span></span>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 20,396 × 2</span></span></span>
 <span><span class="co">##    From       To     </span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> A0A087X1C5 CYP2D7 </span></span>
@@ -219,8 +219,8 @@ arguments passed to the loader function:</p>
 <span><span class="co">## <span style="color: #BCBCBC;"> 7</span> A0A1B0GTW7 CIROP  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> A0AV02     SLC12A8</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> A0AV96     RBM47  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> A0AVF1     TTC26  </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 20,384 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> A0AVF1     IFT56  </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 20,386 more rows</span></span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">latest_param</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $to</span></span>
@@ -262,7 +262,7 @@ information availble by directly looking at the environment:</p>
 <span><span class="co">## [1] "UniProt-GeneSymbol table"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $last_used</span></span>
-<span><span class="co">## [1] "2023-06-22 13:03:46 CEST"</span></span>
+<span><span class="co">## [1] "2023-07-31 19:00:03 CEST"</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $lifetime</span></span>
 <span><span class="co">## [1] 300</span></span>
@@ -293,7 +293,7 @@ information availble by directly looking at the environment:</p>
 <span><span class="co">## [1] TRUE</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $db</span></span>
-<span><span class="co">## <span style="color: #949494;"># A tibble: 20,394 × 2</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># A tibble: 20,396 × 2</span></span></span>
 <span><span class="co">##    From       To     </span></span>
 <span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 1</span> A0A087X1C5 CYP2D7 </span></span>
@@ -305,8 +305,8 @@ information availble by directly looking at the environment:</p>
 <span><span class="co">## <span style="color: #BCBCBC;"> 7</span> A0A1B0GTW7 CIROP  </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> A0AV02     SLC12A8</span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> A0AV96     RBM47  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> A0AVF1     TTC26  </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 20,384 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> A0AVF1     IFT56  </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 20,386 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="how-to-extend-the-expiry-period">How to extend the expiry period?<a class="anchor" aria-label="anchor" href="#how-to-extend-the-expiry-period"></a>
