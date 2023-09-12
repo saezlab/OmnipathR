@@ -39,6 +39,9 @@
 #' @return Nothing, this is not a function but a list.
 .omnipath_options_defaults <- list(
     omnipath.url = 'https://omnipathdb.org/',
+    omnipath.notls_url = 'http://no-tls.omnipathdb.org/',
+    omnipath.notls_fallback = TRUE,
+    omnipath.notls_force = FALSE,
     omnipath.license = 'academic',
     omnipath.password = NULL,
     omnipath.print_urls = FALSE,

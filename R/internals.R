@@ -24,13 +24,18 @@
 #'
 #' @param path_qs Character: part of the URL after the domain: the path and
 #'     the query string.
+#' @param notls Logical: use http instead of https (do not use TLS).
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% or
 #' @importFrom stringr str_replace
 #' @noRd
-omnipath_url <- function(path_qs){
+omnipath_url <- function(path_qs, notls = FALSE){
 
-    'omnipath.url' %>%
+    'omnipath.notls_force' %>%
+    getOption %>%
+    or(notls) %>%
+    `if`('notls_', '') %>%
+    sprintf('omnipath.%surl', .) %>%
     getOption %>%
     str_replace('/+$', '') %>%
     c(str_replace(path_qs, '^/+', '')) %>%
