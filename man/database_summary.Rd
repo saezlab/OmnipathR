@@ -22,6 +22,6 @@ detailed information on the contents of these databases. It includes
 all the available resources, fields and values in the database.
 }
 \examples{
-database_summary('annotations')
+annotations_summary <- database_summary('annotations')
 
 }

@@ -272,7 +272,7 @@ query_info <- function(query_type) {
 #'     otherwise a data frame.
 #'
 #' @examples
-#' database_summary('annotations')
+#' annotations_summary <- database_summary('annotations')
 #'
 #' @importFrom magrittr %>%
 #' @importFrom purrr map keep
