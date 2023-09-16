@@ -53,6 +53,7 @@ Imports:
     jsonlite,
     later,
     logger,
+    lubridate,
     magrittr,
     progress,
     purrr,
