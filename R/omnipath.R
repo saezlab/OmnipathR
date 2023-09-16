@@ -758,6 +758,7 @@ omnipath_download <- function(url, fun, ...) {
         if(!is.null(from_cache)){
 
             log_info('Loaded from cache: `%s`', the_url)
+            attr(from_cache, 'url') <- the_url
             return(from_cache)
 
         }
@@ -783,6 +784,7 @@ omnipath_download <- function(url, fun, ...) {
 
             log_info('Successfully retrieved: `%s`', the_url)
             omnipath_cache_save(data = result, url = the_url)
+            attr(result, 'url') <- the_url
             return(result)
 
         }
