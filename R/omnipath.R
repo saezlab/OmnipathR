@@ -324,14 +324,7 @@ omnipath_check_param <- function(param){
         param$query_type
     )
 
-    # adding the message template which will be printed upon successful
-    # download
-    param$qt_message <- `if`(
-        !is.null(param$query_type) &
-        param$query_type %in% names(.omnipath_qt_messages),
-        .omnipath_qt_messages[[param$query_type]],
-        'records'
-    )
+    param %<>% add_qt_message
 
     # mapping the query string parameter synonyms
     for(name in names(param)){
@@ -427,6 +420,25 @@ omnipath_check_param <- function(param){
         )
 
     }
+
+    return(param)
+
+}
+
+
+#' Adds a message printed upon successful download
+#'
+#' @noRd
+add_qt_message <- function(param) {
+
+    # adding the message template which will be printed upon successful
+    # download
+    param$qt_message <- `if`(
+        !is.null(param$query_type) &
+        param$query_type %in% names(.omnipath_qt_messages),
+        .omnipath_qt_messages[[param$query_type]],
+        'records'
+    )
 
     return(param)
 
