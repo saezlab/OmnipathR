@@ -216,7 +216,41 @@ import_omnipath <- function(
         download_args
     )
 
-    result <- do.call(omnipath_download, download_args)
+    result <-
+        do.call(omnipath_download, download_args) %>%
+        omnipath_post_download(
+            url = url,
+            logicals = logicals,
+            references_by_resource = references_by_resource,
+            strict_evidences = strict_evidences,
+            exclude = exclude,
+            param = param,
+            add_counts = add_counts,
+            silent = silent
+        )
+
+    return(result)
+
+}
+
+
+#' Post-processing of the data downloaded from OmniPath
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom tibble as_tibble
+#' @importFrom rlang !!!
+#' @noRd
+omnipath_post_download <- function(
+        result,
+        url,
+        param,
+        logicals = NULL,
+        references_by_resource = TRUE,
+        strict_evidences = FALSE,
+        exclude = NULL,
+        add_counts = TRUE,
+        silent = FALSE
+    ) {
 
     omnipath_check_result(result, url)
 
@@ -226,7 +260,7 @@ import_omnipath <- function(
     result %<>% deserialize_extra_attrs(!!!param$json_param)
     result %<>% deserialize_evidences(!!!param$json_param)
 
-    if(strict_evidences && query_type == 'interactions') {
+    if(strict_evidences && param$query_type == 'interactions') {
         result %<>% only_from(
             datasets = param$datasets,
             resources = param$resources
