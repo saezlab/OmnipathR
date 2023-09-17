@@ -33,7 +33,9 @@
 #' @examples
 #' static_tables()
 #'
-#' @importFrom magrittr %>% extract
+#' @importFrom magrittr %>% extract extract2
+#' @importFrom curl curl_fetch_memory
+#' @importFrom stringi stri_split_lines1
 #' @importFrom tibble tibble
 #' @importFrom tidyr separate_wider_regex separate_wider_delim
 #' @importFrom stringr str_extract
@@ -43,8 +45,11 @@
 static_tables <- function() {
 
     'omnipath_static' %>%
-    download_to_cache %>%
-    readLines %>%
+    url_parser %>%
+    curl_fetch_memory %>%
+    extract2('content') %>%
+    rawToChar %>%
+    stri_split_lines1 %>%
     extract(8L:length(.) - 2L) %>%
     tibble(fname = .) %>%
     separate_wider_regex(
