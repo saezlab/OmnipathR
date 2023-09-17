@@ -51,6 +51,7 @@
     omnipath.logfile = NULL,
     omnipath.cachedir = NULL,
     omnipath.cache_timeout = 5,
+    omnipath.use_cache = TRUE,
     omnipath.retry_downloads = 3,
     omnipath.retry_downloads_in_seconds = 5,
     omnipath.db_lifetime = 300,

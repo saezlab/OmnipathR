@@ -168,11 +168,13 @@ import_omnipath <- function(
     exclude = NULL,
     json_param = list(),
     strict_evidences = FALSE,
+    cache = NULL,
     ...
 ){
 
     datasets %<>% setdiff(exclude)
     resources %<>% setdiff(exclude)
+    cache %<>% use_cache
 
     param <- c(as.list(environment()), list(...))
     param <- omnipath_check_param(param)
@@ -187,7 +189,8 @@ import_omnipath <- function(
             NULL
         ))
     download_args_defaults <- list(
-        url = url
+        url = url,
+        cache = cache
     )
     dataframe_defaults <- list(
         fun = read_tsv,
@@ -743,29 +746,36 @@ swap_undirected <- function(data){
 #'     be used as fallback URLs in case the first one fails.
 #' @param fun The downloader function. Should be able to accept \code{url}
 #'     as its first argument.
+#' @param cache Logical: use the cache.
 #' @param ... Passed to the internal function \code{download_base} and
 #'     from there ultimately to \code{fun}.
 #'
 #' @importFrom logger log_trace log_info log_error
 #' @noRd
-omnipath_download <- function(url, fun, ...) {
+omnipath_download <- function(url, fun, cache = NULL, ...) {
 
-    for(the_url in url) {
+    cache %<>% use_cache
 
-        log_trace('Looking up in cache: `%s`', the_url)
-        from_cache <- omnipath_cache_load(url = the_url)
+    if(cache) {
 
-        if(!is.null(from_cache)){
+        for(the_url in url) {
 
-            log_info('Loaded from cache: `%s`', the_url)
-            attr(from_cache, 'url') <- the_url
-            return(from_cache)
+            log_trace('Looking up in cache: `%s`', the_url)
+            from_cache <- omnipath_cache_load(url = the_url)
+
+            if(!is.null(from_cache)){
+
+                log_info('Loaded from cache: `%s`', the_url)
+                attr(from_cache, 'url') <- the_url
+                return(from_cache)
+
+            }
 
         }
 
     }
 
-    for(the_url in url){
+    for(the_url in url) {
 
         log_trace('Attempting `%s`', the_url)
 
@@ -783,7 +793,9 @@ omnipath_download <- function(url, fun, ...) {
         if(!is.null(result)){
 
             log_info('Successfully retrieved: `%s`', the_url)
-            omnipath_cache_save(data = result, url = the_url)
+            if(cache) {
+                omnipath_cache_save(data = result, url = the_url)
+            }
             attr(result, 'url') <- the_url
             return(result)
 
