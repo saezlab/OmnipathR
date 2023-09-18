@@ -138,7 +138,7 @@ static_table <- function(
          'experiencing issues.'
     )
 
-    organism %<>% as.character %>% as.integer
+    organism %<>% as.integer %>% as.character
 
     query_l <- str_to_lower(query)
     resource_l <- str_to_lower(resource)
@@ -153,7 +153,7 @@ static_table <- function(
     filter(
         query == query_l &
         str_to_lower(resource) == resource_l &
-        organism == organism
+        organism == .env$organism
     ) %>%
     {`if`(
         nrow(.) < 1L,
