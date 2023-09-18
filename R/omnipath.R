@@ -132,7 +132,8 @@ utils::globalVariables(
     'extra_attrs',
     'evidences',
     'json_param',
-    'strict_evidences'
+    'strict_evidences',
+    'cache'
 )
 
 
