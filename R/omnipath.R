@@ -384,6 +384,9 @@ omnipath_check_param <- function(param){
         param$fields
     )
 
+    # allow organism names
+    param$organisms %<>% map_int(ncbi_taxid)
+
     # removing some fields according to query type
     if(!param$query_type %in% c('interactions', 'enzsub')){
         param$genesymbols <- NULL
