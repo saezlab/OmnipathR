@@ -316,6 +316,7 @@ omnipath_post_download <- function(
 #'
 #' @importFrom magrittr %<>%
 #' @importFrom logger log_warn
+#' @importFrom purrr map_int
 #'
 #' @noRd
 omnipath_check_param <- function(param){
@@ -458,6 +459,8 @@ add_qt_message <- function(param) {
 #'
 #' @importFrom magrittr %>%
 #' @importFrom logger log_warn
+#' @importFrom purrr reduce
+#' @importFrom utils URLencode
 #'
 #' @noRd
 omnipath_build_url <- function(param, notls = FALSE){
@@ -483,13 +486,15 @@ omnipath_build_url <- function(param, notls = FALSE){
 
     }
 
-    url <- Reduce(
-        function(url, key){
-            omnipath_url_add_param(url, key, param[[key]])
-        },
-        .omnipath_querystring_param,
-        init = baseurl
-    )
+    url <-
+        .omnipath_querystring_param %>%
+        reduce(
+            function(url, key){
+                omnipath_url_add_param(url, key, param[[key]])
+            },
+            .init = baseurl
+        ) %>%
+        URLencode
 
     return(url)
 
