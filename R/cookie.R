@@ -45,7 +45,7 @@ cookie <- function(
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
-    name <- value <- NULL
+    name <- value <- login_url <- NULL
 
     if(is.null(init_url)) {
         init_url <- url

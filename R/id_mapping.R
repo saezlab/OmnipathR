@@ -230,6 +230,9 @@ uniprot_id_mapping_table <- function(
 #' @export
 uniprot_idmapping_id_types <- function() {
 
+    # NSE vs. R CMD check workaround
+    groups <- items <- NULL
+
     url_key <- 'uniprot_idmapping_id_types'
 
     generic_downloader(
