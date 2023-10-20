@@ -132,7 +132,8 @@ utils::globalVariables(
     'extra_attrs',
     'evidences',
     'json_param',
-    'strict_evidences'
+    'strict_evidences',
+    'cache'
 )
 
 
@@ -168,11 +169,13 @@ import_omnipath <- function(
     exclude = NULL,
     json_param = list(),
     strict_evidences = FALSE,
+    cache = NULL,
     ...
 ){
 
     datasets %<>% setdiff(exclude)
     resources %<>% setdiff(exclude)
+    cache %<>% use_cache
 
     param <- c(as.list(environment()), list(...))
     param <- omnipath_check_param(param)
@@ -187,7 +190,8 @@ import_omnipath <- function(
             NULL
         ))
     download_args_defaults <- list(
-        url = url
+        url = url,
+        cache = cache
     )
     dataframe_defaults <- list(
         fun = read_tsv,
@@ -216,7 +220,41 @@ import_omnipath <- function(
         download_args
     )
 
-    result <- do.call(omnipath_download, download_args)
+    result <-
+        do.call(omnipath_download, download_args) %>%
+        omnipath_post_download(
+            url = url,
+            logicals = logicals,
+            references_by_resource = references_by_resource,
+            strict_evidences = strict_evidences,
+            exclude = exclude,
+            param = param,
+            add_counts = add_counts,
+            silent = silent
+        )
+
+    return(result)
+
+}
+
+
+#' Post-processing of the data downloaded from OmniPath
+#'
+#' @importFrom magrittr %<>% %>%
+#' @importFrom tibble as_tibble
+#' @importFrom rlang !!!
+#' @noRd
+omnipath_post_download <- function(
+        result,
+        url,
+        param,
+        logicals = NULL,
+        references_by_resource = TRUE,
+        strict_evidences = FALSE,
+        exclude = NULL,
+        add_counts = TRUE,
+        silent = FALSE
+    ) {
 
     omnipath_check_result(result, url)
 
@@ -226,7 +264,7 @@ import_omnipath <- function(
     result %<>% deserialize_extra_attrs(!!!param$json_param)
     result %<>% deserialize_evidences(!!!param$json_param)
 
-    if(strict_evidences && query_type == 'interactions') {
+    if(strict_evidences && param$query_type == 'interactions') {
         result %<>% only_from(
             datasets = param$datasets,
             resources = param$resources
@@ -278,6 +316,7 @@ import_omnipath <- function(
 #'
 #' @importFrom magrittr %<>%
 #' @importFrom logger log_warn
+#' @importFrom purrr map_int
 #'
 #' @noRd
 omnipath_check_param <- function(param){
@@ -290,14 +329,7 @@ omnipath_check_param <- function(param){
         param$query_type
     )
 
-    # adding the message template which will be printed upon successful
-    # download
-    param$qt_message <- `if`(
-        !is.null(param$query_type) &
-        param$query_type %in% names(.omnipath_qt_messages),
-        .omnipath_qt_messages[[param$query_type]],
-        'records'
-    )
+    param %<>% add_qt_message
 
     # mapping the query string parameter synonyms
     for(name in names(param)){
@@ -353,6 +385,9 @@ omnipath_check_param <- function(param){
         param$fields
     )
 
+    # allow organism names
+    param$organisms %<>% map_int(ncbi_taxid)
+
     # removing some fields according to query type
     if(!param$query_type %in% c('interactions', 'enzsub')){
         param$genesymbols <- NULL
@@ -399,12 +434,33 @@ omnipath_check_param <- function(param){
 }
 
 
+#' Adds a message printed upon successful download
+#'
+#' @noRd
+add_qt_message <- function(param) {
+
+    # adding the message template which will be printed upon successful
+    # download
+    param$qt_message <- `if`(
+        !is.null(param$query_type) &
+        param$query_type %in% names(.omnipath_qt_messages),
+        .omnipath_qt_messages[[param$query_type]],
+        'records'
+    )
+
+    return(param)
+
+}
+
+
 #' Constructs the URL by creating a base URL according to the query type and
 #' adding all user or package defined query string parameters.
 #' Not exported.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom logger log_warn
+#' @importFrom purrr reduce
+#' @importFrom utils URLencode
 #'
 #' @noRd
 omnipath_build_url <- function(param, notls = FALSE){
@@ -430,13 +486,15 @@ omnipath_build_url <- function(param, notls = FALSE){
 
     }
 
-    url <- Reduce(
-        function(url, key){
-            omnipath_url_add_param(url, key, param[[key]])
-        },
-        .omnipath_querystring_param,
-        init = baseurl
-    )
+    url <-
+        .omnipath_querystring_param %>%
+        reduce(
+            function(url, key){
+                omnipath_url_add_param(url, key, param[[key]])
+            },
+            .init = baseurl
+        ) %>%
+        URLencode
 
     return(url)
 
@@ -697,28 +755,36 @@ swap_undirected <- function(data){
 #'     be used as fallback URLs in case the first one fails.
 #' @param fun The downloader function. Should be able to accept \code{url}
 #'     as its first argument.
+#' @param cache Logical: use the cache.
 #' @param ... Passed to the internal function \code{download_base} and
 #'     from there ultimately to \code{fun}.
 #'
 #' @importFrom logger log_trace log_info log_error
 #' @noRd
-omnipath_download <- function(url, fun, ...) {
+omnipath_download <- function(url, fun, cache = NULL, ...) {
 
-    for(the_url in url) {
+    cache %<>% use_cache
 
-        log_trace('Looking up in cache: `%s`', the_url)
-        from_cache <- omnipath_cache_load(url = the_url)
+    if(cache) {
 
-        if(!is.null(from_cache)){
+        for(the_url in url) {
 
-            log_info('Loaded from cache: `%s`', the_url)
-            return(from_cache)
+            log_trace('Looking up in cache: `%s`', the_url)
+            from_cache <- omnipath_cache_load(url = the_url)
+
+            if(!is.null(from_cache)){
+
+                log_info('Loaded from cache: `%s`', the_url)
+                attr(from_cache, 'url') <- the_url
+                return(from_cache)
+
+            }
 
         }
 
     }
 
-    for(the_url in url){
+    for(the_url in url) {
 
         log_trace('Attempting `%s`', the_url)
 
@@ -736,7 +802,10 @@ omnipath_download <- function(url, fun, ...) {
         if(!is.null(result)){
 
             log_info('Successfully retrieved: `%s`', the_url)
-            omnipath_cache_save(data = result, url = the_url)
+            if(cache) {
+                omnipath_cache_save(data = result, url = the_url)
+            }
+            attr(result, 'url') <- the_url
             return(result)
 
         }

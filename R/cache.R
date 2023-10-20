@@ -1813,3 +1813,18 @@ origin_cache <- function(data, from_cache = TRUE){
     {`if`(from_cache, `attr<-`(., 'origin', 'cache'), .)}
 
 }
+
+
+
+#' Global on-off switch for cache reads & writes
+#'
+#' It takes effect only in `omnipath_download`.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+use_cache <- function(cache = NULL) {
+
+    cache %>%
+    if_null(getOption('omnipath.use_cache'))
+
+}

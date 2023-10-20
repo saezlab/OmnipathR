@@ -136,5 +136,6 @@
     "oma_pairwise": [
         "https://omabrowser.org/cgi-bin/gateway.pl?",
         "f=PairwiseOrthologs&p1=%s&p2=%s&p3=%s"
-    ]
+    ],
+    "omnipath_static": ["http://no-tls.static.omnipathdb.org/resources/"]
 }

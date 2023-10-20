@@ -92,6 +92,8 @@ orthology_translate <- function(
     source = 9606
 ) {
 
+    # NSE vs R CMD check workaround
+    d <- NULL
 
     UNIPROT_DEFAULTS <- c('uniprot', 'uniprot', 'genesymbol')
     GENESYMBOL_DEFAULTS <- c('genesymbol')
@@ -374,7 +376,7 @@ complex_orthology <- function(
 ) {
 
     # NSE vs. R CMD check workaround
-    components <- NULL
+    components <- complexes <- vars <- NULL
 
     has_prefix <- identifiers %>% str_detect(CPLEX_PREFIX) %>% any
 

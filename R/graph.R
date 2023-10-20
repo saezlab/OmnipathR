@@ -413,6 +413,9 @@ subnetwork <- function(
     return_df = TRUE
 ) {
 
+    # NSE vs R CMD check workaround
+    igraph_vs <- NULL
+
     network %<>% ensure_igraph
     nodes %<>% igraph_vs(network)
 

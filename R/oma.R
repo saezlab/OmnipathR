@@ -102,6 +102,9 @@ oma_pairwise <- function(
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround:
+    id_organism_a <- id_organism_b <- mapping <- NULL
+
     organism_a %<>% oma_code
     organism_b %<>% oma_code
     id_type %<>% oma_id_type
