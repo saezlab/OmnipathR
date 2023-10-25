@@ -15,6 +15,19 @@ cookie(
 )
 }
 \arguments{
+\item{url}{Character. URL to download to get the cookie.}
+
+\item{init_url}{Character. An initial URL to download to get the cookie,
+before downloading ``url`` with the cookie.}
+
+\item{post}{List: HTTP POST parameters.}
+
+\item{payload}{Data to send as payload.}
+
+\item{init_post}{List: HTTP POST parameters for ``init_url``.}
+
+\item{init_payload}{Data to send as payload with ``init_url``.}
+
 \item{curl_verbose}{Logical. Perform CURL requests in verbose mode for
 debugging purposes.}
 }

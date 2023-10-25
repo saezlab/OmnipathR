@@ -24,6 +24,13 @@
 #'
 #' @param curl_verbose Logical. Perform CURL requests in verbose mode for
 #'     debugging purposes.
+#' @param url Character. URL to download to get the cookie.
+#' @param init_url Character. An initial URL to download to get the cookie,
+#'     before downloading ``url`` with the cookie.
+#' @param post List: HTTP POST parameters.
+#' @param payload Data to send as payload.
+#' @param init_post List: HTTP POST parameters for ``init_url``.
+#' @param init_payload Data to send as payload with ``init_url``.
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv cols
