@@ -220,6 +220,8 @@ uniprot_id_mapping_table <- function(
 
 #' ID types available in the UniProt ID Mapping service
 #'
+#' @return A data frame listing the ID types.
+#'
 #' @examples
 #' uniprot_idmapping_id_types()
 #'
