@@ -396,6 +396,9 @@ giant_component <- function(graph){
 #' @param return_df Logical: return an interaction data frame instead of an
 #'     igraph object.
 #'
+#' @return A network data frame or an igraph object, depending on the
+#'     ``return_df`` parameter.
+#'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom igraph ego induced_subgraph
 #' @export

@@ -32,6 +32,10 @@ result.}
 \item{return_df}{Logical: return an interaction data frame instead of an
 igraph object.}
 }
+\value{
+A network data frame or an igraph object, depending on the
+    ``return_df`` parameter.
+}
 \description{
 Extract a custom subnetwork from a large network
 }

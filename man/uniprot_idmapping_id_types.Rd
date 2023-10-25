@@ -6,6 +6,9 @@
 \usage{
 uniprot_idmapping_id_types()
 }
+\value{
+A data frame listing the ID types.
+}
 \description{
 ID types available in the UniProt ID Mapping service
 }
