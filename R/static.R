@@ -44,6 +44,9 @@
 #' @seealso \code{\link{static_table}}
 static_tables <- function() {
 
+    # NSE vs. R CMD check workaround
+    fname <- organism <- time <- size <- NULL
+
     'omnipath_static' %>%
     url_parser %>%
     curl_fetch_memory %>%
@@ -130,6 +133,9 @@ static_table <- function(
         wide = TRUE,
         dorothea_levels = c('A', 'B', 'C')
     ) {
+
+    # NSE vs. R CMD check workaround
+    .env <- NULL
 
     log_warn(
          sprintf('Accessing `%s` as a static table: this is not ', resource),
