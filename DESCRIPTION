@@ -64,6 +64,7 @@ Imports:
     rmarkdown,
     rvest,
     stats,
+    stringi,
     stringr,
     tibble,
     tidyr,
