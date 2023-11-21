@@ -1155,6 +1155,8 @@ import_small_molecule_protein_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param types Character: interaction types, such as "transcriptional",
+#' "post_transcriptional", "post_translational", etc.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -1182,15 +1184,13 @@ import_all_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     strict_evidences = FALSE,
+    types = NULL,
     ...
 ){
 
-    all_datasets <-
-        omnipath_url('queries/interactions?format=json') %>%
-        safe_json(path = .) %>%
-        extract2('datasets') %>%
-        setdiff(exclude)
-
+    q_info <- query_info('interactions')
+    datasets <- q_info %>% extract2('datasets') %>% setdiff(exclude)
+    types %<>% if_null(q_info %>% extract2('types'))
     # it does not make sense without the type field
     fields %<>% c('type', 'dorothea_level') %>% unique
 
@@ -1200,7 +1200,8 @@ import_all_interactions <- function(
         organism = organism,
         dorothea_levels = dorothea_levels,
         exclude = exclude,
-        datasets = all_datasets,
+        datasets = datasets,
+        types = types,
         fields = fields,
         default_fields = default_fields,
         references_by_resource = references_by_resource,

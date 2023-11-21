@@ -14,6 +14,7 @@ import_all_interactions(
   default_fields = TRUE,
   references_by_resource = TRUE,
   strict_evidences = FALSE,
+  types = NULL,
   ...
 )
 
@@ -46,6 +47,9 @@ comes from which resource will be lost and the PubMed IDs will be unique.}
 \item{strict_evidences}{Logical: restrict the evidences to the queried
 datasets and resources. If set to FALSE, the directions and effect signs
 and references might be based on other datasets and resources.}
+
+\item{types}{Character: interaction types, such as "transcriptional",
+"post_transcriptional", "post_translational", etc.}
 
 \item{...}{Passed to \code{import_all_interactions}.}
 }
