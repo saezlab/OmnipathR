@@ -5,11 +5,12 @@
 #' COSMOS using information from different resources. It will download the 
 #' required information through the \pkg{OmnipathR} R package. Particularly, 
 #' \code{create_PKN_COSMOS} will obtain: \itemize{ \item Genome-scale metabolic 
-#' model (GEM) of the required organism from (). \item Interaction network of 
-#' chemical and proteins from STITCH (\url(http://stitch.embl.de/)) for the 
-#' required organism. \item Protein-protein interactions from Omnipath ()} 
-#' With these three pieces of information, the function will generate the 
-#' required causal network for COSMOS to run. 
+#' model (GEM) of the required organism from Wang et al., 2021. 
+#' \item Interaction network of 
+#' chemical and proteins from STITCH (\url{http://stitch.embl.de/}) for the 
+#' required organism. \item Protein-protein interactions from Omnipath (Türei 
+#' et al., 2021)} With these three pieces of information, the function will 
+#' generate the required causal network for COSMOS to run. 
 #' 
 #' @param organism Character or integer: an organism (taxon) identifier. 
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus), 
@@ -36,6 +37,15 @@
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to 
 #'   run: causal PKN, 
+#' 
+#' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, 
+#'    Cholley PE, et al. Genome-scale metabolic network reconstruction of model 
+#'    animals as a platform for translational research. Proceedings of the 
+#'    National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+#'    
+#'    Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+#'     Integrated intra‐ and intercellular signaling knowledge for multicellular 
+#'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #' 
 #' @examples
 #' \dontrun{
@@ -136,11 +146,12 @@ create_PKN_COSMOS <- function(
 #' COSMOS using information from different resources. It will download the 
 #' required information through the \pkg{OmnipathR} R package. Particularly, 
 #' \code{create_PKN_COSMOS} will obtain: \itemize{ \item Genome-scale metabolic 
-#' model (GEM) of the required organism from (). \item Interaction network of 
-#' chemical and proteins from STITCH (\url(http://stitch.embl.de/)) for the 
-#' required organism. \item Protein-protein interactions from Omnipath ()} 
-#' With these three pieces of information, the function will generate the 
-#' required causal network for COSMOS to run. 
+#' model (GEM) of the required organism from Wang et al., 2021. 
+#' \item Interaction network of 
+#' chemical and proteins from STITCH (\url{http://stitch.embl.de/}) for the 
+#' required organism. \item Protein-protein interactions from Omnipath (Türei 
+#' et al., 2021)} With these three pieces of information, the function will 
+#' generate the required causal network for COSMOS to run. 
 #' 
 #' @param organism Character or integer: an organism (taxon) identifier. 
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus), 
@@ -168,10 +179,14 @@ create_PKN_COSMOS <- function(
 #' @return List of 4 elements containing the necessary information for COSMOS to 
 #'   run: causal PKN, 
 #' 
-#' @examples
-#' \dontrun{
-#'   human.PKN.COSMOS <- create_PKN_COSMOS(organism = 9606)
-#' }
+#' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, 
+#'    Cholley PE, et al. Genome-scale metabolic network reconstruction of model 
+#'    animals as a platform for translational research. Proceedings of the 
+#'    National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+#'    
+#'    Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+#'     Integrated intra‐ and intercellular signaling knowledge for multicellular 
+#'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #' 
 #' @noRd
 #'   
