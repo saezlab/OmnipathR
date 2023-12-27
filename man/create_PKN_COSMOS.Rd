@@ -2,7 +2,7 @@
 % Please edit documentation in R/cosmos_PKN_generation.R
 \name{create_PKN_COSMOS}
 \alias{create_PKN_COSMOS}
-\title{Generating COSMOS' PKN for different organisms}
+\title{Generating organism-specific PKNs for COSMOS}
 \usage{
 create_PKN_COSMOS(
   organism,
@@ -21,14 +21,13 @@ create_PKN_COSMOS(
 }
 \arguments{
 \item{organism}{Character or integer: an organism (taxon) identifier. 
-Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus), 
-10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila 
-melanogaster) and 6239 (Caenorhabditis elegans).}
+Supported taxons are 9606 (\emph{Homo sapiens}), 10090 
+(\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).}
 
-\item{translate.genes}{Whether translating genes from ENSEMBL into SYMBOL. 
-\code{FALSE} by default.}
+\item{translate.genes}{Whether translating genes from ENSEMBL into SYMBOL.
+Only required when \code{organism == 9606} (\code{FALSE} by default).}
 
-\item{biomart.use.omnipath}{Whether using BiomaRt information from OmnipathR 
+\item{biomart.use.omnipath}{Whether using BioMart information from OmnipathR 
 (\code{TRUE} by default).}
 
 \item{GEM.reactions.map.col}{Column of reaction IDs in the GEM
@@ -43,7 +42,7 @@ is provided, this list parameter should not be modified.}
 
 \item{GEM.degree.mets.threshold}{Degree cutoff used to filter out 
 metabolites (400 by default). The objective is to remove cofactors and 
-other metabolites with many connections.}
+over-promiscuous metabolites.}
 
 \item{stitch.threshold}{Confidence cutoff used for STITCH connections 
 (700 by default).}
@@ -53,19 +52,22 @@ default).}
 }
 \value{
 List of 4 elements containing the necessary information for COSMOS to 
-  run: causal PKN,
+  run: causal PKN, mapping data frame for metabolites from GEM, 
+  reaction-to-gene data frame from GEM, and mapping data frame for reactions 
+  from GEM.
 }
 \description{
 This function generates the prior knowledge network (PKN) needed to run 
-COSMOS using information from different resources. It will download the 
-required information through the \pkg{OmnipathR} R package. Particularly, 
-\code{create_PKN_COSMOS} will obtain: \itemize{ \item Genome-scale metabolic 
+COSMOS using information from different resources through the \pkg{OmnipathR} 
+R package. Particularly, \code{create_PKN_COSMOS} will obtain: 
+\itemize{ \item Genome-scale metabolic 
 model (GEM) of the required organism from Wang et al., 2021. 
 \item Interaction network of 
-chemical and proteins from STITCH (\url{http://stitch.embl.de/}) for the 
+chemicals and proteins from STITCH (\url{http://stitch.embl.de/}) for the 
 required organism. \item Protein-protein interactions from Omnipath (Türei 
-et al., 2021)} With these three pieces of information, the function will 
-generate the required causal network for COSMOS to run.
+et al., 2021) for the required organism} With these three pieces of 
+information, the function will generate the required causal network for 
+COSMOS to run.
 }
 \examples{
 \dontrun{

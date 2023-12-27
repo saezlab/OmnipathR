@@ -1,24 +1,24 @@
 
-#' Generating COSMOS' PKN for different organisms 
+#' Generating organism-specific PKNs for COSMOS
 #'
 #' This function generates the prior knowledge network (PKN) needed to run 
-#' COSMOS using information from different resources. It will download the 
-#' required information through the \pkg{OmnipathR} R package. Particularly, 
-#' \code{create_PKN_COSMOS} will obtain: \itemize{ \item Genome-scale metabolic 
+#' COSMOS using information from different resources through the \pkg{OmnipathR} 
+#' R package. Particularly, \code{create_PKN_COSMOS} will obtain: 
+#' \itemize{ \item Genome-scale metabolic 
 #' model (GEM) of the required organism from Wang et al., 2021. 
 #' \item Interaction network of 
-#' chemical and proteins from STITCH (\url{http://stitch.embl.de/}) for the 
+#' chemicals and proteins from STITCH (\url{http://stitch.embl.de/}) for the 
 #' required organism. \item Protein-protein interactions from Omnipath (Türei 
-#' et al., 2021)} With these three pieces of information, the function will 
-#' generate the required causal network for COSMOS to run. 
+#' et al., 2021) for the required organism} With these three pieces of 
+#' information, the function will generate the required causal network for 
+#' COSMOS to run. 
 #' 
 #' @param organism Character or integer: an organism (taxon) identifier. 
-#'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus), 
-#'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila 
-#'   melanogaster) and 6239 (Caenorhabditis elegans). 
-#' @param translate.genes Whether translating genes from ENSEMBL into SYMBOL. 
-#'   \code{FALSE} by default.
-#' @param biomart.use.omnipath Whether using BiomaRt information from OmnipathR 
+#'   Supported taxons are 9606 (\emph{Homo sapiens}), 10090 
+#'   (\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}). 
+#' @param translate.genes Whether translating genes from ENSEMBL into SYMBOL.
+#'   Only required when \code{organism == 9606} (\code{FALSE} by default). 
+#' @param biomart.use.omnipath Whether using BioMart information from OmnipathR 
 #'   (\code{TRUE} by default).
 #' @param GEM.reactions.map.col Column of reaction IDs in the GEM
 #'   (\code{"rxns"} by default).
@@ -29,14 +29,16 @@
 #'   is provided, this list parameter should not be modified. 
 #' @param GEM.degree.mets.threshold Degree cutoff used to filter out 
 #'   metabolites (400 by default). The objective is to remove cofactors and 
-#'   other metabolites with many connections. 
+#'   over-promiscuous metabolites. 
 #' @param stitch.threshold Confidence cutoff used for STITCH connections 
 #'   (700 by default).
 #' @param verbose Whether showing messages during execution (\code{TRUE} by 
 #'   default).
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to 
-#'   run: causal PKN, 
+#'   run: causal PKN, mapping data frame for metabolites from GEM, 
+#'   reaction-to-gene data frame from GEM, and mapping data frame for reactions 
+#'   from GEM.
 #' 
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, 
 #'    Cholley PE, et al. Genome-scale metabolic network reconstruction of model 
@@ -51,6 +53,9 @@
 #' \dontrun{
 #'   human.PKN.COSMOS <- create_PKN_COSMOS(organism = 9606)
 #' }
+#' 
+#' @importFrom magrittr %>%
+#' @importFrom rlang exec !!!
 #' 
 #' @export
 #'   
@@ -81,16 +86,22 @@ create_PKN_COSMOS <- function(
     as.character(organism), 
     "9606" = "hsapiens_gene_ensembl",
     "10090" = "mmusculus_gene_ensembl",
-    "10116" = "rnorvegicus_gene_ensembl",
-    "7955" = "drerio_gene_ensembl",
-    "7227" = "dmelanogaster_gene_ensembl",
-    "6239" = "celegants_gene_ensembl"
+    "10116" = "rnorvegicus_gene_ensembl"
   )
   if (is.null(dataset.biomart)) 
     stop(
       "Chosen organism is not recognizable Available options are: ", 
       paste(c(9606, 10090, 10116, 7955, 7227, 6239), collapse = ", ")
     )
+  
+  ## check dependencies (Suggests in DESCRIPTION)
+  if (!requireNamespace("R.matlab", quietly = TRUE)) 
+    stop("R.matlab R package is required but not available")
+  
+  
+  if (!requireNamespace("metaboliteIDmapping", quietly = TRUE)) 
+    stop("metaboliteIDmapping R package is required but not available")
+  
   
   .slow_doctest()
   
@@ -113,7 +124,7 @@ create_PKN_COSMOS <- function(
       create = FALSE
     ) %>% omnipath_cache_latest_version
   
-  if (is.null(in_cache) || !cache) {
+  if (is.null(in_cache)) {
     log_success(
       paste0(
         'Building COSMOS PKN (organism: %s). ',
@@ -177,7 +188,9 @@ create_PKN_COSMOS <- function(
 #'   default).
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to 
-#'   run: causal PKN, 
+#'   run: causal PKN, mapping data frame for metabolites from GEM, 
+#'   reaction-to-gene data frame from GEM, and mapping data frame for reactions 
+#'   from GEM.
 #' 
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, 
 #'    Cholley PE, et al. Genome-scale metabolic network reconstruction of model 
@@ -187,6 +200,8 @@ create_PKN_COSMOS <- function(
 #'    Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
 #'     Integrated intra‐ and intercellular signaling knowledge for multicellular 
 #'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+#' 
+#' @importFrom magrittr %>%
 #' 
 #' @noRd
 #'   
@@ -217,10 +232,7 @@ create_PKN_COSMOS <- function(
     as.character(organism), 
     "9606" = "hsapiens_gene_ensembl",
     "10090" = "mmusculus_gene_ensembl",
-    "10116" = "rnorvegicus_gene_ensembl",
-    "7955" = "drerio_gene_ensembl",
-    "7227" = "dmelanogaster_gene_ensembl",
-    "6239" = "celegants_gene_ensembl"
+    "10116" = "rnorvegicus_gene_ensembl"
   )
   if (is.null(dataset.biomart)) 
     stop(
@@ -230,14 +242,17 @@ create_PKN_COSMOS <- function(
   
   if (verbose) message(">>> Loading GEM obtained from Wang et al., 2021...")
   ## download GEM using OmnipathR (if already done, it will be taken from cache)
-  GEM.matlab <- OmnipathR:::GEM_matlab(organism = organism)
-  GEM.metabs <- OmnipathR:::GEM_metabs(organism = organism)
-  GEM.reacts <- OmnipathR:::GEM_reacts(organism = organism)
+  GEM.matlab <- OmnipathR:::GEM_matlab(organism = organism) %>% as.data.frame()
+  GEM.metabs <- OmnipathR:::GEM_metabs(organism = organism) %>% as.data.frame()
+  GEM.reacts <- OmnipathR:::GEM_reacts(organism = organism) %>% as.data.frame()
   
   if (verbose) message("\n>>> Loading protein-chemical interactions from STITCH...")
   ## download STITCH using OmnipathR (if already done, it will be taken from cache)
-  stitch.actions <- OmnipathR:::stitch_actions(organism = organism)
-  stitch.prot.details <- OmnipathR:::stitch_prot_details(organism = organism)
+  stitch.actions <- OmnipathR:::stitch_actions(organism = organism) %>% 
+    as.data.frame()
+  stitch.prot.details <- OmnipathR:::stitch_prot_details(
+    organism = organism
+  ) %>% as.data.frame()
   
   if (biomart.use.omnipath == TRUE) {
     if (verbose) message("\n>>> Using the OmnipathR to retrieve BioMart information")
@@ -352,17 +367,17 @@ create_PKN_COSMOS <- function(
 #' Helper function for \code{create_GEM_basal_PKN} to keep entries with no 
 #' element in GEM processing
 #' 
-#' @param mat.object GEM from a Matlab object
+#' @param matlab.object GEM from a Matlab object
 #' @param attribs.mat Atribute from the Matlab object to be parsed
 #' @param name Vector of elements to be checked in the Metlab object
 #'
 #' @return Vector with NAs in those entries with no element
 #'
 #' @noRd
-.vecInfoMetab <- function(mat.object, attribs.mat, name) {
+.vecInfoMetab <- function(matlab.object, attribs.mat, name) {
   unlist(
     sapply(
-      X = mat.object[[which(attribs.mat == name)]],
+      X = matlab.object[[which(attribs.mat == name)]],
       FUN = \(elem) {
         if (length(unlist(elem) != 0)) {
           return(elem)
@@ -435,8 +450,8 @@ create_PKN_COSMOS <- function(
     stop("degree.mets.cutoff cannot be less than 1")
   }
   
-  mat.object <- matlab.object[[1]]
-  attribs.mat <- rownames(mat.object)
+  attribs.mat <- rownames(matlab.object)
+  matlab.object <- matlab.object[[1]]
   ## check elements are in the object
   invisible(
     sapply(
@@ -444,7 +459,7 @@ create_PKN_COSMOS <- function(
         if (!list.params.GEM[[idx]] %in% attribs.mat) {
           stop(
             paste0(
-              x, "element in list.params.GEM (", 
+              idx, "element in list.params.GEM (",
               list.params.GEM[[idx]], ") is not in matlab object"
             )
           )
@@ -453,30 +468,30 @@ create_PKN_COSMOS <- function(
     )
   )
   ## obtaining data
-  s.matrix <- mat.object[[which(attribs.mat == list.params.GEM$stoich.name)]]
-  reaction.list <- mat.object[[which(attribs.mat == list.params.GEM$reaction.name)]]
+  s.matrix <- matlab.object[[which(attribs.mat == list.params.GEM$stoich.name)]]
+  reaction.list <- matlab.object[[which(attribs.mat == list.params.GEM$reaction.name)]]
   ##############################################################################
   ## reactions
   # direction reactions
   lbs <- as.data.frame(
     cbind(
-      mat.object[[which(attribs.mat == list.params.GEM$lb.name)]],
-      mat.object[[which(attribs.mat == list.params.GEM$ub.name)]],
-      mat.object[[which(attribs.mat == list.params.GEM$rev.name)]]
+      matlab.object[[which(attribs.mat == list.params.GEM$lb.name)]],
+      matlab.object[[which(attribs.mat == list.params.GEM$ub.name)]],
+      matlab.object[[which(attribs.mat == list.params.GEM$rev.name)]]
     )
   )
   ## this could be done with mutate
   lbs$direction <- ifelse(
-    (mat.object[[which(attribs.mat == list.params.GEM$ub.name)]] + 
-       mat.object[[which(attribs.mat == list.params.GEM$lb.name)]]) >= 0,
+    (matlab.object[[which(attribs.mat == list.params.GEM$ub.name)]] + 
+       matlab.object[[which(attribs.mat == list.params.GEM$lb.name)]]) >= 0,
     "forward", "backward"
   )
   reversible <- ifelse(
-    mat.object[[which(attribs.mat == list.params.GEM$rev.name)]] == 1, 
+    matlab.object[[which(attribs.mat == list.params.GEM$rev.name)]] == 1, 
     TRUE, FALSE
   )
   reaction.ids <- unlist(
-    mat.object[[which(attribs.mat == list.params.GEM$reaction.ID.name)]]
+    matlab.object[[which(attribs.mat == list.params.GEM$reaction.ID.name)]]
   )
   ## reaction to genes df
   reaction.to.genes.df <- lapply(
@@ -522,10 +537,10 @@ create_PKN_COSMOS <- function(
   ##############################################################################
   ## metabolites
   metabolites.IDs <- unlist(
-    mat.object[[which(attribs.mat == list.params.GEM$metabolites.ID.name)]]
+    matlab.object[[which(attribs.mat == list.params.GEM$metabolites.ID.name)]]
   )
   metabolites.names <- .vecInfoMetab(
-    mat.object = mat.object, attribs.mat = attribs.mat, 
+    matlab.object = matlab.object, attribs.mat = attribs.mat, 
     name = list.params.GEM$metabolites.names.name
   )
   ## check if IDs are the same and show number of lost metabolites
@@ -537,11 +552,11 @@ create_PKN_COSMOS <- function(
   metabolites.map <- metabolites.map[metabolites.IDs, ]
   ## adding additional information 
   metabolites.formulas <- .vecInfoMetab(
-    mat.object = mat.object, attribs.mat = attribs.mat, 
+    matlab.object = matlab.object, attribs.mat = attribs.mat, 
     name = list.params.GEM$metabolites.fomulas.name
   )
   metabolites.inchi <- .vecInfoMetab(
-    mat.object = mat.object, attribs.mat = attribs.mat, 
+    matlab.object = matlab.object, attribs.mat = attribs.mat, 
     name = list.params.GEM$metabolites.inchi.name
   )
   metabolites.map <- cbind(
@@ -682,8 +697,8 @@ create_PKN_COSMOS <- function(
 .mets_to_HMDB <- function(list.network) {
   metab.map <- list.network[[2]]
   list.network[[1]] <- list.network[[1]] %>% mutate(
-    source = dplyr::case_when(
-      grepl("Metab__", source) ~ dplyr::case_when(
+    source = case_when(
+      grepl("Metab__", source) ~ case_when(
         !is.na(
           metab.map[gsub("Metab__", replacement = "", x = source), "metHMDBID"]
         ) ~ paste0(
@@ -700,8 +715,8 @@ create_PKN_COSMOS <- function(
         ), TRUE ~ source
       ), TRUE ~ source 
     ),
-    target = dplyr::case_when(
-      grepl("Metab__", target) ~ dplyr::case_when(
+    target = case_when(
+      grepl("Metab__", target) ~ case_when(
         !is.na(
           metab.map[gsub("Metab__", replacement = "", x = target), "metHMDBID"]
         ) ~ paste0(
@@ -800,7 +815,7 @@ create_PKN_COSMOS <- function(
   list.network[[1]] <- list.network[[1]] %>% mutate(
     source = case_when(
       ## cases with a single gene
-      grepl("Gene\\d+__", source) ~ dplyr::case_when(
+      grepl("Gene\\d+__", source) ~ case_when(
         !is.na(
           ensembl.df[gsub(regex, replacement = "", x = source), ont.to]
         ) ~ paste0(
@@ -830,7 +845,7 @@ create_PKN_COSMOS <- function(
     ),
     target = case_when(
       ## cases with a single gene
-      grepl("Gene\\d+__", target) ~ dplyr::case_when(
+      grepl("Gene\\d+__", target) ~ case_when(
         !is.na(
           ensembl.df[gsub(regex, replacement = "", x = target), ont.to]
         ) ~ paste0(
@@ -1120,7 +1135,7 @@ create_PKN_COSMOS <- function(
   prots <- as.data.frame(cbind(prots, gsub(paste0(organism, "\\."), "", prots)))
   colnames(prots) <- c("original", "ensembl_prots")
   ## getting info from Biomart
-  if (verbose) message("\n\t>>> Using info from BiomaRt")
+  if (verbose) message("\t>>> Using information from BiomaRt")
   
   if (is.null(mapping.biomart)) {
     ensembl.link <- useEnsembl(biomart = "ensembl", dataset = dataset.biomart)
@@ -1217,8 +1232,8 @@ create_PKN_COSMOS <- function(
   meta.PKN <- as.data.frame(
     rbind(omnipath.PKN, stitch.PKN, GEM.network)
   ) %>% unique()
-  meta.network <- meta.PKN[, c(1, 3, 2)]
-  names(meta.network) <- c("source", "interaction", "target")
+  meta.PKN <- meta.PKN[, c(1, 3, 2)]
+  names(meta.PKN) <- c("source", "interaction", "target")
   #TODO: manual correction: difficult to generalize for different organisms, shall I remove it? 
   #probably erroneous interaction (WHY?? this only works for human / mouse)
   # meta.network <- meta.network[-which(
@@ -1233,7 +1248,7 @@ create_PKN_COSMOS <- function(
   # meta_network <- meta.network[!(grepl("Cad_reverse", meta.network$source) | grepl("Cad_reverse", meta.network$target)) ,] 
   #redHuman confirms that the reaction is actually not reversible: NOT FOUND IN MOUSE EITHER
   
-  return(list(meta.PKN, meta.network))
+  return(meta.PKN)
 }
 
 
@@ -1405,7 +1420,6 @@ GEM_metabs <- function(organism) {
 #'   27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}. 
 #' 
 #' @importFrom magrittr %>% %T>%
-#' @importFrom R.matlab readMat
 #'
 #' @noRd
 GEM_matlab <- function(organism) {
@@ -1424,7 +1438,7 @@ GEM_matlab <- function(organism) {
   
   'GEM_github' %>% 
     generic_downloader(
-      reader = readMat,
+      reader = R.matlab::readMat,
       url_key_param = list(),
       url_param = list(dataset.github, paste0(dataset.github, "-GEM.mat")),
       reader_param = list(),

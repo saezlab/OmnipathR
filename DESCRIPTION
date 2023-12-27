@@ -90,5 +90,7 @@ Suggests:
     sigmajs,
     smoof,
     supraHex,
-    testthat
+    testthat,
+    R.matlab,
+    metaboliteIDmapping
 RoxygenNote: 7.2.3
