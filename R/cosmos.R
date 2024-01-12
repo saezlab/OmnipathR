@@ -25,7 +25,7 @@
 #'
 #' This function generates the prior knowledge network (PKN) needed to run
 #' COSMOS using information from different resources through the \pkg{OmnipathR}
-#' R package. Particularly, \code{create_PKN_COSMOS} will obtain:
+#' R package. Particularly, \code{cosmos_pkn} will obtain:
 #' \itemize{ \item Genome-scale metabolic
 #' model (GEM) of the required organism from Wang et al., 2021.
 #' \item Interaction network of
@@ -42,14 +42,14 @@
 #'   Only required when \code{organism == 9606} (\code{FALSE} by default).
 #' @param biomart.use.omnipath Whether using BioMart information from OmnipathR
 #'   (\code{TRUE} by default).
-#' @param GEM.reactions.map.col Column of reaction IDs in the GEM
+#' @param gem_reactions.map.col Column of reaction IDs in the GEM
 #'   (\code{"rxns"} by default).
-#' @param GEM.metabolites.map.col Column of reaction IDs in the GEM
+#' @param gem_metabolites.map.col Column of reaction IDs in the GEM
 #'   (\code{"mets"} by default).
-#' @param GEM.list.params List containing the name of the slots where the
-#'   information to construct the PKN is located in the GEM. If a matlab object
+#' @param gem_list.params List containing the name of the slots where the
+#'   information to construct the PKN is located in the gem_ If a matlab object
 #'   is provided, this list parameter should not be modified.
-#' @param GEM.degree.mets.threshold Degree cutoff used to filter out
+#' @param gem_degree.mets.threshold Degree cutoff used to filter out
 #'   metabolites (400 by default). The objective is to remove cofactors and
 #'   over-promiscuous metabolites.
 #' @param stitch.threshold Confidence cutoff used for STITCH connections
@@ -60,7 +60,7 @@
 #' @return List of 4 elements containing the necessary information for COSMOS to
 #'   run: causal PKN, mapping data frame for metabolites from GEM,
 #'   reaction-to-gene data frame from GEM, and mapping data frame for reactions
-#'   from GEM.
+#'   from gem_
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
 #'      Cholley PE, et al. Genome-scale metabolic network reconstruction of model
@@ -73,7 +73,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'   human.PKN.COSMOS <- create_PKN_COSMOS(organism = 9606)
+#'   human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
 #' }
 #'
 #' @importFrom magrittr %>% %T>% %<>%
@@ -84,9 +84,9 @@ cosmos_pkn <- function(
     organism,
     translate.genes = FALSE,
     biomart.use.omnipath = TRUE,
-    GEM.reactions.map.col = "rxns",
-    GEM.metabolites.map.col = "mets",
-    GEM.list.params = list(
+    gem_reactions.map.col = "rxns",
+    gem_metabolites.map.col = "mets",
+    gem_list.params = list(
         stoich.name = "S",
         reaction.name = "grRules",
         lb.name = "lb",
@@ -98,7 +98,7 @@ cosmos_pkn <- function(
         metabolites.fomulas.name = "metFormulas",
         metabolites.inchi.name = "inchis"
     ),
-    GEM.degree.mets.threshold = 400,
+    gem_degree.mets.threshold = 400,
     stitch.threshold = 700,
     verbose = TRUE
 ){
@@ -134,10 +134,10 @@ cosmos_pkn <- function(
         organism = organism,
         translate.genes = translate.genes,
         biomart.use.omnipath = biomart.use.omnipath,
-        GEM.reactions.map.col = GEM.reactions.map.col,
-        GEM.metabolites.map.col = GEM.metabolites.map.col,
-        GEM.list.params = GEM.list.params,
-        GEM.degree.mets.threshold = GEM.degree.mets.threshold,
+        gem_reactions.map.col = gem_reactions.map.col,
+        gem_metabolites.map.col = gem_metabolites.map.col,
+        gem_list.params = gem_list.params,
+        gem_degree.mets.threshold = gem_degree.mets.threshold,
         stitch.threshold = stitch.threshold,
         verbose = verbose
     )
@@ -158,7 +158,7 @@ cosmos_pkn <- function(
             organism
         )
 
-        res <- exec(.create_PKN_COSMOS, !!!cache_pseudo_post) %>%
+        res <- exec(.cosmos_pkn, !!!cache_pseudo_post) %>%
             omnipath_cache_save(
                 url = cache_pseudo_url,
                 post = cache_pseudo_post
@@ -180,7 +180,7 @@ cosmos_pkn <- function(
 #' This function generates the prior knowledge network (PKN) needed to run
 #' COSMOS using information from different resources. It will download the
 #' required information through the \pkg{OmnipathR} R package. Particularly,
-#' \code{create_PKN_COSMOS} will obtain: \itemize{ \item Genome-scale metabolic
+#' \code{cosmos_pkn} will obtain: \itemize{ \item Genome-scale metabolic
 #' model (GEM) of the required organism from Wang et al., 2021.
 #' \item Interaction network of
 #' chemical and proteins from STITCH (\url{http://stitch.embl.de/}) for the
@@ -196,14 +196,14 @@ cosmos_pkn <- function(
 #'   \code{FALSE} by default.
 #' @param biomart.use.omnipath Whether using BiomaRt information from OmnipathR
 #'   (\code{TRUE} by default).
-#' @param GEM.reactions.map.col Column of reaction IDs in the GEM
+#' @param gem_reactions.map.col Column of reaction IDs in the GEM
 #'   (\code{"rxns"} by default).
-#' @param GEM.metabolites.map.col Column of reaction IDs in the GEM
+#' @param gem_metabolites.map.col Column of reaction IDs in the GEM
 #'   (\code{"mets"} by default).
-#' @param GEM.list.params List containing the name of the slots where the
-#'   information to construct the PKN is located in the GEM. If a matlab object
+#' @param gem_list.params List containing the name of the slots where the
+#'   information to construct the PKN is located in the gem_ If a matlab object
 #'   is provided, this list parameter should not be modified.
-#' @param GEM.degree.mets.threshold Degree cutoff used to filter out
+#' @param gem_degree.mets.threshold Degree cutoff used to filter out
 #'   metabolites (400 by default). The objective is to remove cofactors and
 #'   other metabolites with many connections.
 #' @param stitch.threshold Confidence cutoff used for STITCH connections
@@ -214,7 +214,7 @@ cosmos_pkn <- function(
 #' @return List of 4 elements containing the necessary information for COSMOS to
 #'   run: causal PKN, mapping data frame for metabolites from GEM,
 #'   reaction-to-gene data frame from GEM, and mapping data frame for reactions
-#'   from GEM.
+#'   from gem_
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
 #'      Cholley PE, et al. Genome-scale metabolic network reconstruction of model
@@ -229,13 +229,13 @@ cosmos_pkn <- function(
 #'
 #' @noRd
 #'
-.create_PKN_COSMOS <- function(
+.cosmos_pkn <- function(
         organism,
         translate.genes = FALSE,
         biomart.use.omnipath = TRUE,
-        GEM.reactions.map.col = "rxns",
-        GEM.metabolites.map.col = "mets",
-        GEM.list.params = list(
+        gem_reactions.map.col = "rxns",
+        gem_metabolites.map.col = "mets",
+        gem_list.params = list(
             stoich.name = "S",
             reaction.name = "grRules",
             lb.name = "lb",
@@ -247,7 +247,7 @@ cosmos_pkn <- function(
             metabolites.fomulas.name = "metFormulas",
             metabolites.inchi.name = "inchis"
         ),
-        GEM.degree.mets.threshold = 400,
+        gem_degree.mets.threshold = 400,
         stitch.threshold = 700,
         verbose = TRUE
 ) {
@@ -266,9 +266,9 @@ cosmos_pkn <- function(
 
     if (verbose) message(">>> Loading GEM obtained from Wang et al., 2021...")
     ## download GEM using OmnipathR (if already done, it will be taken from cache)
-    GEM.matlab <- OmnipathR:::GEM_matlab(organism = organism) %>% as.data.frame()
-    GEM.metabs <- OmnipathR:::GEM_metabs(organism = organism) %>% as.data.frame()
-    GEM.reacts <- OmnipathR:::GEM_reacts(organism = organism) %>% as.data.frame()
+    gem_matlab <- OmnipathR:::gem_matlab(organism = organism) %>% as.data.frame()
+    gem_metabs <- OmnipathR:::gem_metabs(organism = organism) %>% as.data.frame()
+    gem_reacts <- OmnipathR:::gem_reacts(organism = organism) %>% as.data.frame()
 
     if (verbose) message("\n>>> Loading protein-chemical interactions from STITCH...")
     ## download STITCH using OmnipathR (if already done, it will be taken from cache)
@@ -296,29 +296,29 @@ cosmos_pkn <- function(
     if (verbose) message("\n>>> Loading protein-protein interactions from Omnipath...")
     omnipath.PKN <- .retrievingOmnipath(organism)
     ## Getting GEM PKN
-    if (verbose) message("\n>>> Processing GEM...")
-    GEM.PKN.list <- .create_GEM_basal_PKN(
-        matlab.object = GEM.matlab,
-        reactions.map = GEM.reacts,
-        reactions.map.col = GEM.reactions.map.col,
-        metabolites.map = GEM.metabs,
-        metabolites.map.col = GEM.metabolites.map.col,
-        list.params.GEM = GEM.list.params,
-        degree.mets.cutoff = GEM.degree.mets.threshold,
+    if (verbose) message("\n>>> Processing gem_..")
+    gem_PKN.list <- .create_gem_basal_PKN(
+        matlab.object = gem_matlab,
+        reactions.map = gem_reacts,
+        reactions.map.col = gem_reactions.map.col,
+        metabolites.map = gem_metabs,
+        metabolites.map.col = gem_metabolites.map.col,
+        list.params.GEM = gem_list.params,
+        degree.mets.cutoff = gem_degree.mets.threshold,
         verbose = verbose
     )
     if (verbose) message("\n>>> Formatting GEM PKN for COSMOS...")
-    GEM.PKN.list <- .mets_to_HMDB(GEM.PKN.list)
+    gem_PKN.list <- .mets_to_HMDB(gem_PKN.list)
 
     if (as.character(organism) == "9606") translate.genes <- TRUE
 
     if (translate.genes){
-        GEM.PKN.list <- .genes_to_symbol(
-            GEM.PKN.list, organism = organism,
+        gem_PKN.list <- .genes_to_symbol(
+            gem_PKN.list, organism = organism,
             mapping.biomart = mapping.biomart
         )
     }
-    GEM.PKN.list <- .format_GEM_COSMOS(GEM.PKN.list, verbose = TRUE)
+    gem_PKN.list <- .format_gem_COSMOS(gem_PKN.list, verbose = TRUE)
 
     if (verbose) message("\n>>> Getting STITCH PKN...")
     stitch.PKN <- .formatSTITCH(
@@ -331,7 +331,7 @@ cosmos_pkn <- function(
         verbose = verbose
     )
     output.final <- .mixing_resources(
-        GEM.network = GEM.PKN.list[[1]],
+        gem_network = gem_PKN.list[[1]],
         omnipath.PKN = omnipath.PKN,
         stitch.PKN = stitch.PKN
     )
@@ -349,15 +349,15 @@ cosmos_pkn <- function(
     return(
         list(
             COSMOS.PKN = output.final,
-            GEM.mets.map = GEM.PKN.list[[2]],
-            GEM.reac.to.gene = GEM.PKN.list[[3]],
-            reac.map = GEM.PKN.list[[4]]
+            gem_mets.map = gem_PKN.list[[2]],
+            gem_reac.to.gene = gem_PKN.list[[3]],
+            reac.map = gem_PKN.list[[4]]
         )
     )
 }
 
 
-#' Retrieving protein-protein interactions from Omnipath
+#' OmniPath PPI for the COSMOS PKN
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
@@ -367,7 +367,7 @@ cosmos_pkn <- function(
 #' @return Data frame with the columns source, target and sign.
 #'
 #' @noRd
-.retrievingOmnipath <- function(
+.omnipath_for_cosmos <- function(
         organism = 9606
 ) {
     full_pkn_mm <- as.data.frame(import_omnipath_interactions(organism = organism))
@@ -388,8 +388,8 @@ cosmos_pkn <- function(
     return(clean_PKN_mm)
 }
 
-#' Helper function for \code{create_GEM_basal_PKN} to keep entries with no
-#' element in GEM processing
+
+#' Keep entries without elements in GEM processing
 #'
 #' @param matlab.object GEM from a Matlab object
 #' @param attribs.mat Atribute from the Matlab object to be parsed
@@ -398,7 +398,7 @@ cosmos_pkn <- function(
 #' @return Vector with NAs in those entries with no element
 #'
 #' @noRd
-.vecInfoMetab <- function(matlab.object, attribs.mat, name) {
+.metab_info <- function(matlab.object, attribs.mat, name) {
     unlist(
         sapply(
             X = matlab.object[[which(attribs.mat == name)]],
@@ -416,7 +416,7 @@ cosmos_pkn <- function(
 #' Processing GEMs from Wang et al., 2021
 #' (\url{https://github.com/SysBioChalmers}) to generate PKN for COSMOS
 #'
-#' @param matlab.object Matlab object containing a GEM.
+#' @param matlab.object Matlab object containing a gem_
 #' @param reactions.map Data frame with information to map reaction names using
 #'   different ontologies.
 #' @param metabolites.map Data frame with information to map metabolite names
@@ -444,7 +444,7 @@ cosmos_pkn <- function(
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-.create_GEM_basal_PKN <- function(
+.gem_basal_pkn <- function(
         matlab.object,
         reactions.map,
         metabolites.map,
@@ -563,7 +563,7 @@ cosmos_pkn <- function(
     metabolites.IDs <- unlist(
         matlab.object[[which(attribs.mat == list.params.GEM$metabolites.ID.name)]]
     )
-    metabolites.names <- .vecInfoMetab(
+    metabolites.names <- .metab_info(
         matlab.object = matlab.object, attribs.mat = attribs.mat,
         name = list.params.GEM$metabolites.names.name
     )
@@ -575,11 +575,11 @@ cosmos_pkn <- function(
     rownames(metabolites.map) <- metabolites.map[[metabolites.map.col]]
     metabolites.map <- metabolites.map[metabolites.IDs, ]
     ## adding additional information
-    metabolites.formulas <- .vecInfoMetab(
+    metabolites.formulas <- .metab_info(
         matlab.object = matlab.object, attribs.mat = attribs.mat,
         name = list.params.GEM$metabolites.fomulas.name
     )
-    metabolites.inchi <- .vecInfoMetab(
+    metabolites.inchi <- .metab_info(
         matlab.object = matlab.object, attribs.mat = attribs.mat,
         name = list.params.GEM$metabolites.inchi.name
     )
@@ -692,7 +692,7 @@ cosmos_pkn <- function(
 
     return(
         list(
-            GEM.PKN = reactions.df.no.cofac,
+            gem_PKN = reactions.df.no.cofac,
             mets.map = metabolites.map,
             reac.to.gene = reaction.to.genes.df.reac,
             reac.map = reactions.map
@@ -707,7 +707,7 @@ cosmos_pkn <- function(
 #' no HMDB ID, then the KEGG IDs are used. In case there is not entry for HMDB
 #' or KEGG, the metabolite keeps the Metabolic Atlas ID.
 #'
-#' @param list.network List obtained using \code{.create_GEM_basal_PKN}.
+#' @param list.network List obtained using \code{.create_gem_basal_PKN}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
 #'   translated into the desired ontology, gene-to-reactions data frame,
@@ -761,7 +761,7 @@ cosmos_pkn <- function(
 
     return(
         list(
-            GEM.PKN = list.network[[1]],
+            gem_PKN = list.network[[1]],
             mets.map = metab.map,
             reac.to.gene = list.network[[3]],
             reac.map = list.network[[4]]
@@ -772,7 +772,7 @@ cosmos_pkn <- function(
 
 #' Translating gene names from one ontology to another
 #'
-#' @param list.network List obtained using \code{.create_GEM_basal_PKN}.
+#' @param list.network List obtained using \code{.create_gem_basal_PKN}.
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
@@ -914,7 +914,7 @@ cosmos_pkn <- function(
 
     return(
         list(
-            GEM.PKN = list.network[[1]],
+            gem_PKN = list.network[[1]],
             mets.map = list.network[[2]],
             reac.to.gene = list.network[[3]],
             reac.map = list.network[[4]]
@@ -927,7 +927,7 @@ cosmos_pkn <- function(
 #'
 #' It determines and marks transporters and reverse reactions.
 #'
-#' @param list.network List obtained using \code{.create_GEM_basal_PKN}.
+#' @param list.network List obtained using \code{.create_gem_basal_PKN}.
 #' @param verbose Show informative messages during the execution (\code{TRUE} by
 #'   default).
 #'
@@ -938,7 +938,7 @@ cosmos_pkn <- function(
 #' @importFrom dplyr filter
 #' @importFrom magrittr %>%
 #' @noRd
-.format_GEM_COSMOS <- function(list.network, verbose = TRUE) {
+.format_gem_cosmos <- function(list.network, verbose = TRUE) {
     reaction.network <- list.network[[1]]
     enzyme_reacs <- unique(c(reaction.network$source, reaction.network$target))
     enzyme_reacs <- enzyme_reacs[grepl("^Gene", enzyme_reacs)]
@@ -1029,7 +1029,7 @@ cosmos_pkn <- function(
 
     return(
         list(
-            GEM.PKN = reaction.network.new,
+            gem_PKN = reaction.network.new,
             mets.map = list.network[[2]],
             reac.to.gene = list.network[[3]],
             reac.map = list.network[[4]]
@@ -1040,7 +1040,7 @@ cosmos_pkn <- function(
 
 #' Connecting PKN derived from GEM with Omnipath protein-protein interactions
 #'
-#' @param GEM.PKN List obtained using \code{.create_GEM_basal_PKN}.
+#' @param gem_PKN List obtained using \code{.create_gem_basal_PKN}.
 #' @param omnipath.PKN Protein-protein interactions obtained using
 #'   \code{.retrievingOmnipath}.
 #' @param verbose Show informative messages during the execution (\code{TRUE} by
@@ -1053,12 +1053,12 @@ cosmos_pkn <- function(
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-.connecting_GEM_omnipath <- function(
-        GEM.PKN,
+.connect_gem_omnipath <- function(
+        gem_PKN,
         omnipath.PKN,
         verbose = TRUE
 ) {
-    elements <- unique(as.character(unlist(GEM.PKN)))
+    elements <- unique(as.character(unlist(gem_PKN)))
     elements <- elements[grepl("^Gene\\d+__", elements)]
     elements <- gsub("(.*__)|(_TRANSPORTER[0-9]+)|(_reverse$)", "", elements)
     ## this function can be vectorized
@@ -1086,7 +1086,7 @@ cosmos_pkn <- function(
         connectors.df$source %in% omnipath.PKN$source |
             connectors.df$source %in% omnipath.PKN$target
     ),]
-    network.df.new <- as.data.frame(rbind(GEM.PKN, connectors.df))
+    network.df.new <- as.data.frame(rbind(gem_PKN, connectors.df))
 
     return(network.df.new)
 }
@@ -1117,7 +1117,7 @@ cosmos_pkn <- function(
 #' @importFrom dplyr filter case_when mutate select
 #'
 #' @noRd
-.formatSTITCH <- function(
+.format_gem_stitch <- function(
         stitch.actions,
         stitch.links,
         organism,
@@ -1235,9 +1235,9 @@ cosmos_pkn <- function(
 }
 
 
-#' Mixing GEM-, Omnipath- and STITCH- derived PKNs
+#' Combine GEM-, Omnipath- and STITCH- derived PKNs
 #'
-#' @param GEM.network Metabolic PKN obtained using \code{.create_GEM_basal_PKN}.
+#' @param gem_network Metabolic PKN obtained using \code{.create_gem_basal_PKN}.
 #' @param omnipath.PKN Protein-protein interactions obtained using
 #'   \code{.retrievingOmnipath}.
 #' @param stitch.PKN Chemical-protein PKN obtained using \code{.formatSTITCH}.
@@ -1247,14 +1247,14 @@ cosmos_pkn <- function(
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-.mixing_resources <- function(GEM.network, omnipath.PKN, stitch.PKN) {
+.combine_resources <- function(gem_network, omnipath.PKN, stitch.PKN) {
     ## connecting Omnipath and GEM
-    GEM.network <- .connecting_GEM_omnipath(
-        GEM.PKN = GEM.network, omnipath.PKN = omnipath.PKN
+    gem_network <- .connecting_gem_omnipath(
+        gem_PKN = gem_network, omnipath.PKN = omnipath.PKN
     )
-    GEM.network$sign <- 1
+    gem_network$sign <- 1
     meta.PKN <- as.data.frame(
-        rbind(omnipath.PKN, stitch.PKN, GEM.network)
+        rbind(omnipath.PKN, stitch.PKN, gem_network)
     ) %>% unique()
     meta.PKN <- meta.PKN[, c(1, 3, 2)]
     names(meta.PKN) <- c("source", "interaction", "target")
@@ -1355,7 +1355,7 @@ stitch_actions <- function(organism) {
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-GEM_reacts <- function(organism) {
+gem_reacts <- function(organism) {
 
     dataset.github <- switch(
         as.character(organism),
@@ -1369,7 +1369,7 @@ GEM_reacts <- function(organism) {
 
     .slow_doctest()
 
-    'GEM_github' %>%
+    'gem_github' %>%
         generic_downloader(
             reader = read_tsv,
             url_key_param = list(),
@@ -1401,7 +1401,7 @@ GEM_reacts <- function(organism) {
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-GEM_metabs <- function(organism) {
+gem_metabs <- function(organism) {
 
     dataset.github <- switch(
         as.character(organism),
@@ -1415,7 +1415,7 @@ GEM_metabs <- function(organism) {
 
     .slow_doctest()
 
-    'GEM_github' %>%
+    'gem_github' %>%
         generic_downloader(
             reader = read_tsv,
             url_key_param = list(),
@@ -1446,7 +1446,7 @@ GEM_metabs <- function(organism) {
 #' @importFrom magrittr %>% %T>%
 #'
 #' @noRd
-GEM_matlab <- function(organism) {
+gem_matlab <- function(organism) {
 
     dataset.github <- switch(
         as.character(organism),
@@ -1460,11 +1460,11 @@ GEM_matlab <- function(organism) {
 
     .slow_doctest()
 
-    'GEM_github' %>%
+    'gem_github' %>%
         generic_downloader(
             reader = R.matlab::readMat,
             url_key_param = list(),
-            url_param = list(dataset.github, paste0(dataset.github, "-GEM.mat")),
+            url_param = list(dataset.github, paste0(dataset.github, "-gem_mat")),
             reader_param = list(),
             resource = NULL,
             post = NULL,
