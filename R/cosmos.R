@@ -75,55 +75,58 @@ create_PKN_COSMOS <- function(
     metabolites.ID.name = "mets",
     metabolites.names.name = "metNames",
     metabolites.fomulas.name = "metFormulas",
-    metabolites.inchi.name = "inchis" 
+    metabolites.inchi.name = "inchis"
   ),
   GEM.degree.mets.threshold = 400,
   stitch.threshold = 700,
   verbose = TRUE
 ){
-  
-  dataset.biomart <- switch(
-    as.character(organism), 
-    "9606" = "hsapiens_gene_ensembl",
-    "10090" = "mmusculus_gene_ensembl",
-    "10116" = "rnorvegicus_gene_ensembl"
-  )
-  if (is.null(dataset.biomart)) 
-    stop(
-      "Chosen organism is not recognizable Available options are: ", 
-      paste(c(9606, 10090, 10116, 7955, 7227, 6239), collapse = ", ")
-    )
-  
+
+  organism %<>%
+  c(
+    original = .,
+    ensembl = ensembl_name(.)
+  ) %>%
+  {`if`(
+    is.na(extract2(., 'ensembl')),
+    {
+      extract2(., 'original') %>%
+      sprintf('Could not recognize organism `%s`.', .) %T>%
+      log_error
+      stop
+    },
+    extract2(., 'ensembl')
+  )}
+
+  gene_ensembl <- sprintf('%s_gene_ensembl', ens_organism)
+
   ## check dependencies (Suggests in DESCRIPTION)
-  if (!requireNamespace("R.matlab", quietly = TRUE)) 
-    stop("R.matlab R package is required but not available")
-  
-  
-  if (!requireNamespace("metaboliteIDmapping", quietly = TRUE)) 
-    stop("metaboliteIDmapping R package is required but not available")
-  
-  
+  c('R.matlab', 'metaboliteIDMapping') %>%
+  missing_packages %>%
+  paste(collapse = ', ') %>%
+  {`if`(nchar(.), sprintf('Missing packages: %s', .) %T>% log_error %>% stop)}
+
   .slow_doctest()
-  
-  cache_pseudo_url <- paste0('PKN_COSMOS_', organism)
+
+  cache_pseudo_url <- 'PKN_COSMOS_%s' %>% sprintf(organism)
   cache_pseudo_post <- list(
     organism = organism,
     translate.genes = translate.genes,
     biomart.use.omnipath = biomart.use.omnipath,
-    GEM.reactions.map.col = GEM.reactions.map.col, 
+    GEM.reactions.map.col = GEM.reactions.map.col,
     GEM.metabolites.map.col = GEM.metabolites.map.col,
     GEM.list.params = GEM.list.params,
     GEM.degree.mets.threshold = GEM.degree.mets.threshold,
     stitch.threshold = stitch.threshold,
     verbose = verbose
   )
-  
+
   in_cache <- omnipath_cache_get(
       url = cache_pseudo_url,
       post = cache_pseudo_post,
       create = FALSE
     ) %>% omnipath_cache_latest_version
-  
+
   if (is.null(in_cache)) {
     log_success(
       paste0(

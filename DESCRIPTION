@@ -84,13 +84,13 @@ Suggests:
     gprofiler2,
     knitr,
     mlrMBO,
+    metaboliteIDMapping,
     parallelMap,
     ParamHelpers,
     Rgraphviz,
+    R.matlab,
     sigmajs,
     smoof,
     supraHex,
-    testthat,
-    R.matlab,
-    metaboliteIDmapping
-RoxygenNote: 7.2.3
+    testthat
+RoxygenNote: 7.3.0
