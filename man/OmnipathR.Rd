@@ -2,6 +2,7 @@
 % Please edit documentation in R/omnipathr.R
 \docType{package}
 \name{OmnipathR}
+\alias{OmnipathR-package}
 \alias{OmnipathR}
 \title{The OmnipathR package}
 \value{
@@ -63,6 +64,14 @@ print_path_vs(
     )$res,
     enzsub_g
 )
+}
+
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://r.omnipathdb.org/}
+  \item Report bugs at \url{https://github.com/saezlab/OmnipathR/issues}
 }
 
 }
