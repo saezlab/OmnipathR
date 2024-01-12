@@ -2,7 +2,8 @@
 % Please edit documentation in R/cosmos.R
 \name{cosmos_pkn}
 \alias{cosmos_pkn}
-\title{Generating organism-specific PKNs for COSMOS}
+\title{Alberto Valdeolivas
+Organism-specific prior knowledge networks for COSMOS}
 \usage{
 cosmos_pkn(
   organism,
@@ -77,11 +78,11 @@ COSMOS to run.
 }
 \references{
 Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-   Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-   animals as a platform for translational research. Proceedings of the
-   National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+     Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+     animals as a platform for translational research. Proceedings of the
+     National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 
-   Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-    Integrated intra‐ and intercellular signaling knowledge for multicellular
-    omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+     Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+      Integrated intra‐ and intercellular signaling knowledge for multicellular
+      omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 }
