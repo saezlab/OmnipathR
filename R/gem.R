@@ -38,8 +38,6 @@
 #'   the matlab object. This parameter should not be modified.
 #' @param degree.mets.cutoff Degree cutoff used to prune metabolites with high
 #'   degree assuming they are cofactors (400 by default).
-#' @param verbose Show informative messages during the execution (\code{TRUE} by
-#'   default).
 #'
 #' @return List containing PKN with COSMOS and OCEAN format, gene-to-reactions
 #'   data frame, metabolite-mapping data frame, and reactions-mapping data frame.
@@ -71,8 +69,7 @@ gem_basal_pkn <- function(
             metabolites.fomulas.name = 'metFormulas',
             metabolites.inchi.name = 'inchis'
         ),
-        degree.mets.cutoff = 400,
-        verbose = TRUE
+        degree.mets.cutoff = 400
 ) {
     ## check parameters
     if (!reactions.map.col %in% colnames(reactions.map)) {
@@ -201,7 +198,7 @@ gem_basal_pkn <- function(
     metabolites.map[metabolites.map == ''] <- NA
     ##############################################################################
     ## SIF file: PKN
-    if (verbose) message('\n>>> Generating PKN')
+    log_info('Generating PKN')
 
     reaction.to.genes.df.reac <- reaction.to.genes.df
     reaction.list <- list()
@@ -277,27 +274,26 @@ gem_basal_pkn <- function(
         ),
         decreasing = TRUE
     )
-    if (verbose)
-        message(
-            '\t>>> Number of metabolites removed after degree >',
-            degree.mets.cutoff,  ': ', sum(metabs.degree >= degree.mets.cutoff)
-        )
+    log_info(
+        'Number of metabolites removed after degree >',
+        degree.mets.cutoff,  ': ', sum(metabs.degree >= degree.mets.cutoff)
+    )
+
     metabs.degree.f <- metabs.degree[metabs.degree < degree.mets.cutoff]
     reactions.df.no.cofac <- reaction.df.all[
         reaction.df.all$source %in% names(metabs.degree.f) |
             reaction.df.all$target %in% names(metabs.degree.f),
     ]
-    mets <- grep(
-        pattern = 'Metab__',
-        x = unique(c(reactions.df.no.cofac[[1]], reactions.df.no.cofac[[1]])),
-        value = TRUE
-    ) %>% gsub('Metab__', '', .)
+    mets <-
+        grep(
+            pattern = 'Metab__',
+            x = unique(c(reactions.df.no.cofac[[1]], reactions.df.no.cofac[[1]])),
+            value = TRUE
+        ) %>%
+        gsub('Metab__', '', .)
+
     metabolites.map <- metabolites.map[mets, ]
-    if (verbose) {
-        message(
-            '\t>>> Final number of connections: ', nrow(reactions.df.no.cofac)
-        )
-    }
+    log_info('Final number of connections: ', nrow(reactions.df.no.cofac))
 
     return(
         list(
@@ -315,8 +311,6 @@ gem_basal_pkn <- function(
 #' It determines and marks transporters and reverse reactions.
 #'
 #' @param list.network List obtained using \code{.create_gem_basal_PKN}.
-#' @param verbose Show informative messages during the execution (\code{TRUE} by
-#'   default).
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
 #'   translated into the desired ontology, gene-to-reactions data frame,
@@ -325,14 +319,14 @@ gem_basal_pkn <- function(
 #' @importFrom dplyr filter
 #' @importFrom magrittr %>%
 #' @noRd
-.format_gem_cosmos <- function(list.network, verbose = TRUE) {
+.format_gem_cosmos <- function(list.network) {
     reaction.network <- list.network[[1]]
     enzyme_reacs <- unique(c(reaction.network$source, reaction.network$target))
     enzyme_reacs <- enzyme_reacs[grepl('^Gene', enzyme_reacs)]
     enzyme_reacs_reverse <- enzyme_reacs[grepl('_reverse',enzyme_reacs)]
     enzyme_reacs <- enzyme_reacs[!grepl('_reverse',enzyme_reacs)]
 
-    if (verbose) message('\t>>> Step 1: Defining transporters')
+    log_info('Step 1: Defining transporters')
 
     new_df_list <- sapply(
         X = enzyme_reacs,
@@ -368,7 +362,7 @@ gem_basal_pkn <- function(
     )
     new_df <- as.data.frame(do.call(rbind, new_df_list))
 
-    if (verbose) message('\t>>> Step 2: Defining reverse reactions')
+    log_info('Step 2: Defining reverse reactions')
 
     new_df_reverse <- sapply(
         X = enzyme_reacs_reverse,
