@@ -316,6 +316,7 @@ cosmos_pkn <- function(
     gem_PKN.list <- cosmos_format_gem(gem_PKN.list)
 
     log_info('Getting STITCH PKN...')
+
     stitch.PKN <- stitch_format(
         stitch.actions = stitch.actions,
         stitch.links = stitch.prot.details,
@@ -324,20 +325,13 @@ cosmos_pkn <- function(
         mapping.biomart = mapping.biomart,
         threshold = stitch.threshold
     )
+
     output.final <- .combine_resources(
         gem_network = gem_PKN.list[[1]],
         omnipath.PKN = omnipath.PKN,
         stitch.PKN = stitch.PKN
     )
-    # if (dim(output.final)[[1]][1] == 0) {
-    #       stop(
-    #           paste(
-    #               'Output incorrectly generated. This might happen when the used',
-    #               'gene ontology by GEM and OmnipathR/STITCH is not the same. Check',
-    #               'translate.genes parameter'
-    #           )
-    #       )
-    # }
+
     log_success('COSMOS PKN ready.')
 
     return(
