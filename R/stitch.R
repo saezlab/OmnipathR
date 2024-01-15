@@ -39,15 +39,17 @@ stitch_prot_details <- function(organism) {
     .slow_doctest()
 
     'stitch_prot_details' %>%
-        generic_downloader(
-            reader = read_tsv,
-            url_key_param = list(),
-            url_param = list(organism),
-            reader_param = list(trim_ws = TRUE),
-            resource = NULL,
-            post = NULL,
-            use_httr = FALSE
-        ) %T>% load_success()
+    generic_downloader(
+        reader = read_tsv,
+        url_key_param = list(),
+        url_param = list(organism),
+        reader_param = list(trim_ws = TRUE),
+        resource = NULL,
+        post = NULL,
+        use_httr = FALSE
+    ) %T>%
+    load_success()
+
 }
 
 
@@ -66,18 +68,20 @@ stitch_prot_details <- function(organism) {
 #' @noRd
 stitch_actions <- function(organism) {
 
-        .slow_doctest()
+    .slow_doctest()
 
     'stitch_actions' %>%
-        generic_downloader(
-            reader = read_tsv,
-            url_key_param = list(),
-            url_param = list(organism),
-            reader_param = list(trim_ws = TRUE),
-            resource = NULL,
-            post = NULL,
-            use_httr = FALSE
-        ) %T>% load_success()
+    generic_downloader(
+        reader = read_tsv,
+        url_key_param = list(),
+        url_param = list(organism),
+        reader_param = list(trim_ws = TRUE),
+        resource = NULL,
+        post = NULL,
+        use_httr = FALSE
+    ) %T>%
+    load_success()
+
 }
 
 
@@ -126,9 +130,9 @@ stitch_actions <- function(organism) {
     )
     if (is.null(dataset.biomart))
         stop('Chosen organism is not recognizable')
-    if (verbose) {
-        message('\t>>> Reading provided STITCH files\n')
-    }
+
+    log_info('Reading provided STITCH files.')
+
     links.detail <- as.data.frame(stitch.links) %>% filter(
         combined_score >= threshold,
         experimental >= threshold | database >= threshold
