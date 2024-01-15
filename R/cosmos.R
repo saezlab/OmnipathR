@@ -57,8 +57,6 @@ SUPPORTED_ORGANISMS <- list(
 #'   over-promiscuous metabolites.
 #' @param stitch.threshold Confidence cutoff used for STITCH connections
 #'   (700 by default).
-#' @param verbose Whether showing messages during execution (\code{TRUE} by
-#'   default).
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to
 #'   run: causal PKN, mapping data frame for metabolites from GEM,
@@ -102,8 +100,7 @@ cosmos_pkn <- function(
         metabolites.inchi.name = 'inchis'
     ),
     gem_degree.mets.threshold = 400,
-    stitch.threshold = 700,
-    verbose = TRUE
+    stitch.threshold = 700
 ){
 
     organism %<>%
@@ -141,8 +138,7 @@ cosmos_pkn <- function(
         gem_metabolites.map.col = gem_metabolites.map.col,
         gem_list.params = gem_list.params,
         gem_degree.mets.threshold = gem_degree.mets.threshold,
-        stitch.threshold = stitch.threshold,
-        verbose = verbose
+        stitch.threshold = stitch.threshold
     )
 
     in_cache <- omnipath_cache_get(
@@ -211,8 +207,6 @@ cosmos_pkn <- function(
 #'   other metabolites with many connections.
 #' @param stitch.threshold Confidence cutoff used for STITCH connections
 #'   (700 by default).
-#' @param verbose Whether showing messages during execution (\code{TRUE} by
-#'   default).
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to
 #'   run: causal PKN, mapping data frame for metabolites from GEM,
@@ -251,8 +245,7 @@ cosmos_pkn <- function(
             metabolites.inchi.name = 'inchis'
         ),
         gem_degree.mets.threshold = 400,
-        stitch.threshold = 700,
-        verbose = TRUE
+        stitch.threshold = 700
 ) {
     ## check organisms
     dataset.biomart <- switch(
@@ -267,13 +260,13 @@ cosmos_pkn <- function(
             paste(c(9606, 10090, 10116, 7955, 7227, 6239), collapse = ', ')
         )
 
-    if (verbose) message('>>> Loading GEM obtained from Wang et al., 2021...')
+    log_info('Loading GEM obtained from Wang et al., 2021...')
     ## download GEM using OmnipathR (if already done, it will be taken from cache)
     gem_matlab <- OmnipathR:::gem_matlab(organism = organism) %>% as.data.frame()
     gem_metabs <- OmnipathR:::gem_metabs(organism = organism) %>% as.data.frame()
     gem_reacts <- OmnipathR:::gem_reacts(organism = organism) %>% as.data.frame()
 
-    if (verbose) message('\n>>> Loading protein-chemical interactions from STITCH...')
+    log_info('Loading protein-chemical interactions from STITCH...')
     ## download STITCH using OmnipathR (if already done, it will be taken from cache)
     stitch.actions <- OmnipathR:::stitch_actions(organism = organism) %>%
         as.data.frame()
@@ -282,7 +275,7 @@ cosmos_pkn <- function(
     ) %>% as.data.frame()
 
     if (biomart.use.omnipath == TRUE) {
-        if (verbose) message('\n>>> Using the OmnipathR to retrieve BioMart information')
+        log_info('Using the OmnipathR to retrieve BioMart information')
         ## get info from BiomartR using OmnipathR
         mapping.biomart <- OmnipathR::biomart_query(
             attrs = c(
@@ -291,26 +284,25 @@ cosmos_pkn <- function(
             dataset = dataset.biomart
         ) %>% as.data.frame()
     } else {
-        if (verbose) message('\n>>> Using the BiomaRt R package when needed')
+        log_info('Using the BiomaRt R package when needed')
 
         mapping.biomart <- NULL
     }
     ## Omnipath data
-    if (verbose) message('\n>>> Loading protein-protein interactions from Omnipath...')
+    log_info('Loading protein-protein interactions from Omnipath...')
     omnipath.PKN <- .retrievingOmnipath(organism)
     ## Getting GEM PKN
-    if (verbose) message('\n>>> Processing gem_..')
-    gem_PKN.list <- .create_gem_basal_PKN(
+    log_info('Processing gem_..')
+    gem_PKN.list <- gem_basal_pkn(
         matlab.object = gem_matlab,
         reactions.map = gem_reacts,
         reactions.map.col = gem_reactions.map.col,
         metabolites.map = gem_metabs,
         metabolites.map.col = gem_metabolites.map.col,
         list.params.GEM = gem_list.params,
-        degree.mets.cutoff = gem_degree.mets.threshold,
-        verbose = verbose
+        degree.mets.cutoff = gem_degree.mets.threshold
     )
-    if (verbose) message('\n>>> Formatting GEM PKN for COSMOS...')
+    log_info('Formatting GEM PKN for COSMOS...')
     gem_PKN.list <- .mets_to_HMDB(gem_PKN.list)
 
     if (as.character(organism) == '9606') translate.genes <- TRUE
@@ -321,19 +313,18 @@ cosmos_pkn <- function(
             mapping.biomart = mapping.biomart
         )
     }
-    gem_PKN.list <- .format_gem_COSMOS(gem_PKN.list, verbose = TRUE)
+    gem_PKN.list <- cosmos_format_gem(gem_PKN.list)
 
-    if (verbose) message('\n>>> Getting STITCH PKN...')
-    stitch.PKN <- .formatSTITCH(
+    log_info('Getting STITCH PKN...')
+    stitch.PKN <- stitch_format(
         stitch.actions = stitch.actions,
         stitch.links = stitch.prot.details,
         organism = organism,
         omnipath.PKN = omnipath.PKN,
         mapping.biomart = mapping.biomart,
-        threshold = stitch.threshold,
-        verbose = verbose
+        threshold = stitch.threshold
     )
-    output.final <- .mixing_resources(
+    output.final <- .combine_resources(
         gem_network = gem_PKN.list[[1]],
         omnipath.PKN = omnipath.PKN,
         stitch.PKN = stitch.PKN
@@ -347,7 +338,7 @@ cosmos_pkn <- function(
     #           )
     #       )
     # }
-    if (verbose) message('\nDONE')
+    log_success('COSMOS PKN ready.')
 
     return(
         list(
@@ -619,8 +610,6 @@ omnipath_for_cosmos <- function(
 #' @param gem_PKN List obtained using \code{.create_gem_basal_PKN}.
 #' @param omnipath.PKN Protein-protein interactions obtained using
 #'   \code{.retrievingOmnipath}.
-#' @param verbose Show informative messages during the execution (\code{TRUE} by
-#'   default).
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
 #'   translated into the desired ontology, gene-to-reactions data frame,
@@ -629,11 +618,7 @@ omnipath_for_cosmos <- function(
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-.connect_gem_omnipath <- function(
-        gem_PKN,
-        omnipath.PKN,
-        verbose = TRUE
-) {
+.connect_gem_omnipath <- function(gem_PKN, omnipath.PKN) {
     elements <- unique(as.character(unlist(gem_PKN)))
     elements <- elements[grepl('^Gene\\d+__', elements)]
     elements <- gsub('(.*__)|(_TRANSPORTER[0-9]+)|(_reverse$)', '', elements)
