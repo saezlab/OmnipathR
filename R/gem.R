@@ -310,7 +310,7 @@ gem_basal_pkn <- function(
 #'
 #' It determines and marks transporters and reverse reactions.
 #'
-#' @param list.network List obtained using \code{.create_gem_basal_PKN}.
+#' @param list.network List obtained using \code{gem_basal_pkn}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
 #'   translated into the desired ontology, gene-to-reactions data frame,
@@ -319,7 +319,7 @@ gem_basal_pkn <- function(
 #' @importFrom dplyr filter
 #' @importFrom magrittr %>%
 #' @noRd
-.format_gem_cosmos <- function(list.network) {
+cosmos_format_gem <- function(list.network) {
     reaction.network <- list.network[[1]]
     enzyme_reacs <- unique(c(reaction.network$source, reaction.network$target))
     enzyme_reacs <- enzyme_reacs[grepl('^Gene', enzyme_reacs)]
@@ -438,7 +438,7 @@ gem_basal_pkn <- function(
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-gem_reacts <- function(organism) {
+gem_reactions <- function(organism) {
 
     dataset.github <- switch(
         as.character(organism),
@@ -484,7 +484,7 @@ gem_reacts <- function(organism) {
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-gem_metabs <- function(organism) {
+gem_metabolites <- function(organism) {
 
     dataset.github <- switch(
         as.character(organism),
@@ -530,39 +530,40 @@ gem_metabs <- function(organism) {
 #' @importFrom stringr str_to_title
 #'
 #' @noRd
-gem_matlab <- function(organism) {
+gem_raw <- function(organism) {
 
     organism %<>% common_name %>% str_to_title
 
     .slow_doctest()
 
     'gem_github' %>%
-        generic_downloader(
-            reader = R.matlab::readMat,
-            url_key_param = list(),
-            url_param = list(dataset.github, paste0(dataset.github, '-gem_mat')),
-            reader_param = list(),
-            resource = NULL,
-            post = NULL,
-            use_httr = FALSE
-        ) %T>% load_success()
+    generic_downloader(
+        reader = R.matlab::readMat,
+        url_key_param = list(),
+        url_param = list(dataset.github, paste0(dataset.github, '-gem_mat')),
+        reader_param = list(),
+        resource = NULL,
+        post = NULL,
+        use_httr = FALSE
+    ) %T>%
+    load_success()
 
 }
 
 
 #' Keep entries without elements in GEM processing
 #'
-#' @param matlab.object GEM from a Matlab object
-#' @param attribs.mat Atribute from the Matlab object to be parsed
+#' @param gem_raw GEM from a Matlab object
+#' @param attribs_mat Atribute from the Matlab object to be parsed
 #' @param name Vector of elements to be checked in the Metlab object
 #'
 #' @return Vector with NAs in those entries with no element
 #'
 #' @noRd
-metab_info <- function(matlab.object, attribs.mat, name) {
+metab_info <- function(gem_raw, attribs_mat, name) {
     unlist(
         sapply(
-            X = matlab.object[[which(attribs.mat == name)]],
+            X = gem_raw[[which(attribs_mat == name)]],
             FUN = \(elem) {
                 if (length(unlist(elem) != 0)) {
                     return(elem)

@@ -34,11 +34,11 @@
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-stitch_prot_details <- function(organism) {
+stitch_proteins <- function(organism) {
 
     .slow_doctest()
 
-    'stitch_prot_details' %>%
+    'stitch_proteins' %>%
     generic_downloader(
         reader = read_tsv,
         url_key_param = list(),
@@ -96,13 +96,11 @@ stitch_actions <- function(organism) {
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
 #' @param omnipath.PKN Protein-protein interactions obtained using
-#'   \code{.retrievingOmnipath}.
+#'   \code{omnipath_for_cosmos}.
 #' @param mapping.biomart BioMart ontology mapping data frame. If \code{NULL},
 #'   this info is obtained using the \ckg{bioMaRt} R package.
 #' @param threshold Confidence cutoff used for STITCH connections
 #'   (700 by default).
-#' @param verbose Show informative messages during the execution (\code{TRUE} by
-#'   default).
 #'
 #' @return List containing PKN with COSMOS and OCEAN format.
 #'
@@ -110,14 +108,13 @@ stitch_actions <- function(organism) {
 #' @importFrom dplyr filter case_when mutate select
 #'
 #' @noRd
-.format_gem_stitch <- function(
+stitch_format_gem <- function(
         stitch.actions,
         stitch.links,
         organism,
         omnipath.PKN,
         mapping.biomart = NULL,
-        threshold = 700,
-        verbose = TRUE
+        threshold = 700
 ) {
     dataset.biomart <- switch(
         as.character(organism),
@@ -151,7 +148,7 @@ stitch_actions <- function(organism) {
     prots <- as.data.frame(cbind(prots, gsub(paste0(organism, '\\.'), '', prots)))
     colnames(prots) <- c('original', 'ensembl_prots')
     ## getting info from Biomart
-    if (verbose) message('\t>>> Using information from BiomaRt')
+    log_info('Using information from BiomaRt')
 
     if (is.null(mapping.biomart)) {
         ensembl.link <- useEnsembl(biomart = 'ensembl', dataset = dataset.biomart)
