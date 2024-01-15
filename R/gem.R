@@ -297,7 +297,7 @@ gem_basal_pkn <- function(
 
     return(
         list(
-            gem_PKN = reactions.df.no.cofac,
+            gem_pkn = reactions.df.no.cofac,
             mets.map = metabolites.map,
             reac.to.gene = reaction.to.genes.df.reac,
             reac.map = reactions.map
@@ -410,7 +410,7 @@ cosmos_format_gem <- function(list.network) {
 
     return(
         list(
-            gem_PKN = reaction.network.new,
+            gem_pkn = reaction.network.new,
             mets.map = list.network[[2]],
             reac.to.gene = list.network[[3]],
             reac.map = list.network[[4]]

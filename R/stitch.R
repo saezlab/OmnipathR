@@ -95,7 +95,7 @@ stitch_actions <- function(organism) {
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
-#' @param omnipath.PKN Protein-protein interactions obtained using
+#' @param omnipath_pkn Protein-protein interactions obtained using
 #'   \code{omnipath_for_cosmos}.
 #' @param mapping.biomart BioMart ontology mapping data frame. If \code{NULL},
 #'   this info is obtained using the \ckg{bioMaRt} R package.
@@ -112,7 +112,7 @@ stitch_format_gem <- function(
         stitch.actions,
         stitch.links,
         organism,
-        omnipath.PKN,
+        omnipath_pkn,
         mapping.biomart = NULL,
         threshold = 700
 ) {
@@ -216,7 +216,7 @@ stitch_format_gem <- function(
     )
     # TODO: at this point, STITCH contains metabolites in both columns of the dataframe
     ## this should be checked
-    omn.prots <- unique(as.character(unlist(omnipath.PKN[,c(1, 2)])))
+    omn.prots <- unique(as.character(unlist(omnipath_pkn[,c(1, 2)])))
     STITCH <- unique(STITCH[which(STITCH$target %in% omn.prots),])
 
     STITCH$source <- paste(STITCH$source, '_c', sep = '')

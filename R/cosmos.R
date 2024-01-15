@@ -290,10 +290,10 @@ cosmos_pkn <- function(
     }
     ## Omnipath data
     log_info('Loading protein-protein interactions from Omnipath...')
-    omnipath.PKN <- omnipath_for_cosmos(organism)
+    omnipath_pkn <- omnipath_for_cosmos(organism)
     ## Getting GEM PKN
     log_info('Processing gem_..')
-    gem_PKN.list <- gem_basal_pkn(
+    gem_pkn.list <- gem_basal_pkn(
         matlab.object = gem_raw,
         reactions.map = gem_reactions,
         reactions.map.col = gem_reactions.map.col,
@@ -303,33 +303,33 @@ cosmos_pkn <- function(
         degree.mets.cutoff = gem_degree.mets.threshold
     )
     log_info('Formatting GEM PKN for COSMOS...')
-    gem_PKN.list <- translate_to_hmdb(gem_PKN.list)
+    gem_pkn.list <- translate_to_hmdb(gem_pkn.list)
 
     if (as.character(organism) == '9606') translate.genes <- TRUE
 
     if (translate.genes){
-        gem_PKN.list <- translate_to_genesymbol(
-            gem_PKN.list, organism = organism,
+        gem_pkn.list <- translate_to_genesymbol(
+            gem_pkn.list, organism = organism,
             mapping.biomart = mapping.biomart
         )
     }
-    gem_PKN.list <- cosmos_format_gem(gem_PKN.list)
+    gem_pkn.list <- cosmos_format_gem(gem_pkn.list)
 
     log_info('Getting STITCH PKN...')
 
-    stitch.PKN <- stitch_format(
+    stitch_pkn <- stitch_format(
         stitch.actions = stitch.actions,
         stitch.links = stitch.prot.details,
         organism = organism,
-        omnipath.PKN = omnipath.PKN,
+        omnipath_pkn = omnipath_pkn,
         mapping.biomart = mapping.biomart,
         threshold = stitch.threshold
     )
 
     output.final <- cosmos_combine_networks(
-        gem_network = gem_PKN.list[[1]],
-        omnipath.PKN = omnipath.PKN,
-        stitch.PKN = stitch.PKN
+        gem_pkn = gem_pkn.list[[1]],
+        omnipath_pkn = omnipath_pkn,
+        stitch_pkn = stitch_pkn
     )
 
     log_success('COSMOS PKN ready.')
@@ -337,9 +337,9 @@ cosmos_pkn <- function(
     return(
         list(
             COSMOS.PKN = output.final,
-            gem_mets.map = gem_PKN.list[[2]],
-            gem_reac.to.gene = gem_PKN.list[[3]],
-            reac.map = gem_PKN.list[[4]]
+            gem_mets.map = gem_pkn.list[[2]],
+            gem_reac.to.gene = gem_pkn.list[[3]],
+            reac.map = gem_pkn.list[[4]]
         )
     )
 }
@@ -437,7 +437,7 @@ translate_to_hmdb <- function(list.network) {
 
     return(
         list(
-            gem_PKN = list.network[[1]],
+            gem_pkn = list.network[[1]],
             mets.map = metab.map,
             reac.to.gene = list.network[[3]],
             reac.map = list.network[[4]]
@@ -590,7 +590,7 @@ translate_to_genesymbol <- function(
 
     return(
         list(
-            gem_PKN = list.network[[1]],
+            gem_pkn = list.network[[1]],
             mets.map = list.network[[2]],
             reac.to.gene = list.network[[3]],
             reac.map = list.network[[4]]
@@ -601,8 +601,8 @@ translate_to_genesymbol <- function(
 
 #' Connecting PKN derived from GEM with Omnipath protein-protein interactions
 #'
-#' @param gem_PKN List obtained using \code{gem_basal_pkn}.
-#' @param omnipath.PKN Protein-protein interactions obtained using
+#' @param gem_pkn List obtained using \code{gem_basal_pkn}.
+#' @param omnipath_pkn Protein-protein interactions obtained using
 #'   \code{omnipath_for_cosmos}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
@@ -612,8 +612,8 @@ translate_to_genesymbol <- function(
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-cosmos_connect_gem_omnipath <- function(gem_PKN, omnipath.PKN) {
-    elements <- unique(as.character(unlist(gem_PKN)))
+cosmos_connect_gem_omnipath <- function(gem_pkn, omnipath_pkn) {
+    elements <- unique(as.character(unlist(gem_pkn)))
     elements <- elements[grepl('^Gene\\d+__', elements)]
     elements <- gsub('(.*__)|(_TRANSPORTER[0-9]+)|(_reverse$)', '', elements)
     ## this function can be vectorized
@@ -638,10 +638,10 @@ cosmos_connect_gem_omnipath <- function(gem_PKN, omnipath.PKN) {
     ) %>% do.call(rbind, .) %>% as.data.frame()
     names(connectors.df) <- c('source', 'target')
     connectors.df <- connectors.df[which(
-        connectors.df$source %in% omnipath.PKN$source |
-            connectors.df$source %in% omnipath.PKN$target
+        connectors.df$source %in% omnipath_pkn$source |
+            connectors.df$source %in% omnipath_pkn$target
     ),]
-    network.df.new <- as.data.frame(rbind(gem_PKN, connectors.df))
+    network.df.new <- as.data.frame(rbind(gem_pkn, connectors.df))
 
     return(network.df.new)
 }
@@ -649,24 +649,24 @@ cosmos_connect_gem_omnipath <- function(gem_PKN, omnipath.PKN) {
 
 #' Combine GEM-, Omnipath- and STITCH- derived PKNs
 #'
-#' @param gem_network Metabolic PKN obtained using \code{gem_basal_pkn}.
-#' @param omnipath.PKN Protein-protein interactions obtained using
+#' @param gem_pkn Metabolic PKN obtained using \code{gem_basal_pkn}.
+#' @param omnipath_pkn Protein-protein interactions obtained using
 #'   \code{omnipath_for_cosmos}.
-#' @param stitch.PKN Chemical-protein PKN obtained using \code{stitch_format_gem}.
+#' @param stitch_pkn Chemical-protein PKN obtained using \code{stitch_format_gem}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format.
 #'
 #' @importFrom magrittr %>%
 #'
 #' @noRd
-cosmos_combine_networks <- function(gem_network, omnipath.PKN, stitch.PKN) {
+cosmos_combine_networks <- function(gem_pkn, omnipath_pkn, stitch_pkn) {
     ## connecting Omnipath and GEM
-    gem_network <- cosmos_connect_gem_omnipath(
-        gem_PKN = gem_network, omnipath.PKN = omnipath.PKN
+    gem_pkn <- cosmos_connect_gem_omnipath(
+        gem_pkn = gem_pkn, omnipath_pkn = omnipath_pkn
     )
-    gem_network$sign <- 1
+    gem_pkn$sign <- 1
     meta.PKN <- as.data.frame(
-        rbind(omnipath.PKN, stitch.PKN, gem_network)
+        rbind(omnipath_pkn, stitch_pkn, gem_pkn)
     ) %>% unique()
     meta.PKN <- meta.PKN[, c(1, 3, 2)]
     names(meta.PKN) <- c('source', 'interaction', 'target')
