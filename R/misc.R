@@ -572,6 +572,20 @@ if_null_len0 <- function(value1, value2){
 }
 
 
+#' Same as `if_null_len0` but considers empty string empty too
+#'
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+if_null_len0_2 <- function(value1, value2){
+
+    value1 %>%
+    is_empty_2 %>%
+    `if`(value2, value1)
+
+}
+
+
 #' Workaround against R CMD check notes about using `:::`
 #'
 #' @importFrom rlang enquo !!
@@ -959,5 +973,15 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 unique_sorted <- function(v) {
 
     v %>% unlist %>% unique %>% sort
+
+}
+
+
+#' Joins a list of words by comma and space
+#'
+#' @noRd
+enum_format <- function(words) {
+
+    paste(words, collapse = ', ')
 
 }
