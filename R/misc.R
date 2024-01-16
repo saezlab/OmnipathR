@@ -456,6 +456,32 @@ null_or_call <- function(value, fun, ...){
 }
 
 
+#' Call a function if available
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang is_function
+#' @noRd
+maybe_call <- function(fun, ...) {
+
+    fun %>%
+    `if`(is_function(.), ., tryCatch(get(.), error = identity)) %>%
+    {`if`(is_function(.), .(...), list(...) %>% unlist_len1)}
+
+}
+
+
+#' Returns the first element for length one lists or vectors
+#'
+#' @importFrom dplyr first
+#'
+#' @noRd
+unlist_len1 <- function(x) {
+
+    `if`(length(x) <= 1L, first(x), x)
+
+}
+
+
 #' Returns `value1` if it's not zero length otherwise `value2`
 #'
 #' @importFrom magrittr %>%
