@@ -21,7 +21,7 @@
 #
 
 SUPPORTED_ORGANISMS <- list(
-    gem = c('Human', 'Mouse', 'Rat', 'Zebrafish', 'Fruitfly', 'Worm'),
+    gem = c('Human', 'Mouse', 'Rat', 'Zebrafish', 'Fruitfly', 'Worm')
 )
 
 #' Organism-specific prior knowledge networks for COSMOS
@@ -347,33 +347,69 @@ cosmos_pkn <- function(
 
 #' OmniPath PPI for the COSMOS PKN
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
-#'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'   melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param organism Character or integer: name or NCBI Taxonomy ID of the
+#'     organism.
+#' @param resources Character: names of one or more resources. Correct spelling
+#'     is important.
+#' @param datasets Character: one or more network datasets in OmniPath.
+#' @param interaction_types Character: one or more interaction type
+#' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
 #'
 #' @return Data frame with the columns source, target and sign.
 #'
+#' @importFrom magrittr %<>% %>% %T>%
+#' @importFrom logger log_info
+#' @importFrom dplyr mutate filter select bind_rows select
 #' @noRd
 omnipath_for_cosmos <- function(
-        organism = 9606
-) {
-    full_pkn_mm <- as.data.frame(import_omnipath_interactions(organism = organism))
-    full_pkn_mm <- full_pkn_mm[!is.na(full_pkn_mm$references),]
-    clean_PKN_mm <- full_pkn_mm[
-        full_pkn_mm$consensus_stimulation == 1 |
-            full_pkn_mm$consensus_inhibition == 1,
-    ]
-    clean_PKN_mm$sign <- clean_PKN_mm$consensus_stimulation -
-        clean_PKN_mm$consensus_inhibition
-    clean_PKN_mm <- clean_PKN_mm[, c(3 ,4, 16)]
-    clean_PKN_supp_mm <- clean_PKN_mm[clean_PKN_mm$sign == 0,]
-    clean_PKN_supp_mm$sign <- -1
-    clean_PKN_mm[clean_PKN_mm$sign == 0, 'sign'] <- 1
-    clean_PKN_mm <- as.data.frame(rbind(clean_PKN_mm, clean_PKN_supp_mm))
-    names(clean_PKN_mm) <- c('source', 'target', 'sign')
+        organism = 9606L,
+        resources = NULL,
+        datasets = NULL,
+        interaction_types = NULL,
+        ...
+    ) {
 
-    return(clean_PKN_mm)
+    # NSE vs. R CMD check workaround
+    consensus_stimulation <- consensus_inhibition <- NULL
+
+    organism %<>% organism_supported('omnipath')
+    paste0(
+        'OmniPath network for COSMOS PKN; datasets: %s; ',
+        'resources: %s; interaction types: %s; organism: %s.'
+    ) %>%
+    log_info(
+        if_null_len0_2(enum_format(datasets), 'omnipath'),
+        if_null_len0_2(enum_format(resources), 'all'),
+        if_null_len0_2(enum_format(interaction_types), 'post-translational (PPI)'),
+        common_name(organism)
+    )
+
+    import_omnipath_interactions(
+        organism = organism,
+        resources = resources,
+        datasets = datasets,
+        types = interaction_types,
+        ...
+    ) %>%
+    filter(
+        !is.na(references) &
+        (
+            consensus_stimulation == 1 |
+            consensus_inhibition == 1
+        )
+    ) %>%
+    mutate(sign = consensus_stimulation - consensus_inhibition) %>%
+    select(
+        source = source_genesymbol,
+        target = target_genesymbol,
+        sign
+    ) %>%
+    bind_rows(
+        mutate(., sign = ifelse(sign, sign, 1)),
+        filter(., sign == 0) %>% mutate(sign = -1)
+    ) %T>%
+    {log_info('OmniPath PPI for COSMOS PKN ready: %i interactions.', nrow(.))}
+
 }
 
 
