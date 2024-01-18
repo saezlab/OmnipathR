@@ -206,7 +206,7 @@ omnipath_save_config <- function(
 #' }
 #'
 #' @export
-#' @importFrom yaml yaml.load_file write_yaml
+#' @importFrom yaml read_yaml write_yaml
 #' @importFrom magrittr %<>%
 #' @importFrom purrr map discard map_lgl
 omnipath_load_config <- function(
@@ -226,7 +226,7 @@ omnipath_load_config <- function(
 
     yaml_config <- `if`(
         file.exists(path),
-        yaml.load_file(input = path, ...),
+        read_yaml(file = path, ...),
         list()
     )
 
