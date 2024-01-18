@@ -272,3 +272,111 @@ oma_code <- function(name) {
     map_chr(taxon_name, 'oma')
 
 }
+
+
+#' Reads a built-in table about organism support of resources
+#'
+#' @importFrom magrittr %>%
+#' @importFrom yaml read_yaml
+#'
+#' @noRd
+.load_organisms <- function(pkgname){
+
+    omnipath.env$organisms <-
+        system.file(
+            'internal',
+            'organisms.yaml',
+            package = pkgname,
+            mustWork = TRUE
+        ) %>%
+        read_yaml()
+
+}
+
+#' Make sure the resource supports the organism and it has the ID
+#'
+#' @param organism Character or integer: name or NCBI Taxonomy ID of the
+#'     organism.
+#' @param resource Charater: name of the resource.
+#' @param error Logical: raise an error if the organism is not supported in the
+#'     resource. Otherwise it only emits a warning.
+#'
+#' @return Character: the ID of the organism as it is used by the resource. NA
+#'     if the organism can not be translated to the required identifier type.
+#'
+#' @examples
+#' organism_for(10116, 'chalmers-gem')
+#' # [1] "Rat"
+#' organism_for(6239, 'chalmers-gem')
+#' # [1] "Worm"
+#' # organism_for('foobar', 'chalmers-gem')
+#' # Error in organism_for("foobar", "chalmers-gem") :
+#' # Organism `foobar` (common_name: `NA`; common_name: `NA`)
+#' # is not supported by resource `chalmers-gem`. Supported organisms:
+#' # Human, Mouse, Rat, Zebrafish, Drosophila melanogaster (Fruit fly),
+#' # Caenorhabditis elegans (PRJNA13758).
+#'
+#' @importFrom magrittr %>% %<>% extract2
+#' @importFrom logger log_warn log_error
+#' @export
+organism_for <- function(organism, resource, error = TRUE) {
+
+    resource_info <-
+        omnipath.env$organisms %>%
+        extract2(resource %>% str_to_lower)
+
+    resource_info$supported %<>% maybe_call
+    resource_info$check_by_id %<>% if_null(resource_info$id_type)
+    organism_id_lookup <- get(resource_info$check_by_id)(organism)
+    organism_id_resource <- get(resource_info$id_type)(organism)
+
+    if (!organism_id_lookup %in% resource_info$supported) {
+
+        supported <-
+            resource_info$supported %>%
+            {`if`(
+                length(.) <= 9L,
+                enum_format(resource_info$supported),
+                sprintf(
+                    paste0(
+                        '%i taxons in total, see the built-in ',
+                        '`organisms.yaml` for details'
+                    ),
+                    length(.)
+                )
+            )} %>%
+            sprintf('Supported organisms: %s.', .)
+
+        msg <- sprintf(
+            paste0(
+                'Organism `%s` (%s: `%s`; %s: `%s`) is not supported by ',
+                'resource `%s`. %s'
+            ),
+            organism,
+            resource_info$check_by_id,
+            organism_id_lookup,
+            resource_info$id_type,
+            organism_id_resource,
+            resource,
+            supported
+        )
+
+        if (error) {
+
+            log_error(msg)
+            stop(msg)
+
+        } else {
+
+           log_warn(msg)
+           warning(msg)
+
+        }
+
+    }
+
+    organism_id_resource %>%
+    extract2(resource_info$custom, .) %>%
+    maybe_call(resource_info$finalize, .)
+
+}
