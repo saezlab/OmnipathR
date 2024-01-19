@@ -20,10 +20,6 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-SUPPORTED_ORGANISMS <- list(
-    gem = c('Human', 'Mouse', 'Rat', 'Zebrafish', 'Fruitfly', 'Worm')
-)
-
 #' Organism-specific prior knowledge networks for COSMOS
 #'
 #' This function generates the prior knowledge network (PKN) needed to run
