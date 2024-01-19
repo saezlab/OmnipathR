@@ -69,6 +69,7 @@
     .load_magic_bytes(pkgname)
     .load_urls(pkgname)
     .load_id_types(pkgname)
+    .load_organisms(pkgname)
 
     if(buildserver){
 
