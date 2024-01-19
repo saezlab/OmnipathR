@@ -461,11 +461,29 @@ null_or_call <- function(value, fun, ...){
 #' @importFrom magrittr %>%
 #' @importFrom rlang is_function
 #' @noRd
-maybe_call <- function(fun, ...) {
+maybe_call <- function(fun, ..., .return_args = FALSE) {
 
     fun %>%
-    `if`(is_function(.), ., tryCatch(get(.), error = identity)) %>%
-    {`if`(is_function(.), .(...), list(...) %>% unlist_len1)}
+    `if`(is_function(.), ., maybe_get(.)) %>%
+    {`if`(
+        is_function(.),
+        .(...),
+        `if`(
+            is.null(.) || .return_args,
+            list(...) %>% unlist_len1,
+            .
+        )
+    )}
+
+}
+
+
+#' Try to get name, do nothing if it is not available
+#'
+#' @noRd
+maybe_get <- function(name) {
+
+    tryCatch(get(name), error = function(e) {return(name)})
 
 }
 
