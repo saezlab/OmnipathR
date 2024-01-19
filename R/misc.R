@@ -456,6 +456,50 @@ null_or_call <- function(value, fun, ...){
 }
 
 
+#' Call a function if available
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang is_function
+#' @noRd
+maybe_call <- function(fun, ..., .return_args = FALSE) {
+
+    fun %>%
+    `if`(is_function(.), ., maybe_get(.)) %>%
+    {`if`(
+        is_function(.),
+        .(...),
+        `if`(
+            is.null(.) || .return_args,
+            list(...) %>% unlist_len1,
+            .
+        )
+    )}
+
+}
+
+
+#' Try to get name, do nothing if it is not available
+#'
+#' @noRd
+maybe_get <- function(name) {
+
+    tryCatch(get(name), error = function(e) {return(name)})
+
+}
+
+
+#' Returns the first element for length one lists or vectors
+#'
+#' @importFrom dplyr first
+#'
+#' @noRd
+unlist_len1 <- function(x) {
+
+    `if`(length(x) <= 1L, first(x), x)
+
+}
+
+
 #' Returns `value1` if it's not zero length otherwise `value2`
 #'
 #' @importFrom magrittr %>%
