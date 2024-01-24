@@ -376,7 +376,7 @@ organism_for <- function(organism, resource, error = TRUE) {
     }
 
     organism_id_resource %>%
-    extract2(resource_info$custom, .) %>%
+    if_null(extract2(resource_info$custom, .), .) %>%
     maybe_call(resource_info$finalize, .)
 
 }
