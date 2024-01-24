@@ -16,3 +16,12 @@ chalmers-gem:
   custom:
     Caenorhabditis elegans (PRJNA13758): Worm
     Drosophila melanogaster (Fruit fly): Fruitfly
+cosmos:
+  id_type: ncbi_taxid
+  supported:
+    - 9606
+    - 10090
+    - 10116
+    - 7955
+    - 7227
+    - 6239
