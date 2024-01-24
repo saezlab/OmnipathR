@@ -99,23 +99,11 @@ cosmos_pkn <- function(
     stitch.threshold = 700
 ){
 
-    organism %<>%
-    c(
-        original = .,
-        ensembl = ensembl_name(.)
-    ) %>%
-    {`if`(
-        is.na(extract2(., 'ensembl')),
-        {
-            extract2(., 'original') %>%
-            sprintf('Could not recognize organism `%s`.', .) %T>%
-            log_error
-            stop
-        },
-        extract2(., 'ensembl')
-    )}
+    .slow_doctest()
 
-    gene_ensembl <- sprintf('%s_gene_ensembl', ens_organism)
+    organism %<>% ncbi_taxid()
+
+    args <- environment() %>% as.list
 
     ## check dependencies (Suggests in DESCRIPTION)
     c('R.matlab', 'metaboliteIDMapping') %>%
@@ -123,27 +111,18 @@ cosmos_pkn <- function(
     paste(collapse = ', ') %>%
     {`if`(nchar(.), sprintf('Missing packages: %s', .) %T>% log_error %>% stop)}
 
-    .slow_doctest()
+    cache_pseudo_url <- 'COSMOS_PKN_%s' %>% sprintf(organism)
 
-    cache_pseudo_url <- 'PKN_COSMOS_%s' %>% sprintf(organism)
-    cache_pseudo_post <- list(
-        organism = organism,
-        translate.genes = translate.genes,
-        biomart.use.omnipath = biomart.use.omnipath,
-        gem_reactions.map.col = gem_reactions.map.col,
-        gem_metabolites.map.col = gem_metabolites.map.col,
-        gem_list.params = gem_list.params,
-        gem_degree.mets.threshold = gem_degree.mets.threshold,
-        stitch.threshold = stitch.threshold
-    )
-
-    in_cache <- omnipath_cache_get(
+    in_cache <-
+        omnipath_cache_get(
             url = cache_pseudo_url,
-            post = cache_pseudo_post,
+            post = args,
             create = FALSE
-        ) %>% omnipath_cache_latest_version
+        ) %>%
+        omnipath_cache_latest_version
 
     if (is.null(in_cache)) {
+
         log_success(
             paste0(
                 'Building COSMOS PKN (organism: %s). ',
@@ -153,19 +132,18 @@ cosmos_pkn <- function(
             organism
         )
 
-        res <- exec(.cosmos_pkn, !!!cache_pseudo_post) %>%
-            omnipath_cache_save(
-                url = cache_pseudo_url,
-                post = cache_pseudo_post
-            )
+        result <-
+            exec(.cosmos_pkn, !!!cache_pseudo_post) %>%
+            omnipath_cache_save(url = cache_pseudo_url, post = args)
+
     } else {
-        res <- omnipath_cache_load(
-            url = cache_pseudo_url,
-            post = cache_pseudo_post
-        )
+
+        result <- omnipath_cache_load(url = cache_pseudo_url, post = args)
+
     }
 
-    return(res)
+    return(result)
+
 }
 
 
