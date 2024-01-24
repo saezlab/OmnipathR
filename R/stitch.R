@@ -30,13 +30,15 @@
 #'
 #' @return STITCH links data frame
 #'
-#' @importFrom magrittr %>% %T>%
+#' @importFrom magrittr %<>% %>% %T>%
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-stitch_proteins <- function(organism) {
+stitch_proteins <- function(organism = 'human') {
 
     .slow_doctest()
+
+    organism %<>% organism_supported('stitch')
 
     'stitch_proteins' %>%
     generic_downloader(

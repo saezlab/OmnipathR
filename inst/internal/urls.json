@@ -141,7 +141,7 @@
     "stitch_actions": [
       "http://stitch.embl.de/download/actions.v5.0/%s.actions.v5.0.tsv.gz"
     ],
-    "stitch_prot_details": [
+    "stitch_proteins": [
       "http://stitch.embl.de/download/protein_chemical.links.detailed.v5.0/%s.protein_chemical.links.detailed.v5.0.tsv.gz"
     ],
     "GEM_github": ["https://raw.githubusercontent.com/SysBioChalmers/%s-GEM/main/model/%s"]

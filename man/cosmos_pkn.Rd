@@ -9,15 +9,14 @@ cosmos_pkn(
   organism,
   translate.genes = FALSE,
   biomart.use.omnipath = TRUE,
-  GEM.reactions.map.col = "rxns",
-  GEM.metabolites.map.col = "mets",
-  GEM.list.params = list(stoich.name = "S", reaction.name = "grRules", lb.name = "lb",
+  gem_reactions.map.col = "rxns",
+  gem_metabolites.map.col = "mets",
+  gem_list.params = list(stoich.name = "S", reaction.name = "grRules", lb.name = "lb",
     ub.name = "ub", rev.name = "rev", reaction.ID.name = "rxns", metabolites.ID.name =
     "mets", metabolites.names.name = "metNames", metabolites.fomulas.name =
     "metFormulas", metabolites.inchi.name = "inchis"),
-  GEM.degree.mets.threshold = 400,
-  stitch.threshold = 700,
-  verbose = TRUE
+  gem_degree.mets.threshold = 400,
+  stitch.threshold = 700
 )
 }
 \arguments{
@@ -31,36 +30,33 @@ Only required when \code{organism == 9606} (\code{FALSE} by default).}
 \item{biomart.use.omnipath}{Whether using BioMart information from OmnipathR
 (\code{TRUE} by default).}
 
-\item{GEM.reactions.map.col}{Column of reaction IDs in the GEM
-(\code{"rxns"} by default).}
+\item{gem_reactions.map.col}{Column of reaction IDs in the GEM
+(\code{'rxns'} by default).}
 
-\item{GEM.metabolites.map.col}{Column of reaction IDs in the GEM
-(\code{"mets"} by default).}
+\item{gem_metabolites.map.col}{Column of reaction IDs in the GEM
+(\code{'mets'} by default).}
 
-\item{GEM.list.params}{List containing the name of the slots where the
-information to construct the PKN is located in the GEM. If a matlab object
+\item{gem_list.params}{List containing the name of the slots where the
+information to construct the PKN is located in the gem_ If a matlab object
 is provided, this list parameter should not be modified.}
 
-\item{GEM.degree.mets.threshold}{Degree cutoff used to filter out
+\item{gem_degree.mets.threshold}{Degree cutoff used to filter out
 metabolites (400 by default). The objective is to remove cofactors and
 over-promiscuous metabolites.}
 
 \item{stitch.threshold}{Confidence cutoff used for STITCH connections
 (700 by default).}
-
-\item{verbose}{Whether showing messages during execution (\code{TRUE} by
-default).}
 }
 \value{
 List of 4 elements containing the necessary information for COSMOS to
   run: causal PKN, mapping data frame for metabolites from GEM,
   reaction-to-gene data frame from GEM, and mapping data frame for reactions
-  from GEM.
+  from gem_
 }
 \description{
 This function generates the prior knowledge network (PKN) needed to run
 COSMOS using information from different resources through the \pkg{OmnipathR}
-R package. Particularly, \code{create_PKN_COSMOS} will obtain:
+R package. Particularly, \code{cosmos_pkn} will obtain:
 \itemize{ \item Genome-scale metabolic
 model (GEM) of the required organism from Wang et al., 2021.
 \item Interaction network of
@@ -72,7 +68,7 @@ COSMOS to run.
 }
 \examples{
 \dontrun{
-  human.PKN.COSMOS <- create_PKN_COSMOS(organism = 9606)
+  human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
 }
 
 }
