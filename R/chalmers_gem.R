@@ -25,38 +25,39 @@
 #' Processing GEMs from Wang et al., 2021
 #' (\url{https://github.com/SysBioChalmers}) to generate PKN for COSMOS
 #'
-#' @param matlab.object Matlab object containing a gem_
-#' @param reactions.map Data frame with information to map reaction names using
-#'   different ontologies.
-#' @param metabolites.map Data frame with information to map metabolite names
-#'   using different ontologies.
-#' @param reactions.map.col Column from \code{reactions.map} used as ID in
-#'   \code{matlab.object}. This parameter should not be modified.
-#' @param metabolites.map.col Column from \code{metabolites.map} used as ID in
-#'   \code{matlab.object}. This parameter should not be modified.
+#' @param organism Character or integer: an organism (taxon) identifier.
+#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
+#'     10116 (Rattus norvegicus), 7955 (Danio rerio), 7227 (Drosophila
+#'     melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param reaction_id_type Column from \code{reactions.map} used as ID in
+#'     \code{matlab.object}. This parameter should not be modified.
+#' @param metabolite_id_type Column from \code{metabolites.map} used as ID in
+#'     \code{matlab.object}. This parameter should not be modified.
 #' @param list.params.GEM List of parameters to correctly get information from
-#'   the matlab object. This parameter should not be modified.
+#'     the matlab object. This parameter should not be modified.
 #' @param degree.mets.cutoff Degree cutoff used to prune metabolites with high
-#'   degree assuming they are cofactors (400 by default).
+#'     degree assuming they are cofactors (400 by default).
 #'
 #' @return List containing PKN with COSMOS and OCEAN format, gene-to-reactions
-#'   data frame, metabolite-mapping data frame, and reactions-mapping data frame.
+#'     data frame, metabolite-mapping data frame, and reactions-mapping data
+#'     frame.
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
-#'   PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
-#'   Genome-scale metabolic network reconstruction of model animals as a
-#'   platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
-#'   27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
+#'     PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
+#'     Genome-scale metabolic network reconstruction of model animals as a
+#'     platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
+#'     27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% extract extract2 equals
+#' @importFrom dplyr pull
+#' @importFrom tibble as_tibble
+#' @importFrom purrr map
 #'
-#' @noRd
-gem_basal_pkn <- function(
-        matlab.object,
-        reactions.map,
-        metabolites.map,
-        reactions.map.col = 'rxns',
-        metabolites.map.col = 'mets',
+#' @export
+chalmers_gem <- function(
+        organism = 'Human',
+        reaction_id_type = 'rxns',
+        metabolite_id_type = 'mets',
         list.params.GEM = list(
             stoich.name = 'S',
             reaction.name = 'grRules',
@@ -69,99 +70,57 @@ gem_basal_pkn <- function(
             metabolites.fomulas.name = 'metFormulas',
             metabolites.inchi.name = 'inchis'
         ),
-        degree.mets.cutoff = 400
-) {
+        metab_max_degree = 400L
+    ) {
+
+    log_info('Processing Chalmers SysBio GEM.')
+
+    raw <- gem_raw(organism = organism)
+    metabolites <- gem_metabolites(organism = organism)
+    reactions <- gem_reactions(organism = organism)
+
     ## check parameters
-    if (!reactions.map.col %in% colnames(reactions.map)) {
-        stop('reactions.map.col cannot be found in reactions.map data.frame')
-    } else if (!metabolites.map.col %in% colnames(metabolites.map)) {
-        stop('metabolites.map.col cannot be found in metabolites.map data.frame')
-    } else if (degree.mets.cutoff < 1) {
-        stop('degree.mets.cutoff cannot be less than 1')
+    err = NULL
+    if (metab_max_degree < 1L) {
+        err = '`metab_max_degree` cannot be less than 1.'
     }
 
-    attribs.mat <- rownames(matlab.object)
-    matlab.object <- matlab.object[[1]]
-    ## check elements are in the object
-    invisible(
-        sapply(
-            names(list.params.GEM), \(idx) {
-                if (!list.params.GEM[[idx]] %in% attribs.mat) {
-                    stop(
-                        paste0(
-                            idx, 'element in list.params.GEM (',
-                            list.params.GEM[[idx]], ') is not in matlab object'
-                        )
-                    )
-                }
-            }
-        )
-    )
-    ## obtaining data
-    s.matrix <- matlab.object[[which(attribs.mat == list.params.GEM$stoich.name)]]
-    reaction.list <- matlab.object[[which(attribs.mat == list.params.GEM$reaction.name)]]
-    ##############################################################################
-    ## reactions
-    # direction reactions
-    lbs <- as.data.frame(
-        cbind(
-            matlab.object[[which(attribs.mat == list.params.GEM$lb.name)]],
-            matlab.object[[which(attribs.mat == list.params.GEM$ub.name)]],
-            matlab.object[[which(attribs.mat == list.params.GEM$rev.name)]]
-        )
-    )
-    ## this could be done with mutate
-    lbs$direction <- ifelse(
-        (matlab.object[[which(attribs.mat == list.params.GEM$ub.name)]] +
-             matlab.object[[which(attribs.mat == list.params.GEM$lb.name)]]) >= 0,
-        'forward', 'backward'
-    )
-    reversible <- ifelse(
-        matlab.object[[which(attribs.mat == list.params.GEM$rev.name)]] == 1,
-        TRUE, FALSE
-    )
-    reaction.ids <- unlist(
-        matlab.object[[which(attribs.mat == list.params.GEM$reaction.ID.name)]]
-    )
-    ## reaction to genes df
-    reaction.to.genes.df <- lapply(
-        seq_along(reaction.list),
-        \(idx) {
-            genes.reac <- unlist(reaction.list[[idx]], recursive = FALSE)
-            if (length(genes.reac) != 0) {
-                genes <- unique(
-                    gsub(
-                        ' and ', '_',
-                        gsub(
-                            '[()]','',
-                            gsub('_AT[0-9]+','', strsplit(genes.reac, split = ' or ')[[1]])
-                        )
-                    )
-                )
-                return(
-                    data.frame(
-                        Gene = genes, Reaction = rep(idx, length(genes)),
-                        Reaction.ID = rep(reaction.ids[idx], length(genes))
-                    )
-                )
-            } else {
-                return(
-                    data.frame(
-                        Gene = idx, Reaction = idx, Reaction.ID = reaction.ids[idx]
-                    )
-                )
-            }
+    if (!is.null(err)) {
+        log_error(err)
+        stop(err)
+    }
+
+
+    raw %>%
+    as_tibble %>%
+    pull(1L) %>%
+    extract(,,1L) %>%
+    map(
+        function(x) {
+            if (x %>% dim %>% equals(1L) %>% all) x %>% extract(1L,1L) else x
         }
-    ) %>% do.call(rbind, .)
-    orphan.reacts <- grepl(pattern = '^\\d+$', reaction.to.genes.df$Gene)
-    reaction.to.genes.df[orphan.reacts, 'Reaction.ID'] <- paste0(
-        'orphanReac.', reaction.to.genes.df[orphan.reacts, 'Reaction.ID']
+    ) %>%
+    extract(c('rxns', 'S', 'lb', 'ub', 'rev', 'grRules')) %>%
+    map(extract, ,1L) %>%
+    as_tibble %>%
+    mutate(
+        rxns = unlist(rxns),
+        direction = ifelse(ub + lb >= 0L, 'forward', 'backward'),
+        rev = as.logical(rev),
+        grRules = (
+            unlist(grRules, recursive = FALSE) %>%
+            map_chr(extract, 1L) %>%
+            str_replace_all(' and ', '_') %>%
+            str_replace_all('\\[\\(\\)\\]|_AT\\d+', '') %>%
+            str_split(' or ') %>%
+            map(str_split, ' and ') %>%
+            map(discard, is_empty_2)
+        ),
+        orphan = map_lgl(
+            grRules,
+            ~any(map_lgl(.x, ~any(str_detect(.x, '^\\d+$'))))
+        )
     )
-    reaction.to.genes.df[orphan.reacts, 'Gene'] <- paste0(
-        reaction.to.genes.df[orphan.reacts, 'Gene'], '.',
-        reaction.to.genes.df[orphan.reacts, 'Reaction.ID']
-    )
-    reaction.to.genes.df <- unique(reaction.to.genes.df)
 
 
     ##############################################################################

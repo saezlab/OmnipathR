@@ -234,11 +234,6 @@ cosmos_pkn <- function(
             paste(c(9606, 10090, 10116, 7955, 7227, 6239), collapse = ', ')
         )
 
-    log_info('Loading GEM obtained from Wang et al., 2021...')
-    ## download GEM using OmnipathR (if already done, it will be taken from cache)
-    gem_raw <- OmnipathR:::gem_raw(organism = organism) %>% as.data.frame()
-    gem_metabolites <- OmnipathR:::gem_metabolites(organism = organism) %>% as.data.frame()
-    gem_reactions <- OmnipathR:::gem_reactions(organism = organism) %>% as.data.frame()
 
     log_info('Loading protein-chemical interactions from STITCH...')
     ## download STITCH using OmnipathR (if already done, it will be taken from cache)
