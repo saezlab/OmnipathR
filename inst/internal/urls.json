@@ -145,8 +145,7 @@
       "http://stitch.embl.de/download/protein_chemical.links.detailed.v5.0/",
       "%s.protein_chemical.links.detailed.v5.0.tsv.gz"
     ],
-    "chalmers_gem_github": [
-        "https://raw.githubusercontent.com/SysBioChalmers/",
-        "%s-GEM/main/model/%s-GEM.mat"
+    "chalmers_gem": [
+        "https://raw.githubusercontent.com/SysBioChalmers/%s-GEM/main/model/%s"
     ]
 }

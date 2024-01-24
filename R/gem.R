@@ -419,14 +419,17 @@ cosmos_format_gem <- function(list.network) {
 }
 
 
-#' Download GEM reactions file from Wang et al., 2021
+#' Reactions from the Chalmers SysBio GEM (Wang et al., 2021)
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
 #'
-#' @return Mapping reactions data frame for GEM processing.
+#' @return Data frame of reaction identifiers.
+#'
+#' @examples
+#' chalmers_gem_reactions()
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
 #'   PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
@@ -437,42 +440,44 @@ cosmos_format_gem <- function(list.network) {
 #' @importFrom magrittr %>% %T>%
 #' @importFrom readr read_tsv
 #'
-#' @noRd
-gem_reactions <- function(organism) {
-
-    dataset.github <- switch(
-        as.character(organism),
-        '9606' = 'Human',
-        '10090' = 'Mouse',
-        '10116' = 'Rat',
-        '7955' = 'Zebrafish',
-        '7227' = 'Fruitfly',
-        '6239' = 'Worm'
-    )
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_metabolites}}}
+#'     \item{\code{\link{chalmers_gem_raw}}}
+#'     \item{\code{\link{chalmers_gem_cosmos}}}
+#' }
+chalmers_gem_reactions <- function(organism = 'Human') {
 
     .slow_doctest()
 
-    'gem_github' %>%
-        generic_downloader(
-            reader = read_tsv,
-            url_key_param = list(),
-            url_param = list(dataset.github, 'reactions.tsv'),
-            reader_param = list(),
-            resource = NULL,
-            post = NULL,
-            use_httr = FALSE
-        ) %T>% load_success()
+    organism %<>% organism_for('chalmers-gem')
+
+    'chalmers_gem' %>%
+    generic_downloader(
+        reader = read_tsv,
+        url_key_param = list(),
+        url_param = organism %>% list('reactions.tsv'),
+        reader_param = list(),
+        resource = 'Chalmers GEM',
+        post = NULL,
+        use_httr = FALSE
+    ) %T>%
+    load_success()
+
 }
 
 
-#' Download GEM metabolites file from Wang et al., 2021
+#' Metabolites from the Chalmers SysBio GEM (Wang et al., 2021)
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
 #'
-#' @return Mapping metabolites data frame for GEM processing.
+#' @return Data frame of metabolite identifiers.
+#'
+#' @examples
+#' chalmers_gem_metabolites()
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
 #'   PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
@@ -480,34 +485,33 @@ gem_reactions <- function(organism) {
 #'   platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
 #'   27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 #'
-#' @importFrom magrittr %>% %T>%
+#' @importFrom magrittr %>% %T>% %<>%
 #' @importFrom readr read_tsv
 #'
-#' @noRd
-gem_metabolites <- function(organism) {
-
-    dataset.github <- switch(
-        as.character(organism),
-        '9606' = 'Human',
-        '10090' = 'Mouse',
-        '10116' = 'Rat',
-        '7955' = 'Zebrafish',
-        '7227' = 'Fruitfly',
-        '6239' = 'Worm'
-    )
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_reactions}}}
+#'     \item{\code{\link{chalmers_gem_raw}}}
+#'     \item{\code{\link{chalmers_gem_cosmos}}}
+#' }
+chalmers_gem_metabolites <- function(organism = 'Human') {
 
     .slow_doctest()
 
-    'gem_github' %>%
-        generic_downloader(
-            reader = read_tsv,
-            url_key_param = list(),
-            url_param = list(dataset.github, 'metabolites.tsv'),
-            reader_param = list(),
-            resource = NULL,
-            post = NULL,
-            use_httr = FALSE
-        ) %T>% load_success()
+    organism %<>% organism_for('chalmers-gem')
+
+    suppressWarnings(generic_downloader(
+        'chalmers_gem',
+        reader = read_tsv,
+        url_key_param = list(),
+        url_param = organism %>% list('metabolites.tsv'),
+        reader_param = list(),
+        resource = 'Chalmers GEM',
+        post = NULL,
+        use_httr = FALSE
+    )) %T>%
+    load_success()
+
 }
 
 
@@ -521,7 +525,10 @@ gem_metabolites <- function(organism) {
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
 #'
-#' @return Matlab object containing GEM information.
+#' @return Matlab object containing the GEM.
+#'
+#' @examples
+#' chalmers_gem_raw()
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
 #'   PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
@@ -531,20 +538,25 @@ gem_metabolites <- function(organism) {
 #'
 #' @importFrom magrittr %>% %T>% %<>%
 #'
-#' @noRd
-chalmers_gem_raw <- function(organism) {
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_reactions}}}
+#'     \item{\code{\link{chalmers_gem_metabolites}}}
+#'     \item{\code{\link{chalmers_gem_cosmos}}}
+#' }
+chalmers_gem_raw <- function(organism = 'Human') {
+
+    .slow_doctest()
 
     organism %<>%
         organism_for('chalmers-gem') %T>%
         log_info('Downloading GEM from Chalmers Sysbio for organism `%s`.', .)
 
-    .slow_doctest()
-
-    'chalmers_gem_github' %>%
+    'chalmers_gem' %>%
     generic_downloader(
         reader = R.matlab::readMat,
         url_key_param = list(),
-        url_param = organism %>% list(., .),
+        url_param = organism %>% list(sprintf('%s-GEM.mat', .)),
         reader_param = list(),
         resource = 'Chalmers GEM',
         post = NULL,
@@ -559,7 +571,7 @@ chalmers_gem_raw <- function(organism) {
 #'
 #' @param gem_raw GEM from a Matlab object
 #' @param attribs_mat Atribute from the Matlab object to be parsed
-#' @param name Vector of elements to be checked in the Metlab object
+#' @param name Vector of elements to be checked in the Matlab object
 #'
 #' @return Vector with NAs in those entries with no element
 #'
