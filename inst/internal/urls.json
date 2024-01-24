@@ -142,7 +142,11 @@
       "http://stitch.embl.de/download/actions.v5.0/%s.actions.v5.0.tsv.gz"
     ],
     "stitch_proteins": [
-      "http://stitch.embl.de/download/protein_chemical.links.detailed.v5.0/%s.protein_chemical.links.detailed.v5.0.tsv.gz"
+      "http://stitch.embl.de/download/protein_chemical.links.detailed.v5.0/",
+      "%s.protein_chemical.links.detailed.v5.0.tsv.gz"
     ],
-    "GEM_github": ["https://raw.githubusercontent.com/SysBioChalmers/%s-GEM/main/model/%s"]
+    "chalmers_gem_github": [
+        "https://raw.githubusercontent.com/SysBioChalmers/",
+        "%s-GEM/main/model/%s-GEM.mat"
+    ]
 }
