@@ -511,9 +511,12 @@ gem_metabolites <- function(organism) {
 }
 
 
-#' Download GEM matlab file from Wang et al., 2021
+#' GEM matlab file from Chalmers Sysbio (Wang et al., 2021)
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
+#' Downloads and imports the matlab file containing the genome scale metabolic
+#' models created by Chalmers SysBio.
+#'
+#' @param organism Character or integer: name or identifier of the organism.
 #'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
@@ -526,23 +529,24 @@ gem_metabolites <- function(organism) {
 #'   platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
 #'   27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 #'
-#' @importFrom magrittr %>% %T>%
-#' @importFrom stringr str_to_title
+#' @importFrom magrittr %>% %T>% %<>%
 #'
 #' @noRd
-gem_raw <- function(organism) {
+chalmers_gem_raw <- function(organism) {
 
-    organism %<>% common_name %>% str_to_title
+    organism %<>%
+        organism_for('chalmers-gem') %T>%
+        log_info('Downloading GEM from Chalmers Sysbio for organism `%s`.', .)
 
     .slow_doctest()
 
-    'gem_github' %>%
+    'chalmers_gem_github' %>%
     generic_downloader(
         reader = R.matlab::readMat,
         url_key_param = list(),
-        url_param = list(dataset.github, paste0(dataset.github, '-gem_mat')),
+        url_param = organism %>% list(., .),
         reader_param = list(),
-        resource = NULL,
+        resource = 'Chalmers GEM',
         post = NULL,
         use_httr = FALSE
     ) %T>%
