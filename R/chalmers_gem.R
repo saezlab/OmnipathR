@@ -22,25 +22,24 @@
 
 #' COSMOS PKN from the genome scale metabolic model in Wang et al. 2021
 #'
-#' Processing GEMs from Wang et al., 2021
-#' (\url{https://github.com/SysBioChalmers}) to generate PKN for COSMOS
+#' Process the GEMs from Wang et al., 2021
+#' (\url{https://github.com/SysBioChalmers}) into convenient tables.
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'     10116 (Rattus norvegicus), 7955 (Danio rerio), 7227 (Drosophila
 #'     melanogaster) and 6239 (Caenorhabditis elegans).
-#' @param reaction_id_type Column from \code{reactions.map} used as ID in
-#'     \code{matlab.object}. This parameter should not be modified.
-#' @param metabolite_id_type Column from \code{metabolites.map} used as ID in
-#'     \code{matlab.object}. This parameter should not be modified.
-#' @param list.params.GEM List of parameters to correctly get information from
-#'     the matlab object. This parameter should not be modified.
-#' @param degree.mets.cutoff Degree cutoff used to prune metabolites with high
-#'     degree assuming they are cofactors (400 by default).
 #'
-#' @return List containing PKN with COSMOS and OCEAN format, gene-to-reactions
-#'     data frame, metabolite-mapping data frame, and reactions-mapping data
-#'     frame.
+#' @return List containing the following elements: \itemize{
+#'     \item{reactions: tibble of reaction data;}
+#'     \item{metabolites: tibble of metabolite data;}
+#'     \item{reaction_ids: translation table of reaction identifiers;}
+#'     \item{metabolite_ids: translation table of metabolite identifiers;}
+#'     \item{S: Stoichiometric matrix (sparse).}
+#' }
+#'
+#' @examples
+#' gem <- chalmers_gem()
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
 #'     PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
@@ -48,220 +47,197 @@
 #'     platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
 #'     27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 #'
-#' @importFrom magrittr %>% extract extract2 equals
-#' @importFrom dplyr pull
+#' @importFrom magrittr %>% %T>% extract extract2 equals
+#' @importFrom dplyr pull across na_if first mutate slice n
 #' @importFrom tibble as_tibble
-#' @importFrom purrr map
+#' @importFrom purrr map map_chr map_lgl map2 pmap_int
+#' @importFrom logger log_info
+#' @importFrom tidyselect everything
+#' @importFrom stringr str_split str_replace_all str_detect
 #'
 #' @export
-chalmers_gem <- function(
-        organism = 'Human',
-        reaction_id_type = 'rxns',
-        metabolite_id_type = 'mets',
-        list.params.GEM = list(
-            stoich.name = 'S',
-            reaction.name = 'grRules',
-            lb.name = 'lb',
-            ub.name = 'ub',
-            rev.name = 'rev',
-            reaction.ID.name = 'rxns',
-            metabolites.ID.name = 'mets',
-            metabolites.names.name = 'metNames',
-            metabolites.fomulas.name = 'metFormulas',
-            metabolites.inchi.name = 'inchis'
-        ),
-        metab_max_degree = 400L
-    ) {
+chalmers_gem <- function(organism = 'Human') {
 
     log_info('Processing Chalmers SysBio GEM.')
 
-    raw <- gem_raw(organism = organism)
-    metabolites <- gem_metabolites(organism = organism)
-    reactions <- gem_reactions(organism = organism)
+    raw <- chalmers_gem_raw(organism = organism)
+    metabolite_ids <- chalmers_gem_metabolites(organism = organism)
+    reaction_ids <- chalmers_gem_reactions(organism = organism)
 
-    ## check parameters
-    err = NULL
-    if (metab_max_degree < 1L) {
-        err = '`metab_max_degree` cannot be less than 1.'
-    }
+    S <- raw %>% extract2(1L) %>% extract(,,1L) %>% extract2('S')
 
-    if (!is.null(err)) {
-        log_error(err)
-        stop(err)
-    }
-
-
-    raw %>%
-    as_tibble %>%
-    pull(1L) %>%
-    extract(,,1L) %>%
-    map(
-        function(x) {
-            if (x %>% dim %>% equals(1L) %>% all) x %>% extract(1L,1L) else x
-        }
-    ) %>%
-    extract(c('rxns', 'S', 'lb', 'ub', 'rev', 'grRules')) %>%
-    map(extract, ,1L) %>%
-    as_tibble %>%
-    mutate(
-        rxns = unlist(rxns),
-        direction = ifelse(ub + lb >= 0L, 'forward', 'backward'),
-        rev = as.logical(rev),
-        grRules = (
-            unlist(grRules, recursive = FALSE) %>%
-            map_chr(extract, 1L) %>%
-            str_replace_all(' and ', '_') %>%
-            str_replace_all('\\[\\(\\)\\]|_AT\\d+', '') %>%
-            str_split(' or ') %>%
-            map(str_split, ' and ') %>%
-            map(discard, is_empty_2)
-        ),
-        orphan = map_lgl(
-            grRules,
-            ~any(map_lgl(.x, ~any(str_detect(.x, '^\\d+$'))))
-        )
-    )
-
-
-    ##############################################################################
-    ## metabolites
-    metabolites.IDs <- unlist(
-        matlab.object[[which(attribs.mat == list.params.GEM$metabolites.ID.name)]]
-    )
-    metabolites.names <- .metab_info(
-        matlab.object = matlab.object, attribs.mat = attribs.mat,
-        name = list.params.GEM$metabolites.names.name
-    )
-    ## check if IDs are the same and show number of lost metabolites
-    # metabolites.map[[metabolites.map.col]]
-    inter.metab <- intersect(
-        metabolites.map[[metabolites.map.col]], metabolites.IDs
-    )
-    rownames(metabolites.map) <- metabolites.map[[metabolites.map.col]]
-    metabolites.map <- metabolites.map[metabolites.IDs, ]
-    ## adding additional information
-    metabolites.formulas <- .metab_info(
-        matlab.object = matlab.object, attribs.mat = attribs.mat,
-        name = list.params.GEM$metabolites.fomulas.name
-    )
-    metabolites.inchi <- .metab_info(
-        matlab.object = matlab.object, attribs.mat = attribs.mat,
-        name = list.params.GEM$metabolites.inchi.name
-    )
-    metabolites.map <- cbind(
-        metabolites.map,
-        Metabolite.Name = metabolites.IDs,
-        Metabolite.Formula = metabolites.formulas,
-        Metabolite.Inchi = metabolites.inchi
-    )
-    metabolites.map[metabolites.map == ''] <- NA
-    ##############################################################################
-    ## SIF file: PKN
-    log_info('Generating PKN')
-
-    reaction.to.genes.df.reac <- reaction.to.genes.df
-    reaction.list <- list()
-    for (reac.idx in seq(ncol(s.matrix))) {
-        reaction <- s.matrix[, reac.idx]
-        #modify gene name so reactions that are catalised by same enzyme stay separated
-        reaction.to.genes.df.reac[reaction.to.genes.df$Reaction == reac.idx, 1] <- paste(
-            paste0('Gene', reac.idx),
-            reaction.to.genes.df[reaction.to.genes.df$Reaction == reac.idx, 1],
-            sep = '__'
-        )
-        # get the enzymes associated with reaction
-        genes <- reaction.to.genes.df.reac[reaction.to.genes.df.reac$Reaction == reac.idx, 1]
-        if (as.vector(lbs[reac.idx, 4] == 'forward')) {
-            reactants <- metabolites.IDs[reaction == -1]
-            products <- metabolites.IDs[reaction == 1]
-        } else {
-            reactants <- metabolites.IDs[reaction == 1]
-            products <- metabolites.IDs[reaction == -1]
-        }
-        reactants <- paste0('Metab__', reactants)
-        products <- paste0('Metab__', products)
-        number_of_interations <- length(reactants) + length(products)
-        # now for each enzyme, we create a two column dataframe recapitulating the
-        # interactions between the metabolites and this enzyme
-        reaction.df <- lapply(
-            X = as.list(genes),
-            FUN = \(gene) {
-                gene.df <- data.frame(
-                    # reactants followed by the enzyme (the enzyme is repeated as many time as they are products)
-                    source = c(reactants, rep(gene, number_of_interations - length(reactants))),
-                    # enzyme(repeated as many time as they are reactants) followed by products
-                    target = c(rep(gene, number_of_interations - length(products)), products)
-                )
-                if (reversible[reac.idx]) {
-                    gene.df.reverse <- data.frame(
-                        source = c(
-                            rep(
-                                paste(gene, '_reverse', sep = ''),
-                                number_of_interations - length(products)
-                            ),
-                            products
-                        ),
-                        target = c(
-                            reactants,
-                            rep(
-                                paste(gene, '_reverse', sep = ''),
-                                number_of_interations - length(reactants)
-                            )
-                        )
-                    )
-                    gene.df <- rbind(gene.df, gene.df.reverse)
-                }
-                return(gene.df)
-            }
-        ) %>% do.call(rbind, .)
-        reaction.list[[reac.idx]] <- reaction.df
-    }
-    reaction.df.all <- do.call(rbind, reaction.list)
-    ## removing those reactions with no metab <--> gene
-    reaction.df.all <- reaction.df.all[reaction.df.all$source != 'Metab__' &
-                                                                             reaction.df.all$target != 'Metab__',]
-    ## only complete cases
-    reaction.df.all <- reaction.df.all[complete.cases(reaction.df.all),]
-    ##############################################################################
-    ## removing cofactors (metabolites with a high degree)
-    metabs.degree <- sort(
-        table(
-            grep(
-                '^Metab__', c(reaction.df.all$source, reaction.df.all$target),
-                value = TRUE
+    metabolites <-
+        raw %>%
+        chalmers_gem_matlab_tibble(mets, metNames, metFormulas, inchis) %>%
+        mutate(
+            across(
+                everything(),
+                ~na_if(map_chr(unlist(.x, recursive = FALSE), first), '')
             )
-        ),
-        decreasing = TRUE
-    )
-    log_info(
-        'Number of metabolites removed after degree >',
-        degree.mets.cutoff,  ': ', sum(metabs.degree >= degree.mets.cutoff)
-    )
+        ) %T>%
+        {log_info('Chalmers GEM: %i metabolites.', nrow(.))}
 
-    metabs.degree.f <- metabs.degree[metabs.degree < degree.mets.cutoff]
-    reactions.df.no.cofac <- reaction.df.all[
-        reaction.df.all$source %in% names(metabs.degree.f) |
-            reaction.df.all$target %in% names(metabs.degree.f),
-    ]
-    mets <-
-        grep(
-            pattern = 'Metab__',
-            x = unique(c(reactions.df.no.cofac[[1]], reactions.df.no.cofac[[1]])),
-            value = TRUE
-        ) %>%
-        gsub('Metab__', '', .)
-
-    metabolites.map <- metabolites.map[mets, ]
-    log_info('Final number of connections: ', nrow(reactions.df.no.cofac))
+    reactions <-
+        raw %>%
+        chalmers_gem_matlab_tibble(rxns, lb, ub, reversible, grRules) %>%
+        mutate(
+            rxns = unlist(rxns),
+            direction = ifelse(ub + lb >= 0L, 1L, -1L),
+            reversible = as.logical(reversible),
+            grRules = (
+                unlist(grRules, recursive = FALSE) %>%
+                map_chr(extract, 1L) %>%
+                str_replace_all('\\[\\(\\)\\]|_AT\\d+', '') %>%
+                str_split(' or ') %>%
+                map(str_split, ' and ') %>%
+                map(discard, is_empty_2)
+            ),
+            orphan = map_lgl(
+                grRules,
+                ~any(map_lgl(.x, ~any(str_detect(.x, '^\\d+$'))))
+            ),
+            reactants = map2(
+                1L:n(),
+                direction,
+                ~.x %>% extract(S,,.) %>% equals(-.y) %>% which %>%
+                     slice(metabolites, .) %>% pull(mets)
+            ),
+            products = map2(
+                1L:n(),
+                direction,
+                ~.x %>% extract(S,,.) %>% equals(.y) %>% which %>%
+                    slice(metabolites, .) %>% pull(mets)
+            ),
+            numof_interactions = pmap_int(
+                list(reactants, products),
+                ~length(c(..1, ..2))
+            )
+        ) %T>%
+        {log_info(
+            'Chalmers GEM: %i reactions, %i orphan.',
+            nrow(.),
+            pull(., orphan) %>% sum(na.rm = TRUE)
+        )}
 
     return(
         list(
-            gem_pkn = reactions.df.no.cofac,
-            mets.map = metabolites.map,
-            reac.to.gene = reaction.to.genes.df.reac,
-            reac.map = reactions.map
+            reactions = reactions,
+            metabolites = metabolites,
+            reaction_ids = reaction_ids,
+            metabolite_ids = metabolite_ids,
+            S = S
         )
     )
+
+}
+
+
+#' Chalmers SysBio GEM in the form of gene-metabolite interactions
+#'
+#' Processing GEMs from Wang et al., 2021
+#' (\url{https://github.com/SysBioChalmers}) to generate PKN for COSMOS
+#'
+#' @param organism Character or integer: an organism (taxon) identifier.
+#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
+#'     10116 (Rattus norvegicus), 7955 (Danio rerio), 7227 (Drosophila
+#'     melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param metab_max_degree Degree cutoff used to prune metabolites with high
+#'     degree assuming they are cofactors (400 by default).
+#'
+#' @return Data frame (tibble) of gene-metabolite interactions.
+#'
+#' @examples
+#' gem <- chalmers_gem_network()
+#'
+#' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
+#'     PE, Huang S, Gobom J, Svensson T, Uhlen M, Zetterberg H, Nielsen J.
+#'     Genome-scale metabolic network reconstruction of model animals as a
+#'     platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
+#'     27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
+#'
+#' @importFrom magrittr %>% %T>% extract2
+#' @importFrom purrr map map_chr
+#' @importFrom dplyr mutate across select bind_rows filter
+#' @importFrom tidyr unnest_longer
+#' @importFrom logger log_info log_error
+#' @export
+chalmers_gem_network <- function(
+        organism = 'Human',
+        metab_max_degree = 400L
+    ) {
+
+    .slow_doctest()
+
+    if (metab_max_degree < 1L) {
+        '`metab_max_degree` cannot be less than 1.' %T>% log_error %>% stop
+    }
+
+    organism %>%
+    chalmers_gem %T>%
+    {log_info('Chalmers GEM: compiling gene-metabolite interactions.')} %>%
+    extract2('reactions') %>%
+    # once I see better what's the purpose of this labeling,
+    # I might move it a bit further down the pipeline - denes
+    mutate(
+        genes = map(
+            grRules,
+            ~map(.x, ~map_chr(~sprintf('Gene%i__%s', ri, .x)))
+        ) #,
+        # # this labeling is not necessary at all
+        # # at least I hope so -denes
+        # across(
+        #     c(reactants, products),
+        #     ~map(.x, ~paste0('Metab__', .x))
+        # )
+    ) %>%
+    select(ri, genes, reactants, products, rev) %>%
+    unnest_longer(grRules, simplify = FALSE) %>%
+    unnest_longer(reactants) %>%
+    unnest_longer(products) %>%
+    mutate(
+        # note: this represents the AND relationship between genes,
+        # i.e. both genes together are required for the reaction
+        grRules = map_chr(~paste(.x, collapse = '_')),
+        reverse = FALSE
+    ) %>%
+    {bind_rows(
+        select(., ri, reactants, grRules, reverse),
+        select(., ri, grRules, products, reverse),
+        filter(., rev) %>% select(ri, grRules, reactants) %>% mutate(reverse = TRUE),
+        filter(., rev) %>% select(ri, products, grRules) %>% mutate(reverse = TRUE)
+    )} %T>%
+    {log_info(
+        'Chalmers GEM: %i records in gene-metabolite interactions table.',
+        nrow(.)
+    )} %>%
+    list(
+        lo_degree =
+            c(
+                pull(., mets = reactants),
+                pull(., mets = products)
+            ) %>%
+            table %>%
+            keep(~.x > metab_max_degree) %>%
+            names
+    ) %>%
+    {filter(
+        extract2(., 1L),
+        reactants %in% .$lo_degree &
+        products %in% .$lo_degree
+    )} %T>%
+    {log_info(
+        paste0(
+            'Chalmers GEM: %i gene-metabolite interactions after removing ',
+            'metabolites with more than %i interactions.'
+        ),
+        nrow(.),
+        metab_max_degree
+    )} %T>%
+    # here was removal of records with  missing metabolite or gene
+    # I'm not aware of any reason such records should exist
+    # so I removed the filter for now - denes
+    {log_info('Chalmers GEM: gene-metabolite network is ready.')}
+
 }
 
 
@@ -526,26 +502,40 @@ chalmers_gem_raw <- function(organism = 'Human') {
 }
 
 
-#' Keep entries without elements in GEM processing
+#' Tibble from Chalmers GEM Matlab object
 #'
-#' @param gem_raw GEM from a Matlab object
-#' @param attribs_mat Atribute from the Matlab object to be parsed
-#' @param name Vector of elements to be checked in the Matlab object
+#' @param matlab Chalmers GEM in an R object loaded from the Matlab
+#'     dump.
+#' @param ... Variable names: should contain either only reaction or
+#'     metabolite variables, otherwise num of rows won't be uniform.
 #'
-#' @return Vector with NAs in those entries with no element
+#' @return Tibble with the requested variables.
+#'
+#' @importFrom purrr map
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr pull rename
+#' @importFrom magrittr %>% extract extract2 equals
+#' @importFrom rlang enquos
 #'
 #' @noRd
-metab_info <- function(gem_raw, attribs_mat, name) {
-    unlist(
-        sapply(
-            X = gem_raw[[which(attribs_mat == name)]],
-            FUN = \(elem) {
-                if (length(unlist(elem) != 0)) {
-                    return(elem)
-                } else {
-                    return(NA)
-                }
-            }
-        )
-    )
+chalmers_gem_matlab_tibble <- function(matlab, ...) {
+
+    cols <-
+        enquos(...) %>%
+        map_chr(.nse_ensure_str)
+
+    matlab %>%
+    as_tibble %>%
+    pull(1L) %>%
+    extract(,,1L) %>%
+    map(
+        function(x) {
+            if (x %>% dim %>% equals(1L) %>% all) x %>% extract(1L,1L) else x
+        }
+    ) %>%
+    extract(cols) %>%
+    map(extract,,1L) %>%
+    as_tibble %>%
+    rename(reversible = rev)
+
 }
