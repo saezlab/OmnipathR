@@ -5,13 +5,16 @@
 \title{Alberto Valdeolivas
 COSMOS PKN from the genome scale metabolic model in Wang et al. 2021}
 \usage{
-chalmers_gem(organism = "Human")
+chalmers_gem(organism = "Human", orphans = TRUE)
 }
 \arguments{
 \item{organism}{Character or integer: an organism (taxon) identifier.
 Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 10116 (Rattus norvegicus), 7955 (Danio rerio), 7227 (Drosophila
 melanogaster) and 6239 (Caenorhabditis elegans).}
+
+\item{orphans}{Logical: include orphan reactions (reactions without known
+enzyme).}
 }
 \value{
 List containing the following elements: \itemize{

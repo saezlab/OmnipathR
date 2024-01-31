@@ -218,7 +218,7 @@ cosmos_pkn <- function(
             metabolites.fomulas.name = 'metFormulas',
             metabolites.inchi.name = 'inchis'
         ),
-        gem_degree.mets.threshold = 400,
+        chalmers_gem_metab_max_degree = 400L,
         stitch.threshold = 700
 ) {
     ## check organisms
@@ -260,6 +260,10 @@ cosmos_pkn <- function(
     ## Omnipath data
     log_info('Loading protein-protein interactions from Omnipath...')
     omnipath_pkn <- omnipath_for_cosmos(organism)
+    chalmers_gem_pkn <- chalmers_gem_network(
+        organism,
+        chalmers_gem_metab_max_degree
+    )
     ## Getting GEM PKN
     log_info('Processing gem_..')
     gem_pkn.list <- gem_basal_pkn(

@@ -4,10 +4,13 @@
 \alias{chalmers_gem_network}
 \title{Chalmers SysBio GEM in the form of gene-metabolite interactions}
 \usage{
-chalmers_gem_network(organism = "Human", metab_max_degree = 400L)
+chalmers_gem_network(organism_or_gem = "Human", metab_max_degree = 400L)
 }
 \arguments{
-\item{organism}{Character or integer: an organism (taxon) identifier.
+\item{organism_or_gem}{Character or integer or list or data frame: either
+an organism (taxon) identifier or a list containing the ``reactions``
+data frame as it is provided by \code{\link{chalmers_gem}}, or the
+reactions data frame itself.
 Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 10116 (Rattus norvegicus), 7955 (Danio rerio), 7227 (Drosophila
 melanogaster) and 6239 (Caenorhabditis elegans).}
