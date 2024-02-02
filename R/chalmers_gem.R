@@ -169,7 +169,8 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #' @importFrom magrittr %>% %T>% extract2
 #' @importFrom rlang is_list
 #' @importFrom purrr map map_chr
-#' @importFrom dplyr mutate across select bind_rows filter row_number arrange
+#' @importFrom dplyr mutate across select bind_rows filter
+#' @importFrom dplyr left_join row_number arrange
 #' @importFrom tidyr unnest_longer
 #' @importFrom logger log_info log_error
 #' @export
@@ -239,7 +240,16 @@ chalmers_gem_network <- function(
         source %in% .$lo_degree &
         target %in% .$lo_degree
     )} %>%
-    arrange(ri) %T>%
+    arrange(ri) %>%
+    # these might be transporters, but co-factors look the same, aren't they?
+    # also, we get zero transporters here, why?
+    left_join(
+        select(., ri, source = target, target = source, reverse) %>%
+            mutate(transporter = TRUE) %T>%
+            print,
+        by = c('ri', 'source', 'target', 'reverse')
+    ) %T>%
+    # mutate(transporter = !are_na(transporter)) %T>%
     {log_info(
         paste0(
             'Chalmers GEM: %i gene-metabolite interactions after removing ',
@@ -288,119 +298,6 @@ binary_from_reaction <- function(
         mutate(reverse = TRUE, met_to_gene = !met_to_gene)
     )}
 
-}
-
-
-#' Format the Chalmers SysBio GEM network for COSMOS
-#'
-#' It determines and marks transporters and reverse reactions.
-#'
-#' @param list.network List obtained using \code{gem_basal_pkn}.
-#'
-#' @return List containing PKN with COSMOS and OCEAN format with genes
-#'   translated into the desired ontology, gene-to-reactions data frame,
-#'   metabolite-mapping data frame, and reactions-mapping data frame.
-#'
-#' @importFrom dplyr filter
-#' @importFrom magrittr %>%
-#' @noRd
-cosmos_format_gem <- function(list.network) {
-    reaction.network <- list.network[[1]]
-    enzyme_reacs <- unique(c(reaction.network$source, reaction.network$target))
-    enzyme_reacs <- enzyme_reacs[grepl('^Gene', enzyme_reacs)]
-    enzyme_reacs_reverse <- enzyme_reacs[grepl('_reverse',enzyme_reacs)]
-    enzyme_reacs <- enzyme_reacs[!grepl('_reverse',enzyme_reacs)]
-
-    log_info('Step 1: Defining transporters')
-
-    new_df_list <- sapply(
-        X = enzyme_reacs,
-        FUN = function(enzyme_reac, reaction.network) {
-            df <- reaction.network[which(
-                reaction.network$source == enzyme_reac |
-                    reaction.network$target == enzyme_reac
-            ),]
-            if (dim(df)[1] < 2) {
-                return(NA)
-            } else {
-                if (dim(df)[1] < 3) {
-                    return(df)
-                } else {
-                    for(i in 1:dim(df)[1]) {
-                        if(grepl('Metab__', df[i, 1])) {
-                            counterpart <- which(
-                                gsub('_[a-z]$','',df[,2]) == gsub('_[a-z]$','',df[i,1])
-                            )
-                            if(length(counterpart) > 0) {
-                                df[i, 2] <- paste0(df[i, 2], paste0('_TRANSPORTER', i))
-                                df[counterpart, 1] <- paste0(
-                                    df[counterpart, 1], paste0('_TRANSPORTER', i)
-                                )
-                            }
-                        }
-                    }
-                    return(df)
-                }
-            }
-        },
-        reaction.network = reaction.network
-    )
-    new_df <- as.data.frame(do.call(rbind, new_df_list))
-
-    log_info('Step 2: Defining reverse reactions')
-
-    new_df_reverse <- sapply(
-        X = enzyme_reacs_reverse,
-        FUN = function(enzyme_reac_reverse, reaction.network) {
-            df <- reaction.network[which(
-                reaction.network$source == enzyme_reac_reverse |
-                    reaction.network$target == enzyme_reac_reverse
-            ),]
-            if(dim(df)[1] < 2) {
-                return(NA)
-            } else {
-                if(dim(df)[1] < 3) {
-                    return(df)
-                } else {
-                    for(i in 1:dim(df)[1]) {
-                        if(grepl('Metab__',df[i,1])) {
-                            counterpart <- which(
-                                gsub('_[a-z]$','',df[,2]) == gsub('_[a-z]$','',df[i,1])
-                            )
-                            if(length(counterpart) > 0) {
-                                transporter <- gsub('_reverse', '', df[i, 2])
-                                transporter <- paste0(
-                                    transporter, paste0(paste0('_TRANSPORTER', i), '_reverse')
-                                )
-                                df[i, 2] <- transporter
-                                df[counterpart, 1] <- transporter
-                            }
-                        }
-                    }
-                    return(df)
-                }
-            }
-        }, reaction.network = reaction.network
-    )
-    new_df_reverse <- as.data.frame(do.call(rbind, new_df_list))
-    reaction.network.new <- as.data.frame(rbind(new_df, new_df_reverse))
-    reaction.network.new <- reaction.network.new[complete.cases(reaction.network.new),]
-    ## filter metabolites in mapping mets
-    metabs <- c(
-        grep('Metab__', reaction.network.new[[1]], value = TRUE),
-        grep('Metab__', reaction.network.new[[2]], value = TRUE)
-    ) %>% unique() %>% gsub('(Metab__)|(_[a-z])', '', .)
-    list.network[[2]] <- list.network[[2]] %>%
-        filter(metHMDBID %in% metabs | metBiGGID %in% metabs | mets %in% metabs)
-
-    return(
-        list(
-            gem_pkn = reaction.network.new,
-            mets.map = list.network[[2]],
-            reac.to.gene = list.network[[3]],
-            reac.map = list.network[[4]]
-        )
-    )
 }
 
 
