@@ -228,8 +228,10 @@ chalmers_gem_network <- function(
     list(
         lo_degree =
             c(
-                pull(., source),
-                pull(., target)
+#                 filter(., met_to_gene) %>% pull(source),
+#                 filter(., !met_to_gene) %>% pull(target)
+              pull(., source),
+              pull(., target)
             ) %>%
             table %>%
             keep(~.x < metab_max_degree) %>%
@@ -237,8 +239,8 @@ chalmers_gem_network <- function(
     ) %>%
     {filter(
         extract2(., 1L),
-        source %in% .$lo_degree &
-        target %in% .$lo_degree
+        met_to_gene & source %in% .$lo_degree |
+        !met_to_gene & target %in% .$lo_degree
     )} %>%
     arrange(ri) %>%
     # these might be transporters, but co-factors look the same, aren't they?
