@@ -127,7 +127,7 @@
         "http://www.ensembl.org/biomart/martservice?query=%s"
     ],
     "homologene": [
-        "https://ftp.ncbi.nih.gov/pub/HomoloGene/current/homologene.data"
+        "https://rescued.omnipathdb.org/homologene.data"
     ],
     "oma_species": ["https://omabrowser.org/All/oma-species.txt"],
     "oma_groups": ["https://omabrowser.org/All/oma-groups.txt.gz"],
