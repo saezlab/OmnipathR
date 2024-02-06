@@ -167,7 +167,7 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #'     27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 #'
 #' @importFrom magrittr %>% %T>% extract2
-#' @importFrom rlang is_list
+#' @importFrom rlang is_list enquos
 #' @importFrom purrr map map_chr
 #' @importFrom dplyr mutate across select bind_rows filter
 #' @importFrom dplyr left_join row_number arrange
@@ -176,7 +176,8 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #' @export
 chalmers_gem_network <- function(
         organism_or_gem = 'Human',
-        metab_max_degree = 400L
+        metab_max_degree = 400L,
+        ...
     ) {
 
     .slow_doctest()
@@ -185,12 +186,15 @@ chalmers_gem_network <- function(
         '`metab_max_degree` cannot be less than 1.' %T>% log_error %>% stop
     }
 
+    id_types <-
+        enquos(...) %>%
+        map_chr(.nse_ensure_str)
+
+    organism_or_gem %<>% `if`(is_list(.), ., chalmers_gem(.))
+    metabolite_ids <- organism_or_gem$metabolite_ids
+
     organism_or_gem %>%
-    {`if`(
-        is.data.frame(.),
-        .,
-        `if`(is_list(.), ., chalmers_gem(.)) %>% extract2('reactions')
-    )} %T>%
+    extract2('reactions') %T>%
     {log_info('Chalmers GEM: compiling gene-metabolite interactions.')} %>%
     filter(!orphan) %>%
     # once I see better what's the purpose of this labeling,
