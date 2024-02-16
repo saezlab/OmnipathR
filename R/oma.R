@@ -112,7 +112,7 @@ oma_pairwise <- function(
     args <- match.call() %>% as.list %>% tail(-1L)
 
     for(arg in names(args)) {
-        if(is.null(get(arg)) || is.na(get(arg))) {
+        if(is.null(get(arg)) || any(is.na(get(arg)))) {
             msg <- sprintf(
                 'Could not recognize %s: `%s`.',
                 `if`(arg == 'id_type', 'ID type', 'organism'),
