@@ -84,7 +84,7 @@
 #' Denes Turei <\email{turei.denes@@gmail.com}> and Attila Gabor
 #' <\email{gaborattila87@@gmail.com}>
 #'
-#' @docType package
+#' @docType _PACKAGE
 #' @name OmnipathR
 #' @import logger
 #' @return Nothing, this is not a function but a package.
