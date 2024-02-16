@@ -60,7 +60,9 @@ oma_organisms <- function() {
 #' @param organism_a Name or identifier of an organism.
 #' @param organism_b Name or identifier of another organism.
 #' @param id_type The gene or protein identifier to use in the table. For a
-#'     list of supported ID types see `omnipath.env$id_types$oma`.
+#'     list of supported ID types see `omnipath.env$id_types$oma`. In addition,
+#'     "genesymbol" is supported, in this case
+#'     \code{\link{oma_pairwise_genesymbols}} will be called automatically.
 #' @param mappings Character vector: control ambiguous mappings: \itemize{
 #'         \item{1:1 - unambiguous}
 #'         \item{1:m - one-to-many}
@@ -91,6 +93,7 @@ oma_organisms <- function() {
 #' @importFrom dplyr across mutate filter
 #' @importFrom stringr str_extract str_detect
 #' @importFrom tidyselect starts_with
+#' @importFrom rlang exec !!!
 #' @export
 oma_pairwise <- function(
     organism_a = 'human',
@@ -101,6 +104,15 @@ oma_pairwise <- function(
 ) {
 
     .slow_doctest()
+
+    if (id_type == 'genesymbol') {
+        id_type <- 'uniprot'
+        return(
+            environment() %>%
+            as.list %>%
+            exec(oma_pairwise_genesymbols, !!!.)
+        )
+    }
 
     # NSE vs. R CMD check workaround:
     id_organism_a <- id_organism_b <- mapping <- NULL
