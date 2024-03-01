@@ -563,8 +563,8 @@ uniprot_full_id_mapping_table <- function(
         From = strip_semicol(From),
         To = strip_semicol(To)
     ) %>%
-    separate_rows(From, sep = ';') %>%
-    separate_rows(To, sep = ';') %>%
+    separate_rows(From, sep = '[; ]') %>%
+    separate_rows(To, sep = '[; ]') %>%
     filter(!is.na(From) & !is.na(To)) %>%
     {`if`(from_ens, mutate(., From = str_extract(From, reens)), .)} %>%
     {`if`(to_ens, mutate(., To = str_extract(To, reens)), .)} %>%
