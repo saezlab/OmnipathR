@@ -132,7 +132,6 @@ We also load here the required packages to run the code in this vignette.
 ```{r libraries, message=FALSE}
 library(OmnipathR)
 library(tidyr)
-library(dnet)
 library(gprofiler2)
 ```
 
@@ -519,7 +518,7 @@ genes_complex <-
   unlist(strsplit(complexes_query_genes_join$components_genesymbols, "_"))
 
 ## We can perform an enrichment analyses with the genes in the complex
-EnrichmentResults <- gost(genes_complex, significant = TRUE,
+EnrichmentResults <- gprofiler2::gost(genes_complex, significant = TRUE,
     user_threshold = 0.001, correction_method = c("fdr"),
     sources=c("GO:BP","GO:CC","GO:MF"))
 

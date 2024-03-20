@@ -78,7 +78,6 @@ Suggests:
     BiocStyle,
     biomaRt,
     bookdown,
-    dnet,
     ggplot2,
     ggraph,
     gprofiler2,
