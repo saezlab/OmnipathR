@@ -30,7 +30,7 @@ the objective function.}
 \code{nichenetr::mlrmbo_optimization}.}
 }
 \value{
-A result object from the function ‘mlrMBO::mbo’. Among other
+A result object from the function \code{mlrMBO::mbo}. Among other
     things, this contains the optimal parameter settings, the output
     corresponding to every input etc.
 }
