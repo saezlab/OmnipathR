@@ -44,6 +44,6 @@ in the data with their internal OMA IDs) will be removed. This part is done by .
 in this function we translate the identifiers to gene symbols.
 }
 \examples{
-oma_pairwise_genesmybols("human", "mouse")
+oma_pairwise_genesymbols("human", "mouse")
 
 }

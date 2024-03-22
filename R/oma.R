@@ -192,7 +192,7 @@ oma_pairwise <- function(
 #' @return A data frame with orthologous gene pairs.
 #'
 #' @examples
-#' oma_pairwise_genesmybols("human", "mouse")
+#' oma_pairwise_genesymbols("human", "mouse")
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang exec !!! !! := sym
