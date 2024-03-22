@@ -208,8 +208,12 @@ oma_pairwise_genesymbols <- function(
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround:
+    id_organism_a <- id_organism_b <- NULL
+
     environment() %>%
     as.list %>%
+    extract(!startsWith(names(.), 'id_organism_')) %>%
     exec(oma_pairwise, !!!.) %>%
     translate_ids(
         id_organism_a := !!sym(id_type),
