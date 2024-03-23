@@ -84,10 +84,9 @@
 #' Denes Turei <\email{turei.denes@@gmail.com}> and Attila Gabor
 #' <\email{gaborattila87@@gmail.com}>
 #'
-#' @docType _PACKAGE
 #' @name OmnipathR
 #' @import logger
-NULL
+'_PACKAGE'
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
