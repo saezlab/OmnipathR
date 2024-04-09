@@ -2,7 +2,7 @@
 % Please edit documentation in R/evidences.R
 \name{filter_evidences}
 \alias{filter_evidences}
-\title{Filter evidences by dataset and resource}
+\title{Filter evidences by dataset, resource and license}
 \usage{
 filter_evidences(data, ..., datasets = NULL, resources = NULL)
 }
@@ -23,7 +23,7 @@ The input data frame with the evidences in the selected columns
    filtered.
 }
 \description{
-Filter evidences by dataset and resource
+Filter evidences by dataset, resource and license
 }
 \seealso{
 \itemize{

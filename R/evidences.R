@@ -93,6 +93,10 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #'
 #' @param data An interaction data frame with "evidences" column.
 #' @param longer Logical: If TRUE, the "evidences" column is split into rows.
+#' @param .keep Logical: keep the "evidences" column. When unnesting to longer
+#'     data frame, the "evidences" column will contain the unnested evidences,
+#'     while the original column will be retained under the "all_evidences"
+#'     name (if `.keep = TRUE`).
 #'
 #' @return The data frame with new columns or new rows by direction and sign.
 #'
@@ -104,10 +108,10 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #' }
 #'
 #' @importFrom magrittr %>% extract
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate rename select
 #' @importFrom purrr map
 #' @importFrom tidyr unnest_longer unnest_wider
-#' @importFrom rlang exec !!!
+#' @importFrom rlang exec !!! !! :=
 #' @export
 #'
 #' @seealso \itemize{
@@ -115,7 +119,7 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #'     \item{\code{\link{filter_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-unnest_evidences <- function(data, longer = FALSE) {
+unnest_evidences <- function(data, longer = FALSE, .keep = FALSE) {
 
     must_have_evidences(data)
 
@@ -125,15 +129,26 @@ unnest_evidences <- function(data, longer = FALSE) {
         list(indices_to = 'direction'),
         list(simplify = FALSE)
     )
+    tmp_col <- 'evs_tmp' %>% sym
+    evs_col <- `if`(longer, 'all_evidences', 'evidences') %>% sym
 
     data %>%
-    mutate(evidences = map(evidences, extract, EVIDENCES_KEYS)) %>%
-    exec(unnest_method, ., 'evidences', !!!unnest_args)
+    mutate(
+        !!tmp_col := map(evidences, extract, EVIDENCES_KEYS),
+        .after = evidences
+    ) %>%
+    exec(unnest_method, ., as.character(tmp_col), !!!unnest_args) %>%
+    {`if`(
+        as.character(tmp_col) %in% colnames(.),
+        rename(., all_evidences = evidences, evidences = !!tmp_col),
+        .
+    )} %>%
+    {`if`(.keep, ., select(., -!!evs_col))}
 
 }
 
 
-#' Filter evidences by dataset and resource
+#' Filter evidences by dataset, resource and license
 #'
 #' @param data An interaction data frame with some columns containing evidences
 #'      as nested lists.
@@ -239,6 +254,7 @@ filter_evs_lst <- function(lst, datasets, resources) {
 #'     these datasets will be used.
 #' @param resources Character: a vector of resource labels. Only evidences
 #'     from these resources will be used.
+#' @param .keep Logical: keep the "evidences" column.
 #'
 #' @return A copy of the interaction data frame restricted to the given
 #'     datasets and resources.
@@ -277,7 +293,7 @@ filter_evs_lst <- function(lst, datasets, resources) {
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-only_from <- function(data, datasets = NULL, resources = NULL) {
+only_from <- function(data, datasets = NULL, resources = NULL, .keep = FALSE) {
 
     if(is.null(datasets) && is.null(resources)) {
         return(data)
@@ -294,7 +310,7 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
     )
 
     data %>%
-    {`if`(has_wide, ., unnest_evidences(.))} %>%
+    {`if`(has_wide, ., unnest_evidences(., .keep = .keep))} %>%
     filter_evidences(datasets = datasets, resources = resources) %>%
     from_evidences() %>%
     {`if`(has_wide, ., select(., -any_of(EVIDENCES_KEYS)))}
