@@ -267,7 +267,8 @@ omnipath_post_download <- function(
     if(strict_evidences && param$query_type == 'interactions') {
         result %<>% only_from(
             datasets = param$datasets,
-            resources = param$resources
+            resources = param$resources,
+            .keep = param$keep_evidences
         )
     }
 
@@ -362,6 +363,8 @@ omnipath_check_param <- function(param){
         }
 
     }
+
+    param$keep_evidences <- 'evidences' %in% param$fields
 
     if(param$strict_evidences) {
         param$fields %<>% union('evidences')
