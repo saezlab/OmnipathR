@@ -177,8 +177,11 @@ import_omnipath <- function(
     resources %<>% setdiff(exclude)
     cache %<>% use_cache
 
-    param <- c(as.list(environment()), list(...))
-    param <- omnipath_check_param(param)
+    param <-
+        environment() %>%
+        as.list %>%
+        c(list(...)) %>%
+        omnipath_check_param
 
     url <-
         param %>%
@@ -207,18 +210,16 @@ import_omnipath <- function(
         fun = safe_json,
         simplifyDataFrame = FALSE
     )
-    download_args <- modifyList(
-        `if`(
-            !is.null(param$format) && param$format == 'json',
-            json_defaults,
-            dataframe_defaults
-        ),
-        download_args
-    )
-    download_args <- modifyList(
-        download_args_defaults,
-        download_args
-    )
+    download_args %<>%
+        modifyList(
+            `if`(
+                !is.null(param$format) && param$format == 'json',
+                json_defaults,
+                dataframe_defaults
+            ),
+            .
+        ) %>%
+        modifyList(download_args_defaults, .)
 
     result <-
         do.call(omnipath_download, download_args) %>%
