@@ -111,7 +111,7 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #' @importFrom dplyr mutate rename select
 #' @importFrom purrr map
 #' @importFrom tidyr unnest_longer unnest_wider
-#' @importFrom rlang exec !!! !! :=
+#' @importFrom rlang exec !!! !! := sym
 #' @export
 #'
 #' @seealso \itemize{
