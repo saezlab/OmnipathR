@@ -902,3 +902,18 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
     }
 
 }
+
+
+#' Unlist, unique and sort a list or vector
+#'
+#' @param v List or vector.
+#'
+#' @return A vector of unique values sorted.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+unique_sorted <- function(v) {
+
+    v %>% unlist %>% unique %>% sort
+
+}
