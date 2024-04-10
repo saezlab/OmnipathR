@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">only_from</span><span class="op">(</span><span class="va">data</span>, datasets <span class="op">=</span> <span class="cn">NULL</span>, resources <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">only_from</span><span class="op">(</span><span class="va">data</span>, datasets <span class="op">=</span> <span class="cn">NULL</span>, resources <span class="op">=</span> <span class="cn">NULL</span>, .keep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -100,6 +100,10 @@ these datasets will be used.</p></dd>
 <dt>resources</dt>
 <dd><p>Character: a vector of resource labels. Only evidences
 from these resources will be used.</p></dd>
+
+
+<dt>.keep</dt>
+<dd><p>Logical: keep the "evidences" column.</p></dd>
 
 </dl></div>
     <div class="section level2">
