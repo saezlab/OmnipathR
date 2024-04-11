@@ -224,18 +224,9 @@ filter_evs_lst <- function(lst, datasets, resources) {
                      )
                  }
             ),
-            keep(
-                .,
-                function(ev) {
-                    (is.null(datasets) || ev$dataset %in% datasets) &&
-                    (
-                        is.null(resources) ||
-                        ev$resource %in% resources ||
-                        if_null(ev$via, '') %in% resources
-                    )
-                }
-            )
-        )}
+            keep(., ~match_evidence(.x, datasets, resources, exclude))
+        )} %>%
+        {`if`(length(.) == 0L, NULL, .)}
 
     }
 
@@ -245,6 +236,36 @@ filter_evs_lst <- function(lst, datasets, resources) {
 
 }
 
+
+#' Check if a single evidence matches the conditions
+#'
+#' @param ev An evidence data structure, which is a nested list, as it is
+#'     extracted from the JSON in the "evidences" column from OmniPath queries.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+match_evidence <- function(
+        ev,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL
+    ) {
+
+    (is.null(datasets) || ev$dataset %in% datasets) &&
+    (
+        is.null(resources) ||
+        ev$resource %>% is_in(resources) ||
+        ev$via %>% if_null_len0('') %>% is_in(resources)
+    ) &&
+    (
+        is.null(exclude) ||
+        (
+            ev$resource %>% is_in(exclude) %>% not &&
+            ev$via %>% if_null_len0('') %>% is_in(., exclude) %>% not
+        )
+    )
+
+}
 
 #' Recreate interaction data frame based on certain datasets and resources
 #'
