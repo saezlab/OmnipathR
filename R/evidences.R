@@ -364,6 +364,7 @@ only_from <- function(
         exclude = exclude
     ) %>%
     from_evidences(.keep = .keep) %>%
+    filter(if_any(EVIDENCES_KEYS, ~not(map_lgl(.x, is.null)))) %>%
     {`if`(has_wide, ., select(., -any_of(EVIDENCES_KEYS)))}
 
 }
