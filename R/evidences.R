@@ -430,6 +430,11 @@ from_evidences <- function(data) {
         consensus_stimulation = as.integer(ce_positive >= ce_negative),
         consensus_inhibition = as.integer(ce_positive <= ce_negative)
     ) %>%
+    {`if`(
+        has_evidences(.),
+        evidences_from(.),
+        .
+    )} %>%
     left_join(
         select(., source = target, target = source, ce_directed),
         by = c('source', 'target')
@@ -443,6 +448,43 @@ from_evidences <- function(data) {
     select(-ce_positive, -ce_negative, -ce_directed.x, -ce_directed.y) %>%
     {`if`('n_references' %in% names(.), count_references(.), .)} %>%
     {`if`('n_resources' %in% names(.), count_resources(.), .)}
+
+}
+
+
+#' Update the contents of the original "evidences" column
+#'
+#' Once the evidences have been split by direction and sign and undergone some
+#' processing or filtering, we might wish to keep the original, composite
+#' "evidences" column up to date, ensuring consistency. Here we copy the
+#' processed evidences from the columns "positive", "negative", "directed" and
+#' "undirected" back to the original "evidences" column.
+#'
+#' @importFrom magrittr %>% %T>%
+#' @importFrom dplyr mutate pick
+#' @importFrom tidyselect all_of
+#' @importFrom purrr map2 transpose
+#' @importFrom logger log_warn
+#' @noRd
+evidences_from <- function(data) {
+
+    data %>%
+    {`if`(
+        has_evidences_wide(.),
+        mutate(
+            .,
+            evidences = map2(
+                evidences,
+                transpose(pick(all_of(EVIDENCES_KEYS))),
+                c
+            )
+        ),
+        identity(.) %T>%
+        log_warn(
+            'Unable to update "evidences" column: split evidence columns ',
+            '("positive", "directed", ...) are missing!'
+        )
+    )}
 
 }
 
