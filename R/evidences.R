@@ -173,7 +173,13 @@ unnest_evidences <- function(data, longer = FALSE, .keep = FALSE) {
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
+filter_evidences <- function(
+        data,
+        ...,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL
+    ) {
 
     # NSE vs. R CMD check workaround
     .x <- NULL
@@ -189,24 +195,39 @@ filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
         )
 
     log_trace(
-        'Filtering evidence columns: %s; to datasets: %s; and resources: %s',
+        paste0(
+            'Filtering evidence columns: %s; to datasets: %s; ',
+            'and resources: %s; excluding resources: %s'
+        ),
         paste(columns, collapse = ', '),
         paste(if_null(datasets, 'any'), collapse = ', '),
-        paste(if_null(resources, 'any'), collapse = ', ')
+        paste(if_null(resources, 'any'), collapse = ', '),
+        paste(if_null(exclude, 'none'), collapse = ', ')
     )
 
     data %>%
-    mutate(across(columns, ~filter_evs_lst(.x, datasets, resources)))
+    mutate(across(
+        all_of(columns),
+        ~filter_evs_lst(.x, datasets, resources, exclude)
+    ))
 
 }
 
 
 #' Filter evidences within a nested list
 #'
+#' @param lst A list extracted from the JSON "evidences" column returned by
+#'     OmniPath interactions queries.
+#'
 #' @importFrom magrittr %>% is_in not
 #' @importFrom purrr map2 keep map
 #' @noRd
-filter_evs_lst <- function(lst, datasets, resources) {
+filter_evs_lst <- function(
+        lst,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL
+    ) {
 
     filter_evs <- function(x) {
 
@@ -314,14 +335,19 @@ match_evidence <- function(
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-only_from <- function(data, datasets = NULL, resources = NULL, .keep = FALSE) {
+only_from <- function(
+        data,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL,
+        .keep = FALSE
+    ) {
 
-    if(is.null(datasets) && is.null(resources)) {
+    if(is.null(datasets) && is.null(resources) && is.null(exclude)) {
         return(data)
     }
 
     must_have_evidences(data, wide_ok = TRUE)
-
     has_wide <- data %>% has_evidences_wide
 
     log_trace(
@@ -332,8 +358,12 @@ only_from <- function(data, datasets = NULL, resources = NULL, .keep = FALSE) {
 
     data %>%
     {`if`(has_wide, ., unnest_evidences(., .keep = .keep))} %>%
-    filter_evidences(datasets = datasets, resources = resources) %>%
-    from_evidences() %>%
+    filter_evidences(
+        datasets = datasets,
+        resources = resources,
+        exclude = exclude
+    ) %>%
+    from_evidences(.keep = .keep) %>%
     {`if`(has_wide, ., select(., -any_of(EVIDENCES_KEYS)))}
 
 }
@@ -343,6 +373,8 @@ only_from <- function(data, datasets = NULL, resources = NULL, .keep = FALSE) {
 #'
 #' @param data An interaction data frame from the OmniPath web service with
 #'     evidences column.
+#' @param .keep Logical: keep the original "evidences" column when unnesting to
+#'     separate columns by direction.
 #'
 #' @return A copy of the input data frame with all the standard columns
 #'     describing the direction, effect, resources and references of the
@@ -405,7 +437,7 @@ only_from <- function(data, datasets = NULL, resources = NULL, .keep = FALSE) {
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{only_from}}}
 #' }
-from_evidences <- function(data) {
+from_evidences <- function(data, .keep = FALSE) {
 
     # NSE vs. R CMD check workaround
     target <- ce_directed <- ce_positive <- positive <- negative <- .x <-
@@ -416,7 +448,7 @@ from_evidences <- function(data) {
     prefix <- data$references[1L] %>% str_detect('^\\w+:')
 
     data %>%
-    {`if`(has_evidences_wide(.), ., unnest_evidences(.))} %>%
+    {`if`(has_evidences_wide(.), ., unnest_evidences(., .keep = .keep))} %>%
     mutate(
         is_directed = as.integer(lgl_from(., positive, negative, directed)),
         is_stimulation = as.integer(map_lgl(positive, ~length(.x) > 0L)),
