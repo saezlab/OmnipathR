@@ -369,3 +369,25 @@ resources_in_evidences <- function(data) {
     unique_sorted
 
 }
+
+#' Resources shared between the database and the query set
+#'
+#' @param database Character: resource names in the database (OmniPath); these
+#'     names will be split by underscore to match the names of primary and
+#'     secondary resources on their own; e.g. "SIGNOR_ProtMapper" will match
+#'     both "SIGNOR", "ProtMapper" and "SIGNOR_ProtMapper".
+#' @param query Character: resource names of interest; these will be left
+#'     intact and matched against the first set.
+#'
+#' @return Character: resource names occuring both in database and query.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_split
+#' @noRd
+match_resources <- function(database, query) {
+
+    database %>%
+    c(str_split(., '_') %>% unlist) %>%
+    intersect(query)
+
+}
