@@ -4,11 +4,14 @@
 \alias{from_evidences}
 \title{Recreate interaction records from evidences columns}
 \usage{
-from_evidences(data)
+from_evidences(data, .keep = FALSE)
 }
 \arguments{
 \item{data}{An interaction data frame from the OmniPath web service with
 evidences column.}
+
+\item{.keep}{Logical: keep the original "evidences" column when unnesting to
+separate columns by direction.}
 }
 \value{
 A copy of the input data frame with all the standard columns

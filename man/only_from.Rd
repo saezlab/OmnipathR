@@ -4,7 +4,13 @@
 \alias{only_from}
 \title{Recreate interaction data frame based on certain datasets and resources}
 \usage{
-only_from(data, datasets = NULL, resources = NULL, .keep = FALSE)
+only_from(
+  data,
+  datasets = NULL,
+  resources = NULL,
+  exclude = NULL,
+  .keep = FALSE
+)
 }
 \arguments{
 \item{data}{An interaction data frame from the OmniPath web service with

@@ -4,7 +4,7 @@
 \alias{filter_evidences}
 \title{Filter evidences by dataset, resource and license}
 \usage{
-filter_evidences(data, ..., datasets = NULL, resources = NULL)
+filter_evidences(data, ..., datasets = NULL, resources = NULL, exclude = NULL)
 }
 \arguments{
 \item{data}{An interaction data frame with some columns containing evidences
