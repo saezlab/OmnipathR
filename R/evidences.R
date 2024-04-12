@@ -571,14 +571,19 @@ resource_name <- function(ev) {
 references_from <- function(data, ..., prefix = TRUE, collapse = ';') {
 
     extract_references <- function(ev) {
-        `if`(
-            prefix,
-            paste(ev$resource, ev$references, sep = ':'),
-            ev$references, collapse = collapse
-        ) %>%
-        unique %>%
-        sort %>%
-        paste(collapse = collapse)
+        ev$references %>%
+        {`if`(
+            length(.) == 0L,
+            '',
+            {`if`(
+                prefix,
+                paste(resource_name(ev), ., sep = ':'),
+                .
+            )} %>%
+            unique %>%
+            sort %>%
+            paste(collapse = collapse)
+        )}
     }
 
     data %>%
@@ -590,7 +595,7 @@ references_from <- function(data, ..., prefix = TRUE, collapse = ';') {
 #' Character vector from a set of list columns
 #'
 #' @importFrom magrittr %>%
-#' @importFrom purrr pmap_chr map_chr
+#' @importFrom purrr pmap_chr map_chr discard
 #' @importFrom dplyr select
 #' @noRd
 chr_from <- function(data, ..., fn, collapse = ';') {
@@ -598,6 +603,7 @@ chr_from <- function(data, ..., fn, collapse = ';') {
     map_fn <- function(...) {
         c(...) %>%
         map_chr(fn) %>%
+        discard(~.x == '') %>%
         unique %>%
         sort %>%
         paste(collapse = collapse) %>%
