@@ -543,15 +543,26 @@ lgl_from <- function(data, ...) {
 #' @noRd
 resources_from <- function(data, ..., collapse = ';') {
 
-    extract_resources <- function(ev) {
-        paste0(ev$resource, `if`(is.null(ev$via), '', '_'), ev$via)
-    }
-
     data %>%
-    chr_from(..., fn = extract_resources, collapse = collapse)
+    chr_from(..., fn = resource_name, collapse = collapse)
 
 }
 
+
+#' Resource name from evidence
+#'
+#' @param ev Evidence data structure (list).
+#'
+#' @noRd
+resource_name <- function(ev) {
+
+    paste0(
+        ev$resource,
+        `if`(is.null(ev$via), '', '_'),
+        ev$via
+    )
+
+}
 
 #' Extract references from a set of evidence list columns
 #'
