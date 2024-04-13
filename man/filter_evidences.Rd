@@ -17,6 +17,8 @@ and "undirected" are filtered, if present.}
 \item{datasets}{A character vector of dataset names.}
 
 \item{resources}{A character vector of resource names.}
+
+\item{exclude}{Character vector of resource names to be excluded.}
 }
 \value{
 The input data frame with the evidences in the selected columns

@@ -157,6 +157,7 @@ unnest_evidences <- function(data, longer = FALSE, .keep = FALSE) {
 #'      and "undirected" are filtered, if present.
 #' @param datasets A character vector of dataset names.
 #' @param resources A character vector of resource names.
+#' @param exclude Character vector of resource names to be excluded.
 #'
 #' @return The input data frame with the evidences in the selected columns
 #'    filtered.
@@ -218,6 +219,7 @@ filter_evidences <- function(
 #'
 #' @param lst A list extracted from the JSON "evidences" column returned by
 #'     OmniPath interactions queries.
+#' @param exclude Character vector of resource names to be excluded.
 #'
 #' @importFrom magrittr %>% is_in not
 #' @importFrom purrr map2 keep map
@@ -262,6 +264,7 @@ filter_evs_lst <- function(
 #'
 #' @param ev An evidence data structure, which is a nested list, as it is
 #'     extracted from the JSON in the "evidences" column from OmniPath queries.
+#' @param exclude Character vector of resource names to be excluded.
 #'
 #' @importFrom magrittr %>%
 #' @noRd
@@ -296,6 +299,7 @@ match_evidence <- function(
 #'     these datasets will be used.
 #' @param resources Character: a vector of resource labels. Only evidences
 #'     from these resources will be used.
+#' @param exclude Character vector of resource names to be excluded.
 #' @param .keep Logical: keep the "evidences" column.
 #'
 #' @return A copy of the interaction data frame restricted to the given

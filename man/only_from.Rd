@@ -22,6 +22,8 @@ these datasets will be used.}
 \item{resources}{Character: a vector of resource labels. Only evidences
 from these resources will be used.}
 
+\item{exclude}{Character vector of resource names to be excluded.}
+
 \item{.keep}{Logical: keep the "evidences" column.}
 }
 \value{
