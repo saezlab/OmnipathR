@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -133,6 +133,7 @@ utils::globalVariables(
     'evidences',
     'json_param',
     'strict_evidences',
+    'keep_evidences',
     'cache'
 )
 
@@ -177,8 +178,11 @@ import_omnipath <- function(
     resources %<>% setdiff(exclude)
     cache %<>% use_cache
 
-    param <- c(as.list(environment()), list(...))
-    param <- omnipath_check_param(param)
+    param <-
+        environment() %>%
+        as.list %>%
+        c(list(...)) %>%
+        omnipath_check_param
 
     url <-
         param %>%
@@ -207,18 +211,16 @@ import_omnipath <- function(
         fun = safe_json,
         simplifyDataFrame = FALSE
     )
-    download_args <- modifyList(
-        `if`(
-            !is.null(param$format) && param$format == 'json',
-            json_defaults,
-            dataframe_defaults
-        ),
-        download_args
-    )
-    download_args <- modifyList(
-        download_args_defaults,
-        download_args
-    )
+    download_args %<>%
+        modifyList(
+            `if`(
+                !is.null(param$format) && param$format == 'json',
+                json_defaults,
+                dataframe_defaults
+            ),
+            .
+        ) %>%
+        modifyList(download_args_defaults, .)
 
     result <-
         do.call(omnipath_download, download_args) %>%
@@ -267,7 +269,8 @@ omnipath_post_download <- function(
     if(strict_evidences && param$query_type == 'interactions') {
         result %<>% only_from(
             datasets = param$datasets,
-            resources = param$resources
+            resources = param$resources,
+            .keep = param$keep_evidences
         )
     }
 
@@ -362,6 +365,8 @@ omnipath_check_param <- function(param){
         }
 
     }
+
+    param$keep_evidences <- 'evidences' %in% param$fields
 
     if(param$strict_evidences) {
         param$fields %<>% union('evidences')

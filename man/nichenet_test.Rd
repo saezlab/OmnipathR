@@ -24,7 +24,7 @@ where TRUE/FALSE needed", the random subsampled input is not appropriate.
 In this case just interrupt and call again. This test ensures the
 computational integrity of the pipeline. If it fails during the
 optimization process, try to start it over several times, even
-restarting R. The unpredictability is related to code{mlrMBO} and
+restarting R. The unpredictability is related to \code{mlrMBO} and
 \code{nichenetr} not being prepared to handle certain conditions, and
 it's also difficult to find out which conditions lead to which errors.
 At least 3 different errors appear time to time, depending on the input.

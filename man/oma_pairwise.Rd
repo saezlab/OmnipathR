@@ -18,7 +18,9 @@ oma_pairwise(
 \item{organism_b}{Name or identifier of another organism.}
 
 \item{id_type}{The gene or protein identifier to use in the table. For a
-list of supported ID types see `omnipath.env$id_types$oma`.}
+list of supported ID types see `omnipath.env$id_types$oma`. In addition,
+"genesymbol" is supported, in this case
+\code{\link{oma_pairwise_genesymbols}} will be called automatically.}
 
 \item{mappings}{Character vector: control ambiguous mappings: \itemize{
     \item{1:1 - unambiguous}

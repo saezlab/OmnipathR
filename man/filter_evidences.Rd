@@ -2,9 +2,9 @@
 % Please edit documentation in R/evidences.R
 \name{filter_evidences}
 \alias{filter_evidences}
-\title{Filter evidences by dataset and resource}
+\title{Filter evidences by dataset, resource and license}
 \usage{
-filter_evidences(data, ..., datasets = NULL, resources = NULL)
+filter_evidences(data, ..., datasets = NULL, resources = NULL, exclude = NULL)
 }
 \arguments{
 \item{data}{An interaction data frame with some columns containing evidences
@@ -17,13 +17,15 @@ and "undirected" are filtered, if present.}
 \item{datasets}{A character vector of dataset names.}
 
 \item{resources}{A character vector of resource names.}
+
+\item{exclude}{Character vector of resource names to be excluded.}
 }
 \value{
 The input data frame with the evidences in the selected columns
    filtered.
 }
 \description{
-Filter evidences by dataset and resource
+Filter evidences by dataset, resource and license
 }
 \seealso{
 \itemize{

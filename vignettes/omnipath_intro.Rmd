@@ -131,8 +131,8 @@ We also load here the required packages to run the code in this vignette.
 
 ```{r libraries, message=FALSE}
 library(OmnipathR)
+library(igraph)
 library(tidyr)
-library(dnet)
 library(gprofiler2)
 ```
 
@@ -168,12 +168,13 @@ inconclusive data).
 get_interaction_resources()
 
 ## The interactions are stored into a data frame.
-interactions <-
-    import_omnipath_interactions(resources=c("SignaLink3","PhosphoSite",
-    "SIGNOR"))
+pathways <-
+    import_omnipath_interactions(
+        resources = c("SignaLink3", "PhosphoSite", "SIGNOR")
+    )
 
 ## We visualize the first interactions in the data frame.
-print_interactions(head(interactions))
+print_interactions(head(pathways))
 ```
 
 ### Protein-protein interaction networks
@@ -197,16 +198,29 @@ input an edge sequence and the second one a node sequence.
 
 ```{r sp, message=TRUE}
 ## We transform the interactions data frame into a graph
-OPI_g <- interaction_graph(interactions = interactions)
+pathways_g <- interaction_graph(pathways)
 
 ## Find and print shortest paths on the directed network between proteins
 ## of interest:
-print_path_es(shortest_paths(OPI_g,from = "TYRO3",to = "STAT3",
-    output = 'epath')$epath[[1]],OPI_g)
+print_path_es(
+    igraph::shortest_paths(
+        pathways_g,
+        from = "TYRO3",
+        to = "STAT3",
+        output = "epath"
+    )$epath[[1]],
+    pathways_g
+)
 
 ## Find and print all shortest paths between proteins of interest:
-print_path_vs(all_shortest_paths(OPI_g,from = "DYRK2",
-    to = "MAPKAPK2")$res,OPI_g)
+print_path_vs(
+    igraph::all_shortest_paths(
+        pathways_g,
+        from = "DYRK2",
+        to = "MAPKAPK2"
+    )$res,
+    pathways_g
+)
 ```
 
 
@@ -227,22 +241,34 @@ detailed information.)
 ## directed networks but with longer computational times,
 ## such as cluster_edge_betweenness. These cluster methods are directly
 ## available in the igraph package.
-OPI_g_undirected <- as.undirected(OPI_g, mode=c("mutual"))
-OPI_g_undirected <- simplify(OPI_g_undirected)
-cl_results <- cluster_fast_greedy(OPI_g_undirected)
+pathways_g_u <- igraph::as.undirected(pathways_g, mode = "mutual")
+pathways_g_u <- igraph::simplify(pathways_g_u)
+clusters <- igraph::cluster_fast_greedy(pathways_g_u)
 ## We extract the cluster where a protein of interest is contained
-cluster_id <- cl_results$membership[which(cl_results$names == "ERBB2")]
-module_graph <- induced_subgraph(OPI_g_undirected,
-    V(OPI_g)$name[which(cl_results$membership == cluster_id)])
+erbb2_cluster_id <- clusters$membership[which(clusters$names == "ERBB2")]
+erbb2_cluster_g <- igraph::induced_subgraph(
+    pathways_g_u,
+    igraph::V(pathways_g)$name[which(clusters$membership == erbb2_cluster_id)]
+)
 ```
 
 ```{r fig2, echo = FALSE, fig.cap="ERBB2 associated cluser. Subnetwork extracted from the interactions graph representing the cluster where we can find the gene *ERBB2* (yellow node)"}
 ## We print that cluster with its interactions.
-par(mar=c(0.1,0.1,0.1,0.1))
-plot(module_graph, vertex.label.color="black",vertex.frame.color="#ffffff",
-    vertex.size= 15, edge.curved=.2,
-    vertex.color = ifelse(igraph::V(module_graph)$name == "ERBB2","yellow",
-    "#00CCFF"), edge.color="blue",edge.width=0.8)
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+plot(
+    erbb2_cluster_g,
+    vertex.label.color = "black",
+    vertex.frame.color = "#ffffff",
+    vertex.size = 15,
+    edge.curved = 0.2,
+    vertex.color = ifelse(
+        igraph::V(erbb2_cluster_g)$name == "ERBB2",
+        "yellow",
+        "#00CCFF"
+    ),
+    edge.color = "blue",
+    edge.width = 0.8
+)
 ```
 
 ## Other interaction datasets
@@ -261,16 +287,21 @@ for a given gene in this particular case.
 
 ```{r pathwayextra}
 ## We query and store the interactions into a dataframe
-interactions <-
-    import_pathwayextra_interactions(resources=c("BioGRID","STRING"),
-    organism = 10090)
+iactions <-
+    import_pathwayextra_interactions(
+        resources = c("Wang", "Lit-BM-17"),
+        organism = 10090  # mouse
+    )
 
 ## We select all the interactions in which Amfr gene is involved
-interactions_Amfr <- dplyr::filter(interactions, source_genesymbol == "Amfr" |
-    target_genesymbol == "Amfr")
+iactions_amfr <- dplyr::filter(
+    iactions,
+    source_genesymbol == "Amfr" |
+    target_genesymbol == "Amfr"
+)
 
 ## We print these interactions:
-print_interactions(interactions_Amfr)
+print_interactions(iactions_amfr)
 ```
 
 ### Kinase Extra
@@ -281,16 +312,20 @@ going to focus on rat reactions targeting a particular gene.
 
 ```{r kinaseextra}
 ## We query and store the interactions into a dataframe
-interactions <-
-    import_kinaseextra_interactions(resources=c("PhosphoPoint",
-    "PhosphoSite"), organism = 10116)
+phosphonetw <-
+    import_kinaseextra_interactions(
+        resources = c("PhosphoPoint", "PhosphoSite"),
+        organism = 10116  # rat
+    )
 
 ## We select the interactions in which Dpysl2 gene is a target
-interactions_TargetDpysl2 <- dplyr::filter(interactions,
-    target_genesymbol == "Dpysl2")
+upstream_dpysl2 <- dplyr::filter(
+    phosphonetw,
+    target_genesymbol == "Dpysl2"
+)
 
 ## We print these interactions:
-print_interactions(interactions_TargetDpysl2)
+print_interactions(upstream_dpysl2)
 ```
 
 ### Ligand-receptor Extra
@@ -302,29 +337,44 @@ ligand, CDH1 (Figure \@ref(fig:fig3)).
 
 ```{r ligrecextra}
 ## We query and store the interactions into a dataframe
-interactions <- import_ligrecextra_interactions(resources=c("iTALK",
-    "Baccin2019"), organism=9606)
+ligrec_netw <- import_ligrecextra_interactions(
+    resources = c("iTALK", "Baccin2019"),
+    organism = 9606  # human
+)
 
 ## Receptors of the CDH1 ligand.
-interactions_ADM2 <- dplyr::filter(interactions, source_genesymbol == "ADM2")
+downstream_cdh1 <- dplyr::filter(
+    ligrec_netw,
+    source_genesymbol == "CDH1"
+)
 
 ## We transform the interactions data frame into a graph
-OPI_g <- interaction_graph(interactions = interactions_ADM2)
+downstream_cdh1_g <- interaction_graph(downstream_cdh1)
 
 ## We induce a network with these genes
-Induced_Network <-  dNetInduce(g=OPI_g,
-    nodes_query=as.character( V(OPI_g)$name), knn=0,
-    remove.loops=FALSE, largest.comp=FALSE)
+downstream_cdh1_g <- igraph::induced_subgraph(
+    interaction_graph(import_omnipath_interactions()),
+    igraph::V(downstream_cdh1_g)$name
+)
 ```
 
 ```{r fig3, echo = FALSE, fig.cap="Ligand-receptor interactions for the ADM2 ligand."}
 ## We print the induced network
-par(mar=c(0.1,0.1,0.1,0.1))
-plot(Induced_Network, vertex.label.color="black",
-    vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.2,
-    vertex.color =
-        ifelse(igraph::V(Induced_Network)$name %in% c("ADM2"),
-        "yellow","#00CCFF"), edge.color="blue",edge.width=0.8)
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+plot(
+    downstream_cdh1_g,
+    vertex.label.color = "black",
+    vertex.frame.color = "#ffffff",
+    vertex.size = 20,
+    edge.curved = 0.2,
+    vertex.color = ifelse(
+        igraph::V(downstream_cdh1_g)$name == "CDH1",
+        "yellow",
+        "#00CCFF"
+    ),
+    edge.color = "blue",
+    edge.width = 0.8
+)
 ```
 
 ### DoRothEA Regulons
@@ -337,25 +387,19 @@ select and print the most confident interactions for a given TF.
 
 ```{r dorothea}
 ## We query and store the interactions into a dataframe
-interactions <- import_dorothea_interactions(
-    resources = c("DoRothEA"),
-    dorothea_levels = 'A',
+dorothea_netw <- dorothea(
+    dorothea_levels = "A",
     organism = 9606
-)
-
-## Until the DoRothEA issue gets fixed we have this here:
-interactions <- import_transcriptional_interactions(
-    resources = c("ORegAnno", "DoRothEA")
 )
 
 ## We select the most confident interactions for a given TF and we print
 ## the interactions to check the way it regulates its different targets
-interactions_A_GLI1  <- dplyr::filter(
-    interactions,
+downstream_gli1  <- dplyr::filter(
+    dorothea_netw,
     source_genesymbol == "GLI1"
 )
 
-print_interactions(interactions_A_GLI1)
+print_interactions(downstream_gli1)
 ```
 
 ### miRNA-target dataset
@@ -371,31 +415,53 @@ the miRNA targeting *GLI1* and the genes regulated by this TF.
 
 ```{r mirnatarget}
 ## We query and store the interactions into a dataframe
-interactions <-
-  import_mirnatarget_interactions(resources = c("miR2Disease", "miRDeathDB"))
+mirna_target <- import_mirnatarget_interactions(
+    resources = c("miR2Disease", "miRDeathDB")
+)
 
 ## We select the interactions where a miRNA is interacting with the TF
 ## used in the previous code chunk and we print these interactions.
-interactions_miRNA_GLI1 <-
-    dplyr::filter(interactions, target_genesymbol == "GLI1")
+upstream_gli1 <- dplyr::filter(
+    mirna_target,
+    target_genesymbol == "GLI1"
+)
 
-print_interactions(interactions_miRNA_GLI1)
+print_interactions(upstream_gli1)
 
 ## We transform the previous selections to graphs (igraph objects)
-OPI_g_1 <- interaction_graph(interactions = interactions_miRNA_GLI1)
-OPI_g_2 <- interaction_graph(interactions = interactions_miRNA_GLI1)
+downstream_gli1_g <- interaction_graph(downstream_gli1)
+upstream_gli1_g <- interaction_graph(upstream_gli1)
 ```
 
 ```{r fig4, echo = FALSE, fig.cap="miRNA-TF-target network. Schematic network of the miRNA (red square nodes) targeting \textit{GLI1} (yellow node) and the genes regulated by this TF (blue round nodes)."}
 ## We print the union of both previous graphs
-par(mar=c(0.1,0.1,0.1,0.1))
-plot(OPI_g_1 %u% OPI_g_2, vertex.label.color="black",
-    vertex.frame.color="#ffffff",vertex.size= 20, edge.curved=.25,
-    vertex.color = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
-    "red",ifelse(igraph::V(OPI_g_1 %u% OPI_g_2)$name == "GLI1",
-    "yellow","#00CCFF")), edge.color="blue",
-    vertex.shape = ifelse(grepl("miR",igraph::V(OPI_g_1 %u% OPI_g_2)$name),
-    "vrectangle","circle"),edge.width=0.8)
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+
+gli1_g <- upstream_gli1_g %u% downstream_gli1_g
+
+plot(
+    gli1_g,
+    vertex.label.color = "black",
+    vertex.frame.color = "#ffffff",
+    vertex.size = 20,
+    edge.curved = 0.25,
+    vertex.color = ifelse(
+        grepl("miR", igraph::V(gli1_g)$name),
+        "red",
+        ifelse(
+            igraph::V(gli1_g)$name == "GLI1",
+            "yellow",
+            "#00CCFF"
+        )
+    ),
+    edge.color = "blue",
+    vertex.shape = ifelse(
+        grepl("miR",igraph::V(gli1_g)$name),
+        "vrectangle",
+        "circle"
+    ),
+    edge.width = 0.8
+)
 ```
 
 ### Small molecule-protein dataset
@@ -406,10 +472,10 @@ and Cellinker), but has prospects of a great growth in the future. As an
 example, lets look for targets of a cancer drug, the MEK inhibitor Trametinib:
 
 ```{r small-molecules}
-trametinib_interactions <- import_small_molecule_protein_interactions(
-    sources = 'TRAMETINIB'
+trametinib_targets <- import_small_molecule_protein_interactions(
+    sources = "TRAMETINIB"
 )
-print_interactions(trametinib_interactions)
+print_interactions(trametinib_targets)
 ```
 
 Note, the human readable compound names are not reliable, use PubChem CIDs
@@ -494,39 +560,53 @@ since it will be used again in the forthcoming sections.
 get_complex_resources()
 
 ## We query and store complexes from some sources into a dataframe.
-complexes <- import_omnipath_complexes(resources=c("CORUM", "hu.MAP"))
+complexes <- import_omnipath_complexes(resources = c("CORUM", "hu.MAP"))
 
 ## We check all the molecular complexes where a set of genes participate
-query_genes <- c("WRN","PARP1")
+query_genes <- c("WRN", "PARP1")
 
 ## Complexes where any of the input genes participate
-complexes_query_genes_any <- unique(get_complex_genes(complexes,query_genes,
-    total_match=FALSE))
+wrn_parp1_complexes <- unique(
+    get_complex_genes(
+        complexes,
+        query_genes,
+        total_match = FALSE
+    )
+)
 
 ## We print the components of the different selected components
-head(complexes_query_genes_any$components_genesymbols,6)
+head(wrn_parp1_complexes$components_genesymbols, 6)
 
 ## Complexes where all the input genes participate jointly
-complexes_query_genes_join <- unique(get_complex_genes(complexes,query_genes,
-    total_match=TRUE))
+complexes_query_genes_join <- unique(
+    get_complex_genes(
+        complexes,query_genes,
+        total_match=TRUE
+    )
+)
 
 ## We print the components of the different selected components
 complexes_query_genes_join$components_genesymbols
 ```
 
 ```{r enrichment}
-genes_complex <-
-  unlist(strsplit(complexes_query_genes_join$components_genesymbols, "_"))
+wrn_parp1_cplx_genes <- unlist(
+    strsplit(wrn_parp1_complexes$components_genesymbols, "_")
+)
 
 ## We can perform an enrichment analyses with the genes in the complex
-EnrichmentResults <- gost(genes_complex, significant = TRUE,
-    user_threshold = 0.001, correction_method = c("fdr"),
-    sources=c("GO:BP","GO:CC","GO:MF"))
+enrichment <- gprofiler2::gost(
+    wrn_parp1_cplx_genes,
+    significant = TRUE,
+    user_threshold = 0.001,
+    correction_method = "fdr",
+    sources = c("GO:BP", "GO:CC", "GO:MF")
+)
 
 ## We show the most significant results
-EnrichmentResults$result %>%
-  dplyr::select(term_id, source, term_name,p_value) %>%
-  dplyr::top_n(5,-p_value)
+enrichment$result %>%
+    dplyr::select(term_id, source, term_name, p_value) %>%
+    dplyr::top_n(5, -p_value)
 ```
 
 ## Annotations
@@ -559,10 +639,11 @@ get_annotation_resources()
 ## in the previous section.
 
 ## We first get the annotations of the complex itself:
-annotations <- import_omnipath_annotations(proteins=paste0("COMPLEX:",
-  complexes_query_genes_join$components_genesymbols))
+annotations <- import_omnipath_annotations(
+    proteins = paste0("COMPLEX:", wrn_parp1_complexes$components_genesymbols)
+)
 
-head(dplyr::select(annotations,source,label,value),10)
+head(dplyr::select(annotations, source, label, value), 10)
 ```
 
 Afterwards, we explore the annotations of the individual components of the
@@ -574,7 +655,7 @@ Then, we explore some annotations of its individual components. Pathways
 where the proteins belong:
 ```{r annotations_components}
 annotations <- import_omnipath_annotations(
-    proteins = genes_complex,
+    proteins = wrn_parp1_cplx_genes,
     resources = "NetPath"
 )
 
@@ -584,8 +665,8 @@ dplyr::select(annotations, genesymbol, value)
 Subcellular localization of our proteins:
 
 ```{r subcell_loc}
-annotations <-import_omnipath_annotations(
-    proteins = genes_complex,
+annotations <- import_omnipath_annotations(
+    proteins = wrn_parp1_cplx_genes,
     resources = "ComPPI"
 )
 ```
@@ -607,7 +688,7 @@ will be returned.
 
 ```{r annot_wide}
 signaling_pathways <- import_omnipath_annotations(
-    resources = 'SignaLink_pathway',
+    resources = "SignaLink_pathway",
     wide = TRUE
 )
 ```
@@ -637,12 +718,14 @@ intracellular.
 get_intercell_generic_categories()
 
 ## We import the intercell data into a dataframe
-intercell <- import_omnipath_intercell(scope = 'generic',
-    aspect = 'locational')
+intercell <- import_omnipath_intercell(
+    scope = "generic",
+    aspect = "locational"
+)
 
 ## We check the intercell annotations for the individual components of
 ## our previous complex. We filter our data to print it in a good format
-dplyr::filter(intercell,genesymbol %in% genes_complex) %>%
+dplyr::filter(intercell, genesymbol %in% wrn_parp1_cplx_genes) %>%
 dplyr::distinct(genesymbol, parent, .keep_all = TRUE) %>%
 dplyr::select(category, genesymbol, parent) %>%
 dplyr::arrange(genesymbol)

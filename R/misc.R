@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -961,6 +961,7 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 
 }
 
+
 #' Packages that seem to be missing from library
 #'
 #' @importFrom magrittr %>%
@@ -981,5 +982,20 @@ missing_packages <- function(pkgs) {
 enum_format <- function(words) {
 
     paste(words, collapse = ', ')
+
+}
+
+
+#' Unlist, unique and sort a list or vector
+#'
+#' @param v List or vector.
+#'
+#' @return A vector of unique values sorted.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+unique_sorted <- function(v) {
+
+    v %>% unlist %>% unique %>% sort
 
 }

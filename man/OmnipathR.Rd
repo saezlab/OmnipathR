@@ -2,11 +2,9 @@
 % Please edit documentation in R/omnipathr.R
 \docType{_PACKAGE}
 \name{OmnipathR}
+\alias{OmnipathR-package}
 \alias{OmnipathR}
 \title{The OmnipathR package}
-\value{
-Nothing, this is not a function but a package.
-}
 \description{
 OmnipathR is an R package built to provide easy access to the data stored
 in the OmniPath web service:
@@ -63,6 +61,14 @@ print_path_vs(
     )$res,
     enzsub_g
 )
+}
+
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://r.omnipathdb.org/}
+  \item Report bugs at \url{https://github.com/saezlab/OmnipathR/issues}
 }
 
 }

@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -60,7 +60,9 @@ oma_organisms <- function() {
 #' @param organism_a Name or identifier of an organism.
 #' @param organism_b Name or identifier of another organism.
 #' @param id_type The gene or protein identifier to use in the table. For a
-#'     list of supported ID types see `omnipath.env$id_types$oma`.
+#'     list of supported ID types see `omnipath.env$id_types$oma`. In addition,
+#'     "genesymbol" is supported, in this case
+#'     \code{\link{oma_pairwise_genesymbols}} will be called automatically.
 #' @param mappings Character vector: control ambiguous mappings: \itemize{
 #'         \item{1:1 - unambiguous}
 #'         \item{1:m - one-to-many}
@@ -91,6 +93,7 @@ oma_organisms <- function() {
 #' @importFrom dplyr across mutate filter
 #' @importFrom stringr str_extract str_detect
 #' @importFrom tidyselect starts_with
+#' @importFrom rlang exec !!!
 #' @export
 oma_pairwise <- function(
     organism_a = 'human',
@@ -102,6 +105,15 @@ oma_pairwise <- function(
 
     .slow_doctest()
 
+    if (id_type == 'genesymbol') {
+        id_type <- 'uniprot'
+        return(
+            environment() %>%
+            as.list %>%
+            exec(oma_pairwise_genesymbols, !!!.)
+        )
+    }
+
     # NSE vs. R CMD check workaround:
     id_organism_a <- id_organism_b <- mapping <- NULL
 
@@ -112,7 +124,7 @@ oma_pairwise <- function(
     args <- match.call() %>% as.list %>% tail(-1L)
 
     for(arg in names(args)) {
-        if(is.null(get(arg)) || is.na(get(arg))) {
+        if(is.null(get(arg)) || any(is.na(get(arg)))) {
             msg <- sprintf(
                 'Could not recognize %s: `%s`.',
                 `if`(arg == 'id_type', 'ID type', 'organism'),
@@ -149,6 +161,71 @@ oma_pairwise <- function(
         mapping %in% mappings
     ) %>%
     {`if`(only_ids, select(., id_organism_a, id_organism_b), .)}
+
+}
+
+
+#' Orthologous pairs of gene symbols between two organisms
+#'
+#' The Orthologous Matrix (OMA), a resource of orthologous relationships
+#' between genes, doesn't provide gene symbols, the identifier preferred in
+#' many bioinformatics pipelines. Hence this function wraps
+#' \code{\link{oma_pairwise}} by translating the identifiers used in OMA to
+#' gene symbols. Items that can not be translated to `id_type` (but present
+#' in the data with their internal OMA IDs) will be removed. This part is done by . Then,
+#' in this function we translate the identifiers to gene symbols.
+#'
+#' @param organism_a Name or identifier of an organism.
+#' @param organism_b Name or identifier of another organism.
+#' @param id_type The gene or protein identifier to use in the table. For a
+#'     list of supported ID types see `omnipath.env$id_types$oma`. These are
+#'     the identifiers that will be translated to gene symbols.
+#' @param mappings Character vector: control ambiguous mappings: \itemize{
+#'         \item{1:1 - unambiguous}
+#'         \item{1:m - one-to-many}
+#'         \item{n:1 - many-to-one}
+#'         \item{n:m - many-to-many}
+#'     }
+#' @param only_ids Logical: include only the two identifier columns, not the
+#'     mapping type and the orthology group columns.
+#'
+#' @return A data frame with orthologous gene pairs.
+#'
+#' @examples
+#' oma_pairwise_genesymbols("human", "mouse")
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang exec !!! !! := sym
+#' @importFrom dplyr filter
+#' @export
+oma_pairwise_genesymbols <- function(
+    organism_a = 'human',
+    organism_b = 'mouse',
+    id_type = 'uniprot',
+    mappings = c('1:1', '1:m', 'n:1', 'n:m'),
+    only_ids = TRUE
+) {
+
+    .slow_doctest()
+
+    # NSE vs. R CMD check workaround:
+    id_organism_a <- id_organism_b <- NULL
+
+    environment() %>%
+    as.list %>%
+    extract(!startsWith(names(.), 'id_organism_')) %>%
+    exec(oma_pairwise, !!!.) %>%
+    translate_ids(
+        id_organism_a := !!sym(id_type),
+        id_organism_a := genesymbol,
+        organism = !!sym(organism_a)
+    ) %>%
+    translate_ids(
+        id_organism_b := !!sym(id_type),
+        id_organism_b := genesymbol,
+        organism = !!sym(organism_b)
+    ) %>%
+    filter(!is.na(id_organism_a) & !is.na(id_organism_b))
 
 }
 

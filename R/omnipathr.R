@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -84,11 +84,9 @@
 #' Denes Turei <\email{turei.denes@@gmail.com}> and Attila Gabor
 #' <\email{gaborattila87@@gmail.com}>
 #'
-#' @docType _PACKAGE
 #' @name OmnipathR
 #' @import logger
-#' @return Nothing, this is not a function but a package.
-NULL
+'_PACKAGE'
 
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))

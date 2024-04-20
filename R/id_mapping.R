@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -396,6 +396,7 @@ translate_ids <- function(
         .nse_ensure_str(!!enquo(organism)) %>%
         {`if`(. == 'organism', organism, .)} %>%
         ncbi_taxid
+
     id_cols <- names(ids)
     id_types <- unlist(ids)
     from_col <- id_cols[1]

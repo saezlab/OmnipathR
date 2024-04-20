@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -289,5 +289,105 @@ database_summary <- function(query_type, return_df = FALSE) {
     map(~modifyList(., set_names(str_split(.$value, '#'), 'value'))) %>%
     map(~modifyList(., list(value = keep(.$value, ~nchar(.x) > 0L)))) %>%
     `if`(return_df, tibble(.) %>% unnest_wider(1L), .)
+
+}
+
+
+#' Collect resource names from a data frame
+#'
+#' @param data A data frame from an OmniPath query.
+#'
+#' @return Character: resource names occuring in the data frame.
+#'
+#' @examples
+#' pathways <- import_omnipath_interactions()
+#' resources_in(pathways)
+#'
+#' @importFrom magrittr %>%
+#' @export
+resources_in <- function(data) {
+
+    data %>%
+    {`if`(
+        has_evidences(.),
+        resources_in_evidences(.),
+        resources_in_simple(.)
+    )}
+
+}
+
+
+#' Collect resource names from a data frame
+#'
+#' From the resources column of data frames returned by OmniPath queries.
+#'
+#' @param data A data frame from an OmniPath query.
+#'
+#' @return Character: resource names occuring in the data frame.
+#'
+#' @importFrom magrittr %>% extract
+#' @noRd
+resources_in_simple <- function(data) {
+
+    col <- data %>% resources_colname
+
+    data %>%
+    pull(!!sym(col)) %>%
+    str_split(';') %>%
+    unique_sorted
+
+}
+
+
+#' Collect resource names from a data frame with evidences column
+#'
+#' @param data A data frame with "evidences" column, typically an interactions
+#'     data frame.
+#'
+#' @return Character: resource names occuring in the data frame.
+#'
+#' @importFrom magrittr %>% extract
+#' @importFrom dplyr pull
+#' @importFrom purrr map keep
+#' @noRd
+resources_in_evidences <- function(data) {
+
+    data %>%
+    pull(evidences) %>%
+    map(
+        ~map(
+            keep(.x, ~is.list(.x) && length(.x) > 0L),
+            ~map(
+                .x,
+                ~paste(
+                    unlist(extract(.x, c('resource', 'via'))),
+                    collapse = '_'
+                )
+            )
+        )
+    ) %>%
+    unique_sorted
+
+}
+
+#' Resources shared between the database and the query set
+#'
+#' @param database Character: resource names in the database (OmniPath); these
+#'     names will be split by underscore to match the names of primary and
+#'     secondary resources on their own; e.g. "SIGNOR_ProtMapper" will match
+#'     both "SIGNOR", "ProtMapper" and "SIGNOR_ProtMapper".
+#' @param query Character: resource names of interest; these will be left
+#'     intact and matched against the first set.
+#'
+#' @return Character: resource names occuring both in database and query.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_split
+#' @noRd
+match_resources <- function(database, query) {
+
+    database %>%
+    c(str_split(., '_') %>% unlist) %>%
+    intersect(query)
 
 }

@@ -250,6 +250,12 @@ V(cisplatin_network)$node_type <-
         )
     )
 
+# temporary fix against segfault that happens pre-4.4 R devel builds
+# only if the vignette is built within R CMD build and only on our
+# Ubuntu 22.04 machine
+# likely we can remove this conditional a few weeks later
+if (Sys.info()["user"] != "omnipath") {
+
 ggraph(
     cisplatin_network,
     layout = "lgl",
@@ -275,6 +281,8 @@ theme_bw() +
 xlab("") +
 ylab("") +
 ggtitle("Cisplatin induced network")
+
+}
 ```
 
 The above network represents a way how Cisplatin can influence the POIs. One

@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Building protein networks around drug-targets using OmnipathR">
@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.9.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -356,6 +356,12 @@ members give rise to the network.</p>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
+<span><span class="co"># temporary fix against segfault that happens pre-4.4 R devel builds</span></span>
+<span><span class="co"># only if the vignette is built within R CMD build and only on our</span></span>
+<span><span class="co"># Ubuntu 22.04 machine</span></span>
+<span><span class="co"># likely we can remove this conditional a few weeks later</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"user"</span><span class="op">]</span> <span class="op">!=</span> <span class="st">"omnipath"</span><span class="op">)</span> <span class="op">{</span></span>
+<span></span>
 <span><span class="fu"><a href="https://ggraph.data-imaginist.com/reference/ggraph.html" class="external-link">ggraph</a></span><span class="op">(</span></span>
 <span>    <span class="va">cisplatin_network</span>,</span>
 <span>    layout <span class="op">=</span> <span class="st">"lgl"</span>,</span>
@@ -380,12 +386,9 @@ members give rise to the network.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cisplatin induced network"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `linewidth` in the `default_aes` field and elsewhere instead.</span></span>
-<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Cisplatin induced network"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p><img src="drug_targets_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>The above network represents a way how Cisplatin can influence the
 POIs. One can for example filter out edges based on the number fo
@@ -419,13 +422,13 @@ C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for
 <div class="section level2">
 <h2 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<pre><code><span><span class="co">## R version 4.3.0 (2023-04-21)</span></span>
+<pre><code><span><span class="co">## R version 4.3.2 (2023-10-31)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Arch Linux</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /usr/lib/libopenblas.so.0.3 </span></span>
-<span><span class="co">## LAPACK: /usr/lib/liblapack.so.3.11.0</span></span>
+<span><span class="co">## BLAS:   /usr/lib/libblas.so.3.12.0 </span></span>
+<span><span class="co">## LAPACK: /usr/lib/liblapack.so.3.12.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">##  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span></span>
@@ -435,45 +438,45 @@ C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for
 <span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
 <span><span class="co">## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## time zone: Europe/Berlin</span></span>
+<span><span class="co">## time zone: Europe/Madrid</span></span>
 <span><span class="co">## tzcode source: system (glibc)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] magrittr_2.0.3   ggraph_2.1.0     igraph_1.4.3     OmnipathR_3.9.6 </span></span>
-<span><span class="co">## [5] ggplot2_3.4.2    dplyr_1.1.2      BiocStyle_2.28.0</span></span>
+<span><span class="co">## [1] magrittr_2.0.3    ggraph_2.2.1      igraph_2.0.3      OmnipathR_3.11.10</span></span>
+<span><span class="co">## [5] ggplot2_3.5.0     dplyr_1.1.4       BiocStyle_2.30.0 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] gtable_0.3.3        xfun_0.39           bslib_0.4.2        </span></span>
-<span><span class="co">##  [4] ggrepel_0.9.3       tzdb_0.4.0          vctrs_0.6.2        </span></span>
-<span><span class="co">##  [7] tools_4.3.0         generics_0.1.3      curl_5.0.0         </span></span>
-<span><span class="co">## [10] tibble_3.2.1        fansi_1.0.4         highr_0.10         </span></span>
-<span><span class="co">## [13] pkgconfig_2.0.3     checkmate_2.2.0     desc_1.4.2         </span></span>
-<span><span class="co">## [16] readxl_1.4.2        lifecycle_1.0.3     farver_2.1.1       </span></span>
-<span><span class="co">## [19] compiler_4.3.0      stringr_1.5.0       textshaping_0.3.6  </span></span>
-<span><span class="co">## [22] progress_1.2.2      munsell_0.5.0       ggforce_0.4.1      </span></span>
-<span><span class="co">## [25] graphlayouts_1.0.0  htmltools_0.5.5     sass_0.4.6         </span></span>
-<span><span class="co">## [28] yaml_2.3.7          pillar_1.9.0        pkgdown_2.0.7      </span></span>
-<span><span class="co">## [31] later_1.3.1         crayon_1.5.2        jquerylib_0.1.4    </span></span>
-<span><span class="co">## [34] tidyr_1.3.0         MASS_7.3-60         cachem_1.0.8       </span></span>
-<span><span class="co">## [37] viridis_0.6.3       tidyselect_1.2.0    rvest_1.0.3        </span></span>
-<span><span class="co">## [40] digest_0.6.31       stringi_1.7.12      purrr_1.0.1        </span></span>
-<span><span class="co">## [43] bookdown_0.34       labeling_0.4.2      polyclip_1.10-4    </span></span>
-<span><span class="co">## [46] rprojroot_2.0.3     fastmap_1.1.1       grid_4.3.0         </span></span>
-<span><span class="co">## [49] colorspace_2.1-0    cli_3.6.1           logger_0.2.2       </span></span>
-<span><span class="co">## [52] tidygraph_1.2.3     utf8_1.2.3          readr_2.1.4        </span></span>
-<span><span class="co">## [55] withr_2.5.0         prettyunits_1.1.1   scales_1.2.1       </span></span>
-<span><span class="co">## [58] backports_1.4.1     rappdirs_0.3.3      bit64_4.0.5        </span></span>
-<span><span class="co">## [61] rmarkdown_2.22      httr_1.4.6          bit_4.0.5          </span></span>
-<span><span class="co">## [64] gridExtra_2.3       cellranger_1.1.0    ragg_1.2.5         </span></span>
-<span><span class="co">## [67] hms_1.1.3           memoise_2.0.1       evaluate_0.21      </span></span>
-<span><span class="co">## [70] knitr_1.43          viridisLite_0.4.2   rlang_1.1.1        </span></span>
-<span><span class="co">## [73] Rcpp_1.0.10         glue_1.6.2          tweenr_2.0.2       </span></span>
-<span><span class="co">## [76] BiocManager_1.30.20 xml2_1.3.4          vroom_1.6.3        </span></span>
-<span><span class="co">## [79] jsonlite_1.8.4      R6_2.5.1            systemfonts_1.0.4  </span></span>
-<span><span class="co">## [82] fs_1.6.2</span></span></code></pre>
+<span><span class="co">##  [1] gtable_0.3.4        xfun_0.42           bslib_0.6.1        </span></span>
+<span><span class="co">##  [4] ggrepel_0.9.5       tzdb_0.4.0          vctrs_0.6.5        </span></span>
+<span><span class="co">##  [7] tools_4.3.2         generics_0.1.3      curl_5.2.1         </span></span>
+<span><span class="co">## [10] tibble_3.2.1        fansi_1.0.6         highr_0.10         </span></span>
+<span><span class="co">## [13] pkgconfig_2.0.3     checkmate_2.3.1     desc_1.4.3         </span></span>
+<span><span class="co">## [16] readxl_1.4.3        lifecycle_1.0.4     farver_2.1.1       </span></span>
+<span><span class="co">## [19] compiler_4.3.2      stringr_1.5.1       textshaping_0.3.7  </span></span>
+<span><span class="co">## [22] progress_1.2.3      munsell_0.5.0       ggforce_0.4.2      </span></span>
+<span><span class="co">## [25] graphlayouts_1.1.1  htmltools_0.5.7     sass_0.4.9         </span></span>
+<span><span class="co">## [28] yaml_2.3.8          later_1.3.2         pillar_1.9.0       </span></span>
+<span><span class="co">## [31] pkgdown_2.0.7       crayon_1.5.2        jquerylib_0.1.4    </span></span>
+<span><span class="co">## [34] tidyr_1.3.1         MASS_7.3-60         cachem_1.0.8       </span></span>
+<span><span class="co">## [37] viridis_0.6.5       tidyselect_1.2.1    rvest_1.0.4        </span></span>
+<span><span class="co">## [40] digest_0.6.35       stringi_1.8.3       purrr_1.0.2        </span></span>
+<span><span class="co">## [43] bookdown_0.38       labeling_0.4.3      polyclip_1.10-6    </span></span>
+<span><span class="co">## [46] fastmap_1.1.1       grid_4.3.2          colorspace_2.1-0   </span></span>
+<span><span class="co">## [49] cli_3.6.2           logger_0.3.0        tidygraph_1.3.1    </span></span>
+<span><span class="co">## [52] utf8_1.2.4          readr_2.1.5         withr_3.0.0        </span></span>
+<span><span class="co">## [55] prettyunits_1.2.0   scales_1.3.0        backports_1.4.1    </span></span>
+<span><span class="co">## [58] rappdirs_0.3.3      bit64_4.0.5         lubridate_1.9.3    </span></span>
+<span><span class="co">## [61] timechange_0.3.0    rmarkdown_2.26      httr_1.4.7         </span></span>
+<span><span class="co">## [64] bit_4.0.5           gridExtra_2.3       cellranger_1.1.0   </span></span>
+<span><span class="co">## [67] ragg_1.2.7          hms_1.1.3           memoise_2.0.1      </span></span>
+<span><span class="co">## [70] evaluate_0.23       knitr_1.45          viridisLite_0.4.2  </span></span>
+<span><span class="co">## [73] rlang_1.1.3         Rcpp_1.0.12         glue_1.7.0         </span></span>
+<span><span class="co">## [76] selectr_0.4-2       tweenr_2.0.3        BiocManager_1.30.22</span></span>
+<span><span class="co">## [79] xml2_1.3.6          vroom_1.6.5         jsonlite_1.8.8     </span></span>
+<span><span class="co">## [82] R6_2.5.1            systemfonts_1.0.6   fs_1.6.3</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

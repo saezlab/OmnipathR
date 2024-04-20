@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -44,7 +44,7 @@ TOPOLOGIES_SHORT <-
 #' @param categories vector containing the categories to be retrieved.
 #'     All the genes belonging to those categories will be returned. For
 #'     further information about the categories see
-#'     code{\link{get_intercell_categories}}.
+#'     \code{\link{get_intercell_categories}}.
 #' @param parent vector containing the parent classes to be retrieved.
 #'     All the genes belonging to those classes will be returned. For
 #'     furter information about the main classes see
@@ -81,7 +81,7 @@ TOPOLOGIES_SHORT <-
 #'     categories and then will be applied to their resource specific
 #'     annotations and specific child categories.
 #' @param loc_consensus_percentile Numeric: similar to
-#'     code{consensus_percentile} for major localizations. For example, with
+#'     \code{consensus_percentile} for major localizations. For example, with
 #'     a value of 50, the secreted, plasma membrane transmembrane or
 #'     peripheral attributes will be true only where at least 50 percent
 #'     of the resources support these.

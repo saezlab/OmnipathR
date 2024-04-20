@@ -97,6 +97,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/consensuspathdb_raw_table.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/cookie.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/curated_ligand_receptor_interactions.html</loc>
   </url>
   <url>
@@ -502,6 +505,9 @@
     <loc>https://saezlab.github.io/OmnipathR/reference/oma_pairwise.html</loc>
   </url>
   <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/oma_pairwise_genesymbols.html</loc>
+  </url>
+  <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/omnipath.html</loc>
   </url>
   <url>
@@ -686,6 +692,12 @@
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/simplify_intercell_network.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/static_table.html</loc>
+  </url>
+  <url>
+    <loc>https://saezlab.github.io/OmnipathR/reference/static_tables.html</loc>
   </url>
   <url>
     <loc>https://saezlab.github.io/OmnipathR/reference/subnetwork.html</loc>

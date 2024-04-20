@@ -4,7 +4,13 @@
 \alias{only_from}
 \title{Recreate interaction data frame based on certain datasets and resources}
 \usage{
-only_from(data, datasets = NULL, resources = NULL)
+only_from(
+  data,
+  datasets = NULL,
+  resources = NULL,
+  exclude = NULL,
+  .keep = FALSE
+)
 }
 \arguments{
 \item{data}{An interaction data frame from the OmniPath web service with
@@ -15,6 +21,10 @@ these datasets will be used.}
 
 \item{resources}{Character: a vector of resource labels. Only evidences
 from these resources will be used.}
+
+\item{exclude}{Character vector of resource names to be excluded.}
+
+\item{.keep}{Logical: keep the "evidences" column.}
 }
 \value{
 A copy of the interaction data frame restricted to the given

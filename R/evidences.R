@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2023
+#  2018-2024
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Alberto Valdeolivas
@@ -93,6 +93,10 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #'
 #' @param data An interaction data frame with "evidences" column.
 #' @param longer Logical: If TRUE, the "evidences" column is split into rows.
+#' @param .keep Logical: keep the "evidences" column. When unnesting to longer
+#'     data frame, the "evidences" column will contain the unnested evidences,
+#'     while the original column will be retained under the "all_evidences"
+#'     name (if `.keep = TRUE`).
 #'
 #' @return The data frame with new columns or new rows by direction and sign.
 #'
@@ -104,10 +108,10 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #' }
 #'
 #' @importFrom magrittr %>% extract
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate rename select
 #' @importFrom purrr map
 #' @importFrom tidyr unnest_longer unnest_wider
-#' @importFrom rlang exec !!!
+#' @importFrom rlang exec !!! !! := sym
 #' @export
 #'
 #' @seealso \itemize{
@@ -115,7 +119,7 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #'     \item{\code{\link{filter_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-unnest_evidences <- function(data, longer = FALSE) {
+unnest_evidences <- function(data, longer = FALSE, .keep = FALSE) {
 
     must_have_evidences(data)
 
@@ -125,15 +129,26 @@ unnest_evidences <- function(data, longer = FALSE) {
         list(indices_to = 'direction'),
         list(simplify = FALSE)
     )
+    tmp_col <- 'evs_tmp' %>% sym
+    evs_col <- `if`(longer, 'all_evidences', 'evidences') %>% sym
 
     data %>%
-    mutate(evidences = map(evidences, extract, EVIDENCES_KEYS)) %>%
-    exec(unnest_method, ., 'evidences', !!!unnest_args)
+    mutate(
+        !!tmp_col := map(evidences, extract, EVIDENCES_KEYS),
+        .after = evidences
+    ) %>%
+    exec(unnest_method, ., as.character(tmp_col), !!!unnest_args) %>%
+    {`if`(
+        as.character(tmp_col) %in% colnames(.),
+        rename(., all_evidences = evidences, evidences = !!tmp_col),
+        .
+    )} %>%
+    {`if`(.keep, ., select(., -!!evs_col))}
 
 }
 
 
-#' Filter evidences by dataset and resource
+#' Filter evidences by dataset, resource and license
 #'
 #' @param data An interaction data frame with some columns containing evidences
 #'      as nested lists.
@@ -142,6 +157,7 @@ unnest_evidences <- function(data, longer = FALSE) {
 #'      and "undirected" are filtered, if present.
 #' @param datasets A character vector of dataset names.
 #' @param resources A character vector of resource names.
+#' @param exclude Character vector of resource names to be excluded.
 #'
 #' @return The input data frame with the evidences in the selected columns
 #'    filtered.
@@ -158,7 +174,13 @@ unnest_evidences <- function(data, longer = FALSE) {
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
+filter_evidences <- function(
+        data,
+        ...,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL
+    ) {
 
     # NSE vs. R CMD check workaround
     .x <- NULL
@@ -174,24 +196,40 @@ filter_evidences <- function(data, ..., datasets = NULL, resources = NULL) {
         )
 
     log_trace(
-        'Filtering evidence columns: %s; to datasets: %s; and resources: %s',
+        paste0(
+            'Filtering evidence columns: %s; to datasets: %s; ',
+            'and resources: %s; excluding resources: %s'
+        ),
         paste(columns, collapse = ', '),
         paste(if_null(datasets, 'any'), collapse = ', '),
-        paste(if_null(resources, 'any'), collapse = ', ')
+        paste(if_null(resources, 'any'), collapse = ', '),
+        paste(if_null(exclude, 'none'), collapse = ', ')
     )
 
     data %>%
-    mutate(across(columns, ~filter_evs_lst(.x, datasets, resources)))
+    mutate(across(
+        all_of(columns),
+        ~filter_evs_lst(.x, datasets, resources, exclude)
+    ))
 
 }
 
 
 #' Filter evidences within a nested list
 #'
+#' @param lst A list extracted from the JSON "evidences" column returned by
+#'     OmniPath interactions queries.
+#' @param exclude Character vector of resource names to be excluded.
+#'
 #' @importFrom magrittr %>% is_in not
 #' @importFrom purrr map2 keep map
 #' @noRd
-filter_evs_lst <- function(lst, datasets, resources) {
+filter_evs_lst <- function(
+        lst,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL
+    ) {
 
     filter_evs <- function(x) {
 
@@ -209,18 +247,9 @@ filter_evs_lst <- function(lst, datasets, resources) {
                      )
                  }
             ),
-            keep(
-                .,
-                function(ev) {
-                    (is.null(datasets) || ev$dataset %in% datasets) &&
-                    (
-                        is.null(resources) ||
-                        ev$resource %in% resources ||
-                        if_null(ev$via, '') %in% resources
-                    )
-                }
-            )
-        )}
+            keep(., ~match_evidence(.x, datasets, resources, exclude))
+        )} %>%
+        {`if`(length(.) == 0L, NULL, .)}
 
     }
 
@@ -231,6 +260,37 @@ filter_evs_lst <- function(lst, datasets, resources) {
 }
 
 
+#' Check if a single evidence matches the conditions
+#'
+#' @param ev An evidence data structure, which is a nested list, as it is
+#'     extracted from the JSON in the "evidences" column from OmniPath queries.
+#' @param exclude Character vector of resource names to be excluded.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+match_evidence <- function(
+        ev,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL
+    ) {
+
+    (is.null(datasets) || ev$dataset %in% datasets) &&
+    (
+        is.null(resources) ||
+        ev$resource %>% is_in(resources) ||
+        ev$via %>% if_null_len0('') %>% is_in(resources)
+    ) &&
+    (
+        is.null(exclude) ||
+        (
+            ev$resource %>% is_in(exclude) %>% not &&
+            ev$via %>% if_null_len0('') %>% is_in(., exclude) %>% not
+        )
+    )
+
+}
+
 #' Recreate interaction data frame based on certain datasets and resources
 #'
 #' @param data An interaction data frame from the OmniPath web service with
@@ -239,6 +299,8 @@ filter_evs_lst <- function(lst, datasets, resources) {
 #'     these datasets will be used.
 #' @param resources Character: a vector of resource labels. Only evidences
 #'     from these resources will be used.
+#' @param exclude Character vector of resource names to be excluded.
+#' @param .keep Logical: keep the "evidences" column.
 #'
 #' @return A copy of the interaction data frame restricted to the given
 #'     datasets and resources.
@@ -277,14 +339,19 @@ filter_evs_lst <- function(lst, datasets, resources) {
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
 #' }
-only_from <- function(data, datasets = NULL, resources = NULL) {
+only_from <- function(
+        data,
+        datasets = NULL,
+        resources = NULL,
+        exclude = NULL,
+        .keep = FALSE
+    ) {
 
-    if(is.null(datasets) && is.null(resources)) {
+    if(is.null(datasets) && is.null(resources) && is.null(exclude)) {
         return(data)
     }
 
     must_have_evidences(data, wide_ok = TRUE)
-
     has_wide <- data %>% has_evidences_wide
 
     log_trace(
@@ -294,9 +361,14 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
     )
 
     data %>%
-    {`if`(has_wide, ., unnest_evidences(.))} %>%
-    filter_evidences(datasets = datasets, resources = resources) %>%
-    from_evidences() %>%
+    {`if`(has_wide, ., unnest_evidences(., .keep = .keep))} %>%
+    filter_evidences(
+        datasets = datasets,
+        resources = resources,
+        exclude = exclude
+    ) %>%
+    from_evidences(.keep = .keep) %>%
+    filter(if_any(EVIDENCES_KEYS, ~not(map_lgl(.x, is.null)))) %>%
     {`if`(has_wide, ., select(., -any_of(EVIDENCES_KEYS)))}
 
 }
@@ -306,6 +378,8 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #'
 #' @param data An interaction data frame from the OmniPath web service with
 #'     evidences column.
+#' @param .keep Logical: keep the original "evidences" column when unnesting to
+#'     separate columns by direction.
 #'
 #' @return A copy of the input data frame with all the standard columns
 #'     describing the direction, effect, resources and references of the
@@ -368,7 +442,7 @@ only_from <- function(data, datasets = NULL, resources = NULL) {
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{only_from}}}
 #' }
-from_evidences <- function(data) {
+from_evidences <- function(data, .keep = FALSE) {
 
     # NSE vs. R CMD check workaround
     target <- ce_directed <- ce_positive <- positive <- negative <- .x <-
@@ -379,7 +453,7 @@ from_evidences <- function(data) {
     prefix <- data$references[1L] %>% str_detect('^\\w+:')
 
     data %>%
-    {`if`(has_evidences_wide(.), ., unnest_evidences(.))} %>%
+    {`if`(has_evidences_wide(.), ., unnest_evidences(., .keep = .keep))} %>%
     mutate(
         is_directed = as.integer(lgl_from(., positive, negative, directed)),
         is_stimulation = as.integer(map_lgl(positive, ~length(.x) > 0L)),
@@ -393,6 +467,11 @@ from_evidences <- function(data) {
         consensus_stimulation = as.integer(ce_positive >= ce_negative),
         consensus_inhibition = as.integer(ce_positive <= ce_negative)
     ) %>%
+    {`if`(
+        has_evidences(.),
+        evidences_from(.),
+        .
+    )} %>%
     left_join(
         select(., source = target, target = source, ce_directed),
         by = c('source', 'target')
@@ -406,6 +485,43 @@ from_evidences <- function(data) {
     select(-ce_positive, -ce_negative, -ce_directed.x, -ce_directed.y) %>%
     {`if`('n_references' %in% names(.), count_references(.), .)} %>%
     {`if`('n_resources' %in% names(.), count_resources(.), .)}
+
+}
+
+
+#' Update the contents of the original "evidences" column
+#'
+#' Once the evidences have been split by direction and sign and undergone some
+#' processing or filtering, we might wish to keep the original, composite
+#' "evidences" column up to date, ensuring consistency. Here we copy the
+#' processed evidences from the columns "positive", "negative", "directed" and
+#' "undirected" back to the original "evidences" column.
+#'
+#' @importFrom magrittr %>% %T>%
+#' @importFrom dplyr mutate pick
+#' @importFrom tidyselect all_of
+#' @importFrom purrr map2 transpose
+#' @importFrom logger log_warn
+#' @noRd
+evidences_from <- function(data) {
+
+    data %>%
+    {`if`(
+        has_evidences_wide(.),
+        mutate(
+            .,
+            evidences = map2(
+                evidences,
+                transpose(pick(all_of(EVIDENCES_KEYS))),
+                c
+            )
+        ),
+        identity(.) %T>%
+        log_warn(
+            'Unable to update "evidences" column: split evidence columns ',
+            '("positive", "directed", ...) are missing!'
+        )
+    )}
 
 }
 
@@ -431,15 +547,26 @@ lgl_from <- function(data, ...) {
 #' @noRd
 resources_from <- function(data, ..., collapse = ';') {
 
-    extract_resources <- function(ev) {
-        paste0(ev$resource, `if`(is.null(ev$via), '', '_'), ev$via)
-    }
-
     data %>%
-    chr_from(..., fn = extract_resources, collapse = collapse)
+    chr_from(..., fn = resource_name, collapse = collapse)
 
 }
 
+
+#' Resource name from evidence
+#'
+#' @param ev Evidence data structure (list).
+#'
+#' @noRd
+resource_name <- function(ev) {
+
+    paste0(
+        ev$resource,
+        `if`(is.null(ev$via), '', '_'),
+        ev$via
+    )
+
+}
 
 #' Extract references from a set of evidence list columns
 #'
@@ -448,14 +575,19 @@ resources_from <- function(data, ..., collapse = ';') {
 references_from <- function(data, ..., prefix = TRUE, collapse = ';') {
 
     extract_references <- function(ev) {
-        `if`(
-            prefix,
-            paste(ev$resource, ev$references, sep = ':'),
-            ev$references, collapse = collapse
-        ) %>%
-        unique %>%
-        sort %>%
-        paste(collapse = collapse)
+        ev$references %>%
+        {`if`(
+            length(.) == 0L,
+            '',
+            {`if`(
+                prefix,
+                paste(resource_name(ev), ., sep = ':'),
+                .
+            )} %>%
+            unique %>%
+            sort %>%
+            paste(collapse = collapse)
+        )}
     }
 
     data %>%
@@ -467,7 +599,7 @@ references_from <- function(data, ..., prefix = TRUE, collapse = ';') {
 #' Character vector from a set of list columns
 #'
 #' @importFrom magrittr %>%
-#' @importFrom purrr pmap_chr map_chr
+#' @importFrom purrr pmap_chr map_chr discard
 #' @importFrom dplyr select
 #' @noRd
 chr_from <- function(data, ..., fn, collapse = ';') {
@@ -475,6 +607,7 @@ chr_from <- function(data, ..., fn, collapse = ';') {
     map_fn <- function(...) {
         c(...) %>%
         map_chr(fn) %>%
+        discard(~.x == '') %>%
         unique %>%
         sort %>%
         paste(collapse = collapse) %>%
