@@ -489,4 +489,5 @@ chalmers_gem_matlab_tibble <- function(matlab, ...) {
     extract(cols) %>%
     map(extract,,1L) %>%
     as_tibble
+
 }

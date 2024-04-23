@@ -39,6 +39,7 @@ stitch_proteins <- function(organism = 'human') {
     .slow_doctest()
 
     organism %<>% organism_for('stitch')
+    log_trace('Loading STITCH proteins.')
 
     'stitch_proteins' %>%
     generic_downloader(
@@ -73,6 +74,7 @@ stitch_actions <- function(organism = 'human') {
     .slow_doctest()
 
     organism %<>% organism_for('stitch')
+    log_trace('Loading STITCH actions.')
 
     'stitch_actions' %>%
     generic_downloader(
@@ -95,10 +97,6 @@ stitch_actions <- function(organism = 'human') {
 #'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'     melanogaster) and 6239 (Caenorhabditis elegans).
-#' @param omnipath_pkn Protein-protein interactions obtained using
-#'     \code{omnipath_for_cosmos}.
-#' @param mapping.biomart BioMart ontology mapping data frame. If \code{NULL},
-#'     this info is obtained using the \ckg{bioMaRt} R package.
 #' @param threshold Confidence cutoff used for STITCH connections
 #'     (700 by default).
 #'
@@ -109,17 +107,12 @@ stitch_actions <- function(organism = 'human') {
 #' @importFrom tidyr unite
 #'
 #' @noRd
-stitch_gem <- function(
-        organism,
-        omnipath_pkn,
-        mapping.biomart = NULL,
-        threshold = 700
-) {
+stitch_gem <- function(organism = 'human', min_score = 700L) {
 
     organism %<>% organism_for('stitch')
 
-    links <-
-        stitch_links(organism) %>%
+    actions <-
+        stitch_actions(organism) %>%
         filter(
             combined_score >= threshold,
             experimental >= threshold | database >= threshold
@@ -149,7 +142,7 @@ stitch_gem <- function(
         mode == 'inhibition',
         a_is_acting
     ) %>%
-    inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
+    inner_join(actions, by = c('item_id_a', 'item_id_b')) %>%
     select(-7L) %>%
     mutate(
         across(

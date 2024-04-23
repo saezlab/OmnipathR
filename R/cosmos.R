@@ -20,7 +20,7 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-#' Organism-specific prior knowledge networks for COSMOS
+#' Prior knowledge network (PKN) for COSMOS
 #'
 #' This function generates the prior knowledge network (PKN) needed to run
 #' COSMOS using information from different resources through the \pkg{OmnipathR}
@@ -35,42 +35,42 @@
 #' COSMOS to run.
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
-#'   Supported taxons are 9606 (\emph{Homo sapiens}), 10090
-#'   (\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).
+#'       Supported taxons are 9606 (\emph{Homo sapiens}), 10090
+#'       (\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).
 #' @param translate.genes Whether translating genes from ENSEMBL into SYMBOL.
-#'   Only required when \code{organism == 9606} (\code{FALSE} by default).
+#'     Only required when \code{organism == 9606} (\code{FALSE} by default).
 #' @param biomart.use.omnipath Whether using BioMart information from OmnipathR
-#'   (\code{TRUE} by default).
+#'     (\code{TRUE} by default).
 #' @param gem_reactions.map.col Column of reaction IDs in the GEM
-#'   (\code{'rxns'} by default).
+#'     (\code{'rxns'} by default).
 #' @param gem_metabolites.map.col Column of reaction IDs in the GEM
-#'   (\code{'mets'} by default).
+#'     (\code{'mets'} by default).
 #' @param gem_list.params List containing the name of the slots where the
-#'   information to construct the PKN is located in the gem_ If a matlab object
-#'   is provided, this list parameter should not be modified.
+#'     information to construct the PKN is located in the gem_ If a matlab object
+#'     is provided, this list parameter should not be modified.
 #' @param gem_degree.mets.threshold Degree cutoff used to filter out
-#'   metabolites (400 by default). The objective is to remove cofactors and
-#'   over-promiscuous metabolites.
+#'     metabolites (400 by default). The objective is to remove cofactors and
+#'     over-promiscuous metabolites.
 #' @param stitch.threshold Confidence cutoff used for STITCH connections
-#'   (700 by default).
+#'     (700 by default).
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to
-#'   run: causal PKN, mapping data frame for metabolites from GEM,
-#'   reaction-to-gene data frame from GEM, and mapping data frame for reactions
-#'   from gem_
+#'     run: causal PKN, mapping data frame for metabolites from GEM,
+#'     reaction-to-gene data frame from GEM, and mapping data frame for reactions
+#'     from gem_
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-#'      Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-#'      animals as a platform for translational research. Proceedings of the
-#'      National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+#'        Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+#'        animals as a platform for translational research. Proceedings of the
+#'        National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 #'
-#'      Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-#'       Integrated intra‐ and intercellular signaling knowledge for multicellular
-#'       omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+#'        Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+#'         Integrated intra‐ and intercellular signaling knowledge for multicellular
+#'         omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #'
 #' @examples
 #' \dontrun{
-#'   human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
+#'     human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
 #' }
 #'
 #' @importFrom magrittr %>% %T>% %<>%
@@ -79,24 +79,9 @@
 #' @export
 cosmos_pkn <- function(
     organism,
-    translate.genes = FALSE,
-    biomart.use.omnipath = TRUE,
-    gem_reactions.map.col = 'rxns',
-    gem_metabolites.map.col = 'mets',
-    gem_list.params = list(
-        stoich.name = 'S',
-        reaction.name = 'grRules',
-        lb.name = 'lb',
-        ub.name = 'ub',
-        rev.name = 'rev',
-        reaction.ID.name = 'rxns',
-        metabolites.ID.name = 'mets',
-        metabolites.names.name = 'metNames',
-        metabolites.fomulas.name = 'metFormulas',
-        metabolites.inchi.name = 'inchis'
-    ),
-    gem_degree.mets.threshold = 400,
-    stitch.threshold = 700
+    gene_id_type = NULL,
+    chalmers_gem_metab_max_degree = 400L,
+    stitch_score = 700L
 ){
 
     .slow_doctest()
@@ -148,7 +133,7 @@ cosmos_pkn <- function(
 
 
 
-#' Generating COSMOS' PKN for different organisms
+#' Build prior knowledge network for COSMOS
 #'
 #' This function generates the prior knowledge network (PKN) needed to run
 #' COSMOS using information from different resources. It will download the
@@ -162,39 +147,37 @@ cosmos_pkn <- function(
 #' generate the required causal network for COSMOS to run.
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
-#'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'   melanogaster) and 6239 (Caenorhabditis elegans).
-#' @param translate.genes Whether translating genes from ENSEMBL into SYMBOL.
-#'   \code{FALSE} by default.
-#' @param biomart.use.omnipath Whether using BiomaRt information from OmnipathR
-#'   (\code{TRUE} by default).
+#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
+#'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
+#'     melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param gene_id_type Whether translating genes from ENSEMBL into SYMBOL.
+#'     \code{FALSE} by default.
 #' @param gem_reactions.map.col Column of reaction IDs in the GEM
-#'   (\code{'rxns'} by default).
+#'     (\code{'rxns'} by default).
 #' @param gem_metabolites.map.col Column of reaction IDs in the GEM
-#'   (\code{'mets'} by default).
+#'     (\code{'mets'} by default).
 #' @param gem_list.params List containing the name of the slots where the
-#'   information to construct the PKN is located in the gem_ If a matlab object
-#'   is provided, this list parameter should not be modified.
-#' @param gem_degree.mets.threshold Degree cutoff used to filter out
-#'   metabolites (400 by default). The objective is to remove cofactors and
-#'   other metabolites with many connections.
-#' @param stitch.threshold Confidence cutoff used for STITCH connections
-#'   (700 by default).
+#'     information to construct the PKN is located in the gem_ If a matlab object
+#'     is provided, this list parameter should not be modified.
+#' @param met_max_degree Degree cutoff used to filter out
+#'     metabolites (400 by default). The objective is to remove cofactors and
+#'     other metabolites with many connections.
+#' @param stitch_score Confidence cutoff used for STITCH connections
+#'     (700 by default).
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to
-#'   run: causal PKN, mapping data frame for metabolites from GEM,
-#'   reaction-to-gene data frame from GEM, and mapping data frame for reactions
-#'   from gem_
+#'     run: causal PKN, mapping data frame for metabolites from GEM,
+#'     reaction-to-gene data frame from GEM, and mapping data frame for reactions
+#'     from gem_
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-#'      Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-#'      animals as a platform for translational research. Proceedings of the
-#'      National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+#'        Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+#'        animals as a platform for translational research. Proceedings of the
+#'        National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 #'
-#'      Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-#'       Integrated intra‐ and intercellular signaling knowledge for multicellular
-#'       omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+#'        Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+#'         Integrated intra‐ and intercellular signaling knowledge for multicellular
+#'         omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #'
 #' @importFrom magrittr %>%
 #'
@@ -202,128 +185,37 @@ cosmos_pkn <- function(
 #'
 .cosmos_pkn <- function(
         organism,
-        translate.genes = FALSE,
-        biomart.use.omnipath = TRUE,
-        gem_reactions.map.col = 'rxns',
-        gem_metabolites.map.col = 'mets',
-        gem_list.params = list(
-            stoich.name = 'S',
-            reaction.name = 'grRules',
-            lb.name = 'lb',
-            ub.name = 'ub',
-            rev.name = 'rev',
-            reaction.ID.name = 'rxns',
-            metabolites.ID.name = 'mets',
-            metabolites.names.name = 'metNames',
-            metabolites.fomulas.name = 'metFormulas',
-            metabolites.inchi.name = 'inchis'
-        ),
+        gene_id_type = NULL,
         chalmers_gem_metab_max_degree = 400L,
-        stitch.threshold = 700
+        stitch_score = 700L
 ) {
-    ## check organisms
-    dataset.biomart <- switch(
-        as.character(organism),
-        '9606' = 'hsapiens_gene_ensembl',
-        '10090' = 'mmusculus_gene_ensembl',
-        '10116' = 'rnorvegicus_gene_ensembl'
-    )
-    if (is.null(dataset.biomart))
-        stop(
-            'Chosen organism is not recognizable Available options are: ',
-            paste(c(9606, 10090, 10116, 7955, 7227, 6239), collapse = ', ')
-        )
 
+    organism %<>% organism_for('cosmos')
 
-    log_info('Loading protein-chemical interactions from STITCH...')
     ## download STITCH using OmnipathR (if already done, it will be taken from cache)
-    stitch.actions <- OmnipathR:::stitch_actions(organism = organism) %>%
-        as.data.frame()
-    stitch.prot.details <- OmnipathR:::stitch_proteins(
-        organism = organism
-    ) %>% as.data.frame()
-
-    if (biomart.use.omnipath == TRUE) {
-        log_info('Using the OmnipathR to retrieve BioMart information')
-        ## get info from BiomartR using OmnipathR
-        mapping.biomart <- OmnipathR::biomart_query(
-            attrs = c(
-                'ensembl_peptide_id','ensembl_gene_id', 'external_gene_name'
-            ),
-            dataset = dataset.biomart
-        ) %>% as.data.frame()
-    } else {
-        log_info('Using the BiomaRt R package when needed')
-
-        mapping.biomart <- NULL
-    }
-    ## Omnipath data
-    log_info('Loading protein-protein interactions from Omnipath...')
-    omnipath_pkn <- omnipath_for_cosmos(organism)
-    chalmers_gem_pkn <- chalmers_gem_network(
-        organism,
-        chalmers_gem_metab_max_degree
-    )
-    ## Getting GEM PKN
-    log_info('Processing gem_..')
-    gem_pkn.list <- gem_basal_pkn(
-        matlab.object = gem_raw,
-        reactions.map = gem_reactions,
-        reactions.map.col = gem_reactions.map.col,
-        metabolites.map = gem_metabolites,
-        metabolites.map.col = gem_metabolites.map.col,
-        list.params.GEM = gem_list.params,
-        degree.mets.cutoff = gem_degree.mets.threshold
-    )
-    log_info('Formatting GEM PKN for COSMOS...')
-    gem_pkn.list <- translate_to_hmdb(gem_pkn.list)
-
-    if (as.character(organism) == '9606') translate.genes <- TRUE
-
-    if (translate.genes){
-        gem_pkn.list <- translate_to_genesymbol(
-            gem_pkn.list, organism = organism,
-            mapping.biomart = mapping.biomart
-        )
-    }
-    gem_pkn.list <- cosmos_format_gem(gem_pkn.list)
-
-    log_info('Getting STITCH PKN...')
-
-    stitch_pkn <- stitch_format(
-        stitch.actions = stitch.actions,
-        stitch.links = stitch.prot.details,
+    stitch <- stitch_gem(organism = organism, stitch_score = stitch_score)
+    chalmers <- chalmers_gem_network(
         organism = organism,
-        omnipath_pkn = omnipath_pkn,
-        mapping.biomart = mapping.biomart,
-        threshold = stitch.threshold
+        metab_max_degree = chalmers_gem_metab_max_degree
     )
+    ominpath <- omnipath_for_cosmos(organism)
 
-    output.final <- cosmos_combine_networks(
-        gem_pkn = gem_pkn.list[[1]],
-        omnipath_pkn = omnipath_pkn,
-        stitch_pkn = stitch_pkn
-    )
+    cosmos_combine_networks(
+        chalmers = chalmers,
+        omnipath = omnipath,
+        stitch = stitch
+    ) %T>%
+    {log_success('COSMOS PKN ready, %i interactions.', nrow(.))}
 
-    log_success('COSMOS PKN ready.')
-
-    return(
-        list(
-            COSMOS.PKN = output.final,
-            gem_mets.map = gem_pkn.list[[2]],
-            gem_reac.to.gene = gem_pkn.list[[3]],
-            reac.map = gem_pkn.list[[4]]
-        )
-    )
 }
 
 
 #' OmniPath PPI for the COSMOS PKN
 #'
 #' @param organism Character or integer: name or NCBI Taxonomy ID of the
-#'     organism.
+#'       organism.
 #' @param resources Character: names of one or more resources. Correct spelling
-#'     is important.
+#'       is important.
 #' @param datasets Character: one or more network datasets in OmniPath.
 #' @param interaction_types Character: one or more interaction type
 #' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
@@ -395,8 +287,8 @@ omnipath_for_cosmos <- function(
 #' @param list.network List obtained using \code{gem_basal_pkn}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
-#'   translated into the desired ontology, gene-to-reactions data frame,
-#'   metabolite-mapping data frame, and reactions-mapping data frame.
+#'     translated into the desired ontology, gene-to-reactions data frame,
+#'     metabolite-mapping data frame, and reactions-mapping data frame.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr case_when mutate
@@ -459,19 +351,19 @@ translate_to_hmdb <- function(list.network) {
 #'
 #' @param list.network List obtained using \code{gem_basal_pkn}.
 #' @param organism Character or integer: an organism (taxon) identifier.
-#'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'   melanogaster) and 6239 (Caenorhabditis elegans).
+#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
+#'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
+#'     melanogaster) and 6239 (Caenorhabditis elegans).
 #' @param mapping.biomart BioMart ontology mapping data frame. If \code{NULL},
-#'   this info is obtained using the \ckg{bioMaRt} R package.
+#'     this info is obtained using the \ckg{bioMaRt} R package.
 #' @param ont.from Ontology to translate genes from
-#'   (\code{'ensembl_gene_id' by default}).
+#'     (\code{'ensembl_gene_id' by default}).
 #' @param ont.to Ontology to translate genes into
-#'   (\code{'external_gene_name' by default}).
+#'     (\code{'external_gene_name' by default}).
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
-#'   translated into the desired ontology, gene-to-reactions data frame,
-#'   metabolite-mapping data frame, and reactions-mapping data frame.
+#'     translated into the desired ontology, gene-to-reactions data frame,
+#'     metabolite-mapping data frame, and reactions-mapping data frame.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr case_when mutate select
@@ -612,11 +504,11 @@ translate_to_genesymbol <- function(
 #'
 #' @param gem_pkn List obtained using \code{gem_basal_pkn}.
 #' @param omnipath_pkn Protein-protein interactions obtained using
-#'   \code{omnipath_for_cosmos}.
+#'     \code{omnipath_for_cosmos}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format with genes
-#'   translated into the desired ontology, gene-to-reactions data frame,
-#'   metabolite-mapping data frame, and reactions-mapping data frame.
+#'     translated into the desired ontology, gene-to-reactions data frame,
+#'     metabolite-mapping data frame, and reactions-mapping data frame.
 #'
 #' @importFrom magrittr %>%
 #'
@@ -660,7 +552,7 @@ cosmos_connect_gem_omnipath <- function(gem_pkn, omnipath_pkn) {
 #'
 #' @param gem_pkn Metabolic PKN obtained using \code{gem_basal_pkn}.
 #' @param omnipath_pkn Protein-protein interactions obtained using
-#'   \code{omnipath_for_cosmos}.
+#'     \code{omnipath_for_cosmos}.
 #' @param stitch_pkn Chemical-protein PKN obtained using \code{stitch_format_gem}.
 #'
 #' @return List containing PKN with COSMOS and OCEAN format.
