@@ -137,8 +137,8 @@ oma_pairwise <- function(
     # NSE vs. R CMD check workaround:
     id_organism_a <- id_organism_b <- mapping <- NULL
 
-    organism_a %<>% oma_code
-    organism_b %<>% oma_code
+    organism_a %<>% organism_for('oma')
+    organism_b %<>% organism_for('oma')
     id_type %<>% oma_id_type
 
     args <- match.call() %>% as.list %>% tail(-1L)
