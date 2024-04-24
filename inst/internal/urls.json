@@ -137,5 +137,19 @@
         "https://omabrowser.org/cgi-bin/gateway.pl?",
         "f=PairwiseOrthologs&p1=%s&p2=%s&p3=%s"
     ],
-    "omnipath_static": ["http://no-tls.static.omnipathdb.org/resources/"]
+    "oma_pairwise_new" : [
+        "https://omabrowser.org/api/pairs/%s/%s/?",
+        "format=tsv&xrefs=%s&per_page=2000000"
+    ],
+    "omnipath_static": ["http://no-tls.static.omnipathdb.org/resources/"],
+    "stitch_actions": [
+      "http://stitch.embl.de/download/actions.v5.0/%s.actions.v5.0.tsv.gz"
+    ],
+    "stitch_proteins": [
+      "http://stitch.embl.de/download/protein_chemical.links.detailed.v5.0/",
+      "%s.protein_chemical.links.detailed.v5.0.tsv.gz"
+    ],
+    "chalmers_gem": [
+        "https://raw.githubusercontent.com/SysBioChalmers/%s-GEM/main/model/%s"
+    ]
 }
