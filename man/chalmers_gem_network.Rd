@@ -4,7 +4,7 @@
 \alias{chalmers_gem_network}
 \title{Chalmers SysBio GEM in the form of gene-metabolite interactions}
 \usage{
-chalmers_gem_network(organism_or_gem = "Human", metab_max_degree = 400L)
+chalmers_gem_network(organism_or_gem = "Human", metab_max_degree = 400L, ...)
 }
 \arguments{
 \item{organism_or_gem}{Character or integer or list or data frame: either

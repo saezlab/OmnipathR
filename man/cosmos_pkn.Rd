@@ -3,20 +3,13 @@
 \name{cosmos_pkn}
 \alias{cosmos_pkn}
 \title{Alberto Valdeolivas
-Organism-specific prior knowledge networks for COSMOS}
+Prior knowledge network (PKN) for COSMOS}
 \usage{
 cosmos_pkn(
   organism,
-  translate.genes = FALSE,
-  biomart.use.omnipath = TRUE,
-  gem_reactions.map.col = "rxns",
-  gem_metabolites.map.col = "mets",
-  gem_list.params = list(stoich.name = "S", reaction.name = "grRules", lb.name = "lb",
-    ub.name = "ub", rev.name = "rev", reaction.ID.name = "rxns", metabolites.ID.name =
-    "mets", metabolites.names.name = "metNames", metabolites.fomulas.name =
-    "metFormulas", metabolites.inchi.name = "inchis"),
-  gem_degree.mets.threshold = 400,
-  stitch.threshold = 700
+  gene_id_type = NULL,
+  chalmers_gem_metab_max_degree = 400L,
+  stitch_score = 700L
 )
 }
 \arguments{
@@ -49,9 +42,9 @@ over-promiscuous metabolites.}
 }
 \value{
 List of 4 elements containing the necessary information for COSMOS to
-  run: causal PKN, mapping data frame for metabolites from GEM,
-  reaction-to-gene data frame from GEM, and mapping data frame for reactions
-  from gem_
+    run: causal PKN, mapping data frame for metabolites from GEM,
+    reaction-to-gene data frame from GEM, and mapping data frame for reactions
+    from gem_
 }
 \description{
 This function generates the prior knowledge network (PKN) needed to run
@@ -68,17 +61,17 @@ COSMOS to run.
 }
 \examples{
 \dontrun{
-  human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
+    human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
 }
 
 }
 \references{
 Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-     Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-     animals as a platform for translational research. Proceedings of the
-     National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+       Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+       animals as a platform for translational research. Proceedings of the
+       National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 
-     Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-      Integrated intra‐ and intercellular signaling knowledge for multicellular
-      omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+       Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+        Integrated intra‐ and intercellular signaling knowledge for multicellular
+        omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 }
