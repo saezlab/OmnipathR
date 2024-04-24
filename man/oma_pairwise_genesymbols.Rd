@@ -7,7 +7,7 @@
 oma_pairwise_genesymbols(
   organism_a = "human",
   organism_b = "mouse",
-  id_type = "uniprot",
+  oma_id_type = "uniprot_entry",
   mappings = c("1:1", "1:m", "n:1", "n:m"),
   only_ids = TRUE
 )
@@ -17,9 +17,8 @@ oma_pairwise_genesymbols(
 
 \item{organism_b}{Name or identifier of another organism.}
 
-\item{id_type}{The gene or protein identifier to use in the table. For a
-list of supported ID types see `omnipath.env$id_types$oma`. These are
-the identifiers that will be translated to gene symbols.}
+\item{oma_id_type}{Character: the gene or protein identifier to be queried
+from OMA. These IDs will be translated to `id_type`.}
 
 \item{mappings}{Character vector: control ambiguous mappings: \itemize{
     \item{1:1 - unambiguous}
@@ -40,7 +39,7 @@ between genes, doesn't provide gene symbols, the identifier preferred in
 many bioinformatics pipelines. Hence this function wraps
 \code{\link{oma_pairwise}} by translating the identifiers used in OMA to
 gene symbols. Items that can not be translated to `id_type` (but present
-in the data with their internal OMA IDs) will be removed. This part is done by . Then,
+in the data with their internal OMA IDs) will be removed. Then,
 in this function we translate the identifiers to gene symbols.
 }
 \examples{
