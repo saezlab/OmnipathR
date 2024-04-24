@@ -170,13 +170,22 @@ oma_pairwise <- function(
             skip = 1L
         ),
         url_param = list(organism_a, organism_b, id_type)
-    ) %>%
-    mutate(
-        across(
-            starts_with('id_organism'),
-            ~str_extract(.x, '([^_]*)')
-        )
-    ) %>%
+    ) %T>%
+    {`if`(
+        ncol(.) != 6L,
+        {
+            msg <- sprintf(
+                paste0(
+                    'Unexpected number of columns in OMA data: ',
+                    'most likely the `id_type` (`%s`) is not correct.'
+                ),
+                id_type
+            )
+            log_error(msg)
+            stop(msg)
+        },
+        .
+    )} %>%
     filter(
         !str_detect(id_organism_a, sprintf('%s\\d+', organism_a)) &
         !str_detect(id_organism_b, sprintf('%s\\d+', organism_b)) &
