@@ -338,6 +338,7 @@ oma_id_type <- function(id_type) {
         omnipath.env$id_types$oma %>%
         set_names(., str_to_lower(.)) %>%
         extract2(id_type)
-    )
+    ) %>%
+    URLencode(reserved = TRUE)
 
 }
