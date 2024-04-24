@@ -999,3 +999,13 @@ unique_sorted <- function(v) {
     v %>% unlist %>% unique %>% sort
 
 }
+
+
+#' Joins a list of words by comma and space
+#'
+#' @noRd
+enum_format <- function(words) {
+
+    paste(words, collapse = ', ')
+
+}
