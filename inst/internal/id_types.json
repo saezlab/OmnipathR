@@ -80,13 +80,16 @@
         "pbd": "pbd"
     },
     "oma": {
-        "source": "Source",
+        "source": "SourceID",
         "source_ac": "SourceAC",
-        "swissprot": "SwissProt",
+        "swissprot": "UniProtKB/SwissProt",
+        "uniprot_entry": "UniProtKB/SwissProt",
         "oma": "OMA",
-        "uniprot": "UniProt",
-        "refseq": "Refseq_AC",
+        "trembl": "UniProtKB/TrEMBL",
+        "refseq": "RefSeq",
         "entrez": "EntrezGene",
-        "ensg": "EnsemblGene"
+        "geneid": "EntrezGene",
+        "ensg": "Ensembl Gene",
+        "ensembl": "Ensembl Gene"
     }
 }
