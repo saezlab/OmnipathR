@@ -51,6 +51,26 @@ oma_organisms <- function() {
 }
 
 
+#' OMA codes of all supported organisms
+#'
+#' We need this wrapper only to help `organism_for`, i.e. to provide a callable
+#' without arguments that returns a simple character vector.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr pull
+#' @noRd
+oma_supported_organisms <- function() {
+
+    # NSE vs. R CMD check workaround
+    oma_code <- NULL
+
+    oma_organisms() %>%
+    pull(oma_code) %>%
+    unique
+
+}
+
+
 #' Orthologous gene pairs between two organisms
 #'
 #' From the web API of Orthologous Matrix (OMA). Items which could not be
