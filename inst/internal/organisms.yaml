@@ -34,3 +34,6 @@ stitch:
     - 7955
     - 7227
     - 6239
+oma:
+  id_type: oma_code
+  supported: oma_supported_organisms
