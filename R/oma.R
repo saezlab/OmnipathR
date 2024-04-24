@@ -154,17 +154,20 @@ oma_pairwise <- function(
         }
     }
 
-    'oma_pairwise' %>%
+    'oma_pairwise_new' %>%
     generic_downloader(
         reader_param = list(
             col_names = c(
+                'oma_code_a',
                 'id_organism_a',
+                'oma_code_b',
                 'id_organism_b',
                 'mapping',
                 'oma_group'
             ),
             col_types = cols(),
-            comment = '#'
+            comment = '#',
+            skip = 1L
         ),
         url_param = list(organism_a, organism_b, id_type)
     ) %>%
