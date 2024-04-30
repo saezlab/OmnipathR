@@ -24,7 +24,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang enquo quo_get_expr quo_text is_symbol
-#'
+#' @importFrom stringr str_remove
 #' @noRd
 .nse_ensure_str <- function(arg){
 
@@ -33,7 +33,9 @@
         is_symbol(quo_get_expr(.)),
         quo_text(.),
         quo_get_expr(.)
-    )}
+    )} %>%
+    str_remove('`$') %>%
+    str_remove('^`')
 
 }
 
