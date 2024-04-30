@@ -245,6 +245,9 @@ oma_pairwise_translated <- function(
     # NSE vs. R CMD check workaround:
     id_organism_a <- id_organism_b <- NULL
 
+    organism_a <- .nse_ensure_str(!!enquo(organism_a))
+    organism_b <- .nse_ensure_str(!!enquo(organism_b))
+
     environment() %>%
     as.list %>%
     extract(!startsWith(names(.), 'id_organism_')) %>%
