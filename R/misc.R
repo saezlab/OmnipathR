@@ -1011,3 +1011,36 @@ enum_format <- function(words) {
     paste(words, collapse = ', ')
 
 }
+
+
+#' Uncompressed size of a connection
+#'
+#' @param con A connection.
+#'
+#' @return Integer: uncompressed size of the file the connection points to.
+#'
+#' @importFrom zip zip_list
+#' @importFrom magrittr %>% extract extract2
+#' @importFrom stringr str_split
+#' @noRd
+file_size <- function(con) {
+
+    con %>%
+    summary %>%
+    extract2('description') %>%
+    {`if`(
+        class(con)[1L] == 'unz',
+
+        str_split(., ':') %>%
+        extract2(1L) %>%
+        {extract(zip_list(.[1L]), 1L, 'uncompressed_size')},
+
+        {`if`(
+            class(con)[1L] == 'file',
+            file.info(.) %>%
+            extract(1L, 'size'),
+            NA
+        )}
+    )}
+
+}
