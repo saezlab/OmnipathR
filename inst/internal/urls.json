@@ -151,5 +151,6 @@
     ],
     "chalmers_gem": [
         "https://raw.githubusercontent.com/SysBioChalmers/%s-GEM/main/model/%s"
-    ]
+    ],
+    "hmdb": "https://hmdb.ca/system/downloads/current/%s.zip"
 }
