@@ -96,38 +96,11 @@ cosmos_pkn <- function(
     paste(collapse = ', ') %>%
     {`if`(nchar(.), sprintf('Missing packages: %s', .) %T>% log_error %>% stop)}
 
-    cache_pseudo_url <- 'COSMOS_PKN_%s' %>% sprintf(organism)
-
-    in_cache <-
-        omnipath_cache_get(
-            url = cache_pseudo_url,
-            post = args,
-            create = FALSE
-        ) %>%
-        omnipath_cache_latest_version
-
-    if (is.null(in_cache)) {
-
-        log_success(
-            paste0(
-                'Building COSMOS PKN (organism: %s). ',
-                'This will take 10-30 min at the first ',
-                'time, and will be saved in the cache for later use.'
-            ),
-            organism
-        )
-
-        result <-
-            exec(.cosmos_pkn, !!!cache_pseudo_post) %>%
-            omnipath_cache_save(url = cache_pseudo_url, post = args)
-
-    } else {
-
-        result <- omnipath_cache_load(url = cache_pseudo_url, post = args)
-
-    }
-
-    return(result)
+    with_cache(
+        name = 'COSMOS_PKN_%s' %>% sprintf(organism),
+        args = args,
+        callback = .cosmos_pkn
+    )
 
 }
 
@@ -191,6 +164,15 @@ cosmos_pkn <- function(
 ) {
 
     organism %<>% organism_for('cosmos')
+
+    log_success(
+        paste0(
+            'Building COSMOS PKN (organism: %s). ',
+            'This will take 10-30 min at the first ',
+            'time, and will be saved in the cache for later use.'
+        ),
+        organism
+    )
 
     ## download STITCH using OmnipathR (if already done, it will be taken from cache)
     stitch <- stitch_gem(organism = organism, stitch_score = stitch_score)
