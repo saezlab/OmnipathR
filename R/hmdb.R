@@ -192,7 +192,6 @@ hmdb_xml2_parse <- function(dataset, fields) {
 #' hmdb_table(fields())
 #'
 #' @importFrom magrittr %<>% %>% extract2
-#' @importFrom XML xmlEventParse
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr unnest_wider
 #' @export
@@ -204,6 +203,8 @@ hmdb_table <- function(
         fields = hmdb_metabolite_fields(),
         dataset = 'metabolites'
     ) {
+
+    .slow_doctest()
 
     dataset %>%
     {`if`(
