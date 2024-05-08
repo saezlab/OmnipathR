@@ -1828,3 +1828,43 @@ use_cache <- function(cache = NULL) {
     if_null(getOption('omnipath.use_cache'))
 
 }
+
+#' Load from and save into the cache an intermediate output
+#'
+#' @param name Character: a custom, unique name of the cache content.
+#' @param args List: arguments for the callback function, also included in the
+#'     cache key, which means, if any parameter is different, the content will
+#'     be regenerated (and saved under a different key).
+#' @param callback Function: the function that generates the content.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+with_cache <- function(name, args, callback) {
+
+    log_trace('Looking up in cache: `%s`.', name)
+
+    in_cache <-
+        omnipath_cache_get(
+            url = name,
+            post = args,
+            create = FALSE
+        ) %>%
+        omnipath_cache_latest_version
+
+    if (is.null(in_cache)) {
+
+        log_trace('Not found in cache, rebuilding: `%s`.', name)
+
+        result <-
+            exec(callback, !!!args) %>%
+            omnipath_cache_save(url = name, post = args)
+
+    } else {
+
+        log_trace('Loading from cache: `%s`.', name)
+
+        result <- omnipath_cache_load(url = name, post = args)
+
+    }
+
+}
