@@ -191,9 +191,12 @@ hmdb_xml2_parse <- function(dataset, fields) {
 #' @examples
 #' hmdb_table(fields())
 #'
+#' @importFrom logger log_success
 #' @importFrom magrittr %<>% %>% extract2
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr unnest_wider
+#' @importFrom dplyr select
+#' @importFrom rlang syms !!!
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{hmdb_protein_fields}}}
@@ -206,23 +209,43 @@ hmdb_table <- function(
 
     .slow_doctest()
 
-    dataset %>%
-    {`if`(
-        . %in% c('metabolites', 'proteins'),
-        sprintf('hmdb_%s', .),
-        sprintf('%s_metabolites', .)
-    )} %>%
-    {archive_extractor(
-        url_key = 'hmdb',
-        path = sprintf('%s.xml', .),
-        url_param = list(.)
-    )} %>%
-    parse_in_chunks(
-        record = dataset %>% the_record,
-        header_lines = 2L,
-        parser = hmdb_xml2_parse(dataset, fields)
-    ) %>%
-    as_tibble
+    hmdb_table_impl <- function(dataset) {
+
+        log_success(
+            paste0(
+                'Downloading and preprocessing HMDB %s dataset. ',
+                'This will take 10-20 minutes. The preprocessed data will ',
+                'be stored in the cache and loeded from there at next use.'
+            ),
+            dataset
+        )
+
+        dataset %>%
+        {`if`(
+            . %in% c('metabolites', 'proteins'),
+            sprintf('hmdb_%s', .),
+            sprintf('%s_metabolites', .)
+        )} %>%
+        {archive_extractor(
+            url_key = 'hmdb',
+            path = sprintf('%s.xml', .),
+            url_param = list(.)
+        )} %>%
+        parse_in_chunks(
+            record = dataset %>% the_record,
+            header_lines = 2L,
+            parser = hmdb_xml2_parse(dataset, fields)
+        ) %>%
+        as_tibble %>%
+        select(!!!syms(fields))
+
+    }
+
+    with_cache(
+        name = 'hmdb_table',
+        args = list(dataset),
+        callback = hmdb_table_impl
+    )
 
 }
 
