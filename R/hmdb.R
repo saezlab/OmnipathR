@@ -127,75 +127,6 @@ hmdb_protein_fields <- function() {
 }
 
 
-#' Handlers for processing simple fields from HMDB XML
-#'
-#' The event driven XML parser requires handles that can be triggered by
-#' events. The handlers here are able to extract simple and multiple value
-#' fields.
-#'
-#' @param record Character: name of the tag that represents a complete record:
-#'     it is "protein" for the proteins dataset, "metabolite" for all other
-#'     datasets.
-#' @param fields Character: names of the fields to be extracted.
-#'
-#' @importFrom magrittr %>%
-#' @importFrom rlang set_names
-#' @importFrom purrr map
-#' @noRd
-hmdb_evparse_handlers <- function(dataset, fields) {
-
-    empty <- fields %>% set_names(map(., ~NULL), .)
-    record <- dataset %>% the_record
-    records <- list()
-    current <- empty
-    field <- NULL
-    multi <- FALSE
-    depth <- 0L
-
-    startElement <- function(name, attrs) {
-        if(name %in% fields && depth == 1L) {
-            field <<- name
-            multi <<- name %in% MULTI_FIELDS
-        }
-        depth <<- depth + 1L
-    }
-
-    text <- function(content, attrs) {
-        if(!is.null(field)) {
-            current[[field]] <<- c(current[[field]], content)
-            if(!multi) {
-                field <<- NULL
-            }
-        }
-    }
-
-    endElement <- function(name) {
-        if(name == record) {
-            records <<- c(records, list(current))
-            current <<- empty
-        } else if(!is.null(field) && name == field) {
-            field <<- NULL
-            multi <<- FALSE
-        }
-        depth <<- depth - 1L
-    }
-
-    dump <- function() {
-        records_dumped <- records
-        records <<- list()
-        return(records_dumped)
-    }
-
-    list(
-        startElement = startElement,
-        text = text,
-        endElement = endElement,
-        dump = dump
-    )
-
-}
-
-
 #' Simple xml2 parser for HMDB
 #'
 #' @importFrom magrittr %>% extract equals
@@ -287,12 +218,8 @@ hmdb_table <- function(
     )} %>%
     parse_in_chunks(
         record = dataset %>% the_record,
-        # handlers = hmdb_evparse_handlers(dataset, fields),
         header_lines = 2L,
         parser = hmdb_xml2_parse(dataset, fields)
-        # post_parse = function(handlers) {
-        #    handlers$dump()
-        # }
     ) %>%
     as_tibble
 
