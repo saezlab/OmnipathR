@@ -4,19 +4,20 @@
 \alias{hmdb_table}
 \title{Download a HMDB XML file and process it into a table}
 \usage{
-hmdb_table(fields = hmdb_metabolite_fields(), dataset = "metabolites")
+hmdb_table(dataset = "metabolites", fields = NULL)
 }
 \arguments{
+\item{dataset}{Character: name of an HMDB XML dataset, such as
+"metabolites", "proteins", "urine", "serum", "csf", "saliva", "feces",
+"sweat".}
+
 \item{fields}{Character: fields to extract from the XML. This is a very
 minimal parser that is able to extract the text content of simple fields
 and multiple value fields which contain a list of leaves within one
 container tag under the record tag. A full list of fields available in
 HMDB is available by the \code{\link{hmdb_protein_fields}} and \code{
-\link{hmdb_metabolite_fields}} functions.}
-
-\item{dataset}{Character: name of an HMDB XML dataset, such as
-"metabolites", "proteins", "urine", "serum", "csf", "saliva", "feces",
-"sweat".}
+\link{hmdb_metabolite_fields}} functions. By default, all fields
+available in the dataset are extracted.}
 }
 \value{
 A data frame (tibble) with each column corresponding to a field.

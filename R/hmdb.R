@@ -30,7 +30,8 @@ PROTEIN_FIELDS <- c(
 
 PROTEIN_ID_FIELDS <- c(
     'gene_name',
-    'genebank_protein_id',
+    'genbank_protein_id',
+    'genbank_gene_id',
     'uniprot_id',
     'uniprot_name',
     'hgnc_id',
@@ -81,6 +82,12 @@ MULTI_FIELDS <- c(
 )
 
 
+PROTEIN_MULTI_FIELDS <- c(
+    'pdb_ids',
+    'subcellular_locations'
+)
+
+
 #' Field names for the HMDB metabolite dataset
 #'
 #' @return Character vector of field names.
@@ -121,7 +128,8 @@ hmdb_protein_fields <- function() {
     return(c(
         PROTEIN_FIELDS,
         PROTEIN_ID_FIELDS,
-        MULTI_FIELDS
+        MULTI_FIELDS,
+        PROTEIN_MULTI_FIELDS
     ))
 
 }
@@ -176,15 +184,16 @@ hmdb_xml2_parse <- function(dataset, fields) {
 
 #' Download a HMDB XML file and process it into a table
 #'
+#' @param dataset Character: name of an HMDB XML dataset, such as
+#'     "metabolites", "proteins", "urine", "serum", "csf", "saliva", "feces",
+#'     "sweat".
 #' @param fields Character: fields to extract from the XML. This is a very
 #'     minimal parser that is able to extract the text content of simple fields
 #'     and multiple value fields which contain a list of leaves within one
 #'     container tag under the record tag. A full list of fields available in
 #'     HMDB is available by the \code{\link{hmdb_protein_fields}} and \code{
-#'     \link{hmdb_metabolite_fields}} functions.
-#' @param dataset Character: name of an HMDB XML dataset, such as
-#'     "metabolites", "proteins", "urine", "serum", "csf", "saliva", "feces",
-#'     "sweat".
+#'     \link{hmdb_metabolite_fields}} functions. By default, all fields
+#'     available in the dataset are extracted.
 #'
 #' @return A data frame (tibble) with each column corresponding to a field.
 #'
@@ -203,11 +212,20 @@ hmdb_xml2_parse <- function(dataset, fields) {
 #'     \item{\code{\link{hmdb_metabolite_fields}}}
 #' }
 hmdb_table <- function(
-        fields = hmdb_metabolite_fields(),
-        dataset = 'metabolites'
+        dataset = 'metabolites',
+        fields = NULL
     ) {
 
     .slow_doctest()
+
+    fields %<>%
+        if_null(
+            `if`(
+                 dataset == 'proteins',
+                 hmdb_protein_fields(),
+                 hmdb_metabolite_fields()
+            )
+        )
 
     hmdb_table_impl <- function(dataset) {
 
