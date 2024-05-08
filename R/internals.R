@@ -656,6 +656,8 @@ archive_downloader <- function(
 #'     for token.
 #' @param resource Character: name of the resource.
 #' @param extract_xls Logical: read worksheet from xls(x) file automatically.
+#' @param to_tempdir Logical: if TRUE, the archive is extracted to a temporary
+#'      directory from the zip file. Ignored for other archive types.
 #' @param ... Passed to \code{\link{archive_downloader}}.
 #'
 #' @return A connection to the extracted file or a the contents read from
@@ -681,6 +683,7 @@ archive_extractor <- function(
     cache_by_url = NULL,
     resource = NULL,
     extract_xls = TRUE,
+    to_tempdir = FALSE,
     ...
 ){
 
@@ -726,14 +729,18 @@ archive_extractor <- function(
 
     if(archive_data$ext == 'zip'){
 
-        if(xls){
+        if(xls || to_tempdir){
 
             con <-
                 archive_data$path %>%
                 unzip(files = path, exdir = tempdir()) %>%
-                `[`(1)
+                extract(1L)
 
-            reader <- read_excel
+            if(xls) {
+                reader <- read_excel
+            }else{
+                return(con)
+            }
 
         }else{
 
