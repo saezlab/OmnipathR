@@ -34,14 +34,14 @@
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-stitch_proteins <- function(organism = 'human') {
+stitch_links <- function(organism = 'human') {
 
     .slow_doctest()
 
     organism %<>% organism_for('stitch')
-    log_trace('Loading STITCH proteins.')
+    log_trace('Loading STITCH protein-small molecule links.')
 
-    'stitch_proteins' %>%
+    'stitch_links' %>%
     generic_downloader(
         reader = read_tsv,
         url_key_param = list(),
@@ -109,13 +109,19 @@ stitch_actions <- function(organism = 'human') {
 #' @noRd
 stitch_gem <- function(organism = 'human', min_score = 700L) {
 
+    .slow_doctest()
+
+    # NSE vs. R CMD check workaround
+    chemical <- protein <- item_id_a <- item_id_b <- CID <- HMDB <-
+    a_is_acting <- ensp <- genesymbol <- NULL
+
     organism %<>% organism_for('stitch')
 
-    actions <-
-        stitch_actions(organism) %>%
+    links <-
+        stitch_links(organism) %>%
         filter(
-            combined_score >= threshold,
-            experimental >= threshold | database >= threshold
+            combined_score >= min_score,
+            experimental >= min_score | database >= min_score
         ) %>%
         select(
             item_id_a = chemical,
@@ -125,6 +131,7 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
         bind_rows(
             .,
             rename(
+                .,
                 item_id_a = item_id_b,
                 item_id_b = item_id_a
             )
@@ -142,7 +149,7 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
         mode == 'inhibition',
         a_is_acting
     ) %>%
-    inner_join(actions, by = c('item_id_a', 'item_id_b')) %>%
+    inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
     select(-7L) %>%
     mutate(
         across(
