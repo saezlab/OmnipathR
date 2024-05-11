@@ -1867,4 +1867,6 @@ with_cache <- function(name, args, callback) {
 
     }
 
+    return(result)
+
 }
