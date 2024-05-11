@@ -362,7 +362,7 @@ uniprot_idmapping_id_types <- function() {
 #'
 #' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym
 #' @importFrom magrittr %>% %<>% or
-#' @importFrom dplyr pull left_join inner_join mutate
+#' @importFrom dplyr pull left_join inner_join rename
 #' @importFrom purrr map reduce2
 #' @importFrom logger log_fatal
 #' @importFrom utils tail
@@ -455,8 +455,7 @@ translate_ids <- function(
                 translation_table,
                 by = 'From' %>% set_names(from_col)
             ) %>%
-            mutate(!!sym(to_col) := To) %>%
-            select(-To)
+            rename(!!sym(to_col) := To)
 
         },
         .init = .
@@ -927,11 +926,11 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
         .nse_ensure_str(!!enquo(from)) %>%
         hmdb_id_type()
 
-    hmdb_id_mapping_table_impl <- function(to, from) {
+    hmdb_id_mapping_table_impl <- function(from, to) {
         entity_type %>%
         ensure_entity_type %>%
         recode(!!!DATASETS) %>%
-        hmdb_table(fields = c(to, from)) %>%
+        hmdb_table(fields = c(from, to)) %>%
         set_names(c('From', 'To')) %>%
         unnest_longer(everything()) %>%
         trim_and_distinct
@@ -939,7 +938,7 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
 
     with_cache(
         name = 'hmdb_id_mapping_table',
-        args = list(to, from),
+        args = list(from, to),
         callback = hmdb_id_mapping_table_impl
     )
 
