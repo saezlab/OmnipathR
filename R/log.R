@@ -323,3 +323,13 @@ omnipath_has_logfile <- function(){
     magrittr::not()
 
 }
+
+
+#' Shortcut for lowest log level (useful for development)
+#'
+#' @noRd
+.optrace <- function() {
+
+    omnipath_set_console_loglevel('trace')
+
+}
