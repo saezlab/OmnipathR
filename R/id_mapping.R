@@ -927,13 +927,21 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
         .nse_ensure_str(!!enquo(from)) %>%
         hmdb_id_type()
 
-    entity_type %>%
-    ensure_entity_type %>%
-    recode(!!!DATASETS) %>%
-    hmdb_table(fields = c(to, from)) %>%
-    set_names(c('From', 'To')) %>%
-    unnest_longer(everything()) %>%
-    trim_and_distinct
+    hmdb_id_mapping_table_impl <- function(to, from) {
+        entity_type %>%
+        ensure_entity_type %>%
+        recode(!!!DATASETS) %>%
+        hmdb_table(fields = c(to, from)) %>%
+        set_names(c('From', 'To')) %>%
+        unnest_longer(everything()) %>%
+        trim_and_distinct
+    }
+
+    with_cache(
+        name = 'hmdb_id_mapping_table',
+        args = list(to, from),
+        callback = hmdb_id_mapping_table_impl
+    )
 
 }
 
