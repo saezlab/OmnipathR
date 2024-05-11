@@ -218,14 +218,14 @@ hmdb_table <- function(
 
     .slow_doctest()
 
-    fields %<>%
-        if_null(
-            `if`(
-                 dataset == 'proteins',
-                 hmdb_protein_fields(),
-                 hmdb_metabolite_fields()
-            )
+    all_fields <-
+        `if`(
+             dataset == 'proteins',
+             hmdb_protein_fields(),
+             hmdb_metabolite_fields()
         )
+
+    fields %<>% if_null(all_fields)
 
     hmdb_table_impl <- function(dataset) {
 
@@ -252,10 +252,9 @@ hmdb_table <- function(
         parse_in_chunks(
             record = dataset %>% the_record,
             header_lines = 2L,
-            parser = hmdb_xml2_parse(dataset, fields)
+            parser = hmdb_xml2_parse(dataset, all_fields)
         ) %>%
-        as_tibble %>%
-        select(!!!syms(fields))
+        as_tibble
 
     }
 
@@ -263,7 +262,8 @@ hmdb_table <- function(
         name = 'hmdb_table',
         args = list(dataset),
         callback = hmdb_table_impl
-    )
+    ) %>%
+    select(!!!syms(fields))
 
 }
 
