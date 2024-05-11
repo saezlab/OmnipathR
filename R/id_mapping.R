@@ -277,6 +277,10 @@ uniprot_idmapping_id_types <- function() {
 #'     is preferred because in the long term, with caching, it requires
 #'     less download and data storage.
 #' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
+#' @param hmdb Logical: use HMDB ID translation data.
+#' @param entity_type Character: "gene" and "smol" are short symbols for
+#'     proteins, genes and small molecules respectively. Several other synonyms
+#'     are also accepted.
 #' @param keep_untranslated In case the output is a data frame, keep the
 #'     records where the source identifier could not be translated. At
 #'     these records the target identifier will be NA.
@@ -357,7 +361,7 @@ uniprot_idmapping_id_types <- function() {
 #' # 4     Q9Y2P5    SLC27A5
 #'
 #' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym
-#' @importFrom magrittr %>% %<>%
+#' @importFrom magrittr %>% %<>% or
 #' @importFrom dplyr pull left_join inner_join mutate
 #' @importFrom purrr map reduce2
 #' @importFrom logger log_fatal
@@ -368,6 +372,7 @@ uniprot_idmapping_id_types <- function() {
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{ensembl_id_mapping_table}}}
+#'     \item{\code{\link{hmdb_id_mapping_table}}}
 #' }
 #' @md
 translate_ids <- function(
@@ -375,6 +380,8 @@ translate_ids <- function(
     ...,
     uploadlists = FALSE,
     ensembl = FALSE,
+    hmdb = FALSE,
+    entity_type = NULL,
     keep_untranslated = TRUE,
     return_df = FALSE,
     organism = 9606,
@@ -396,6 +403,9 @@ translate_ids <- function(
         .nse_ensure_str(!!enquo(organism)) %>%
         {`if`(. == 'organism', organism, .)} %>%
         ncbi_taxid
+
+    entity_type %<>% ensure_entity_type
+    hmdb %<>% or(entity_type == 'small_molecule')
 
     id_cols <- names(ids)
     id_types <- unlist(ids)
@@ -433,6 +443,8 @@ translate_ids <- function(
                 !!sym(to_type),
                 ensembl = ensembl,
                 uploadlists = uploadlists,
+                hmdb = hmdb,
+                entity_type = entity_type,
                 identifiers = d %>% pull(!!sym(from_col)),
                 organism = organism,
                 reviewed = reviewed
@@ -625,6 +637,8 @@ id_translation_table <- function(
     to,
     uploadlists = FALSE,
     ensembl = FALSE,
+    hmdb = FALSE,
+    entity_type = NULL,
     identifiers = NULL,
     organism = 9606L,
     reviewed = TRUE
@@ -636,7 +650,7 @@ id_translation_table <- function(
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
-    if(ensembl){
+    if(ensembl) {
 
         log_trace(
             'ID translation table: from `%s` to `%s`, using Ensembl BioMart.',
@@ -650,7 +664,21 @@ id_translation_table <- function(
                 organism = organism
             )
 
-    }else if(
+    } else if(hmdb) {
+
+        log_trace(
+            'ID translation table: from `%s` to `%s`, using HMDB.',
+            from, to
+        )
+
+        result <-
+            hmdb_id_mapping_table(
+                to = !!sym(to),
+                from = !!sym(from),
+                entity_type = entity_type
+            )
+
+    } else if(
         uploadlists || (
             (
                 !id_type_in(from, 'uniprot') ||
@@ -659,7 +687,7 @@ id_translation_table <- function(
             id_type_in(from, 'uploadlists') &&
             id_type_in(to, 'uploadlists')
         )
-    ){
+    ) {
 
         log_trace(
             'ID translation table: from `%s` to `%s`, using `uploadlists`.',
@@ -700,7 +728,7 @@ id_translation_table <- function(
                 .
             )}
 
-    }else{
+    } else {
 
         log_trace(
             'ID translation table: from `%s` to `%s`, using `uniprot`.',
@@ -796,18 +824,13 @@ id_type_in <- function(id_type, service){
 #'     \item{\code{\link{translate_ids}}}
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
+#'     \item{\code{\link{hmdb_id_mapping_table}}}
 #' }
 ensembl_id_mapping_table <- function(
     to,
     from = 'uniprot',
     organism = 9606
 ){
-
-    get_field_name <- function(label){
-
-        label %>% recode(!!!omnipath.env$id_types$ensembl)
-
-    }
 
     to <-
         .nse_ensure_str(!!enquo(to)) %>%
@@ -846,6 +869,75 @@ ensembl_id_mapping_table <- function(
 }
 
 
+#' Identifier translation table from HMDB
+#'
+#' @param to Character or symbol: target ID type. See Details for possible
+#'     values.
+#' @param from Character or symbol: source ID type. See Details for possible
+#'     values.
+#' @param entity_type Character: "gene" and "smol" are short symbols for
+#'     proteins, genes and small molecules respectively. Several other synonyms
+#'     are also accepted.
+#'
+#' @return A data frame (tibble) with columns `From` and `To`.
+#'
+#' @details The arguments \code{to} and \code{from} can be provided either
+#' as character or as symbol (NSE). Their possible values are either HMDB XML
+#' tag names or synonyms listed at \code{omnipath.env$id_types}.
+#'
+#' @examples
+#' ensp_up <- ensembl_id_mapping_table("ensp")
+#' ensp_up
+#' # # A tibble: 119,129 × 2
+#' #    From   To
+#' #    <chr>  <chr>
+#' #  1 P03886 ENSP00000354687
+#' #  2 P03891 ENSP00000355046
+#' #  3 P00395 ENSP00000354499
+#' #  4 P00403 ENSP00000354876
+#' #  5 P03928 ENSP00000355265
+#' # # . with 119,124 more rows
+#'
+#' @importFrom dplyr recode
+#' @importFrom magrittr %>%
+#' @importFrom rlang enquo !! !!!
+#' @importFrom tidyselect everything
+#' @importFrom tidyr unnest_longer
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#'     \item{\code{\link{ensembl_id_mapping_table}}}
+#' }
+hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
+
+    .slow_doctest()
+
+    DATASETS <- c(
+        small_molecule = 'metabolites',
+        protein = 'proteins'
+    )
+
+    to <-
+        .nse_ensure_str(!!enquo(to)) %>%
+        hmdb_id_type()
+    from <-
+        .nse_ensure_str(!!enquo(from)) %>%
+        hmdb_id_type()
+
+    entity_type %>%
+    ensure_entity_type %>%
+    recode(!!!DATASETS) %>%
+    hmdb_table(fields = c(to, from)) %>%
+    set_names(c('From', 'To')) %>%
+    unnest_longer(everything()) %>%
+    trim_and_distinct
+
+}
+
+
 #' Ensembl identifier type label
 #'
 #' @param label Character: an ID type label, as shown in the table at
@@ -871,6 +963,32 @@ ensembl_id_type <- function(label){
 
 }
 
+
+#' HMDB identifier type label
+#'
+#' @param label Character: an ID type label, as shown in the table at
+#'     \code{\link{translate_ids}}
+#'
+#' @return Character: the HMDB specific ID type label, or the input
+#'     unchanged if it could not be translated (still might be a valid
+#'     identifier name). These labels should be valid HMDB field
+#'     names, as used in HMDB XML files.
+#'
+#' @examples
+#' hmdb_id_type("hmdb")
+#' # [1] "accession"
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uploadlists_id_type}}}
+#' }
+hmdb_id_type <- function(label){
+
+    resource_id_type(label, 'hmdb')
+
+}
 
 
 #' UniProt identifier type label
