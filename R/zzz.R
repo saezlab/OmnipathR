@@ -21,7 +21,8 @@
 
 
 #' @importFrom rmarkdown pandoc_version
-#' @importFrom logger log_trace
+#' @importFrom logger log_trace log_info
+#' @importFrom utils packageVersion
 #' @noRd
 .onLoad <- function(libname, pkgname){
 
@@ -29,7 +30,8 @@
     patch_logger_metavar()
     patch_logger_appender()
     omnipath_init_log(pkgname = pkgname)
-    logger::log_info('Welcome to OmnipathR!')
+    log_info('Welcome to OmnipathR!')
+    log_info('OmnipathR version: %s', packageVersion(pkgname))
 
     buildserver <- .on_buildserver()
 
@@ -70,6 +72,7 @@
     .load_urls(pkgname)
     .load_id_types(pkgname)
     .load_organisms(pkgname)
+    .load_entity_types(pkgname)
 
     if(buildserver){
 

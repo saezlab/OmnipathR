@@ -1,0 +1,14 @@
+protein:
+  - gene
+  - .default
+small_molecule:
+  - smol
+  - compound
+  - drug
+  - lipid
+  - metabolite
+rna:
+  - mirna
+  - lncrna
+  - ncrna
+  - mrna
