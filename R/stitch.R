@@ -34,7 +34,7 @@
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-stitch_links <- function(organism = 'human') {
+stitch_links <- function(organism = 'human', prefixes = FALSE) {
 
     .slow_doctest()
 
@@ -50,7 +50,8 @@ stitch_links <- function(organism = 'human') {
         resource = NULL,
         post = NULL,
         use_httr = FALSE
-    ) %T>%
+    ) %>%
+    stitch_remove_prefixes(chemical, protein, remove = !prefixes) %T>%
     load_success()
 
 }
@@ -69,7 +70,7 @@ stitch_links <- function(organism = 'human') {
 #' @importFrom readr read_tsv
 #'
 #' @noRd
-stitch_actions <- function(organism = 'human') {
+stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 
     .slow_doctest()
 
@@ -85,8 +86,55 @@ stitch_actions <- function(organism = 'human') {
         resource = NULL,
         post = NULL,
         use_httr = FALSE
-    ) %T>%
+    ) %>%
+    stitch_remove_prefixes(item_id_a, item_id_b, remove = !prefixes) %T>%
     load_success()
+
+}
+
+
+#' Remove the prefixes from STITCH identifiers
+#'
+#' STITCH adds the NCBI Taxonomy ID as a prefix to Ensembl protein identifiers,
+#' e.g. "9606.ENSP00000170630", and "CID" followed by "s" or "m"
+#' (stereospecific or merged, respectively) in front of PubChem Compound
+#' Identifiers. It also pads the CID with zeros. This function removes these
+#' prefixes, leaving only the identifiers.
+#'
+#' @param d Data frame, typically the output of \code{\link{stitch_links}} or
+#'     \code{\link{stitch_actions}}.
+#' @param ... Names of columns to remove prefixes from. NSE is supported.
+#' @param remove Logical: remove the prefixes? If FALSE, this function does
+#'     nothing.
+#'
+#' @examples
+#' stitch_remove_prefixes(
+#'     tibble(a = c('9606.ENSP00000170630', 'CIDs00012345')),
+#'     a
+#' )
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang enquos
+#' @importFrom purrr map_chr
+#' @importFrom dplyr mutate across
+#' @export
+stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
+
+    if(remove) {
+
+        cols <- enquos(...) %>% map_chr(.nse_ensure_str)
+
+        d %<>%
+            mutate(
+                across(
+                    cols,
+                    ~str_replace(.x, '^(\\d+\\.|CID[ms]0*)', '')
+                )
+            )
+
+    }
+
+    d
 
 }
 
@@ -113,7 +161,8 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
 
     # NSE vs. R CMD check workaround
     chemical <- protein <- item_id_a <- item_id_b <- CID <- HMDB <-
-    a_is_acting <- ensp <- genesymbol <- NULL
+    a_is_acting <- ensp <- genesymbol <- pubchem <- hmdb <-
+    hmdb_source <- hmdb_target <- NULL
 
     organism %<>% organism_for('stitch')
 
@@ -137,12 +186,6 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
             )
         )
 
-    metabolites <-
-        metaboliteIDMapping::metabolitesMapping %>%
-        select(CID, HMDB) %>%
-        mutate(across(CID, HMDB, ~sprintf('Metab__%s', .x)))
-
-
     stitch_actions(organism) %>%
     filter(
         mode == 'activation' |
@@ -150,14 +193,6 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
         a_is_acting
     ) %>%
     inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
-    select(-7L) %>%
-    mutate(
-        across(
-            item_id_a,
-            item_id_b,
-            ~str_replace(.x, sprintf('%s\\.', organism), '')
-        )
-    ) %>%
     translate_ids(
         item_id_a = ensp,
         genesymbol_a = genesymbol,
@@ -170,26 +205,24 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
         ensembl = TRUE,
         organism = organism
     ) %>%
+    translate_ids(item_id_a = pubchem, hmdb_a = hmdb, hmdb = TRUE) %>%
+    translate_ids(item_id_b = pubchem, hmdb_b = hmdb, hmdb = TRUE) %>%
     mutate(
-        across(
-            item_id_a,
-            item_id_b,
-            ~str_replace(.x, '^CID[a-z]0*', 'Metab__')
-        ),
-        sign = ifelse(action == 'inhibition', -1L, 1L)
+        item_id_a = coalesce(genesymbol_a, hmdb_a, item_id_a),
+        item_id_b = coalesce(genesymbol_b, hmdb_b, item_id_b)
     ) %>%
     select(
         source = item_id_a,
         target = item_id_b,
-        sign
+        sign = action
     ) %>%
-    left_join(metabolites, by = c('source' = 'CID')) %>%
-    left_join(metabolites, by = c('target' = 'CID')) %>%
     mutate(
-        source = ifelse(is.na(HMDB.x), source, HMDB.x),
-        target = ifelse(is.na(HMDB.y), target, HMDB.y)
+        across(
+            c(source, target),
+            ~str_replace(.x, '^(HMDB|\\d)', 'Metab__\\1')
+        ),
+        sign = ifelse(sign == 'inhibition', -1L, 1L)
     ) %>%
-    select(-HMDB.x, -HMDB.y) %>%
     mutate(source = sprintf('%s_c', source))
 
 }
