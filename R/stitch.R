@@ -147,6 +147,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #'     melanogaster) and 6239 (Caenorhabditis elegans).
 #' @param threshold Confidence cutoff used for STITCH connections
 #'     (700 by default).
+#' @param cosmos Logical: use COSMOS format?
 #'
 #' @return List containing PKN with COSMOS and OCEAN format.
 #'
@@ -155,7 +156,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #' @importFrom tidyr unite
 #'
 #' @noRd
-stitch_gem <- function(organism = 'human', min_score = 700L) {
+stitch_gem <- function(organism = 'human', min_score = 700L, cosmos = FALSE) {
 
     .slow_doctest()
 
@@ -216,13 +217,18 @@ stitch_gem <- function(organism = 'human', min_score = 700L) {
         target = item_id_b,
         sign = action
     ) %>%
-    mutate(
-        across(
-            c(source, target),
-            ~str_replace(.x, '^(HMDB|\\d)', 'Metab__\\1')
-        ),
-        sign = ifelse(sign == 'inhibition', -1L, 1L)
-    ) %>%
-    mutate(source = sprintf('%s_c', source))
+    {`if`(
+        cosmos,
+        mutate(
+            .,
+            across(
+                c(source, target),
+                ~str_replace(.x, '^(HMDB|\\d)', 'Metab__\\1')
+            ),
+            sign = ifelse(sign == 'inhibition', -1L, 1L)
+        ) %>%
+        mutate(source = sprintf('%s_c', source)),
+        .,
+    )}
 
 }
