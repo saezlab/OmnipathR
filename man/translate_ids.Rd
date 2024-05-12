@@ -9,6 +9,8 @@ translate_ids(
   ...,
   uploadlists = FALSE,
   ensembl = FALSE,
+  hmdb = FALSE,
+  entity_type = NULL,
   keep_untranslated = TRUE,
   return_df = FALSE,
   organism = 9606,
@@ -37,6 +39,12 @@ is preferred because in the long term, with caching, it requires
 less download and data storage.}
 
 \item{ensembl}{Logical: use data from Ensembl BioMart instead of UniProt.}
+
+\item{hmdb}{Logical: use HMDB ID translation data.}
+
+\item{entity_type}{Character: "gene" and "smol" are short symbols for
+proteins, genes and small molecules respectively. Several other synonyms
+are also accepted.}
 
 \item{keep_untranslated}{In case the output is a data frame, keep the
 records where the source identifier could not be translated. At
@@ -131,5 +139,6 @@ d
 \item{\code{\link{uniprot_id_mapping_table}}}
 \item{\code{\link{uniprot_full_id_mapping_table}}}
 \item{\code{\link{ensembl_id_mapping_table}}}
+\item{\code{\link{hmdb_id_mapping_table}}}
 }
 }

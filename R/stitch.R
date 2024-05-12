@@ -152,7 +152,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #' @return List containing PKN with COSMOS and OCEAN format.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter case_when mutate select
+#' @importFrom dplyr filter case_when mutate select coalesce
 #' @importFrom tidyr unite
 #'
 #' @noRd

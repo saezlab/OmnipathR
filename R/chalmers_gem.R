@@ -20,7 +20,7 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-#' COSMOS PKN from the genome scale metabolic model in Wang et al. 2021
+#' Genome scale metabolic model by Wang et al. 2021
 #'
 #' Process the GEMs from Wang et al., 2021
 #' (\url{https://github.com/SysBioChalmers}) into convenient tables.
@@ -232,10 +232,8 @@ chalmers_gem_network <- function(
     list(
         lo_degree =
             c(
-#                 filter(., met_to_gene) %>% pull(source),
-#                 filter(., !met_to_gene) %>% pull(target)
-              pull(., source),
-              pull(., target)
+                pull(., source),
+                pull(., target)
             ) %>%
             table %>%
             keep(~.x < metab_max_degree) %>%
@@ -251,8 +249,7 @@ chalmers_gem_network <- function(
     # also, we get zero transporters here, why?
     left_join(
         select(., ri, source = target, target = source, reverse) %>%
-            mutate(transporter = TRUE) %T>%
-            print,
+            mutate(transporter = TRUE),
         by = c('ri', 'source', 'target', 'reverse')
     ) %T>%
     # mutate(transporter = !are_na(transporter)) %T>%
