@@ -157,7 +157,7 @@ cosmos_pkn <- function(
 #' @noRd
 #'
 .cosmos_pkn <- function(
-        organism,
+        organism = 'human',
         gene_id_type = NULL,
         chalmers_gem_metab_max_degree = 400L,
         stitch_score = 700L
@@ -175,7 +175,11 @@ cosmos_pkn <- function(
     )
 
     ## download STITCH using OmnipathR (if already done, it will be taken from cache)
-    stitch <- stitch_gem(organism = organism, stitch_score = stitch_score)
+    stitch <- stitch_gem(
+        organism = organism,
+        min_score = stitch_score,
+        cosmos = TRUE
+    )
     chalmers <- chalmers_gem_network(
         organism = organism,
         metab_max_degree = chalmers_gem_metab_max_degree
@@ -219,7 +223,7 @@ omnipath_for_cosmos <- function(
     # NSE vs. R CMD check workaround
     consensus_stimulation <- consensus_inhibition <- NULL
 
-    organism %<>% organism_supported('omnipath')
+    organism %<>% organism_for('omnipath')
     paste0(
         'OmniPath network for COSMOS PKN; datasets: %s; ',
         'resources: %s; interaction types: %s; organism: %s.'
