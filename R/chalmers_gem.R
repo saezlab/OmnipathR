@@ -199,22 +199,7 @@ chalmers_gem_network <- function(
     filter(!orphan) %>%
     # once I see better what's the purpose of this labeling,
     # I might move it a bit further down the pipeline - denes
-    mutate(
-        ri = row_number(),
-        genes = map2(
-            grRules,
-            ri,
-            function(.x, .ri) {
-                map(.x, ~map_chr(.x, ~sprintf('Gene%i__%s', .ri, .x)))
-            }
-        ) #,
-        # # this labeling is not necessary at all
-        # # at least I hope so -denes
-        # across(
-        #     c(reactants, products),
-        #     ~map(.x, ~paste0('Metab__', .x))
-        # )
-    ) %>%
+    mutate(ri = row_number()) %>%
     select(ri, grRules, reactants, products, reversible) %>%
     unnest_longer(grRules, simplify = FALSE) %>%
     # note: this represents the AND relationship between genes,
@@ -299,7 +284,13 @@ binary_from_reaction <- function(
         inset2(., 'r', filter(.$r, reversible)) %>%
         {select(.$r, ri, ci, source = !!sym(.$t), target = !!sym(.$s))} %>%
         mutate(reverse = TRUE, met_to_gene = !met_to_gene)
-    )}
+    )} %>%
+    mutate(
+        across(
+            c(source, target),
+            ~str_replace(.x, '^\\(?(ENS[A-Z]+\\d+)\\)?$', '\\1')
+        )
+    )
 
 }
 
