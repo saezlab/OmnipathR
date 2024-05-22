@@ -230,14 +230,11 @@ chalmers_gem_network <- function(
         !met_to_gene & target %in% .$lo_degree
     )} %>%
     arrange(ri) %>%
-    # these might be transporters, but co-factors look the same, aren't they?
-    # also, we get zero transporters here, why?
     left_join(
         select(., ri, source = target, target = source, reverse) %>%
             mutate(transporter = TRUE),
         by = c('ri', 'source', 'target', 'reverse')
     ) %T>%
-    # mutate(transporter = !are_na(transporter)) %T>%
     {log_info(
         paste0(
             'Chalmers GEM: %i gene-metabolite interactions after removing ',
@@ -246,9 +243,6 @@ chalmers_gem_network <- function(
         nrow(.),
         metab_max_degree
     )} %T>%
-    # here was removal of records with  missing metabolite or gene
-    # I'm not aware of any reason such records should exist
-    # so I removed the filter for now - denes
     {log_info('Chalmers GEM: gene-metabolite network is ready.')}
 
 }
@@ -261,8 +255,8 @@ chalmers_gem_network <- function(
 #'
 #' @importFrom rlang enquo !! sym set_names
 #' @importFrom magrittr %>% inset2
-#' @importFrom dplyr filter select bind_rows mutate
-#' @importFrom tidyr unnest_longer
+#' @importFrom dplyr filter select bind_rows mutate rename
+#' @importFrom tidyr unnest_longer separate_wider_regex
 #' @noRd
 binary_from_reaction <- function(
         reactions,
@@ -290,7 +284,14 @@ binary_from_reaction <- function(
             c(source, target),
             ~str_replace(.x, '^\\(?(ENS[A-Z]+\\d+)\\)?$', '\\1')
         )
-    )
+    ) %>%
+    separate_wider_regex(
+        c(source, target),
+        patterns = c(id = '(?:MAM|ENSG)\\d+', comp = '[cmxrelgni]?'),
+        names_sep = '_',
+        too_few = 'debug'
+    ) %>%
+    rename(source = source_id, target = target_id)
 
 }
 
