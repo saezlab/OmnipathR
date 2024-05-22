@@ -221,13 +221,8 @@ stitch_gem <- function(organism = 'human', min_score = 700L, cosmos = FALSE) {
         cosmos,
         mutate(
             .,
-            across(
-                c(source, target),
-                ~str_replace(.x, '^(HMDB|\\d)', 'Metab__\\1')
-            ),
             sign = ifelse(sign == 'inhibition', -1L, 1L)
-        ) %>%
-        mutate(source = sprintf('%s_c', source)),
+        ),
         .,
     )}
 
