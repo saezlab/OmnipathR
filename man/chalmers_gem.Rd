@@ -3,7 +3,7 @@
 \name{chalmers_gem}
 \alias{chalmers_gem}
 \title{Alberto Valdeolivas
-COSMOS PKN from the genome scale metabolic model in Wang et al. 2021}
+Genome scale metabolic model by Wang et al. 2021}
 \usage{
 chalmers_gem(organism = "Human", orphans = TRUE)
 }

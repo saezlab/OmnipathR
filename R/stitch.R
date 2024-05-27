@@ -145,18 +145,35 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'     melanogaster) and 6239 (Caenorhabditis elegans).
-#' @param threshold Confidence cutoff used for STITCH connections
+#' @param min_score Confidence cutoff used for STITCH connections
 #'     (700 by default).
+#' @param protein_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the "a"
+#'     and "b" sides of the interaction, respectively. The default ID type for
+#'     proteins is Esembl Protein ID, and by default UniProt IDs and Gene
+#'     Symbols are included.
+#' @param metabolite_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the "a"
+#'     and "b" sides of the interaction, respectively. The default ID type for
+#'     metabolites is PubChem CID, and HMDB IDs and KEGG IDs are included.
 #' @param cosmos Logical: use COSMOS format?
 #'
 #' @return List containing PKN with COSMOS and OCEAN format.
 #'
-#' @importFrom magrittr %>%
-#' @importFrom dplyr filter case_when mutate select coalesce
+#' @importFrom magrittr %>% %<>%
+#' @importFrom dplyr bind_rows select filter mutate rename inner_join
 #' @importFrom tidyr unite
+#' @importFrom purrr reduce
+#' @importFrom rlang syms !!!
 #'
 #' @noRd
-stitch_gem <- function(organism = 'human', min_score = 700L, cosmos = FALSE) {
+stitch_gem <- function(
+        organism = 'human',
+        min_score = 700L,
+        protein_ids = c('uniprot', 'genesymbol'),
+        metabolite_ids = c('hmdb', 'kegg'),
+        cosmos = FALSE
+    ) {
 
     .slow_doctest()
 
@@ -194,29 +211,29 @@ stitch_gem <- function(organism = 'human', min_score = 700L, cosmos = FALSE) {
         a_is_acting
     ) %>%
     inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
-    translate_ids(
-        item_id_a = ensp,
-        genesymbol_a = genesymbol,
-        ensembl = TRUE,
-        organism = organism
-    ) %>%
-    translate_ids(
-        item_id_b = ensp,
-        genesymbol_b = genesymbol,
-        ensembl = TRUE,
-        organism = organism
-    ) %>%
-    translate_ids(item_id_a = pubchem, hmdb_a = hmdb, hmdb = TRUE) %>%
-    translate_ids(item_id_b = pubchem, hmdb_b = hmdb, hmdb = TRUE) %>%
-    mutate(
-        item_id_a = coalesce(genesymbol_a, hmdb_a, item_id_a),
-        item_id_b = coalesce(genesymbol_b, hmdb_b, item_id_b)
-    ) %>%
-    select(
-        source = item_id_a,
-        target = item_id_b,
-        sign = action
-    ) %>%
+    {reduce(
+        c('a', 'b'),
+        ~translate_ids(
+            .x,
+            item_id_a = ensp,
+            !!!syms(protein_ids %>% set_names(sprintf('%s_%s', ., .y))),
+            ensembl = TRUE,
+            organism = organism
+        ),
+        .init = .
+    )} %>%
+    {reduce(
+        c('a', 'b'),
+        ~translate_ids(
+            .x,
+            item_id_a = pubchem,
+            !!!syms(metabolite_ids %>% set_names(sprintf('%s_%s', ., .y))),
+            entity_type = 'metabolite',
+            organism = organism
+        ),
+        .init = .
+    )} %>%
+    rename(sign = action) %>%
     {`if`(
         cosmos,
         mutate(
