@@ -254,12 +254,12 @@ oma_pairwise_translated <- function(
     translate_ids(
         id_organism_a := !!sym(oma_id_type),
         id_organism_a := !!sym(id_type),
-        organism = !!sym(organism_a)
+        organism = organism_a
     ) %>%
     translate_ids(
         id_organism_b := !!sym(oma_id_type),
         id_organism_b := !!sym(id_type),
-        organism = !!sym(organism_b)
+        organism = organism_b
     ) %>%
     filter(!is.na(id_organism_a) & !is.na(id_organism_b))
 
