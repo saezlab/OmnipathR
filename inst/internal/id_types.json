@@ -127,5 +127,21 @@
         "hgnc": "hgnc_id",
         "genecard": "genecard_id",
         "geneatlas": "geneatlas_id"
+    },
+    "chalmers_gem": {
+        "metabolicatlas": "metsNoComp",
+        "metabolicatlas_comp": "mets",
+        "bigg": "metBiGGID",
+        "kegg": "metKEGGID",
+        "hmdb": "metHMDBID",
+        "chebi": "metChEBIID",
+        "pubchem": "metPubChemID",
+        "pubchem_cid": "metPubChemID",
+        "lipidmaps": "metLipidMapsID",
+        "ehmn": "metEHMNID",
+        "hepatonet": "metHepatoNET1ID",
+        "recon3d": "metRecon3DID",
+        "metanetx": "metMetaNetXID",
+        "hmr2": "metHMR2ID"
     }
 }
