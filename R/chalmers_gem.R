@@ -94,7 +94,7 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
             grRules = (
                 unlist(grRules, recursive = FALSE) %>%
                 map_chr(extract, 1L) %>%
-                str_replace_all('\\[\\(\\)\\]|_AT\\d+', '') %>%
+                str_replace_all('[\\(\\)]|_AT\\d+', '') %>%
                 str_split(' or ') %>%
                 map(str_split, ' and ') %>%
                 map(discard, is_empty_2)
