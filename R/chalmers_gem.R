@@ -182,6 +182,10 @@ chalmers_gem_network <- function(
 
     .slow_doctest()
 
+    # NSE vs R CMD check workaround
+    orphan <- ri <- grRules <- reactants <- products <- reversible <-
+    met_to_gene <- target <- NULL
+
     if (metab_max_degree < 1L) {
         '`metab_max_degree` cannot be less than 1.' %T>% log_error %>% stop
     }
@@ -264,6 +268,11 @@ binary_from_reaction <- function(
         met_col,
         met_to_gene = TRUE
     ) {
+
+
+    # NSE vs R CMD check workaround
+    source_comp <- target_comp <- target <- ri <- ci <-
+    source_id <- target_id <- NULL
 
     list(
         s = .nse_ensure_str(!!enquo(gene_col)),
@@ -403,6 +412,12 @@ chalmers_gem_metabolites <- function(organism = 'Human') {
 #'   melanogaster) and 6239 (Caenorhabditis elegans).
 #'
 #' @return Matlab object containing the GEM.
+#'
+#' @details The Matlab object is parsed into a nested list containing a number
+#'   of vectors and two sparse matrices. The top level contains a single
+#'   element under the name "ihuman" for human; under this key there is an
+#'   array of 31 elements. These elements are labeled by the row names of the
+#'   array.
 #'
 #' @examples
 #' chalmers_gem_raw()
