@@ -947,6 +947,47 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
 }
 
 
+#' Metabolite ID translation tables from Chalmers Sysbio
+#'
+#' @param to Character: type of ID to translate to, either label used
+#'   internally in this package, or a column name from "metabolites.tsv"
+#'   distributed by Chalmers Sysbio. NSE is supported.
+#' @param from Character: type of ID to translate from, same format as "to".
+#' @param organism Character or integer: name or identifier of the organism.
+#'   Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
+#'   10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
+#'   melanogaster) and 6239 (Caenorhabditis elegans).
+#'
+#' @return Tibble with two columns, "From" and "To", with the corresponding ID
+#'   types.
+#'
+#' @examples
+#' chalmers_gem_id_mapping_table('metabolicatlas', 'hmdb')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang !! enquo sym
+#' @importFrom dplyr select distinct filter mutate if_any across
+#' @importFrom tidyselect everything
+#' @export
+chalmers_gem_id_mapping_table <- function(
+        to,
+        from = 'metabolicatlas',
+        organism = 'Human'
+    ) {
+
+    to <- .nse_ensure_str(!!enquo(to)) %>% chalmers_gem_id_type
+    from <- .nse_ensure_str(!!enquo(from)) %>% chalmers_gem_id_type
+
+    organism %>%
+    chalmers_gem_metabolites %>%
+    select(From = !!sym(from), To = !!sym(to)) %>%
+    filter(!if_any(everything(), is.na)) %>%
+    mutate(across(everything(), as.character)) %>%
+    distinct
+
+}
+
+
 #' Ensembl identifier type label
 #'
 #' @param label Character: an ID type label, as shown in the table at
