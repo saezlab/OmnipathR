@@ -824,6 +824,7 @@ id_type_in <- function(id_type, service){
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
 #'     \item{\code{\link{hmdb_id_mapping_table}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
 #' }
 ensembl_id_mapping_table <- function(
     to,
@@ -909,6 +910,7 @@ ensembl_id_mapping_table <- function(
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
 #'     \item{\code{\link{ensembl_id_mapping_table}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
 #' }
 hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
 
@@ -963,6 +965,8 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
 #' @seealso \itemize{
 #'     \item{\code{\link{uniprot_id_type}}}
 #'     \item{\code{\link{uploadlists_id_type}}}
+#'     \item{\code{\link{chalmers_gem_id_type}}}
+#'     \item{\code{\link{hmdb_id_type}}}
 #' }
 ensembl_id_type <- function(label){
 
@@ -987,6 +991,7 @@ ensembl_id_type <- function(label){
 #'
 #' @export
 #' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_id_type}}}
 #'     \item{\code{\link{uniprot_id_type}}}
 #'     \item{\code{\link{ensembl_id_type}}}
 #'     \item{\code{\link{uploadlists_id_type}}}
@@ -994,6 +999,34 @@ ensembl_id_type <- function(label){
 hmdb_id_type <- function(label){
 
     resource_id_type(label, 'hmdb')
+
+}
+
+
+#' Metabolite identifier type label used in Chalmers Sysbio GEM
+#'
+#' @param label Character: an ID type label, as shown in the table at
+#'     \code{\link{translate_ids}}
+#'
+#' @return Character: the Chalmers GEM specific ID type label, or the input
+#'     unchanged if it could not be translated (still might be a valid
+#'     identifier name). These labels should be column names from the
+#'     "metabolites.tsv" distributed with the GEMs.
+#'
+#' @examples
+#' chalmers_gem_id_type("metabolicatlas")
+#' # [1] "metsNoComp"
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{hmdb_id_type}}}
+#'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uploadlists_id_type}}}
+#' }
+chalmers_gem_id_type <- function(label){
+
+    resource_id_type(label, 'chalmers_gem')
 
 }
 
@@ -1046,6 +1079,8 @@ uniprot_id_type <- function(label){
 #' @seealso \itemize{
 #'     \item{\code{\link{ensembl_id_type}}}
 #'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{hmdb_id_type}}}
+#'     \item{\code{\link{chalmers_gem_id_type}}}
 #' }
 uploadlists_id_type <- function(label, side = 'from'){
 
