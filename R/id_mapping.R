@@ -289,8 +289,9 @@ uniprot_idmapping_id_types <- function() {
 #' @param reviewed Translate only reviewed (\code{TRUE}), only unreviewed
 #'     (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
 #'     if \code{uploadlists} is \code{FALSE}.
-#' @param organism Integer, NCBI Taxonomy ID of the organism (by default
-#'     9606 for human). Matters only if \code{uploadlists} is \code{FALSE}.
+#' @param organism Character or integer, name or NCBI Taxonomy ID of the
+#'     organism (by default 9606 for human). Matters only if
+#'     \code{uploadlists} is \code{FALSE}.
 #'
 #' @return
 #' \itemize{
@@ -401,10 +402,7 @@ translate_ids <- function(
         set_names(names(.) %||% unlist(.)) %>%
         set_names(ifelse(nchar(names(.)), names(.), unlist(.)))
 
-    organism <-
-        .nse_ensure_str(!!enquo(organism)) %>%
-        {`if`(. == 'organism', organism, .)} %>%
-        ncbi_taxid
+    organism %<>% ncbi_taxid
 
     entity_type %<>% ensure_entity_type
     hmdb %<>% or(entity_type == 'small_molecule' && !chalmers)

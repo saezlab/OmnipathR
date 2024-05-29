@@ -55,8 +55,9 @@ these records the target identifier will be NA.}
 
 \item{return_df}{Return a data frame even if the input is a vector.}
 
-\item{organism}{Integer, NCBI Taxonomy ID of the organism (by default
-9606 for human). Matters only if \code{uploadlists} is \code{FALSE}.}
+\item{organism}{Character or integer, name or NCBI Taxonomy ID of the
+organism (by default 9606 for human). Matters only if
+\code{uploadlists} is \code{FALSE}.}
 
 \item{reviewed}{Translate only reviewed (\code{TRUE}), only unreviewed
 (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
