@@ -10,6 +10,7 @@ translate_ids(
   uploadlists = FALSE,
   ensembl = FALSE,
   hmdb = FALSE,
+  chalmers = FALSE,
   entity_type = NULL,
   keep_untranslated = TRUE,
   return_df = FALSE,
@@ -41,6 +42,8 @@ less download and data storage.}
 \item{ensembl}{Logical: use data from Ensembl BioMart instead of UniProt.}
 
 \item{hmdb}{Logical: use HMDB ID translation data.}
+
+\item{chalmers}{Logical: use ID translation data from Chalmers Sysbio GEM.}
 
 \item{entity_type}{Character: "gene" and "smol" are short symbols for
 proteins, genes and small molecules respectively. Several other synonyms

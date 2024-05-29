@@ -278,6 +278,7 @@ uniprot_idmapping_id_types <- function() {
 #'     less download and data storage.
 #' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
 #' @param hmdb Logical: use HMDB ID translation data.
+#' @param chalmers Logical: use ID translation data from Chalmers Sysbio GEM.
 #' @param entity_type Character: "gene" and "smol" are short symbols for
 #'     proteins, genes and small molecules respectively. Several other synonyms
 #'     are also accepted.
@@ -381,6 +382,7 @@ translate_ids <- function(
     uploadlists = FALSE,
     ensembl = FALSE,
     hmdb = FALSE,
+    chalmers = FALSE,
     entity_type = NULL,
     keep_untranslated = TRUE,
     return_df = FALSE,
@@ -405,7 +407,7 @@ translate_ids <- function(
         ncbi_taxid
 
     entity_type %<>% ensure_entity_type
-    hmdb %<>% or(entity_type == 'small_molecule')
+    hmdb %<>% or(entity_type == 'small_molecule' && !chalmers)
 
     id_cols <- names(ids)
     id_types <- unlist(ids)
@@ -444,6 +446,7 @@ translate_ids <- function(
                 ensembl = ensembl,
                 uploadlists = uploadlists,
                 hmdb = hmdb,
+                chalmers = chalmers,
                 entity_type = entity_type,
                 identifiers = d %>% pull(!!sym(from_col)),
                 organism = organism,
@@ -610,6 +613,12 @@ trim_and_distinct <- function(d){
 #' @param from Character or symbol: the source identifier type.
 #' @param to Character or symbol: the target identifier type.
 #' @param uploadlists Logical: force to use the uploadlists service.
+#' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
+#' @param hmdb Logical: use HMDB ID translation data.
+#' @param chalmers Logical: use ID translation data from Chalmers Sysbio GEM.
+#' @param entity_type Character: "gene" and "smol" are short symbols for
+#'     proteins, genes and small molecules respectively. Several other synonyms
+#'     are also accepted.
 #' @param identifiers Character vector: query these identifiers from
 #'     the uploadlists service.
 #' @param organism Integer: NCBI Taxonomy ID of the organism.
@@ -637,6 +646,7 @@ id_translation_table <- function(
     uploadlists = FALSE,
     ensembl = FALSE,
     hmdb = FALSE,
+    chalmers = FALSE,
     entity_type = NULL,
     identifiers = NULL,
     organism = 9606L,
@@ -658,6 +668,20 @@ id_translation_table <- function(
 
         result <-
             ensembl_id_mapping_table(
+                to = !!sym(to),
+                from = !!sym(from),
+                organism = organism
+            )
+
+    } else if(chalmers) {
+
+        log_trace(
+            'ID translation table: from `%s` to `%s`, using Chalmers GEM.',
+            from, to
+        )
+
+        result <-
+            chalmers_gem_id_mapping_table(
                 to = !!sym(to),
                 from = !!sym(from),
                 organism = organism
@@ -968,6 +992,7 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
 #' @importFrom rlang !! enquo sym
 #' @importFrom dplyr select distinct filter mutate if_any across
 #' @importFrom tidyselect everything
+#' @importFrom tidyr separate_longer_delim
 #' @export
 chalmers_gem_id_mapping_table <- function(
         to,
@@ -983,6 +1008,7 @@ chalmers_gem_id_mapping_table <- function(
     select(From = !!sym(from), To = !!sym(to)) %>%
     filter(!if_any(everything(), is.na)) %>%
     mutate(across(everything(), as.character)) %>%
+    separate_longer_delim(everything(), delim = ';') %>%
     distinct
 
 }
