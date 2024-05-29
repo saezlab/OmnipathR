@@ -28,5 +28,7 @@ ensembl_id_type("uniprot")
 \itemize{
     \item{\code{\link{uniprot_id_type}}}
     \item{\code{\link{uploadlists_id_type}}}
+    \item{\code{\link{chalmers_gem_id_type}}}
+    \item{\code{\link{hmdb_id_type}}}
 }
 }

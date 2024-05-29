@@ -47,5 +47,6 @@ ensp_up
     \item{\code{\link{uniprot_full_id_mapping_table}}}
     \item{\code{\link{uniprot_id_mapping_table}}}
     \item{\code{\link{hmdb_id_mapping_table}}}
+    \item{\code{\link{chalmers_gem_id_mapping_table}}}
 }
 }

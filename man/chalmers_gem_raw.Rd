@@ -19,6 +19,13 @@ Matlab object containing the GEM.
 Downloads and imports the matlab file containing the genome scale metabolic
 models created by Chalmers SysBio.
 }
+\details{
+The Matlab object is parsed into a nested list containing a number
+  of vectors and two sparse matrices. The top level contains a single
+  element under the name "ihuman" for human; under this key there is an
+  array of 31 elements. These elements are labeled by the row names of the
+  array.
+}
 \examples{
 chalmers_gem_raw()
 

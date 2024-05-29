@@ -30,5 +30,7 @@ ensembl_id_type("entrez")
 \itemize{
     \item{\code{\link{ensembl_id_type}}}
     \item{\code{\link{uniprot_id_type}}}
+    \item{\code{\link{hmdb_id_type}}}
+    \item{\code{\link{chalmers_gem_id_type}}}
 }
 }

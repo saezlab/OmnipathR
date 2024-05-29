@@ -26,6 +26,7 @@ hmdb_id_type("hmdb")
 }
 \seealso{
 \itemize{
+    \item{\code{\link{chalmers_gem_id_type}}}
     \item{\code{\link{uniprot_id_type}}}
     \item{\code{\link{ensembl_id_type}}}
     \item{\code{\link{uploadlists_id_type}}}
