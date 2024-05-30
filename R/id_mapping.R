@@ -348,6 +348,10 @@ uniprot_idmapping_id_types <- function() {
 #' | zfin           |                      | database(ZFIN)     |                            |
 #' | pbd            | PBD_ID               | database(PDB)      | pbd                        |
 #'
+#' For a complete list of ID types and their synonyms, including metabolite and
+#' chemical ID types which are not shown here, see the lists in
+#' ``OmnipathR:::omnipath.env$id_types``.
+#'
 #' The mapping between identifiers can be ambiguous. In this case one row
 #' in the original data frame yields multiple rows or elements in the
 #' returned data frame or vector(s).
@@ -371,10 +375,16 @@ uniprot_idmapping_id_types <- function() {
 #' @export
 #'
 #' @seealso \itemize{
+#'     \item{\code{\link{translate_ids_multi}}}
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{ensembl_id_mapping_table}}}
 #'     \item{\code{\link{hmdb_id_mapping_table}}}
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{uploadlists_id_type}}}
+#'     \item{\code{\link{hmdb_id_type}}}
+#'     \item{\code{\link{chalmers_gem_id_type}}}
 #' }
 #' @md
 translate_ids <- function(
@@ -487,9 +497,57 @@ translate_ids <- function(
 #' for \code{\link{translate_ids}}. The only limitation is that, if the source
 #' columns are provided as stem+suffixes, they must be the same ID type.
 #'
+#' @param d A data frame.
+#' @param ... At least two arguments, with or without names. These arguments
+#'     describe identifier columns, either the ones we translate from (source),
+#'     or the ones we translate to (target). Columns existing in the data frame
+#'     will be used as source columns. All the rest will be considered target
+#'     columns. Alternatively, the source columns can be defined as a stem and
+#'     a vector of suffixes, plus a separator between the stem and suffix. In
+#'     this case, the source columns will be the ones that exist in the data
+#'     frame with the suffixes added. The values of all these
+#'     arguments must be valid identifier types as shown at
+#'     \code{\link{translate_ids}}. If ID type is provided only for the first
+#'     source column, the rest of the source columns will be assumed to have
+#'     the same ID type. For the target identifiers new columns will be
+#'     created with the desired names, with the suffixes added. If no suffixes
+#'     provided, the names of the source columns will be used instead.
+#' @param uploadlists Force using the `uploadlists` service from UniProt.
+#'     By default the plain query interface is used (implemented in
+#'     \code{\link{uniprot_full_id_mapping_table}} in this package).
+#'     If any of the provided ID types is only available in the uploadlists
+#'     service, it will be automatically selected. The plain query interface
+#'     is preferred because in the long term, with caching, it requires
+#'     less download and data storage.
+#' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
+#' @param hmdb Logical: use HMDB ID translation data.
+#' @param chalmers Logical: use ID translation data from Chalmers Sysbio GEM.
+#' @param entity_type Character: "gene" and "smol" are short symbols for
+#'     proteins, genes and small molecules respectively. Several other synonyms
+#'     are also accepted.
+#' @param keep_untranslated In case the output is a data frame, keep the
+#'     records where the source identifier could not be translated. At
+#'     these records the target identifier will be NA.
+#' @param reviewed Translate only reviewed (\code{TRUE}), only unreviewed
+#'     (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
+#'     if \code{uploadlists} is \code{FALSE}.
+#' @param organism Character or integer, name or NCBI Taxonomy ID of the
+#'     organism (by default 9606 for human). Matters only if
+#'     \code{uploadlists} is \code{FALSE}.
+#'
+#' @return
+#' A data frame with all source columns translated to all target identifiers.
+#' The number of new columns is the product of source and target columns. The
+#' target columns are distinguished by the suffexes added to their names.
+#'
+#' @examples
+#' ia <- import_omnipath_interactions()
+#' translate_ids_multi(ia, source = uniprot, target, ensp, ensembl = TRUE)
+#'
 #' @importFrom magrittr %>% %<>% extract
 #' @importFrom purrr map map_chr pluck reduce discard
 #' @importFrom rlang set_names !!! !! := enquos
+#' @seealso \code{\link{translate_ids}}
 #' @export
 translate_ids_multi <- function(
     d,
@@ -505,7 +563,6 @@ translate_ids_multi <- function(
     organism = 9606,
     reviewed = TRUE
 ) {
-
 
     ids <- ellipsis_to_char(...)
     raw_ids <- enquos(...) %>% map(.nse_ensure_str) %>% unlist
@@ -539,6 +596,12 @@ translate_ids_multi <- function(
         from_types <-
             source_cols %>%
             map_chr(~pluck(raw_ids, .x, .default = default_id))
+
+    }
+
+    if(length(target_cols) == 0L) {
+
+        return(d)
 
     }
 

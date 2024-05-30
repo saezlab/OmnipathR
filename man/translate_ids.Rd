@@ -123,6 +123,10 @@ followings:\tabular{llll}{
 }
 
 
+For a complete list of ID types and their synonyms, including metabolite and
+chemical ID types which are not shown here, see the lists in
+\code{OmnipathR:::omnipath.env$id_types}.
+
 The mapping between identifiers can be ambiguous. In this case one row
 in the original data frame yields multiple rows or elements in the
 returned data frame or vector(s).
@@ -140,9 +144,15 @@ d
 }
 \seealso{
 \itemize{
+\item{\code{\link{translate_ids_multi}}}
 \item{\code{\link{uniprot_id_mapping_table}}}
 \item{\code{\link{uniprot_full_id_mapping_table}}}
 \item{\code{\link{ensembl_id_mapping_table}}}
 \item{\code{\link{hmdb_id_mapping_table}}}
+\item{\code{\link{ensembl_id_type}}}
+\item{\code{\link{uniprot_id_type}}}
+\item{\code{\link{uploadlists_id_type}}}
+\item{\code{\link{hmdb_id_type}}}
+\item{\code{\link{chalmers_gem_id_type}}}
 }
 }

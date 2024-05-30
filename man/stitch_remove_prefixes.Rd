@@ -29,3 +29,10 @@ stitch_remove_prefixes(
 )
 
 }
+\seealso{
+\itemize{
+    \item{\code{\link{stitch_actions}}}
+    \item{\code{\link{stitch_links}}}
+    \item{\code{\link{stitch_gem}}}
+}
+}

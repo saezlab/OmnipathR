@@ -15,10 +15,62 @@ translate_ids_multi(
   chalmers = FALSE,
   entity_type = NULL,
   keep_untranslated = TRUE,
-  return_df = FALSE,
   organism = 9606,
   reviewed = TRUE
 )
+}
+\arguments{
+\item{d}{A data frame.}
+
+\item{...}{At least two arguments, with or without names. These arguments
+describe identifier columns, either the ones we translate from (source),
+or the ones we translate to (target). Columns existing in the data frame
+will be used as source columns. All the rest will be considered target
+columns. Alternatively, the source columns can be defined as a stem and
+a vector of suffixes, plus a separator between the stem and suffix. In
+this case, the source columns will be the ones that exist in the data
+frame with the suffixes added. The values of all these
+arguments must be valid identifier types as shown at
+\code{\link{translate_ids}}. If ID type is provided only for the first
+source column, the rest of the source columns will be assumed to have
+the same ID type. For the target identifiers new columns will be
+created with the desired names, with the suffixes added. If no suffixes
+provided, the names of the source columns will be used instead.}
+
+\item{uploadlists}{Force using the `uploadlists` service from UniProt.
+By default the plain query interface is used (implemented in
+\code{\link{uniprot_full_id_mapping_table}} in this package).
+If any of the provided ID types is only available in the uploadlists
+service, it will be automatically selected. The plain query interface
+is preferred because in the long term, with caching, it requires
+less download and data storage.}
+
+\item{ensembl}{Logical: use data from Ensembl BioMart instead of UniProt.}
+
+\item{hmdb}{Logical: use HMDB ID translation data.}
+
+\item{chalmers}{Logical: use ID translation data from Chalmers Sysbio GEM.}
+
+\item{entity_type}{Character: "gene" and "smol" are short symbols for
+proteins, genes and small molecules respectively. Several other synonyms
+are also accepted.}
+
+\item{keep_untranslated}{In case the output is a data frame, keep the
+records where the source identifier could not be translated. At
+these records the target identifier will be NA.}
+
+\item{organism}{Character or integer, name or NCBI Taxonomy ID of the
+organism (by default 9606 for human). Matters only if
+\code{uploadlists} is \code{FALSE}.}
+
+\item{reviewed}{Translate only reviewed (\code{TRUE}), only unreviewed
+(\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
+if \code{uploadlists} is \code{FALSE}.}
+}
+\value{
+A data frame with all source columns translated to all target identifiers.
+The number of new columns is the product of source and target columns. The
+target columns are distinguished by the suffexes added to their names.
 }
 \description{
 Especially when translating network interactions, where two ID columns exist
@@ -34,4 +86,12 @@ column names will be created by adding the \code{suffixes}. The
 to the name of the target columns. ID types can be defined the same way as
 for \code{\link{translate_ids}}. The only limitation is that, if the source
 columns are provided as stem+suffixes, they must be the same ID type.
+}
+\examples{
+ia <- import_omnipath_interactions()
+translate_ids_multi(ia, source = uniprot, target, ensp, ensembl = TRUE)
+
+}
+\seealso{
+\code{\link{translate_ids}}
 }

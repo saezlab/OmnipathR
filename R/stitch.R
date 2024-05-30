@@ -21,19 +21,26 @@
 #
 
 
-#' Download STITCH link data frame from \url{http://stitch.embl.de/}
+#' Retrieve the STITCH links dataset
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
 #'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
 #'     melanogaster) and 6239 (Caenorhabditis elegans).
 #'
-#' @return Data frame of STITCH links.
+#' @return Data frame: organism specific STITCH links dataset.
+#'
+#' @examples
+#' stl <- stitch_links()
 #'
 #' @importFrom magrittr %<>% %>% %T>%
 #' @importFrom readr read_tsv
-#'
-#' @noRd
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{stitch_actions}}}
+#'     \item{\code{\link{stitch_links}}}
+#'     \item{\code{\link{stitch_gem}}}
+#' }
 stitch_links <- function(organism = 'human', prefixes = FALSE) {
 
     .slow_doctest()
@@ -57,7 +64,7 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 }
 
 
-#' Download STITCH actions data frame from \url{http://stitch.embl.de/}
+#' Retrieve the STITCH actions dataset
 #'
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
@@ -66,10 +73,17 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 #'
 #' @return Data frame of STITCH actions.
 #'
+#' @examples
+#' sta <- stitch_actions(organism = 'mouse')
+#'
 #' @importFrom magrittr %>% %T>% %<>%
 #' @importFrom readr read_tsv
-#'
-#' @noRd
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{stitch_actions}}}
+#'     \item{\code{\link{stitch_links}}}
+#'     \item{\code{\link{stitch_gem}}}
+#' }
 stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 
     .slow_doctest()
@@ -118,6 +132,11 @@ stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 #' @importFrom purrr map_chr
 #' @importFrom dplyr mutate across
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{stitch_actions}}}
+#'     \item{\code{\link{stitch_links}}}
+#'     \item{\code{\link{stitch_gem}}}
+#' }
 stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 
     if(remove) {
@@ -158,15 +177,25 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #'     metabolites is PubChem CID, and HMDB IDs and KEGG IDs are included.
 #' @param cosmos Logical: use COSMOS format?
 #'
-#' @return List containing PKN with COSMOS and OCEAN format.
+#' @return A data frame of STITCH chemical-protein and protein-chemical
+#' interactions with their effect signs, and optionally with identifiers
+#' translated.
+#'
+#' @examples
+#' stg <- stitch_gem(protein_ids = 'genesymbol', metabolite_ids = 'hmdb')
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom dplyr bind_rows select filter mutate rename inner_join
+#' @importFrom dplyr row_number
 #' @importFrom tidyr unite
 #' @importFrom purrr reduce
 #' @importFrom rlang syms !!!
-#'
-#' @noRd
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{stitch_actions}}}
+#'     \item{\code{\link{stitch_links}}}
+#'     \item{\code{\link{stitch_remove_prefixes}}}
+#' }
 stitch_gem <- function(
         organism = 'human',
         min_score = 700L,
@@ -211,6 +240,7 @@ stitch_gem <- function(
         a_is_acting
     ) %>%
     inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
+    mutate(record_id = row_number()) %>%
     translate_ids_multi(
         item_id = ensp,
         !!!syms(protein_ids),
