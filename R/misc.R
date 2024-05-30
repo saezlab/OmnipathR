@@ -40,6 +40,22 @@
 }
 
 
+#' Makes sure the ellipsis is a named vector of strings
+#'
+#' @importFrom rlang %||% enquos
+#' @importFrom purrr map
+#' @importFrom magrittr %>%
+#' @noRd
+ellipsis_to_char <- function(...) {
+
+    enquos(...) %>%
+    map(.nse_ensure_str) %>%
+    set_names(names(.) %||% unlist(.)) %>%
+    set_names(ifelse(nchar(names(.)), names(.), unlist(.)))
+
+}
+
+
 #' @noRd
 .ensure_dir <- function(path){
 

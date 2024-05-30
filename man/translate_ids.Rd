@@ -2,7 +2,7 @@
 % Please edit documentation in R/id_mapping.R
 \name{translate_ids}
 \alias{translate_ids}
-\title{Translate gene and protein identifiers}
+\title{Translate gene, protein and small molecule identifiers}
 \usage{
 translate_ids(
   d,
