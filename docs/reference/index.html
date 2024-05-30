@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -158,6 +158,42 @@
 copy/pasted into the BMA canvas</dd>
       </dl><dl><dt>
           
+          <code><a href="chalmers_gem.html">chalmers_gem()</a></code> 
+        </dt>
+        <dd>Alberto Valdeolivas
+Genome scale metabolic model by Wang et al. 2021</dd>
+      </dl><dl><dt>
+          
+          <code><a href="chalmers_gem_id_mapping_table.html">chalmers_gem_id_mapping_table()</a></code> 
+        </dt>
+        <dd>Metabolite ID translation tables from Chalmers Sysbio</dd>
+      </dl><dl><dt>
+          
+          <code><a href="chalmers_gem_id_type.html">chalmers_gem_id_type()</a></code> 
+        </dt>
+        <dd>Metabolite identifier type label used in Chalmers Sysbio GEM</dd>
+      </dl><dl><dt>
+          
+          <code><a href="chalmers_gem_metabolites.html">chalmers_gem_metabolites()</a></code> 
+        </dt>
+        <dd>Metabolites from the Chalmers SysBio GEM (Wang et al., 2021)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="chalmers_gem_network.html">chalmers_gem_network()</a></code> 
+        </dt>
+        <dd>Chalmers SysBio GEM in the form of gene-metabolite interactions</dd>
+      </dl><dl><dt>
+          
+          <code><a href="chalmers_gem_raw.html">chalmers_gem_raw()</a></code> 
+        </dt>
+        <dd>GEM matlab file from Chalmers Sysbio (Wang et al., 2021)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="chalmers_gem_reactions.html">chalmers_gem_reactions()</a></code> 
+        </dt>
+        <dd>Reactions from the Chalmers SysBio GEM (Wang et al., 2021)</dd>
+      </dl><dl><dt>
+          
           <code><a href="collectri.html">collectri()</a></code> 
         </dt>
         <dd>TF-target interactions from CollecTRI</dd>
@@ -181,6 +217,12 @@ copy/pasted into the BMA canvas</dd>
           <code><a href="cookie.html">cookie()</a></code> 
         </dt>
         <dd>Acquire a cookie if necessary</dd>
+      </dl><dl><dt>
+          
+          <code><a href="cosmos_pkn.html">cosmos_pkn()</a></code> 
+        </dt>
+        <dd>Alberto Valdeolivas
+Prior knowledge network (PKN) for COSMOS</dd>
       </dl><dl><dt>
           
           <code><a href="curated_ligand_receptor_interactions.html">curated_ligand_receptor_interactions()</a></code> 
@@ -424,6 +466,31 @@ OmniPath</dd>
           <code><a href="has_extra_attrs.html">has_extra_attrs()</a></code> 
         </dt>
         <dd>Tells if an interaction data frame has an extra_attrs column</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hmdb_id_mapping_table.html">hmdb_id_mapping_table()</a></code> 
+        </dt>
+        <dd>Identifier translation table from HMDB</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hmdb_id_type.html">hmdb_id_type()</a></code> 
+        </dt>
+        <dd>HMDB identifier type label</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hmdb_metabolite_fields.html">hmdb_metabolite_fields()</a></code> 
+        </dt>
+        <dd>Field names for the HMDB metabolite dataset</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hmdb_protein_fields.html">hmdb_protein_fields()</a></code> 
+        </dt>
+        <dd>Field names for the HMDB proteins dataset</dd>
+      </dl><dl><dt>
+          
+          <code><a href="hmdb_table.html">hmdb_table()</a></code> 
+        </dt>
+        <dd>Download a HMDB XML file and process it into a table</dd>
       </dl><dl><dt>
           
           <code><a href="homologene_download.html">homologene_download()</a></code> 
@@ -1168,6 +1235,27 @@ database</dd>
         <dd>List the static tables available from OmniPath</dd>
       </dl><dl><dt>
           
+          <code><a href="stitch_actions.html">stitch_actions()</a></code> 
+        </dt>
+        <dd>Retrieve the STITCH actions dataset</dd>
+      </dl><dl><dt>
+          
+          <code><a href="stitch_gem.html">stitch_gem()</a></code> 
+        </dt>
+        <dd>Chemical-protein interactions from STITCH</dd>
+      </dl><dl><dt>
+          
+          <code><a href="stitch_links.html">stitch_links()</a></code> 
+        </dt>
+        <dd>Alberto Valdeolivas
+Retrieve the STITCH links dataset</dd>
+      </dl><dl><dt>
+          
+          <code><a href="stitch_remove_prefixes.html">stitch_remove_prefixes()</a></code> 
+        </dt>
+        <dd>Remove the prefixes from STITCH identifiers</dd>
+      </dl><dl><dt>
+          
           <code><a href="subnetwork.html">subnetwork()</a></code> 
         </dt>
         <dd>Extract a custom subnetwork from a large network</dd>
@@ -1190,7 +1278,12 @@ database</dd>
           
           <code><a href="translate_ids.html">translate_ids()</a></code> 
         </dt>
-        <dd>Translate gene and protein identifiers</dd>
+        <dd>Translate gene, protein and small molecule identifiers</dd>
+      </dl><dl><dt>
+          
+          <code><a href="translate_ids_multi.html">translate_ids_multi()</a></code> 
+        </dt>
+        <dd>Translate gene, protein and small molecule identifiers from multiple columns</dd>
       </dl><dl><dt>
           
           <code><a href="trembls_only.html">trembls_only()</a></code> 
