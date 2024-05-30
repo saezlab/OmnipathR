@@ -253,7 +253,7 @@ uniprot_idmapping_id_types <- function() {
 }
 
 
-#' Translate gene and protein identifiers
+#' Translate gene, protein and small molecule identifiers
 #'
 #' Translates a vector of identifiers, resulting a new vector, or a column
 #' of identifiers in a data frame by creating another column with the target
@@ -396,17 +396,11 @@ translate_ids <- function(
     # NSE vs. R CMD check workaround
     To <- NULL
 
-    ids <-
-        enquos(...) %>%
-        map(.nse_ensure_str) %>%
-        set_names(names(.) %||% unlist(.)) %>%
-        set_names(ifelse(nchar(names(.)), names(.), unlist(.)))
-
     organism %<>% ncbi_taxid
-
     entity_type %<>% ensure_entity_type
     hmdb %<>% or(entity_type == 'small_molecule' && !chalmers)
 
+    ids <- ellipsis_to_char(...)
     id_cols <- names(ids)
     id_types <- unlist(ids)
     from_col <- id_cols[1]
@@ -473,6 +467,128 @@ translate_ids <- function(
     }
 
     return(d)
+
+}
+
+
+#' Translate gene, protein and small molecule identifiers from multiple columns
+#'
+#' Especially when translating network interactions, where two ID columns exist
+#' (source and target), it is convenient to call the same ID translation on
+#' multiple columns. The \code{\link{translate_ids}} function is already able
+#' to translate to multiple ID types in one call, but is able to work only from
+#' one source column. Here too, multiple target IDs are supported. The source
+#' columns can be listed explicitely, or they might share a common stem, in
+#' this case the first element of \code{...} will be used as stem, and the
+#' column names will be created by adding the \code{suffixes}. The
+#' \code{suffixes} are also used to name the target columns. If no
+#' \code{suffixes} are provided, the name of the source columns will be added
+#' to the name of the target columns. ID types can be defined the same way as
+#' for \code{\link{translate_ids}}. The only limitation is that, if the source
+#' columns are provided as stem+suffixes, they must be the same ID type.
+#'
+#' @importFrom magrittr %>% %<>% extract
+#' @importFrom purrr map map_chr pluck reduce discard
+#' @importFrom rlang set_names !!! !! := enquos
+#' @export
+translate_ids_multi <- function(
+    d,
+    ...,
+    suffixes = NULL,
+    suffix_sep = '_',
+    uploadlists = FALSE,
+    ensembl = FALSE,
+    hmdb = FALSE,
+    chalmers = FALSE,
+    entity_type = NULL,
+    keep_untranslated = TRUE,
+    organism = 9606,
+    reviewed = TRUE
+) {
+
+
+    ids <- ellipsis_to_char(...)
+    raw_ids <- enquos(...) %>% map(.nse_ensure_str) %>% unlist
+    source_cols <- intersect(names(ids), colnames(d))
+
+    if (length(source_cols) == 0L && length(suffixes > 0L)) {
+
+        source_cols <-
+            names(ids)[1L] %>%
+            paste(suffixes, sep = suffix_sep) %>%
+            intersect(colnames(d))
+
+        target_cols <- names(ids) %>% tail(-1L)
+
+        from_types <-
+            source_cols %>%
+            length %>%
+            rep(ids[1L], .) %>%
+            unlist %>% unname
+
+    } else {
+
+        target_cols <- names(ids) %>% setdiff(colnames(d))
+
+        default_id <-
+            raw_ids %>%
+            extract(source_cols) %>%
+            discard(is.na) %>%
+            first
+
+        from_types <-
+            source_cols %>%
+            map_chr(~pluck(raw_ids, .x, .default = default_id))
+
+    }
+
+    if(length(source_cols) == 0L) {
+
+        msg <- 'translate_ids_multi: no source column provided.'
+        log_error(msg)
+        stop(msg)
+
+    }
+
+    to_types <- ids %>% extract(target_cols) %>% unlist %>% unname
+    suffixes %<>% if_null(`if`(length(source_cols) == 1L, '', source_cols))
+    suffix_sep %<>% {`if`(length(suffixes) == 1L && suffixes == '', '', .)}
+
+    if(length(suffixes) != length(source_cols)) {
+
+        msg <-
+            paste0(
+                'translate_ids_multi: number of suffixes (%i) does not ',
+                'match number of source columns (%i).'
+            ) %>%
+            sprintf(length(suffixes), length(source_cols))
+
+        log_error(msg)
+        stop(msg)
+
+    }
+
+    source_cols %>%
+    seq_along %>%
+    reduce(
+        ~translate_ids(
+            .x,
+            !!sym(source_cols[.y]) := !!sym(from_types[.y]),
+            !!!syms(
+                to_types %>%
+                set_names(paste0(target_cols, suffix_sep, suffixes[.y]))
+            ),
+            uploadlists = uploadlists,
+            ensembl = ensembl,
+            hmdb = hmdb,
+            chalmers = chalmers,
+            entity_type = entity_type,
+            keep_untranslated = keep_untranslated,
+            organism = organism,
+            reviewed = reviewed
+        ),
+        .init = d
+    )
 
 }
 
