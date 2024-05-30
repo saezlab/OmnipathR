@@ -180,7 +180,7 @@ stitch_gem <- function(
     # NSE vs. R CMD check workaround
     chemical <- protein <- item_id_a <- item_id_b <- CID <- HMDB <-
     a_is_acting <- ensp <- genesymbol <- pubchem <- hmdb <-
-    hmdb_source <- hmdb_target <- NULL
+    hmdb_source <- hmdb_target <- item_id <- action <- NULL
 
     organism %<>% organism_for('stitch')
 
@@ -211,28 +211,20 @@ stitch_gem <- function(
         a_is_acting
     ) %>%
     inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
-    {reduce(
-        c('a', 'b'),
-        ~translate_ids(
-            .x,
-            item_id_a = ensp,
-            !!!syms(protein_ids %>% set_names(sprintf('%s_%s', ., .y))),
-            ensembl = TRUE,
-            organism = organism
-        ),
-        .init = .
-    )} %>%
-    {reduce(
-        c('a', 'b'),
-        ~translate_ids(
-            .x,
-            item_id_a = pubchem,
-            !!!syms(metabolite_ids %>% set_names(sprintf('%s_%s', ., .y))),
-            entity_type = 'metabolite',
-            organism = organism
-        ),
-        .init = .
-    )} %>%
+    translate_ids_multi(
+        item_id = ensp,
+        !!!syms(protein_ids),
+        suffixes = c('a', 'b'),
+        ensembl = TRUE,
+        organism = organism
+    ) %>%
+    translate_ids_multi(
+        item_id = pubchem,
+        !!!syms(metabolite_ids),
+        suffixes = c('a', 'b'),
+        entity_type = 'metabolite',
+        organism = organism
+    ) %>%
     rename(sign = action) %>%
     {`if`(
         cosmos,
