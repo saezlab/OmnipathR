@@ -19,7 +19,17 @@ Authors@R: c(
         given = "Attila",
         family = "Gabor",
         role = "aut",
-        comment = c(ORCID = "0000-0002-0776-1182")))
+        comment = c(ORCID = "0000-0002-0776-1182")),
+    person(
+        given = "Diego",
+        family = "Mananes",
+        role = "aut",
+        comment = c(ORCID = "0000-0001-7247-6794")),
+    person(
+        given = "Aurelien",
+        family = "Dugourd",
+        role = "aut",
+        comment = c(ORCID = "0000-0002-0714-028X")))
 Description: A client for the OmniPath web service
     (https://www.omnipathdb.org) and many other resources.
     It also includes functions to transform and pretty print
