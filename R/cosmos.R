@@ -77,7 +77,7 @@
 #'
 #' @export
 cosmos_pkn <- function(
-    organism,
+    organism = 'human',
     protein_ids = c('uniprot', 'genesymbol'),
     metabolite_ids = c('hmdb', 'kegg'),
     chalmers_gem_metab_max_degree = 400L,
@@ -178,7 +178,6 @@ cosmos_pkn <- function(
         organism
     )
 
-    ## download STITCH using OmnipathR (if already done, it will be taken from cache)
     stitch <- stitch_gem(
         organism = organism,
         min_score = stitch_score,
@@ -186,12 +185,14 @@ cosmos_pkn <- function(
         metabolite_ids = metabolite_ids,
         cosmos = TRUE
     )
+
     chalmers <- chalmers_gem_network(
         organism = organism,
         protein_ids = protein_ids,
         metabolite_ids = metabolite_ids,
         metab_max_degree = chalmers_gem_metab_max_degree
     )
+
     ominpath <- omnipath_for_cosmos(organism, id_types = protein_ids, ...)
 
     cosmos_combine_networks(
