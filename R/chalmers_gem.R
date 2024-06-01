@@ -204,9 +204,20 @@ chalmers_gem_network <- function(
     organism_or_gem %<>% `if`(is_list(.), ., chalmers_gem(.))
     organism <- organism_or_gem$organism
 
+    log_info(
+        paste0(
+           'Building Chalmers Sysbio GEM: organism=%s; metab_max_degree=%i; ',
+           'protein_ids=%s; metabolite_ids=%s'
+        ),
+        organism,
+        metab_max_degree,
+        paste(protein_ids, collapse = ','),
+        paste(metabolite_ids, collapse = ',')
+    )
+
     organism_or_gem %>%
     extract2('reactions') %T>%
-    {log_info('Chalmers GEM: compiling gene-metabolite interactions.')} %>%
+    {log_info('Chalmers Sysbio GEM: compiling gene-metabolite interactions.')} %>%
     filter(!orphan) %>%
     # once I see better what's the purpose of this labeling,
     # I might move it a bit further down the pipeline - denes
@@ -218,8 +229,10 @@ chalmers_gem_network <- function(
     mutate(ci = row_number()) %>%
     unnest_longer(grRules, indices_include = FALSE) %>%
     {bind_rows(
-        binary_from_reaction(., grRules, reactants),
-        binary_from_reaction(., grRules, products, met_to_gene = FALSE)
+        binary_from_reaction(., grRules, reactants) %T>%
+        {log_trace('Chalmers GEM: %i reactant-enzyme interactions.', nrow(.))},
+        binary_from_reaction(., grRules, products, met_to_gene = FALSE) %T>%
+        {log_trace('Chalmers GEM: %i enzyme-product interactions.', nrow(.))}
     )} %T>%
     {log_info(
         'Chalmers GEM: %i records in gene-metabolite interactions table.',
@@ -268,7 +281,10 @@ chalmers_gem_network <- function(
         chalmers = TRUE,
         organism = organism
     ) %T>%
-    {log_info('Chalmers GEM: gene-metabolite network is ready.')}
+    {log_info(
+        'Chalmers GEM: built gene-metabolite network of %i interactions.',
+        nrow(.)
+    )}
 
 }
 

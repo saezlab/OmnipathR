@@ -191,6 +191,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #' @importFrom tidyr unite
 #' @importFrom purrr reduce
 #' @importFrom rlang syms !!!
+#' @importFrom logger log_info
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{stitch_actions}}}
@@ -211,6 +212,17 @@ stitch_gem <- function(
     chemical <- protein <- item_id_a <- item_id_b <- CID <- HMDB <-
     a_is_acting <- ensp <- genesymbol <- pubchem <- hmdb <-
     hmdb_source <- hmdb_target <- item_id <- action <- NULL
+
+    log_info(
+        paste0(
+           'Building STITCH GEM: min_score=%i, protein_ids=%s, ',
+           'metabolite_ids=%s, cosmos=%s'
+        ),
+        min_score,
+        paste0(protein_ids, collapse = ','),
+        paste0(metabolite_ids, collapse = ','),
+        cosmos
+    )
 
     organism %<>% organism_for('stitch')
 
@@ -242,7 +254,11 @@ stitch_gem <- function(
     ) %>%
     select(-mode, -a_is_acting) %>%
     inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
-    mutate(record_id = row_number()) %>%
+    mutate(record_id = row_number()) %T>%
+    {log_info(
+        'STITCH GEM: %i interactions before ID translation.',
+        nrow(.)
+    )} %>%
     translate_ids_multi(
         item_id = ensp,
         !!!syms(protein_ids),
@@ -265,6 +281,7 @@ stitch_gem <- function(
             sign = ifelse(sign == 'inhibition', -1L, 1L)
         ),
         .,
-    )}
+    )} %T>%
+    {log_info('STITCH GEM ready: %i interactions.', nrow(.))}
 
 }
