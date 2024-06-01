@@ -8,7 +8,7 @@
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Diego Mananes
-#'                 Alberto Valdeolivas
+#                 Alberto Valdeolivas
 #                  Dénes Türei (turei.denes@gmail.com)
 #                  Attila Gábor
 #
@@ -22,50 +22,65 @@
 
 #' Prior knowledge network (PKN) for COSMOS
 #'
-#' This function generates the prior knowledge network (PKN) needed to run
-#' COSMOS using information from different resources through the \pkg{OmnipathR}
-#' R package. Particularly, \code{cosmos_pkn} will obtain:
-#' \itemize{ \item Genome-scale metabolic
-#' model (GEM) of the required organism from Wang et al., 2021.
-#' \item Interaction network of
-#' chemicals and proteins from STITCH (\url{http://stitch.embl.de/}) for the
-#' required organism. \item Protein-protein interactions from Omnipath (Türei
-#' et al., 2021) for the required organism} With these three pieces of
-#' information, the function will generate the required causal network for
-#' COSMOS to run.
+#' The prior knowledge network (PKN) used by COSMOS is a network of
+#' heterogenous causal interactions: it contains protein-protein,
+#' reactant-enzyme and enzyme-product interactions. It is a combination of
+#' multiple resources:
+#' \itemize{
+#'     \item Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
+#'     al., 2021.)
+#'     \item Network of chemical-protein interactions from STITCH
+#'     (\url{http://stitch.embl.de/})
+#'     \item Protein-protein interactions from Omnipath (Türei
+#'     et al., 2021)
+#' }
+#' This function downloads, processes and combines the resources above. With
+#' all downloads and processing the build might take 30-40 minutes. Data is
+#' cached at various levels of processing, shortening processing times. With
+#' all data downloaded and HMDB ID translation data preprocessed, the build
+#' takes 3-4 minutes; the complete PKN is also saved in the cache, if this is
+#' available, loading it takes only a few seconds.
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
-#'       Supported taxons are 9606 (\emph{Homo sapiens}), 10090
-#'       (\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).
+#' @param organism Character or integer: name or NCBI Taxonomy ID of an
+#'      organism. Supported organisms are human, mouse and rat.
 #' @param protein_ids Character: translate the protein identifiers to these ID
-#'     types. Each ID type results two extra columns in the output, for the "a"
-#'     and "b" sides of the interaction, respectively. The default ID type for
-#'     proteins is Esembl Gene ID, and by default UniProt IDs and Gene
-#'     Symbols are included.
-#' @param metabolite_ids Character: translate the protein identifiers to these ID
-#'     types. Each ID type results two extra columns in the output, for the "a"
-#'     and "b" sides of the interaction, respectively. The default ID type for
-#'     metabolites is Metabolic Atlas ID, and HMDB IDs and KEGG IDs are included.
-#' @param chalmers_gem_metab_max_degree Degree cutoff used to filter out
-#'     metabolites (400 by default). The objective is to remove cofactors and
-#'     over-promiscuous metabolites.
-#' @param stitch_score Confidence cutoff used for STITCH connections (700 by
-#'     default).
+#'     types. Each ID type results two extra columns in the output, for the
+#'     "source" and "target" sides of the interaction, respectively. The
+#'     default ID type for proteins depends on the resource, hence the "source"
+#'     and "target" columns are heterogenous. By default UniProt IDs and Gene
+#'     Symbols are included. The Gene Symbols used in the COSMOS PKN are
+#'     provided by Ensembl, and do not completely agree with the ones provided
+#'     by UniProt and used in OmniPath data by default.
+#' @param metabolite_ids Character: translate the metabolite identifiers to
+#'     these ID types. Each ID type results two extra columns in the output,
+#'     for the "source" and "target" sides of the interaction, respectively.
+#'     The default ID type for metabolites depends on the resource, hence the
+#'     "source" and "target" columns are heterogenous. By default HMDB IDs and
+#'     KEGG IDs are included.
+#' @param chalmers_gem_metab_max_degree Numeric: remove metabolites from the
+#'     Chalmers GEM network with defgrees larger than this. Useful to remove
+#'     cofactors and over-promiscuous metabolites.
+#' @param stitch_score Include interactions from STITCH with combined
+#'     confidence score larger than this.
 #' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
 #'
-#' @return List of 4 elements containing the necessary information for COSMOS to
-#'     run: causal PKN, mapping data frame for metabolites from GEM,
-#'     reaction-to-gene data frame from GEM, and mapping data frame for reactions
-#'     from gem_
+#' @return A data frame of binary causal interations with effect signs,
+#'     resource specific attributes and translated to the desired identifiers.
+#'     The ``record_id`` column identifies the original records within each
+#'     resource. If one ``record_id`` yields multiple records in the final data
+#'     frame, it is the result of one-to-many ID translation or other
+#'     processing steps. Before use, it is recommended to select one pair of ID
+#'     type columns (by combining the preferred ones) and perform ``distinct``
+#'     by the identifier columns and sign.
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-#'        Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-#'        animals as a platform for translational research. Proceedings of the
-#'        National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+#'     Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+#'     animals as a platform for translational research. Proceedings of the
+#'     National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 #'
-#'        Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-#'         Integrated intra‐ and intercellular signaling knowledge for multicellular
-#'         omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+#'     Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+#'     Integrated intra‐ and intercellular signaling knowledge for multicellular
+#'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #'
 #' @examples
 #' \dontrun{
@@ -76,6 +91,12 @@
 #' @importFrom rlang exec !!!
 #'
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_network}}}
+#'     \item{\code{\link{stitch_gem}}}
+#'     \item{\code{\link{omnipath_for_cosmos}}}
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#' }
 cosmos_pkn <- function(
     organism = 'human',
     protein_ids = c('uniprot', 'genesymbol'),
@@ -109,50 +130,65 @@ cosmos_pkn <- function(
 
 #' Build prior knowledge network for COSMOS
 #'
-#' This function generates the prior knowledge network (PKN) needed to run
-#' COSMOS using information from different resources. It will download the
-#' required information through the \pkg{OmnipathR} R package. Particularly,
-#' \code{cosmos_pkn} will obtain: \itemize{ \item Genome-scale metabolic
-#' model (GEM) of the required organism from Wang et al., 2021.
-#' \item Interaction network of
-#' chemical and proteins from STITCH (\url{http://stitch.embl.de/}) for the
-#' required organism. \item Protein-protein interactions from Omnipath (Türei
-#' et al., 2021)} With these three pieces of information, the function will
-#' generate the required causal network for COSMOS to run.
+#' The prior knowledge network (PKN) used by COSMOS is a network of
+#' heterogenous causal interactions: it contains protein-protein,
+#' reactant-enzyme and enzyme-product interactions. It is a combination of
+#' multiple resources:
+#' \itemize{
+#'     \item Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
+#'     al., 2021.)
+#'     \item Network of chemical-protein interactions from STITCH
+#'     (\url{http://stitch.embl.de/})
+#'     \item Protein-protein interactions from Omnipath (Türei
+#'     et al., 2021)
+#' }
+#' This function downloads, processes and combines the resources above. With
+#' all downloads and processing the build might take 30-40 minutes. Data is
+#' cached at various levels of processing, shortening processing times. With
+#' all data downloaded and HMDB ID translation data preprocessed, the build
+#' takes 3-4 minutes; the complete PKN is also saved in the cache, if this is
+#' available, loading it takes only a few seconds.
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
-#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'     melanogaster) and 6239 (Caenorhabditis elegans).
-#' @param gene_id_type Whether translating genes from ENSEMBL into SYMBOL.
-#'     \code{FALSE} by default.
-#' @param gem_reactions.map.col Column of reaction IDs in the GEM
-#'     (\code{'rxns'} by default).
-#' @param gem_metabolites.map.col Column of reaction IDs in the GEM
-#'     (\code{'mets'} by default).
-#' @param gem_list.params List containing the name of the slots where the
-#'     information to construct the PKN is located in the gem_ If a matlab object
-#'     is provided, this list parameter should not be modified.
-#' @param met_max_degree Degree cutoff used to filter out
-#'     metabolites (400 by default). The objective is to remove cofactors and
-#'     other metabolites with many connections.
-#' @param stitch_score Confidence cutoff used for STITCH connections
-#'     (700 by default).
+#' @param organism Character or integer: name or NCBI Taxonomy ID of an
+#'      organism. Supported organisms are human, mouse and rat.
+#' @param protein_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the
+#'     "source" and "target" sides of the interaction, respectively. The
+#'     default ID type for proteins depends on the resource, hence the "source"
+#'     and "target" columns are heterogenous. By default UniProt IDs and Gene
+#'     Symbols are included. The Gene Symbols used in the COSMOS PKN are
+#'     provided by Ensembl, and do not completely agree with the ones provided
+#'     by UniProt and used in OmniPath data by default.
+#' @param metabolite_ids Character: translate the metabolite identifiers to
+#'     these ID types. Each ID type results two extra columns in the output,
+#'     for the "source" and "target" sides of the interaction, respectively.
+#'     The default ID type for metabolites depends on the resource, hence the
+#'     "source" and "target" columns are heterogenous. By default HMDB IDs and
+#'     KEGG IDs are included.
+#' @param chalmers_gem_metab_max_degree Numeric: remove metabolites from the
+#'     Chalmers GEM network with defgrees larger than this. Useful to remove
+#'     cofactors and over-promiscuous metabolites.
+#' @param stitch_score Confidence cutoff used for STITCH connections (700 by
+#'     default).
 #' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
 #'
-#' @return List of 4 elements containing the necessary information for COSMOS to
-#'     run: causal PKN, mapping data frame for metabolites from GEM,
-#'     reaction-to-gene data frame from GEM, and mapping data frame for reactions
-#'     from gem_
+#' @return A data frame of binary causal interations with effect signs,
+#'     resource specific attributes and translated to the desired identifiers.
+#'     The ``record_id`` column identifies the original records within each
+#'     resource. If one ``record_id`` yields multiple records in the final data
+#'     frame, it is the result of one-to-many ID translation or other
+#'     processing steps. Before use, it is recommended to select one pair of ID
+#'     type columns (by combining the preferred ones) and perform ``distinct``
+#'     by the identifier columns and sign.
 #'
 #' @references Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-#'        Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-#'        animals as a platform for translational research. Proceedings of the
-#'        National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+#'     Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+#'     animals as a platform for translational research. Proceedings of the
+#'     National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 #'
-#'        Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-#'         Integrated intra‐ and intercellular signaling knowledge for multicellular
-#'         omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+#'     Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+#'     Integrated intra‐ and intercellular signaling knowledge for multicellular
+#'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #'
 #' @importFrom magrittr %>%
 #'
@@ -235,8 +271,12 @@ cosmos_pkn <- function(
 #' @importFrom dplyr mutate filter select bind_rows select row_number
 #' @importFrom rlang !!! syms
 #' @export
-#' @seealso \code{\link{cosmos_pkn}}
+#' @seealso \itemize{
+#'     \item{\code{\link{cosmos_pkn}}}
+#'     \item{\code{\link{import_omnipath_interactions}}}
+#' }
 omnipath_for_cosmos <- function(
+
         organism = 9606L,
         resources = NULL,
         datasets = NULL,

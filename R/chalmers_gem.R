@@ -60,6 +60,14 @@
 #' @importFrom stringr str_split str_replace_all str_detect
 #'
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_network}}}
+#'     \item{\code{\link{chalmers_gem_metabolites}}}
+#'     \item{\code{\link{chalmers_gem_reactions}}}
+#'     \item{\code{\link{chalmers_gem_raw}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#'     \item{\code{\link{cosmos_pkn}}}
+#' }
 chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 
     .slow_doctest()
@@ -184,6 +192,14 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #' @importFrom tidyr unnest_longer
 #' @importFrom logger log_info log_error
 #' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem}}}
+#'     \item{\code{\link{chalmers_gem_metabolites}}}
+#'     \item{\code{\link{chalmers_gem_reactions}}}
+#'     \item{\code{\link{chalmers_gem_raw}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#'     \item{\code{\link{cosmos_pkn}}}
+#' }
 chalmers_gem_network <- function(
         organism_or_gem = 'Human',
         metab_max_degree = 400L,
@@ -368,9 +384,12 @@ binary_from_reaction <- function(
 #'
 #' @export
 #' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_network}}}
 #'     \item{\code{\link{chalmers_gem_metabolites}}}
+#'     \item{\code{\link{chalmers_gem}}}
 #'     \item{\code{\link{chalmers_gem_raw}}}
-#'     \item{\code{\link{chalmers_gem_cosmos}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#'     \item{\code{\link{cosmos_pkn}}}
 #' }
 chalmers_gem_reactions <- function(organism = 'Human') {
 
@@ -416,9 +435,12 @@ chalmers_gem_reactions <- function(organism = 'Human') {
 #'
 #' @export
 #' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_network}}}
 #'     \item{\code{\link{chalmers_gem_reactions}}}
+#'     \item{\code{\link{chalmers_gem}}}
 #'     \item{\code{\link{chalmers_gem_raw}}}
-#'     \item{\code{\link{chalmers_gem_cosmos}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#'     \item{\code{\link{cosmos_pkn}}}
 #' }
 chalmers_gem_metabolites <- function(organism = 'Human') {
 
@@ -472,9 +494,12 @@ chalmers_gem_metabolites <- function(organism = 'Human') {
 #'
 #' @export
 #' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_network}}}
 #'     \item{\code{\link{chalmers_gem_reactions}}}
-#'     \item{\code{\link{chalmers_gem_metabolites}}}
-#'     \item{\code{\link{chalmers_gem_cosmos}}}
+#'     \item{\code{\link{chalmers_gem}}}
+#'     \item{\code{\link{chalmers_gem_reactions}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#'     \item{\code{\link{cosmos_pkn}}}
 #' }
 chalmers_gem_raw <- function(organism = 'Human') {
 
