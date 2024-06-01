@@ -215,9 +215,10 @@ stitch_gem <- function(
 
     log_info(
         paste0(
-           'Building STITCH GEM: min_score=%i, protein_ids=%s, ',
-           'metabolite_ids=%s, cosmos=%s'
+           'Building STITCH GEM: organism=%s, min_score=%i, ',
+           'protein_ids=%s, metabolite_ids=%s, cosmos=%s'
         ),
+        organism,
         min_score,
         paste0(protein_ids, collapse = ','),
         paste0(metabolite_ids, collapse = ','),
