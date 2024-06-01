@@ -322,7 +322,7 @@ binary_from_reaction <- function(
         patterns = c(id = '(?:MAM|ENSG)\\d+', comp = '[cmxrelgni]?'),
         names_sep = '_'
     ) %>%
-    mutate(comp = str_c(source_comp, target_comp)) %>%
+    mutate(comp = as.factor(str_c(source_comp, target_comp))) %>%
     select(-source_comp, -target_comp) %>%
     rename(source = source_id, target = target_id)
 
