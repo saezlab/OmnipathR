@@ -193,7 +193,7 @@ cosmos_pkn <- function(
         metab_max_degree = chalmers_gem_metab_max_degree
     )
 
-    ominpath <- omnipath_for_cosmos(organism, id_types = protein_ids, ...)
+    omnipath <- omnipath_for_cosmos(organism, id_types = protein_ids, ...)
 
     cosmos_combine_networks(
         chalmers = chalmers,
@@ -296,5 +296,105 @@ omnipath_for_cosmos <- function(
         filter(., sign == 0) %>% mutate(sign = -1)
     ) %T>%
     {log_info('OmniPath PPI for COSMOS PKN ready: %i interactions.', nrow(.))}
+
+}
+
+
+#' Combine components of COSMOS PKN
+#'
+#' @param chalmers Data frame: the Chalmers Sysbiol GEM PKN as produced by
+#'     \{code{\link{chalmers_gem_network}}.
+#' @param omnipath Data frame: the OmniPath PKN as produced by
+#'     \{code{\link{omnipath_for_cosmos}}.
+#' @param stitch Data frame: the STITCH PKN as produced by
+#'     \{code{\link{stitch_gem}}.
+#'
+#' @return Data frame: the combined PKN suitable for COSMOS and OCEAN.
+#'
+#' @importFrom magrittr %<>% %>% %T>%
+#' @importFrom dplyr rename rename_with bind_rows mutate relocate select across
+#' @importFrom tidyselect starts_with
+#' @importFrom stringr str_replace str_detect
+#' @importFrom logger log_trace log_info
+#' @noRd
+cosmos_combine_networks <- function(
+    chalmers,
+    omnipath,
+    stitch
+){
+
+    .slow_doctest()
+
+    # NSE vs. R CMD check workaround
+    item_id_a <- item_id_b <- score <- ri <- ci <- .x <- comp <- reverse <-
+    transporter <- met_to_gene <- target <- resource <- entity_type_source <-
+    entity_type_target <- score_stitch <- ci_chalmers <- comp_chalmers <-
+    reverse_chalmers <- transporter_chalmers <- record_id <- NULL
+
+    stitch_etype <- function(x) {
+        ifelse(str_detect(x, '^ENS'), 'protein', 'metabolite')
+    }
+
+    log_info('Combining components of COSMOS PKN.')
+    log_trace('Preparing STITCH')
+
+    stitch %<>%
+        rename(
+            source = item_id_a,
+            target = item_id_b,
+            score_stitch = score
+        ) %>%
+        rename_with(~str_replace(.x, '_a$', '_source')) %>%
+        rename_with(~str_replace(.x, '_b$', '_target')) %>%
+        mutate(
+            entity_type_source = stitch_etype(source),
+            entity_type_target = stitch_etype(target),
+            resource = 'STITCH'
+        )
+
+    log_trace('Preparing Chalmers Sysbio GEM')
+
+    chalmers %<>%
+        rename(
+            record_id = ri,
+            ci_chalmers = ci,
+            comp_chalmers = comp,
+            reverse_chalmers = reverse,
+            transporter_chalmers = transporter
+        ) %>%
+        mutate(
+            entity_type_source = ifelse(met_to_gene, 'metabolite', 'protein'),
+            entity_type_target = ifelse(met_to_gene, 'protein', 'metabolite'),
+            resource = 'Chalmers Sysbiol GEM'
+        ) %>%
+        select(-met_to_gene)
+
+    log_trace('Preparing OmniPath')
+
+    omnipath %<>%
+        mutate(
+            entity_type_source = 'protein',
+            entity_type_target = 'protein',
+            resource = 'OmniPath'
+        )
+
+    log_trace('Combining data frames')
+
+    bind_rows(chalmers, stitch, omnipath) %>%
+    relocate(
+        sign,
+        record_id,
+        resource,
+        entity_type_source,
+        entity_type_target,
+        score_stitch,
+        ci_chalmers,
+        comp_chalmers,
+        reverse_chalmers,
+        transporter_chalmers,
+        .after = target
+    ) %>%
+    mutate(across(starts_with('entity_type_'), as.factor)) %T>%
+    {log_info('COSMOS combined PKN ready')}
 
 }
