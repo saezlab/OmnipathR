@@ -84,7 +84,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'     human_cosmos <- cosmos_pkn(organism = 9606)
+#'     human_cosmos <- cosmos_pkn(organism = "human")
 #' }
 #'
 #' @importFrom magrittr %>% %T>% %<>%

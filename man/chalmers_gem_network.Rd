@@ -52,3 +52,13 @@ Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
     platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
     27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 }
+\seealso{
+\itemize{
+    \item{\code{\link{chalmers_gem}}}
+    \item{\code{\link{chalmers_gem_metabolites}}}
+    \item{\code{\link{chalmers_gem_reactions}}}
+    \item{\code{\link{chalmers_gem_raw}}}
+    \item{\code{\link{chalmers_gem_id_mapping_table}}}
+    \item{\code{\link{cosmos_pkn}}}
+}
+}

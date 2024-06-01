@@ -39,8 +39,11 @@ Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M, Cholley
 }
 \seealso{
 \itemize{
+    \item{\code{\link{chalmers_gem_network}}}
     \item{\code{\link{chalmers_gem_reactions}}}
-    \item{\code{\link{chalmers_gem_metabolites}}}
-    \item{\code{\link{chalmers_gem_cosmos}}}
+    \item{\code{\link{chalmers_gem}}}
+    \item{\code{\link{chalmers_gem_reactions}}}
+    \item{\code{\link{chalmers_gem_id_mapping_table}}}
+    \item{\code{\link{cosmos_pkn}}}
 }
 }

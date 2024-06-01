@@ -2,8 +2,7 @@
 % Please edit documentation in R/cosmos.R
 \name{cosmos_pkn}
 \alias{cosmos_pkn}
-\title{Alberto Valdeolivas
-Prior knowledge network (PKN) for COSMOS}
+\title{Prior knowledge network (PKN) for COSMOS}
 \usage{
 cosmos_pkn(
   organism = "human",
@@ -15,62 +14,85 @@ cosmos_pkn(
 )
 }
 \arguments{
-\item{organism}{Character or integer: an organism (taxon) identifier.
-Supported taxons are 9606 (\emph{Homo sapiens}), 10090
-(\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).}
+\item{organism}{Character or integer: name or NCBI Taxonomy ID of an
+organism. Supported organisms are human, mouse and rat.}
 
 \item{protein_ids}{Character: translate the protein identifiers to these ID
-types. Each ID type results two extra columns in the output, for the "a"
-and "b" sides of the interaction, respectively. The default ID type for
-proteins is Esembl Gene ID, and by default UniProt IDs and Gene
-Symbols are included.}
+types. Each ID type results two extra columns in the output, for the
+"source" and "target" sides of the interaction, respectively. The
+default ID type for proteins depends on the resource, hence the "source"
+and "target" columns are heterogenous. By default UniProt IDs and Gene
+Symbols are included. The Gene Symbols used in the COSMOS PKN are
+provided by Ensembl, and do not completely agree with the ones provided
+by UniProt and used in OmniPath data by default.}
 
-\item{metabolite_ids}{Character: translate the protein identifiers to these ID
-types. Each ID type results two extra columns in the output, for the "a"
-and "b" sides of the interaction, respectively. The default ID type for
-metabolites is Metabolic Atlas ID, and HMDB IDs and KEGG IDs are included.}
+\item{metabolite_ids}{Character: translate the metabolite identifiers to
+these ID types. Each ID type results two extra columns in the output,
+for the "source" and "target" sides of the interaction, respectively.
+The default ID type for metabolites depends on the resource, hence the
+"source" and "target" columns are heterogenous. By default HMDB IDs and
+KEGG IDs are included.}
 
-\item{chalmers_gem_metab_max_degree}{Degree cutoff used to filter out
-metabolites (400 by default). The objective is to remove cofactors and
-over-promiscuous metabolites.}
+\item{chalmers_gem_metab_max_degree}{Numeric: remove metabolites from the
+Chalmers GEM network with defgrees larger than this. Useful to remove
+cofactors and over-promiscuous metabolites.}
 
-\item{stitch_score}{Confidence cutoff used for STITCH connections (700 by
-default).}
+\item{stitch_score}{Include interactions from STITCH with combined
+confidence score larger than this.}
 
 \item{...}{Further parameters to \code{\link{import_omnipath_interactions}}.}
 }
 \value{
-List of 4 elements containing the necessary information for COSMOS to
-    run: causal PKN, mapping data frame for metabolites from GEM,
-    reaction-to-gene data frame from GEM, and mapping data frame for reactions
-    from gem_
+A data frame of binary causal interations with effect signs,
+    resource specific attributes and translated to the desired identifiers.
+    The ``record_id`` column identifies the original records within each
+    resource. If one ``record_id`` yields multiple records in the final data
+    frame, it is the result of one-to-many ID translation or other
+    processing steps. Before use, it is recommended to select one pair of ID
+    type columns (by combining the preferred ones) and perform ``distinct``
+    by the identifier columns and sign.
 }
 \description{
-This function generates the prior knowledge network (PKN) needed to run
-COSMOS using information from different resources through the \pkg{OmnipathR}
-R package. Particularly, \code{cosmos_pkn} will obtain:
-\itemize{ \item Genome-scale metabolic
-model (GEM) of the required organism from Wang et al., 2021.
-\item Interaction network of
-chemicals and proteins from STITCH (\url{http://stitch.embl.de/}) for the
-required organism. \item Protein-protein interactions from Omnipath (Türei
-et al., 2021) for the required organism} With these three pieces of
-information, the function will generate the required causal network for
-COSMOS to run.
+The prior knowledge network (PKN) used by COSMOS is a network of
+heterogenous causal interactions: it contains protein-protein,
+reactant-enzyme and enzyme-product interactions. It is a combination of
+multiple resources:
+\itemize{
+    \item Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
+    al., 2021.)
+    \item Network of chemical-protein interactions from STITCH
+    (\url{http://stitch.embl.de/})
+    \item Protein-protein interactions from Omnipath (Türei
+    et al., 2021)
+}
+This function downloads, processes and combines the resources above. With
+all downloads and processing the build might take 30-40 minutes. Data is
+cached at various levels of processing, shortening processing times. With
+all data downloaded and HMDB ID translation data preprocessed, the build
+takes 3-4 minutes; the complete PKN is also saved in the cache, if this is
+available, loading it takes only a few seconds.
 }
 \examples{
 \dontrun{
-    human_cosmos <- cosmos_pkn(organism = 9606)
+    human_cosmos <- cosmos_pkn(organism = "human")
 }
 
 }
 \references{
 Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
-       Cholley PE, et al. Genome-scale metabolic network reconstruction of model
-       animals as a platform for translational research. Proceedings of the
-       National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
+    Cholley PE, et al. Genome-scale metabolic network reconstruction of model
+    animals as a platform for translational research. Proceedings of the
+    National Academy of Sciences. 2021 Jul 27;118(30):e2102344118.
 
-       Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
-        Integrated intra‐ and intercellular signaling knowledge for multicellular
-        omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+    Türei D, Valdeolivas A, Gul L, Palacio‐Escat N, Klein M, Ivanova O, et al.
+    Integrated intra‐ and intercellular signaling knowledge for multicellular
+    omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
+}
+\seealso{
+\itemize{
+    \item{\code{\link{chalmers_gem_network}}}
+    \item{\code{\link{stitch_gem}}}
+    \item{\code{\link{omnipath_for_cosmos}}}
+    \item{\code{\link{import_omnipath_interactions}}}
+}
 }

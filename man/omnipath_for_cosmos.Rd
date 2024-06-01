@@ -48,5 +48,8 @@ op_cosmos
 
 }
 \seealso{
-\code{\link{cosmos_pkn}}
+\itemize{
+    \item{\code{\link{cosmos_pkn}}}
+    \item{\code{\link{import_omnipath_interactions}}}
+}
 }
