@@ -4,7 +4,12 @@
 \alias{chalmers_gem_network}
 \title{Chalmers SysBio GEM in the form of gene-metabolite interactions}
 \usage{
-chalmers_gem_network(organism_or_gem = "Human", metab_max_degree = 400L, ...)
+chalmers_gem_network(
+  organism_or_gem = "Human",
+  metab_max_degree = 400L,
+  protein_ids = c("uniprot", "genesymbol"),
+  metabolite_ids = c("hmdb", "kegg")
+)
 }
 \arguments{
 \item{organism_or_gem}{Character or integer or list or data frame: either
@@ -17,6 +22,17 @@ melanogaster) and 6239 (Caenorhabditis elegans).}
 
 \item{metab_max_degree}{Degree cutoff used to prune metabolites with high
 degree assuming they are cofactors (400 by default).}
+
+\item{protein_ids}{Character: translate the protein identifiers to these ID
+types. Each ID type results two extra columns in the output, for the "a"
+and "b" sides of the interaction, respectively. The default ID type for
+proteins is Esembl Gene ID, and by default UniProt IDs and Gene
+Symbols are included.}
+
+\item{metabolite_ids}{Character: translate the protein identifiers to these ID
+types. Each ID type results two extra columns in the output, for the "a"
+and "b" sides of the interaction, respectively. The default ID type for
+metabolites is Metabolic Atlas ID, and HMDB IDs and KEGG IDs are included.}
 }
 \value{
 Data frame (tibble) of gene-metabolite interactions.

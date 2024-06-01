@@ -6,10 +6,12 @@
 Prior knowledge network (PKN) for COSMOS}
 \usage{
 cosmos_pkn(
-  organism,
-  gene_id_type = NULL,
+  organism = "human",
+  protein_ids = c("uniprot", "genesymbol"),
+  metabolite_ids = c("hmdb", "kegg"),
   chalmers_gem_metab_max_degree = 400L,
-  stitch_score = 700L
+  stitch_score = 700L,
+  ...
 )
 }
 \arguments{
@@ -17,28 +19,25 @@ cosmos_pkn(
 Supported taxons are 9606 (\emph{Homo sapiens}), 10090
 (\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).}
 
-\item{translate.genes}{Whether translating genes from ENSEMBL into SYMBOL.
-Only required when \code{organism == 9606} (\code{FALSE} by default).}
+\item{protein_ids}{Character: translate the protein identifiers to these ID
+types. Each ID type results two extra columns in the output, for the "a"
+and "b" sides of the interaction, respectively. The default ID type for
+proteins is Esembl Gene ID, and by default UniProt IDs and Gene
+Symbols are included.}
 
-\item{biomart.use.omnipath}{Whether using BioMart information from OmnipathR
-(\code{TRUE} by default).}
+\item{metabolite_ids}{Character: translate the protein identifiers to these ID
+types. Each ID type results two extra columns in the output, for the "a"
+and "b" sides of the interaction, respectively. The default ID type for
+metabolites is Metabolic Atlas ID, and HMDB IDs and KEGG IDs are included.}
 
-\item{gem_reactions.map.col}{Column of reaction IDs in the GEM
-(\code{'rxns'} by default).}
-
-\item{gem_metabolites.map.col}{Column of reaction IDs in the GEM
-(\code{'mets'} by default).}
-
-\item{gem_list.params}{List containing the name of the slots where the
-information to construct the PKN is located in the gem_ If a matlab object
-is provided, this list parameter should not be modified.}
-
-\item{gem_degree.mets.threshold}{Degree cutoff used to filter out
+\item{chalmers_gem_metab_max_degree}{Degree cutoff used to filter out
 metabolites (400 by default). The objective is to remove cofactors and
 over-promiscuous metabolites.}
 
-\item{stitch.threshold}{Confidence cutoff used for STITCH connections
-(700 by default).}
+\item{stitch_score}{Confidence cutoff used for STITCH connections (700 by
+default).}
+
+\item{...}{Further parameters to \code{\link{import_omnipath_interactions}}.}
 }
 \value{
 List of 4 elements containing the necessary information for COSMOS to
@@ -61,7 +60,7 @@ COSMOS to run.
 }
 \examples{
 \dontrun{
-    human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
+    human_cosmos <- cosmos_pkn(organism = 9606)
 }
 
 }
