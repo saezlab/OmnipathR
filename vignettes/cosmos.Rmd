@@ -56,6 +56,65 @@ library(OmnipathR)
 
 # Chalmers Sysbio GEM
 
+The Chalmers Sysbio group provides genome scale models of metabolism (GEMs) for
+various organisms: human, mouse, rat, fish, fly and worm. These models are
+available as Matlab files, which contain reaction data, stoichiometry matrix
+and identifier translation data.
+
+The raw contents of the Matlab file can be loaded by `chalmers_gem_raw()`. This
+results in a convoluted structure of nested lists and arrays:
+
+```{r chalmers-raw}
+ch_raw <- chalmers_gem_raw()
+```
+
+Another function, `chalmers_gem()` processes the above structure into a data
+frame of reactions, also keeping the stoichiometry matrix and including the
+identifier translation data:
+
+```{r chalmers-proc}
+ch_processed <- chalmers_gem()
+names(ch_processed)
+```
+
+The identifier translation tables are available by separate functions,
+`chalmers_gem_metabolites()` and `chalmers_gem_reactions()` for metabolite and
+reaction (and enzyme) identifiers, respectively. These return simple data
+frames.
+
+```{r chalmers-id}
+ch_met <- chalmers_gem_metabolites()
+
+ch_met
+```
+
+The metabolite identifier translation available here is also integrated into
+the package's translation service, available by the `translate_ids` and other
+functions.
+
+```{r chalmers-idtrans}
+translate_ids('MAM00001', 'metabolicatlas', 'recon3d', chalmers = TRUE)
+```
+
+Finally, the `chalmers_gem_network()` function uses all above data to compile a
+network binary chemical-protein interactions. By default Metabolic Atlas
+identifiers are used for the metabolites and Ensembl Gene IDs for the
+enzymes. These can be tranlated to the desired identifiers using the
+`metabolite_ids` and `protein_ids` arguments. Translation to multiple
+identifers is possible. The `ri` or `record_id` column in case of the Chalmers
+GEM represent the reaction ID, a unique identifier of the original reaction.
+One reaction yields many binary interactions as it consists of a number of gene
+products, reactants and products. The column `ci` means "complex ID", it is a
+unique identifier of groups of enzymes required together to carry out the
+reaction. The column `reverse` indicates if the row is derived from the
+reversed version of a reversible reaction. The column `transporter` signals
+reactions where the same metabolite occures both on reactant and product side,
+these are assumed to be transport reactions. In the Chalmers GEM the reactions
+are also assigned to compartments, these are encoded by single letter codes in
+the `comp` column. In the original data the compartment codes are postfixes of
+the metabolite IDs, here we move them into a separate column, leaving the
+Metabolic Atlas IDs clean and usable.
+
 ```{r chalmers}
 ch <- chalmers_gem_network()
 
@@ -63,6 +122,38 @@ ch
 ```
 
 # STITCH enzyme-metabolite interactions
+
+STITCH is a large compendium of binary interactions between proteins and
+chemicals. Some of these are derived from metabolic reactions. Various
+attributes such as mode of action, effect sign and scores are assigned to each
+link. The datasets are available by organism, stored in "actions" and "links"
+tables, available by the `stitch_actions()` and `stitch_links()` functions,
+respectively. STITCH supports a broad variety of organisms, please refer to
+their website at (https://stitch.embl.de/).
+
+```{r stitch-actions}
+sta <- stitch_actions()
+
+sta
+```
+
+```{r stitch-actions}
+stl <- stitch_actions()
+
+stl
+```
+
+`stitch_gem()` combines the actions and links data frames, filters by
+confidence scores, removes the prefixes from identifiers and translates them to
+the desired ID types. STITCH prefixes Ensembl Protein IDs with the NCBI Taxonomy
+ID, while PubChem CIDs with CID plus a lowercase letter "s" or "m", meaning
+stereo specific or merged stereoisomers, respectively. These prefixes are
+removed by default by the `stitch_remove_prefixes()` function. Effect signs (1
+= activation, -1 = inhibition) and combined scores are aslo included in the
+data frame. Similarly to Chalmers GEM, translation of chemical and protein
+identifiers is available. The `record_id` column uniquely identifies the
+original records. Multiple rows with the same `record_id` are due to
+one-to-many identifier translation.
 
 ```{ri stitch}
 st <- stitch_gem()
@@ -72,6 +163,15 @@ st
 
 # OmniPath signaling network
 
+All parameters supported by the OmniPath web service
+(`import_omnipath_interactions()`) can be passed to `omnipath_for_cosmos()`,
+enabling precise control over the resources, interaction types and other
+options when preparing the signaling network from OmniPath. By default the
+"omnipath" dataset is included which contains high confidence, literature
+curated, causal protein-protein interactions. For human, mouse and rat,
+orthology translated data is retrieved from the web service, while for other
+organisms translation by orthologous gene pairs is carried out client side.
+
 ```{r omnipath}
 op <- omnipath_for_cosmos()
 
@@ -79,6 +179,14 @@ op
 ```
 
 # Complete build
+
+Building the complete COSMOS PKN is done by `cosmos_pkn()`. All the resources
+above can be customized by arguments passed to this function. With all
+downloads and processing the build might take 30-40 minutes. Data
+is cached at various levels of processing, shortening processing times. With
+all data downloaded and HMDB ID translation data preprocessed, the build
+takes 3-4 minutes; the complete PKN is also saved in the cache, if this is
+available, loading it takes only a few seconds.
 
 ```{r cosmos}
 pkn <- cosmos_pkn()
@@ -91,4 +199,13 @@ resource. If one `record_id` yields multiple records in the final data
 frame, it is the result of one-to-many ID translation or other
 processing steps. Before use, it is recommended to select one pair of ID
 type columns (by combining the preferred ones) and perform `distinct`
-by the identifier columns and sign.
+by the identifier columns and sign. After the common columns, resource specific
+columns are labeled with the resource name; after these columns, molecule type
+and side specific identifer columns are named after the ID type and the side of
+the interaction ("source" vs. "target").
+
+# Session information
+
+```{r session}
+sessionInfo()
+```
