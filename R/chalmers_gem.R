@@ -158,12 +158,12 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #' @param protein_ids Character: translate the protein identifiers to these ID
 #'     types. Each ID type results two extra columns in the output, for the "a"
 #'     and "b" sides of the interaction, respectively. The default ID type for
-#'     proteins is Esembl Protein ID, and by default UniProt IDs and Gene
+#'     proteins is Esembl Gene ID, and by default UniProt IDs and Gene
 #'     Symbols are included.
 #' @param metabolite_ids Character: translate the protein identifiers to these ID
 #'     types. Each ID type results two extra columns in the output, for the "a"
 #'     and "b" sides of the interaction, respectively. The default ID type for
-#'     metabolites is PubChem CID, and HMDB IDs and KEGG IDs are included.
+#'     metabolites is Metabolic Atlas ID, and HMDB IDs and KEGG IDs are included.
 #'
 #' @return Data frame (tibble) of gene-metabolite interactions.
 #'
