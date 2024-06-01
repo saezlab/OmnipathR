@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/cosmos.html">Building prior knowledge network (PKN) for COSMOS</a>
     <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
@@ -422,7 +423,7 @@ C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for
 <div class="section level2">
 <h2 class="unnumbered" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<pre><code><span><span class="co">## R version 4.3.2 (2023-10-31)</span></span>
+<pre><code><span><span class="co">## R version 4.3.3 (2024-02-29)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Arch Linux</span></span>
 <span><span class="co">## </span></span>
@@ -445,38 +446,39 @@ C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] magrittr_2.0.3    ggraph_2.2.1      igraph_2.0.3      OmnipathR_3.11.10</span></span>
-<span><span class="co">## [5] ggplot2_3.5.0     dplyr_1.1.4       BiocStyle_2.30.0 </span></span>
+<span><span class="co">## [1] magrittr_2.0.3   ggraph_2.2.1     igraph_2.0.3     OmnipathR_3.13.1</span></span>
+<span><span class="co">## [5] ggplot2_3.5.0    dplyr_1.1.4      BiocStyle_2.30.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##  [1] gtable_0.3.4        xfun_0.42           bslib_0.6.1        </span></span>
 <span><span class="co">##  [4] ggrepel_0.9.5       tzdb_0.4.0          vctrs_0.6.5        </span></span>
-<span><span class="co">##  [7] tools_4.3.2         generics_0.1.3      curl_5.2.1         </span></span>
+<span><span class="co">##  [7] tools_4.3.3         generics_0.1.3      curl_5.2.1         </span></span>
 <span><span class="co">## [10] tibble_3.2.1        fansi_1.0.6         highr_0.10         </span></span>
 <span><span class="co">## [13] pkgconfig_2.0.3     checkmate_2.3.1     desc_1.4.3         </span></span>
 <span><span class="co">## [16] readxl_1.4.3        lifecycle_1.0.4     farver_2.1.1       </span></span>
-<span><span class="co">## [19] compiler_4.3.2      stringr_1.5.1       textshaping_0.3.7  </span></span>
+<span><span class="co">## [19] compiler_4.3.3      stringr_1.5.1       textshaping_0.3.7  </span></span>
 <span><span class="co">## [22] progress_1.2.3      munsell_0.5.0       ggforce_0.4.2      </span></span>
 <span><span class="co">## [25] graphlayouts_1.1.1  htmltools_0.5.7     sass_0.4.9         </span></span>
-<span><span class="co">## [28] yaml_2.3.8          later_1.3.2         pillar_1.9.0       </span></span>
-<span><span class="co">## [31] pkgdown_2.0.7       crayon_1.5.2        jquerylib_0.1.4    </span></span>
-<span><span class="co">## [34] tidyr_1.3.1         MASS_7.3-60         cachem_1.0.8       </span></span>
-<span><span class="co">## [37] viridis_0.6.5       tidyselect_1.2.1    rvest_1.0.4        </span></span>
-<span><span class="co">## [40] digest_0.6.35       stringi_1.8.3       purrr_1.0.2        </span></span>
-<span><span class="co">## [43] bookdown_0.38       labeling_0.4.3      polyclip_1.10-6    </span></span>
-<span><span class="co">## [46] fastmap_1.1.1       grid_4.3.2          colorspace_2.1-0   </span></span>
-<span><span class="co">## [49] cli_3.6.2           logger_0.3.0        tidygraph_1.3.1    </span></span>
-<span><span class="co">## [52] utf8_1.2.4          readr_2.1.5         withr_3.0.0        </span></span>
-<span><span class="co">## [55] prettyunits_1.2.0   scales_1.3.0        backports_1.4.1    </span></span>
-<span><span class="co">## [58] rappdirs_0.3.3      bit64_4.0.5         lubridate_1.9.3    </span></span>
-<span><span class="co">## [61] timechange_0.3.0    rmarkdown_2.26      httr_1.4.7         </span></span>
-<span><span class="co">## [64] bit_4.0.5           gridExtra_2.3       cellranger_1.1.0   </span></span>
-<span><span class="co">## [67] ragg_1.2.7          hms_1.1.3           memoise_2.0.1      </span></span>
-<span><span class="co">## [70] evaluate_0.23       knitr_1.45          viridisLite_0.4.2  </span></span>
-<span><span class="co">## [73] rlang_1.1.3         Rcpp_1.0.12         glue_1.7.0         </span></span>
-<span><span class="co">## [76] selectr_0.4-2       tweenr_2.0.3        BiocManager_1.30.22</span></span>
-<span><span class="co">## [79] xml2_1.3.6          vroom_1.6.5         jsonlite_1.8.8     </span></span>
-<span><span class="co">## [82] R6_2.5.1            systemfonts_1.0.6   fs_1.6.3</span></span></code></pre>
+<span><span class="co">## [28] yaml_2.3.8          tidyr_1.3.1         pillar_1.9.0       </span></span>
+<span><span class="co">## [31] pkgdown_2.0.7       later_1.3.2         crayon_1.5.2       </span></span>
+<span><span class="co">## [34] jquerylib_0.1.4     MASS_7.3-60.0.1     cachem_1.0.8       </span></span>
+<span><span class="co">## [37] viridis_0.6.5       zip_2.3.0           tidyselect_1.2.1   </span></span>
+<span><span class="co">## [40] rvest_1.0.4         digest_0.6.35       stringi_1.8.3      </span></span>
+<span><span class="co">## [43] purrr_1.0.2         bookdown_0.38       labeling_0.4.3     </span></span>
+<span><span class="co">## [46] polyclip_1.10-6     fastmap_1.1.1       grid_4.3.3         </span></span>
+<span><span class="co">## [49] colorspace_2.1-0    cli_3.6.2           logger_0.3.0       </span></span>
+<span><span class="co">## [52] tidygraph_1.3.1     XML_3.99-0.16.1     utf8_1.2.4         </span></span>
+<span><span class="co">## [55] readr_2.1.5         withr_3.0.0         prettyunits_1.2.0  </span></span>
+<span><span class="co">## [58] scales_1.3.0        backports_1.4.1     rappdirs_0.3.3     </span></span>
+<span><span class="co">## [61] bit64_4.0.5         lubridate_1.9.3     timechange_0.3.0   </span></span>
+<span><span class="co">## [64] rmarkdown_2.26      httr_1.4.7          bit_4.0.5          </span></span>
+<span><span class="co">## [67] gridExtra_2.3       cellranger_1.1.0    ragg_1.2.7         </span></span>
+<span><span class="co">## [70] hms_1.1.3           memoise_2.0.1       evaluate_0.23      </span></span>
+<span><span class="co">## [73] knitr_1.45          viridisLite_0.4.2   rlang_1.1.3        </span></span>
+<span><span class="co">## [76] Rcpp_1.0.12         glue_1.7.0          selectr_0.4-2      </span></span>
+<span><span class="co">## [79] tweenr_2.0.3        BiocManager_1.30.22 xml2_1.3.6         </span></span>
+<span><span class="co">## [82] vroom_1.6.5         jsonlite_1.8.8      R6_2.5.1           </span></span>
+<span><span class="co">## [85] systemfonts_1.0.6   fs_1.6.3</span></span></code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -486,7 +488,7 @@ C, Wilson M. DrugBank 5.0: a major update to the DrugBank database for
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
+<p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor, Diego Mananes, Aurelien Dugourd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

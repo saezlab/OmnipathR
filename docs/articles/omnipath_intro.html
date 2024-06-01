@@ -40,7 +40,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/cosmos.html">Building prior knowledge network (PKN) for COSMOS</a>
     <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
@@ -581,13 +582,13 @@ select and print the most confident interactions for a given TF.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 7 × 5</span></span></span>
 <span><span class="co">##   source        interaction target          n_resources n_references</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> GLI1 (P08151) ==( + )==&gt;  BCL2 (P10415)             1            6</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> GLI1 (P08151) ==( + )==&gt;  PTCH1 (Q13635)            1            4</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> GLI1 (P08151) ==( + )==&gt;  SFRP1 (Q8N474)            1            3</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> GLI1 (P08151) ==( + )==&gt;  IGFBP6 (P24592)           1            3</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span> GLI1 (P08151) ==( - )==&gt;  EGR2 (P11161)             1            3</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span> GLI1 (P08151) ==( + )==&gt;  CCND2 (P30279)            1            3</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">7</span> GLI1 (P08151) ==( - )==&gt;  SLIT2 (O94813)            1            3</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> GLI1 (P08151) ==( + )==&gt;  IGFBP6 (P24592)           1            1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> GLI1 (P08151) ==( - )==&gt;  EGR2 (P11161)             1            1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> GLI1 (P08151) ==( + )==&gt;  CCND2 (P30279)            1            1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> GLI1 (P08151) ==( - )==&gt;  SLIT2 (O94813)            1            1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> GLI1 (P08151) ==( + )==&gt;  BCL2 (P10415)             1            0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> GLI1 (P08151) ==( + )==&gt;  PTCH1 (Q13635)            1            0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> GLI1 (P08151) ==( + )==&gt;  SFRP1 (Q8N474)            1            0</span></span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="mirna-target-dataset">miRNA-target dataset<a class="anchor" aria-label="anchor" href="#mirna-target-dataset"></a>
@@ -1071,7 +1072,7 @@ detailed in previous sections of this document.</p>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<pre><code><span><span class="co">## R version 4.3.2 (2023-10-31)</span></span>
+<pre><code><span><span class="co">## R version 4.3.3 (2024-02-29)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
 <span><span class="co">## Running under: Arch Linux</span></span>
 <span><span class="co">## </span></span>
@@ -1094,36 +1095,36 @@ detailed in previous sections of this document.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] gprofiler2_0.2.3  tidyr_1.3.1       igraph_2.0.3      OmnipathR_3.11.10</span></span>
-<span><span class="co">## [5] knitr_1.45       </span></span>
+<span><span class="co">## [1] gprofiler2_0.2.3 tidyr_1.3.1      igraph_2.0.3     OmnipathR_3.13.1</span></span>
+<span><span class="co">## [5] knitr_1.45      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##  [1] gtable_0.3.4        xfun_0.42           bslib_0.6.1        </span></span>
 <span><span class="co">##  [4] ggplot2_3.5.0       htmlwidgets_1.6.4   tzdb_0.4.0         </span></span>
-<span><span class="co">##  [7] bitops_1.0-7        vctrs_0.6.5         tools_4.3.2        </span></span>
-<span><span class="co">## [10] generics_0.1.3      parallel_4.3.2      curl_5.2.1         </span></span>
-<span><span class="co">## [13] tibble_3.2.1        fansi_1.0.6         highr_0.10         </span></span>
-<span><span class="co">## [16] pkgconfig_2.0.3     data.table_1.15.2   checkmate_2.3.1    </span></span>
-<span><span class="co">## [19] readxl_1.4.3        lifecycle_1.0.4     compiler_4.3.2     </span></span>
-<span><span class="co">## [22] stringr_1.5.1       progress_1.2.3      munsell_0.5.0      </span></span>
-<span><span class="co">## [25] BiocStyle_2.30.0    htmltools_0.5.7     sass_0.4.9         </span></span>
-<span><span class="co">## [28] RCurl_1.98-1.14     yaml_2.3.8          lazyeval_0.2.2     </span></span>
-<span><span class="co">## [31] plotly_4.10.4       later_1.3.2         pillar_1.9.0       </span></span>
-<span><span class="co">## [34] crayon_1.5.2        jquerylib_0.1.4     cachem_1.0.8       </span></span>
-<span><span class="co">## [37] tidyselect_1.2.1    rvest_1.0.4         digest_0.6.35      </span></span>
+<span><span class="co">##  [7] bitops_1.0-7        vctrs_0.6.5         tools_4.3.3        </span></span>
+<span><span class="co">## [10] generics_0.1.3      curl_5.2.1          tibble_3.2.1       </span></span>
+<span><span class="co">## [13] fansi_1.0.6         highr_0.10          pkgconfig_2.0.3    </span></span>
+<span><span class="co">## [16] data.table_1.15.2   checkmate_2.3.1     readxl_1.4.3       </span></span>
+<span><span class="co">## [19] lifecycle_1.0.4     compiler_4.3.3      stringr_1.5.1      </span></span>
+<span><span class="co">## [22] progress_1.2.3      munsell_0.5.0       BiocStyle_2.30.0   </span></span>
+<span><span class="co">## [25] htmltools_0.5.7     sass_0.4.9          RCurl_1.98-1.14    </span></span>
+<span><span class="co">## [28] lazyeval_0.2.2      yaml_2.3.8          plotly_4.10.4      </span></span>
+<span><span class="co">## [31] later_1.3.2         pillar_1.9.0        crayon_1.5.2       </span></span>
+<span><span class="co">## [34] jquerylib_0.1.4     cachem_1.0.8        tidyselect_1.2.1   </span></span>
+<span><span class="co">## [37] rvest_1.0.4         zip_2.3.0           digest_0.6.35      </span></span>
 <span><span class="co">## [40] stringi_1.8.3       dplyr_1.1.4         purrr_1.0.2        </span></span>
-<span><span class="co">## [43] bookdown_0.38       fastmap_1.1.1       grid_4.3.2         </span></span>
+<span><span class="co">## [43] bookdown_0.38       fastmap_1.1.1       grid_4.3.3         </span></span>
 <span><span class="co">## [46] colorspace_2.1-0    cli_3.6.2           logger_0.3.0       </span></span>
-<span><span class="co">## [49] magrittr_2.0.3      utf8_1.2.4          readr_2.1.5        </span></span>
-<span><span class="co">## [52] withr_3.0.0         prettyunits_1.2.0   scales_1.3.0       </span></span>
-<span><span class="co">## [55] backports_1.4.1     rappdirs_0.3.3      bit64_4.0.5        </span></span>
-<span><span class="co">## [58] lubridate_1.9.3     timechange_0.3.0    rmarkdown_2.26     </span></span>
-<span><span class="co">## [61] httr_1.4.7          bit_4.0.5           cellranger_1.1.0   </span></span>
-<span><span class="co">## [64] png_0.1-8           hms_1.1.3           evaluate_0.23      </span></span>
-<span><span class="co">## [67] viridisLite_0.4.2   rlang_1.1.3         Rcpp_1.0.12        </span></span>
-<span><span class="co">## [70] glue_1.7.0          selectr_0.4-2       BiocManager_1.30.22</span></span>
-<span><span class="co">## [73] xml2_1.3.6          vroom_1.6.5         jsonlite_1.8.8     </span></span>
-<span><span class="co">## [76] R6_2.5.1</span></span></code></pre>
+<span><span class="co">## [49] magrittr_2.0.3      XML_3.99-0.16.1     utf8_1.2.4         </span></span>
+<span><span class="co">## [52] readr_2.1.5         withr_3.0.0         prettyunits_1.2.0  </span></span>
+<span><span class="co">## [55] scales_1.3.0        backports_1.4.1     rappdirs_0.3.3     </span></span>
+<span><span class="co">## [58] bit64_4.0.5         lubridate_1.9.3     timechange_0.3.0   </span></span>
+<span><span class="co">## [61] rmarkdown_2.26      httr_1.4.7          bit_4.0.5          </span></span>
+<span><span class="co">## [64] cellranger_1.1.0    png_0.1-8           hms_1.1.3          </span></span>
+<span><span class="co">## [67] evaluate_0.23       viridisLite_0.4.2   rlang_1.1.3        </span></span>
+<span><span class="co">## [70] Rcpp_1.0.12         glue_1.7.0          selectr_0.4-2      </span></span>
+<span><span class="co">## [73] BiocManager_1.30.22 xml2_1.3.6          vroom_1.6.5        </span></span>
+<span><span class="co">## [76] jsonlite_1.8.8      R6_2.5.1</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -1172,7 +1173,7 @@ Vento-Tormo, Roser, Mirjana Efremova, Rachel A. Botting, Margherita Y. Turco, Mi
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
+<p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor, Diego Mananes, Aurelien Dugourd.</p>
 </div>
 
 <div class="pkgdown-footer-right">
