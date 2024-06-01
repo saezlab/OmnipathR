@@ -37,22 +37,21 @@
 #' @param organism Character or integer: an organism (taxon) identifier.
 #'       Supported taxons are 9606 (\emph{Homo sapiens}), 10090
 #'       (\emph{Mus musculus}), and 10116 (\emph{Rattus norvegicus}).
-#' @param translate.genes Whether translating genes from ENSEMBL into SYMBOL.
-#'     Only required when \code{organism == 9606} (\code{FALSE} by default).
-#' @param biomart.use.omnipath Whether using BioMart information from OmnipathR
-#'     (\code{TRUE} by default).
-#' @param gem_reactions.map.col Column of reaction IDs in the GEM
-#'     (\code{'rxns'} by default).
-#' @param gem_metabolites.map.col Column of reaction IDs in the GEM
-#'     (\code{'mets'} by default).
-#' @param gem_list.params List containing the name of the slots where the
-#'     information to construct the PKN is located in the gem_ If a matlab object
-#'     is provided, this list parameter should not be modified.
-#' @param gem_degree.mets.threshold Degree cutoff used to filter out
+#' @param protein_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the "a"
+#'     and "b" sides of the interaction, respectively. The default ID type for
+#'     proteins is Esembl Gene ID, and by default UniProt IDs and Gene
+#'     Symbols are included.
+#' @param metabolite_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the "a"
+#'     and "b" sides of the interaction, respectively. The default ID type for
+#'     metabolites is Metabolic Atlas ID, and HMDB IDs and KEGG IDs are included.
+#' @param chalmers_gem_metab_max_degree Degree cutoff used to filter out
 #'     metabolites (400 by default). The objective is to remove cofactors and
 #'     over-promiscuous metabolites.
-#' @param stitch.threshold Confidence cutoff used for STITCH connections
-#'     (700 by default).
+#' @param stitch_score Confidence cutoff used for STITCH connections (700 by
+#'     default).
+#' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to
 #'     run: causal PKN, mapping data frame for metabolites from GEM,
@@ -70,7 +69,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'     human.PKN.COSMOS <- cosmos_pkn(organism = 9606)
+#'     human_cosmos <- cosmos_pkn(organism = 9606)
 #' }
 #'
 #' @importFrom magrittr %>% %T>% %<>%
@@ -79,19 +78,21 @@
 #' @export
 cosmos_pkn <- function(
     organism,
-    gene_id_type = NULL,
+    protein_ids = c('uniprot', 'genesymbol'),
+    metabolite_ids = c('hmdb', 'kegg'),
     chalmers_gem_metab_max_degree = 400L,
-    stitch_score = 700L
+    stitch_score = 700L,
+    ...
 ){
 
     .slow_doctest()
 
     organism %<>% ncbi_taxid()
 
-    args <- environment() %>% as.list
+    args <- environment() %>% as.list %>% c(list(...))
 
     ## check dependencies (Suggests in DESCRIPTION)
-    c('R.matlab', 'metaboliteIDMapping') %>%
+    'R.matlab' %>%
     missing_packages %>%
     paste(collapse = ', ') %>%
     {`if`(nchar(.), sprintf('Missing packages: %s', .) %T>% log_error %>% stop)}
@@ -137,6 +138,7 @@ cosmos_pkn <- function(
 #'     other metabolites with many connections.
 #' @param stitch_score Confidence cutoff used for STITCH connections
 #'     (700 by default).
+#' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
 #'
 #' @return List of 4 elements containing the necessary information for COSMOS to
 #'     run: causal PKN, mapping data frame for metabolites from GEM,
@@ -157,10 +159,12 @@ cosmos_pkn <- function(
 #' @noRd
 #'
 .cosmos_pkn <- function(
-        organism = 'human',
-        gene_id_type = NULL,
-        chalmers_gem_metab_max_degree = 400L,
-        stitch_score = 700L
+    organism = 'human',
+    protein_ids = c('uniprot', 'genesymbol'),
+    metabolite_ids = c('hmdb', 'kegg'),
+    chalmers_gem_metab_max_degree = 400L,
+    stitch_score = 700L,
+    ...
 ) {
 
     organism %<>% organism_for('cosmos')
@@ -178,13 +182,17 @@ cosmos_pkn <- function(
     stitch <- stitch_gem(
         organism = organism,
         min_score = stitch_score,
+        protein_ids = protein_ids,
+        metabolite_ids = metabolite_ids,
         cosmos = TRUE
     )
     chalmers <- chalmers_gem_network(
         organism = organism,
+        protein_ids = protein_ids,
+        metabolite_ids = metabolite_ids,
         metab_max_degree = chalmers_gem_metab_max_degree
     )
-    ominpath <- omnipath_for_cosmos(organism)
+    ominpath <- omnipath_for_cosmos(organism, id_types = protein_ids, ...)
 
     cosmos_combine_networks(
         chalmers = chalmers,
@@ -204,19 +212,35 @@ cosmos_pkn <- function(
 #'       is important.
 #' @param datasets Character: one or more network datasets in OmniPath.
 #' @param interaction_types Character: one or more interaction type
+#' @param id_types Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the
+#'     "source" and "target" sides of the interaction, respectively. The
+#'     default ID type for proteins is Esembl Gene ID, and by default UniProt
+#'     IDs and Gene Symbols are included. The UniProt IDs returned by the web
+#'     service are left intact, while the Gene Symbols are queried from
+#'     Ensembl. These Gene Symbols are different from the ones returned from
+#'     the web service, and match the Ensembl Gene Symbols used by other
+#'     components of the COSMOS PKN.
 #' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
 #'
 #' @return Data frame with the columns source, target and sign.
 #'
+#' @examples
+#' op_cosmos <- omnipath_for_cosmos()
+#' op_cosmos
+#'
 #' @importFrom magrittr %<>% %>% %T>%
 #' @importFrom logger log_info
-#' @importFrom dplyr mutate filter select bind_rows select
-#' @noRd
+#' @importFrom dplyr mutate filter select bind_rows select row_number
+#' @importFrom rlang !!! syms
+#' @export
+#' @seealso \code{\link{cosmos_pkn}}
 omnipath_for_cosmos <- function(
         organism = 9606L,
         resources = NULL,
         datasets = NULL,
         interaction_types = NULL,
+        id_types = c('uniprot', 'genesymbol'),
         ...
     ) {
 
@@ -249,11 +273,22 @@ omnipath_for_cosmos <- function(
             consensus_inhibition == 1
         )
     ) %>%
-    mutate(sign = consensus_stimulation - consensus_inhibition) %>%
-    select(
-        source = source_genesymbol,
-        target = target_genesymbol,
-        sign
+    mutate(
+        sign = consensus_stimulation - consensus_inhibition,
+        record_id = row_number()
+    ) %>%
+    select(source, target, sign, record_id) %>%
+    {`if`(
+        'uniprot' %in% id_types,
+        mutate(., uniprot_source = source, uniprot_target = target),
+        .
+    )} %>%
+    translate_ids_multi(
+        source = uniprot,
+        target,
+        !!!syms(setdiff(id_types, 'uniprot')),
+        ensembl = TRUE,
+        organism = organism
     ) %>%
     bind_rows(
         mutate(., sign = ifelse(sign, sign, 1)),
