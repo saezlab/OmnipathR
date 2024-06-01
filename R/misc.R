@@ -983,11 +983,11 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 #' Packages that seem to be missing from library
 #'
 #' @importFrom magrittr %>%
+#' @importFrom utils installed.pacakges
 #' @noRd
 missing_packages <- function(pkgs) {
 
-    pkgs %>%
-    installed.packages %>%
+    installed.packages() %>%
     rownames %>%
     setdiff(pkgs, .)
 
