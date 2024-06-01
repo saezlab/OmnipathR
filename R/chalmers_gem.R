@@ -129,6 +129,7 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 
     return(
         list(
+            organism = organism,
             reactions = reactions,
             metabolites = metabolites,
             reaction_ids = reaction_ids,
@@ -154,6 +155,15 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #'     melanogaster) and 6239 (Caenorhabditis elegans).
 #' @param metab_max_degree Degree cutoff used to prune metabolites with high
 #'     degree assuming they are cofactors (400 by default).
+#' @param protein_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the "a"
+#'     and "b" sides of the interaction, respectively. The default ID type for
+#'     proteins is Esembl Protein ID, and by default UniProt IDs and Gene
+#'     Symbols are included.
+#' @param metabolite_ids Character: translate the protein identifiers to these ID
+#'     types. Each ID type results two extra columns in the output, for the "a"
+#'     and "b" sides of the interaction, respectively. The default ID type for
+#'     metabolites is PubChem CID, and HMDB IDs and KEGG IDs are included.
 #'
 #' @return Data frame (tibble) of gene-metabolite interactions.
 #'
@@ -166,7 +176,7 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #'     platform for translational research. Proc Natl Acad Sci U S A. 2021 Jul
 #'     27;118(30):e2102344118. doi: \doi{10.1073/pnas.2102344118}.
 #'
-#' @importFrom magrittr %>% %T>% extract2
+#' @importFrom magrittr %>% %<>% %T>% extract2
 #' @importFrom rlang is_list enquos
 #' @importFrom purrr map map_chr
 #' @importFrom dplyr mutate across select bind_rows filter
@@ -177,7 +187,8 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 chalmers_gem_network <- function(
         organism_or_gem = 'Human',
         metab_max_degree = 400L,
-        ...
+        protein_ids = c('uniprot', 'genesymbol'),
+        metabolite_ids = c('hmdb', 'kegg')
     ) {
 
     .slow_doctest()
@@ -190,12 +201,8 @@ chalmers_gem_network <- function(
         '`metab_max_degree` cannot be less than 1.' %T>% log_error %>% stop
     }
 
-    id_types <-
-        enquos(...) %>%
-        map_chr(.nse_ensure_str)
-
     organism_or_gem %<>% `if`(is_list(.), ., chalmers_gem(.))
-    metabolite_ids <- organism_or_gem$metabolite_ids
+    organism <- organism_or_gem$organism
 
     organism_or_gem %>%
     extract2('reactions') %T>%
@@ -246,7 +253,21 @@ chalmers_gem_network <- function(
         ),
         nrow(.),
         metab_max_degree
-    )} %T>%
+    )} %>%
+    translate_ids_multi(
+        source = ensg,
+        target,
+        !!!syms(protein_ids),
+        ensembl = TRUE,
+        organism = organism
+    ) %>%
+    translate_ids_multi(
+        source = metabolicatlas,
+        target,
+        !!!syms(metabolite_ids),
+        chalmers = TRUE,
+        organism = organism
+    ) %T>%
     {log_info('Chalmers GEM: gene-metabolite network is ready.')}
 
 }
