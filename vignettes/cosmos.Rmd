@@ -1,0 +1,94 @@
+---
+title: "Building prior knowledge network (PKN) for COSMOS"
+author:
+  - name: Denes Turei
+    email: turei.denes@gmail.com
+    correspondance: true
+    affiliation: Institute for Computational Biomedicine, Heidelberg University
+institute:
+  - unihd: Institute for Computational Biomedicine, Heidelberg University
+package: OmnipathR
+output:
+  BiocStyle::html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+    pandoc_args:
+      - '--lua-filter=scholarly-metadata.lua'
+      - '--lua-filter=author-info-blocks.lua'
+abstract: |
+  The prior knowledge network (PKN) used by COSMOS is a network of
+  heterogenous causal interactions: it contains protein-protein,
+  reactant-enzyme and enzyme-product interactions. It is a combination of
+  multiple resources. Here we present the functions that load each component,
+  the options for customization, and the functions to build the complete PKN.
+  \itemize{
+  }
+vignette: |
+  %\VignetteIndexEntry{COSMOS PKN}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+fig_width: 9
+fig_height: 7
+---
+
+# Introduction
+
+The COSMOS PKN is a combination of the following datasets:
+
+* Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et al., 2021.)
+* Network of chemical-protein interactions from STITCH (http://stitch.embl.de/)
+* Protein-protein interactions from Omnipath (Türei et al., 2021)
+
+Building the PKN is possible in by calling the `cosmos_pkn()` function that we
+present in the last section. First let's take a closer look at each resource.
+
+```{r message=FALSE, warning=FALSE}
+library(OmnipathR)
+```
+
+# Chalmers Sysbio GEM
+
+```{r chalmers}
+ch <- chalmers_gem_network()
+
+ch
+```
+
+# STITCH enzyme-metabolite interactions
+
+```{ri stitch}
+st <- stitch_gem()
+
+st
+```
+
+# OmniPath signaling network
+
+```{r omnipath}
+op <- omnipath_for_cosmos()
+
+op
+```
+
+# Complete build
+
+```{r cosmos}
+pkn <- cosmos_pkn()
+
+pkn
+```
+
+The `record_id` column identifies the original records within each
+resource. If one `record_id` yields multiple records in the final data
+frame, it is the result of one-to-many ID translation or other
+processing steps. Before use, it is recommended to select one pair of ID
+type columns (by combining the preferred ones) and perform `distinct`
+by the identifier columns and sign.
