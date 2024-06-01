@@ -101,6 +101,7 @@ stitch_actions <- function(organism = 'human', prefixes = FALSE) {
         post = NULL,
         use_httr = FALSE
     ) %>%
+    mutate(action = as.factor(action)) %>%
     stitch_remove_prefixes(item_id_a, item_id_b, remove = !prefixes) %T>%
     load_success()
 
@@ -239,6 +240,7 @@ stitch_gem <- function(
         mode == 'inhibition',
         a_is_acting
     ) %>%
+    select(-mode, -a_is_acting) %>%
     inner_join(links, by = c('item_id_a', 'item_id_b')) %>%
     mutate(record_id = row_number()) %>%
     translate_ids_multi(
@@ -256,7 +258,6 @@ stitch_gem <- function(
         organism = organism
     ) %>%
     rename(sign = action) %>%
-    select(-mode, -a_is_acting) %>%
     {`if`(
         cosmos,
         mutate(
