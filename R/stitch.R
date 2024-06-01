@@ -256,6 +256,7 @@ stitch_gem <- function(
         organism = organism
     ) %>%
     rename(sign = action) %>%
+    select(-mode, -a_is_acting) %>%
     {`if`(
         cosmos,
         mutate(
