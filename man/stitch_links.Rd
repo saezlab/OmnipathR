@@ -7,10 +7,9 @@
 stitch_links(organism = "human", prefixes = FALSE)
 }
 \arguments{
-\item{organism}{Character or integer: an organism (taxon) identifier.
-Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-melanogaster) and 6239 (Caenorhabditis elegans).}
+\item{organism}{Character or integer: name or NCBI Taxonomy ID of an
+organism. STICH supports many organisms, please refer to their web site
+at \url{https://stitch.embl.de/}.}
 }
 \value{
 Data frame: organism specific STITCH links dataset.
