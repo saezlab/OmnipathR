@@ -1685,3 +1685,58 @@ ensembl_uniprot <- function(ens_id_type = 'ensg', organism = 9606L){
 
 
 }
+
+
+#' ID types and synonyms in identifier translation
+#'
+#' @return Data frame with 4 columns: the ID type labels in the resource, their
+#'     synonyms in OmniPath (this package), the name of the ID translation
+#'     resource, and the entity type.
+#'
+#' @examples
+#' id_types()
+#'
+#' @importFrom magrittr %>% is_in
+#' @importFrom dplyr mutate
+#' @importFrom tidyr unnest_longer separate_longer_delim
+#' @importFrom tibble tibble
+#' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{translate_ids_multi}}}
+#'     \item{\code{\link{ensembl_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#'     \item{\code{\link{hmdb_id_mapping_table}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{hmdb_id_type}}}
+#'     \item{\code{\link{chalmers_gem_id_type}}}
+#' }
+id_types <- function() {
+
+    hmdb_met <- hmdb_metabolite_fields()
+    hmdb_pro <- hmdb_protein_fields()
+    hmdb_com <- hmdb_met %>% intersect(hmdb_pro)
+
+    omnipath.env$id_types %>%
+    {tibble(idtype = list(.))} %>%
+    unnest_longer(idtype, indices_to = 'resource') %>%
+    unnest_longer(
+        idtype,
+        indices_to = 'in_omnipath',
+        values_to = 'in_resource'
+    ) %>%
+    mutate(
+        entity_type = case_when(
+            resource == 'hmdb' & in_resource %in% hmdb_com ~ 'metabolite;protein',
+            resource == 'hmdb' & in_resource %in% hmdb_met ~ 'metabolite',
+            resource == 'chalmers_gem' ~ 'metabolite',
+            TRUE ~ 'protein'
+        )
+    ) %>%
+    separate_longer_delim(entity_type, delim = ';')
+
+}
