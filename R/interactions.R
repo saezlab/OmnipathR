@@ -34,8 +34,11 @@
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param datasets Names of the interaction datasets to download: omnipath
 #' (by default). Other possiblites are: pathwayextra, kinaseextra,
 #' ligrecextra, dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna.
@@ -53,6 +56,12 @@
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -78,6 +87,7 @@ import_omnipath_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -91,6 +101,7 @@ import_omnipath_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -109,8 +120,11 @@ import_omnipath_interactions <- function(
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -123,6 +137,12 @@ import_omnipath_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments, passed to
 #' \code{\link{import_omnipath_interactions}}.
 #'
@@ -149,6 +169,7 @@ omnipath <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -163,6 +184,7 @@ omnipath <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         !!!args
     )
 
@@ -206,8 +228,11 @@ import_OmniPath_Interactions <- function(...){
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose one of those: 9606 human (default), 10116 rat or 10090 Mouse.
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -220,6 +245,12 @@ import_OmniPath_Interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -245,6 +276,7 @@ import_pathwayextra_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -258,6 +290,7 @@ import_pathwayextra_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -290,8 +323,11 @@ import_PathwayExtra_Interactions <- function(...){
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -304,6 +340,12 @@ import_PathwayExtra_Interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... Optional additional arguments.
 #'
 #' @examples
@@ -329,6 +371,7 @@ import_kinaseextra_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -342,6 +385,7 @@ import_kinaseextra_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -373,8 +417,11 @@ import_KinaseExtra_Interactions <- function(...){
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -387,6 +434,12 @@ import_KinaseExtra_Interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -411,6 +464,7 @@ import_ligrecextra_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -424,6 +478,7 @@ import_ligrecextra_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -452,8 +507,11 @@ import_LigrecExtra_Interactions <- function(...){
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param exclude Character: datasets or resources to exclude
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
@@ -462,6 +520,12 @@ import_LigrecExtra_Interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @importFrom rlang %||% exec !!!
@@ -483,6 +547,7 @@ import_post_translational_interactions <- function(
     exclude = NULL,
     references_by_resource = TRUE,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -498,7 +563,8 @@ import_post_translational_interactions <- function(
             organism = organism,
             references_by_resource = references_by_resource,
             exclude = exclude,
-            strict_evidences = strict_evidences
+            strict_evidences = strict_evidences,
+            genesymbol_resource = genesymbol_resource,
         )
     )
 
@@ -523,8 +589,11 @@ import_post_translational_interactions <- function(
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param dorothea_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
@@ -545,6 +614,12 @@ import_post_translational_interactions <- function(
 #' and references might be based on other datasets and resources. In case of
 #' DoRothEA this is not desirable for most of the applications. For most of
 #' the other interaction querying functions it is `FALSE` by default.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -575,6 +650,7 @@ dorothea <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = TRUE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -589,6 +665,7 @@ dorothea <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -633,8 +710,11 @@ import_tfregulons_interactions <- function(...){
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -647,6 +727,12 @@ import_tfregulons_interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... Optional additional arguments
 #'
 #' @examples
@@ -669,6 +755,7 @@ import_tf_target_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -682,6 +769,7 @@ import_tf_target_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -699,8 +787,11 @@ import_tf_target_interactions <- function(
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param dorothea_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
@@ -714,6 +805,12 @@ import_tf_target_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... Optional additional arguments.
 #'
 #' @return A dataframe containing TF-target interactions.
@@ -744,6 +841,7 @@ import_transcriptional_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -763,6 +861,7 @@ import_transcriptional_interactions <- function(
             resources = resources,
             references_by_resource = references_by_resource,
             strict_evidences = strict_evidences,
+            genesymbol_resource = genesymbol_resource,
             !!!args
         )
 
@@ -779,8 +878,11 @@ import_transcriptional_interactions <- function(
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided.
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
@@ -790,6 +892,12 @@ import_transcriptional_interactions <- function(
 #' and references might be based on other datasets and resources. In case of
 #' CollecTRI this is not desirable for most of the applications. For most of
 #' the other interaction querying functions it is `FALSE` by default.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... Optional additional arguments, passed to
 #'     \code{\link{import_transcriptional_interactions}}.
 #'
@@ -816,6 +924,7 @@ collectri <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = TRUE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -829,6 +938,7 @@ collectri <- function(
         resources = resources,
         references_by_resource = references_by_resource,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         !!!args
     )
 
@@ -845,8 +955,9 @@ collectri <- function(
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -859,6 +970,12 @@ collectri <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -883,6 +1000,7 @@ import_mirnatarget_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -896,6 +1014,7 @@ import_mirnatarget_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -926,8 +1045,9 @@ import_miRNAtarget_Interactions <- function(...){
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -940,6 +1060,12 @@ import_miRNAtarget_Interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -962,6 +1088,7 @@ import_tf_mirna_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -975,6 +1102,7 @@ import_tf_mirna_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -991,8 +1119,9 @@ import_tf_mirna_interactions <- function(
 #' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat.
 #' @param fields The user can define here the fields to be added. If used, set
 #' the next argument, `default_fields`, to FALSE.
 #' @param default_fields whether to include the default fields (columns) for
@@ -1005,6 +1134,12 @@ import_tf_mirna_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @examples
@@ -1027,6 +1162,7 @@ import_lncrna_mrna_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -1040,6 +1176,7 @@ import_lncrna_mrna_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -1056,8 +1193,9 @@ import_lncrna_mrna_interactions <- function(
 #' @param resources interactions not reported in these databases are
 #'     removed. See \code{\link{get_interaction_resources}} for more
 #'     information.
-#' @param organism Interactions are available for human, mouse and rat.
-#'     Choose among: 9606 human (default), 10116 rat and 10090 Mouse.
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat.
 #' @param fields Optional fields to be added.
 #' @param default_fields whether to include the default fields (columns) for
 #'     the query type. If FALSE, only the fields defined by the user in the
@@ -1070,6 +1208,12 @@ import_lncrna_mrna_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe of small molecule-protein interactions
@@ -1098,6 +1242,7 @@ import_small_molecule_protein_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -1111,6 +1256,7 @@ import_small_molecule_protein_interactions <- function(
         references_by_resource = references_by_resource,
         exclude = exclude,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 
@@ -1134,12 +1280,16 @@ import_small_molecule_protein_interactions <- function(
 #' lncrna_mrna: lncRNA-mRNA interactions
 #'
 #' @return A dataframe containing all the datasets in the interactions query
-
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Interactions are available for human, mouse and rat.
-#' Choose among: 9606 human (default), 10116 rat and 10090 Mouse
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides interactions for
+#'     human, mouse and rat. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human. In this case, only one organism
+#'     can be provided. If miRNA, lncRNA or small molecule datasets included,
+#'     orthology translation is not possible and will remove the interactions
+#'     with non-protein partners.
 #' @param dorothea_levels The confidence levels of the dorothea
 #' interactions (TF-target) which range from A to D. Set to A and B by
 #' default.
@@ -1155,6 +1305,12 @@ import_small_molecule_protein_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param types Character: interaction types, such as "transcriptional",
 #' "post_transcriptional", "post_translational", etc.
 #' @param ... optional additional arguments
@@ -1184,6 +1340,7 @@ import_all_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     strict_evidences = FALSE,
+    genesymbol_resource = NULL,
     types = NULL,
     ...
 ){
@@ -1206,6 +1363,7 @@ import_all_interactions <- function(
         default_fields = default_fields,
         references_by_resource = references_by_resource,
         strict_evidences = strict_evidences,
+        genesymbol_resource = genesymbol_resource,
         ...
     )
 

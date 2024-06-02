@@ -41,6 +41,10 @@ TOPOLOGIES_SHORT <-
 #' @return A dataframe cotaining information about roles in intercellular
 #' signaling.
 #'
+#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
+#'     organisms. The web service currently provides intercell annotations
+#'     only for human. For other organisms, the data will be translated
+#'     by orthologous gene pairs from human.
 #' @param categories vector containing the categories to be retrieved.
 #'     All the genes belonging to those categories will be returned. For
 #'     further information about the categories see
@@ -85,6 +89,12 @@ TOPOLOGIES_SHORT <-
 #'     a value of 50, the secreted, plasma membrane transmembrane or
 #'     peripheral attributes will be true only where at least 50 percent
 #'     of the resources support these.
+#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+#'     former leaves intact the gene symbols returned by the web service,
+#'     originally set from UniProt. The latter updates the gene symbols from
+#'     Ensembl, which uses a slightly different gene symbol standard. In this
+#'     case a few records will be duplicated, where Ensembl provides ambiguous
+#'     translation.
 #' @param ... Additional optional arguments, ignored.
 #'
 #' @examples
@@ -103,6 +113,7 @@ TOPOLOGIES_SHORT <-
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
+    organism = 'human',
     categories = NULL,
     resources = NULL,
     parent = NULL,
@@ -119,6 +130,7 @@ import_omnipath_intercell <- function(
     causality = NULL,
     consensus_percentile = NULL,
     loc_consensus_percentile = NULL,
+    genesymbol_resource = NULL,
     ...
 ){
 
@@ -152,6 +164,7 @@ import_omnipath_intercell <- function(
     )
     args$consensus_percentile <- NULL
     args$loc_consensus_percentile <- NULL
+    args$genesymbol_resource <- genesymbol_resource
 
     result <-
         do.call(import_omnipath, args) %>%
