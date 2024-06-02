@@ -198,7 +198,7 @@ hmdb_xml2_parse <- function(dataset, fields) {
 #' @return A data frame (tibble) with each column corresponding to a field.
 #'
 #' @examples
-#' hmdb_table(fields())
+#' hmdb_table()
 #'
 #' @importFrom logger log_success
 #' @importFrom magrittr %<>% %>% extract2
