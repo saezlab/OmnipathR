@@ -26,7 +26,7 @@ A data frame (tibble) with each column corresponding to a field.
 Download a HMDB XML file and process it into a table
 }
 \examples{
-hmdb_table(fields())
+hmdb_table()
 
 }
 \seealso{

@@ -120,8 +120,27 @@ available in the dataset are extracted.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">hmdb_table</span><span class="op">(</span><span class="fu">fields</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fields():</span> could not find function "fields"</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">hmdb_table</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 217,920 × 33</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    accession   name                  version status description chemical_formula</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> HMDB0000001 1-Methylhistidine     5.0     quant… <span style="color: #949494;">"</span>1-Methylh… C7H11N3O2       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> HMDB0000002 1,3-Diaminopropane    5.0     quant… <span style="color: #949494;">"</span>1,3-Diami… C3H10N2         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> HMDB0000005 2-Ketobutyric acid    5.0     quant… <span style="color: #949494;">"</span>2-Ketobut… C4H6O3          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> HMDB0000008 2-Hydroxybutyric acid 5.0     quant… <span style="color: #949494;">"</span>2-Hydroxy… C4H8O3          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> HMDB0000010 2-Methoxyestrone      5.0     quant… <span style="color: #949494;">"</span>2-Methoxy… C19H24O3        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> HMDB0000011 3-Hydroxybutyric acid 5.0     quant… <span style="color: #949494;">"</span>3-Hydroxy… C4H8O3          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> HMDB0000012 Deoxyuridine          5.0     quant… <span style="color: #949494;">"</span>Deoxyurid… C9H12N2O5       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> HMDB0000014 Deoxycytidine         5.0     quant… <span style="color: #949494;">"</span>Deoxycyti… C9H13N3O4       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> HMDB0000015 Cortexolone           5.0     quant… <span style="color: #949494;">"</span>Cortexolo… C21H30O4        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> HMDB0000016 Deoxycorticosterone   5.0     quant… <span style="color: #949494;">"</span>11-Deoxyc… C21H30O3        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 217,910 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 27 more variables: average_molecular_weight &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   monisotopic_molecular_weight &lt;chr&gt;, iupac_name &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   traditional_iupac &lt;chr&gt;, cas_registry_number &lt;chr&gt;, smiles &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   inchi &lt;chr&gt;, inchikey &lt;chr&gt;, state &lt;chr&gt;, synthesis_reference &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   chemspider_id &lt;chr&gt;, drugbank_id &lt;chr&gt;, foodb_id &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   pubchem_compound_id &lt;chr&gt;, pdb_id &lt;chr&gt;, chebi_id &lt;chr&gt;, …</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

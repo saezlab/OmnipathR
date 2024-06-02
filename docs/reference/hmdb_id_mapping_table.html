@@ -129,31 +129,22 @@ tag names or synonyms listed at <code>omnipath.env$id_types</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ensp_up</span> <span class="op">&lt;-</span> <span class="fu"><a href="ensembl_id_mapping_table.html">ensembl_id_mapping_table</a></span><span class="op">(</span><span class="st">"ensp"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">ensp_up</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 123,514 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    From   To             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P03886 ENSP00000354687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P03891 ENSP00000355046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P00395 ENSP00000354499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> P00403 ENSP00000354876</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P03928 ENSP00000355265</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> P00846 ENSP00000354632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P00414 ENSP00000354982</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P03897 ENSP00000355206</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P03901 ENSP00000354728</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P03905 ENSP00000354961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 123,504 more rows</span></span>
-<span class="r-in"><span><span class="co"># # A tibble: 119,129 × 2</span></span></span>
-<span class="r-in"><span><span class="co">#    From   To</span></span></span>
-<span class="r-in"><span><span class="co">#    &lt;chr&gt;  &lt;chr&gt;</span></span></span>
-<span class="r-in"><span><span class="co">#  1 P03886 ENSP00000354687</span></span></span>
-<span class="r-in"><span><span class="co">#  2 P03891 ENSP00000355046</span></span></span>
-<span class="r-in"><span><span class="co">#  3 P00395 ENSP00000354499</span></span></span>
-<span class="r-in"><span><span class="co">#  4 P00403 ENSP00000354876</span></span></span>
-<span class="r-in"><span><span class="co">#  5 P03928 ENSP00000355265</span></span></span>
-<span class="r-in"><span><span class="co"># # . with 119,124 more rows</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">hmdb_kegg</span> <span class="op">&lt;-</span> <span class="fu">hmdb_id_mapping_table</span><span class="op">(</span><span class="st">"kegg"</span>, <span class="st">"hmdb"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">hmdb_kegg</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 217,920 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    From        To    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> HMDB0000001 C01152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> HMDB0000002 C00986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> HMDB0000005 C00109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> HMDB0000008 C05984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> HMDB0000010 C05299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> HMDB0000011 C01089</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> HMDB0000012 C00526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> HMDB0000014 C00881</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> HMDB0000015 C05488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> HMDB0000016 C03205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 217,910 more rows</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
