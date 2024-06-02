@@ -1088,17 +1088,8 @@ ensembl_id_mapping_table <- function(
 #' tag names or synonyms listed at \code{omnipath.env$id_types}.
 #'
 #' @examples
-#' ensp_up <- ensembl_id_mapping_table("ensp")
-#' ensp_up
-#' # # A tibble: 119,129 × 2
-#' #    From   To
-#' #    <chr>  <chr>
-#' #  1 P03886 ENSP00000354687
-#' #  2 P03891 ENSP00000355046
-#' #  3 P00395 ENSP00000354499
-#' #  4 P00403 ENSP00000354876
-#' #  5 P03928 ENSP00000355265
-#' # # . with 119,124 more rows
+#' hmdb_kegg <- hmdb_id_mapping_table("kegg", "hmdb")
+#' hmdb_kegg
 #'
 #' @importFrom dplyr recode
 #' @importFrom magrittr %>%
