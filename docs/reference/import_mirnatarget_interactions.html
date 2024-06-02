@@ -20,7 +20,7 @@ which contains miRNA-mRNA interactions."><meta property="og:image" content="http
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.11.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@ which contains miRNA-mRNA interactions."><meta property="og:image" content="http
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/cosmos.html">Building prior knowledge network (PKN) for COSMOS</a>
     <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
@@ -96,6 +97,7 @@ which contains miRNA-mRNA interactions.</p>
 <span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  strict_evidences <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  genesymbol_resource <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -108,8 +110,9 @@ removed. See <code><a href="get_interaction_resources.html">get_interaction_reso
 
 
 <dt>organism</dt>
-<dd><p>Interactions are available for human, mouse and rat.
-Choose among: 9606 human (default), 10116 rat and 10090 Mouse</p></dd>
+<dd><p>Character or integer: Name or NCBI Taxonomy ID of one or
+organisms. The web service currently provides interactions for
+human, mouse and rat.</p></dd>
 
 
 <dt>fields</dt>
@@ -139,6 +142,15 @@ datasets and resources. If set to FALSE, the directions and effect signs
 and references might be based on other datasets and resources.</p></dd>
 
 
+<dt>genesymbol_resource</dt>
+<dd><p>Character: either "uniprot" or "ensembl". The
+former leaves intact the gene symbols returned by the web service,
+originally set from UniProt. The latter updates the gene symbols from
+Ensembl, which uses a slightly different gene symbol standard. In this
+case a few records will be duplicated, where Ensembl provides ambiguous
+translation.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>optional additional arguments</p></dd>
 
@@ -165,6 +177,7 @@ and references might be based on other datasets and resources.</p></dd>
 <span class="r-in"><span>    <span class="fu">import_mirnatarget_interactions</span><span class="op">(</span></span></span>
 <span class="r-in"><span>        resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'miRTarBase'</span>, <span class="st">'miRecords'</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -173,7 +186,7 @@ and references might be based on other datasets and resources.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
+  <p></p><p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor, Diego Mananes, Aurelien Dugourd.</p>
 </div>
 
 <div class="pkgdown-footer-right">
