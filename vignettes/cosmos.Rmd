@@ -137,8 +137,8 @@ sta <- stitch_actions()
 sta
 ```
 
-```{r stitch-actions}
-stl <- stitch_actions()
+```{r stitch-links}
+stl <- stitch_links()
 
 stl
 ```

@@ -12,6 +12,7 @@ import_small_molecule_protein_interactions(
   references_by_resource = TRUE,
   exclude = NULL,
   strict_evidences = FALSE,
+  genesymbol_resource = NULL,
   ...
 )
 }
@@ -20,8 +21,9 @@ import_small_molecule_protein_interactions(
 removed. See \code{\link{get_interaction_resources}} for more
 information.}
 
-\item{organism}{Interactions are available for human, mouse and rat.
-Choose among: 9606 human (default), 10116 rat and 10090 Mouse.}
+\item{organism}{Character or integer: Name or NCBI Taxonomy ID of one or
+organisms. The web service currently provides interactions for
+human, mouse and rat.}
 
 \item{fields}{Optional fields to be added.}
 
@@ -39,6 +41,13 @@ IDs will be unique.}
 \item{strict_evidences}{Logical: restrict the evidences to the queried
 datasets and resources. If set to FALSE, the directions and effect signs
 and references might be based on other datasets and resources.}
+
+\item{genesymbol_resource}{Character: either "uniprot" or "ensembl". The
+former leaves intact the gene symbols returned by the web service,
+originally set from UniProt. The latter updates the gene symbols from
+Ensembl, which uses a slightly different gene symbol standard. In this
+case a few records will be duplicated, where Ensembl provides ambiguous
+translation.}
 
 \item{...}{optional additional arguments}
 }

@@ -7,6 +7,7 @@
 \title{Imports OmniPath intercell annotations}
 \usage{
 import_omnipath_intercell(
+  organism = "human",
   categories = NULL,
   resources = NULL,
   parent = NULL,
@@ -23,10 +24,16 @@ import_omnipath_intercell(
   causality = NULL,
   consensus_percentile = NULL,
   loc_consensus_percentile = NULL,
+  genesymbol_resource = NULL,
   ...
 )
 }
 \arguments{
+\item{organism}{Character or integer: Name or NCBI Taxonomy ID of one or
+organisms. The web service currently provides intercell annotations
+only for human. For other organisms, the data will be translated
+by orthologous gene pairs from human.}
+
 \item{categories}{vector containing the categories to be retrieved.
 All the genes belonging to those categories will be returned. For
 further information about the categories see
@@ -86,6 +93,13 @@ annotations and specific child categories.}
 a value of 50, the secreted, plasma membrane transmembrane or
 peripheral attributes will be true only where at least 50 percent
 of the resources support these.}
+
+\item{genesymbol_resource}{Character: either "uniprot" or "ensembl". The
+former leaves intact the gene symbols returned by the web service,
+originally set from UniProt. The latter updates the gene symbols from
+Ensembl, which uses a slightly different gene symbol standard. In this
+case a few records will be duplicated, where Ensembl provides ambiguous
+translation.}
 
 \item{...}{Additional optional arguments, ignored.}
 }

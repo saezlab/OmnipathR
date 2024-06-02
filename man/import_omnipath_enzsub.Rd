@@ -13,6 +13,7 @@ import_omnipath_enzsub(
   default_fields = TRUE,
   references_by_resource = TRUE,
   exclude = NULL,
+  genesymbol_resource = NULL,
   ...
 )
 }
@@ -20,8 +21,9 @@ import_omnipath_enzsub(
 \item{resources}{PTMs not reported in these databases are
 removed. See \code{\link{get_ptms_databases}} for more information.}
 
-\item{organism}{PTMs are available for human, mouse and rat.
-Choose among: 9606 human (default), 10116 rat and 10090 Mouse}
+\item{organism}{Character or integer: Name or NCBI Taxonomy ID of one or
+organisms. The web service currently provides interactions for
+human, mouse and rat.}
 
 \item{fields}{You can define here additional fields to be added to the
 result. If used, set the next argument, \code{default_fields}, to
@@ -37,6 +39,13 @@ reference comes from which resource will be lost and the PubMed IDs
 will be unique.}
 
 \item{exclude}{Character: datasets or resources to exclude.}
+
+\item{genesymbol_resource}{Character: either "uniprot" or "ensembl". The
+former leaves intact the gene symbols returned by the web service,
+originally set from UniProt. The latter updates the gene symbols from
+Ensembl, which uses a slightly different gene symbol standard. In this
+case a few records will be duplicated, where Ensembl provides ambiguous
+translation.}
 
 \item{...}{Optional additional arguments.}
 }

@@ -10,6 +10,8 @@ import_omnipath_annotations(
   proteins = NULL,
   resources = NULL,
   wide = FALSE,
+  organism = "human",
+  genesymbol_resource = NULL,
   ...
 )
 }
@@ -27,6 +29,18 @@ See \code{\link{get_annotation_resources}} for possible values.}
 corresponds more or less to the original resource. If the data comes
 from more than one resource a list of wide tables will be returned.
 See examples at \code{\link{pivot_annotations}}.}
+
+\item{organism}{Character or integer: Name or NCBI Taxonomy ID of one or
+organisms. The web service currently provides intercell annotations
+only for human. For other organisms, the data will be translated
+by orthologous gene pairs from human.}
+
+\item{genesymbol_resource}{Character: either "uniprot" or "ensembl". The
+former leaves intact the gene symbols returned by the web service,
+originally set from UniProt. The latter updates the gene symbols from
+Ensembl, which uses a slightly different gene symbol standard. In this
+case a few records will be duplicated, where Ensembl provides ambiguous
+translation.}
 
 \item{...}{Additional arguments.}
 }
