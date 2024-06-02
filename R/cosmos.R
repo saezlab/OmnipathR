@@ -98,7 +98,7 @@
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{chalmers_gem_network}}}
-#'     \item{\code{\link{stitch_gem}}}
+#'     \item{\code{\link{stitch_network}}}
 #'     \item{\code{\link{omnipath_for_cosmos}}}
 #'     \item{\code{\link{import_omnipath_interactions}}}
 #' }
@@ -219,7 +219,7 @@ cosmos_pkn <- function(
         organism
     )
 
-    stitch <- stitch_gem(
+    stitch <- stitch_network(
         organism = organism,
         min_score = stitch_score,
         protein_ids = protein_ids,
@@ -352,7 +352,7 @@ omnipath_for_cosmos <- function(
 #' @param omnipath Data frame: the OmniPath PKN as produced by
 #'     \{code{\link{omnipath_for_cosmos}}.
 #' @param stitch Data frame: the STITCH PKN as produced by
-#'     \{code{\link{stitch_gem}}.
+#'     \{code{\link{stitch_network}}.
 #'
 #' @return Data frame: the combined PKN suitable for COSMOS and OCEAN.
 #'

@@ -39,7 +39,7 @@
 #' @seealso \itemize{
 #'     \item{\code{\link{stitch_actions}}}
 #'     \item{\code{\link{stitch_links}}}
-#'     \item{\code{\link{stitch_gem}}}
+#'     \item{\code{\link{stitch_network}}}
 #' }
 stitch_links <- function(organism = 'human', prefixes = FALSE) {
 
@@ -82,7 +82,7 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 #' @seealso \itemize{
 #'     \item{\code{\link{stitch_actions}}}
 #'     \item{\code{\link{stitch_links}}}
-#'     \item{\code{\link{stitch_gem}}}
+#'     \item{\code{\link{stitch_network}}}
 #' }
 stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 
@@ -136,7 +136,7 @@ stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 #' @seealso \itemize{
 #'     \item{\code{\link{stitch_actions}}}
 #'     \item{\code{\link{stitch_links}}}
-#'     \item{\code{\link{stitch_gem}}}
+#'     \item{\code{\link{stitch_network}}}
 #' }
 stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 
@@ -183,7 +183,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #' translated.
 #'
 #' @examples
-#' stg <- stitch_gem(protein_ids = 'genesymbol', metabolite_ids = 'hmdb')
+#' stg <- stitch_network(protein_ids = 'genesymbol', metabolite_ids = 'hmdb')
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom dplyr bind_rows select filter mutate rename inner_join
@@ -198,7 +198,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #'     \item{\code{\link{stitch_links}}}
 #'     \item{\code{\link{stitch_remove_prefixes}}}
 #' }
-stitch_gem <- function(
+stitch_network <- function(
         organism = 'human',
         min_score = 700L,
         protein_ids = c('uniprot', 'genesymbol'),
