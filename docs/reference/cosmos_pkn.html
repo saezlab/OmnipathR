@@ -6,7 +6,7 @@ multiple resources:
 Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
     al., 2021.)
 Network of chemical-protein interactions from STITCH
-    (http://stitch.embl.de/)
+    (https://stitch.embl.de/)
 Protein-protein interactions from Omnipath (Türei
     et al., 2021)
 This function downloads, processes and combines the resources above. With
@@ -21,7 +21,7 @@ multiple resources:
 Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
     al., 2021.)
 Network of chemical-protein interactions from STITCH
-    (http://stitch.embl.de/)
+    (https://stitch.embl.de/)
 Protein-protein interactions from Omnipath (Türei
     et al., 2021)
 This function downloads, processes and combines the resources above. With
@@ -46,7 +46,7 @@ available, loading it takes only a few seconds."><meta property="og:image" conte
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@ available, loading it takes only a few seconds."><meta property="og:image" conte
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
-    <a class="dropdown-item" href="../articles/cosmos.html">Resource specific inte</a>
+    <a class="dropdown-item" href="../articles/cosmos.html">Building prior knowledge network (PKN) for COSMOS</a>
     <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
@@ -114,7 +114,7 @@ reactant-enzyme and enzyme-product interactions. It is a combination of
 multiple resources:</p><ul><li><p>Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
     al., 2021.)</p></li>
 <li><p>Network of chemical-protein interactions from STITCH
-    (<a href="http://stitch.embl.de/" class="external-link">http://stitch.embl.de/</a>)</p></li>
+    (<a href="https://stitch.embl.de/" class="external-link">https://stitch.embl.de/</a>)</p></li>
 <li><p>Protein-protein interactions from Omnipath (Türei
     et al., 2021)</p></li>
 </ul><p>This function downloads, processes and combines the resources above. With
@@ -141,7 +141,12 @@ available, loading it takes only a few seconds.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>organism</dt>
 <dd><p>Character or integer: name or NCBI Taxonomy ID of an
-organism. Supported organisms are human, mouse and rat.</p></dd>
+organism. Supported organisms vary by resource: the Chalmers GEM is
+available only for human, mouse, rat, fish, fly and worm. OmniPath can
+be translated by orthology, but for non-vertebrate or less researched
+taxa very few orthologues are available. STITCH is available for a
+large number of organisms, please refer to their web page:
+<a href="https://stitch.embl.de/" class="external-link">https://stitch.embl.de/</a>.</p></dd>
 
 
 <dt>protein_ids</dt>
@@ -225,7 +230,7 @@ confidence score larger than this.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
+  <p></p><p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor, Diego Mananes, Aurelien Dugourd.</p>
 </div>
 
 <div class="pkgdown-footer-right">

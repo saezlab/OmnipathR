@@ -15,7 +15,12 @@ cosmos_pkn(
 }
 \arguments{
 \item{organism}{Character or integer: name or NCBI Taxonomy ID of an
-organism. Supported organisms are human, mouse and rat.}
+organism. Supported organisms vary by resource: the Chalmers GEM is
+available only for human, mouse, rat, fish, fly and worm. OmniPath can
+be translated by orthology, but for non-vertebrate or less researched
+taxa very few orthologues are available. STITCH is available for a
+large number of organisms, please refer to their web page:
+\url{https://stitch.embl.de/}.}
 
 \item{protein_ids}{Character: translate the protein identifiers to these ID
 types. Each ID type results two extra columns in the output, for the
@@ -61,7 +66,7 @@ multiple resources:
     \item Genome-scale metabolic model (GEM) from Chalmers Sysbio (Wang et
     al., 2021.)
     \item Network of chemical-protein interactions from STITCH
-    (\url{http://stitch.embl.de/})
+    (\url{https://stitch.embl.de/})
     \item Protein-protein interactions from Omnipath (Türei
     et al., 2021)
 }

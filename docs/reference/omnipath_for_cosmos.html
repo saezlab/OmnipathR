@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/bioc_workshop.html">OmniPath Bioconductor workshop</a>
+    <a class="dropdown-item" href="../articles/cosmos.html">Building prior knowledge network (PKN) for COSMOS</a>
     <a class="dropdown-item" href="../articles/db_manager.html">The database manager in OmnipathR</a>
     <a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a>
     <a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a>
@@ -145,21 +146,22 @@ components of the COSMOS PKN.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">op_cosmos</span> <span class="op">&lt;-</span> <span class="fu">omnipath_for_cosmos</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span><span class="va">op_cosmos</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 141,695 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 138,492 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    source target  sign record_id uniprot_source uniprot_target genesymbol_source</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP23 P48995    -<span style="color: #BB0000;">1</span>         1 P0DP23         P48995         CALM1            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P0DP25 P48995    -<span style="color: #BB0000;">1</span>         2 P0DP25         P48995         CALM3            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P0DP25 P48995    -<span style="color: #BB0000;">1</span>         2 P0DP25         P48995         CALM1            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> P0DP24 P48995    -<span style="color: #BB0000;">1</span>         3 P0DP24         P48995         CALM2            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P0DP24 P48995    -<span style="color: #BB0000;">1</span>         3 P0DP24         P48995         CALM1            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Q03135 P48995     1         4 Q03135         P48995         CAV1             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> P14416 P48995     1         5 P14416         P48995         DRD2             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Q99750 P48995    -<span style="color: #BB0000;">1</span>         6 Q99750         P48995         MDFI             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Q14571 P48995     1         7 Q14571         P48995         ITPR2            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> P29966 P48995    -<span style="color: #BB0000;">1</span>         8 P29966         P48995         MARCKS           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 141,685 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P0DP24 P48995    -<span style="color: #BB0000;">1</span>         3 P0DP24         P48995         CALM2            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Q03135 P48995     1         4 Q03135         P48995         CAV1             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P14416 P48995     1         5 P14416         P48995         DRD2             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Q99750 P48995    -<span style="color: #BB0000;">1</span>         6 Q99750         P48995         MDFI             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Q14571 P48995     1         7 Q14571         P48995         ITPR2            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P29966 P48995    -<span style="color: #BB0000;">1</span>         8 P29966         P48995         MARCKS           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Q13255 P48995     1         9 Q13255         P48995         GRM1             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q13586 P48995     1        10 Q13586         P48995         STIM1            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 138,482 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: genesymbol_target &lt;chr&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -169,7 +171,7 @@ components of the COSMOS PKN.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor.</p>
+  <p></p><p>Developed by Alberto Valdeolivas, Denes Turei, Attila Gabor, Diego Mananes, Aurelien Dugourd.</p>
 </div>
 
 <div class="pkgdown-footer-right">
