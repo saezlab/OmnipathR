@@ -30,6 +30,8 @@ utils::globalVariables(
     "n_resources", "ncbi_tax_id_target", "ncbi_tax_id_source")
 )
 
+ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
+
 .omnipath_qt_synonyms <- list(
     ptms = 'enzsub',
     enz_sub = 'enzsub',
@@ -133,6 +135,8 @@ utils::globalVariables(
     'evidences',
     'json_param',
     'strict_evidences',
+    'genesymbol_resource',
+    'orthology_targets',
     'keep_evidences',
     'cache'
 )
@@ -154,7 +158,7 @@ utils::globalVariables(
 #' @noRd
 import_omnipath <- function(
     query_type,
-    organism = 9606,
+    organism = 9606L,
     resources = NULL,
     datasets = NULL,
     genesymbols = 'yes',
@@ -170,6 +174,7 @@ import_omnipath <- function(
     exclude = NULL,
     json_param = list(),
     strict_evidences = FALSE,
+    genesymbol_resource = 'UniProt',
     cache = NULL,
     ...
 ){
@@ -283,6 +288,15 @@ omnipath_post_download <- function(
         result %<>% as_tibble
     }
 
+    if(!is_empty_2(param$orthology_targets)){
+        result %<>% omnipath_orthology_translate(param)
+    } else if(
+        !is_empty_2(param$genesymbol_resource) &&
+        str_to_lower(param$genesymbol_resource[1L]) != 'uniprot'
+    ) {
+        result %<>% update_genesymbols(param, param$organisms[1L])
+    }
+
     from_cache <- result %>% is_from_cache
 
     # reporting and returning result
@@ -317,9 +331,10 @@ omnipath_post_download <- function(
 #' the download function.
 #' Not exported.
 #'
-#' @importFrom magrittr %<>%
+#' @importFrom magrittr %<>% %>%
 #' @importFrom logger log_warn
 #' @importFrom purrr map_int
+#' @importFrom dplyr first
 #'
 #' @noRd
 omnipath_check_param <- function(param){
@@ -390,8 +405,37 @@ omnipath_check_param <- function(param){
         param$fields
     )
 
+    organisms_supported <- `if`(
+        param$query_type %in% c('interactions', 'enzsub'),
+        ORGANISMS_SUPPORTED,
+        9606L
+    )
     # allow organism names
     param$organisms %<>% map_int(ncbi_taxid)
+    param$orthology_targets <- param$organisms %>% setdiff(organisms_supported)
+    param$organisms %<>% intersect(organisms_supported)
+    log_trace('Organism(s): %s', enum_format(param$organisms))
+    log_trace('Orthology targets: %s', enum_format(param$orthology_targets))
+    print(param$genesymbol_resource)
+
+    if(length(param$orthology_targets > 0L)) {
+
+        param$organisms %<>% if_null_len0(9606L)
+
+        if(length(param$organisms) > 1L || param$organisms != 9606L) {
+
+            log_warn(
+                paste0(
+                    'The result will be translated to `%s` by orthology; ',
+                    'querying for human.'
+                ),
+                param$orthology_targets %>% first
+            )
+            param$organisms <- 9606L
+
+        }
+
+    }
 
     # removing some fields according to query type
     if(!param$query_type %in% c('interactions', 'enzsub')){
@@ -539,6 +583,200 @@ omnipath_url_add_param <- function(url, name, values = NULL){
     )
 
     return(url)
+
+}
+
+
+#' Translate an OmniPath data frame by orthology
+#'
+#' @param data A data frame from OmniPath, or any data frame with UniProt IDs
+#'     in a column named "uniprot", or columns named "source" and "target", or
+#'     "enzyme" and "substrate".
+#' @param param List or character: OmniPath query parameters or the name of a
+#'
+#' @return Data frame: the input data frame with the UniProt IDs translated to
+#'     the target organism by orthology.
+#'
+#' @importFrom magrittr %T>% %>% extract2
+#' @importFrom dplyr first
+#' @importFrom rlang !! sym
+#' @importFrom purrr reduce
+#' @importFrom logger log_warn log_info
+#' @noRd
+omnipath_orthology_translate <- function(data, param) {
+
+    target <-
+        param %>%
+        {`if`(is.list(.), extract2(., 'orthology_targets'), .)} %T>%
+        {`if`(
+            !is.null(.) && length(.) > 1L,
+            log_warn(
+                paste0(
+                       'Orthology translation works for only one organism in one ',
+                       'query. Translating only to the first target organism: `%i`.'
+                ),
+                first(.)
+            ),
+            NA
+        )} %>%
+        first
+
+    if(!is.na(target)) {
+
+        log_info(
+            'Translating to `%s` by orthology, %i records before translation',
+            target,
+            nrow(data)
+        )
+
+        genesymbol_resource <-
+            param %>%
+            {`if`(is.list(.), extract2(., 'genesymbol_resource'), 'uniprot')}
+
+        data <-
+            reduce(
+                uniprot_columns(data),
+                ~orthology_translate_column(
+                    .x,
+                    !!sym(.y),
+                    source_organism = 9606L,
+                    target_organism = target,
+                    replace = TRUE
+                ),
+                .init = data
+            ) %T>%
+            {log_info('%i records after orthology translation.', nrow(.))} %>%
+            update_genesymbols(genesymbol_resource, organism = target)
+
+    }
+
+    return(data)
+
+}
+
+
+#' Update gene symbols in the data frame
+#'
+#' @param data A data frame from OmniPath, or any data frame with UniProt IDs
+#'     in a column named "uniprot", or columns named "source" and "target", or
+#'     "enzyme" and "substrate".
+#' @param param List or character: OmniPath query parameters or the name of a
+#'     Gene Symbol resource, either "uniprot" or "ensembl".
+#' @param organism Character or integer: name or NCBI Taxonomy ID of the
+#'     organism the UniProt IDs in the data frame belong to.
+#'
+#' @return Data frame: the input data frame with the gene symbol columns
+#'     updated.
+#'
+#' @importFrom magrittr %>% extract2 is_in
+#' @importFrom logger log_warn log_info
+#' @importFrom purrr reduce
+#' @importFrom stringr str_to_lower
+#' @importFrom rlang !! !!! sym :=
+#' @noRd
+update_genesymbols <- function(data, param, organism = 9606L) {
+
+    up_cols <- data %>% uniprot_columns
+    gs_cols <- data %>% genesymbol_columns
+
+    if(is_empty_2(up_cols)) {
+
+        log_warn(
+            paste0(
+               'No columns with UniProt IDs found, ',
+               'not updating gene symbols.'
+            )
+        )
+        return(data)
+
+    }
+
+    resource <-
+        param %>%
+        {`if`(is.list(.), extract2(., 'genesymbol_resource'), .)} %>%
+        str_to_lower
+
+    if(resource %>% is_in(c('ensembl', 'uniprot')) %>% not) {
+
+        log_warn(
+            paste0(
+               'Unknown genesymbol resource: `%s`. ',
+               'Using UniProt, the default one, instead.'
+            ),
+            resource
+        )
+        resource <- 'uniprot'
+
+    }
+
+    resource %T>%
+    {log_info('Settings gene symbols from `%s`.', .)} %>%
+    {reduce(
+        up_cols,
+        ~translate_ids(
+            .x,
+            !!sym(.y) := uniprot,
+            !!sym(
+                `if`(
+                    .y == 'uniprot',
+                    'genesymbol',
+                    sprintf('%s_genesymbol', .y)
+                )
+            ) := genesymbol,
+            organism = organism,
+            ensembl = resource == 'ensembl'
+        ),
+        .init = data
+    )} %T>%
+    {log_info('%i records after setting gene symbols.', nrow(.))}
+
+}
+
+#' Names of UniProt columns in an OmniPath data frame
+#'
+#' @param data A data frame from OmniPath.
+#'
+#' @importFrom magrittr %>% is_in
+#' @noRd
+uniprot_columns <- function(data) {
+
+    UP_COLS <- list(
+        'uniprot',
+        c('enzyme', 'substrate'),
+        c('source', 'target')
+    )
+
+    for(cols in UP_COLS) {
+
+        if(cols %>% is_in(data %>% colnames) %>% all) {
+            return(cols)
+        }
+
+    }
+
+}
+
+
+#' Names of Gene Symbol columns in an OmniPath data frame
+#'
+#' @param data A data frame from OmniPath.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+genesymbol_columns <- function(data) {
+
+    data %>%
+    uniprot_columns %>%
+    {`if`(
+        is.null(.) || length(.) == 0L,
+        .,
+        `if`(
+             .[1L] == 'uniprot',
+             'genesymbol',
+             map_chr(., ~sprintf('%s_genesymbol', .))
+        )
+    )} %>%
+    intersect(data %>% colnames)
 
 }
 
