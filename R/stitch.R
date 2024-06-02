@@ -8,7 +8,7 @@
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Diego Mananes
-#'                 Alberto Valdeolivas
+#                  Alberto Valdeolivas
 #                  Dénes Türei (turei.denes@gmail.com)
 #                  Attila Gábor
 #
