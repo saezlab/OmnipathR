@@ -96,7 +96,7 @@ Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
 \seealso{
 \itemize{
     \item{\code{\link{chalmers_gem_network}}}
-    \item{\code{\link{stitch_gem}}}
+    \item{\code{\link{stitch_network}}}
     \item{\code{\link{omnipath_for_cosmos}}}
     \item{\code{\link{import_omnipath_interactions}}}
 }

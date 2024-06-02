@@ -20,7 +20,7 @@ identifiers."><meta property="og:image" content="https://saezlab.github.io/Omnip
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -196,8 +196,7 @@ refer to the table here: <a href="https://www.uniprot.org/help/api_idmapping" cl
 In addition, simple synonyms are available which realize a uniform API
 for the uploadlists and UniProt query based backends. These are the
 followings:</p><table class="table table"><tr><td><strong>OmnipathR</strong></td><td><strong>Uploadlists</strong></td><td><strong>UniProt query</strong></td><td><strong>Ensembl BioMart</strong></td></tr><tr><td>uniprot</td><td>ACC</td><td>id</td><td>uniprotswissprot</td></tr><tr><td>uniprot_entry</td><td>ID</td><td>entry name</td><td></td></tr><tr><td>trembl</td><td><em>reviewed = FALSE</em></td><td><em>reviewed = FALSE</em></td><td>uniprotsptrembl</td></tr><tr><td>genesymbol</td><td>GENENAME</td><td>genes(PREFERRED)</td><td>external_gene_name</td></tr><tr><td>genesymbol_syn</td><td></td><td>genes(ALTERNATIVE)</td><td>external_synonym</td></tr><tr><td>hgnc</td><td>HGNC_ID</td><td>database(HGNC)</td><td>hgnc_symbol</td></tr><tr><td>entrez</td><td>P_ENTREZGENEID</td><td>database(GeneID)</td><td></td></tr><tr><td>ensembl</td><td>ENSEMBL_ID</td><td></td><td>ensembl_gene_id</td></tr><tr><td>ensg</td><td>ENSEMBL_ID</td><td></td><td>ensembl_gene_id</td></tr><tr><td>enst</td><td>ENSEMBL_TRS_ID</td><td>database(Ensembl)</td><td>ensembl_transcript_id</td></tr><tr><td>ensp</td><td>ENSEMBL_PRO_ID</td><td></td><td>ensembl_peptide_id</td></tr><tr><td>ensgg</td><td>ENSEMBLGENOME_ID</td><td></td><td></td></tr><tr><td>ensgt</td><td>ENSEMBLGENOME_TRS_ID</td><td></td><td></td></tr><tr><td>ensgp</td><td>ENSEMBLGENOME_PRO_ID</td><td></td><td></td></tr><tr><td>protein_name</td><td></td><td>protein names</td><td></td></tr><tr><td>pir</td><td>PIR</td><td>database(PIR)</td><td></td></tr><tr><td>ccds</td><td></td><td>database(CCDS)</td><td></td></tr><tr><td>refseqp</td><td>P_REFSEQ_AC</td><td>database(refseq)</td><td></td></tr><tr><td>ipro</td><td></td><td></td><td>interpro</td></tr><tr><td>ipro_desc</td><td></td><td></td><td>interpro_description</td></tr><tr><td>ipro_sdesc</td><td></td><td></td><td>interpro_short_description</td></tr><tr><td>wikigene</td><td></td><td></td><td>wikigene_name</td></tr><tr><td>rnacentral</td><td></td><td></td><td>rnacentral</td></tr><tr><td>gene_desc</td><td></td><td></td><td>description</td></tr><tr><td>wormbase</td><td></td><td>database(WormBase)</td><td></td></tr><tr><td>flybase</td><td></td><td>database(FlyBase)</td><td></td></tr><tr><td>xenbase</td><td></td><td>database(Xenbase)</td><td></td></tr><tr><td>zfin</td><td></td><td>database(ZFIN)</td><td></td></tr><tr><td>pbd</td><td>PBD_ID</td><td>database(PDB)</td><td>pbd</td></tr></table><p>For a complete list of ID types and their synonyms, including metabolite and
-chemical ID types which are not shown here, see the lists in
-<code>OmnipathR:::omnipath.env$id_types</code>.</p>
+chemical ID types which are not shown here, see <code><a href="id_types.html">id_types</a></code>.</p>
 <p>The mapping between identifiers can be ambiguous. In this case one row
 in the original data frame yields multiple rows or elements in the
 returned data frame or vector(s).</p>
@@ -210,6 +209,7 @@ returned data frame or vector(s).</p>
 <li><p><code><a href="uniprot_full_id_mapping_table.html">uniprot_full_id_mapping_table</a></code></p></li>
 <li><p><code><a href="ensembl_id_mapping_table.html">ensembl_id_mapping_table</a></code></p></li>
 <li><p><code><a href="hmdb_id_mapping_table.html">hmdb_id_mapping_table</a></code></p></li>
+<li><p><code><a href="id_types.html">id_types</a></code></p></li>
 <li><p><code><a href="ensembl_id_type.html">ensembl_id_type</a></code></p></li>
 <li><p><code><a href="uniprot_id_type.html">uniprot_id_type</a></code></p></li>
 <li><p><code><a href="uploadlists_id_type.html">uploadlists_id_type</a></code></p></li>

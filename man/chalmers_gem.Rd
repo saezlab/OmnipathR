@@ -2,8 +2,7 @@
 % Please edit documentation in R/chalmers_gem.R
 \name{chalmers_gem}
 \alias{chalmers_gem}
-\title{Alberto Valdeolivas
-Genome scale metabolic model by Wang et al. 2021}
+\title{Genome scale metabolic model by Wang et al. 2021}
 \usage{
 chalmers_gem(organism = "Human", orphans = TRUE)
 }

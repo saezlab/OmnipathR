@@ -2,8 +2,7 @@
 % Please edit documentation in R/stitch.R
 \name{stitch_links}
 \alias{stitch_links}
-\title{Alberto Valdeolivas
-Retrieve the STITCH links dataset}
+\title{Retrieve the STITCH links dataset}
 \usage{
 stitch_links(organism = "human", prefixes = FALSE)
 }
@@ -17,7 +16,6 @@ melanogaster) and 6239 (Caenorhabditis elegans).}
 Data frame: organism specific STITCH links dataset.
 }
 \description{
-Alberto Valdeolivas
 Retrieve the STITCH links dataset
 }
 \examples{
@@ -28,6 +26,6 @@ stl <- stitch_links()
 \itemize{
     \item{\code{\link{stitch_actions}}}
     \item{\code{\link{stitch_links}}}
-    \item{\code{\link{stitch_gem}}}
+    \item{\code{\link{stitch_network}}}
 }
 }

@@ -143,7 +143,7 @@ stl <- stitch_links()
 stl
 ```
 
-`stitch_gem()` combines the actions and links data frames, filters by
+`stitch_network()` combines the actions and links data frames, filters by
 confidence scores, removes the prefixes from identifiers and translates them to
 the desired ID types. STITCH prefixes Ensembl Protein IDs with the NCBI Taxonomy
 ID, while PubChem CIDs with CID plus a lowercase letter "s" or "m", meaning
@@ -156,7 +156,7 @@ original records. Multiple rows with the same `record_id` are due to
 one-to-many identifier translation.
 
 ```{ri stitch}
-st <- stitch_gem()
+st <- stitch_network()
 
 st
 ```

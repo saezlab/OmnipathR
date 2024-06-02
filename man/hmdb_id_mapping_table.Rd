@@ -26,7 +26,7 @@ Identifier translation table from HMDB
 \details{
 The arguments \code{to} and \code{from} can be provided either
 as character or as symbol (NSE). Their possible values are either HMDB XML
-tag names or synonyms listed at \code{omnipath.env$id_types}.
+tag names or synonyms listed at \code{\link{id_types}}.
 }
 \examples{
 hmdb_kegg <- hmdb_id_mapping_table("kegg", "hmdb")
@@ -36,6 +36,8 @@ hmdb_kegg
 \seealso{
 \itemize{
     \item{\code{\link{translate_ids}}}
+    \item{\code{\link{id_types}}}
+    \item{\code{\link{hmdb_table}}}
     \item{\code{\link{uniprot_full_id_mapping_table}}}
     \item{\code{\link{uniprot_id_mapping_table}}}
     \item{\code{\link{ensembl_id_mapping_table}}}

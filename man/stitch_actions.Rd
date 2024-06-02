@@ -26,6 +26,6 @@ sta <- stitch_actions(organism = 'mouse')
 \itemize{
     \item{\code{\link{stitch_actions}}}
     \item{\code{\link{stitch_links}}}
-    \item{\code{\link{stitch_gem}}}
+    \item{\code{\link{stitch_network}}}
 }
 }
