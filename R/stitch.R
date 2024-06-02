@@ -23,10 +23,9 @@
 
 #' Retrieve the STITCH links dataset
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
-#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'     melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param organism Character or integer: name or NCBI Taxonomy ID of an
+#'     organism. STICH supports many organisms, please refer to their web site
+#'     at \url{https://stitch.embl.de/}.
 #'
 #' @return Data frame: organism specific STITCH links dataset.
 #'
@@ -66,10 +65,9 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 
 #' Retrieve the STITCH actions dataset
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
-#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'     melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param organism Character or integer: name or NCBI Taxonomy ID of an
+#'     organism. STICH supports many organisms, please refer to their web site
+#'     at \url{https://stitch.embl.de/}.
 #'
 #' @return Data frame of STITCH actions.
 #'
@@ -161,10 +159,9 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 
 #' Chemical-protein interactions from STITCH
 #'
-#' @param organism Character or integer: an organism (taxon) identifier.
-#'     Supported taxons are 9606 (Homo sapiens), 10090 (Mus musculus),
-#'     10116 (Rattus norvegicu), 7955 (Danio rerio), 7227 (Drosophila
-#'     melanogaster) and 6239 (Caenorhabditis elegans).
+#' @param organism Character or integer: name or NCBI Taxonomy ID of an
+#'     organism. STICH supports many organisms, please refer to their web site
+#'     at \url{https://stitch.embl.de/}.
 #' @param min_score Confidence cutoff used for STITCH connections
 #'     (700 by default).
 #' @param protein_ids Character: translate the protein identifiers to these ID
@@ -183,7 +180,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #' translated.
 #'
 #' @examples
-#' stg <- stitch_network(protein_ids = 'genesymbol', metabolite_ids = 'hmdb')
+#' stn <- stitch_network(protein_ids = 'genesymbol', metabolite_ids = 'hmdb')
 #'
 #' @importFrom magrittr %>% %<>%
 #' @importFrom dplyr bind_rows select filter mutate rename inner_join
