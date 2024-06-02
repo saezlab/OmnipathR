@@ -349,8 +349,7 @@ uniprot_idmapping_id_types <- function() {
 #' | pbd            | PBD_ID               | database(PDB)      | pbd                        |
 #'
 #' For a complete list of ID types and their synonyms, including metabolite and
-#' chemical ID types which are not shown here, see the lists in
-#' ``OmnipathR:::omnipath.env$id_types``.
+#' chemical ID types which are not shown here, see \code{\link{id_types}}.
 #'
 #' The mapping between identifiers can be ambiguous. In this case one row
 #' in the original data frame yields multiple rows or elements in the
@@ -380,6 +379,7 @@ uniprot_idmapping_id_types <- function() {
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{ensembl_id_mapping_table}}}
 #'     \item{\code{\link{hmdb_id_mapping_table}}}
+#'     \item{\code{\link{id_types}}}
 #'     \item{\code{\link{ensembl_id_type}}}
 #'     \item{\code{\link{uniprot_id_type}}}
 #'     \item{\code{\link{uploadlists_id_type}}}
@@ -1085,7 +1085,7 @@ ensembl_id_mapping_table <- function(
 #'
 #' @details The arguments \code{to} and \code{from} can be provided either
 #' as character or as symbol (NSE). Their possible values are either HMDB XML
-#' tag names or synonyms listed at \code{omnipath.env$id_types}.
+#' tag names or synonyms listed at \code{\link{id_types}}.
 #'
 #' @examples
 #' hmdb_kegg <- hmdb_id_mapping_table("kegg", "hmdb")
@@ -1100,6 +1100,8 @@ ensembl_id_mapping_table <- function(
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{id_types}}}
+#'     \item{\code{\link{hmdb_table}}}
 #'     \item{\code{\link{uniprot_full_id_mapping_table}}}
 #'     \item{\code{\link{uniprot_id_mapping_table}}}
 #'     \item{\code{\link{ensembl_id_mapping_table}}}
