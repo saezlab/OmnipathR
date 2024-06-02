@@ -24,7 +24,7 @@
 #' Retrieve the STITCH links dataset
 #'
 #' @param organism Character or integer: name or NCBI Taxonomy ID of an
-#'     organism. STICH supports many organisms, please refer to their web site
+#'     organism. STITCH supports many organisms, please refer to their web site
 #'     at \url{https://stitch.embl.de/}.
 #'
 #' @return Data frame: organism specific STITCH links dataset.
@@ -66,7 +66,7 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 #' Retrieve the STITCH actions dataset
 #'
 #' @param organism Character or integer: name or NCBI Taxonomy ID of an
-#'     organism. STICH supports many organisms, please refer to their web site
+#'     organism. STITCH supports many organisms, please refer to their web site
 #'     at \url{https://stitch.embl.de/}.
 #'
 #' @return Data frame of STITCH actions.
@@ -160,7 +160,7 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #' Chemical-protein interactions from STITCH
 #'
 #' @param organism Character or integer: name or NCBI Taxonomy ID of an
-#'     organism. STICH supports many organisms, please refer to their web site
+#'     organism. STITCH supports many organisms, please refer to their web site
 #'     at \url{https://stitch.embl.de/}.
 #' @param min_score Confidence cutoff used for STITCH connections
 #'     (700 by default).
