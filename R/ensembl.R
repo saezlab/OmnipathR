@@ -33,12 +33,13 @@
 #' ens_org
 #'
 #' @importFrom magrittr %>%
+#' @importFrom dplyr first
 #' @importFrom rvest read_html html_element html_table
 #' @export
 ensembl_organisms_raw <- function(){
 
     'ensembl_organisms' %>%
-    download_to_cache %>%
+    download_to_cache(req_headers = user_agent()) %>%
     read_html %>%
     html_element('table') %>%
     html_table()
@@ -188,7 +189,9 @@ biomart_query <- function(
             col_names = col_names,
             col_types = cols(.default = col_character()),
             progress = FALSE
-        )
+        ),
+        use_httr = TRUE,
+        req_headers = user_agent()
     ) %>%
     {`if`(
         slice_tail(., n = 1L) %>% extract2(1L) %>% equals('[success]'),

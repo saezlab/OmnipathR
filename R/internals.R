@@ -964,3 +964,19 @@ archive_type <- function(path, url = NULL){
     )}
 
 }
+
+
+#' Custom user-agent header from options
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr first
+#' @noRd
+user_agent <- function() {
+
+    # NSE vs. R CMD check workaround
+    'omnipath.user_agent' %>%
+    options %>%
+    first %>%
+    list('User-Agent' = .)
+
+}
