@@ -383,6 +383,9 @@ curl_wrap_url <- function(url){
 #'     will be attempted.
 #' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
 #'     will be used to download the data, otherwise \code{httr::POST}.
+#' @param req_headers List: a list of HTTP headers. Passed to
+#'     `httr::add_headers`, used only if the downloader function is set up
+#'     here (see details at param `fun`).
 #'
 #' @noRd
 download_to_cache <- function(
@@ -391,7 +394,8 @@ download_to_cache <- function(
     url_param = list(),
     http_param = list(),
     ext = NULL,
-    post = NULL
+    post = NULL,
+    req_headers = NULL
 ){
 
     url <- url_parser(
@@ -411,7 +415,8 @@ download_to_cache <- function(
             fun = NULL,
             path = version$path,
             http_param = http_param,
-            post = post
+            post = post,
+            req_headers = req_headers
         )
         omnipath_cache_download_ready(version)
 
