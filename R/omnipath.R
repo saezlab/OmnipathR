@@ -416,7 +416,6 @@ omnipath_check_param <- function(param){
     param$organisms %<>% intersect(organisms_supported)
     log_trace('Organism(s): %s', enum_format(param$organisms))
     log_trace('Orthology targets: %s', enum_format(param$orthology_targets))
-    print(param$genesymbol_resource)
 
     if(length(param$orthology_targets > 0L)) {
 
