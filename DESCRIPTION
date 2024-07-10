@@ -93,7 +93,6 @@ Suggests:
     gprofiler2,
     knitr,
     mlrMBO,
-    metaboliteIDMapping,
     parallelMap,
     ParamHelpers,
     Rgraphviz,
