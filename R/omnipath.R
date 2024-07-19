@@ -326,6 +326,36 @@ omnipath_post_download <- function(
 }
 
 
+#' Consolidate arguments for OmniPath calls
+#'
+#' Most importantly, control argument expansion by ensuring the priority of
+#' the explicitely built in synonyms.
+#'
+#' @param ... Override arguments.
+#'
+#' @return A list of arguments for `import_omnipath`.
+#'
+#' @importFrom magrittr %>% inset2 extract
+#' @importFrom purrr map
+#' @noRd
+omnipath_args <- function(...) {
+
+    override <- list(...) %>% qs_synonyms
+    call <- sys.call(-1L)
+    defaults <- call %>% extract(1L) %>% as.character %>% get %>% formals
+
+    call %>%
+    as.list %>%
+    extract(-1L) %>%
+    qs_synonyms %>%
+    modifyList(defaults, .) %>%
+    modifyList(override) %>%
+    inset2('...', NULL) %>%
+    map(eval)
+
+}
+
+
 #' Checks the arguments of \link{import_omnipath}, corrects some easy to
 #' confuse or deprecated synonyms and selects the message printed by
 #' the download function.
