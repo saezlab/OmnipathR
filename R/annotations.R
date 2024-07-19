@@ -68,15 +68,15 @@
 #'     resources = c('HPA_subcellular')
 #' )
 #'
-#' @importFrom logger log_fatal log_success
-#' @export
-#'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_annotation_databases}}}
 #'     \item{\code{\link{pivot_annotations}}}
 #' }
 #'
-#' @aliases import_Omnipath_annotations import_OmniPath_annotations
+#' @importFrom magrittr %<>%
+#' @importFrom rlang exec !!!
+#' @importFrom logger log_fatal log_success
+#' @export
 import_omnipath_annotations <- function(
     proteins = NULL,
     resources = NULL,
@@ -86,8 +86,9 @@ import_omnipath_annotations <- function(
     ...
 ){
 
-    # account for the old argument name
-    proteins <- c(proteins, list(...)$select_genes)
+    args <- omnipath_args(query_type = 'annotations')
+    wide <- pop(args, wide)
+    proteins <- pop(args, proteins)
 
     if(
         is.null(proteins) &&
@@ -110,14 +111,7 @@ import_omnipath_annotations <- function(
 
     if(length(proteins) < 600){
 
-        result <- import_omnipath(
-            query_type = 'annotations',
-            proteins = proteins,
-            resources = resources,
-            organism = organism,
-            genesymbol_resource = genesymbol_resource,
-            ...
-        )
+        result <- exec(import_omnipath, proteins = proteins, !!!args)
 
         if(!is.null(proteins)){
             result <- result[
@@ -137,7 +131,7 @@ import_omnipath_annotations <- function(
                 proteins,
                 cut(
                     seq_along(proteins),
-                    breaks = length(proteins) / 500,
+                    breaks = length(proteins) / 500L,
                     labels = FALSE
                 )
             )
@@ -151,14 +145,12 @@ import_omnipath_annotations <- function(
             parts <- append(
                 parts,
                 list(
-                    import_omnipath(
-                        query_type = 'annotations',
+                    exec(
+                        import_omnipath,
                         proteins = proteins_chunk,
-                        resources = resources,
                         recursive_call = TRUE,
                         silent = TRUE,
-                        genesymbol_resource = genesymbol_resource,
-                        ...
+                        !!!args
                     )
                 )
             )
@@ -176,37 +168,10 @@ import_omnipath_annotations <- function(
 
     }
 
-    if(wide){
-
-        result <- pivot_annotations(result)
-
-    }
+    result %<>% {`if`(wide, pivot_annotations(.), .)}
 
     return(result)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_omnipath_annotations
-#' @param ... Passed to \code{import_omnipath_annotations}.
-#' @export
-#'
-#' @noRd
-import_Omnipath_annotations <- function(...){
-    .Deprecated("import_omnipath_annotations")
-    import_omnipath_annotations(...)
-}
-
-
-#' @rdname import_omnipath_annotations
-#' @param ... Passed to \code{import_omnipath_annotations}.
-#' @export
-#'
-#' @noRd
-import_OmniPath_annotations <- function(...){
-    .Deprecated("import_omnipath_annotations")
-    import_omnipath_annotations(...)
 }
 
 
@@ -215,10 +180,10 @@ import_OmniPath_annotations <- function(...){
 #'
 #' Get the names of the resources from \url{https://omnipath.org/annotations}.
 #'
-#' @return character vector with the names of the annotation resources
-#' @export
 #' @param dataset ignored for this query type
 #' @param ... optional additional arguments
+#'
+#' @return character vector with the names of the annotation resources
 #'
 #' @examples
 #' get_annotation_resources()
@@ -228,23 +193,11 @@ import_OmniPath_annotations <- function(...){
 #'     \item{\code{\link{import_omnipath_annotations}}}
 #' }
 #'
-#' @aliases get_annotation_databases
+#' @export
 get_annotation_resources <- function(dataset = NULL, ...){
 
     return(get_resources(query_type = 'annotations', datasets = dataset))
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname get_annotation_resources
-#' @param ... Passed to \code{get_annotation_resources}.
-#' @export
-#'
-#' @noRd
-get_annotation_databases <- function(...){
-    .Deprecated("get_annotation_resources")
-    get_annotation_resources(...)
 }
 
 
