@@ -22,15 +22,16 @@
 ## Functions for importing interactions from OmniPath.
 ## The interactions database of OminPath consists of several datastes.
 
+PPI_DATASETS <- c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
+GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
+
+
 #' Imports interactions from the `omnipath` dataset of Omnipath
 #'
 #' Imports the database from \url{https://omnipathdb.org/interactions}, which
 #' contains only interactions supported by literature references.
 #' This part of the interaction database compiled a similar way as it has
 #' been presented in the first paper describing OmniPath (Turei et al. 2016).
-#'
-#' @return A dataframe of protein-protein interactions
-#' @export
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
@@ -64,6 +65,8 @@
 #'     translation.
 #' @param ... optional additional arguments
 #'
+#' @return A dataframe of protein-protein interactions
+#'
 #' @examples
 #' interactions = import_omnipath_interactions(
 #'     resources = c('SignaLink3'),
@@ -78,9 +81,11 @@
 #' }
 #'
 #' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
+#' @importFrom rlang exec !!!
+#' @export
 import_omnipath_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     datasets = 'omnipath',
     fields = NULL,
     default_fields = TRUE,
@@ -91,19 +96,9 @@ import_omnipath_interactions <- function(
     ...
 ){
 
-    import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = datasets,
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(query_type = 'interactions')
+
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -163,7 +158,7 @@ import_omnipath_interactions <- function(
 #' @export
 omnipath <- function(
     resources = NULL,
-    organism = 9606L,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -173,20 +168,9 @@ omnipath <- function(
     ...
 ){
 
-    args <- list(...)
-    args$datasets <- 'omnipath'
+    args <- omnipath_args(datasets = 'omnipath')
 
-    exec(
-        import_omnipath_interactions,
-        organism = organism,
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        !!!args
-    )
+    exec(import_omnipath_interactions, !!!args)
 
 }
 
@@ -223,9 +207,6 @@ import_OmniPath_Interactions <- function(...){
 #' The activity flow interactions supported by literature references
 #' are part of the `omnipath` dataset.
 #'
-#' @return A dataframe containing activity flow interactions between proteins
-#' without literature reference
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -253,6 +234,9 @@ import_OmniPath_Interactions <- function(...){
 #'     translation.
 #' @param ... optional additional arguments
 #'
+#' @return A dataframe containing activity flow interactions between proteins
+#' without literature reference
+#'
 #' @examples
 #' interactions <-
 #'     import_pathwayextra_interactions(
@@ -268,9 +252,11 @@ import_OmniPath_Interactions <- function(...){
 #' }
 #'
 #' @aliases import_PathwayExtra_Interactions
+#' @importFrom rlang exec !!!
+#' @export
 import_pathwayextra_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -280,19 +266,9 @@ import_pathwayextra_interactions <- function(
     ...
 ){
 
-    import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'pathwayextra',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(datasets = 'pathwayextra')
+
+    exec(import_omnipath_interactions, !!!args)
 
 }
 
@@ -318,9 +294,6 @@ import_PathwayExtra_Interactions <- function(...){
 #' The enzyme-substrate interactions supported by literature references
 #' are part of the `omnipath` dataset.
 #'
-#' @return A dataframe containing enzyme-substrate interactions without
-#' literature reference
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -348,6 +321,9 @@ import_PathwayExtra_Interactions <- function(...){
 #'     translation.
 #' @param ... Optional additional arguments.
 #'
+#' @return A dataframe containing enzyme-substrate interactions without
+#' literature reference
+#'
 #' @examples
 #' interactions <-
 #'    import_kinaseextra_interactions(
@@ -363,9 +339,11 @@ import_PathwayExtra_Interactions <- function(...){
 #' }
 #'
 #' @aliases import_KinaseExtra_Interactions
+#' @importFrom rlang exec !!!
+#' @export
 import_kinaseextra_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -375,19 +353,9 @@ import_kinaseextra_interactions <- function(
     ...
 ){
 
-    import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'kinaseextra',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(datasets = 'kinaseextra')
+
+    exec(import_omnipath_interactions, !!!args)
 
 }
 
@@ -412,9 +380,6 @@ import_KinaseExtra_Interactions <- function(...){
 #' The ligand-receptor interactions supported by literature references
 #' are part of the `omnipath` dataset.
 #'
-#' @return A dataframe containing ligand-receptor interactions including
-#' the ones without literature references
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -442,6 +407,9 @@ import_KinaseExtra_Interactions <- function(...){
 #'     translation.
 #' @param ... optional additional arguments
 #'
+#' @return A dataframe containing ligand-receptor interactions including
+#' the ones without literature references
+#'
 #' @examples
 #' interactions <- import_ligrecextra_interactions(
 #'     resources = c('HPRD', 'Guide2Pharma'),
@@ -456,9 +424,11 @@ import_KinaseExtra_Interactions <- function(...){
 #' }
 #'
 #' @aliases import_LigrecExtra_Interactions
+#' @importFrom rlang exec !!!
+#' @export
 import_ligrecextra_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -468,19 +438,9 @@ import_ligrecextra_interactions <- function(
     ...
 ){
 
-    import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'ligrecextra',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(datasets = 'ligrecextra')
+
+    exec(import_omnipath_interactions, !!!args)
 
 }
 
@@ -503,8 +463,6 @@ import_LigrecExtra_Interactions <- function(...){
 #' The datasets are "omnipath", "kinaseextra", "pathwayextra" and
 #' "ligrecextra".
 #'
-#' @return A dataframe containing post-translational interactions
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -528,7 +486,8 @@ import_LigrecExtra_Interactions <- function(...){
 #'     translation.
 #' @param ... optional additional arguments
 #'
-#' @importFrom rlang %||% exec !!!
+#' @return A dataframe containing post-translational interactions
+#'
 #' @examples
 #' interactions <-
 #'     import_post_translational_interactions(
@@ -541,9 +500,11 @@ import_LigrecExtra_Interactions <- function(...){
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#' @importFrom rlang %||% exec !!!
+#' @export
 import_post_translational_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     exclude = NULL,
     references_by_resource = TRUE,
     strict_evidences = FALSE,
@@ -551,23 +512,9 @@ import_post_translational_interactions <- function(
     ...
 ){
 
-    args <- list(...)
-    args$datasets <-
-        args$datasets %||%
-        c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
 
-    args %<>% merge_lists(
-        list(
-            query_type = 'interactions',
-            resources = resources,
-            organism = organism,
-            references_by_resource = references_by_resource,
-            exclude = exclude,
-            strict_evidences = strict_evidences,
-            genesymbol_resource = genesymbol_resource,
-        )
-    )
-
+    args <- omnipath_args(query_type = 'interactions')
+    args$datasets %<>% {. %||% PPI_DATASETS}
 
     exec(import_omnipath, !!!args)
 
@@ -583,9 +530,6 @@ import_post_translational_interactions <- function(
 #' DoRothEA is a comprehensive resource of transcriptional regulation,
 #' consisting of 16 original resources, in silico TFBS prediction, gene
 #' expression signatures and ChIP-Seq binding site analysis.
-#'
-#' @return A dataframe of TF-target interactions from DoRothEA
-#' @export
 #'
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
@@ -622,6 +566,8 @@ import_post_translational_interactions <- function(
 #'     translation.
 #' @param ... optional additional arguments
 #'
+#' @return A data frame of TF-target interactions from DoRothEA.
+#'
 #' @examples
 #' dorothea_grn <- dorothea(
 #'     resources = c('DoRothEA', 'ARACNe-GTEx_DoRothEA'),
@@ -641,9 +587,11 @@ import_post_translational_interactions <- function(
 #' }
 #'
 #' @aliases import_tfregulons_interactions import_dorothea_interactions
+#' @importFrom rlang exec !!!
+#' @export
 dorothea <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     dorothea_levels = c('A', 'B'),
     fields = NULL,
     default_fields = TRUE,
@@ -654,22 +602,9 @@ dorothea <- function(
     ...
 ){
 
-    result <- import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        dorothea_levels = dorothea_levels,
-        datasets = 'dorothea',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(query_type = 'interactions', datasets = 'dorothea')
 
-    return(result)
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -706,8 +641,6 @@ import_tfregulons_interactions <- function(...){
 #' `dorothea` is the other one and the `tf_mirna` dataset provides
 #' TF-miRNA gene interactions.
 #'
-#' @return A dataframe containing TF-target interactions
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -735,6 +668,8 @@ import_tfregulons_interactions <- function(...){
 #'     translation.
 #' @param ... Optional additional arguments
 #'
+#' @return A dataframe containing TF-target interactions
+#'
 #' @examples
 #' interactions <-
 #'     import_tf_target_interactions(
@@ -747,9 +682,11 @@ import_tfregulons_interactions <- function(...){
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#' @importFrom rlang exec !!!
+#' @export
 import_tf_target_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -759,21 +696,9 @@ import_tf_target_interactions <- function(
     ...
 ){
 
-    result <- import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'tf_target',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(query_type = 'interactions', datasets = 'tf_target')
 
-    return(result)
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -822,21 +747,20 @@ import_tf_target_interactions <- function(
 #'     )
 #' grn
 #'
-#'
-#' @export
-#' @importFrom dplyr mutate select
-#' @importFrom magrittr %>% %<>%
-#' @importFrom rlang %||% exec !!!
-#'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#'
+#' @importFrom dplyr mutate select
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang %||% exec !!!
+#' @export
 import_transcriptional_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     dorothea_levels = c('A', 'B'),
     references_by_resource = TRUE,
     exclude = NULL,
@@ -845,27 +769,10 @@ import_transcriptional_interactions <- function(
     ...
 ){
 
-    is_directed <- NULL
+    args <- omnipath_args(query_type = 'interactions')
+    args$datasets %<>% {. %||% GRN_DATASETS} %>% intersect(GRN_DATASETS)
 
-    args <- list(...)
-    tr_datasets <- c('dorothea', 'tf_target', 'collectri')
-    args$datasets %<>% {. %||% tr_datasets} %>% intersect(tr_datasets)
-
-    result <-
-        exec(
-            import_omnipath,
-            query_type = 'interactions',
-            exclude = exclude,
-            dorothea_levels = dorothea_levels,
-            organism = organism,
-            resources = resources,
-            references_by_resource = references_by_resource,
-            strict_evidences = strict_evidences,
-            genesymbol_resource = genesymbol_resource,
-            !!!args
-        )
-
-    return(result)
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -907,9 +814,6 @@ import_transcriptional_interactions <- function(
 #' collectri_grn <- collectri()
 #' collectri_grn
 #'
-#' @export
-#' @importFrom rlang exec !!!
-#'
 #' @seealso \itemize{
 #'     \item{\code{\link{import_transcriptional_interactions}}}
 #'     \item{\code{\link{dorothea}}}
@@ -918,9 +822,12 @@ import_transcriptional_interactions <- function(
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#'
+#' @export
+#' @importFrom rlang exec !!!
 collectri <- function(
     resources = NULL,
-    organism = 9606L,
+    organism = 'human',
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = TRUE,
@@ -928,19 +835,9 @@ collectri <- function(
     ...
 ){
 
-    args <- list(...)
-    args$datasets <- 'collectri'
+    args <- omnipath_args(datasets = 'collectri')
 
-    exec(
-        import_transcriptional_interactions,
-        exclude = exclude,
-        organism = organism,
-        resources = resources,
-        references_by_resource = references_by_resource,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        !!!args
-    )
+    exec(import_transcriptional_interactions, !!!args)
 
 }
 
@@ -951,8 +848,6 @@ collectri <- function(
 #' \url{https://omnipathdb.org/interactions?datasets=mirnatarget},
 #' which contains miRNA-mRNA interactions.
 #'
-#' @return A dataframe containing miRNA-mRNA interactions
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -978,6 +873,8 @@ collectri <- function(
 #'     translation.
 #' @param ... optional additional arguments
 #'
+#' @return A dataframe containing miRNA-mRNA interactions
+#'
 #' @examples
 #' interactions <-
 #'     import_mirnatarget_interactions(
@@ -992,9 +889,11 @@ collectri <- function(
 #' }
 #'
 #' @aliases import_miRNAtarget_Interactions
+#' @importFrom rlang exec !!!
+#' @export
 import_mirnatarget_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -1004,21 +903,12 @@ import_mirnatarget_interactions <- function(
     ...
 ){
 
-    result <- import_omnipath(
+    args <- omnipath_args(
         query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'mirnatarget',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
+        datasets = 'mirnatarget'
     )
 
-    return(result)
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -1041,8 +931,6 @@ import_miRNAtarget_Interactions <- function(...){
 #' \url{https://omnipathdb.org/interactions?datasets=tf_mirna},
 #' which contains transcription factor-miRNA gene interactions
 #'
-#' @return A dataframe containing TF-miRNA interactions
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -1067,6 +955,8 @@ import_miRNAtarget_Interactions <- function(...){
 #'     case a few records will be duplicated, where Ensembl provides ambiguous
 #'     translation.
 #' @param ... optional additional arguments
+#'
+#' @return A dataframe containing TF-miRNA interactions
 #'
 #' @examples
 #' interactions <-
@@ -1080,9 +970,12 @@ import_miRNAtarget_Interactions <- function(...){
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#'
+#' @export
+#' @importFrom rlang exec !!!
 import_tf_mirna_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -1092,19 +985,9 @@ import_tf_mirna_interactions <- function(
     ...
 ){
 
-    import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'tf_mirna',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(query_type = 'interactions', datasets = 'tf_mirna')
+
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -1115,8 +998,6 @@ import_tf_mirna_interactions <- function(
 #' \url{https://omnipathdb.org/interactions?datasets=lncrna_mrna},
 #' which contains lncRNA-mRNA interactions
 #'
-#' @return A dataframe containing lncRNA-mRNA interactions
-#' @export
 #' @param resources interactions not reported in these databases are
 #' removed. See \code{\link{get_interaction_resources}} for more information.
 #' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
@@ -1142,6 +1023,8 @@ import_tf_mirna_interactions <- function(
 #'     translation.
 #' @param ... optional additional arguments
 #'
+#' @return A dataframe containing lncRNA-mRNA interactions
+#'
 #' @examples
 #' interactions <-
 #'     import_lncrna_mrna_interactions(
@@ -1154,9 +1037,12 @@ import_tf_mirna_interactions <- function(
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#'
+#' @importFrom rlang exec !!!
+#' @export
 import_lncrna_mrna_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -1166,19 +1052,12 @@ import_lncrna_mrna_interactions <- function(
     ...
 ){
 
-    import_omnipath(
+    args <- omnipath_args(
         query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'lncrna_mrna',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
+        datasets = 'lncrna_mrna'
     )
+
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -1227,16 +1106,18 @@ import_lncrna_mrna_interactions <- function(
 #' # The prostaglandin synthases:
 #' interactions
 #'
-#' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
+#'
+#' @importFrom rlang exec !!!
+#' @export
 import_small_molecule_protein_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     fields = NULL,
     default_fields = TRUE,
     references_by_resource = TRUE,
@@ -1246,19 +1127,12 @@ import_small_molecule_protein_interactions <- function(
     ...
 ){
 
-    import_omnipath(
+    args <- omnipath_args(
         query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        datasets = 'small_molecule',
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
+        datasets = 'small_molecule'
     )
+
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -1321,9 +1195,6 @@ import_small_molecule_protein_interactions <- function(
 #'     organism = 9606
 #' )
 #'
-#' @importFrom magrittr %<>% %>% extract2
-#' @export
-#'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{interaction_graph}}}
@@ -1331,9 +1202,13 @@ import_small_molecule_protein_interactions <- function(
 #' }
 #'
 #' @aliases import_AllInteractions
+#'
+#' @importFrom rlang exec !!!
+#' @importFrom magrittr %<>% %>% extract2
+#' @export
 import_all_interactions <- function(
     resources = NULL,
-    organism = 9606,
+    organism = 'human',
     dorothea_levels = c('A', 'B'),
     exclude = NULL,
     fields = NULL,
@@ -1351,21 +1226,14 @@ import_all_interactions <- function(
     # it does not make sense without the type field
     fields %<>% c('type', 'dorothea_level') %>% unique
 
-    import_omnipath(
-        query_type = 'interactions',
-        resources = resources,
-        organism = organism,
-        dorothea_levels = dorothea_levels,
-        exclude = exclude,
-        datasets = datasets,
+    args <- omnipath_args(
+        query_type = 'ineractions',
         types = types,
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        strict_evidences = strict_evidences,
-        genesymbol_resource = genesymbol_resource,
-        ...
+        datasets = datasets,
+        fields = fields
     )
+
+    exec(import_omnipath, !!!args)
 
 }
 
@@ -1431,7 +1299,7 @@ get_interaction_databases <- function(...){
 #' @param envir Environment from the calling function where dataset names
 #'     present as logical variables.
 #'
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% extract
 #' @importFrom purrr keep
 #'
 #' @noRd
@@ -1439,14 +1307,7 @@ select_interaction_datasets <- function(envir){
 
     envir %>%
     as.list %>%
-    `[`(
-        c(
-            'omnipath',
-            'pathwayextra',
-            'kinaseextra',
-            'ligrecextra'
-        )
-    ) %>%
+    extract(PPI_DATASETS) %>%
     keep(identity) %>%
     names
 
