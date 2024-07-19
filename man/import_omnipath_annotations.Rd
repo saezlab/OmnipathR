@@ -2,8 +2,6 @@
 % Please edit documentation in R/annotations.R
 \name{import_omnipath_annotations}
 \alias{import_omnipath_annotations}
-\alias{import_Omnipath_annotations}
-\alias{import_OmniPath_annotations}
 \title{Imports annotations from OmniPath}
 \usage{
 import_omnipath_annotations(

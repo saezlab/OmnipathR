@@ -2,7 +2,6 @@
 % Please edit documentation in R/annotations.R
 \name{get_annotation_resources}
 \alias{get_annotation_resources}
-\alias{get_annotation_databases}
 \title{Retrieves a list of available resources in the annotations database
 of OmniPath}
 \usage{

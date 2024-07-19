@@ -1060,3 +1060,23 @@ file_size <- function(con) {
     )}
 
 }
+
+#' Pop and return list element(s) by their name(s)
+#'
+#' @importFrom magrittr %>% extract
+#' @importFrom purrr map_chr
+#' @importFrom rlang enquos
+#' @noRd
+pop <- function(lst, ...) {
+
+    name <- enquos(...) %>% map_chr(.nse_ensure_str)
+
+    assign(
+        as.character(substitute(lst)),
+        lst[setdiff(names(lst), name)],
+        envir = parent.frame()
+    )
+
+    lst %>% extract(name) %>% {`if`(length(.) == 1L, unlist(.), .)}
+
+}

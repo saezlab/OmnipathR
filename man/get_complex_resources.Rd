@@ -2,7 +2,6 @@
 % Please edit documentation in R/complexes.R
 \name{get_complex_resources}
 \alias{get_complex_resources}
-\alias{get_complexes_databases}
 \title{Retrieve a list of complex resources available in Omnipath}
 \usage{
 get_complex_resources(dataset = NULL)

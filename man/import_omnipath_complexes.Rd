@@ -2,8 +2,6 @@
 % Please edit documentation in R/complexes.R
 \name{import_omnipath_complexes}
 \alias{import_omnipath_complexes}
-\alias{import_Omnipath_complexes}
-\alias{import_OmniPath_complexes}
 \title{Imports protein complexes from OmniPath}
 \usage{
 import_omnipath_complexes(resources = NULL, ...)
