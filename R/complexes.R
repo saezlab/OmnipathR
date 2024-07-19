@@ -25,12 +25,11 @@
 #' Imports the complexes stored in Omnipath database from
 #' \url{https://omnipathdb.org/complexes}.
 #'
-#' @return A dataframe containing information about complexes
-#' @export
-#'
 #' @param resources complexes not reported in these databases are
 #' removed. See \code{\link{get_complexes_databases}} for more information.
 #' @param ... optional additional arguments
+#'
+#' @return A dataframe containing information about complexes
 #'
 #' @examples
 #' complexes = import_omnipath_complexes(
@@ -39,43 +38,17 @@
 #'
 #' @seealso \itemize{\item{\code{\link{get_complexes_databases}}}}
 #'
-#' @aliases import_Omnipath_complexes import_OmniPath_complexes
+#' @importFrom rlang exec !!!
+#' @export
 import_omnipath_complexes <- function(
     resources = NULL,
     ...
 ){
 
-    result <- import_omnipath(
-        query_type = 'complexes',
-        resources = resources,
-        ...
-    )
+    args <- omnipath_args(query_type = 'complexes')
 
-    return(result)
+    exec(import_omnipath, !!!args)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_omnipath_complexes
-#' @param ... Passed to \code{import_omnipath_complexes}.
-#' @export
-#'
-#' @noRd
-import_Omnipath_complexes <- function(...){
-    .Deprecated("import_omnipath_complexes")
-    import_omnipath_complexes(...)
-}
-
-
-#' @rdname import_omnipath_complexes
-#' @param ... Passed to \code{import_omnipath_complexes}.
-#' @export
-#'
-#' @noRd
-import_OmniPath_complexes <- function(...){
-    .Deprecated("import_omnipath_complexes")
-    import_omnipath_complexes(...)
 }
 
 
@@ -84,33 +57,20 @@ import_OmniPath_complexes <- function(...){
 #' Get the names of the resources from \url{https://omnipath.org/complexes}
 #'
 #' @param dataset ignored for this query type
-#' @return character vector with the names of the databases
 #'
 #' @examples
 #' get_complex_resources()
 #'
-#' @export
+#' @return character vector with the names of the databases
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{get_resources}}}
 #'     \item{\code{\link{import_omnipath_complexes}}}
 #' }
 #'
-#' @aliases get_complexes_databases
+#' @export
 get_complex_resources <- function(dataset = NULL){
 
     return(get_resources(query_type = 'complexes', datasets = dataset))
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname get_complex_resources
-#' @param ... Passed to \code{import_omnipath_enzsub}.
-#' @export
-#'
-#' @noRd
-get_complexes_databases <- function(...){
-    .Deprecated("get_complex_resources")
-    get_complex_resources(...)
 }
