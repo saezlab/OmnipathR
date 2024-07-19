@@ -80,7 +80,6 @@ GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_Omnipath_Interactions import_OmniPath_Interactions
 #' @importFrom rlang exec !!!
 #' @export
 import_omnipath_interactions <- function(
@@ -175,30 +174,6 @@ omnipath <- function(
 }
 
 
-# Aliases (old names) to be deprecated
-#' @rdname import_omnipath_interactions
-#' @param ... Passed to \code{import_omnipath_interactions}.
-#' @export
-#'
-#' @noRd
-import_Omnipath_Interactions <- function(...){
-    .Deprecated("import_omnipath_interactions")
-    import_omnipath_interactions(...)
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_omnipath_interactions
-#' @param ... Passed to \code{import_omnipath_interactions}.
-#' @export
-#'
-#' @noRd
-import_OmniPath_Interactions <- function(...){
-    .Deprecated("import_omnipath_interactions")
-    import_omnipath_interactions(...)
-}
-
-
 #' Imports interactions from the `pathway extra` dataset of Omnipath
 #'
 #' Imports the dataset from:
@@ -251,7 +226,6 @@ import_OmniPath_Interactions <- function(...){
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_PathwayExtra_Interactions
 #' @importFrom rlang exec !!!
 #' @export
 import_pathwayextra_interactions <- function(
@@ -270,19 +244,6 @@ import_pathwayextra_interactions <- function(
 
     exec(import_omnipath_interactions, !!!args)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#'
-#' @rdname import_pathwayextra_interactions
-#' @param ... Passed to \code{import_pathwayextra_interactions}.
-#' @export
-#'
-#' @noRd
-import_PathwayExtra_Interactions <- function(...){
-    .Deprecated("import_pathwayextra_interactions")
-    import_pathwayextra_interactions(...)
 }
 
 
@@ -338,7 +299,6 @@ import_PathwayExtra_Interactions <- function(...){
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_KinaseExtra_Interactions
 #' @importFrom rlang exec !!!
 #' @export
 import_kinaseextra_interactions <- function(
@@ -357,18 +317,6 @@ import_kinaseextra_interactions <- function(
 
     exec(import_omnipath_interactions, !!!args)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_kinaseextra_interactions
-#' @param ... Passed to \code{import_kinaseextra_interactions}.
-#' @export
-#'
-#' @noRd
-import_KinaseExtra_Interactions <- function(...){
-    .Deprecated("import_kinaseextra_interactions")
-    import_kinaseextra_interactions(...)
 }
 
 
@@ -423,7 +371,6 @@ import_KinaseExtra_Interactions <- function(...){
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_LigrecExtra_Interactions
 #' @importFrom rlang exec !!!
 #' @export
 import_ligrecextra_interactions <- function(
@@ -442,18 +389,6 @@ import_ligrecextra_interactions <- function(
 
     exec(import_omnipath_interactions, !!!args)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_ligrecextra_interactions
-#' @param ... Passed to \code{import_ligrecextra_interactions}.
-#' @export
-#'
-#' @noRd
-import_LigrecExtra_Interactions <- function(...){
-    .Deprecated("import_ligrecextra_interactions")
-    import_ligrecextra_interactions(...)
 }
 
 
@@ -586,9 +521,9 @@ import_post_translational_interactions <- function(
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_tfregulons_interactions import_dorothea_interactions
 #' @importFrom rlang exec !!!
 #' @export
+#' @aliases import_dorothea_interactions
 dorothea <- function(
     resources = NULL,
     organism = 'human',
@@ -616,17 +551,6 @@ dorothea <- function(
 #'
 #' @noRd
 import_dorothea_interactions <- function(...){
-    .Deprecated("dorothea")
-    dorothea(...)
-}
-
-
-#' @rdname dorothea
-#' @param ... Passed to \code{\link{dorothea}}.
-#' @export
-#'
-#' @noRd
-import_tfregulons_interactions <- function(...){
     .Deprecated("dorothea")
     dorothea(...)
 }
@@ -888,7 +812,6 @@ collectri <- function(
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_miRNAtarget_Interactions
 #' @importFrom rlang exec !!!
 #' @export
 import_mirnatarget_interactions <- function(
@@ -910,18 +833,6 @@ import_mirnatarget_interactions <- function(
 
     exec(import_omnipath, !!!args)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_mirnatarget_interactions
-#' @param ... Passed to \code{import_mirnatarget_interactions}.
-#' @export
-#'
-#' @noRd
-import_miRNAtarget_Interactions <- function(...){
-    .Deprecated("import_mirnatarget_interactions")
-    import_mirnatarget_interactions(...)
 }
 
 
@@ -1201,8 +1112,6 @@ import_small_molecule_protein_interactions <- function(
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
-#' @aliases import_AllInteractions
-#'
 #' @importFrom rlang exec !!!
 #' @importFrom magrittr %<>% %>% extract2
 #' @export
@@ -1238,15 +1147,6 @@ import_all_interactions <- function(
 }
 
 
-# Aliases (old names) to be deprecated
-#' @rdname import_all_interactions
-#' @param ... Passed to \code{import_all_interactions}.
-#' @export
-import_AllInteractions <- function(...){
-    .Deprecated("import_all_interactions")
-    import_all_interactions(...)
-}
-
 #' Retrieve a list of interaction resources available in Omnipath
 #'
 #' Gets the names of the resources from
@@ -1258,7 +1158,6 @@ import_AllInteractions <- function(...){
 #' `lncrna_mrna`
 #'
 #' @return character vector with the names of the interaction databases
-#' @export
 #'
 #' @examples
 #' get_interaction_resources()
@@ -1273,23 +1172,11 @@ import_AllInteractions <- function(...){
 #'     \item{\code{\link{import_mirnatarget_interactions}}}
 #'     \item{\code{\link{import_dorothea_interactions}}}
 #' }
-#'
-#' @aliases get_interaction_databases
+#' @export
 get_interaction_resources <- function(dataset = NULL){
 
     return(get_resources(query_type = 'interactions', datasets = dataset))
 
-}
-
-# Aliases (old names) to be deprecated
-#' @rdname get_interaction_resources
-#' @param ... Passed to \code{get_interaction_resources}.
-#' @export
-#'
-#' @noRd
-get_interaction_databases <- function(...){
-    .Deprecated("get_interaction_resources")
-    get_interaction_resources(...)
 }
 
 
