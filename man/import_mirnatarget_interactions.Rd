@@ -2,7 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{import_mirnatarget_interactions}
 \alias{import_mirnatarget_interactions}
-\alias{import_miRNAtarget_Interactions}
 \title{Imports interactions from the miRNA-target dataset of OmniPath}
 \usage{
 import_mirnatarget_interactions(

@@ -2,7 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{dorothea}
 \alias{dorothea}
-\alias{import_tfregulons_interactions}
 \alias{import_dorothea_interactions}
 \title{TF-target interactions from DoRothEA}
 \usage{

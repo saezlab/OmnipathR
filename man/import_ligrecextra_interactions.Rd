@@ -2,7 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{import_ligrecextra_interactions}
 \alias{import_ligrecextra_interactions}
-\alias{import_LigrecExtra_Interactions}
 \title{Imports interactions from the `ligrec extra` dataset of OmniPath}
 \usage{
 import_ligrecextra_interactions(

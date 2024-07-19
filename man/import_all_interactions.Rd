@@ -2,7 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{import_all_interactions}
 \alias{import_all_interactions}
-\alias{import_AllInteractions}
 \title{Imports all interaction datasets available in OmniPath}
 \usage{
 import_all_interactions(
@@ -18,8 +17,6 @@ import_all_interactions(
   types = NULL,
   ...
 )
-
-import_AllInteractions(...)
 }
 \arguments{
 \item{resources}{interactions not reported in these databases are
@@ -64,7 +61,7 @@ translation.}
 \item{types}{Character: interaction types, such as "transcriptional",
 "post_transcriptional", "post_translational", etc.}
 
-\item{...}{Passed to \code{import_all_interactions}.}
+\item{...}{optional additional arguments}
 }
 \value{
 A dataframe containing all the datasets in the interactions query

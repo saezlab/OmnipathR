@@ -2,8 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{import_omnipath_interactions}
 \alias{import_omnipath_interactions}
-\alias{import_Omnipath_Interactions}
-\alias{import_OmniPath_Interactions}
 \title{Imports interactions from the `omnipath` dataset of Omnipath}
 \usage{
 import_omnipath_interactions(

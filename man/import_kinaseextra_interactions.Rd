@@ -2,7 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{import_kinaseextra_interactions}
 \alias{import_kinaseextra_interactions}
-\alias{import_KinaseExtra_Interactions}
 \title{Imports interactions from the `kinase extra` dataset of OmniPath}
 \usage{
 import_kinaseextra_interactions(

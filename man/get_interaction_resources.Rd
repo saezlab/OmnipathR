@@ -2,7 +2,6 @@
 % Please edit documentation in R/interactions.R
 \name{get_interaction_resources}
 \alias{get_interaction_resources}
-\alias{get_interaction_databases}
 \title{Retrieve a list of interaction resources available in Omnipath}
 \usage{
 get_interaction_resources(dataset = NULL)
