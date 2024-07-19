@@ -8,7 +8,7 @@
 \usage{
 import_omnipath_interactions(
   resources = NULL,
-  organism = 9606,
+  organism = "human",
   datasets = "omnipath",
   fields = NULL,
   default_fields = TRUE,

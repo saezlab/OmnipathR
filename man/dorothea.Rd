@@ -8,7 +8,7 @@
 \usage{
 dorothea(
   resources = NULL,
-  organism = 9606,
+  organism = "human",
   dorothea_levels = c("A", "B"),
   fields = NULL,
   default_fields = TRUE,
@@ -65,7 +65,7 @@ translation.}
 \item{...}{optional additional arguments}
 }
 \value{
-A dataframe of TF-target interactions from DoRothEA
+A data frame of TF-target interactions from DoRothEA.
 }
 \description{
 Imports the dataset from:

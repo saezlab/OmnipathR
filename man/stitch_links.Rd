@@ -8,7 +8,7 @@ stitch_links(organism = "human", prefixes = FALSE)
 }
 \arguments{
 \item{organism}{Character or integer: name or NCBI Taxonomy ID of an
-organism. STICH supports many organisms, please refer to their web site
+organism. STITCH supports many organisms, please refer to their web site
 at \url{https://stitch.embl.de/}.}
 }
 \value{

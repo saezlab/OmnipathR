@@ -6,7 +6,7 @@
 \usage{
 import_transcriptional_interactions(
   resources = NULL,
-  organism = 9606,
+  organism = "human",
   dorothea_levels = c("A", "B"),
   references_by_resource = TRUE,
   exclude = NULL,
@@ -66,7 +66,6 @@ grn <-
         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
     )
 grn
-
 
 }
 \seealso{

@@ -6,7 +6,7 @@
 \usage{
 import_tf_target_interactions(
   resources = NULL,
-  organism = 9606,
+  organism = "human",
   fields = NULL,
   default_fields = TRUE,
   references_by_resource = TRUE,

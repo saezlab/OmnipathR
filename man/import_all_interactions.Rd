@@ -7,7 +7,7 @@
 \usage{
 import_all_interactions(
   resources = NULL,
-  organism = 9606,
+  organism = "human",
   dorothea_levels = c("A", "B"),
   exclude = NULL,
   fields = NULL,

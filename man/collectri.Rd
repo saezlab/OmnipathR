@@ -6,7 +6,7 @@
 \usage{
 collectri(
   resources = NULL,
-  organism = 9606L,
+  organism = "human",
   references_by_resource = TRUE,
   exclude = NULL,
   strict_evidences = TRUE,

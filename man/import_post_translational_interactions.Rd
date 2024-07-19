@@ -6,7 +6,7 @@
 \usage{
 import_post_translational_interactions(
   resources = NULL,
-  organism = 9606,
+  organism = "human",
   exclude = NULL,
   references_by_resource = TRUE,
   strict_evidences = FALSE,
