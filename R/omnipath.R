@@ -348,16 +348,7 @@ omnipath_check_param <- function(param){
     )
 
     param %<>% add_qt_message
-
-    # mapping the query string parameter synonyms
-    for(name in names(param)){
-        if(
-            name %in% names(.omnipath_querystring_synonyms) &&
-            !.omnipath_querystring_synonyms[[name]] %in% names(param)
-        ){
-            param[[.omnipath_querystring_synonyms[[name]]]] <- param[[name]]
-        }
-    }
+    param %<>% qs_synonyms
 
     # checking DoRothEA confidence level values
     if(
@@ -481,6 +472,29 @@ omnipath_check_param <- function(param){
 
 }
 
+
+#' Replace synonymous keys in query string parameters
+#'
+#' @importFrom magrittr %>% %<>% inset2
+#' @noRd
+qs_synonyms <- function(param) {
+
+    # mapping the query string parameter synonyms
+    for(name in names(param)){
+        if(
+            name %in% names(.omnipath_querystring_synonyms) &&
+            !.omnipath_querystring_synonyms[[name]] %in% names(param)
+        ){
+            new_name <- .omnipath_querystring_synonyms[[name]]
+            param %<>%
+                inset2(new_name, param[[name]]) %>%
+                inset2(name, NULL)
+        }
+    }
+
+    return(param)
+
+}
 
 #' Adds a message printed upon successful download
 #'
