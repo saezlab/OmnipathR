@@ -1699,7 +1699,7 @@ ensembl_uniprot <- function(ens_id_type = 'ensg', organism = 9606L){
 #' id_types()
 #'
 #' @importFrom magrittr %>% is_in
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate case_when
 #' @importFrom tidyr unnest_longer separate_longer_delim
 #' @importFrom tibble tibble
 #' @export
@@ -1740,5 +1740,91 @@ id_types <- function() {
         )
     ) %>%
     separate_longer_delim(entity_type, delim = ';')
+
+}
+
+
+#' Translate identifiers within complexes
+#'
+#' Here we attempt to provide ID translation for complexes by translating the
+#' identifiers of their members one by one. Importantly, iff any of the members
+#' is not possible to translate (i.e. missing from the translation table), the
+#' translation of the whole complex will be omitted, in order to avoid creating
+#' complexes with missing members. One to many mappings of identifiers result a
+#' combinatorial expansion, which can dramatically inflate the number of
+#' records. By default this expansion is disabled, and only the first (randomly
+#' choosen) target identifier will be used for each member. This function is
+#' not aware of any parameter of the translation, it is applicable for any
+#' organism, entity type, and even for translation by orthologous gene pairs.
+#'
+#' @param d A data frame.
+#' @param ... Names of columns containing complex identifiers.
+#' @param mapping Data frame: the ID translation table with two columns, the
+#'     source and target identifiers.
+#' @param one_to_many Logical: allow combinatorial expansion or use only the
+#'     first target identifier for each member of each complex.
+#'
+#' @param Data frame: the ID translation table with translation for complexes
+#'     added to it.
+#'
+#' @importFrom magrittr %<>% %>% not
+#' @importFrom dplyr select mutate left_join group_by filter row_number
+#' @importFrom dplyr summarize first
+#' @importFrom stringr str_replace
+#' @importFrom tibble tibble
+#' @importFrom tidyr separate_longer_delim unnest_longer unite expand_grid
+#' @importFrom purrr map
+#' @noRd
+translate_complexes <- function(d, ..., mapping, one_to_many = FALSE) {
+
+
+    # NSE vs. R CMD check workaround
+    from <- to <- From <- To <- ids <- original <-
+    complex_id <- member_id <- NULL
+
+    mapping %<>% set_names(c('from', 'to'))
+
+    d %>%
+    select(...) %>%
+    unlist %>%
+    unname %>%
+    unique %>%
+    keep(str_starts(., 'COMPLEX:')) %>%
+    str_replace('^COMPLEX:', '') %>%
+    tibble(ids = .) %>%
+    mutate(
+        original = ids,
+        complex_id = row_number()
+    ) %>%
+    separate_longer_delim(ids, '_') %>%
+    mutate(member_id = row_number()) %>%
+    left_join(mapping, by = c('ids' = 'from')) %>%
+    {`if`(
+        one_to_many,
+        .,
+        group_by(., member_id) %>%
+        filter(row_number() == 1L) %>%
+        ungroup,
+    )} %>%
+    group_by(complex_id) %>%
+    filter(to %>% is.na %>% any %>% not) %>%
+    summarize(
+        to =
+            split(to, member_id) %>%
+            do.call(expand_grid, .) %>%
+            list,
+        from =
+            split(ids, member_id) %>%
+            do.call(expand_grid, .) %>%
+            list,
+        original = first(original)
+    ) %>%
+    mutate(
+        to = map_chr(to, ~unlist(unite(.x, 'components', sep = '_'))),
+        from = map_chr(from, ~unlist(unite(.x, 'components', sep = '_')))
+    ) %>%
+    unnest_longer(to, values_to = 'To') %>%
+    unnest_longer(from, values_to = 'From') %>%
+    select(From, To)
 
 }
