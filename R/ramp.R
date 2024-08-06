@@ -107,3 +107,21 @@ ramp_table <- function(name, version = '2.5.4') {
 
 }
 
+
+ramp_id_mapping_table <- function(from, to, version = '2.5.4') {
+
+    version %>%
+    ramp_table('source', .) %>%
+    mutate(
+        sourceId = str_replace(sourceId, 'swisslipids:SLM', 'swisslipids')
+    ) %>%
+    separate_wider_delim(
+        sourceId,
+        names = c('resource', 'ID'),
+        delim = ':',
+        too_many = 'merge'
+    ) %>%
+    filter(!str_detect(ID, ':')) %>%
+    mutate(ID = ifelse(resource == 'swisslipids', sprintf('SLM:%s', ID), ID))
+
+}
