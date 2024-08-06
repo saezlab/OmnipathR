@@ -22,10 +22,23 @@
 
 #' Download and open RaMP database SQLite
 #'
+#' @param version Character. The version of RaMP to download.
+#'
+#' @return SQLite connection.
+#'
+#' @examples
+#' sqlite_con <- ramp_sqlite()
+#'
+#' @importFrom magrittr %>%
 #' @importFrom R.utils gunzip
 #' @importFrom RSQLite SQLite dbConnect
-#' @noRd
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ramp_tables}}}
+#' }
 ramp_sqlite <- function(version = '2.5.4') {
+
+    .slow_doctest()
 
     fake_url <- version %>% sprintf('RAMP_%s.sqlite', .)
     cache_record <- omnipath_cache_latest_or_new(url = fake_url)
@@ -44,9 +57,25 @@ ramp_sqlite <- function(version = '2.5.4') {
 
 }
 
-#' @importFrom RSQLite SQLite dbListTables
-#' @noRd
+
+#' List tables in RaMP database
+
+#' @param version Character. The version of RaMP to download.
+#'
+#' @return Character vector of table names in the RaMP SQLite database.
+#'
+#' @examples
+#' ramp_tables()
+#'
+#' @importFrom magrittr %>%
+#' @importFrom RSQLite dbListTables
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ramp_sqlite}}}
+#' }
 ramp_tables <- function(version = '2.5.4') {
+
+    .slow_doctest()
 
     version %>% ramp_sqlite %>% dbListTables
 
