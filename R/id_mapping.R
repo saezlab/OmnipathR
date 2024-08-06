@@ -1769,11 +1769,12 @@ id_types <- function() {
 #'
 #' @importFrom magrittr %<>% %>% not
 #' @importFrom dplyr select mutate left_join group_by filter row_number
-#' @importFrom dplyr summarize first
+#' @importFrom dplyr summarize first across
 #' @importFrom stringr str_replace
 #' @importFrom tibble tibble
 #' @importFrom tidyr separate_longer_delim unnest_longer unite expand_grid
-#' @importFrom purrr map
+#' @importFrom purrr map_chr
+#' @importFrom tidyselect everything
 #' @noRd
 translate_complexes <- function(d, ..., mapping, one_to_many = FALSE) {
 
@@ -1825,7 +1826,8 @@ translate_complexes <- function(d, ..., mapping, one_to_many = FALSE) {
     ) %>%
     unnest_longer(to, values_to = 'To') %>%
     unnest_longer(from, values_to = 'From') %>%
-    select(From, To)
+    select(From, To) %>%
+    mutate(across(everything(), ~sprintf('COMPLEX:%s', .x)))
 
 }
 
