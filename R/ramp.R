@@ -80,3 +80,30 @@ ramp_tables <- function(version = '2.5.4') {
     version %>% ramp_sqlite %>% dbListTables
 
 }
+
+
+#' Return table from RaMP database
+
+#' @param version Character. The version of RaMP to download.
+#'
+#' @return Character vector of table names in the RaMP SQLite database.
+#'
+#' @examples
+#' ramp_table('source')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom RSQLite dbReadTable
+#' @importFrom tibble as_tibble
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ramp_sqlite}}}
+#'     \item{\code{\link{ramp_tables}}}
+#' }
+ramp_table <- function(name, version = '2.5.4') {
+
+    .slow_doctest()
+
+    version %>% ramp_sqlite %>% dbReadTable(name) %>% as_tibble()
+
+}
+
