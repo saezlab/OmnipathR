@@ -43,3 +43,11 @@ ramp_sqlite <- function(version = '2.5.4') {
     dbConnect(SQLite(), cache_record$path)
 
 }
+
+#' @importFrom RSQLite SQLite dbListTables
+#' @noRd
+ramp_tables <- function(version = '2.5.4') {
+
+    version %>% ramp_sqlite %>% dbListTables
+
+}
