@@ -1828,3 +1828,19 @@ translate_complexes <- function(d, ..., mapping, one_to_many = FALSE) {
     select(From, To)
 
 }
+
+
+#' List available ID translation resources
+#'
+#' @return A character vector with the names of the available ID translation
+#'     resources.
+#'
+#' @examples
+#' id_translation_resources()
+#'
+#' @export
+id_translation_resources <- function() {
+
+    names(omnipath.env$id_types)
+
+}
