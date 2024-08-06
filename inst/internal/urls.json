@@ -148,5 +148,9 @@
     "chalmers_gem": [
         "https://raw.githubusercontent.com/SysBioChalmers/%s-GEM/main/model/%s"
     ],
-    "hmdb": "https://hmdb.ca/system/downloads/current/%s.zip"
+    "hmdb": "https://hmdb.ca/system/downloads/current/%s.zip",
+    "ramp": [
+        "https://media.githubusercontent.com/media/ncats/RaMP-DB/",
+        "main/db/RaMP_SQLite_v%s.sqlite.gz"
+    ]
 }
