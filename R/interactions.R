@@ -759,9 +759,9 @@ collectri <- function(
     ...
 ){
 
-    args <- omnipath_args(datasets = 'collectri')
+    args <- omnipath_args(query_type = 'interactions', datasets = 'collectri')
 
-    exec(import_transcriptional_interactions, !!!args)
+    exec(import_omnipath, !!!args)
 
 }
 
