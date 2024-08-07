@@ -278,6 +278,7 @@ uniprot_idmapping_id_types <- function() {
 #'     less download and data storage.
 #' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
 #' @param hmdb Logical: use HMDB ID translation data.
+#' @param ramp Logical: use RaMP ID translation data.
 #' @param chalmers Logical: use ID translation data from Chalmers Sysbio GEM.
 #' @param entity_type Character: "gene" and "smol" are short symbols for
 #'     proteins, genes and small molecules respectively. Several other synonyms
@@ -393,6 +394,7 @@ translate_ids <- function(
     uploadlists = FALSE,
     ensembl = FALSE,
     hmdb = FALSE,
+    ramp = FALSE,
     chalmers = FALSE,
     entity_type = NULL,
     keep_untranslated = TRUE,
@@ -408,7 +410,7 @@ translate_ids <- function(
 
     organism %<>% ncbi_taxid
     entity_type %<>% ensure_entity_type
-    hmdb %<>% or(entity_type == 'small_molecule' && !chalmers)
+    ramp %<>% or(entity_type == 'small_molecule' && !hmdb && !chalmers)
 
     ids <- ellipsis_to_char(...)
     id_cols <- names(ids)
@@ -448,6 +450,7 @@ translate_ids <- function(
                 ensembl = ensembl,
                 uploadlists = uploadlists,
                 hmdb = hmdb,
+                ramp = ramp,
                 chalmers = chalmers,
                 entity_type = entity_type,
                 identifiers = d %>% pull(!!sym(from_col)),
@@ -793,6 +796,7 @@ trim_and_distinct <- function(d){
 #' @param uploadlists Logical: force to use the uploadlists service.
 #' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
 #' @param hmdb Logical: use HMDB ID translation data.
+#' @param ramp Logical: use RaMP ID translation data.
 #' @param chalmers Logical: use ID translation data from Chalmers Sysbio GEM.
 #' @param entity_type Character: "gene" and "smol" are short symbols for
 #'     proteins, genes and small molecules respectively. Several other synonyms
@@ -824,6 +828,7 @@ id_translation_table <- function(
     uploadlists = FALSE,
     ensembl = FALSE,
     hmdb = FALSE,
+    ramp = FALSE,
     chalmers = FALSE,
     entity_type = NULL,
     identifiers = NULL,
@@ -877,6 +882,19 @@ id_translation_table <- function(
                 to = !!sym(to),
                 from = !!sym(from),
                 entity_type = entity_type
+            )
+
+    } else if(ramp) {
+
+        log_trace(
+            'ID translation table: from `%s` to `%s`, using RaMP',
+            from, to
+        )
+
+        result <-
+            ramp_id_mapping_table(
+                to = !!sym(to),
+                from = !!sym(from)
             )
 
     } else if(
