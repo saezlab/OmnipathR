@@ -7,7 +7,7 @@
 ramp_id_type(label)
 }
 \arguments{
-\item{label}{Character: an ID type label, as shown in the table returned 
+\item{label}{Character: an ID type label, as shown in the table returned
 by \code{\link{id_types}}}
 }
 \value{

@@ -10,6 +10,7 @@ translate_ids(
   uploadlists = FALSE,
   ensembl = FALSE,
   hmdb = FALSE,
+  ramp = FALSE,
   chalmers = FALSE,
   entity_type = NULL,
   keep_untranslated = TRUE,
@@ -42,6 +43,8 @@ less download and data storage.}
 \item{ensembl}{Logical: use data from Ensembl BioMart instead of UniProt.}
 
 \item{hmdb}{Logical: use HMDB ID translation data.}
+
+\item{ramp}{Logical: use RaMP ID translation data.}
 
 \item{chalmers}{Logical: use ID translation data from Chalmers Sysbio GEM.}
 
