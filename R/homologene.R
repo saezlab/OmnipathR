@@ -135,8 +135,8 @@ homologene_download <- function(
     # NSE vs. R CMD check workaround
     hgroup <- NULL
 
-    source <- .nse_ensure_str(!!enquo(source)) %>% ncbi_taxid
-    target <- .nse_ensure_str(!!enquo(target)) %>% ncbi_taxid
+    source %<>% ncbi_taxid
+    target %<>% ncbi_taxid
     id_type <- .nse_ensure_str(!!enquo(id_type))
 
     homologene_raw() %>%
@@ -197,24 +197,25 @@ homologene_uniprot_orthology <- function(
     entrez <- uniprot <- NULL
 
     by <- .nse_ensure_str(!!enquo(by))
-    source <- .nse_ensure_str(!!enquo(source)) %>% ncbi_taxid
-    target <- .nse_ensure_str(!!enquo(target)) %>% ncbi_taxid
+    log_trace('HomoloGene: translating to UniProt by `%s`.', by)
+    source %<>% ncbi_taxid
+    target %<>% ncbi_taxid
 
     homologene_download(
-        target = !!target,
-        source = !!source,
+        target = target,
+        source = source,
         id_type = !!sym(by)
     ) %>%
     translate_ids(
         !!sym(sprintf('%s_source', by)) := !!sym(by),
         source = uniprot,
-        organism = !!source,
+        organism = source,
         ...
     ) %>%
     translate_ids(
         !!sym(sprintf('%s_target', by)) := !!sym(by),
         target = uniprot,
-        organism = !!target,
+        organism = target,
         ...
     ) %>%
     select(source, target) %>%
