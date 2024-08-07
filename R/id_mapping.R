@@ -293,6 +293,14 @@ uniprot_idmapping_id_types <- function() {
 #' @param organism Character or integer, name or NCBI Taxonomy ID of the
 #'     organism (by default 9606 for human). Matters only if
 #'     \code{uploadlists} is \code{FALSE}.
+#' @param complexes Logical: translate complexes by their members. Only
+#'     complexes where all members can be translated will be included in the
+#'     result. If \code{NULL}, the option `omnipath.complex_translation` will
+#'     be used.
+#' @param complexes_one_to_many Logical: allow combinatorial expansion or
+#'     use only the first target identifier for each member of each complex.
+#'     If \code{NULL}, the option `omnipath.complex_translation_one_to_many`
+#'     will be used.
 #'
 #' @return
 #' \itemize{
@@ -400,7 +408,9 @@ translate_ids <- function(
     keep_untranslated = TRUE,
     return_df = FALSE,
     organism = 9606,
-    reviewed = TRUE
+    reviewed = TRUE,
+    complexes = NULL,
+    complexes_one_to_many = NULL
 ){
 
     .slow_doctest()
@@ -444,19 +454,33 @@ translate_ids <- function(
         to_types,
         function(d, to_col, to_type){
 
-            translation_table <- id_translation_table(
-                !!sym(from_type),
-                !!sym(to_type),
-                ensembl = ensembl,
-                uploadlists = uploadlists,
-                hmdb = hmdb,
-                ramp = ramp,
-                chalmers = chalmers,
-                entity_type = entity_type,
-                identifiers = d %>% pull(!!sym(from_col)),
-                organism = organism,
-                reviewed = reviewed
-            )
+            translation_table <-
+                id_translation_table(
+                    !!sym(from_type),
+                    !!sym(to_type),
+                    ensembl = ensembl,
+                    uploadlists = uploadlists,
+                    hmdb = hmdb,
+                    ramp = ramp,
+                    chalmers = chalmers,
+                    entity_type = entity_type,
+                    identifiers = d %>% pull(!!sym(from_col)),
+                    organism = organism,
+                    reviewed = reviewed
+                ) %>%
+                {`if`(
+                    complexes,
+                    bind_rows(
+                        .,
+                        translate_complexes(
+                            d,
+                            !!sym(from_col),
+                            mapping = .,
+                            one_to_many = complexes_one_to_many
+                        )
+                    ),
+                    .
+                )}
 
             d %>%
             join_method(
