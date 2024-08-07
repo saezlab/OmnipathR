@@ -13,9 +13,11 @@ chalmers-gem:
     - Zebrafish
     - Drosophila melanogaster (Fruit fly)
     - Caenorhabditis elegans (PRJNA13758)
+    - Caenorhabditis elegans (Nematode, N2)
   custom:
     Caenorhabditis elegans (PRJNA13758): Worm
     Drosophila melanogaster (Fruit fly): Fruitfly
+    Caenorhabditis elegans (Nematode, N2): Worm
 cosmos:
   id_type: ncbi_taxid
   supported:
