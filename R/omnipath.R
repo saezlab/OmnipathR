@@ -724,12 +724,13 @@ update_genesymbols <- function(data, param, organism = 9606L) {
 
     if(is_empty_2(up_cols)) {
 
-        log_warn(
+        warn <-
             paste0(
                'No columns with UniProt IDs found, ',
                'not updating gene symbols.'
             )
-        )
+        log_warn(warn)
+        warning(warn)
         return(data)
 
     }
@@ -753,7 +754,7 @@ update_genesymbols <- function(data, param, organism = 9606L) {
     }
 
     resource %T>%
-    {log_info('Settings gene symbols from `%s`.', .)} %>%
+    {log_info('Setting gene symbols from `%s`.', .)} %>%
     {reduce(
         up_cols,
         ~translate_ids(
@@ -767,7 +768,8 @@ update_genesymbols <- function(data, param, organism = 9606L) {
                 )
             ) := genesymbol,
             organism = organism,
-            ensembl = resource == 'ensembl'
+            ensembl = resource == 'ensembl',
+            keep_untranslated = FALSE
         ),
         .init = data
     )} %T>%
