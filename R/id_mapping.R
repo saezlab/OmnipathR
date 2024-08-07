@@ -418,6 +418,7 @@ translate_ids <- function(
     # NSE vs. R CMD check workaround
     To <- NULL
 
+    complexes %<>% if_null(getOption('omnipath.complex_translation'))
     organism %<>% ncbi_taxid
     entity_type %<>% ensure_entity_type
     ramp %<>% or(entity_type == 'small_molecule' && !hmdb && !chalmers)
@@ -1880,26 +1881,30 @@ id_types <- function() {
 #'     source and target identifiers.
 #' @param one_to_many Logical: allow combinatorial expansion or use only the
 #'     first target identifier for each member of each complex.
+#'     If \code{NULL}, the option `omnipath.complex_translation_one_to_many`
+#'     will be used.
 #'
 #' @param Data frame: the ID translation table with translation for complexes
 #'     added to it.
 #'
 #' @importFrom magrittr %<>% %>% not
 #' @importFrom dplyr select mutate left_join group_by filter row_number
-#' @importFrom dplyr summarize first across
+#' @importFrom dplyr summarize first across pull
 #' @importFrom stringr str_replace
 #' @importFrom tibble tibble
 #' @importFrom tidyr separate_longer_delim unnest_longer unite expand_grid
-#' @importFrom purrr map_chr
+#' @importFrom purrr map
 #' @importFrom tidyselect everything
 #' @noRd
-translate_complexes <- function(d, ..., mapping, one_to_many = FALSE) {
-
+translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
 
     # NSE vs. R CMD check workaround
     from <- to <- From <- To <- ids <- original <-
-    complex_id <- member_id <- NULL
+    complex_id <- member_id <- comp <- NULL
 
+    one_to_many %<>% if_null(
+        getOption('omnipath.complex_translation_one_to_many')
+    )
     mapping %<>% set_names(c('from', 'to'))
 
     d %>%

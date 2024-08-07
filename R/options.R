@@ -63,7 +63,9 @@
     omnipath.user_agent = paste0(
         'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) ',
         'Gecko/20100101 Firefox/120.0'
-    )
+    ),
+    omnipath.complex_translation = TRUE,
+    omnipath.complex_translation_one_to_many = TRUE
 )
 
 
