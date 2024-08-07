@@ -159,7 +159,7 @@ ramp_table <- function(name, version = '2.5.4') {
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr inner_join mutate filter select distinct
-#' @importFrom tidyr separate_wider
+#' @importFrom tidyr separate_wider_delim
 #' @importFrom stringr str_replace str_detect
 #' @importFrom rlang !! enquo
 #' @export

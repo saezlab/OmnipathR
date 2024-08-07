@@ -1241,6 +1241,34 @@ hmdb_id_type <- function(label){
 }
 
 
+#' RaMP identifier type label
+#'
+#' @param label Character: an ID type label, as shown in the table returned 
+#'     by \code{\link{id_types}}
+#'
+#' @return Character: the RaMP specific ID type label, or the input
+#'     unchanged if it could not be translated (still might be a valid
+#'     identifier name). These labels should be valid value
+#'     names, as used in RaMP SQL database.
+#'
+#' @examples
+#' ramp_id_type("rhea")
+#' # [1] "rhea-comp"
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{chalmers_gem_id_type}}}
+#'     \item{\code{\link{uniprot_id_type}}}
+#'     \item{\code{\link{ensembl_id_type}}}
+#'     \item{\code{\link{uploadlists_id_type}}}
+#' }
+ramp_id_type <- function(label){
+
+    resource_id_type(label, 'ramp')
+
+}
+
+
 #' Metabolite identifier type label used in Chalmers Sysbio GEM
 #'
 #' @param label Character: an ID type label, as shown in the table at

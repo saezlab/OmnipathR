@@ -7,6 +7,8 @@
 ramp_table(name, version = "2.5.4")
 }
 \arguments{
+\item{name}{Character. The name of the RaMP table to fetch.}
+
 \item{version}{Character. The version of RaMP to download.}
 }
 \value{
