@@ -1142,6 +1142,48 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
 }
 
 
+#' Pairwise ID translation table from RaMP database
+
+#' @param from Character or Symbol. Name of an identifier type.
+#' @param to Character or Symbol. Name of an identifier type.
+#' @param version Character. The version of RaMP to download.
+#'
+#' @return Dataframe of pairs of identifiers.
+#'
+#' @examples
+#' ramp_id_mapping_table('hmdb', 'kegg')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang !! enquo
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ramp_sqlite}}}
+#'     \item{\code{\link{ramp_tables}}}
+#'     \item{\code{\link{ramp_table}}}
+#'     \item{\code{\link{translate_ids}}}
+#'     \item{\code{\link{id_types}}}
+#'     \item{\code{\link{hmdb_table}}}
+#'     \item{\code{\link{uniprot_full_id_mapping_table}}}
+#'     \item{\code{\link{uniprot_id_mapping_table}}}
+#'     \item{\code{\link{ensembl_id_mapping_table}}}
+#'     \item{\code{\link{chalmers_gem_id_mapping_table}}}
+#' }
+ramp_id_mapping_table <- function(from, to, version = '2.5.4') {
+
+    .slow_doctest()
+
+    from <- .nse_ensure_str(!!enquo(from)) %>% ramp_id_type
+    to <- .nse_ensure_str(!!enquo(to)) %>% ramp_id_type
+
+    with_cache(
+        name = 'ramp_id_mapping_table',
+        args = list(from, to, version),
+        callback = ramp_id_mapping_table_impl
+    )
+
+}
+
+
 #' Metabolite ID translation tables from Chalmers Sysbio
 #'
 #' @param to Character: type of ID to translate to, either label used
@@ -1243,7 +1285,7 @@ hmdb_id_type <- function(label){
 
 #' RaMP identifier type label
 #'
-#' @param label Character: an ID type label, as shown in the table returned 
+#' @param label Character: an ID type label, as shown in the table returned
 #'     by \code{\link{id_types}}
 #'
 #' @return Character: the RaMP specific ID type label, or the input

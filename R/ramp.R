@@ -162,18 +162,18 @@ ramp_table <- function(name, version = '2.5.4') {
 #' @importFrom tidyr separate_wider_delim
 #' @importFrom stringr str_replace str_detect
 #' @importFrom rlang !! enquo
-#' @export
+#' @noRd
 #' @seealso \itemize{
 #'     \item{\code{\link{ramp_sqlite}}}
 #'     \item{\code{\link{ramp_tables}}}
 #'     \item{\code{\link{ramp_table}}}
 #' }
-ramp_id_mapping_table <- function(from, to, version = '2.5.4') {
+ramp_id_mapping_table_impl <- function(from, to, version = '2.5.4') {
 
     .slow_doctest()
 
-    from <- .nse_ensure_str(!!enquo(from))
-    to <- .nse_ensure_str(!!enquo(to))
+    from <- .nse_ensure_str(!!enquo(from)) %>% ramp_id_type
+    to <- .nse_ensure_str(!!enquo(to)) %>% ramp_id_type
 
     version %>%
     ramp_table('source', .) %>%
