@@ -84,6 +84,7 @@ ramp_tables <- function(version = '2.5.4') {
 
 #' Return table from RaMP database
 
+#' @param name Character. The name of the RaMP table to fetch.
 #' @param version Character. The version of RaMP to download.
 #'
 #' @return Character vector of table names in the RaMP SQLite database.
@@ -108,7 +109,33 @@ ramp_table <- function(name, version = '2.5.4') {
 }
 
 
+#' Pairwise ID translation table from RaMP database
+
+#' @param from Character or Symbol. Name of an identifier type.
+#' @param to Character or Symbol. Name of an identifier type.
+#' @param version Character. The version of RaMP to download.
+#' 
+#' @return Dataframe of pairs of identifiers. 
+#'
+#' @examples
+#' ramp_id_mapping_table('hmdb', 'kegg')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr inner_join mutate filter select distinct
+#' @importFrom tidyr separate_wider 
+#' @importFrom stringr str_replace str_detect 
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{ramp_sqlite}}}
+#'     \item{\code{\link{ramp_tables}}}
+#'     \item{\code{\link{ramp_table}}}
+#' }
 ramp_id_mapping_table <- function(from, to, version = '2.5.4') {
+
+    .slow_doctest()
+
+    from <- .nse_ensure_str(from)
+    to <- .nse_ensure_str(to)
 
     version %>%
     ramp_table('source', .) %>%
