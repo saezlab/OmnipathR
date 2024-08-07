@@ -38,13 +38,15 @@ oma_organisms <- function() {
         reader_param = list(
             col_names = c(
                 'oma_code',
+                'oma_tax_id',
                 'ncbi_tax_id',
+                'gtdb_genome',
                 'latin_name',
                 'genome_source',
                 'oma_version'
             ),
             col_types = cols(),
-            comment = '#'
+            skip = 3L
         )
     )
 
