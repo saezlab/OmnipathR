@@ -20,7 +20,7 @@ identifiers."><meta property="og:image" content="https://saezlab.github.io/Omnip
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,12 +95,15 @@ identifiers.</p>
 <span>  uploadlists <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ensembl <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  hmdb <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ramp <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  chalmers <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  entity_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  keep_untranslated <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  return_df <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  organism <span class="op">=</span> <span class="fl">9606</span>,</span>
-<span>  reviewed <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  reviewed <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  complexes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  complexes_one_to_many <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -140,6 +143,10 @@ less download and data storage.</p></dd>
 <dd><p>Logical: use HMDB ID translation data.</p></dd>
 
 
+<dt>ramp</dt>
+<dd><p>Logical: use RaMP ID translation data.</p></dd>
+
+
 <dt>chalmers</dt>
 <dd><p>Logical: use ID translation data from Chalmers Sysbio GEM.</p></dd>
 
@@ -170,6 +177,20 @@ organism (by default 9606 for human). Matters only if
 <dd><p>Translate only reviewed (<code>TRUE</code>), only unreviewed
 (<code>FALSE</code>) or both (<code>NULL</code>) UniProt records. Matters only
 if <code>uploadlists</code> is <code>FALSE</code>.</p></dd>
+
+
+<dt>complexes</dt>
+<dd><p>Logical: translate complexes by their members. Only
+complexes where all members can be translated will be included in the
+result. If <code>NULL</code>, the option <code>omnipath.complex_translation</code> will
+be used.</p></dd>
+
+
+<dt>complexes_one_to_many</dt>
+<dd><p>Logical: allow combinatorial expansion or
+use only the first target identifier for each member of each complex.
+If <code>NULL</code>, the option <code>omnipath.complex_translation_one_to_many</code>
+will be used.</p></dd>
 
 </dl></div>
     <div class="section level2">
