@@ -16,7 +16,9 @@ translate_ids(
   keep_untranslated = TRUE,
   return_df = FALSE,
   organism = 9606,
-  reviewed = TRUE
+  reviewed = TRUE,
+  complexes = NULL,
+  complexes_one_to_many = NULL
 )
 }
 \arguments{
@@ -65,6 +67,16 @@ organism (by default 9606 for human). Matters only if
 \item{reviewed}{Translate only reviewed (\code{TRUE}), only unreviewed
 (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
 if \code{uploadlists} is \code{FALSE}.}
+
+\item{complexes}{Logical: translate complexes by their members. Only
+complexes where all members can be translated will be included in the
+result. If \code{NULL}, the option \code{omnipath.complex_translation} will
+be used.}
+
+\item{complexes_one_to_many}{Logical: allow combinatorial expansion or
+use only the first target identifier for each member of each complex.
+If \code{NULL}, the option \code{omnipath.complex_translation_one_to_many}
+will be used.}
 }
 \value{
 \itemize{
