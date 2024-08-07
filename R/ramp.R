@@ -122,6 +122,13 @@ ramp_id_mapping_table <- function(from, to, version = '2.5.4') {
         too_many = 'merge'
     ) %>%
     filter(!str_detect(ID, ':')) %>%
-    mutate(ID = ifelse(resource == 'swisslipids', sprintf('SLM:%s', ID), ID))
+    mutate(ID = ifelse(resource == 'swisslipids', sprintf('SLM:%s', ID), ID)) %>%
+    {inner_join(
+        filter(., resource == from) %>% select(From = ID, rampId),
+        filter(., resource == to) %>% select(To = ID, rampId),
+        by = 'rampId'
+    )} %>%
+    select(-rampId) %>%
+    distinct
 
 }
