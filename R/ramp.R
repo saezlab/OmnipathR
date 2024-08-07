@@ -20,6 +20,43 @@
 #
 
 
+RAMP_METABOLITE_ID_TYPES <- c(
+    "hmdb",
+    "chebi",
+    "chemspider",
+    "kegg",
+    "pubchem",
+    "pubchem_cid",
+    "CAS",
+    "cas",
+    "wikidata",
+    "LIPIDMAPS",
+    "lipidmaps",
+    "lipidbank",
+    "swisslipids",
+    "plantfa",
+    "kegg_glycan",
+    "rhea-comp",
+    "rhea",
+    "polymer"
+)
+
+RAMP_GENE_ID_TYPES <- c(
+    "hmdb",
+    "wikidata",
+    "ensg",
+    "ensembl",
+    "genesymbol",
+    "gene_symbol",
+    "uniprot",
+    "entrez",
+    "EN",
+    "en",
+    "ncbiprotein",
+    "brenda"
+)
+
+
 #' Download and open RaMP database SQLite
 #'
 #' @param version Character. The version of RaMP to download.

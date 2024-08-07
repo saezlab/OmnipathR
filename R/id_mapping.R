@@ -1722,6 +1722,9 @@ id_types <- function() {
     hmdb_met <- hmdb_metabolite_fields()
     hmdb_pro <- hmdb_protein_fields()
     hmdb_com <- hmdb_met %>% intersect(hmdb_pro)
+    ramp_met <- RAMP_METABOLITE_ID_TYPES
+    ramp_pro <- RAMP_GENE_ID_TYPES
+    ramp_com <- ramp_met %>% intersect(ramp_pro)
 
     omnipath.env$id_types %>%
     {tibble(idtype = list(.))} %>%
@@ -1735,6 +1738,8 @@ id_types <- function() {
         entity_type = case_when(
             resource == 'hmdb' & in_resource %in% hmdb_com ~ 'metabolite;protein',
             resource == 'hmdb' & in_resource %in% hmdb_met ~ 'metabolite',
+            resource == 'ramp' & in_resource %in% ramp_com ~ 'metabolite;protein',
+            resource == 'ramp' & in_resource %in% ramp_met ~ 'metabolite',
             resource == 'chalmers_gem' ~ 'metabolite',
             TRUE ~ 'protein'
         )
