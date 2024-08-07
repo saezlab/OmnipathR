@@ -323,7 +323,7 @@ annotation_categories <- function(){
 #' @export
 #' @importFrom magrittr %>% %<>% is_greater_than
 #' @importFrom tidyr pivot_wider
-#' @importFrom dplyr select pull group_split
+#' @importFrom dplyr select pull group_split group_by group_keys
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @importFrom readr type_convert cols
@@ -339,16 +339,19 @@ pivot_annotations <- function(annotations){
         pull(source) %>%
         unique %>%
         length %>%
-        is_greater_than(1)
+        is_greater_than(1L)
 
-    if(more_than_one_resources){
+    if(more_than_one_resources) {
 
         annotations %>%
-        group_split(source) %>%
-        set_names(annotations %>% pull(source) %>% unique %>% sort) %>%
+        group_by(source) %>%
+        {set_names(
+            group_split(.),
+            group_keys(.)$source
+        )} %>%
         map(pivot_annotations)
 
-    }else{
+    } else {
 
         id_cols <- c(
             'record_id',
