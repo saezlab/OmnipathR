@@ -1943,8 +1943,8 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
         original = first(original)
     ) %>%
     mutate(
-        to = map_chr(to, ~unlist(unite(.x, 'components', sep = '_'))),
-        from = map_chr(from, ~unlist(unite(.x, 'components', sep = '_')))
+        to = map(to, ~unite(.x, comp, sep = '_') %>% pull(comp)),
+        from = map(from, ~unite(.x, comp, sep = '_') %>% pull(comp))
     ) %>%
     unnest_longer(to, values_to = 'To') %>%
     unnest_longer(from, values_to = 'From') %>%
