@@ -442,6 +442,7 @@ translate_ids <- function(
                 by = 'From' %>% set_names(from_col)
             ) %>%
             mutate(!!sym(to_col) := To) %>%
+            {`if`(keep_untranslated, ., filter(., !is.na(To)))} %>%
             select(-To)
 
         },
