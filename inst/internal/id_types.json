@@ -143,5 +143,33 @@
         "recon3d": "metRecon3DID",
         "metanetx": "metMetaNetXID",
         "hmr2": "metHMR2ID"
+    },
+    "ramp": {
+        "hmdb": "hmdb",
+        "chebi": "chebi",
+        "chemspider": "chemspider",
+        "kegg": "kegg",
+        "pubchem": "pubchem",
+        "pubchem_cid": "pubchem",
+        "CAS": "CAS",
+        "cas": "CAS",
+        "wikidata": "wikidata",
+        "LIPIDMAPS": "LIPIDMAPS",
+        "lipidmaps": "LIPIDMAPS",
+        "lipidbank": "lipidbank",
+        "swisslipids": "swisslipids",
+        "plantfa": "plantfa",
+        "kegg_glycan": "kegg_glycan",
+        "rhea-comp": "rhea-comp",
+        "rhea": "rhea-comp",
+        "polymer": "polymer",
+        "ensembl": "ensembl",
+        "gene_symbol":"gene_symbol",
+        "uniprot": "uniprot",
+        "entrez": "entrez",
+        "EN": "EN",
+        "en": "EN",
+        "ncbiprotein": "ncbiprotein",
+        "brenda":"brenda"
     }
 }
