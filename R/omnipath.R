@@ -331,27 +331,37 @@ omnipath_post_download <- function(
 #' Most importantly, control argument expansion by ensuring the priority of
 #' the explicitely built in synonyms.
 #'
+#' @param dots List: dots from the parent.
 #' @param ... Override arguments.
 #'
 #' @return A list of arguments for `import_omnipath`.
 #'
 #' @importFrom magrittr %>% inset2 extract
+#' @importFrom stringr str_extract
 #' @importFrom purrr map
 #' @noRd
-omnipath_args <- function(...) {
+omnipath_args <- function(dots, ...) {
 
+    calling_env <- parent.frame()
     override <- list(...) %>% qs_synonyms
     call <- sys.call(-1L)
-    defaults <- call %>% extract(1L) %>% as.character %>% get %>% formals
 
-    call %>%
+    defaults <-
+        call %>%
+        extract(1L) %>%
+        as.character %>%
+        str_extract('^(?:[A-z_]*:+)?([A-z_]+)$', group = 1L) %>%
+        get %>%
+        formals %>%
+        qs_synonyms
+
+    calling_env %>%
     as.list %>%
-    extract(-1L) %>%
     qs_synonyms %>%
     modifyList(defaults, .) %>%
+    modifyList(dots %>% qs_synonyms) %>%
     modifyList(override) %>%
-    inset2('...', NULL) %>%
-    map(eval)
+    inset2('...', NULL)
 
 }
 
