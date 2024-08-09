@@ -57,12 +57,12 @@ GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
+# #' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
+# #'     former leaves intact the gene symbols returned by the web service,
+# #'     originally set from UniProt. The latter updates the gene symbols from
+# #'     Ensembl, which uses a slightly different gene symbol standard. In this
+# #'     case a few records will be duplicated, where Ensembl provides ambiguous
+# #'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe of protein-protein interactions
@@ -91,11 +91,10 @@ import_omnipath_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(query_type = 'interactions')
+    args <- omnipath_args(list(...), query_type = 'interactions')
 
     exec(import_omnipath, !!!args)
 
@@ -131,12 +130,6 @@ import_omnipath_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments, passed to
 #' \code{\link{import_omnipath_interactions}}.
 #'
@@ -163,11 +156,10 @@ omnipath <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(datasets = 'omnipath')
+    args <- omnipath_args(list(...), datasets = 'omnipath')
 
     exec(import_omnipath_interactions, !!!args)
 
@@ -201,12 +193,6 @@ omnipath <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe containing activity flow interactions between proteins
@@ -236,11 +222,10 @@ import_pathwayextra_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(datasets = 'pathwayextra')
+    args <- omnipath_args(list(...), datasets = 'pathwayextra')
 
     exec(import_omnipath_interactions, !!!args)
 
@@ -274,12 +259,6 @@ import_pathwayextra_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... Optional additional arguments.
 #'
 #' @return A dataframe containing enzyme-substrate interactions without
@@ -309,11 +288,10 @@ import_kinaseextra_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(datasets = 'kinaseextra')
+    args <- omnipath_args(list(...), datasets = 'kinaseextra')
 
     exec(import_omnipath_interactions, !!!args)
 
@@ -347,12 +325,6 @@ import_kinaseextra_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe containing ligand-receptor interactions including
@@ -381,11 +353,10 @@ import_ligrecextra_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(datasets = 'ligrecextra')
+    args <- omnipath_args(list(...), datasets = 'ligrecextra')
 
     exec(import_omnipath_interactions, !!!args)
 
@@ -413,12 +384,6 @@ import_ligrecextra_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe containing post-translational interactions
@@ -443,12 +408,11 @@ import_post_translational_interactions <- function(
     exclude = NULL,
     references_by_resource = TRUE,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
 
-    args <- omnipath_args(query_type = 'interactions')
+    args <- omnipath_args(list(...), query_type = 'interactions')
     args$datasets %<>% {. %||% PPI_DATASETS}
 
     exec(import_omnipath, !!!args)
@@ -493,12 +457,6 @@ import_post_translational_interactions <- function(
 #' and references might be based on other datasets and resources. In case of
 #' DoRothEA this is not desirable for most of the applications. For most of
 #' the other interaction querying functions it is `FALSE` by default.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A data frame of TF-target interactions from DoRothEA.
@@ -533,11 +491,14 @@ dorothea <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = TRUE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(query_type = 'interactions', datasets = 'dorothea')
+    args <- omnipath_args(
+        list(...),
+        query_type = 'interactions',
+        datasets = 'dorothea'
+    )
 
     exec(import_omnipath, !!!args)
 
@@ -584,12 +545,6 @@ import_dorothea_interactions <- function(...){
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... Optional additional arguments
 #'
 #' @return A dataframe containing TF-target interactions
@@ -616,11 +571,14 @@ import_tf_target_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(query_type = 'interactions', datasets = 'tf_target')
+    args <- omnipath_args(
+        list(...),
+        query_type = 'interactions',
+        datasets = 'tf_target'
+    )
 
     exec(import_omnipath, !!!args)
 
@@ -654,12 +612,6 @@ import_tf_target_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... Optional additional arguments.
 #'
 #' @return A dataframe containing TF-target interactions.
@@ -689,11 +641,10 @@ import_transcriptional_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(query_type = 'interactions')
+    args <- omnipath_args(list(...), query_type = 'interactions')
     args$datasets %<>% {. %||% GRN_DATASETS} %>% intersect(GRN_DATASETS)
 
     exec(import_omnipath, !!!args)
@@ -717,20 +668,13 @@ import_transcriptional_interactions <- function(
 #' @param references_by_resource if FALSE, removes the resource name prefixes
 #' from the references (PubMed IDs); this way the information which reference
 #' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources. In case of
 #' CollecTRI this is not desirable for most of the applications. For most of
 #' the other interaction querying functions it is `FALSE` by default.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... Optional additional arguments, passed to
-#'     \code{\link{import_transcriptional_interactions}}.
+#'     \code{\link{import_omnipath_interactions}}.
 #'
 #' @return A dataframe of TF-target interactions.
 #'
@@ -753,13 +697,16 @@ collectri <- function(
     resources = NULL,
     organism = 'human',
     references_by_resource = TRUE,
-    exclude = NULL,
     strict_evidences = TRUE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(query_type = 'interactions', datasets = 'collectri')
+    args <-
+        omnipath_args(
+            list(...),
+            query_type = 'interactions',
+            datasets = 'collectri'
+        )
 
     exec(import_omnipath, !!!args)
 
@@ -789,12 +736,6 @@ collectri <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe containing miRNA-mRNA interactions
@@ -822,11 +763,11 @@ import_mirnatarget_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
     args <- omnipath_args(
+        list(...),
         query_type = 'interactions',
         datasets = 'mirnatarget'
     )
@@ -859,12 +800,6 @@ import_mirnatarget_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe containing TF-miRNA interactions
@@ -892,11 +827,14 @@ import_tf_mirna_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
-    args <- omnipath_args(query_type = 'interactions', datasets = 'tf_mirna')
+    args <- omnipath_args(
+        list(...),
+        query_type = 'interactions',
+        datasets = 'tf_mirna'
+    )
 
     exec(import_omnipath, !!!args)
 
@@ -926,12 +864,6 @@ import_tf_mirna_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe containing lncRNA-mRNA interactions
@@ -959,11 +891,11 @@ import_lncrna_mrna_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
     args <- omnipath_args(
+        list(...),
         query_type = 'interactions',
         datasets = 'lncrna_mrna'
     )
@@ -998,12 +930,6 @@ import_lncrna_mrna_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param ... optional additional arguments
 #'
 #' @return A dataframe of small molecule-protein interactions
@@ -1034,11 +960,11 @@ import_small_molecule_protein_interactions <- function(
     references_by_resource = TRUE,
     exclude = NULL,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     ...
 ){
 
     args <- omnipath_args(
+        list(...),
         query_type = 'interactions',
         datasets = 'small_molecule'
     )
@@ -1090,12 +1016,6 @@ import_small_molecule_protein_interactions <- function(
 #' @param strict_evidences Logical: restrict the evidences to the queried
 #' datasets and resources. If set to FALSE, the directions and effect signs
 #' and references might be based on other datasets and resources.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
 #' @param types Character: interaction types, such as "transcriptional",
 #' "post_transcriptional", "post_translational", etc.
 #' @param ... optional additional arguments
@@ -1124,7 +1044,6 @@ import_all_interactions <- function(
     default_fields = TRUE,
     references_by_resource = TRUE,
     strict_evidences = FALSE,
-    genesymbol_resource = NULL,
     types = NULL,
     ...
 ){
@@ -1136,6 +1055,7 @@ import_all_interactions <- function(
     fields %<>% c('type', 'dorothea_level') %>% unique
 
     args <- omnipath_args(
+        list(...),
         query_type = 'ineractions',
         types = types,
         datasets = datasets,
