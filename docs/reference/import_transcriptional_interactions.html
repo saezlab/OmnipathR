@@ -22,7 +22,7 @@ interactions."><meta property="og:image" content="https://saezlab.github.io/Omni
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,7 +99,6 @@ interactions.</p>
 <span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  strict_evidences <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  genesymbol_resource <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -142,15 +141,6 @@ comes from which resource will be lost and the PubMed IDs will be unique.</p></d
 <dd><p>Logical: restrict the evidences to the queried
 datasets and resources. If set to FALSE, the directions and effect signs
 and references might be based on other datasets and resources.</p></dd>
-
-
-<dt>genesymbol_resource</dt>
-<dd><p>Character: either "uniprot" or "ensembl". The
-former leaves intact the gene symbols returned by the web service,
-originally set from UniProt. The latter updates the gene symbols from
-Ensembl, which uses a slightly different gene symbol standard. In this
-case a few records will be duplicated, where Ensembl provides ambiguous
-translation.</p></dd>
 
 
 <dt>...</dt>
