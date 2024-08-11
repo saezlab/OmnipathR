@@ -86,7 +86,7 @@ import_omnipath_annotations <- function(
     ...
 ){
 
-    args <- omnipath_args(query_type = 'annotations')
+    args <- omnipath_args(list(...), query_type = 'annotations')
     wide <- pop(args, wide)
     proteins <- pop(args, proteins)
 
