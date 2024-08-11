@@ -142,21 +142,104 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 )
 
 
-#' Downloads data from the OmniPath web service
+#' Download data from the OmniPath web service
 #'
-#' Generic method for retrieval of a table and creating a data frame.
-#' All methods specific for certain query types or datasets use this function
-#' to manage the download.
-#' Not exported.
+#' This is the most generic method for accessing data from the OmniPath web
+#' service. All other functions retrieving data from OmniPath call this
+#' function with various parameters. In general, every query can retrieve data
+#' in tabular or JSON format, the tabular (data frame) being the default.
+#'
+#' @param query_type Character: "interactions", "enzsub", "complexes",
+#'     "annotations", or "intercell".
+#' @param organism Character or integer: name or NCBI Taxonomy ID of the
+#'     organism. OmniPath is built of human data, and the web service provides
+#'     orthology translated interactions and enzyme-substrate relationships for
+#'     mouse and rat. For other organisms and query types, orthology
+#'     translation will be called automatically on the downloaded human data
+#'     before returning the result.
+#' @param resources Character vector: name of one or more resources. Restrict
+#'     the data to these resources. For a complete list of available resources,
+#'     call the `get_<query_type>_resources` functions for the query type of
+#'     interst.
+#' @param datasets Character vector: name of one or more datasets. In the
+#'     interactions query type a number of datasets are available. The default
+#'     is caled "omnipath", and corresponds to the curated causal signaling
+#'     network published in the 2016 OmniPath paper.
+#' @param genesymbols Character or logical: TRUE or FALS or "yes" or "no".
+#'     Include the `genesymbols` column in the results. OmniPath uses UniProt
+#'     IDs as the primary identifiers, gene symbols are optional.
+#' @param fields Character vector: additional fields to include in the result.
+#'     For a list of available fields, call `query_info("interactions")`.
+#' @param default_fields Logical: if TRUE, the default fields will be included.
+#' @param silent Logical: if TRUE, no messages will be printed. By default a
+#'     summary message is printed upon successful download.
+#' @param logicals Character vector: fields to be cast to logical.
+#' @param format Character: if "json", JSON will be retrieved and processed
+#'     into a nested list; any other value will return data frame.
+#' @param download_args List: parameters to pass to the download function,
+#'     which is `readr::read_tsv` by default, and `jsonlite::safe_load`.
+#' @param references_by_resource Logical: if TRUE,, in the `references`
+#'     column the PubMed IDs will be prefixed with the names of the resources
+#'     they are coming from. If FALSE, the `references` column will be a list
+#'     of unique PubMed IDs.
+#' @param add_counts Logical: if TRUE, the number of references and number of
+#'     resources for each record will be added to the result.
+#' @param license Character: license restrictions. By default, data from
+#'     resources allowing "academic" use is returned by OmniPath. If you use
+#'     the data for work in a company, you can provide "commercial" or
+#'     "for-profit", which will restrict the data to those records which are
+#'     supported by resources that allow for-profit use.
+#' @param password Character: password for the OmniPath web service. You can
+#'     provide a special password here which enables the use of `license =
+#'     "ignore"` option, completely bypassing the license filter.
+#' @param exclude Character vector: resource or dataset names to be excluded.
+#'     The data will be filtered after download to remove records of the
+#'     excluded datasets and resources.
+#' @param json_param List: parameters to pass to the `jsonlite::fromJSON` when
+#'     processing JSON columns embedded in the downloaded data. Such columns
+#'     are "extra_attrs" and "evidences". These are optional columns which
+#'     provide a lot of extra details about interactions.
+#' @param strict_evidences Logical: reconstruct the "sources" and "references"
+#'     columns of interaction data frames based on the "evidences" column,
+#'     strictly filtering them to the queried datasets and resources. Without
+#'     this, the "sources" and "references" fields for each record might
+#'     contain information for datasets and resources other than the queried
+#'     ones, because the downloaded records are a result of a simple filtering
+#'     of an already integrated data frame.
+#' @param genesymbol_resource Character: "uniprot" (default) or "ensembl". The
+#'     OmniPath web service uses the primary gene symbols as provided by
+#'     UniProt. By passing "ensembl" here, the UniProt gene symbols will be
+#'     replaced by the ones used in Ensembl. This translation results in a loss
+#'     of a few records, and multiplication of another few records due to
+#'     ambiguous translation.
+#' @param cache Logical: use caching, load data from and save to the. The cache
+#'     directory by default belongs to the user, located in the user's default
+#'     cache directory, and named "OmnipathR". Find out about it by
+#'     \code{\link{omnipath_get_cachedir}}. Can be changed by
+#'     \code{\link{omnipath_set_cachedir}}.
+#' @param ... Additional parameters for the OmniPath web service. These
+#'     parameters will be processed, validated and included in the query
+#'     string. Many parameters are already explicitly set by the arguments
+#'     above. A number of query type specific parameters are also available,
+#'     learn more about these by the \code{\link{query_info}} function. For
+#'     functions more specific than \code{\link{omnipath_query}}, arguments for
+#'     all downstream functions are also passed here.
+#'
+#' @return Data frame (tibble) or list: the data returned by the OmniPath web
+#'     service (or loaded from cache), after processing. Nested list if the
+#'     "format" parameter is "json", otherwise a tibble.
+#'
+#' @examples
+#' interaction_data <- omnipath_query("interaction", datasets = "omnipath")
+#' interaction_data
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom tibble as_tibble
 #' @importFrom readr read_tsv cols col_character
 #' @importFrom utils modifyList
 #' @importFrom rlang !!!
-#'
-#' @noRd
-import_omnipath <- function(
+#' @export
+omnipath_query <- function(
     query_type,
     organism = 9606L,
     resources = NULL,
@@ -167,6 +250,7 @@ import_omnipath <- function(
     silent = FALSE,
     logicals = NULL,
     download_args = list(),
+    format = 'data.frame',
     references_by_resource = TRUE,
     add_counts = TRUE,
     license = NULL,
@@ -219,7 +303,7 @@ import_omnipath <- function(
     download_args %<>%
         modifyList(
             `if`(
-                !is.null(param$format) && param$format == 'json',
+                !is_empty_2(param$format) && param$format == 'json',
                 json_defaults,
                 dataframe_defaults
             ),

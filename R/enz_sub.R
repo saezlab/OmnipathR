@@ -78,7 +78,7 @@ import_omnipath_enzsub <- function(
     ...
 ){
 
-    result <- import_omnipath(
+    result <- omnipath_query(
         query_type = 'enzsub',
         resources = resources,
         organism = organism,

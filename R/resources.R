@@ -226,7 +226,7 @@ strip_resource_labels <- function(
 #' @export
 resource_info <- function() {
 
-    import_omnipath('resources', format = 'json')
+    omnipath_query('resources', format = 'json')
 
 }
 
@@ -253,7 +253,7 @@ query_info <- function(query_type) {
 
     query_type %>%
     sprintf('queries/%s', .) %>%
-    import_omnipath(format = 'json')
+    omnipath_query(format = 'json')
 
 }
 
@@ -285,7 +285,7 @@ database_summary <- function(query_type, return_df = FALSE) {
 
     query_type %>%
     sprintf('%s_summary', .) %>%
-    import_omnipath(format = 'json') %>%
+    omnipath_query(format = 'json') %>%
     map(~modifyList(., set_names(str_split(.$value, '#'), 'value'))) %>%
     map(~modifyList(., list(value = keep(.$value, ~nchar(.x) > 0L)))) %>%
     `if`(return_df, tibble(.) %>% unnest_wider(1L), .)

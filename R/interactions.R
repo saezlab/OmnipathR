@@ -96,7 +96,7 @@ import_omnipath_interactions <- function(
 
     args <- omnipath_args(list(...), query_type = 'interactions')
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -415,7 +415,7 @@ import_post_translational_interactions <- function(
     args <- omnipath_args(list(...), query_type = 'interactions')
     args$datasets %<>% {. %||% PPI_DATASETS}
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -500,7 +500,7 @@ dorothea <- function(
         datasets = 'dorothea'
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -580,7 +580,7 @@ import_tf_target_interactions <- function(
         datasets = 'tf_target'
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -647,7 +647,7 @@ import_transcriptional_interactions <- function(
     args <- omnipath_args(list(...), query_type = 'interactions')
     args$datasets %<>% {. %||% GRN_DATASETS} %>% intersect(GRN_DATASETS)
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -708,7 +708,7 @@ collectri <- function(
             datasets = 'collectri'
         )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -772,7 +772,7 @@ import_mirnatarget_interactions <- function(
         datasets = 'mirnatarget'
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -836,7 +836,7 @@ import_tf_mirna_interactions <- function(
         datasets = 'tf_mirna'
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -900,7 +900,7 @@ import_lncrna_mrna_interactions <- function(
         datasets = 'lncrna_mrna'
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -969,7 +969,7 @@ import_small_molecule_protein_interactions <- function(
         datasets = 'small_molecule'
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
@@ -1062,7 +1062,7 @@ import_all_interactions <- function(
         fields = fields
     )
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 

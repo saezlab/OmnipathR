@@ -167,7 +167,7 @@ import_omnipath_intercell <- function(
     args$genesymbol_resource <- genesymbol_resource
 
     result <-
-        do.call(import_omnipath, args) %>%
+        do.call(omnipath_query, args) %>%
         intercell_consensus_filter(
             percentile = consensus_percentile,
             loc_percentile = loc_consensus_percentile,
@@ -527,7 +527,7 @@ import_intercell_network <- function(
         modifyList(interactions_param)
 
     interactions <- do.call(
-        import_omnipath,
+        omnipath_query,
         interactions_param
     )
     interactions <- swap_undirected(interactions)
@@ -1205,7 +1205,7 @@ get_intercell_categories <- function(){
 
     return(
         unique(
-            import_omnipath('intercell_summary', license = NA)$category
+            omnipath_query('intercell_summary', license = NA)$category
         )
     )
 
@@ -1232,7 +1232,7 @@ get_intercell_categories <- function(){
 #' @export
 intercell_categories <- function(){
 
-    import_omnipath('intercell_summary', license = NA)
+    omnipath_query('intercell_summary', license = NA)
 
 }
 
@@ -1258,7 +1258,7 @@ get_intercell_generic_categories <- function(){
 
     return(
         unique(
-            import_omnipath('intercell_summary', license = NA)$parent
+            omnipath_query('intercell_summary', license = NA)$parent
         )
     )
 }

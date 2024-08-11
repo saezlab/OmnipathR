@@ -111,7 +111,7 @@ import_omnipath_annotations <- function(
 
     if(length(proteins) < 600){
 
-        result <- exec(import_omnipath, proteins = proteins, !!!args)
+        result <- exec(omnipath_query, proteins = proteins, !!!args)
 
         if(!is.null(proteins)){
             result <- result[
@@ -146,7 +146,7 @@ import_omnipath_annotations <- function(
                 parts,
                 list(
                     exec(
-                        import_omnipath,
+                        omnipath_query,
                         proteins = proteins_chunk,
                         recursive_call = TRUE,
                         silent = TRUE,
@@ -234,7 +234,7 @@ annotation_categories <- function(){
     # NSE vs. R CMD check workaround
     value <- NULL
 
-    import_omnipath('annotations_summary', license = NA) %>%
+    omnipath_query('annotations_summary', license = NA) %>%
     separate_rows(value, sep = '#')
 
 }

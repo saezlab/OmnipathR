@@ -47,7 +47,7 @@ import_omnipath_complexes <- function(
 
     args <- omnipath_args(query_type = 'complexes')
 
-    exec(import_omnipath, !!!args)
+    exec(omnipath_query, !!!args)
 
 }
 
