@@ -35,7 +35,9 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 .omnipath_qt_synonyms <- list(
     ptms = 'enzsub',
     enz_sub = 'enzsub',
-    complex = 'complexes'
+    complex = 'complexes',
+    interaction = 'interactions',
+    network = 'interactions'
 )
 
 .omnipath_qt_messages <- list(
