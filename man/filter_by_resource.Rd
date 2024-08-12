@@ -2,7 +2,6 @@
 % Please edit documentation in R/resources.R
 \name{filter_by_resource}
 \alias{filter_by_resource}
-\alias{filter_sources}
 \title{Filters OmniPath data by resources}
 \usage{
 filter_by_resource(data, resources = NULL)

@@ -2,7 +2,6 @@
 % Please edit documentation in R/print_interactions.R
 \name{print_path_es}
 \alias{print_path_es}
-\alias{printPath_es}
 \title{Prints network paths in an edge sequence}
 \usage{
 print_path_es(edgeSeq, G)

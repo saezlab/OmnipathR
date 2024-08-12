@@ -2,7 +2,6 @@
 % Please edit documentation in R/print_interactions.R
 \name{print_path_vs}
 \alias{print_path_vs}
-\alias{printPath_vs}
 \title{Print networks paths given by node sequence}
 \usage{
 print_path_vs(nodeSeq, G)

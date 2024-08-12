@@ -4,14 +4,7 @@
 \alias{import_omnipath_annotations}
 \title{Imports annotations from OmniPath}
 \usage{
-import_omnipath_annotations(
-  proteins = NULL,
-  resources = NULL,
-  wide = FALSE,
-  organism = "human",
-  genesymbol_resource = NULL,
-  ...
-)
+import_omnipath_annotations(proteins = NULL, wide = FALSE, ...)
 }
 \arguments{
 \item{proteins}{Vector containing the genes or proteins for whom
@@ -20,27 +13,81 @@ miRBase IDs). It is also possible to donwload annotations for protein
 complexes. To do so, write 'COMPLEX:' right before the genesymbols of
 the genes integrating the complex. Check the vignette for examples.}
 
-\item{resources}{Load the annotations only from these databases.
-See \code{\link{get_annotation_resources}} for possible values.}
-
 \item{wide}{Convert the annotation table to wide format, which
 corresponds more or less to the original resource. If the data comes
 from more than one resource a list of wide tables will be returned.
 See examples at \code{\link{pivot_annotations}}.}
 
-\item{organism}{Character or integer: Name or NCBI Taxonomy ID of one or
-organisms. The web service currently provides intercell annotations
-only for human. For other organisms, the data will be translated
-by orthologous gene pairs from human.}
-
-\item{genesymbol_resource}{Character: either "uniprot" or "ensembl". The
-former leaves intact the gene symbols returned by the web service,
-originally set from UniProt. The latter updates the gene symbols from
-Ensembl, which uses a slightly different gene symbol standard. In this
-case a few records will be duplicated, where Ensembl provides ambiguous
-translation.}
-
-\item{...}{Additional arguments.}
+\item{...}{
+  Arguments passed on to \code{\link[=omnipath_query]{omnipath_query}}
+  \describe{
+    \item{\code{organism}}{Character or integer: name or NCBI Taxonomy ID of the
+organism. OmniPath is built of human data, and the web service provides
+orthology translated interactions and enzyme-substrate relationships for
+mouse and rat. For other organisms and query types, orthology
+translation will be called automatically on the downloaded human data
+before returning the result.}
+    \item{\code{resources}}{Character vector: name of one or more resources. Restrict
+the data to these resources. For a complete list of available resources,
+call the `get_<query_type>_resources` functions for the query type of
+interst.}
+    \item{\code{datasets}}{Character vector: name of one or more datasets. In the
+interactions query type a number of datasets are available. The default
+is caled "omnipath", and corresponds to the curated causal signaling
+network published in the 2016 OmniPath paper.}
+    \item{\code{genesymbols}}{Character or logical: TRUE or FALS or "yes" or "no".
+Include the `genesymbols` column in the results. OmniPath uses UniProt
+IDs as the primary identifiers, gene symbols are optional.}
+    \item{\code{fields}}{Character vector: additional fields to include in the result.
+For a list of available fields, call `query_info("interactions")`.}
+    \item{\code{default_fields}}{Logical: if TRUE, the default fields will be included.}
+    \item{\code{silent}}{Logical: if TRUE, no messages will be printed. By default a
+summary message is printed upon successful download.}
+    \item{\code{logicals}}{Character vector: fields to be cast to logical.}
+    \item{\code{format}}{Character: if "json", JSON will be retrieved and processed
+into a nested list; any other value will return data frame.}
+    \item{\code{download_args}}{List: parameters to pass to the download function,
+which is `readr::read_tsv` by default, and `jsonlite::safe_load`.}
+    \item{\code{references_by_resource}}{Logical: if TRUE,, in the `references`
+column the PubMed IDs will be prefixed with the names of the resources
+they are coming from. If FALSE, the `references` column will be a list
+of unique PubMed IDs.}
+    \item{\code{add_counts}}{Logical: if TRUE, the number of references and number of
+resources for each record will be added to the result.}
+    \item{\code{license}}{Character: license restrictions. By default, data from
+resources allowing "academic" use is returned by OmniPath. If you use
+the data for work in a company, you can provide "commercial" or
+"for-profit", which will restrict the data to those records which are
+supported by resources that allow for-profit use.}
+    \item{\code{password}}{Character: password for the OmniPath web service. You can
+provide a special password here which enables the use of `license =
+"ignore"` option, completely bypassing the license filter.}
+    \item{\code{exclude}}{Character vector: resource or dataset names to be excluded.
+The data will be filtered after download to remove records of the
+excluded datasets and resources.}
+    \item{\code{json_param}}{List: parameters to pass to the `jsonlite::fromJSON` when
+processing JSON columns embedded in the downloaded data. Such columns
+are "extra_attrs" and "evidences". These are optional columns which
+provide a lot of extra details about interactions.}
+    \item{\code{strict_evidences}}{Logical: reconstruct the "sources" and "references"
+columns of interaction data frames based on the "evidences" column,
+strictly filtering them to the queried datasets and resources. Without
+this, the "sources" and "references" fields for each record might
+contain information for datasets and resources other than the queried
+ones, because the downloaded records are a result of a simple filtering
+of an already integrated data frame.}
+    \item{\code{genesymbol_resource}}{Character: "uniprot" (default) or "ensembl". The
+OmniPath web service uses the primary gene symbols as provided by
+UniProt. By passing "ensembl" here, the UniProt gene symbols will be
+replaced by the ones used in Ensembl. This translation results in a loss
+of a few records, and multiplication of another few records due to
+ambiguous translation.}
+    \item{\code{cache}}{Logical: use caching, load data from and save to the. The cache
+directory by default belongs to the user, located in the user's default
+cache directory, and named "OmnipathR". Find out about it by
+\code{\link{omnipath_get_cachedir}}. Can be changed by
+\code{\link{omnipath_set_cachedir}}.}
+  }}
 }
 \value{
 A data frame containing different gene and complex annotations.

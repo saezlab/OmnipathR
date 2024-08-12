@@ -2,7 +2,6 @@
 % Please edit documentation in R/enz_sub.R
 \name{get_enzsub_resources}
 \alias{get_enzsub_resources}
-\alias{get_ptms_databases}
 \title{Retrieves a list of enzyme-substrate resources available in OmniPath}
 \usage{
 get_enzsub_resources(dataset = NULL)
