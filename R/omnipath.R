@@ -119,7 +119,9 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     entity_type = 'entity_types',
     signs = 'signed',
     modification = 'types',
-    type = 'types'
+    type = 'types',
+    interaction_type = 'types',
+    interaction_types = 'types'
 )
 
 
@@ -167,6 +169,9 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 #'     interactions query type a number of datasets are available. The default
 #'     is caled "omnipath", and corresponds to the curated causal signaling
 #'     network published in the 2016 OmniPath paper.
+#' @param types Character vector: one or more interaction types, such as
+#'     "transcriptional" or "post_translational". For a full list of
+#'     interaction types see `query_info("interaction")$types`.
 #' @param genesymbols Character or logical: TRUE or FALS or "yes" or "no".
 #'     Include the `genesymbols` column in the results. OmniPath uses UniProt
 #'     IDs as the primary identifiers, gene symbols are optional.
@@ -246,6 +251,7 @@ omnipath_query <- function(
     organism = 9606L,
     resources = NULL,
     datasets = NULL,
+    types = NULL,
     genesymbols = 'yes',
     fields = NULL,
     default_fields = TRUE,
