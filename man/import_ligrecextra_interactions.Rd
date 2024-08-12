@@ -20,6 +20,9 @@ before returning the result.}
 the data to these resources. For a complete list of available resources,
 call the `get_<query_type>_resources` functions for the query type of
 interst.}
+    \item{\code{types}}{Character vector: one or more interaction types, such as
+"transcriptional" or "post_translational". For a full list of
+interaction types see `query_info("interaction")$types`.}
     \item{\code{genesymbols}}{Character or logical: TRUE or FALS or "yes" or "no".
 Include the `genesymbols` column in the results. OmniPath uses UniProt
 IDs as the primary identifiers, gene symbols are optional.}

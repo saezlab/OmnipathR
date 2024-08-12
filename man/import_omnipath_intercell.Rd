@@ -94,13 +94,6 @@ before returning the result.}
 the data to these resources. For a complete list of available resources,
 call the `get_<query_type>_resources` functions for the query type of
 interst.}
-    \item{\code{datasets}}{Character vector: name of one or more datasets. In the
-interactions query type a number of datasets are available. The default
-is caled "omnipath", and corresponds to the curated causal signaling
-network published in the 2016 OmniPath paper.}
-    \item{\code{genesymbols}}{Character or logical: TRUE or FALS or "yes" or "no".
-Include the `genesymbols` column in the results. OmniPath uses UniProt
-IDs as the primary identifiers, gene symbols are optional.}
     \item{\code{fields}}{Character vector: additional fields to include in the result.
 For a list of available fields, call `query_info("interactions")`.}
     \item{\code{default_fields}}{Logical: if TRUE, the default fields will be included.}
@@ -111,12 +104,6 @@ summary message is printed upon successful download.}
 into a nested list; any other value will return data frame.}
     \item{\code{download_args}}{List: parameters to pass to the download function,
 which is `readr::read_tsv` by default, and `jsonlite::safe_load`.}
-    \item{\code{references_by_resource}}{Logical: if TRUE,, in the `references`
-column the PubMed IDs will be prefixed with the names of the resources
-they are coming from. If FALSE, the `references` column will be a list
-of unique PubMed IDs.}
-    \item{\code{add_counts}}{Logical: if TRUE, the number of references and number of
-resources for each record will be added to the result.}
     \item{\code{license}}{Character: license restrictions. By default, data from
 resources allowing "academic" use is returned by OmniPath. If you use
 the data for work in a company, you can provide "commercial" or

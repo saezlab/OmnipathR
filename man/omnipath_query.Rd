@@ -9,6 +9,7 @@ omnipath_query(
   organism = 9606L,
   resources = NULL,
   datasets = NULL,
+  types = NULL,
   genesymbols = "yes",
   fields = NULL,
   default_fields = TRUE,
@@ -48,6 +49,10 @@ interst.}
 interactions query type a number of datasets are available. The default
 is caled "omnipath", and corresponds to the curated causal signaling
 network published in the 2016 OmniPath paper.}
+
+\item{types}{Character vector: one or more interaction types, such as
+"transcriptional" or "post_translational". For a full list of
+interaction types see `query_info("interaction")$types`.}
 
 \item{genesymbols}{Character or logical: TRUE or FALS or "yes" or "no".
 Include the `genesymbols` column in the results. OmniPath uses UniProt

@@ -20,10 +20,6 @@ before returning the result.}
 the data to these resources. For a complete list of available resources,
 call the `get_<query_type>_resources` functions for the query type of
 interst.}
-    \item{\code{datasets}}{Character vector: name of one or more datasets. In the
-interactions query type a number of datasets are available. The default
-is caled "omnipath", and corresponds to the curated causal signaling
-network published in the 2016 OmniPath paper.}
     \item{\code{genesymbols}}{Character or logical: TRUE or FALS or "yes" or "no".
 Include the `genesymbols` column in the results. OmniPath uses UniProt
 IDs as the primary identifiers, gene symbols are optional.}
@@ -37,10 +33,6 @@ summary message is printed upon successful download.}
 into a nested list; any other value will return data frame.}
     \item{\code{download_args}}{List: parameters to pass to the download function,
 which is `readr::read_tsv` by default, and `jsonlite::safe_load`.}
-    \item{\code{references_by_resource}}{Logical: if TRUE,, in the `references`
-column the PubMed IDs will be prefixed with the names of the resources
-they are coming from. If FALSE, the `references` column will be a list
-of unique PubMed IDs.}
     \item{\code{add_counts}}{Logical: if TRUE, the number of references and number of
 resources for each record will be added to the result.}
     \item{\code{license}}{Character: license restrictions. By default, data from
@@ -54,10 +46,6 @@ provide a special password here which enables the use of `license =
     \item{\code{exclude}}{Character vector: resource or dataset names to be excluded.
 The data will be filtered after download to remove records of the
 excluded datasets and resources.}
-    \item{\code{json_param}}{List: parameters to pass to the `jsonlite::fromJSON` when
-processing JSON columns embedded in the downloaded data. Such columns
-are "extra_attrs" and "evidences". These are optional columns which
-provide a lot of extra details about interactions.}
     \item{\code{strict_evidences}}{Logical: reconstruct the "sources" and "references"
 columns of interaction data frames based on the "evidences" column,
 strictly filtering them to the queried datasets and resources. Without
