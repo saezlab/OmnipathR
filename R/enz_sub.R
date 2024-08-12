@@ -28,7 +28,8 @@
 #' @return A data frame containing the information about ptms
 #'
 #' @param ... Arguments passed to \code{\link{omnipath_query}}.
-#' @inheritDotParams omnipath_query -query_type
+#' @inheritDotParams omnipath_query -query_type -datasets -types -json_param
+#'     -add_counts -references_by_resource
 #'
 #' @examples
 #' enzsub <- import_omnipath_enzsub(

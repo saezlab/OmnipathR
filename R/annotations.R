@@ -49,7 +49,8 @@
 #'     from more than one resource a list of wide tables will be returned.
 #'     See examples at \code{\link{pivot_annotations}}.
 #' @param ... Arguments for \code{\link{omnipath_query}}.
-#' @inheritDotParams omnipath_query -query_type
+#' @inheritDotParams omnipath_query -query_type -datasets -types -json_param
+#'     -add_counts -references_by_resource
 #'
 #' @examples
 #' annotations <- import_omnipath_annotations(

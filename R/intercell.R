@@ -84,7 +84,8 @@ TOPOLOGIES_SHORT <-
 #'     peripheral attributes will be true only where at least 50 percent
 #'     of the resources support these.
 #' @param ... Further arguments passed to \code{\link{omnipath_query}}.
-#' @inheritDotParams omnipath_query -query_type
+#' @inheritDotParams omnipath_query -query_type -datasets -types -genesymbols
+#'     -json_param -references_by_resource -add_counts
 #'
 #' @examples
 #' intercell <- import_omnipath_intercell(categories = 'ecm')

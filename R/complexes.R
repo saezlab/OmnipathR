@@ -26,7 +26,8 @@
 #' \url{https://omnipathdb.org/complexes} endpoint of the OmniPath web service.
 #'
 #' @param ... Arguments passed to \code{\link{omnipath_query}}.
-#' @inheritDotParams omnipath_query -query_type
+#' @inheritDotParams omnipath_query -query_type -datasets -types -json_param
+#'     -add_counts -references_by_resource
 #'
 #' @return A dataframe containing information about complexes
 #'
