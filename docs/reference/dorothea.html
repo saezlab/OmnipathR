@@ -28,7 +28,7 @@ expression signatures and ChIP-Seq binding site analysis."><meta property="og:im
     
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -101,35 +101,12 @@ expression signatures and ChIP-Seq binding site analysis.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dorothea</span><span class="op">(</span></span>
-<span>  resources <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  organism <span class="op">=</span> <span class="st">"human"</span>,</span>
-<span>  dorothea_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
-<span>  fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  default_fields <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  strict_evidences <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dorothea</span><span class="op">(</span>dorothea_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>resources</dt>
-<dd><p>interactions not reported in these databases are
-removed. See <code><a href="get_interaction_resources.html">get_interaction_resources</a></code> for more information.</p></dd>
-
-
-<dt>organism</dt>
-<dd><p>Character or integer: Name or NCBI Taxonomy ID of one or
-organisms. The web service currently provides interactions for
-human, mouse and rat. For other organisms, the data will be translated
-by orthologous gene pairs from human. In this case, only one organism
-can be provided.</p></dd>
-
-
-<dt>dorothea_levels</dt>
+    <dl><dt>dorothea_levels</dt>
 <dd><p>Vector detailing the confidence levels of the
 interactions to be downloaded. In dorothea, every TF-target interaction
 has a confidence score ranging from A to E, being A the most reliable
@@ -138,37 +115,107 @@ By default we take A and B level interactions (<code>c(A, B)</code>).
 It is to note that E interactions are not available in OmnipathR.</p></dd>
 
 
-<dt>fields</dt>
-<dd><p>The user can define here the fields to be added. If used, set
-the next argument, `default_fields`, to FALSE.</p></dd>
-
-
-<dt>default_fields</dt>
-<dd><p>whether to include the default fields (columns) for
-the query type. If FALSE, only the fields defined by the user in the
-`fields` argument will be added.</p></dd>
-
-
-<dt>references_by_resource</dt>
-<dd><p>if FALSE, removes the resource name prefixes
-from the references (PubMed IDs); this way the information which reference
-comes from which resource will be lost and the PubMed IDs will be unique.</p></dd>
-
-
-<dt>exclude</dt>
-<dd><p>Character: datasets or resources to exclude.</p></dd>
-
-
-<dt>strict_evidences</dt>
-<dd><p>Logical: restrict the evidences to the queried
-datasets and resources. If set to FALSE, the directions and effect signs
-and references might be based on other datasets and resources. In case of
-DoRothEA this is not desirable for most of the applications. For most of
-the other interaction querying functions it is `FALSE` by default.</p></dd>
-
-
 <dt>...</dt>
-<dd><p>optional additional arguments</p></dd>
+<dd><p>Arguments passed on to <code><a href="omnipath_query.html">omnipath_query</a></code></p><dl><dt><code>organism</code></dt>
+<dd><p>Character or integer: name or NCBI Taxonomy ID of the
+organism. OmniPath is built of human data, and the web service provides
+orthology translated interactions and enzyme-substrate relationships for
+mouse and rat. For other organisms and query types, orthology
+translation will be called automatically on the downloaded human data
+before returning the result.</p></dd>
+
+    <dt><code>resources</code></dt>
+<dd><p>Character vector: name of one or more resources. Restrict
+the data to these resources. For a complete list of available resources,
+call the `get_&lt;query_type&gt;_resources` functions for the query type of
+interst.</p></dd>
+
+    <dt><code>genesymbols</code></dt>
+<dd><p>Character or logical: TRUE or FALS or "yes" or "no".
+Include the `genesymbols` column in the results. OmniPath uses UniProt
+IDs as the primary identifiers, gene symbols are optional.</p></dd>
+
+    <dt><code>fields</code></dt>
+<dd><p>Character vector: additional fields to include in the result.
+For a list of available fields, call `query_info("interactions")`.</p></dd>
+
+    <dt><code>default_fields</code></dt>
+<dd><p>Logical: if TRUE, the default fields will be included.</p></dd>
+
+    <dt><code>silent</code></dt>
+<dd><p>Logical: if TRUE, no messages will be printed. By default a
+summary message is printed upon successful download.</p></dd>
+
+    <dt><code>logicals</code></dt>
+<dd><p>Character vector: fields to be cast to logical.</p></dd>
+
+    <dt><code>format</code></dt>
+<dd><p>Character: if "json", JSON will be retrieved and processed
+into a nested list; any other value will return data frame.</p></dd>
+
+    <dt><code>download_args</code></dt>
+<dd><p>List: parameters to pass to the download function,
+which is `readr::read_tsv` by default, and `jsonlite::safe_load`.</p></dd>
+
+    <dt><code>references_by_resource</code></dt>
+<dd><p>Logical: if TRUE,, in the `references`
+column the PubMed IDs will be prefixed with the names of the resources
+they are coming from. If FALSE, the `references` column will be a list
+of unique PubMed IDs.</p></dd>
+
+    <dt><code>add_counts</code></dt>
+<dd><p>Logical: if TRUE, the number of references and number of
+resources for each record will be added to the result.</p></dd>
+
+    <dt><code>license</code></dt>
+<dd><p>Character: license restrictions. By default, data from
+resources allowing "academic" use is returned by OmniPath. If you use
+the data for work in a company, you can provide "commercial" or
+"for-profit", which will restrict the data to those records which are
+supported by resources that allow for-profit use.</p></dd>
+
+    <dt><code>password</code></dt>
+<dd><p>Character: password for the OmniPath web service. You can
+provide a special password here which enables the use of `license =
+"ignore"` option, completely bypassing the license filter.</p></dd>
+
+    <dt><code>exclude</code></dt>
+<dd><p>Character vector: resource or dataset names to be excluded.
+The data will be filtered after download to remove records of the
+excluded datasets and resources.</p></dd>
+
+    <dt><code>json_param</code></dt>
+<dd><p>List: parameters to pass to the `jsonlite::fromJSON` when
+processing JSON columns embedded in the downloaded data. Such columns
+are "extra_attrs" and "evidences". These are optional columns which
+provide a lot of extra details about interactions.</p></dd>
+
+    <dt><code>strict_evidences</code></dt>
+<dd><p>Logical: reconstruct the "sources" and "references"
+columns of interaction data frames based on the "evidences" column,
+strictly filtering them to the queried datasets and resources. Without
+this, the "sources" and "references" fields for each record might
+contain information for datasets and resources other than the queried
+ones, because the downloaded records are a result of a simple filtering
+of an already integrated data frame.</p></dd>
+
+    <dt><code>genesymbol_resource</code></dt>
+<dd><p>Character: "uniprot" (default) or "ensembl". The
+OmniPath web service uses the primary gene symbols as provided by
+UniProt. By passing "ensembl" here, the UniProt gene symbols will be
+replaced by the ones used in Ensembl. This translation results in a loss
+of a few records, and multiplication of another few records due to
+ambiguous translation.</p></dd>
+
+    <dt><code>cache</code></dt>
+<dd><p>Logical: use caching, load data from and save to the. The cache
+directory by default belongs to the user, located in the user's default
+cache directory, and named "OmnipathR". Find out about it by
+<code>omnipath_get_cachedir</code>. Can be changed by
+<code><a href="omnipath_set_cachedir.html">omnipath_set_cachedir</a></code>.</p></dd>
+
+  
+</dl></dd>
 
 </dl></div>
     <div class="section level2">
@@ -200,7 +247,7 @@ the other interaction querying functions it is `FALSE` by default.</p></dd>
 <span class="r-in"><span><span class="va">dorothea_grn</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32,617 × 16</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    source target source_genesymbol target_genesymbol is_directed is_stimulation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P01106 O14746 MYC               TERT                        1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P84022 P05412 SMAD3             JUN                         1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Q13485 P05412 SMAD4             JUN                         1              1</span>
@@ -212,10 +259,10 @@ the other interaction querying functions it is `FALSE` by default.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> P40763 P38936 STAT3             CDKN1A                      1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q04206 P08183 RELA              ABCB1                       1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 32,607 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: is_inhibition &lt;int&gt;, consensus_direction &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_stimulation &lt;int&gt;, consensus_inhibition &lt;int&gt;, sources &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   references &lt;chr&gt;, curation_effort &lt;int&gt;, dorothea_level &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_references &lt;int&gt;, n_resources &lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: is_inhibition &lt;dbl&gt;, consensus_direction &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;, sources &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   references &lt;chr&gt;, curation_effort &lt;dbl&gt;, dorothea_level &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_references &lt;dbl&gt;, n_resources &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
