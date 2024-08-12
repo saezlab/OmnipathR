@@ -100,8 +100,6 @@ TOPOLOGIES_SHORT <-
 #'     \item{\code{\link{import_intercell_network}}}
 #'     \item{\code{\link{intercell_consensus_filter}}}
 #' }
-#'
-#' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
     categories = NULL,
     parent = NULL,
@@ -282,29 +280,6 @@ intercell_consensus_filter <- function(
 
     return(data)
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname import_omnipath_intercell
-#' @param ... Passed to \code{import_omnipath_intercell}.
-#' @export
-#'
-#' @noRd
-import_Omnipath_intercell <- function(...){
-    .Deprecated("import_omnipath_intercell")
-    import_omnipath_intercell(...)
-}
-
-
-#' @rdname import_omnipath_intercell
-#' @param ... Passed to \code{import_omnipath_intercell}.
-#' @export
-#'
-#' @noRd
-import_OmniPath_intercell <- function(...){
-    .Deprecated("import_omnipath_intercell")
-    import_omnipath_intercell(...)
 }
 
 
@@ -1239,8 +1214,6 @@ intercell_categories <- function(){
 #'     \item{\code{\link{import_omnipath_intercell}}}
 #'     \item{\code{\link{get_intercell_categories}}}
 #' }
-#'
-#' @aliases get_intercell_classes
 get_intercell_generic_categories <- function(){
 
     return(
@@ -1248,18 +1221,6 @@ get_intercell_generic_categories <- function(){
             omnipath_query('intercell_summary', license = NA)$parent
         )
     )
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname get_intercell_generic_categories
-#' @param ... Passed to \code{get_intercell_generic_categories}.
-#' @export
-#'
-#' @noRd
-get_intercell_classes <- function(...){
-    .Deprecated("get_intercell_generic_categories")
-    get_intercell_generic_categories(...)
 }
 
 

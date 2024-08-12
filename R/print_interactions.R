@@ -164,7 +164,6 @@ print_interactions <- function(interDF, writeRefs=FALSE){
 #' @seealso \itemize{
 #'     \item{\code{\link{print_path_vs}}}
 #' }
-#' @aliases printPath_es
 print_path_es <- function(edgeSeq, G){
 
     if(length(edgeSeq) == 0){
@@ -312,7 +311,6 @@ unique_node_seq <- function(nodeSeq_list){
 #' )
 #'
 #' @seealso \code{\link{print_path_es}}
-#' @aliases printPath_vs
 print_path_vs <- function(nodeSeq, G){
 
     if(length(nodeSeq) == 0){
@@ -330,28 +328,4 @@ print_path_vs <- function(nodeSeq, G){
         }
         print_path_es(E(G)[edgeSet], G)
     }
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname print_path_vs
-#' @param ... Passed to \code{print_path_vs}.
-#' @export
-#'
-#' @noRd
-printPath_vs <- function(...){
-    .Deprecated('print_path_vs')
-    print_path_vs(...)
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname print_path_es
-#' @param ... Passed to \code{print_path_es}.
-#' @export
-#'
-#' @noRd
-printPath_es <- function(...){
-    .Deprecated('print_path_es')
-    print_path_es(...)
 }

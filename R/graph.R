@@ -42,7 +42,6 @@
 #'     \item{\code{\link{giant_component}}}
 #'     \item{\code{\link{find_all_paths}}}
 #' }
-#' @aliases ptms_graph
 enzsub_graph <- function(enzsub){
     # This is a gene_name based conversion to igraph, i.e. the vertices are
     # identified by genenames, and not by uniprot IDs.
@@ -64,21 +63,6 @@ enzsub_graph <- function(enzsub){
     # by calling to the function below
     format_graph_edges(flag = 'enzsub_dataset')
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname enzsub_graph
-#' @param ... Passed to \code{enzsub_graph}.
-#' @export
-#' @importFrom rlang %||%
-#'
-#' @noRd
-ptms_graph <- function(...){
-    .Deprecated('enzsub_graph')
-    args <- list(...)
-    enzsub <- args$enzsub %||% args$ptms
-    enzsub_graph(enzsub)
 }
 
 

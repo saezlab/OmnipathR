@@ -103,8 +103,6 @@ get_resources <- function(
 #'
 #' @importFrom logger log_success
 #' @export
-#'
-#' @aliases filter_sources
 filter_by_resource <- function(data, resources = NULL){
 
     if(!is.null(resources)){
@@ -163,16 +161,6 @@ resources_colname <- function(data){
     ) %>%
     extract(1L)
 
-}
-
-
-#' Alias for old function name.
-#' @param ... Passed to \code{filter_by_resource}.
-#'
-#' @noRd
-filter_sources <- function(...){
-    .Deprecated("filter_by_resource")
-    filter_by_resource(...)
 }
 
 
