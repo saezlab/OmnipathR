@@ -20,36 +20,15 @@
 #
 
 
-#' Imports enzyme-substrate relationships from OmniPath
+#' Enzyme-substrate (PTM) relationships from OmniPath
 #'
 #' Imports the enzyme-substrate (more exactly, enzyme-PTM) relationship
 #' database from \url{https://omnipathdb.org/enzsub}
 #'
 #' @return A data frame containing the information about ptms
 #'
-#' @param resources PTMs not reported in these databases are
-#'     removed. See \code{\link{get_ptms_databases}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat.
-#' @param fields You can define here additional fields to be added to the
-#'     result. If used, set the next argument, \code{default_fields}, to
-#'     \code{FALSE}.
-#' @param default_fields Whether to include the default fields (columns) for
-#'     the query type. If \code{FALSE}, only the fields defined by the user
-#'     in the \code{fields} argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#'     from the references (PubMed IDs); this way the information which
-#'     reference comes from which resource will be lost and the PubMed IDs
-#'     will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
-#' @param ... Optional additional arguments.
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
 #' @examples
 #' enzsub <- import_omnipath_enzsub(
@@ -57,6 +36,7 @@
 #'     organism = 9606
 #' )
 #'
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @seealso \itemize{
@@ -65,56 +45,12 @@
 #'     \item{\code{\link{enzsub_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
-#'
-#' @aliases import_Omnipath_PTMS import_OmniPath_PTMS
-import_omnipath_enzsub <- function(
-    resources = NULL,
-    organism = 9606,
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    genesymbol_resource = NULL,
-    ...
-){
+import_omnipath_enzsub <- function(...){
 
-    result <- omnipath_query(
-        query_type = 'enzsub',
-        resources = resources,
-        organism = organism,
-        fields = fields,
-        default_fields = default_fields,
-        references_by_resource = references_by_resource,
-        exclude = exclude,
-        genesymbol_resource = genesymbol_resource,
-        ...
-    )
+    args <- omnipath_args(list(...), query_type = 'enzsub')
 
-    return(result)
+    exec(omnipath_query, !!!args)
 
-}
-
-# Aliases (old names) to be Deprecated
-#' @rdname import_omnipath_enzsub
-#' @param ... Passed to \code{import_omnipath_enzsub}.
-#' @export
-#'
-#' @noRd
-import_Omnipath_PTMS <- function(...){
-    .Deprecated("import_omnipath_enzsub")
-    import_omnipath_enzsub(...)
-}
-
-
-# Aliases (old names) to be Deprecated
-#' @rdname import_omnipath_enzsub
-#' @param ... Passed to \code{import_omnipath_enzsub}.
-#' @export
-#'
-#' @noRd
-import_OmniPath_PTMS <- function(...){
-    .Deprecated("import_omnipath_enzsub")
-    import_omnipath_enzsub(...)
 }
 
 
@@ -134,24 +70,10 @@ import_OmniPath_PTMS <- function(...){
 #'     \item{\code{\link{get_resources}}}
 #'     \item{\code{\link{import_omnipath_enzsub}}}
 #' }
-#'
-#' @aliases get_ptms_databases
 get_enzsub_resources <- function(dataset = NULL){
 
     return(get_resources(query_type = 'enzsub', datasets = dataset))
 
-}
-
-
-# Aliases (old names) to be deprecated
-#' @rdname get_enzsub_resources
-#' @param ... Passed to \code{get_enzsub_resources}.
-#' @export
-#'
-#' @noRd
-get_ptms_databases <- function(...){
-    .Deprecated("get_enzsub_resources")
-    get_enzsub_resources(...)
 }
 
 

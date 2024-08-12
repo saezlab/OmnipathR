@@ -20,14 +20,13 @@
 #
 
 
-#' Imports protein complexes from OmniPath
+#' Protein complexes from OmniPath
 #'
-#' Imports the complexes stored in Omnipath database from
-#' \url{https://omnipathdb.org/complexes}.
+#' A comprehensive dataset of protein complexes from the
+#' \url{https://omnipathdb.org/complexes} endpoint of the OmniPath web service.
 #'
-#' @param resources complexes not reported in these databases are
-#' removed. See \code{\link{get_complexes_databases}} for more information.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
 #' @return A dataframe containing information about complexes
 #'
@@ -40,10 +39,7 @@
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_omnipath_complexes <- function(
-    resources = NULL,
-    ...
-){
+import_omnipath_complexes <- function(...){
 
     args <- omnipath_args(list(...), query_type = 'complexes')
 

@@ -41,10 +41,6 @@ TOPOLOGIES_SHORT <-
 #' @return A dataframe cotaining information about roles in intercellular
 #' signaling.
 #'
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides intercell annotations
-#'     only for human. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human.
 #' @param categories vector containing the categories to be retrieved.
 #'     All the genes belonging to those categories will be returned. For
 #'     further information about the categories see
@@ -53,8 +49,6 @@ TOPOLOGIES_SHORT <-
 #'     All the genes belonging to those classes will be returned. For
 #'     furter information about the main classes see
 #'     \code{\link{get_intercell_categories}}.
-#' @param resources limit the query to certain resources; see the available
-#'     resources by \code{\link{get_intercell_resources}}.
 #' @param scope either `specific` or `generic`
 #' @param aspect either `locational` or `functional`
 #' @param source either `resource_specific` or `composite`
@@ -89,19 +83,15 @@ TOPOLOGIES_SHORT <-
 #'     a value of 50, the secreted, plasma membrane transmembrane or
 #'     peripheral attributes will be true only where at least 50 percent
 #'     of the resources support these.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
-#' @param ... Additional optional arguments, ignored.
+#' @param ... Further arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
 #' @examples
 #' intercell <- import_omnipath_intercell(categories = 'ecm')
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom purrr reduce
+#' @importFrom rlang exec !!!
 #' @export
 #'
 #' @seealso \itemize{
@@ -113,9 +103,7 @@ TOPOLOGIES_SHORT <-
 #'
 #' @aliases import_Omnipath_intercell import_OmniPath_intercell
 import_omnipath_intercell <- function(
-    organism = 'human',
     categories = NULL,
-    resources = NULL,
     parent = NULL,
     scope = NULL,
     aspect = NULL,
@@ -130,7 +118,6 @@ import_omnipath_intercell <- function(
     causality = NULL,
     consensus_percentile = NULL,
     loc_consensus_percentile = NULL,
-    genesymbol_resource = NULL,
     ...
 ){
 
@@ -167,7 +154,7 @@ import_omnipath_intercell <- function(
     args$genesymbol_resource <- genesymbol_resource
 
     result <-
-        do.call(omnipath_query, args) %>%
+        exec(omnipath_query, !!!args) %>%
         intercell_consensus_filter(
             percentile = consensus_percentile,
             loc_percentile = loc_consensus_percentile,

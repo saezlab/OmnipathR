@@ -44,23 +44,12 @@
 #'     miRBase IDs). It is also possible to donwload annotations for protein
 #'     complexes. To do so, write 'COMPLEX:' right before the genesymbols of
 #'     the genes integrating the complex. Check the vignette for examples.
-#' @param resources Load the annotations only from these databases.
-#'     See \code{\link{get_annotation_resources}} for possible values.
 #' @param wide Convert the annotation table to wide format, which
 #'     corresponds more or less to the original resource. If the data comes
 #'     from more than one resource a list of wide tables will be returned.
 #'     See examples at \code{\link{pivot_annotations}}.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides intercell annotations
-#'     only for human. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human.
-#' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-#'     former leaves intact the gene symbols returned by the web service,
-#'     originally set from UniProt. The latter updates the gene symbols from
-#'     Ensembl, which uses a slightly different gene symbol standard. In this
-#'     case a few records will be duplicated, where Ensembl provides ambiguous
-#'     translation.
-#' @param ... Additional arguments.
+#' @param ... Arguments for \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
 #' @examples
 #' annotations <- import_omnipath_annotations(
@@ -77,14 +66,7 @@
 #' @importFrom rlang exec !!!
 #' @importFrom logger log_fatal log_success
 #' @export
-import_omnipath_annotations <- function(
-    proteins = NULL,
-    resources = NULL,
-    wide = FALSE,
-    organism = 'human',
-    genesymbol_resource = NULL,
-    ...
-){
+import_omnipath_annotations <- function(proteins = NULL, wide = FALSE, ...){
 
     args <- omnipath_args(list(...), query_type = 'annotations')
     wide <- pop(args, wide)
@@ -125,6 +107,7 @@ import_omnipath_annotations <- function(
     }else{
 
         parts <- list()
+        args$silent <- TRUE
 
         proteins_chunks <-
             split(
@@ -149,7 +132,6 @@ import_omnipath_annotations <- function(
                         omnipath_query,
                         proteins = proteins_chunk,
                         recursive_call = TRUE,
-                        silent = TRUE,
                         !!!args
                     )
                 )

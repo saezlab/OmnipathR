@@ -26,46 +26,17 @@ PPI_DATASETS <- c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
 GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 
 
-#' Imports interactions from the `omnipath` dataset of Omnipath
+#' Interactions from OmniPath
 #'
-#' Imports the database from \url{https://omnipathdb.org/interactions}, which
-#' contains only interactions supported by literature references.
-#' This part of the interaction database compiled a similar way as it has
-#' been presented in the first paper describing OmniPath (Turei et al. 2016).
+#' Interactions from the \url{https://omnipathdb.org/interactions} endpoint of
+#' the OmniPath web service.
+#' By default, it downloads only the "omnipath" dataset, which corresponds to
+#' the curated causal interactions described in Turei et al. 2016.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param datasets Names of the interaction datasets to download: omnipath
-#' (by default). Other possiblites are: pathwayextra, kinaseextra,
-#' ligrecextra, dorothea,tf_target, mirnatarget, tf_mirna, lncrna_mrna.
-#' The user can select multiple datasets as for example: c('omnipath',
-#' 'pathwayextra', 'kinaseextra')
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-# #' @param genesymbol_resource Character: either "uniprot" or "ensembl". The
-# #'     former leaves intact the gene symbols returned by the web service,
-# #'     originally set from UniProt. The latter updates the gene symbols from
-# #'     Ensembl, which uses a slightly different gene symbol standard. In this
-# #'     case a few records will be duplicated, where Ensembl provides ambiguous
-# #'     translation.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
-#' @return A dataframe of protein-protein interactions
+#' @return A dataframe of molecular interactions.
 #'
 #' @examples
 #' interactions = import_omnipath_interactions(
@@ -74,27 +45,21 @@ GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 #' )
 #'
 #' @seealso \itemize{
+#'     \item{\code{\link{omnipath}}}
 #'     \item{\code{\link{get_interaction_resources}}}
 #'     \item{\code{\link{import_all_interactions}}}
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
 #'
+#' @importFrom magrittr %<>%
 #' @importFrom rlang exec !!!
 #' @export
-import_omnipath_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    datasets = 'omnipath',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+import_omnipath_interactions <- function(...){
 
     args <- omnipath_args(list(...), query_type = 'interactions')
+    defaults <- list(datasets = 'omnipath')
+    args %<>% modifyList(defaults, .)
 
     exec(omnipath_query, !!!args)
 
@@ -103,33 +68,17 @@ import_omnipath_interactions <- function(
 
 #' Literature curated signaling pathways
 #'
-#' Imports interactions from the `omnipath` dataset of Omnipath, a dataset
+#' Imports interactions from the `omnipath` dataset of OmniPath, a dataset
 #' that inherits most of its design and contents from the original OmniPath
 #' core from the 2016 publication. This dataset consists of about 40k
 #' interactions.
 #'
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
+#'
 #' @return A dataframe of literature curated, post-translational signaling
 #'     interactions.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
 #' @param ... optional additional arguments, passed to
 #' \code{\link{import_omnipath_interactions}}.
 #'
@@ -148,16 +97,7 @@ import_omnipath_interactions <- function(
 #'
 #' @importFrom rlang exec !!!
 #' @export
-omnipath <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+omnipath <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'omnipath')
 
@@ -166,7 +106,7 @@ omnipath <- function(
 }
 
 
-#' Imports interactions from the `pathway extra` dataset of Omnipath
+#' Interactions from the `pathway extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=pathwayextra},
@@ -174,26 +114,9 @@ omnipath <- function(
 #' The activity flow interactions supported by literature references
 #' are part of the `omnipath` dataset.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
+#'
 #'
 #' @return A dataframe containing activity flow interactions between proteins
 #' without literature reference
@@ -214,16 +137,7 @@ omnipath <- function(
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_pathwayextra_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+import_pathwayextra_interactions <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'pathwayextra')
 
@@ -232,7 +146,7 @@ import_pathwayextra_interactions <- function(
 }
 
 
-#' Imports interactions from the `kinase extra` dataset of OmniPath
+#' Interactions from the `kinase extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=kinaseextra},
@@ -240,26 +154,8 @@ import_pathwayextra_interactions <- function(
 #' The enzyme-substrate interactions supported by literature references
 #' are part of the `omnipath` dataset.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... Optional additional arguments.
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe containing enzyme-substrate interactions without
 #' literature reference
@@ -298,7 +194,7 @@ import_kinaseextra_interactions <- function(
 }
 
 
-#' Imports interactions from the `ligrec extra` dataset of OmniPath
+#' Interactions from the `ligrec extra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=ligrecextra},
@@ -306,26 +202,8 @@ import_kinaseextra_interactions <- function(
 #' The ligand-receptor interactions supported by literature references
 #' are part of the `omnipath` dataset.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe containing ligand-receptor interactions including
 #' the ones without literature references
@@ -345,16 +223,7 @@ import_kinaseextra_interactions <- function(
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_ligrecextra_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+import_ligrecextra_interactions <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'ligrecextra')
 
@@ -369,22 +238,8 @@ import_ligrecextra_interactions <- function(
 #' The datasets are "omnipath", "kinaseextra", "pathwayextra" and
 #' "ligrecextra".
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param exclude Character: datasets or resources to exclude
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
 #' @return A dataframe containing post-translational interactions
 #'
@@ -402,14 +257,7 @@ import_ligrecextra_interactions <- function(
 #' }
 #' @importFrom rlang %||% exec !!!
 #' @export
-import_post_translational_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    exclude = NULL,
-    references_by_resource = TRUE,
-    strict_evidences = FALSE,
-    ...
-){
+import_post_translational_interactions <- function(...){
 
 
     args <- omnipath_args(list(...), query_type = 'interactions')
@@ -430,34 +278,14 @@ import_post_translational_interactions <- function(
 #' consisting of 16 original resources, in silico TFBS prediction, gene
 #' expression signatures and ChIP-Seq binding site analysis.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
 #' @param dorothea_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
 #' interactions.
 #' By default we take A and B level interactions (\code{c(A, B)}).
 #' It is to note that E interactions are not available in OmnipathR.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources. In case of
-#' DoRothEA this is not desirable for most of the applications. For most of
-#' the other interaction querying functions it is `FALSE` by default.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A data frame of TF-target interactions from DoRothEA.
 #'
@@ -482,17 +310,7 @@ import_post_translational_interactions <- function(
 #' @importFrom rlang exec !!!
 #' @export
 #' @aliases import_dorothea_interactions
-dorothea <- function(
-    resources = NULL,
-    organism = 'human',
-    dorothea_levels = c('A', 'B'),
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = TRUE,
-    ...
-){
+dorothea <- function(dorothea_levels = c('A', 'B'), ...){
 
     args <- omnipath_args(
         list(...),
@@ -505,19 +323,7 @@ dorothea <- function(
 }
 
 
-# Aliases (old names) to be deprecated
-#' @rdname dorothea
-#' @param ... Passed to \code{\link{dorothea}}.
-#' @export
-#'
-#' @noRd
-import_dorothea_interactions <- function(...){
-    .Deprecated("dorothea")
-    dorothea(...)
-}
-
-
-#' Imports interactions from the TF-target dataset of OmniPath
+#' Interactions from the TF-target dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=tf_target},
@@ -526,26 +332,8 @@ import_dorothea_interactions <- function(...){
 #' `dorothea` is the other one and the `tf_mirna` dataset provides
 #' TF-miRNA gene interactions.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... Optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe containing TF-target interactions
 #'
@@ -585,34 +373,21 @@ import_tf_target_interactions <- function(
 }
 
 
-#' Imports all TF-target interactions from OmniPath
+#' All TF-target interactions from OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=tf_target,dorothea},
 #' which contains transcription factor-target protein coding gene
 #' interactions.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
 #' @param dorothea_levels Vector detailing the confidence levels of the
 #' interactions to be downloaded. In dorothea, every TF-target interaction
 #' has a confidence score ranging from A to E, being A the most reliable
 #' interactions.
 #' By default we take A and B level interactions (\code{c(A, B)}).
 #' It is to note that E interactions are not available in OmnipathR.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... Optional additional arguments.
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -query_type
 #'
 #' @return A dataframe containing TF-target interactions.
 #'
@@ -635,12 +410,7 @@ import_tf_target_interactions <- function(
 #' @importFrom rlang %||% exec !!!
 #' @export
 import_transcriptional_interactions <- function(
-    resources = NULL,
-    organism = 'human',
     dorothea_levels = c('A', 'B'),
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
     ...
 ){
 
@@ -658,23 +428,8 @@ import_transcriptional_interactions <- function(
 #' published in 2023, consisting of 14 resources and original literature
 #' curation.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources. In case of
-#' CollecTRI this is not desirable for most of the applications. For most of
-#' the other interaction querying functions it is `FALSE` by default.
-#' @param ... Optional additional arguments, passed to
-#'     \code{\link{import_omnipath_interactions}}.
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe of TF-target interactions.
 #'
@@ -693,13 +448,7 @@ import_transcriptional_interactions <- function(
 #'
 #' @export
 #' @importFrom rlang exec !!!
-collectri <- function(
-    resources = NULL,
-    organism = 'human',
-    references_by_resource = TRUE,
-    strict_evidences = TRUE,
-    ...
-){
+collectri <- function(...){
 
     args <-
         omnipath_args(
@@ -713,30 +462,14 @@ collectri <- function(
 }
 
 
-#' Imports interactions from the miRNA-target dataset of OmniPath
+#' Interactions from the miRNA-target dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=mirnatarget},
 #' which contains miRNA-mRNA interactions.
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe containing miRNA-mRNA interactions
 #'
@@ -755,16 +488,7 @@ collectri <- function(
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_mirnatarget_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+import_mirnatarget_interactions <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -777,30 +501,14 @@ import_mirnatarget_interactions <- function(
 }
 
 
-#' Imports interactions from the TF-miRNA dataset of OmniPath
+#' Interactions from the TF-miRNA dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=tf_mirna},
 #' which contains transcription factor-miRNA gene interactions
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe containing TF-miRNA interactions
 #'
@@ -819,16 +527,7 @@ import_mirnatarget_interactions <- function(
 #'
 #' @export
 #' @importFrom rlang exec !!!
-import_tf_mirna_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+import_tf_mirna_interactions <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -841,30 +540,14 @@ import_tf_mirna_interactions <- function(
 }
 
 
-#' Imports interactions from the lncRNA-mRNA dataset of OmniPath
+#' lncRNA-mRNA interactions from OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=lncrna_mrna},
 #' which contains lncRNA-mRNA interactions
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe containing lncRNA-mRNA interactions
 #'
@@ -883,16 +566,7 @@ import_tf_mirna_interactions <- function(
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_lncrna_mrna_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+import_lncrna_mrna_interactions <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -905,32 +579,15 @@ import_lncrna_mrna_interactions <- function(
 }
 
 
-#' Interactions from the small molecule-protein dataset of OmniPath
+#' Small molecule-protein interactions from OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=small_molecule},
 #' which contains small molecule-protein interactions. Small molecules
 #' can be metabolites, intrinsic ligands or drug compounds.
 #'
-#' @param resources interactions not reported in these databases are
-#'     removed. See \code{\link{get_interaction_resources}} for more
-#'     information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat.
-#' @param fields Optional fields to be added.
-#' @param default_fields whether to include the default fields (columns) for
-#'     the query type. If FALSE, only the fields defined by the user in the
-#'     `fields` argument will be added.
-#' @param references_by_resource If \code{FALSE}, removes the resource name
-#'     prefixes from the references (PubMed IDs); this way the information
-#'     which reference comes from which resource will be lost and the PubMed
-#'     IDs will be unique.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
-#' @param ... optional additional arguments
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @return A dataframe of small molecule-protein interactions
 #'
@@ -978,47 +635,35 @@ import_small_molecule_protein_interactions <- function(
 #'
 #' The interaction datasets currently available in OmniPath:
 #'
-#' omnipath: the OmniPath data as defined in the paper, an arbitrary optimum
-#' between coverage and quality
-#' pathwayextra: activity flow interactions without literature reference
-#' kinaseextra: enzyme-substrate interactions without literature reference
-#' ligrecextra: ligand-receptor interactions without literature reference
-#' dorothea: transcription factor (TF)-target interactions from DoRothEA
-#' tf_target: transcription factor (TF)-target interactions from other
-#' resources
-#' mirnatarget: miRNA-mRNA interactions
-#' tf_mirna: TF-miRNA interactions
-#' lncrna_mrna: lncRNA-mRNA interactions
+#' \itemize{
+#'     \item{omnipath: the OmniPath data as defined in the 2016 paper, an
+#'     arbitrary optimum between coverage and quality}
+#'     \item{pathwayextra: activity flow interactions without literature
+#'     references}
+#'     \item{kinaseextra: enzyme-substrate interactions without literature
+#'     reference}
+#'     \item{ligrecextra: ligand-receptor interactions without
+#'     literature reference}
+#'     \item{collectri: transcription factor (TF)-target
+#'     interactions from CollecTRI}
+#'     \item{dorothea: transcription factor (TF)-target
+#'     interactions from DoRothEA}
+#'     \item{tf_target: transcription factor
+#'     (TF)-target interactions from other resources}
+#'     \item{mirnatarget: miRNA-mRNA interactions}
+#'     \item{tf_mirna: TF-miRNA interactions}
+#'     \item{lncrna_mrna: lncRNA-mRNA interactions}
+#' }
 #'
 #' @return A dataframe containing all the datasets in the interactions query
 #'
-#' @param resources interactions not reported in these databases are
-#' removed. See \code{\link{get_interaction_resources}} for more information.
-#' @param organism Character or integer: Name or NCBI Taxonomy ID of one or
-#'     organisms. The web service currently provides interactions for
-#'     human, mouse and rat. For other organisms, the data will be translated
-#'     by orthologous gene pairs from human. In this case, only one organism
-#'     can be provided. If miRNA, lncRNA or small molecule datasets included,
-#'     orthology translation is not possible and will remove the interactions
-#'     with non-protein partners.
 #' @param dorothea_levels The confidence levels of the dorothea
 #' interactions (TF-target) which range from A to D. Set to A and B by
 #' default.
-#' @param exclude Character: datasets or resources to exclude.
-#' @param fields The user can define here the fields to be added. If used, set
-#' the next argument, `default_fields`, to FALSE.
-#' @param default_fields whether to include the default fields (columns) for
-#' the query type. If FALSE, only the fields defined by the user in the
-#' `fields` argument will be added.
-#' @param references_by_resource if FALSE, removes the resource name prefixes
-#' from the references (PubMed IDs); this way the information which reference
-#' comes from which resource will be lost and the PubMed IDs will be unique.
-#' @param strict_evidences Logical: restrict the evidences to the queried
-#' datasets and resources. If set to FALSE, the directions and effect signs
-#' and references might be based on other datasets and resources.
 #' @param types Character: interaction types, such as "transcriptional",
-#' "post_transcriptional", "post_translational", etc.
-#' @param ... optional additional arguments
+#'     "post_transcriptional", "post_translational", etc.
+#' @param ... Arguments passed to \code{\link{omnipath_query}}.
+#' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @examples
 #' interactions <- import_all_interactions(
@@ -1036,14 +681,7 @@ import_small_molecule_protein_interactions <- function(
 #' @importFrom magrittr %<>% %>% extract2
 #' @export
 import_all_interactions <- function(
-    resources = NULL,
-    organism = 'human',
     dorothea_levels = c('A', 'B'),
-    exclude = NULL,
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    strict_evidences = FALSE,
     types = NULL,
     ...
 ){
