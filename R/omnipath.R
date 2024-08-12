@@ -311,7 +311,7 @@ omnipath_query <- function(
     download_args %<>%
         modifyList(
             `if`(
-                !is_empty_2(param$format) && param$format == 'json',
+                empty_or_equals(param$format, 'json'),
                 json_defaults,
                 dataframe_defaults
             ),
@@ -454,7 +454,7 @@ omnipath_args <- function(dots, ...) {
 }
 
 
-#' Checks the arguments of \link{import_omnipath}, corrects some easy to
+#' Checks the arguments of \link{omnipath_query}, corrects some easy to
 #' confuse or deprecated synonyms and selects the message printed by
 #' the download function.
 #' Not exported.
@@ -477,6 +477,8 @@ omnipath_check_param <- function(param){
 
     param %<>% add_qt_message
     param %<>% qs_synonyms
+
+    param$format %<>% {`if`(empty_or_equals(.,'json'), ., NULL)}
 
     # checking DoRothEA confidence level values
     if(
