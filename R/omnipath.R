@@ -428,14 +428,10 @@ omnipath_args <- function(dots, ...) {
 
     calling_env <- parent.frame()
     override <- list(...) %>% qs_synonyms
-    call <- sys.call(-1L)
+    calling_fun <- sys.function(-1L)
 
     defaults <-
-        call %>%
-        extract(1L) %>%
-        as.character %>%
-        str_extract('^(?:[A-z_]*:+)?([A-z_]+)$', group = 1L) %>%
-        get %>%
+        calling_fun %>%
         formals %>%
         qs_synonyms
 
