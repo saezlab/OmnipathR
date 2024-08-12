@@ -564,6 +564,18 @@ is_empty_2 <- function(value){
 }
 
 
+#' Equality between value1 and value2
+#'
+#' Returns FALSE also if value1 is NULL or a vector of length zero
+#'
+#' @noRd
+empty_or_equals <- function(value1, value2) {
+
+    !is_empty_2(value1) && value1 == value2
+
+}
+
+
 #' Tells if value is closure-like
 #'
 #' @importFrom magrittr %>% is_in
