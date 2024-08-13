@@ -37,7 +37,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install pak
-        run: Rscript -e 'install.packages("pak")'
+        run: Rscript -e 'install.packages("remotes")'
 
       - name: Install OmnipathR from git by pak
-        run: Rscript -e 'pak::pkg_install("saezlab/OmnipathR")'
+        run: Rscript -e 'remotes::install_github("saezlab/OmnipathR")'
