@@ -87,6 +87,7 @@ Imports:
     XML,
     xml2,
     yaml
+    zip
 Suggests:
     BiocStyle,
     biomaRt,
