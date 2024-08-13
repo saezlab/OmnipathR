@@ -483,7 +483,15 @@ translate_ids <- function(
                     .
                 )}
 
-            d %>%
+            log_trace(
+                '%i rows before translation, %i %s IDs in column `%s`.',
+                nrow(d),
+                d %>% pull(!!sym(from_col)) %>% n_distinct,
+                from_type,
+                from_col
+            )
+
+            d %<>%
             join_method(
                 translation_table,
                 by = 'From' %>% set_names(from_col)
@@ -491,6 +499,22 @@ translate_ids <- function(
             mutate(!!sym(to_col) := To) %>%
             {`if`(keep_untranslated, ., filter(., !is.na(To)))} %>%
             select(-To)
+
+            log_trace(
+                paste0(
+                    '%i rows after translation; translated %i `%s` ',
+                    'IDs in column `%s` to %i `%s` IDs in column `%s`.'
+                ),
+                nrow(d),
+                d %>% pull(!!sym(from_col)) %>% n_distinct,
+                from_type,
+                from_col,
+                d %>% pull(!!sym(to_col)) %>% n_distinct,
+                to_type,
+                to_col
+            )
+
+            return(d)
 
         },
         .init = .
