@@ -72,6 +72,7 @@ Imports:
     readxl,
     rlang,
     rmarkdown,
+    RSQLite,
     rvest,
     stats,
     stringi,
@@ -82,6 +83,7 @@ Imports:
     tools,
     utils,
     withr,
+    XML,
     xml2,
     yaml
 Suggests:
