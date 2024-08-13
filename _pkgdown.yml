@@ -8,9 +8,11 @@ navbar:
      twitter:
        icon: "fab fa-twitter fa-lg"
        href: https://twitter.com/omnipathdb
+       aria-label: "Go to the Twitter of OmniPath"
      homepage:
        icon: "fas fa-university"
        href: https://omnipathdb.org/
+       aria-label: "Go to the OmniPath homepage"
   type: dark
   bg: primary
 template:
