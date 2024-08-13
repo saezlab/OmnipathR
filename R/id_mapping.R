@@ -1904,10 +1904,12 @@ id_types <- function() {
 #' @param ... Names of columns containing complex identifiers.
 #' @param mapping Data frame: the ID translation table with two columns, the
 #'     source and target identifiers.
-#' @param one_to_many Logical: allow combinatorial expansion or use only the
-#'     first target identifier for each member of each complex.
-#'     If \code{NULL}, the option `omnipath.complex_translation_one_to_many`
-#'     will be used.
+#' @param one_to_many Logical or numeric: allow combinatorial expansion or use
+#'     only the first target identifier for each member of each complex. If
+#'     numeric, it will be the maximum number of complex. The value `TRUE`
+#'     corresponds to 12, i.e. one complex in `d` can be translated to a
+#'     maximum of 12 complexes, which is the default.  If \code{NULL}, the
+#'     option `omnipath.complex_translation_one_to_many` will be used.
 #'
 #' @param Data frame: the ID translation table with translation for complexes
 #'     added to it.
@@ -1927,9 +1929,13 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
     from <- to <- From <- To <- ids <- original <-
     complex_id <- member_id <- comp <- NULL
 
-    one_to_many %<>% if_null(
-        getOption('omnipath.complex_translation_one_to_many')
-    )
+    one_to_many %<>%
+        if_null(
+            getOption('omnipath.complex_translation_one_to_many')
+        ) %>%
+        {`if`(identical(., TRUE), 12L, .)} %>%
+        {`if`(identical(., FALSE), ., 1L)}
+
     mapping %<>% set_names(c('from', 'to'))
 
     d %>%
@@ -1939,7 +1945,8 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
     unique %>%
     keep(str_starts(., 'COMPLEX:')) %>%
     str_replace('^COMPLEX:', '') %>%
-    tibble(ids = .) %>%
+    tibble(ids = .) %T>%
+    {log_trace('Translating complexes: %i complexes in data.', nrow(.))} %>%
     mutate(
         original = ids,
         complex_id = row_number()
@@ -1947,15 +1954,17 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
     separate_longer_delim(ids, '_') %>%
     mutate(member_id = row_number()) %>%
     left_join(mapping, by = c('ids' = 'from')) %>%
-    {`if`(
-        one_to_many,
-        .,
-        group_by(., member_id) %>%
-        filter(row_number() == 1L) %>%
-        ungroup,
-    )} %>%
     group_by(complex_id) %>%
     filter(to %>% is.na %>% any %>% not) %>%
+    filter(table(member_id) %>% prod <= one_to_many) %T>%
+    {log_trace(
+        paste0(
+           '%i complexes after removing the ones mapping to ',
+           'more than %i items in target identifier space.'
+        ),
+        n_distinct(.$original),
+        one_to_many
+    )} %>%
     summarize(
         to =
             split(to, member_id) %>%
@@ -1974,7 +1983,12 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
     unnest_longer(to, values_to = 'To') %>%
     unnest_longer(from, values_to = 'From') %>%
     select(From, To) %>%
-    mutate(across(everything(), ~sprintf('COMPLEX:%s', .x)))
+    mutate(across(everything(), ~sprintf('COMPLEX:%s', .x))) %T>%
+    {log_trace(
+        'Translated %i complexes to %i.',
+        n_distinct(.$From),
+        n_distinct(.$To)
+    )}
 
 }
 
