@@ -73,6 +73,7 @@ Imports:
     rlang,
     rmarkdown,
     RSQLite,
+    R.utils,
     rvest,
     stats,
     stringi,
