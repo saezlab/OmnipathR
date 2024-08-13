@@ -65,7 +65,7 @@
         'Gecko/20100101 Firefox/120.0'
     ),
     omnipath.complex_translation = TRUE,
-    omnipath.complex_translation_one_to_many = TRUE
+    omnipath.complex_translation_one_to_many = 12L
 )
 
 

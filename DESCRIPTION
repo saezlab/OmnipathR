@@ -1,7 +1,7 @@
 Package: OmnipathR
 Type: Package
 Title: OmniPath web service client and more
-Version: 3.13.11
+Version: 3.13.12
 Authors@R: c(
     person(
         given = "Alberto",
@@ -72,6 +72,7 @@ Imports:
     readxl,
     rlang,
     rmarkdown,
+    RSQLite,
     rvest,
     stats,
     stringi,
@@ -82,6 +83,7 @@ Imports:
     tools,
     utils,
     withr,
+    XML,
     xml2,
     yaml
 Suggests:
