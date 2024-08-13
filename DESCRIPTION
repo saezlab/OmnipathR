@@ -86,7 +86,7 @@ Imports:
     withr,
     XML,
     xml2,
-    yaml
+    yaml,
     zip
 Suggests:
     BiocStyle,
