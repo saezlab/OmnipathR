@@ -155,7 +155,7 @@ identifiers is available. The `record_id` column uniquely identifies the
 original records. Multiple rows with the same `record_id` are due to
 one-to-many identifier translation.
 
-```{ri stitch}
+```{r stitch}
 st <- stitch_network()
 
 st
