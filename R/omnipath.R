@@ -449,7 +449,8 @@ omnipath_args <- function(dots, ...) {
     modifyList(defaults, .) %>%
     modifyList(dots %>% qs_synonyms) %>%
     modifyList(override) %>%
-    inset2('...', NULL)
+    inset2('...', NULL) %T>%
+    {log_trace('Arguments for OmniPath query: %s', compact_repr(.))}
 
 }
 
