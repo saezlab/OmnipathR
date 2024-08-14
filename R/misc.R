@@ -1041,6 +1041,54 @@ enum_format <- function(words) {
 }
 
 
+#' Compact string representation for any R object
+#'
+#' @param obj An R object.
+#' @param limit Integer: max number of elements to include; the rest of the
+#'     elements in each vector or list will be replaced by `...`.
+#'
+#' @return Character: a compact string representation.
+#'
+#' @importFrom magrittr %>% %<>% is_greater_than
+#' @importFrom utils head
+#' @noRd
+compact_repr <- function(obj, limit = 10L) {
+
+    if (is.data.frame(obj)) {
+
+        obj %<>% {sprintf('<DF:%ix%i>', nrow(.), ncol(.))}
+
+    } else if (
+        inherits(obj, c('list', 'pairlist')) ||
+        (is.vector(obj) && length(obj) > 1L)
+    ) {
+
+        dots <- obj %>% length %>% is_greater_than(limit) %>% `if`('...', NULL)
+
+        obj %<>%
+            head(limit) %>%
+            map_chr(compact_repr) %>%
+            c(dots) %>%
+            paste(names(.), '=', ., sep = '') %>%
+            str_replace('^=', '') %>%
+            paste(collapse = ',') %>%
+            sprintf('[%s]', .)
+
+    } else {
+
+        obj %<>% {`if`(
+            is.atomic(.),
+            as.character(.),
+            sprintf('<%s>', class(.))
+        )}
+
+    }
+
+    return(obj)
+
+}
+
+
 #' Uncompressed size of a connection
 #'
 #' @param con A connection.
