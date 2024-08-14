@@ -75,7 +75,7 @@ import_omnipath_annotations <- function(proteins = NULL, wide = FALSE, ...){
 
     if(
         is.null(proteins) &&
-        is.null(resources)
+        is.null(args$resources)
     ){
 
         msg <- paste(
