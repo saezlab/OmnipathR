@@ -76,7 +76,6 @@ Imports:
     yaml
 Suggests:
     BiocStyle,
-    biomaRt,
     bookdown,
     ggplot2,
     ggraph,
