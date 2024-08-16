@@ -26,6 +26,88 @@ PPI_DATASETS <- c('omnipath', 'pathwayextra', 'kinaseextra', 'ligrecextra')
 GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 
 
+#' Molecular interactions from OmniPath
+#'
+#' The functions listed here all download pairwise, causal molecular
+#' interactions from the \url{https://omnipathdb.org/interactions} endpoint of
+#' the OmniPath web service. They are different only in the type of
+#' interactions and the kind of resources and data they have been compiled
+#' from. A complete list of these functions is available below, these cover
+#' the interaction datasets and types  currently available in OmniPath:
+#'
+#' **Post-translational (protein-protein, PPI) interactions**
+#'
+#' \itemize{
+#'     \item{\code{omnipath}: the OmniPath data as defined in the 2016 paper,
+#'         an arbitrary optimum between coverage and quality. This dataset
+#'         contains almost entirely causal (stimulatory or inhibitory; i.e.
+#'         activity flow , according to the SBGN standard), physical
+#'         interactions between pairs of proteins, curated by experts
+#'         from the literature.}
+#'     \item{\code{pathwayextra}: activity flow interactions without literature
+#'         references.}
+#'     \item{\code{kinaseextra}: enzyme-substrate interactions without
+#'         literature references.}
+#'     \item{\code{ligrecextra}: ligand-receptor interactions without
+#'         literature references.}
+#'     \item{\code{post_translational}: all post-translational
+#'         (protein-protein, PPI) interactions; this is the combination of the
+#'         *omnipath*, *pathwayextra*, *kinaseextra* and *ligrecextra*
+#'         datasets.}
+#' }
+#'
+#' **TF-target (gene regulatory, GRN) interactions**
+#'
+#' \itemize{
+#'     \item{\code{collectri}: transcription factor (TF)-target
+#'         interactions from CollecTRI.}
+#'     \item{\code{dorothea}: transcription factor (TF)-target
+#'         interactions from DoRothEA}
+#'     \item{\code{tf_target}: transcription factor
+#'         (TF)-target interactions from other resources}
+#'     \item{\code{transcriptional}: all transcription factor
+#'         (TF)-target interactions; this is the combination of the
+#'         *collectri*, *dorothea* and *tf_target* datasets.}
+#' }
+#'
+#' **Post-transcriptional (miRNA-target) and other RNA related interactions**
+#'
+#' In these datasets we intend to collect the literature curated resources,
+#' hence we don't include some of the most well known large databases if those
+#' are based on predictions or high-throughput assays.
+#'
+#' \itemize{
+#'     \item{\code{mirna_target}: miRNA-mRNA interactions}
+#'     \item{\code{tf_mirna}: TF-miRNA interactions}
+#'     \item{\code{lncrna_mrna}: lncRNA-mRNA interactions}
+#' }
+#'
+#' **Other interaction access functions**
+#'
+#' \itemize{
+#'     \item{\code{small_molecule}: interactions between small molecules and
+#'         proteins. Currently this is a small, experimental dataset that
+#'         includes drug-target, ligand-receptor, enzyme-metabolite and other
+#'         interactions. In the future this will be largely expanded and
+#'         divided into multiple datasets.}
+#'     \item{\code{all_interactions}: all the interaction datasets combined.}
+#' }
+#'
+#' @examples
+#' op <- omnipath(resources = c("CA1", "SIGNOR", "SignaLink3"))
+#' op
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{interaction_graph}}}
+#'     \item{\code{\link{print_interactions}}}
+#'     \item{\code{\link{annotated_network}}}
+#' }
+#'
+#' @name omnipath-interactions
+NULL
+
+
 #' Interactions from OmniPath
 #'
 #' Interactions from the \url{https://omnipathdb.org/interactions} endpoint of
@@ -39,23 +121,16 @@ GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 #' @return A dataframe of molecular interactions.
 #'
 #' @examples
-#' interactions = import_omnipath_interactions(
-#'     resources = c('SignaLink3'),
+#' interactions = omnipath_interactions(
+#'     resources = "SignaLink3",
 #'     organism = 9606
 #' )
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{omnipath}}}
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
 #'
 #' @importFrom magrittr %<>%
 #' @importFrom rlang exec !!!
 #' @export
-import_omnipath_interactions <- function(...){
+#' @rdname omnipath-interactions
+omnipath_interactions <- function(...){
 
     args <- omnipath_args(list(...), query_type = 'interactions')
     defaults <- list(datasets = 'omnipath')
@@ -63,6 +138,18 @@ import_omnipath_interactions <- function(...){
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{omnipath_interactions}.
+#' @export
+#'
+#' @noRd
+import_omnipath_interactions <- function(...){
+    .Deprecated('import_omnipath_interactions')
+    omnipath_interactions(...)
 }
 
 
@@ -97,6 +184,7 @@ import_omnipath_interactions <- function(...){
 #'
 #' @importFrom rlang exec !!!
 #' @export
+#' @rdname omnipath-interactions
 omnipath <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'omnipath')
@@ -123,30 +211,37 @@ omnipath <- function(...){
 #'
 #' @examples
 #' interactions <-
-#'     import_pathwayextra_interactions(
-#'         resources = c('BioGRID', 'IntAct'),
+#'     pathwayextra(
+#'         resources = c("BioGRID", "IntAct"),
 #'         organism = 9606
 #'     )
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-#'
 #' @importFrom rlang exec !!!
 #' @export
-import_pathwayextra_interactions <- function(...){
+#' @rdname omnipath-interactions
+#' @aliases import_pathwayextra_interactions
+pathwayextra <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'pathwayextra')
 
-    exec(import_omnipath_interactions, !!!args)
+    exec(omnipath_interactions, !!!args)
 
 }
 
 
-#' Interactions from the `kinase extra` dataset of OmniPath
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{pathwayextra}.
+#' @export
+#'
+#' @noRd
+import_pathwayextra_interactions <- function(...){
+    .Deprecated('import_pathwayextra_interactions')
+    pathwayextra(...)
+}
+
+
+#' Interactions from the `kinaseextra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=kinaseextra},
@@ -161,31 +256,17 @@ import_pathwayextra_interactions <- function(...){
 #' literature reference
 #'
 #' @examples
-#' interactions <-
-#'    import_kinaseextra_interactions(
+#' kinase_substrate <-
+#'    kinaseextra(
 #'        resources = c('PhosphoPoint', 'PhosphoSite'),
 #'        organism = 9606
 #'    )
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-#'
 #' @importFrom rlang exec !!!
 #' @export
-import_kinaseextra_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+#' @rdname omnipath-interactions
+#' @aliases import_kinaseextra_interactions
+kinaseextra <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'kinaseextra')
 
@@ -194,7 +275,19 @@ import_kinaseextra_interactions <- function(
 }
 
 
-#' Interactions from the `ligrec extra` dataset of OmniPath
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{kinaseextra}.
+#' @export
+#'
+#' @noRd
+import_kinaseextra_interactions <- function(...){
+    .Deprecated('import_kinaseextra_interactions')
+    kinaseextra(...)
+}
+
+
+#' Interactions from the `ligrecextra` dataset of OmniPath
 #'
 #' Imports the dataset from:
 #' \url{https://omnipathdb.org/interactions?datasets=ligrecextra},
@@ -209,26 +302,33 @@ import_kinaseextra_interactions <- function(
 #' the ones without literature references
 #'
 #' @examples
-#' interactions <- import_ligrecextra_interactions(
+#' ligand_receptor <- ligrecextra(
 #'     resources = c('HPRD', 'Guide2Pharma'),
 #'     organism = 9606
 #' )
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-#'
 #' @importFrom rlang exec !!!
 #' @export
-import_ligrecextra_interactions <- function(...){
+#' @rdname omnipath-interactions
+#' @aliases import_ligrecextra_interactions
+ligrecextra <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'ligrecextra')
 
     exec(import_omnipath_interactions, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{ligrecextra}.
+#' @export
+#'
+#' @noRd
+import_ligrecextra_interactions <- function(...){
+    .Deprecated('import_ligrecextra_interactions')
+    ligrecextra(...)
 }
 
 
@@ -244,20 +344,13 @@ import_ligrecextra_interactions <- function(...){
 #' @return A dataframe containing post-translational interactions
 #'
 #' @examples
-#' interactions <-
-#'     import_post_translational_interactions(
-#'         resources = c('BioGRID')
-#'     )
+#' interactions <- post_translational(resources = "BioGRID")
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
 #' @importFrom rlang %||% exec !!!
 #' @export
-import_post_translational_interactions <- function(...){
+#' @rdname omnipath-interactions
+#' @aliases import_post_translational_interactions
+post_translational <- function(...){
 
 
     args <- omnipath_args(list(...), query_type = 'interactions')
@@ -265,6 +358,18 @@ import_post_translational_interactions <- function(...){
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{post_translational}.
+#' @export
+#'
+#' @noRd
+import_post_translational_interactions <- function(...){
+    .Deprecated('import_post_translational_interactions')
+    post_translational(...)
 }
 
 
@@ -310,6 +415,7 @@ import_post_translational_interactions <- function(...){
 #' @importFrom rlang exec !!!
 #' @export
 #' @aliases import_dorothea_interactions
+#' @rdname omnipath-interactions
 dorothea <- function(dorothea_levels = c('A', 'B'), ...){
 
     args <- omnipath_args(
@@ -320,6 +426,18 @@ dorothea <- function(dorothea_levels = c('A', 'B'), ...){
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{dorothea}.
+#' @export
+#'
+#' @noRd
+import_dorothea_interactions <- function(...){
+    .Deprecated('import_dorothea_interactions')
+    dorothea(...)
 }
 
 
@@ -338,20 +456,13 @@ dorothea <- function(dorothea_levels = c('A', 'B'), ...){
 #' @return A dataframe containing TF-target interactions
 #'
 #' @examples
-#' interactions <-
-#'     import_tf_target_interactions(
-#'         resources = c('DoRothEA', 'SIGNOR')
-#'     )
+#' interactions <- tf_target(resources = c("DoRothEA", "SIGNOR"))
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
 #' @importFrom rlang exec !!!
 #' @export
-import_tf_target_interactions <- function(
+#' @rdname omnipath-interactions
+#' @aliases import_tf_target_interactions
+tf_target <- function(
     resources = NULL,
     organism = 'human',
     fields = NULL,
@@ -370,6 +481,18 @@ import_tf_target_interactions <- function(
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{tf_target}.
+#' @export
+#'
+#' @noRd
+import_tf_target_interactions <- function(...){
+    .Deprecated('import_tf_target_interactions')
+    tf_target(...)
 }
 
 
@@ -392,10 +515,7 @@ import_tf_target_interactions <- function(
 #' @return A dataframe containing TF-target interactions.
 #'
 #' @examples
-#' grn <-
-#'     import_transcriptional_interactions(
-#'         resources = c('PAZAR', 'ORegAnno', 'DoRothEA')
-#'     )
+#' grn <- transcriptional(resources = c("PAZAR", "ORegAnno", "DoRothEA"))
 #' grn
 #'
 #' @seealso \itemize{
@@ -409,16 +529,27 @@ import_tf_target_interactions <- function(
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang %||% exec !!!
 #' @export
-import_transcriptional_interactions <- function(
-    dorothea_levels = c('A', 'B'),
-    ...
-){
+#' @rdname omnipath-interactions
+#' @aliases import_transcriptional_interactions
+transcriptional <- function(dorothea_levels = c('A', 'B'), ...){
 
     args <- omnipath_args(list(...), query_type = 'interactions')
     args$datasets %<>% {. %||% GRN_DATASETS} %>% intersect(GRN_DATASETS)
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{transcriptional}.
+#' @export
+#'
+#' @noRd
+import_transcriptional_interactions <- function(...){
+    .Deprecated('import_transcriptional_interactions')
+    transcriptional(...)
 }
 
 
@@ -437,17 +568,9 @@ import_transcriptional_interactions <- function(
 #' collectri_grn <- collectri()
 #' collectri_grn
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{import_transcriptional_interactions}}}
-#'     \item{\code{\link{dorothea}}}
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-#'
-#' @export
 #' @importFrom rlang exec !!!
+#' @export
+#' @rdname omnipath-interactions
 collectri <- function(...){
 
     args <-
@@ -474,21 +597,13 @@ collectri <- function(...){
 #' @return A dataframe containing miRNA-mRNA interactions
 #'
 #' @examples
-#' interactions <-
-#'     import_mirnatarget_interactions(
-#'         resources = c('miRTarBase', 'miRecords')
-#'     )
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
+#' interactions <- mirna_target( resources = c("miRTarBase", "miRecords"))
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_mirnatarget_interactions <- function(...){
+#' @rdname omnipath-interactions
+#' @aliases import_mirnatarget_interactions
+mirna_target <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -498,6 +613,18 @@ import_mirnatarget_interactions <- function(...){
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{mirna_target}.
+#' @export
+#'
+#' @noRd
+import_mirnatarget_interactions <- function(...){
+    .Deprecated('import_mirnatarget_interactions')
+    mirna_target(...)
 }
 
 
@@ -513,21 +640,13 @@ import_mirnatarget_interactions <- function(...){
 #' @return A dataframe containing TF-miRNA interactions
 #'
 #' @examples
-#' interactions <-
-#'     import_tf_mirna_interactions(
-#'         resources = c('TransmiR')
-#'     )
+#' interactions <- tf_mirna(resources = "TransmiR")
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-#'
-#' @export
 #' @importFrom rlang exec !!!
-import_tf_mirna_interactions <- function(...){
+#' @export
+#' @rdname omnipath-interactions
+#' @aliases import_tf_mirna_interactions
+tf_mirna <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -537,6 +656,18 @@ import_tf_mirna_interactions <- function(...){
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{tf_mirna}.
+#' @export
+#'
+#' @noRd
+import_tf_mirna_interactions <- function(...){
+    .Deprecated('import_tf_mirna_interactions')
+    tf_mirna(...)
 }
 
 
@@ -552,21 +683,13 @@ import_tf_mirna_interactions <- function(...){
 #' @return A dataframe containing lncRNA-mRNA interactions
 #'
 #' @examples
-#' interactions <-
-#'     import_lncrna_mrna_interactions(
-#'         resources = c('ncRDeathDB')
-#'     )
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
+#' interactions <- lncrna_mrna(resources = c("ncRDeathDB"))
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_lncrna_mrna_interactions <- function(...){
+#' @rdname omnipath-interactions
+#' @aliases import_lncrna_mrna_interactions
+lncrna_mrna <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -576,6 +699,18 @@ import_lncrna_mrna_interactions <- function(...){
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{lncrna_mrna}.
+#' @export
+#'
+#' @noRd
+import_lncrna_mrna_interactions <- function(...){
+    .Deprecated('import_lncrna_mrna_interactions')
+    lncrna_mrna(...)
 }
 
 
@@ -593,10 +728,7 @@ import_lncrna_mrna_interactions <- function(...){
 #'
 #' @examples
 #' # What are the targets of aspirin?
-#' interactions <-
-#'     import_small_molecule_protein_interactions(
-#'         sources = 'ASPIRIN'
-#'     )
+#' interactions <- small_molecule(sources = "ASPIRIN")
 #' # The prostaglandin synthases:
 #' interactions
 #'
@@ -609,16 +741,9 @@ import_lncrna_mrna_interactions <- function(...){
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_small_molecule_protein_interactions <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+#' @rdname omnipath-interactions
+#' @aliases import_small_molecule_protein_interactions
+small_molecule <- function(...){
 
     args <- omnipath_args(
         list(...),
@@ -631,29 +756,19 @@ import_small_molecule_protein_interactions <- function(
 }
 
 
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{small_molecule}.
+#' @export
+#'
+#' @noRd
+import_small_molecule_protein_interactions <- function(...){
+    .Deprecated('import_small_molecule_protein_interactions')
+    small_molecule(...)
+}
+
+
 #' Imports all interaction datasets available in OmniPath
-#'
-#' The interaction datasets currently available in OmniPath:
-#'
-#' \itemize{
-#'     \item{omnipath: the OmniPath data as defined in the 2016 paper, an
-#'     arbitrary optimum between coverage and quality}
-#'     \item{pathwayextra: activity flow interactions without literature
-#'     references}
-#'     \item{kinaseextra: enzyme-substrate interactions without literature
-#'     reference}
-#'     \item{ligrecextra: ligand-receptor interactions without
-#'     literature reference}
-#'     \item{collectri: transcription factor (TF)-target
-#'     interactions from CollecTRI}
-#'     \item{dorothea: transcription factor (TF)-target
-#'     interactions from DoRothEA}
-#'     \item{tf_target: transcription factor
-#'     (TF)-target interactions from other resources}
-#'     \item{mirnatarget: miRNA-mRNA interactions}
-#'     \item{tf_mirna: TF-miRNA interactions}
-#'     \item{lncrna_mrna: lncRNA-mRNA interactions}
-#' }
 #'
 #' @return A dataframe containing all the datasets in the interactions query
 #'
@@ -666,21 +781,17 @@ import_small_molecule_protein_interactions <- function(
 #' @inheritDotParams omnipath_query -datasets -query_type
 #'
 #' @examples
-#' interactions <- import_all_interactions(
-#'     resources = c('HPRD', 'BioGRID'),
+#' interactions <- all_interactions(
+#'     resources = c("HPRD", "BioGRID"),
 #'     organism = 9606
 #' )
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
 #'
 #' @importFrom rlang exec !!!
 #' @importFrom magrittr %<>% %>% extract2
 #' @export
-import_all_interactions <- function(
+#' @rdname omnipath-interactions
+#' @aliases import_all_interactions
+all_interactions <- function(
     dorothea_levels = c('A', 'B'),
     types = NULL,
     ...
@@ -702,6 +813,18 @@ import_all_interactions <- function(
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname omnipath-interactions
+#' @param ... Passed to \code{all_interactions}.
+#' @export
+#'
+#' @noRd
+import_all_interactions <- function(...){
+    .Deprecated('import_all_interactions')
+    all_interactions(...)
 }
 
 
