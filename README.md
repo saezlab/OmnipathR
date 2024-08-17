@@ -129,7 +129,7 @@ library(OmnipathR)
 Download human protein-protein interactions from the specified resources:
 
 ```{r}
-interactions <- import_omnipath_interactions(
+interactions <- omnipath(
     resources = c('SignaLink3', 'PhosphoSite', 'SIGNOR')
 )
 ```
@@ -138,7 +138,7 @@ interactions <- import_omnipath_interactions(
 Download human enzyme-PTM relationships from the specified resources:
 
 ```{r}
-enzsub <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
+enzsub <- enzyme_substrate(resources = c('PhosphoSite', 'SIGNOR'))
 ```
 
 Convert both data frames into networks (`igraph` objects)
