@@ -165,16 +165,16 @@ inconclusive data).
 
 ```{r interactions}
 ## We check some of the different interaction databases
-get_interaction_resources()
+interaction_resources()
 
 ## The interactions are stored into a data frame.
 pathways <-
-    import_omnipath_interactions(
+    omnipath(
         resources = c("SignaLink3", "PhosphoSite", "SIGNOR")
     )
 
 ## We visualize the first interactions in the data frame.
-print_interactions(head(pathways))
+printhead(pathways))
 ```
 
 ### Protein-protein interaction networks
@@ -288,7 +288,7 @@ for a given gene in this particular case.
 ```{r pathwayextra}
 ## We query and store the interactions into a dataframe
 iactions <-
-    import_pathwayextra_interactions(
+    pathwayextra
         resources = c("Wang", "Lit-BM-17"),
         organism = 10090  # mouse
     )
@@ -301,7 +301,7 @@ iactions_amfr <- dplyr::filter(
 )
 
 ## We print these interactions:
-print_interactions(iactions_amfr)
+print(iactions_amfr)
 ```
 
 ### Kinase Extra
@@ -313,7 +313,7 @@ going to focus on rat reactions targeting a particular gene.
 ```{r kinaseextra}
 ## We query and store the interactions into a dataframe
 phosphonetw <-
-    import_kinaseextra_interactions(
+    kinaseextra
         resources = c("PhosphoPoint", "PhosphoSite"),
         organism = 10116  # rat
     )
@@ -325,7 +325,7 @@ upstream_dpysl2 <- dplyr::filter(
 )
 
 ## We print these interactions:
-print_interactions(upstream_dpysl2)
+printupstream_dpysl2)
 ```
 
 ### Ligand-receptor Extra
@@ -337,7 +337,7 @@ ligand, CDH1 (Figure \@ref(fig:fig3)).
 
 ```{r ligrecextra}
 ## We query and store the interactions into a dataframe
-ligrec_netw <- import_ligrecextra_interactions(
+ligrec_netw <- ligrecextra
     resources = c("iTALK", "Baccin2019"),
     organism = 9606  # human
 )
@@ -353,7 +353,7 @@ downstream_cdh1_g <- interaction_graph(downstream_cdh1)
 
 ## We induce a network with these genes
 downstream_cdh1_g <- igraph::induced_subgraph(
-    interaction_graph(import_omnipath_interactions()),
+    interaction_graph(omnipath()),
     igraph::V(downstream_cdh1_g)$name
 )
 ```
@@ -399,7 +399,7 @@ downstream_gli1  <- dplyr::filter(
     source_genesymbol == "GLI1"
 )
 
-print_interactions(downstream_gli1)
+printdownstream_gli1)
 ```
 
 ### miRNA-target dataset
@@ -415,7 +415,7 @@ the miRNA targeting *GLI1* and the genes regulated by this TF.
 
 ```{r mirnatarget}
 ## We query and store the interactions into a dataframe
-mirna_target <- import_mirnatarget_interactions(
+mirna_target <- mirnatarget
     resources = c("miR2Disease", "miRDeathDB")
 )
 
@@ -426,7 +426,7 @@ upstream_gli1 <- dplyr::filter(
     target_genesymbol == "GLI1"
 )
 
-print_interactions(upstream_gli1)
+printupstream_gli1)
 
 ## We transform the previous selections to graphs (igraph objects)
 downstream_gli1_g <- interaction_graph(downstream_gli1)
@@ -472,10 +472,10 @@ and Cellinker), but has prospects of a great growth in the future. As an
 example, lets look for targets of a cancer drug, the MEK inhibitor Trametinib:
 
 ```{r small-molecules}
-trametinib_targets <- import_small_molecule_protein_interactions(
+trametinib_targets <- small_molecule_protein
     sources = "TRAMETINIB"
 )
-print_interactions(trametinib_targets)
+printtrametinib_targets)
 ```
 
 Note, the human readable compound names are not reliable, use PubChem CIDs
@@ -500,15 +500,15 @@ build a graph using this information, and to retrieve PTMs from mouse or rat.
 
 ```{r PTMs}
 ## We check the different PTMs databases
-get_enzsub_resources()
+enzsub_resources()
 
 ## We query and store the enzyme-PTM interactions into a dataframe.
 ## No filtering by databases in this case.
-enzsub <- import_omnipath_enzsub()
+enzsub <- enzyme_substrate()
 
 ## We can select and print the reactions between a specific kinase and
 ## a specific substrate
-print_interactions(dplyr::filter(
+printdplyr::filter(
     enzsub,
     enzyme_genesymbol == "MAP2K1",
     substrate_genesymbol == "MAPK3"
@@ -517,19 +517,19 @@ print_interactions(dplyr::filter(
 ## In the previous results, we can see that enzyme-PTM relationships do not
 ## contain sign (activation/inhibition). We can generate this information
 ## based on the protein-protein OmniPath interaction dataset.
-interactions <- import_omnipath_interactions()
-enzsub <- get_signed_ptms(enzsub, interactions)
+interactions <- omnipath()
+enzsub <- signed_ptms(enzsub, interactions)
 
 ## We select again the same kinase and substrate. Now we have information
 ## about inhibition or activation when we print the enzyme-PTM relationships
-print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
+printdplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
     substrate_genesymbol=="MAPK3"))
 
 ## We can also transform the enzyme-PTM relationships into a graph.
 enzsub_g <- enzsub_graph(enzsub = enzsub)
 
 ## We download PTMs for mouse
-enzsub <- import_omnipath_enzsub(
+enzsub <- enzyme_substrate(
     resources = c("PhosphoSite", "SIGNOR"),
     organism = 10090
 )
@@ -557,17 +557,17 @@ since it will be used again in the forthcoming sections.
 
 ```{r complexes}
 ## We check the different complexes databases
-get_complex_resources()
+complex_resources()
 
 ## We query and store complexes from some sources into a dataframe.
-complexes <- import_omnipath_complexes(resources = c("CORUM", "hu.MAP"))
+complexes <- complexes(resources = c("CORUM", "hu.MAP"))
 
 ## We check all the molecular complexes where a set of genes participate
 query_genes <- c("WRN", "PARP1")
 
 ## Complexes where any of the input genes participate
 wrn_parp1_complexes <- unique(
-    get_complex_genes(
+    complex_genes(
         complexes,
         query_genes,
         total_match = FALSE
@@ -579,7 +579,7 @@ head(wrn_parp1_complexes$components_genesymbols, 6)
 
 ## Complexes where all the input genes participate jointly
 complexes_query_genes_join <- unique(
-    get_complex_genes(
+    complex_genes(
         complexes,query_genes,
         total_match=TRUE
     )
@@ -633,13 +633,13 @@ results of its individual components.
 
 ```{r complex_annotations}
 ## We check the different annotation databases
-get_annotation_resources()
+annotation_resources()
 
 ## We can further investigate the features of the complex selected
 ## in the previous section.
 
 ## We first get the annotations of the complex itself:
-annotations <- import_omnipath_annotations(
+annotations <- annotations(
     proteins = paste0("COMPLEX:", wrn_parp1_complexes$components_genesymbols)
 )
 
@@ -654,7 +654,7 @@ checking their cellular location.
 Then, we explore some annotations of its individual components. Pathways
 where the proteins belong:
 ```{r annotations_components}
-annotations <- import_omnipath_annotations(
+annotations <- annotations(
     proteins = wrn_parp1_cplx_genes,
     resources = "NetPath"
 )
@@ -665,7 +665,7 @@ dplyr::select(annotations, genesymbol, value)
 Subcellular localization of our proteins:
 
 ```{r subcell_loc}
-annotations <- import_omnipath_annotations(
+annotations <- annotations(
     proteins = wrn_parp1_cplx_genes,
     resources = "ComPPI"
 )
@@ -682,12 +682,12 @@ dplyr::top_n(10, score)
 
 The way above, we more or less reconstituted the data as it is in the
 original resource. The same can be done much easier by passing the
-`wide = TRUE` parameter to `import_omnipath_annotations`. In this case,
+`wide = TRUE` parameter to `annotations`. In this case,
 if the data contains more than one resources, a list of data frames
 will be returned.
 
 ```{r annot_wide}
-signaling_pathways <- import_omnipath_annotations(
+signaling_pathways <- annotations(
     resources = "SignaLink_pathway",
     wide = TRUE
 )
@@ -715,10 +715,10 @@ intracellular.
 
 ```{r intercell}
 ## We check some of the different intercell categories
-get_intercell_generic_categories()
+intercell_generic_categories()
 
 ## We import the intercell data into a dataframe
-intercell <- import_omnipath_intercell(
+intercell <- intercell(
     scope = "generic",
     aspect = "locational"
 )
@@ -731,14 +731,14 @@ dplyr::select(category, genesymbol, parent) %>%
 dplyr::arrange(genesymbol)
 ```
 
-The `import_intercell_network` function creates the most complete network,
+The `intercell_network` function creates the most complete network,
 including many interactions which are false positives in the context of
 interacellular communication. It is highly recommended to apply some
 quality filtering on this network. The `high_confidence` parameter performs
 a quiet stringent filtering:
 
 ```{r intercell_quality}
-icn <- import_intercell_network(high_confidence = TRUE)
+icn <- intercell_network(high_confidence = TRUE)
 ```
 
 Using the function `filter_intercell_network` instead, you have much more
@@ -747,7 +747,7 @@ analysis. See the full list of options in the docs of the function.
 
 ```{r intercell_filter}
 icn <-
-    import_intercell_network() %>%
+    intercell_network() %>%
     filter_intercell_network(
         min_curation_effort = 1,
         consensus_percentile = 33

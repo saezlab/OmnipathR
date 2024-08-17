@@ -180,41 +180,32 @@ categories can be further divided into datasets which are defined by the
 type of evidences. A full list of network datasets:
 
 * Protein-protein interactions *(post_translational)*
-  [import_post_translational_interactions](https://saezlab.github.io/OmnipathR/reference/import_post_translational_interactions.html)
   - **omnipath:** literature curated, directed interactions with effect signs;
     corresponds to the first edition of OmniPath, hence the confusing name
     is due to historical reasons
-    [import_omnipath_interactions](https://saezlab.github.io/OmnipathR/reference/import_omnipath_interactions.html)
   - **pathwayextra:** directed and signed interactions, without literature
     references (might be literature curated, but references are not
     available)
-    [import_pathwayextra_interactions](https://saezlab.github.io/OmnipathR/reference/import_pathwayextra_interactions.html)
   - **kinaseextra:** enzyme-PTM interactions without literature references
-    [import_kinaseextra_interactions](https://saezlab.github.io/OmnipathR/reference/import_kinaseextra_interactions.html)
   - **ligrecextra:** ligand-receptor interactions without literature
     references
-    [import_ligrecextra_interactions](https://saezlab.github.io/OmnipathR/reference/import_ligrecextra_interactions.html)
 * Gene regulatory interactions *(transcriptional)*
-  [import_transcriptional_interactions](https://saezlab.github.io/OmnipathR/reference/import_transcriptional_interactions.html)
   - **dorothea:** a comprehensive collection built out of 18 resources,
     contains literature curated, ChIP-Seq, gene expression derived
     and TF binding site predicted data, with 5 confidence levels (A-E)
-    [import_dorothea_interactions](https://saezlab.github.io/OmnipathR/reference/import_kinaseextra_interactions.html)
   - **tf_target:** additional literature curated interactions
-    [import_tf_target_interactions](https://saezlab.github.io/OmnipathR/reference/import_tf_target_interactions.html)
 * miRNA interactions *(post_transcriptional and mirna_transcriptional)*
   - **mirnatarget:** literature curated miRNA-mRNA interactions
-    [import_mirnatarget_interactions](https://saezlab.github.io/OmnipathR/reference/import_mirnatarget_interactions.html)
   - **tf_mirna:** literature curated TF-miRNA interactions (transcriptional
     regulations of miRNA)
-    [import_tf_mirna_interactions](https://saezlab.github.io/OmnipathR/reference/import_tf_mirna_interactions.html)
 * lncRNA interactions *(lncrna_post_transcriptional)*
   - **lncrna_mrna:** literature curated lncRNA-mRNA interactions
-    [import_lncrna_mrna_interactions](https://saezlab.github.io/OmnipathR/reference/import_lncrna_mrna_interactions.html)
 * Small molecule-protein interactions *(small_molecule_protein)*
   - **small_molecule:** metabolites, intrinsic ligands or drug compounds
     targeting human proteins
-    [import_small_molecule_protein_interactions](https://saezlab.github.io/OmnipathR/reference/import_small_molecule_protein_interactions.html)
+
+The functions accessing the above datasets are listed
+[here](https://r.omnipathdb.org/reference/omnipath-interactions.html).
 
 Not individual interactions but resource are classified into the datasets
 above, so these can overlap. Each interaction type and dataset has its
@@ -222,7 +213,7 @@ dedicated function in `OmnipathR`, above we provide links to their help
 pages. As an example, let's see the gene regulatory interactions:
 
 ```{r network}
-gri <- import_transcriptional_interactions()
+gri <- transcriptional)
 gri
 ```
 
@@ -264,7 +255,7 @@ query, but the enzyme-substrate query type provides additional information
 about the PTM types and residues.
 
 ```{r enzsub}
-enz_sub <- import_omnipath_enzsub()
+enz_sub <- enzyme_substrate()
 enz_sub
 ```
 
@@ -279,13 +270,13 @@ It is also possible to add effect signs (stimulatory or inhibitory) to
 enzyme-PTM relationships:
 
 ```{r enzsub-signs}
-es_signed <- get_signed_ptms(enz_sub)
+es_signed <- signed_ptms(enz_sub)
 ```
 
 ### Protein complexes
 
 ```{r complexes}
-cplx <- import_omnipath_complexes()
+cplx <- complexes()
 cplx
 ```
 
@@ -304,7 +295,7 @@ data from UniProt, tissue expression from Human Protein Atlas and
 pathway information from SignaLink:
 
 ```{r uniprot-loc}
-uniprot_loc <- import_omnipath_annotations(
+uniprot_loc <- annotations(
     resources = 'UniProt_location',
     wide = TRUE
 )
@@ -319,7 +310,7 @@ In case of spelling mistake either in parameter names or values `OmnipathR`
 either corrects the mistake or gives a warning or error:
 
 ```{r uniprot-loc-1}
-uniprot_loc <- import_omnipath_annotations(
+uniprot_loc <- annotations(
     resources = 'Uniprot_location',
     wide = TRUE
 )
@@ -329,7 +320,7 @@ Above the name of the resource is wrong. If the parameter name is wrong, it
 throws an error:
 
 ```{r uniprot-loc-2, error = TRUE}
-uniprot_loc <- import_omnipath_annotations(
+uniprot_loc <- annotations(
     resuorces = 'UniProt_location',
     wide = TRUE
 )
@@ -338,7 +329,7 @@ uniprot_loc <- import_omnipath_annotations(
 Singular vs. plural forms and a few synonyms are automatically corrected:
 
 ```{r uniprot-loc-3}
-uniprot_loc <- import_omnipath_annotations(
+uniprot_loc <- annotations(
     resource = 'UniProt_location',
     wide = TRUE
 )
@@ -347,7 +338,7 @@ uniprot_loc <- import_omnipath_annotations(
 Another example with tissue expression from Human Protein Atlas:
 
 ```{r hpa-tissue}
-hpa_tissue <- import_omnipath_annotations(
+hpa_tissue <- annotations(
     resources = 'HPA_tissue',
     wide = TRUE,
     # Limiting to a handful of proteins for a faster vignette build:
@@ -359,7 +350,7 @@ hpa_tissue
 And pathway annotations from SignaLink:
 
 ```{r slk-pathway}
-slk_pathw <- import_omnipath_annotations(
+slk_pathw <- annotations(
     resources = 'SignaLink_pathway',
     wide = TRUE
 )
@@ -374,7 +365,7 @@ accepts either the name of an annotation resource or an annotation data
 frame:
 
 ```{r annotate-network}
-network <- import_omnipath_interactions()
+network <- omnipath()
 
 network_slk_pw <- annotated_network(network, 'SignaLink_pathway')
 network_slk_pw
@@ -388,16 +379,16 @@ being simple, best is to check the description in the recent OmniPath paper
 [1].
 
 ```{r intercell}
-ic <- import_omnipath_intercell()
+ic <- intercell()
 ic
 ```
 
 This data frame is about individual proteins. To create a network of
-intercellular communication, we provide the `import_intercell_network`
+intercellular communication, we provide the `intercell_network`
 function:
 
 ```{r intercell-network}
-icn <- import_intercell_network(high_confidence = TRUE)
+icn <- intercell_network(high_confidence = TRUE)
 icn
 ```
 
@@ -411,7 +402,7 @@ over the quality filters. It has many options which are described in the
 manual.
 
 ```{r intercell-filter}
-icn <- import_intercell_network()
+icn <- intercell_network()
 icn_hc <- filter_intercell_network(
     icn,
     ligand_receptor = TRUE,
@@ -427,18 +418,18 @@ annotation data frame.
 ### Metadata
 
 The list of available resources for each query type can be retrieved
-by the `get_..._resources` function. For example, the annotation resources
+by the `..._resources` functions. For example, the annotation resources
 are:
 
 ```{r annot-res}
-get_annotation_resources()
+annotation_resources()
 ```
 
 Categories in the `intercell` query also can be listed:
 
 ```{r intercell-cat}
-get_intercell_generic_categories()
-# get_intercell_categories() # this would show also the specific categories
+intercell_generic_categories()
+# intercell_categories() # this would show also the specific categories
 ```
 
 ## Data from other resources
@@ -473,7 +464,7 @@ are necessary. *Note: certain functionality fails recently due to changes
 in other packages, will be fixed in a few days.*
 
 ```{r id-translate-df, eval = FALSE}
-network <- import_omnipath_interactions()
+network <- omnipath()
 network <- translate_ids(
     network,
     source = uniprot_id,

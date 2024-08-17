@@ -164,7 +164,7 @@ st
 # OmniPath signaling network
 
 All parameters supported by the OmniPath web service
-(`import_omnipath_interactions()`) can be passed to `omnipath_for_cosmos()`,
+(`omnipath()`) can be passed to `omnipath_for_cosmos()`,
 enabling precise control over the resources, interaction types and other
 options when preparing the signaling network from OmniPath. By default the
 "omnipath" dataset is included which contains high confidence, literature

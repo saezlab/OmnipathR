@@ -217,8 +217,8 @@ networks <- nichenet_networks(only_omnipath = TRUE)
 
 To the network building functions of OmniPath many further arguments can
 be provided, at the end these are passed to
-`import_post_translational_interactions`, `import_intercell_network` and
-`import_transcriptional_interactions`, so we recommend to read the manual of
+`post_translational`, `intercell_network` and
+`transcriptional`, so we recommend to read the manual of
 these functions. As an example, one can restrict the signaling network to
 the resources SIGNOR and PhosphoSite, while for ligand-receptor use only
 ligands and enzymes on the transmitter side and receptors and transporters
@@ -290,7 +290,7 @@ evex_signaling <- nichenet_signaling_network_evex(top_confidence = .9)
 The network format of NicheNet is very minimalistic, it contains only the
 interacting partners and the resource. To investigate the data more in depth,
 we recommend to look at the original data. The methods retrieving data from
-resources all end by `_download` for foreign resources and start by `import_`
+resources all end by `_download` for foreign resources and start by ``
 for OmniPath. For example, to access the EVEX data as it is provided by the
 resource:
 
@@ -311,7 +311,7 @@ RegNetwork, HTRIdb, ReMap, EVEX, PathwayCommons and TRRUST.
 
 The ligand-receptor interactions from OmniPath are special: these cover
 broader categories than only ligands and receptors. It includes also
-secreted enzymes, transporters, etc. Also the `import_intercell_network`
+secreted enzymes, transporters, etc. Also the `intercell_network`
 function, responsible for creating the OmniPath LR network, by default
 returns the most complete network. However, this contains a considerable
 number of interactions which might be false positives in the context of
@@ -346,7 +346,7 @@ nichenet_results <- nichenet_main(small = TRUE)
 ```
 
 The small network is not customizable, and it uses the `high_confidence`
-option in `import_intercell_network`. You can build similar smaller networks
+option in `intercell_network`. You can build similar smaller networks
 by using the general options instead. Another option `tiny` generates an
 even smaller network, however this involves a random subsetting, the outcome
 is not deterministic, this option is only for testing purposes.

@@ -58,7 +58,7 @@ library(magrittr)
 library(dplyr)
 
 tfcensus <-
-    import_omnipath_annotations(
+    annotations(
         resources = 'TFcensus',
         entity_types = 'protein'
     ) %>%
@@ -86,7 +86,7 @@ interactions.
 
 ```{r tfs-from-network}
 tfs_from_network <-
-    import_transcriptional_interactions(
+    transcriptional
         # confidence levels;
         # we use only the 3 levels with highest confidence
         dorothea_levels = c('A', 'B', 'C'),
@@ -111,7 +111,7 @@ We present here a three of them:
 
 ```{r localizations}
 localizations <-
-    import_omnipath_annotations(
+    annotations(
         resources = c(
             'Ramilowski_location',
             'UniProt_location',
@@ -139,7 +139,7 @@ of these datasets, we print the number of unique proteins.
 
 ```{r ligrec}
 ligands <-
-    OmnipathR::import_omnipath_intercell(
+    OmnipathR::intercell(
         parent = 'ligand',
         topology = 'sec',
         consensus_percentile = 50,
@@ -151,7 +151,7 @@ ligands <-
     length
 
 receptors <-
-    OmnipathR::import_omnipath_intercell(
+    OmnipathR::intercell(
         parent = 'receptor',
         topology = 'pmtm',
         consensus_percentile = 50,
@@ -163,7 +163,7 @@ receptors <-
     length
 
 transmitters <-
-    OmnipathR::import_omnipath_intercell(
+    OmnipathR::intercell(
         causality = 'trans',
         topology = 'sec',
         consensus_percentile = 50,
@@ -175,7 +175,7 @@ transmitters <-
     length
 
 receivers <-
-    OmnipathR::import_omnipath_intercell(
+    OmnipathR::intercell(
         causality = 'rec',
         topology = 'pmtm',
         consensus_percentile = 50,
@@ -198,7 +198,7 @@ only literature curated, causal interactions.
 
 ```{r ppi}
 ppi <-
-    import_omnipath_interactions(
+    omnipath(
         datasets = 'omnipath',
         entity_types = 'protein'
     )
@@ -214,14 +214,14 @@ in this demonstration.
 
 ```{r signalink}
 signalink_pathways <-
-    import_omnipath_annotations(
+    annotations(
         resources = 'SignaLink_pathway',
         entity_types = 'protein',
         wide = TRUE
     )
 
 signalink_functions <-
-    import_omnipath_annotations(
+    annotations(
         resources = 'SignaLink_function',
         entity_types = 'protein',
         wide = TRUE
@@ -388,14 +388,14 @@ function for creating ligand-receptor (or transmitter-receiver) interactions,
 we can use this as a first step. For simplicity, here we limited the query to
 ligand-receptor interactions and do a simple filtering to select high
 confidence ones (mostly based on consensus across resources). Alternatively,
-one can fine tune better the parameters to `import_intercell_network`, or
+one can fine tune better the parameters to `intercell_network`, or
 call it without any parameters, and use `filter_intercell_network` for
 quality filtering. At the end we use `simplify_intercell_network` to get
 rid of redundant columns.
 
 ```{r intercell-network}
 ligand_receptor <-
-    import_intercell_network(
+    intercell_network(
         ligand_receptor = TRUE,
         high_confidence = TRUE,
         entity_types = 'protein'
@@ -407,7 +407,7 @@ We query the TF-target gene interactions into another data frame:
 
 ```{r tf-target-network}
 tf_target <-
-    import_transcriptional_interactions(
+    transcriptional
         # confidence levels;
         # we use only the 2 levels with highest confidence
         dorothea_levels = c('A', 'B'),
@@ -427,7 +427,7 @@ previous section. If you missed it, you can load it like this:
 
 ```{r ppi-2, eval = FALSE}
 ppi <-
-    import_omnipath_interactions(
+    omnipath(
         datasets = 'omnipath',
         entity_types = 'protein'
     )

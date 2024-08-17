@@ -44,7 +44,7 @@ https://omnipathdb.org/ using OmnipathR package:
 
 ```{r}
 # Download protein-protein interactions
-interactions <- import_omnipath_interactions() %>% as_tibble()
+interactions <- omnipath() %>% as_tibble()
 
 # Convert to igraph objects:
 OPI_g <- interaction_graph(interactions = interactions)
