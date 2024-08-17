@@ -20,7 +20,7 @@ Returns `NULL`.
 The motifs can be copy-pasted into a BMA canvas.
 }
 \examples{
-interactions <- import_omnipath_interactions(resources = 'ARN')
+interactions <- omnipath(resources = "ARN")
 graph <- interaction_graph(interactions)
 print_bma_motif_es(igraph::E(graph)[1], graph)
 # {"Model": {

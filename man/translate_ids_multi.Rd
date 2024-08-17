@@ -88,7 +88,7 @@ for \code{\link{translate_ids}}. The only limitation is that, if the source
 columns are provided as stem+suffixes, they must be the same ID type.
 }
 \examples{
-ia <- import_omnipath_interactions()
+ia <- omnipath()
 translate_ids_multi(ia, source = uniprot, target, ensp, ensembl = TRUE)
 
 }

@@ -45,7 +45,7 @@ cofactors and over-promiscuous metabolites.}
 \item{stitch_score}{Include interactions from STITCH with combined
 confidence score larger than this.}
 
-\item{...}{Further parameters to \code{\link{import_omnipath_interactions}}.}
+\item{...}{Further parameters to \code{\link{omnipath_interactions}}.}
 }
 \value{
 A data frame of binary causal interations with effect signs,
@@ -98,6 +98,6 @@ Wang H, Robinson JL, Kocabas P, Gustafsson J, Anton M,
     \item{\code{\link{chalmers_gem_network}}}
     \item{\code{\link{stitch_network}}}
     \item{\code{\link{omnipath_for_cosmos}}}
-    \item{\code{\link{import_omnipath_interactions}}}
+    \item{\code{\link{omnipath-interactions}}}
 }
 }

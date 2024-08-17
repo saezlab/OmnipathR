@@ -13,7 +13,7 @@ intercell_consensus_filter(
 }
 \arguments{
 \item{data}{A data frame with intercell annotations, as provided by
-\code{\link{import_omnipath_intercell}}.}
+\code{\link{intercell}}.}
 
 \item{percentile}{Numeric: a percentile cut off for the consensus score
 of composite categories. The consensus score is the number of
@@ -43,11 +43,23 @@ The data frame in \code{data} filtered by the consensus scores.
 Quality filter for intercell annotations
 }
 \examples{
-intercell <- import_omnipath_intercell(parent = c('ligand', 'receptor'))
-nrow(intercell)
+ligand_receptor <- intercell(parent = c("ligand", "receptor"))
+nrow(ligand_receptor)
 # [1] 50174
-intercell_q50 <- intercell_consensus_filter(intercell, 50)
-nrow(intercell_q50)
+lr_q50 <- intercell_consensus_filter(ligand_receptor, 50)
+nrow(lr_q50)
 # [1] 42863
 
+}
+\seealso{
+\itemize{
+    \item{\code{\link{resources}}}
+    \item{\code{\link{intercell}}}
+    \item{\code{\link{filter_intercell}}}
+    \item{\code{\link{intercell_categories}}}
+    \item{\code{\link{intercell_generic_categories}}}
+    \item{\code{\link{intercell_resources}}}
+    \item{\code{\link{intercell_summary}}}
+    \item{\code{\link{intercell_network}}}
+}
 }

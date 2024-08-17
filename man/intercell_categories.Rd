@@ -2,27 +2,25 @@
 % Please edit documentation in R/intercell.R
 \name{intercell_categories}
 \alias{intercell_categories}
-\title{Full list of intercell categories and resources}
+\alias{get_intercell_categories}
+\title{Categories in the intercell database of OmniPath}
 \usage{
 intercell_categories()
 }
 \value{
-A data frame of categories and resources.
+character vector with the different intercell categories
 }
 \description{
-Full list of intercell categories and resources
+Retrieves a list of categories from \url{https://omnipath.org/intercell}.
 }
 \examples{
-ic_cat <- intercell_categories()
-ic_cat
-# # A tibble: 1,125 x 3
-#    category                parent                  database
-#    <chr>                   <chr>                   <chr>
-#  1 transmembrane           transmembrane           UniProt_location
-#  2 transmembrane           transmembrane           UniProt_topology
-#  3 transmembrane           transmembrane           UniProt_keyword
-#  4 transmembrane           transmembrane_predicted Phobius
-#  5 transmembrane_phobius   transmembrane_predicted Almen2009
-# # . with 1,120 more rows
+intercell_categories()
 
+}
+\seealso{
+\itemize{
+    \item{\code{\link{intercell}}}
+    \item{\code{\link{intercell_generic_categories}}}
+    \item{\code{\link{intercell_summary}}}
+}
 }

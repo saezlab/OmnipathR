@@ -34,7 +34,7 @@ Ensembl. These Gene Symbols are different from the ones returned from
 the web service, and match the Ensembl Gene Symbols used by other
 components of the COSMOS PKN.}
 
-\item{...}{Further parameters to \code{\link{import_omnipath_interactions}}.}
+\item{...}{Further parameters to \code{\link{omnipath_interactions}}.}
 }
 \value{
 Data frame with the columns source, target and sign.
@@ -50,6 +50,6 @@ op_cosmos
 \seealso{
 \itemize{
     \item{\code{\link{cosmos_pkn}}}
-    \item{\code{\link{import_omnipath_interactions}}}
+    \item{\code{\link{omnipath-interactions}}}
 }
 }

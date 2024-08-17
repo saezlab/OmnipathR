@@ -4,10 +4,10 @@
 \alias{print_path_es}
 \title{Prints network paths in an edge sequence}
 \usage{
-print_path_es(edgeSeq, G)
+print_path_es(edges, G)
 }
 \arguments{
-\item{edgeSeq}{edge sequence}
+\item{edges}{An igraph edge sequence object.}
 
 \item{G}{igraph object (from ptms or any interaction dataset)}
 }
@@ -18,7 +18,7 @@ Returns `NULL`.
 Pretty prints the interactions in a path.
 }
 \examples{
-interactions <- import_omnipath_interactions(resources = c('SignaLink3'))
+interactions <- omnipath(resources = "SignaLink3")
 OPI_g <- interaction_graph(interactions = interactions)
 print_path_es(
     suppressWarnings(igraph::shortest_paths(

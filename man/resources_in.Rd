@@ -16,7 +16,7 @@ Character: resource names occuring in the data frame.
 Collect resource names from a data frame
 }
 \examples{
-pathways <- import_omnipath_interactions()
+pathways <- omnipath_interactions()
 resources_in(pathways)
 
 }

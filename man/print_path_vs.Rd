@@ -4,12 +4,12 @@
 \alias{print_path_vs}
 \title{Print networks paths given by node sequence}
 \usage{
-print_path_vs(nodeSeq, G)
+print_path_vs(nodes, G)
 }
 \arguments{
-\item{nodeSeq}{node sequence}
+\item{nodes}{An igraph node sequence object.}
 
-\item{G}{igraph object (from ptms or interactions)}
+\item{G}{An igraph graph object (from ptms or interactions)}
 }
 \value{
 Returns `NULL`.
@@ -18,7 +18,7 @@ Returns `NULL`.
 Prints the interactions in the path in a nice format.
 }
 \examples{
-interactions <- import_omnipath_interactions(resources=c('SignaLink3'))
+interactions <- omnipath(resources = "SignaLink3")
 OPI_g <- interaction_graph(interactions = interactions)
 print_path_vs(
     igraph::all_shortest_paths(
@@ -28,7 +28,7 @@ print_path_vs(
     )$vpath,
     OPI_g
 )
-enzsub <- import_omnipath_enzsub(resources=c('PhosphoSite', 'SIGNOR'))
+enzsub <- enzyme_substrate(resources=c("PhosphoSite", "SIGNOR"))
 enzsub_g <- enzsub_graph(enzsub)
 print_path_vs(
     igraph::all_shortest_paths(

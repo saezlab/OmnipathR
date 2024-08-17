@@ -18,7 +18,7 @@ The data frame filtered to the records having the extra attribute.
 Interaction records having certain extra attributes
 }
 \examples{
-i <- import_omnipath_interactions(fields = 'extra_attrs')
+i <- omnipath(fields = "extra_attrs")
 with_extra_attrs(i, Macrophage_type)
 
 }

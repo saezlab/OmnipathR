@@ -27,7 +27,7 @@ filter_intercell_network(
 }
 \arguments{
 \item{network}{An intercell network data frame, as provided by
-\code{\link{import_intercell_network}}, without \code{simplify}.}
+\code{\link{intercell_network}}, without \code{simplify}.}
 
 \item{transmitter_topology}{Character vector: topologies allowed for the
 entities in transmitter role. Abbreviations allowed: "sec", "pmtm"
@@ -110,13 +110,13 @@ ways of cell to cell communication, and the pieces of information, such as
 localization, topology, function and interaction, are combined from many,
 often independent sources. This unavoidably result some weird and
 unexpected combinations which are false positives in the context of
-intercellular communication. \code{\link{import_intercell_network}}
+intercellular communication. \code{\link{intercell_network}}
 provides a shortcut (\code{high_confidence}) to do basic quality filtering.
 For custom filtering or experimentation with the parameters we offer this
 function.
 }
 \examples{
-icn <- import_intercell_network()
+icn <- intercell_network()
 icn_f <- filter_intercell_network(
     icn,
     consensus_percentile = 75,
@@ -127,8 +127,12 @@ icn_f <- filter_intercell_network(
 }
 \seealso{
 \itemize{
-    \item{\code{\link{import_intercell_network}}}
+    \item{\code{\link{intercell_network}}}
     \item{\code{\link{unique_intercell_network}}}
     \item{\code{\link{simplify_intercell_network}}}
+    \item{\code{\link{intercell}}}
+    \item{\code{\link{intercell_categories}}}
+    \item{\code{\link{intercell_generic_categories}}}
+    \item{\code{\link{intercell_summary}}}
 }
 }

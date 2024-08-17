@@ -24,7 +24,7 @@ vectors of more than one identifiers can be passed.}
 \item{interactions}{An interaction data frame. If not provided, all
 interactions will be loaded within this function, but that takes
 noticeable time. If a `list` is provided, it will be used as
-parameters for \code{\link{import_omnipath_interactions}}. This way
+parameters for \code{\link{omnipath_interactions}}. This way
 you can define the organism, datasets or the interaction type.}
 
 \item{directed}{Logical: does the direction matter? If `TRUE`, only

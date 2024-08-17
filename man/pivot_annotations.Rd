@@ -8,7 +8,7 @@ pivot_annotations(annotations)
 }
 \arguments{
 \item{annotations}{A data frame of annotations downloaded from the
-OmniPath web service by \code{\link{import_omnipath_annotations}}.}
+OmniPath web service by \code{\link{annotations}}.}
 }
 \value{
 A wide format data frame (tibble) if the provided data contains
@@ -17,12 +17,12 @@ annotations from one resource, otherwise a list of wide format tibbles.
 \description{
 Use this method to reconstitute the annotation tables into the format of
 the original resources. With the `wide=TRUE` option
-\code{\link{import_omnipath_annotations}} applies this function to the
+\code{\link{annotations}} applies this function to the
 downloaded data.
 }
 \examples{
 # single resource: the result is a data frame
-disgenet <- import_omnipath_annotations(resources = 'DisGeNet')
+disgenet <- annotations(resources = "DisGeNet")
 disgenet <- pivot_annotations(disgenet)
 disgenet
 # # A tibble: 126,588 × 11
@@ -37,14 +37,14 @@ disgenet
 # #   nof_snps <dbl>, source <chr>
 
 # multiple resources: the result is a list
-annotations <- import_omnipath_annotations(
-    resources = c('DisGeNet', 'SignaLink_function', 'DGIdb', 'kinase.com')
+annot_long <- annotations(
+    resources = c("DisGeNet", "SignaLink_function", "DGIdb", "kinase.com")
 )
-annotations <- pivot_annotations(annotations)
-names(annotations)
+annot_wide <- pivot_annotations(annot_long)
+names(annot_wide)
 # [1] "DGIdb"              "DisGeNet"           "kinase.com"
 # [4] "SignaLink_function"
-annotations$kinase.com
+annot_wide$kinase.com
 # # A tibble: 825 x 6
 #    uniprot genesymbol entity_type group family subfamily
 #    <chr>   <chr>      <chr>       <chr> <chr>  <chr>
@@ -57,5 +57,5 @@ annotations$kinase.com
 
 }
 \seealso{
-\code{\link{import_omnipath_annotations}}
+\code{\link{annotations}}
 }

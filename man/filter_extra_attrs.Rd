@@ -31,16 +31,16 @@ The input data frame with records removed according to the
 Filter interactions by extra attribute values
 }
 \examples{
-cl <- import_post_translational_interactions(
-    resources = 'Cellinker',
-    fields = 'extra_attrs'
+cl <- post_translational(
+    resources = "Cellinker",
+    fields = "extra_attrs"
 )
 # Only cell adhesion interactions from Cellinker
-filter_extra_attrs(cl, Cellinker_type = 'Cell adhesion')
+filter_extra_attrs(cl, Cellinker_type = "Cell adhesion")
 
-op <- import_omnipath_interactions(fields = 'extra_attrs')
+op <- omnipath(fields = "extra_attrs")
 # Any mechanism except phosphorylation
-filter_extra_attrs(op, .SIGNOR_mechanism = 'phosphorylation')
+filter_extra_attrs(op, .SIGNOR_mechanism = "phosphorylation")
 
 }
 \seealso{

@@ -23,7 +23,7 @@ of interest.
 \examples{
 \dontrun{
 # get interactions from omnipath
-interactions <- OmnipathR::import_omnipath_interactions()
+interactions <- omnipath()
 # create and plot the network containing ATM neighbors
 viz_sigmajs_neighborhood(interactions_df = interactions, int_node = "ATM")
 }

@@ -7,24 +7,23 @@
 enzsub_graph(enzsub)
 }
 \arguments{
-\item{enzsub}{Data frame created by \code{\link{import_omnipath_enzsub}}}
+\item{enzsub}{Data frame created by \code{\link{enzyme_substrate}}}
 }
 \value{
 An igraph directed graph object.
 }
 \description{
 Transforms the a data frame with enzyme-substrate relationships
-(obtained by \code{\link{import_omnipath_enzsub}}) to an igraph
-graph object.
+(obtained by \code{\link{enzyme_substrate}}) to an igraph graph object.
 }
 \examples{
-enzsub <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
+enzsub <- enzyme_substrate(resources = c('PhosphoSite', 'SIGNOR'))
 enzsub_g <- enzsub_graph(enzsub = enzsub)
 
 }
 \seealso{
 \itemize{
-    \item{\code{\link{import_omnipath_enzsub}}}
+    \item{\code{\link{enzyme_substrate}}}
     \item{\code{\link{giant_component}}}
     \item{\code{\link{find_all_paths}}}
 }

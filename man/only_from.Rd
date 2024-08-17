@@ -47,7 +47,7 @@ to use the interaction data as it is returned by the web service.
 
 \strong{Note:} This function is automatically applied if the
 `strict_evidences` argument is passed to any function querying interactions
-(e.g. \code{\link{import_omnipath_interactions}}).
+(e.g. \code{\link{omnipath-interactions}}).
 }
 \examples{
 \dontrun{
@@ -58,6 +58,7 @@ ci <- only_from(ci, datasets = 'collectri')
 }
 \seealso{
 \itemize{
+    \item{\code{\link{omnipath-interactions}}}
     \item{\code{\link{filter_evidences}}}
     \item{\code{\link{unnest_evidences}}}
     \item{\code{\link{from_evidences}}}

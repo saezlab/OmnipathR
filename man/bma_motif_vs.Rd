@@ -19,7 +19,7 @@ Character: BMA motifs as a single string.
 Intended to parallel print_path_vs
 }
 \examples{
-interactions <- import_omnipath_interactions(resources = 'ARN')
+interactions <- omnipath(resources = "ARN")
 graph <- interaction_graph(interactions)
 bma_string <- bma_motif_vs(
     igraph::all_shortest_paths(

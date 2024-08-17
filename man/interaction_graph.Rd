@@ -8,17 +8,9 @@ interaction_graph(interactions = interactions)
 }
 \arguments{
 \item{interactions}{data.frame created by \itemize{
-\item{\code{\link{import_omnipath_enzsub}}}
-\item{\code{\link{import_omnipath_interactions}}}
-\item{\code{\link{import_pathwayextra_interactions}}}
-\item{\code{\link{import_kinaseextra_interactions}}}
-\item{\code{\link{import_ligrecextra_interactions}}}
-\item{\code{\link{import_post_translational_interactions}}}
-\item{\code{\link{import_dorothea_interactions}}}
-\item{\code{\link{import_tf_target_interactions}}}
-\item{\code{\link{import_transcriptional_interactions}}}
-\item{\code{\link{import_mirnatarget_interactions}}}
-\item{\code{\link{import_all_interactions}}}}}
+    \item{\code{\link{enzyme_substrate}}}
+    \item{\code{\link{omnipath-interactions}}}
+}}
 }
 \value{
 An igraph graph object.

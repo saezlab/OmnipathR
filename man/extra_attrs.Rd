@@ -8,7 +8,7 @@ extra_attrs(data)
 }
 \arguments{
 \item{data}{An interaction data frame, as provided by any of the
-\code{import...interactions} functions.}
+\code{\link{omnipath-interactions}} functions.}
 }
 \value{
 Character: the names of the extra attributes in the data frame.
@@ -23,7 +23,7 @@ This function returns the names of the extra attributes available in
 the provided data frame.
 }
 \examples{
-i <- import_omnipath_interactions(fields = 'extra_attrs')
+i <- omnipath(fields = "extra_attrs")
 extra_attrs(i)
 
 }

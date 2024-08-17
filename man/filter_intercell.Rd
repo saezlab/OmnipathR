@@ -25,7 +25,7 @@ filter_intercell(
 }
 \arguments{
 \item{data}{An intercell annotation data frame as provided by
-\code{\link{import_omnipath_intercell}}.}
+\code{\link{intercell}}.}
 
 \item{categories}{Character: allow only these values in the \code{category}
 column.}
@@ -79,10 +79,10 @@ The intercell annotation data frame filtered according to the
     specified conditions.
 }
 \description{
-Filters a data frame retrieved by \code{\link{import_omnipath_intercell}}.
+Filters a data frame retrieved by \code{\link{intercell}}.
 }
 \examples{
-ic <- import_omnipath_intercell()
+ic <- intercell()
 ic <- filter_intercell(
     ic,
     transmitter = TRUE,
@@ -90,4 +90,13 @@ ic <- filter_intercell(
     scope = "specific"
 )
 
+}
+\seealso{
+\itemize{
+    \item{\code{\link{intercell}}}
+    \item{\code{\link{intercell_categories}}}
+    \item{\code{\link{intercell_generic_categories}}}
+    \item{\code{\link{intercell_summary}}}
+    \item{\code{\link{intercell_network}}}
+}
 }

@@ -52,8 +52,8 @@ otherwise, the column will be unnested within this function.
 
 \strong{Note:} This function (or rather its wrapper,
 \code{\link{only_from}}) is automatically applied if the `strict_evidences`
-argument is passed to any function querying interactions (e.g.
-\code{\link{import_omnipath_interactions}}).
+argument is passed to any function querying interactions (see
+\code{\link{omnipath-interactions}}).
 }
 \examples{
 \dontrun{

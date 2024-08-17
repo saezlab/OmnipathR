@@ -8,7 +8,7 @@ unique_intercell_network(network, ...)
 }
 \arguments{
 \item{network}{An intercellular network data frame as produced by
-\code{\link{import_intercell_network}}.}
+\code{\link{intercell_network}}.}
 
 \item{...}{Additional columns to keep. Note: if these have multiple
 values for an interacting pair, only the first row will be
@@ -19,19 +19,23 @@ A data frame with interacting pairs and interaction attributes.
 }
 \description{
 In the intercellular network data frames produced by \code{
-\link{import_intercell_network}}, by default each pair of annotations for
+\link{intercell_network}}, by default each pair of annotations for
 an interaction is represented in a separate row. This function drops the
 annotations and keeps only the distinct interacting pairs.
 }
 \examples{
-icn <- import_intercell_network()
+icn <- intercell_network()
 icn_unique <- unique_intercell_network(icn)
 
 }
 \seealso{
 \itemize{
-    \item{\code{\link{import_intercell_network}}}
+    \item{\code{\link{intercell_network}}}
     \item{\code{\link{simplify_intercell_network}}}
     \item{\code{\link{filter_intercell_network}}}
+    \item{\code{\link{intercell}}}
+    \item{\code{\link{intercell_categories}}}
+    \item{\code{\link{intercell_generic_categories}}}
+    \item{\code{\link{intercell_summary}}}
 }
 }

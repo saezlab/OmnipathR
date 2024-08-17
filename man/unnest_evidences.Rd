@@ -24,9 +24,9 @@ Separate evidences by direction and effect sign
 }
 \examples{
 \dontrun{
-omnipath <- import_omnipath_interactions(fields = 'evidences')
-omnipath <- unnest_evidences(omnipath)
-colnames(omnipath)
+op <- omnipath_interactions(fields = "evidences")
+op <- unnest_evidences(op)
+colnames(op)
 }
 
 }

@@ -20,7 +20,7 @@ Character: BMA motifs as a single string.
 These motifs can be added to a BMA canvas.
 }
 \examples{
-interactions <- import_omnipath_interactions(resources = 'ARN')
+interactions <- omnipath(resources = "ARN")
 graph <- interaction_graph(interactions)
 motifs <- bma_motif_es(igraph::E(graph)[1], graph)
 

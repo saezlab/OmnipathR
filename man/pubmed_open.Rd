@@ -24,7 +24,7 @@ Returns `NULL`.
 Open one or more PubMed articles
 }
 \examples{
-interactions <- import_omnipath_interactions()
+interactions <- omnipath()
 pubmed_open(interactions$references[1])
 
 }
