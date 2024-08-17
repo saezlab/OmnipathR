@@ -163,7 +163,7 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 #'     before returning the result.
 #' @param resources Character vector: name of one or more resources. Restrict
 #'     the data to these resources. For a complete list of available resources,
-#'     call the `get_<query_type>_resources` functions for the query type of
+#'     call the `<query_type>_resources` functions for the query type of
 #'     interst.
 #' @param datasets Character vector: name of one or more datasets. In the
 #'     interactions query type a number of datasets are available. The default

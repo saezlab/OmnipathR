@@ -105,6 +105,7 @@ GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 #' }
 #'
 #' @name omnipath-interactions
+#' @md
 NULL
 
 
@@ -453,16 +454,7 @@ import_dorothea_interactions <- function(...){
 #' @export
 #' @rdname omnipath-interactions
 #' @aliases import_tf_target_interactions
-tf_target <- function(
-    resources = NULL,
-    organism = 'human',
-    fields = NULL,
-    default_fields = TRUE,
-    references_by_resource = TRUE,
-    exclude = NULL,
-    strict_evidences = FALSE,
-    ...
-){
+tf_target <- function(...){
 
     args <- omnipath_args(
         list(...),

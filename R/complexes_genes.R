@@ -39,9 +39,7 @@
 #' @return Data frame of complexes
 #'
 #' @examples
-#' complexes <- complexes(
-#'     filter_databases = c("CORUM", "hu.MAP")
-#' )
+#' complexes <- complexes(resources = c("CORUM", "hu.MAP"))
 #' query_genes <- c("LMNA", "BANF1")
 #' complexes_with_query_genes <- complex_genes(complexes, query_genes)
 #'

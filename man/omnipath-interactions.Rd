@@ -46,16 +46,7 @@ post_translational(...)
 
 dorothea(dorothea_levels = c("A", "B"), ...)
 
-tf_target(
-  resources = NULL,
-  organism = "human",
-  fields = NULL,
-  default_fields = TRUE,
-  references_by_resource = TRUE,
-  exclude = NULL,
-  strict_evidences = FALSE,
-  ...
-)
+tf_target(...)
 
 transcriptional(dorothea_levels = c("A", "B"), ...)
 
@@ -267,62 +258,62 @@ which contains small molecule-protein interactions. Small molecules
 can be metabolites, intrinsic ligands or drug compounds.
 }
 \details{
-**Post-translational (protein-protein, PPI) interactions**
+\strong{Post-translational (protein-protein, PPI) interactions}
 
 \itemize{
-    \item{\code{omnipath}: the OmniPath data as defined in the 2016 paper,
-        an arbitrary optimum between coverage and quality. This dataset
-        contains almost entirely causal (stimulatory or inhibitory; i.e.
-        activity flow , according to the SBGN standard), physical
-        interactions between pairs of proteins, curated by experts
-        from the literature.}
-    \item{\code{pathwayextra}: activity flow interactions without literature
-        references.}
-    \item{\code{kinaseextra}: enzyme-substrate interactions without
-        literature references.}
-    \item{\code{ligrecextra}: ligand-receptor interactions without
-        literature references.}
-    \item{\code{post_translational}: all post-translational
-        (protein-protein, PPI) interactions; this is the combination of the
-        *omnipath*, *pathwayextra*, *kinaseextra* and *ligrecextra*
-        datasets.}
+\item{\code{omnipath}: the OmniPath data as defined in the 2016 paper,
+an arbitrary optimum between coverage and quality. This dataset
+contains almost entirely causal (stimulatory or inhibitory; i.e.
+activity flow , according to the SBGN standard), physical
+interactions between pairs of proteins, curated by experts
+from the literature.}
+\item{\code{pathwayextra}: activity flow interactions without literature
+references.}
+\item{\code{kinaseextra}: enzyme-substrate interactions without
+literature references.}
+\item{\code{ligrecextra}: ligand-receptor interactions without
+literature references.}
+\item{\code{post_translational}: all post-translational
+(protein-protein, PPI) interactions; this is the combination of the
+\emph{omnipath}, \emph{pathwayextra}, \emph{kinaseextra} and \emph{ligrecextra}
+datasets.}
 }
 
-**TF-target (gene regulatory, GRN) interactions**
+\strong{TF-target (gene regulatory, GRN) interactions}
 
 \itemize{
-    \item{\code{collectri}: transcription factor (TF)-target
-        interactions from CollecTRI.}
-    \item{\code{dorothea}: transcription factor (TF)-target
-        interactions from DoRothEA}
-    \item{\code{tf_target}: transcription factor
-        (TF)-target interactions from other resources}
-    \item{\code{transcriptional}: all transcription factor
-        (TF)-target interactions; this is the combination of the
-        *collectri*, *dorothea* and *tf_target* datasets.}
+\item{\code{collectri}: transcription factor (TF)-target
+interactions from CollecTRI.}
+\item{\code{dorothea}: transcription factor (TF)-target
+interactions from DoRothEA}
+\item{\code{tf_target}: transcription factor
+(TF)-target interactions from other resources}
+\item{\code{transcriptional}: all transcription factor
+(TF)-target interactions; this is the combination of the
+\emph{collectri}, \emph{dorothea} and \emph{tf_target} datasets.}
 }
 
-**Post-transcriptional (miRNA-target) and other RNA related interactions**
+\strong{Post-transcriptional (miRNA-target) and other RNA related interactions}
 
 In these datasets we intend to collect the literature curated resources,
 hence we don't include some of the most well known large databases if those
 are based on predictions or high-throughput assays.
 
 \itemize{
-    \item{\code{mirna_target}: miRNA-mRNA interactions}
-    \item{\code{tf_mirna}: TF-miRNA interactions}
-    \item{\code{lncrna_mrna}: lncRNA-mRNA interactions}
+\item{\code{mirna_target}: miRNA-mRNA interactions}
+\item{\code{tf_mirna}: TF-miRNA interactions}
+\item{\code{lncrna_mrna}: lncRNA-mRNA interactions}
 }
 
-**Other interaction access functions**
+\strong{Other interaction access functions}
 
 \itemize{
-    \item{\code{small_molecule}: interactions between small molecules and
-        proteins. Currently this is a small, experimental dataset that
-        includes drug-target, ligand-receptor, enzyme-metabolite and other
-        interactions. In the future this will be largely expanded and
-        divided into multiple datasets.}
-    \item{\code{all_interactions}: all the interaction datasets combined.}
+\item{\code{small_molecule}: interactions between small molecules and
+proteins. Currently this is a small, experimental dataset that
+includes drug-target, ligand-receptor, enzyme-metabolite and other
+interactions. In the future this will be largely expanded and
+divided into multiple datasets.}
+\item{\code{all_interactions}: all the interaction datasets combined.}
 }
 }
 \examples{
@@ -390,10 +381,10 @@ interactions <- all_interactions(
 }
 \seealso{
 \itemize{
-    \item{\code{\link{interaction_resources}}}
-    \item{\code{\link{interaction_graph}}}
-    \item{\code{\link{print_interactions}}}
-    \item{\code{\link{annotated_network}}}
+\item{\code{\link{interaction_resources}}}
+\item{\code{\link{interaction_graph}}}
+\item{\code{\link{print_interactions}}}
+\item{\code{\link{annotated_network}}}
 }
 
 \itemize{

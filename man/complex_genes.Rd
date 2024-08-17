@@ -27,9 +27,7 @@ any of the input genes participate or just retrieve these complexes where
 all the genes in input set participate together.
 }
 \examples{
-complexes <- complexes(
-    filter_databases = c("CORUM", "hu.MAP")
-)
+complexes <- complexes(resources = c("CORUM", "hu.MAP"))
 query_genes <- c("LMNA", "BANF1")
 complexes_with_query_genes <- complex_genes(complexes, query_genes)
 
