@@ -35,7 +35,7 @@
 
     <a class="navbar-brand me-2" href="index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -179,9 +179,9 @@ install_github('saezlab/OmnipathR')</code></pre>
 <p>In addition, we provide here some examples for a quick start:</p>
 <p><code>{r} library(OmnipathR)</code></p>
 <p>Download human protein-protein interactions from the specified resources:</p>
-<p><code>{r} interactions &lt;- import_omnipath_interactions(     resources = c('SignaLink3', 'PhosphoSite', 'SIGNOR') )</code></p>
+<p><code>{r} interactions &lt;- omnipath(     resources = c('SignaLink3', 'PhosphoSite', 'SIGNOR') )</code></p>
 <p>Download human enzyme-PTM relationships from the specified resources:</p>
-<p><code>{r} enzsub &lt;- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))</code></p>
+<p><code>{r} enzsub &lt;- enzyme_substrate(resources = c('PhosphoSite', 'SIGNOR'))</code></p>
 <p>Convert both data frames into networks (<code>igraph</code> objects) <code>{r} ptms_g = ptms_graph(ptms = enzsub) OPI_g = interaction_graph(interactions = interactions)</code></p>
 <p>Print some interactions in a nice format: ```{r} print_interactions(head(interactions))</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>      source interaction         target n_resources n_references</span></code></pre></div>

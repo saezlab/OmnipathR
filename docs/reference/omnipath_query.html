@@ -19,7 +19,7 @@ in tabular or JSON format, the tabular (data frame) being the default."><meta pr
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,6 +70,7 @@ in tabular or JSON format, the tabular (data frame) being the default.</p>
 <span>  organism <span class="op">=</span> <span class="fl">9606L</span>,</span>
 <span>  resources <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  datasets <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  types <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  genesymbols <span class="op">=</span> <span class="st">"yes"</span>,</span>
 <span>  fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  default_fields <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -120,6 +121,12 @@ interst.</p></dd>
 interactions query type a number of datasets are available. The default
 is caled "omnipath", and corresponds to the curated causal signaling
 network published in the 2016 OmniPath paper.</p></dd>
+
+
+<dt id="arg-types">types<a class="anchor" aria-label="anchor" href="#arg-types"></a></dt>
+<dd><p>Character vector: one or more interaction types, such as
+"transcriptional" or "post_translational". For a full list of
+interaction types see `query_info("interaction")$types`.</p></dd>
 
 
 <dt id="arg-genesymbols">genesymbols<a class="anchor" aria-label="anchor" href="#arg-genesymbols"></a></dt>
@@ -243,21 +250,24 @@ all downstream functions are also passed here.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">interaction_data</span> <span class="op">&lt;-</span> <span class="fu">omnipath_query</span><span class="op">(</span><span class="st">"interaction"</span>, datasets <span class="op">=</span> <span class="st">"omnipath"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">interaction_data</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 81,529 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    source target is_directed is_stimulation is_inhibition consensus_direction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP23 P48995           1              0             1                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P0DP25 P48995           1              0             1                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P0DP24 P48995           1              0             1                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Q03135 P48995           1              1             0                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P14416 P48995           1              1             0                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Q99750 P48995           1              0             1                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Q14571 P48995           1              1             0                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P29966 P48995           1              0             1                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Q13255 P48995           1              1             0                   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q13586 P48995           1              1             0                   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 81,529 × 15</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    source target source_genesymbol target_genesymbol is_directed is_stimulation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> P0DP23 P48995 CALM1             TRPC1                       1              0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> P0DP25 P48995 CALM3             TRPC1                       1              0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> P0DP24 P48995 CALM2             TRPC1                       1              0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Q03135 P48995 CAV1              TRPC1                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> P14416 P48995 DRD2              TRPC1                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Q99750 P48995 MDFI              TRPC1                       1              0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Q14571 P48995 ITPR2             TRPC1                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> P29966 P48995 MARCKS            TRPC1                       1              0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Q13255 P48995 GRM1              TRPC1                       1              1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Q13586 P48995 STIM1             TRPC1                       1              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 81,519 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: is_inhibition &lt;dbl&gt;, consensus_direction &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   consensus_stimulation &lt;dbl&gt;, consensus_inhibition &lt;dbl&gt;, sources &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   references &lt;chr&gt;, curation_effort &lt;dbl&gt;, n_references &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   n_resources &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

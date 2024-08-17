@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,6 +95,18 @@
 
         </dt>
         <dd>Annotation categories and resources</dd>
+      </dl><dl><dt>
+
+          <code><a href="annotation_resources.html">annotation_resources()</a></code>
+
+        </dt>
+        <dd>Retrieves a list of available resources in the annotations database of OmniPath</dd>
+      </dl><dl><dt>
+
+          <code><a href="annotations.html">annotations()</a></code>
+
+        </dt>
+        <dd>Protein and gene annotations from OmniPath</dd>
       </dl><dl><dt>
 
           <code><a href="biomart_query.html">biomart_query()</a></code>
@@ -187,16 +199,28 @@
         <dd>Reactions from the Chalmers SysBio GEM (Wang et al., 2021)</dd>
       </dl><dl><dt>
 
-          <code><a href="collectri.html">collectri()</a></code>
-
-        </dt>
-        <dd>TF-target interactions from CollecTRI</dd>
-      </dl><dl><dt>
-
           <code><a href="common_name.html">common_name()</a></code>
 
         </dt>
         <dd>Common (English) names of organisms</dd>
+      </dl><dl><dt>
+
+          <code><a href="complex_genes.html">complex_genes()</a></code>
+
+        </dt>
+        <dd>Get all the molecular complexes for a given gene(s)</dd>
+      </dl><dl><dt>
+
+          <code><a href="complex_resources.html">complex_resources()</a></code>
+
+        </dt>
+        <dd>Retrieve a list of complex resources available in Omnipath</dd>
+      </dl><dl><dt>
+
+          <code><a href="complexes.html">complexes()</a></code>
+
+        </dt>
+        <dd>Protein complexes from OmniPath</dd>
       </dl><dl><dt>
 
           <code><a href="consensuspathdb_download.html">consensuspathdb_download()</a></code>
@@ -251,12 +275,6 @@
 
         </dt>
         <dd>All descendants in the ontology tree</dd>
-      </dl><dl><dt>
-
-          <code><a href="dorothea.html">dorothea()</a></code>
-
-        </dt>
-        <dd>TF-target interactions from DoRothEA</dd>
       </dl><dl><dt>
 
           <code><a href="dot-omnipath_options_defaults.html">.omnipath_options_defaults</a></code>
@@ -317,6 +335,18 @@
 
         </dt>
         <dd>Enzyme-substrate graph</dd>
+      </dl><dl><dt>
+
+          <code><a href="enzsub_resources.html">enzsub_resources()</a></code>
+
+        </dt>
+        <dd>Retrieves a list of enzyme-substrate resources available in OmniPath</dd>
+      </dl><dl><dt>
+
+          <code><a href="enzyme_substrate.html">enzyme_substrate()</a></code>
+
+        </dt>
+        <dd>Enzyme-substrate (PTM) relationships from OmniPath</dd>
       </dl><dl><dt>
 
           <code><a href="evex_download.html">evex_download()</a></code>
@@ -391,76 +421,16 @@
         <dd>Recreate interaction records from evidences columns</dd>
       </dl><dl><dt>
 
-          <code><a href="get_annotation_resources.html">get_annotation_resources()</a></code>
-
-        </dt>
-        <dd>Retrieves a list of available resources in the annotations database of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_complex_genes.html">get_complex_genes()</a></code>
-
-        </dt>
-        <dd>Get all the molecular complexes for a given gene(s)</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_complex_resources.html">get_complex_resources()</a></code>
-
-        </dt>
-        <dd>Retrieve a list of complex resources available in Omnipath</dd>
-      </dl><dl><dt>
-
           <code><a href="get_db.html">get_db()</a></code>
 
         </dt>
         <dd>Access a built in database</dd>
       </dl><dl><dt>
 
-          <code><a href="get_enzsub_resources.html">get_enzsub_resources()</a></code>
-
-        </dt>
-        <dd>Retrieves a list of enzyme-substrate resources available in OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_interaction_resources.html">get_interaction_resources()</a></code>
-
-        </dt>
-        <dd>Retrieve a list of interaction resources available in Omnipath</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_intercell_categories.html">get_intercell_categories()</a></code>
-
-        </dt>
-        <dd>Categories in the intercell database of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_intercell_generic_categories.html">get_intercell_generic_categories()</a></code>
-
-        </dt>
-        <dd>Retrieves a list of the generic categories in the intercell database of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_intercell_resources.html">get_intercell_resources()</a></code>
-
-        </dt>
-        <dd>Retrieves a list of intercellular communication resources available in OmniPath</dd>
-      </dl><dl><dt>
-
           <code><a href="get_ontology_db.html">get_ontology_db()</a></code>
 
         </dt>
         <dd>Access an ontology database</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_resources.html">get_resources()</a></code>
-
-        </dt>
-        <dd>Retrieve the available resources for a given query type</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_signed_ptms.html">get_signed_ptms()</a></code>
-
-        </dt>
-        <dd>Signs for enzyme-substrate interactions</dd>
       </dl><dl><dt>
 
           <code><a href="giant_component.html">giant_component()</a></code>
@@ -589,108 +559,6 @@
         <dd>ID types and synonyms in identifier translation</dd>
       </dl><dl><dt>
 
-          <code><a href="import_all_interactions.html">import_all_interactions()</a></code>
-
-        </dt>
-        <dd>Imports all interaction datasets available in OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_intercell_network.html">import_intercell_network()</a></code>
-
-        </dt>
-        <dd>Intercellular communication network</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_kinaseextra_interactions.html">import_kinaseextra_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from the `kinase extra` dataset of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_ligrecextra_interactions.html">import_ligrecextra_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from the `ligrec extra` dataset of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_lncrna_mrna_interactions.html">import_lncrna_mrna_interactions()</a></code>
-
-        </dt>
-        <dd>lncRNA-mRNA interactions from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_mirnatarget_interactions.html">import_mirnatarget_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from the miRNA-target dataset of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_omnipath_annotations.html">import_omnipath_annotations()</a></code>
-
-        </dt>
-        <dd>Imports annotations from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_omnipath_complexes.html">import_omnipath_complexes()</a></code>
-
-        </dt>
-        <dd>Protein complexes from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_omnipath_enzsub.html">import_omnipath_enzsub()</a></code>
-
-        </dt>
-        <dd>Enzyme-substrate (PTM) relationships from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_omnipath_interactions.html">import_omnipath_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_omnipath_intercell.html">import_omnipath_intercell()</a></code>
-
-        </dt>
-        <dd>Imports OmniPath intercell annotations</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_pathwayextra_interactions.html">import_pathwayextra_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from the `pathway extra` dataset of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_post_translational_interactions.html">import_post_translational_interactions()</a></code>
-
-        </dt>
-        <dd>All post-translational interactions from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_small_molecule_protein_interactions.html">import_small_molecule_protein_interactions()</a></code>
-
-        </dt>
-        <dd>Small molecule-protein interactions from OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_tf_mirna_interactions.html">import_tf_mirna_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from the TF-miRNA dataset of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_tf_target_interactions.html">import_tf_target_interactions()</a></code>
-
-        </dt>
-        <dd>Interactions from the TF-target dataset of OmniPath</dd>
-      </dl><dl><dt>
-
-          <code><a href="import_transcriptional_interactions.html">import_transcriptional_interactions()</a></code>
-
-        </dt>
-        <dd>All TF-target interactions from OmniPath</dd>
-      </dl><dl><dt>
-
           <code><a href="inbiomap_download.html">inbiomap_download()</a></code>
 
         </dt>
@@ -715,22 +583,58 @@
         <dd>Build Omnipath interaction graph</dd>
       </dl><dl><dt>
 
+          <code><a href="interaction_resources.html">interaction_resources()</a></code>
+
+        </dt>
+        <dd>Interaction resources available in Omnipath</dd>
+      </dl><dl><dt>
+
           <code><a href="interaction_types.html">interaction_types()</a></code>
 
         </dt>
         <dd>Interaction types in the OmniPath Interactions database</dd>
       </dl><dl><dt>
 
+          <code><a href="intercell.html">intercell()</a></code>
+
+        </dt>
+        <dd>Cell-cell communication roles from OmniPath</dd>
+      </dl><dl><dt>
+
           <code><a href="intercell_categories.html">intercell_categories()</a></code>
 
         </dt>
-        <dd>Full list of intercell categories and resources</dd>
+        <dd>Categories in the intercell database of OmniPath</dd>
       </dl><dl><dt>
 
           <code><a href="intercell_consensus_filter.html">intercell_consensus_filter()</a></code>
 
         </dt>
         <dd>Quality filter for intercell annotations</dd>
+      </dl><dl><dt>
+
+          <code><a href="intercell_generic_categories.html">intercell_generic_categories()</a></code>
+
+        </dt>
+        <dd>Retrieves a list of the generic categories in the intercell database of OmniPath</dd>
+      </dl><dl><dt>
+
+          <code><a href="intercell_network.html">intercell_network()</a></code>
+
+        </dt>
+        <dd>Intercellular communication network</dd>
+      </dl><dl><dt>
+
+          <code><a href="intercell_resources.html">intercell_resources()</a></code>
+
+        </dt>
+        <dd>Retrieves a list of intercellular communication resources available in OmniPath</dd>
+      </dl><dl><dt>
+
+          <code><a href="intercell_summary.html">intercell_summary()</a></code>
+
+        </dt>
+        <dd>Full list of intercell categories and resources</dd>
       </dl><dl><dt>
 
           <code><a href="is_ontology_id.html">is_ontology_id()</a></code>
@@ -1057,10 +961,10 @@
         <dd>Orthologous pairs between two organisms for ID types not supported by OMA</dd>
       </dl><dl><dt>
 
-          <code><a href="omnipath.html">omnipath()</a></code>
+          <code><a href="omnipath-interactions.html">omnipath_interactions()</a></code> <code><a href="omnipath-interactions.html">omnipath()</a></code> <code><a href="omnipath-interactions.html">pathwayextra()</a></code> <code><a href="omnipath-interactions.html">kinaseextra()</a></code> <code><a href="omnipath-interactions.html">ligrecextra()</a></code> <code><a href="omnipath-interactions.html">post_translational()</a></code> <code><a href="omnipath-interactions.html">dorothea()</a></code> <code><a href="omnipath-interactions.html">tf_target()</a></code> <code><a href="omnipath-interactions.html">transcriptional()</a></code> <code><a href="omnipath-interactions.html">collectri()</a></code> <code><a href="omnipath-interactions.html">mirna_target()</a></code> <code><a href="omnipath-interactions.html">tf_mirna()</a></code> <code><a href="omnipath-interactions.html">lncrna_mrna()</a></code> <code><a href="omnipath-interactions.html">small_molecule()</a></code> <code><a href="omnipath-interactions.html">all_interactions()</a></code>
 
         </dt>
-        <dd>Literature curated signaling pathways</dd>
+        <dd>Molecular interactions from OmniPath</dd>
       </dl><dl><dt>
 
           <code><a href="omnipath_cache_autoclean.html">omnipath_cache_autoclean()</a></code>
@@ -1447,6 +1351,12 @@
         <dd>OmniPath resource information</dd>
       </dl><dl><dt>
 
+          <code><a href="resources.html">resources()</a></code>
+
+        </dt>
+        <dd>Retrieve the available resources for a given query type</dd>
+      </dl><dl><dt>
+
           <code><a href="resources_colname.html">resources_colname()</a></code>
 
         </dt>
@@ -1463,6 +1373,12 @@
 
         </dt>
         <dd>Visualize node neighborhood with SigmaJS</dd>
+      </dl><dl><dt>
+
+          <code><a href="signed_ptms.html">signed_ptms()</a></code>
+
+        </dt>
+        <dd>Causal effect enzyme-PTM interactions</dd>
       </dl><dl><dt>
 
           <code><a href="simplify_intercell_network.html">simplify_intercell_network()</a></code>
