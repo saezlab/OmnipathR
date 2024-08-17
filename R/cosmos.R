@@ -67,7 +67,7 @@
 #'     cofactors and over-promiscuous metabolites.
 #' @param stitch_score Include interactions from STITCH with combined
 #'     confidence score larger than this.
-#' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
+#' @param ... Further parameters to \code{\link{omnipath_interactions}}.
 #'
 #' @return A data frame of binary causal interations with effect signs,
 #'     resource specific attributes and translated to the desired identifiers.
@@ -100,7 +100,7 @@
 #'     \item{\code{\link{chalmers_gem_network}}}
 #'     \item{\code{\link{stitch_network}}}
 #'     \item{\code{\link{omnipath_for_cosmos}}}
-#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{omnipath-interactions}}}
 #' }
 cosmos_pkn <- function(
     organism = 'human',
@@ -175,7 +175,7 @@ cosmos_pkn <- function(
 #'     cofactors and over-promiscuous metabolites.
 #' @param stitch_score Confidence cutoff used for STITCH connections (700 by
 #'     default).
-#' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
+#' @param ... Further parameters to \code{\link{omnipath_interactions}}.
 #'
 #' @return A data frame of binary causal interations with effect signs,
 #'     resource specific attributes and translated to the desired identifiers.
@@ -263,7 +263,7 @@ cosmos_pkn <- function(
 #'     Ensembl. These Gene Symbols are different from the ones returned from
 #'     the web service, and match the Ensembl Gene Symbols used by other
 #'     components of the COSMOS PKN.
-#' @param ... Further parameters to \code{\link{import_omnipath_interactions}}.
+#' @param ... Further parameters to \code{\link{omnipath_interactions}}.
 #'
 #' @return Data frame with the columns source, target and sign.
 #'
@@ -278,7 +278,7 @@ cosmos_pkn <- function(
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{cosmos_pkn}}}
-#'     \item{\code{\link{import_omnipath_interactions}}}
+#'     \item{\code{\link{omnipath-interactions}}}
 #' }
 omnipath_for_cosmos <- function(
 
@@ -305,7 +305,7 @@ omnipath_for_cosmos <- function(
         common_name(organism)
     )
 
-    import_omnipath_interactions(
+    omnipath_interactions(
         organism = organism,
         resources = resources,
         datasets = datasets,

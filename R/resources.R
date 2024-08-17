@@ -39,8 +39,9 @@
 #' @export
 #'
 #' @examples
-#' get_resources(query_type = 'interactions')
-get_resources <- function(
+#' resources(query_type = "interactions")
+#' @aliases get_resources
+resources <- function(
     query_type,
     datasets = NULL,
     generic_categories = NULL
@@ -86,6 +87,18 @@ get_resources <- function(
 }
 
 
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{resources}.
+#' @export
+#'
+#' @noRd
+get_resources <- function(...){
+    .Deprecated('get_resources')
+    resources(...)
+}
+
+
 #' Filters OmniPath data by resources
 #'
 #' Keeps only those records which are supported by any of the resources of
@@ -98,8 +111,8 @@ get_resources <- function(
 #' @return The data frame filtered.
 #'
 #' @examples
-#' interactions <- import_omnipath_interactions()
-#' signor <- filter_by_resource(interactions, resources = 'SIGNOR')
+#' interactions <- omnipath()
+#' signor <- filter_by_resource(interactions, resources = "SIGNOR")
 #'
 #' @importFrom logger log_success
 #' @export
@@ -124,7 +137,7 @@ filter_by_resource <- function(data, resources = NULL){
 
         after <- nrow(data)
 
-        logger::log_success(
+        log_success(
             'Filtering by resources: removed %d records.',
             before - after
         )
@@ -147,7 +160,7 @@ filter_by_resource <- function(data, resources = NULL){
 #'     matches.
 #'
 #' @examples
-#' co <- import_omnipath_complexes()
+#' co <- complexes()
 #' resources_colname(co)
 #' # [1] "sources"
 #'
@@ -288,7 +301,7 @@ database_summary <- function(query_type, return_df = FALSE) {
 #' @return Character: resource names occuring in the data frame.
 #'
 #' @examples
-#' pathways <- import_omnipath_interactions()
+#' pathways <- omnipath_interactions()
 #' resources_in(pathways)
 #'
 #' @importFrom magrittr %>%

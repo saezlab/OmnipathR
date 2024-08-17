@@ -31,15 +31,15 @@ TOPOLOGIES_SHORT <-
     rlang::set_names(TOPOLOGIES, c('sec', 'pmtm', 'pmp'))
 
 
-#' Imports OmniPath intercell annotations
+#' Cell-cell communication roles from OmniPath
 #'
-#' Imports the OmniPath intercellular communication role annotation database
-#' from \url{https://omnipathdb.org/intercell}. It provides information
-#' on the roles in inter-cellular signaling. E.g. if a protein is
-#' a ligand, a receptor, an extracellular matrix (ECM) component, etc.
+#' Roles of proteins in intercellular communication from the
+#' \url{https://omnipathdb.org/intercell} endpoint of the OmniPath web service.
+#' It provides information on the roles in inter-cellular signaling. E.g. if
+#' a protein is a ligand, a receptor, an extracellular matrix (ECM) component,
+#' etc.
 #'
-#' @return A dataframe cotaining information about roles in intercellular
-#' signaling.
+#' @return A data frame of intercellular communication roles.
 #'
 #' @param categories vector containing the categories to be retrieved.
 #'     All the genes belonging to those categories will be returned. For
@@ -88,7 +88,7 @@ TOPOLOGIES_SHORT <-
 #'     -json_param -references_by_resource -add_counts
 #'
 #' @examples
-#' intercell <- import_omnipath_intercell(categories = 'ecm')
+#' ecm_proteins <- intercell(categories = "ecm")
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom purrr reduce
@@ -96,12 +96,17 @@ TOPOLOGIES_SHORT <-
 #' @export
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_intercell_categories}}}
-#'     \item{\code{\link{get_intercell_generic_categories}}}
-#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{intercell_network}}}
 #'     \item{\code{\link{intercell_consensus_filter}}}
+#'     \item{\code{\link{filter_intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_resources}}}
+#'     \item{\code{\link{intercell_summary}}}
+#'     \item{\code{\link{intercell_network}}}
 #' }
-import_omnipath_intercell <- function(
+#' @aliases import_omnipath_intercell
+intercell <- function(
     categories = NULL,
     parent = NULL,
     scope = NULL,
@@ -165,10 +170,22 @@ import_omnipath_intercell <- function(
 }
 
 
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{intercell}.
+#' @export
+#'
+#' @noRd
+import_omnipath_intercell <- function(...){
+    .Deprecated('import_omnipath_intercell')
+    intercell(...)
+}
+
+
 #' Quality filter for intercell annotations
 #'
 #' @param data A data frame with intercell annotations, as provided by
-#'     \code{\link{import_omnipath_intercell}}.
+#'     \code{\link{intercell}}.
 #' @param percentile Numeric: a percentile cut off for the consensus score
 #'     of composite categories. The consensus score is the number of
 #'     resources supporting the classification of an entity into a category
@@ -191,11 +208,11 @@ import_omnipath_intercell <- function(
 #' @return The data frame in \code{data} filtered by the consensus scores.
 #'
 #' @examples
-#' intercell <- import_omnipath_intercell(parent = c('ligand', 'receptor'))
-#' nrow(intercell)
+#' ligand_receptor <- intercell(parent = c("ligand", "receptor"))
+#' nrow(ligand_receptor)
 #' # [1] 50174
-#' intercell_q50 <- intercell_consensus_filter(intercell, 50)
-#' nrow(intercell_q50)
+#' lr_q50 <- intercell_consensus_filter(ligand_receptor, 50)
+#' nrow(lr_q50)
 #' # [1] 42863
 #'
 #' @importFrom magrittr %>% %<>%
@@ -205,6 +222,17 @@ import_omnipath_intercell <- function(
 #' @importFrom rlang !! := sym eval_tidy parse_expr
 #' @importFrom purrr reduce
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{resources}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{filter_intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_resources}}}
+#'     \item{\code{\link{intercell_summary}}}
+#'     \item{\code{\link{intercell_network}}}
+#' }
 intercell_consensus_filter <- function(
     data,
     percentile = NULL,
@@ -245,7 +273,7 @@ intercell_consensus_filter <- function(
 
     if(!is.null(loc_percentile)){
 
-        locations <- import_omnipath_intercell(
+        locations <- intercell(
             aspect = 'locational',
             parent = TOPOLOGIES,
             consensus_percentile = loc_percentile
@@ -295,18 +323,36 @@ intercell_consensus_filter <- function(
 #' @return character vector with the names of the databases
 #'
 #' @examples
-#' get_intercell_resources()
+#' intercell_resources()
 #'
 #' @export
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_resources}}}
-#'     \item{\code{\link{import_omnipath_intercell}}}
+#'     \item{\code{\link{resources}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{filter_intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
+#'     \item{\code{\link{intercell_network}}}
 #' }
-get_intercell_resources <- function(dataset = NULL){
+#' @aliases get_intercell_resources
+intercell_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'intercell', datasets = dataset))
+    return(resources(query_type = 'intercell', datasets = dataset))
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{intercell_resources}.
+#' @export
+#'
+#' @noRd
+get_intercell_resources <- function(...){
+    .Deprecated('get_intercell_resources')
+    intercell_resources(...)
 }
 
 
@@ -319,8 +365,8 @@ get_intercell_resources <- function(dataset = NULL){
 #' information from the expressing cell) and second, the receiver (receiving
 #' signal and relaying it towards the expressing cell) side. These 3 queries
 #' can be customized by providing parameters in lists which will be passed to
-#' the respective methods (\code{\link{import_omnipath_interactions}} for
-#' the network and \code{\link{import_omnipath_intercell}} for the
+#' the respective methods (\code{\link{omnipath_interactions}} for
+#' the network and \code{\link{intercell}} for the
 #' annotations). Finally the 3 data frames combined in a way that the source
 #' proteins in each interaction annotated by the transmitter, and the target
 #' proteins by the receiver categories. If undirected interactions present
@@ -331,16 +377,13 @@ get_intercell_resources <- function(dataset = NULL){
 #' interactions and the inter-cellular roles of the protiens involved in those
 #' interactions.
 #'
-#' @param interactions_param a list with arguments for an interactions query:
-#'     \code{\link{import_omnipath_interactions}},
-#'     \code{\link{import_pathwayextra_interactions}},
-#'     \code{\link{import_kinaseextra_interactions}},
-#'     \code{\link{import_ligrecextra_interactions}}
+#' @param interactions_param a list with arguments for an interactions query;
+#'     \code{\link{omnipath-interactions}}.
 #' @param transmitter_param a list with arguments for
-#'     \code{\link{import_omnipath_intercell}}, to define the transmitter side
+#'     \code{\link{intercell}}, to define the transmitter side
 #'     of intercellular connections
 #' @param receiver_param a list with arguments for
-#'     \code{\link{import_omnipath_intercell}}, to define the receiver side
+#'     \code{\link{intercell}}, to define the receiver side
 #'     of intercellular connections
 #' @param resources A character vector of resources to be applied to
 #'     both the interactions and the annotations. For example, \code{resources
@@ -423,7 +466,7 @@ get_intercell_resources <- function(dataset = NULL){
 #' \link{filter_intercell_network}} for more consistent results.
 #'
 #' @examples
-#' intercell_network <- import_intercell_network(
+#' intercell_network <- intercell_network(
 #'     interactions_param = list(datasets = 'ligrecextra'),
 #'     receiver_param = list(categories = c('receptor', 'transporter')),
 #'     transmitter_param = list(categories = c('ligand', 'secreted_enzyme'))
@@ -437,18 +480,21 @@ get_intercell_resources <- function(dataset = NULL){
 #' @export
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_intercell_categories}}}
-#'     \item{\code{\link{get_intercell_generic_categories}}}
-#'     \item{\code{\link{import_omnipath_intercell}}}
-#'     \item{\code{\link{import_omnipath_interactions}}}
-#'     \item{\code{\link{import_pathwayextra_interactions}}}
-#'     \item{\code{\link{import_kinaseextra_interactions}}}
-#'     \item{\code{\link{import_ligrecextra_interactions}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_summary}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{omnipath}}}
+#'     \item{\code{\link{pathwayextra}}}
+#'     \item{\code{\link{kinaseextra}}}
+#'     \item{\code{\link{ligrecextra}}}
 #'     \item{\code{\link{unique_intercell_network}}}
 #'     \item{\code{\link{simplify_intercell_network}}}
 #'     \item{\code{\link{filter_intercell_network}}}
 #' }
-import_intercell_network <- function(
+#' @aliases import_intercell_network
+intercell_network <- function(
     interactions_param = list(),
     transmitter_param = list(),
     receiver_param = list(),
@@ -538,7 +584,7 @@ import_intercell_network <- function(
 
     intracell <- c('intracellular_intercellular_related', 'intracellular')
     transmitters <-
-        do.call(import_omnipath_intercell, transmitter_param) %>%
+        do.call(intercell, transmitter_param) %>%
         filter(!parent %in% intracell) %>%
         rename(category_source = source) %>%
         {`if`(
@@ -552,7 +598,7 @@ import_intercell_network <- function(
             .
         )}
     receivers <-
-        do.call(import_omnipath_intercell, receiver_param) %>%
+        do.call(intercell, receiver_param) %>%
         filter(!parent %in% intracell) %>%
         rename(category_source = source) %>%
         {`if`(
@@ -613,12 +659,24 @@ import_intercell_network <- function(
 }
 
 
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{intercell_network}.
+#' @export
+#'
+#' @noRd
+import_intercell_network <- function(...){
+    .Deprecated('import_intercell_network')
+    intercell_network(...)
+}
+
+
 #' Filter intercell annotations
 #'
-#' Filters a data frame retrieved by \code{\link{import_omnipath_intercell}}.
+#' Filters a data frame retrieved by \code{\link{intercell}}.
 #'
 #' @param data An intercell annotation data frame as provided by
-#'     \code{\link{import_omnipath_intercell}}.
+#'     \code{\link{intercell}}.
 #' @param categories Character: allow only these values in the \code{category}
 #'     column.
 #' @param resources Character: allow records only from these resources.
@@ -656,7 +714,7 @@ import_intercell_network <- function(
 #'     specified conditions.
 #'
 #' @examples
-#' ic <- import_omnipath_intercell()
+#' ic <- intercell()
 #' ic <- filter_intercell(
 #'     ic,
 #'     transmitter = TRUE,
@@ -669,6 +727,14 @@ import_intercell_network <- function(
 #' @importFrom rlang .data set_names
 #' @importFrom stringr str_detect
 #' @export
+#'
+#' @seealso \itemize{
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
+#'     \item{\code{\link{intercell_network}}}
+#' }
 filter_intercell <- function(
     data,
     categories = NULL,
@@ -775,13 +841,13 @@ filter_intercell <- function(
 #' localization, topology, function and interaction, are combined from many,
 #' often independent sources. This unavoidably result some weird and
 #' unexpected combinations which are false positives in the context of
-#' intercellular communication. \code{\link{import_intercell_network}}
+#' intercellular communication. \code{\link{intercell_network}}
 #' provides a shortcut (\code{high_confidence}) to do basic quality filtering.
 #' For custom filtering or experimentation with the parameters we offer this
 #' function.
 #'
 #' @param network An intercell network data frame, as provided by
-#'     \code{\link{import_intercell_network}}, without \code{simplify}.
+#'     \code{\link{intercell_network}}, without \code{simplify}.
 #' @param transmitter_topology Character vector: topologies allowed for the
 #'     entities in transmitter role. Abbreviations allowed: "sec", "pmtm"
 #'     and "pmp".
@@ -842,7 +908,7 @@ filter_intercell <- function(
 #' @return An intercell network data frame filtered.
 #'
 #' @examples
-#' icn <- import_intercell_network()
+#' icn <- intercell_network()
 #' icn_f <- filter_intercell_network(
 #'     icn,
 #'     consensus_percentile = 75,
@@ -858,9 +924,13 @@ filter_intercell <- function(
 #' @export
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{intercell_network}}}
 #'     \item{\code{\link{unique_intercell_network}}}
 #'     \item{\code{\link{simplify_intercell_network}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
 #' }
 filter_intercell_network <- function(
     network,
@@ -892,7 +962,7 @@ filter_intercell_network <- function(
     parent <- curation_effort <- n_resources <- n_references <- NULL
 
     consensus <-
-        import_omnipath_intercell(
+        intercell(
             consensus_percentile = consensus_percentile,
             loc_consensus_percentile = loc_consensus_percentile
         )
@@ -1027,7 +1097,7 @@ filter_intercell_network <- function(
 #' Simplify an intercell network
 #'
 #' The intercellular communication network data frames, created by
-#' \code{\link{import_intercell_network}}, are combinations of a network data
+#' \code{\link{intercell_network}}, are combinations of a network data
 #' frame with two copies of the intercell annotation data frames, all of them
 #' already having quite some columns. Here we keep only the names of the
 #' interacting pair, their intercellular communication roles, and the minimal
@@ -1035,13 +1105,13 @@ filter_intercell_network <- function(
 #' Optionally further columns can be selected.
 #'
 #' @param network An intercell network data frame, as provided by
-#'     \code{\link{import_intercell_network}}.
+#'     \code{\link{intercell_network}}.
 #' @param ... Optional, further columns to select.
 #'
 #' @return An intercell network data frame with some columns removed.
 #'
 #' @examples
-#' icn <- import_intercell_network()
+#' icn <- intercell_network()
 #' icn_s <- simplify_intercell_network(icn)
 #'
 #' @importFrom magrittr %>%
@@ -1050,9 +1120,13 @@ filter_intercell_network <- function(
 #' @export
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_intercell_network}}}
-#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{intercell_network}}}
 #'     \item{\code{\link{filter_intercell_network}}}
+#'     \item{\code{\link{unique_intercell_network}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
 #' }
 simplify_intercell_network <- function(network, ...){
 
@@ -1093,12 +1167,12 @@ simplify_intercell_network <- function(network, ...){
 #' Unique intercellular interactions
 #'
 #' In the intercellular network data frames produced by \code{
-#' \link{import_intercell_network}}, by default each pair of annotations for
+#' \link{intercell_network}}, by default each pair of annotations for
 #' an interaction is represented in a separate row. This function drops the
 #' annotations and keeps only the distinct interacting pairs.
 #'
 #' @param network An intercellular network data frame as produced by
-#'     \code{\link{import_intercell_network}}.
+#'     \code{\link{intercell_network}}.
 #' @param ... Additional columns to keep. Note: if these have multiple
 #'     values for an interacting pair, only the first row will be
 #'     preserved.
@@ -1106,7 +1180,7 @@ simplify_intercell_network <- function(network, ...){
 #' @return A data frame with interacting pairs and interaction attributes.
 #'
 #' @examples
-#' icn <- import_intercell_network()
+#' icn <- intercell_network()
 #' icn_unique <- unique_intercell_network(icn)
 #'
 #' @importFrom magrittr %>%
@@ -1115,9 +1189,13 @@ simplify_intercell_network <- function(network, ...){
 #' @export
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_intercell_network}}}
+#'     \item{\code{\link{intercell_network}}}
 #'     \item{\code{\link{simplify_intercell_network}}}
 #'     \item{\code{\link{filter_intercell_network}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
 #' }
 unique_intercell_network <- function(network, ...){
 
@@ -1158,13 +1236,15 @@ unique_intercell_network <- function(network, ...){
 #' @export
 #'
 #' @examples
-#' get_intercell_categories()
+#' intercell_categories()
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_omnipath_intercell}}}
-#'     \item{\code{\link{get_intercell_generic_categories}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_generic_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
 #' }
-get_intercell_categories <- function(){
+#' @aliases get_intercell_categories
+intercell_categories <- function(){
 
     return(
         unique(
@@ -1172,6 +1252,18 @@ get_intercell_categories <- function(){
         )
     )
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{intercell_categories}.
+#' @export
+#'
+#' @noRd
+get_intercell_categories <- function(...){
+    .Deprecated('get_intercell_categories')
+    intercell_categories(...)
 }
 
 
@@ -1193,7 +1285,7 @@ get_intercell_categories <- function(){
 #' # # . with 1,120 more rows
 #'
 #' @export
-intercell_categories <- function(){
+intercell_summary <- function(){
 
     omnipath_query('intercell_summary', license = NA)
 
@@ -1212,16 +1304,29 @@ intercell_categories <- function(){
 #' get_intercell_generic_categories()
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_omnipath_intercell}}}
-#'     \item{\code{\link{get_intercell_categories}}}
+#'     \item{\code{\link{intercell}}}
+#'     \item{\code{\link{intercell_categories}}}
+#'     \item{\code{\link{intercell_summary}}}
 #' }
-get_intercell_generic_categories <- function(){
+intercell_generic_categories <- function(){
 
     return(
         unique(
             omnipath_query('intercell_summary', license = NA)$parent
         )
     )
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{intercell_generic_categories}.
+#' @export
+#'
+#' @noRd
+get_intercell_generic_categories <- function(...){
+    .Deprecated('get_intercell_generic_categories')
+    intercell_generic_categories(...)
 }
 
 

@@ -159,7 +159,7 @@ interactions_search_index <- function() {
 
     log_info('Building search index for the interactions database.')
 
-    import_all_interactions(fields = c('extra_attrs', 'datasets')) %>%
+    all_interactions(fields = c('extra_attrs', 'datasets')) %>%
     datasets_one_column(remove_logicals = TRUE) %>%
     select(resource = sources, type, extra_attrs, dataset = datasets) %>%
     unnest_longer(
@@ -229,7 +229,7 @@ complexes_search_index <- function() {
 
     log_info('Building search index for the complexes database.')
 
-    import_omnipath_complexes() %>%
+    complexes() %>%
     select(resource = sources, value = name) %>%
     filter(!is.na(value)) %>%
     separate_rows(resource, sep = ';') %>%
@@ -256,7 +256,7 @@ enzsub_search_index <- function() {
 
     log_info('Building search index for the enzyme-substrate database.')
 
-    import_omnipath_enzsub() %>%
+    enzyme_substrate() %>%
     select(resource = sources, value = modification) %>%
     separate_rows(resource, sep = ';') %>%
     distinct %>%

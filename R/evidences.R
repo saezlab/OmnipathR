@@ -102,9 +102,9 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
 #'
 #' @examples
 #' \dontrun{
-#' omnipath <- import_omnipath_interactions(fields = 'evidences')
-#' omnipath <- unnest_evidences(omnipath)
-#' colnames(omnipath)
+#' op <- omnipath_interactions(fields = "evidences")
+#' op <- unnest_evidences(op)
+#' colnames(op)
 #' }
 #'
 #' @importFrom magrittr %>% extract
@@ -319,7 +319,7 @@ match_evidence <- function(
 #'
 #' \strong{Note:} This function is automatically applied if the
 #' `strict_evidences` argument is passed to any function querying interactions
-#' (e.g. \code{\link{import_omnipath_interactions}}).
+#' (e.g. \code{\link{omnipath-interactions}}).
 #'
 #' @examples
 #' \dontrun{
@@ -335,6 +335,7 @@ match_evidence <- function(
 #' @export
 #'
 #' @seealso \itemize{
+#'     \item{\code{\link{omnipath-interactions}}}
 #'     \item{\code{\link{filter_evidences}}}
 #'     \item{\code{\link{unnest_evidences}}}
 #'     \item{\code{\link{from_evidences}}}
@@ -416,8 +417,8 @@ only_from <- function(
 #'
 #' \strong{Note:} This function (or rather its wrapper,
 #' \code{\link{only_from}}) is automatically applied if the `strict_evidences`
-#' argument is passed to any function querying interactions (e.g.
-#' \code{\link{import_omnipath_interactions}}).
+#' argument is passed to any function querying interactions (see
+#' \code{\link{omnipath-interactions}}).
 #'
 #' @examples
 #' \dontrun{

@@ -29,23 +29,38 @@
 #' @inheritDotParams omnipath_query -query_type -datasets -types -json_param
 #'     -add_counts -references_by_resource
 #'
-#' @return A dataframe containing information about complexes
+#' @return A data frame of protein complexes.
 #'
 #' @examples
-#' complexes = import_omnipath_complexes(
-#'     resources = c('CORUM', 'hu.MAP')
-#' )
+#' cplx <- complexes(resources = c("CORUM", "hu.MAP"))
 #'
-#' @seealso \itemize{\item{\code{\link{get_complexes_databases}}}}
+#' @seealso \itemize{
+#'     \item{\code{\link{complexe_resources}}}
+#'     \item{\code{\link{query_info}}}
+#'     \item{\code{\link{omnipath_query}}}
+#' }
 #'
 #' @importFrom rlang exec !!!
 #' @export
-import_omnipath_complexes <- function(...){
+#' @aliases import_omnipath_complexes
+complexes <- function(...){
 
     args <- omnipath_args(list(...), query_type = 'complexes')
 
     exec(omnipath_query, !!!args)
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{complexes}.
+#' @export
+#'
+#' @noRd
+import_omnipath_complexes <- function(...){
+    .Deprecated('import_omnipath_complexes')
+    complexes(...)
 }
 
 
@@ -56,18 +71,31 @@ import_omnipath_complexes <- function(...){
 #' @param dataset ignored for this query type
 #'
 #' @examples
-#' get_complex_resources()
+#' complex_resources()
 #'
 #' @return character vector with the names of the databases
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_resources}}}
-#'     \item{\code{\link{import_omnipath_complexes}}}
+#'     \item{\code{\link{resources}}}
+#'     \item{\code{\link{complexes}}}
 #' }
 #'
 #' @export
-get_complex_resources <- function(dataset = NULL){
+#' @aliases get_complex_resources
+complex_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'complexes', datasets = dataset))
+    return(resources(query_type = 'complexes', datasets = dataset))
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{complex_resources}.
+#' @export
+#'
+#' @noRd
+get_complex_resources <- function(...){
+    .Deprecated('get_complex_resources')
+    complex_resources(...)
 }

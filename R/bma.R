@@ -130,7 +130,7 @@ bma_description <- function(e, incoming = ""){
 #' @return Character: BMA motifs as a single string.
 #'
 #' @examples
-#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' interactions <- omnipath(resources = "ARN")
 #' graph <- interaction_graph(interactions)
 #' motifs <- bma_motif_es(igraph::E(graph)[1], graph)
 #'
@@ -207,7 +207,7 @@ bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' interactions <- omnipath(resources = "ARN")
 #' graph <- interaction_graph(interactions)
 #' print_bma_motif_es(igraph::E(graph)[1], graph)
 #' # {"Model": {
@@ -248,7 +248,7 @@ print_bma_motif_es <- function(edge_seq, G, granularity = 2){
 #' @return Character: BMA motifs as a single string.
 #'
 #' @examples
-#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' interactions <- omnipath(resources = "ARN")
 #' graph <- interaction_graph(interactions)
 #' bma_string <- bma_motif_vs(
 #'     igraph::all_shortest_paths(
@@ -306,7 +306,7 @@ bma_motif_vs <- function(node_seq, G){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' interactions <- import_omnipath_interactions(resources = 'ARN')
+#' interactions <- omnipath(resources = "ARN")
 #' graph <- interaction_graph(interactions)
 #' print_bma_motif_vs(
 #'     igraph::all_shortest_paths(

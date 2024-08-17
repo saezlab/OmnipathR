@@ -46,20 +46,20 @@
 #' @examples
 #' \dontrun{
 #' # Download post-translational modifications:
-#' enzsub <- import_omnipath_enzsub(resources = c("PhosphoSite", "SIGNOR"))
+#' enzsub <- enzyme_substrate(resources = c("PhosphoSite", "SIGNOR"))
 #'
 #' # Download protein-protein interactions
-#' interactions <- import_omnipath_interactions(resources = c("SignaLink3"))
+#' interactions <- omnipath(resources = "SignaLink3")
 #'
 #' # Convert to igraph objects:
 #' enzsub_g <- enzsub_graph(enzsub = enzsub)
-#' OPI_g <- interaction_graph(interactions = interactions )
+#' OPI_g <- interaction_graph(interactions = interactions)
 #'
 #' # Print some interactions:
-#' print_interactions(head(ptms))
+#' print_interactions(head(enzsub))
 #'
 #' # interactions with references:
-#' print_interactions(tail(ptms),writeRefs=TRUE)
+#' print_interactions(tail(enzsub), writeRefs = TRUE)
 #'
 #' # find interactions between kinase and substrate:
 #' print_interactions(dplyr::filter(ptms,enzyme_genesymbol=="MAP2K1",

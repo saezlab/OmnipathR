@@ -98,7 +98,7 @@ GRN_DATASETS <- c('dorothea', 'tf_target', 'collectri')
 #' op
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
+#'     \item{\code{\link{interaction_resources}}}
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #'     \item{\code{\link{annotated_network}}}
@@ -130,6 +130,7 @@ NULL
 #' @importFrom rlang exec !!!
 #' @export
 #' @rdname omnipath-interactions
+#' @aliases import_omnipath_interactions
 omnipath_interactions <- function(...){
 
     args <- omnipath_args(list(...), query_type = 'interactions')
@@ -167,17 +168,17 @@ import_omnipath_interactions <- function(...){
 #'     interactions.
 #'
 #' @param ... optional additional arguments, passed to
-#' \code{\link{import_omnipath_interactions}}.
+#'     \code{\link{omnipath_interactions}}.
 #'
 #' @examples
 #' pathways <- omnipath()
 #' pathways
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_omnipath_interactions}}}
-#'     \item{\code{\link{import_post_translational_interactions}}}
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
+#'     \item{\code{\link{omnipath_interactions}}}
+#'     \item{\code{\link{post_translational}}}
+#'     \item{\code{\link{interaction_resources}}}
+#'     \item{\code{\link{all_interactions}}}
 #'     \item{\code{\link{interaction_graph}}}
 #'     \item{\code{\link{print_interactions}}}
 #' }
@@ -189,7 +190,7 @@ omnipath <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'omnipath')
 
-    exec(import_omnipath_interactions, !!!args)
+    exec(omnipath_interactions, !!!args)
 
 }
 
@@ -270,7 +271,7 @@ kinaseextra <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'kinaseextra')
 
-    exec(import_omnipath_interactions, !!!args)
+    exec(omnipath_interactions, !!!args)
 
 }
 
@@ -315,7 +316,7 @@ ligrecextra <- function(...){
 
     args <- omnipath_args(list(...), datasets = 'ligrecextra')
 
-    exec(import_omnipath_interactions, !!!args)
+    exec(omnipath_interactions, !!!args)
 
 }
 
@@ -401,16 +402,6 @@ import_post_translational_interactions <- function(...){
 #'     dorothea_levels = c('A', 'B', 'C')
 #' )
 #' dorothea_grn
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{collectri}}}
-#'     \item{\code{\link{import_transcriptional_interactions}}}
-#'     \item{\code{\link{import_tf_target_interactions}}}
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
 #'
 #' @importFrom rlang exec !!!
 #' @export
@@ -517,13 +508,6 @@ import_tf_target_interactions <- function(...){
 #' @examples
 #' grn <- transcriptional(resources = c("PAZAR", "ORegAnno", "DoRothEA"))
 #' grn
-#'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
 #'
 #' @importFrom dplyr mutate select
 #' @importFrom magrittr %>% %<>%
@@ -732,13 +716,6 @@ import_lncrna_mrna_interactions <- function(...){
 #' # The prostaglandin synthases:
 #' interactions
 #'
-#' @seealso \itemize{
-#'     \item{\code{\link{get_interaction_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{interaction_graph}}}
-#'     \item{\code{\link{print_interactions}}}
-#' }
-#'
 #' @importFrom rlang exec !!!
 #' @export
 #' @rdname omnipath-interactions
@@ -828,36 +805,54 @@ import_all_interactions <- function(...){
 }
 
 
-#' Retrieve a list of interaction resources available in Omnipath
+#' Interaction resources available in Omnipath
 #'
-#' Gets the names of the resources from
-#' \url{https://omnipath.org/interactions}.
+#' Names of the resources available in \url{https://omnipath.org/interactions}.
 #'
 #' @param dataset a dataset within the interactions query type. Currently
 #' available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
-#' `ligrecextra`, `dorothea`, `tf_target`, `tf_mirna`, `mirnatarget` and
-#' `lncrna_mrna`
+#' `ligrecextra`, `collectri`, `dorothea`, `tf_target`, `tf_mirna`,
+#' `mirnatarget`, `lncrna_mrna` and `small_molecule_protein`.
 #'
-#' @return character vector with the names of the interaction databases
+#' @return Character: names of the interaction resources.
 #'
 #' @examples
-#' get_interaction_resources()
+#' interaction_resources()
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_resources}}}
-#'     \item{\code{\link{import_all_interactions}}}
-#'     \item{\code{\link{import_omnipath_interactions}}}
-#'     \item{\code{\link{import_pathwayextra_interactions}}}
-#'     \item{\code{\link{import_kinaseextra_interactions}}}
-#'     \item{\code{\link{import_ligrecextra_interactions}}}
-#'     \item{\code{\link{import_mirnatarget_interactions}}}
-#'     \item{\code{\link{import_dorothea_interactions}}}
+#'     \item{\code{\link{resources}}}
+#'     \item{\code{\link{omnipath}}}
+#'     \item{\code{\link{pathwayextra}}}
+#'     \item{\code{\link{kinaseextra}}}
+#'     \item{\code{\link{ligrecextra}}}
+#'     \item{\code{\link{post_translational}}}
+#'     \item{\code{\link{dorothea}}}
+#'     \item{\code{\link{collectri}}}
+#'     \item{\code{\link{tf_target}}}
+#'     \item{\code{\link{transcriptional}}}
+#'     \item{\code{\link{mirna_target}}}
+#'     \item{\code{\link{tf_mirna}}}
+#'     \item{\code{\link{small_molecule}}}
+#'     \item{\code{\link{all_interactions}}}
 #' }
 #' @export
-get_interaction_resources <- function(dataset = NULL){
+#' @aliases get_interaction_resources
+interaction_resources <- function(dataset = NULL){
 
-    return(get_resources(query_type = 'interactions', datasets = dataset))
+    return(resources(query_type = 'interactions', datasets = dataset))
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{interaction_resources}.
+#' @export
+#'
+#' @noRd
+get_interaction_resources <- function(...){
+    .Deprecated('get_interaction_resources')
+    interaction_resources(...)
 }
 
 

@@ -23,22 +23,21 @@
 #' Enzyme-substrate graph
 #'
 #' Transforms the a data frame with enzyme-substrate relationships
-#' (obtained by \code{\link{import_omnipath_enzsub}}) to an igraph
-#' graph object.
+#' (obtained by \code{\link{enzyme_substrate}}) to an igraph graph object.
 #'
-#' @param enzsub Data frame created by \code{\link{import_omnipath_enzsub}}
+#' @param enzsub Data frame created by \code{\link{enzyme_substrate}}
 #'
 #' @return An igraph directed graph object.
 #'
 #' @examples
-#' enzsub <- import_omnipath_enzsub(resources = c('PhosphoSite', 'SIGNOR'))
+#' enzsub <- enzyme_substrate(resources = c('PhosphoSite', 'SIGNOR'))
 #' enzsub_g <- enzsub_graph(enzsub = enzsub)
 #'
 #' @export
 #' @importFrom magrittr %>%
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{import_omnipath_enzsub}}}
+#'     \item{\code{\link{enzyme_substrate}}}
 #'     \item{\code{\link{giant_component}}}
 #'     \item{\code{\link{find_all_paths}}}
 #' }
@@ -71,17 +70,9 @@ enzsub_graph <- function(enzsub){
 #' Transforms the interactions data frame to an igraph graph object.
 #'
 #' @param interactions data.frame created by \itemize{
-#'     \item{\code{\link{import_omnipath_enzsub}}}
-#'     \item{\code{\link{import_omnipath_interactions}}}
-#'     \item{\code{\link{import_pathwayextra_interactions}}}
-#'     \item{\code{\link{import_kinaseextra_interactions}}}
-#'     \item{\code{\link{import_ligrecextra_interactions}}}
-#'     \item{\code{\link{import_post_translational_interactions}}}
-#'     \item{\code{\link{import_dorothea_interactions}}}
-#'     \item{\code{\link{import_tf_target_interactions}}}
-#'     \item{\code{\link{import_transcriptional_interactions}}}
-#'     \item{\code{\link{import_mirnatarget_interactions}}}
-#'     \item{\code{\link{import_all_interactions}}}}
+#'     \item{\code{\link{enzyme_substrate}}}
+#'     \item{\code{\link{omnipath-interactions}}}
+#' }
 #'
 #' @return An igraph graph object.
 #'

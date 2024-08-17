@@ -20,11 +20,12 @@
 #
 
 
-#' Imports annotations from OmniPath
+#' Protein and gene annotations from OmniPath
 #'
-#' Imports protein annotations about function, localization, expression,
-#' structure and other properties of proteins from OmniPath
-#' \url{https://omnipathdb.org/annotations}.
+#' Protein and gene annotations about function, localization, expression,
+#' structure and other properties, from  the
+#' \url{https://omnipathdb.org/annotations} endpoint of the OmniPath web
+#' service.
 #' Note: there might be also a few miRNAs annotated; a vast majority of
 #' protein complex annotations are inferred from the annotations of the
 #' members: if all members carry the same annotation the complex inherits.
@@ -36,8 +37,6 @@
 #' download the full database from
 #' \url{https://archive.omnipathdb.org/omnipath_webservice_annotations__recent.tsv}
 #' using any standard R or \code{readr} method.
-#'
-#' @return A data frame containing different gene and complex annotations.
 #'
 #' @param proteins Vector containing the genes or proteins for whom
 #'     annotations will be retrieved (UniProt IDs or HGNC Gene Symbols or
@@ -52,22 +51,35 @@
 #' @inheritDotParams omnipath_query -query_type -datasets -types -json_param
 #'     -add_counts -references_by_resource
 #'
+#' @return A data frame or list of data frames:
+#'     \itemize{
+#'         \item{If \code{wide=FALSE} (default), all the requested resources
+#'             will be in a single long format data frame.}
+#'         \item{If \code{wide=TRUE}: one or more data frames with columns
+#'             specific to the requested resources. If more than one resources
+#'             is requested a list of data frames is returned.}
+#'     }
+#'
 #' @examples
-#' annotations <- import_omnipath_annotations(
-#'     proteins = c('TP53', 'LMNA'),
-#'     resources = c('HPA_subcellular')
+#' annotations <- annotations(
+#'     proteins = c("TP53", "LMNA"),
+#'     resources = c("HPA_subcellular")
 #' )
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_annotation_databases}}}
+#'     \item{\code{\link{annotation_resources}}}
 #'     \item{\code{\link{pivot_annotations}}}
+#'     \item{\code{\link{query_info}}}
+#'     \item{\code{\link{omnipath_query}}}
+#'     \item{\code{\link{annotated_network}}}
 #' }
 #'
 #' @importFrom magrittr %<>%
 #' @importFrom rlang exec !!!
 #' @importFrom logger log_fatal log_success
 #' @export
-import_omnipath_annotations <- function(proteins = NULL, wide = FALSE, ...){
+#' @aliases import_omnipath_annotations
+annotations <- function(proteins = NULL, wide = FALSE, ...){
 
     args <- omnipath_args(list(...), query_type = 'annotations')
     wide <- pop(args, wide)
@@ -158,6 +170,18 @@ import_omnipath_annotations <- function(proteins = NULL, wide = FALSE, ...){
 }
 
 
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{annotations}.
+#' @export
+#'
+#' @noRd
+import_omnipath_annotations <- function(...){
+    .Deprecated('import_omnipath_annotations')
+    annotations(...)
+}
+
+
 #' Retrieves a list of available resources in the annotations database
 #' of OmniPath
 #'
@@ -169,18 +193,31 @@ import_omnipath_annotations <- function(proteins = NULL, wide = FALSE, ...){
 #' @return character vector with the names of the annotation resources
 #'
 #' @examples
-#' get_annotation_resources()
+#' annotation_resources()
 #'
 #' @seealso \itemize{
-#'     \item{\code{\link{get_resources}}}
-#'     \item{\code{\link{import_omnipath_annotations}}}
+#'     \item{\code{\link{resources}}}
+#'     \item{\code{\link{annotations}}}
 #' }
 #'
 #' @export
-get_annotation_resources <- function(dataset = NULL, ...){
+#' @aliases get_annotation_resources
+annotation_resources <- function(dataset = NULL, ...){
 
-    return(get_resources(query_type = 'annotations', datasets = dataset))
+    return(resources(query_type = 'annotations', datasets = dataset))
 
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complexes
+#' @param ... Passed to \code{annotation_resources}.
+#' @export
+#'
+#' @noRd
+get_annotation_resources <- function(...){
+    .Deprecated('get_annotation_resources')
+    annotation_resources(...)
 }
 
 
@@ -227,18 +264,18 @@ annotation_categories <- function(){
 #'
 #' Use this method to reconstitute the annotation tables into the format of
 #' the original resources. With the `wide=TRUE` option
-#' \code{\link{import_omnipath_annotations}} applies this function to the
+#' \code{\link{annotations}} applies this function to the
 #' downloaded data.
 #'
 #' @param annotations A data frame of annotations downloaded from the
-#'    OmniPath web service by \code{\link{import_omnipath_annotations}}.
+#'    OmniPath web service by \code{\link{annotations}}.
 #'
 #' @return A wide format data frame (tibble) if the provided data contains
 #' annotations from one resource, otherwise a list of wide format tibbles.
 #'
 #' @examples
 #' # single resource: the result is a data frame
-#' disgenet <- import_omnipath_annotations(resources = 'DisGeNet')
+#' disgenet <- annotations(resources = "DisGeNet")
 #' disgenet <- pivot_annotations(disgenet)
 #' disgenet
 #' # # A tibble: 126,588 × 11
@@ -253,14 +290,14 @@ annotation_categories <- function(){
 #' # #   nof_snps <dbl>, source <chr>
 #'
 #' # multiple resources: the result is a list
-#' annotations <- import_omnipath_annotations(
-#'     resources = c('DisGeNet', 'SignaLink_function', 'DGIdb', 'kinase.com')
+#' annot_long <- annotations(
+#'     resources = c("DisGeNet", "SignaLink_function", "DGIdb", "kinase.com")
 #' )
-#' annotations <- pivot_annotations(annotations)
-#' names(annotations)
+#' annot_wide <- pivot_annotations(annot_long)
+#' names(annot_wide)
 #' # [1] "DGIdb"              "DisGeNet"           "kinase.com"
 #' # [4] "SignaLink_function"
-#' annotations$kinase.com
+#' annot_wide$kinase.com
 #' # # A tibble: 825 x 6
 #' #    uniprot genesymbol entity_type group family subfamily
 #' #    <chr>   <chr>      <chr>       <chr> <chr>  <chr>
@@ -279,7 +316,7 @@ annotation_categories <- function(){
 #' @importFrom rlang set_names
 #' @importFrom readr type_convert cols
 #'
-#' @seealso \code{\link{import_omnipath_annotations}}
+#' @seealso \code{\link{annotations}}
 pivot_annotations <- function(annotations){
 
     # NSE vs. R CMD check workaround

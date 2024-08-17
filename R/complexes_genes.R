@@ -27,48 +27,47 @@
 #' any of the input genes participate or just retrieve these complexes where
 #' all the genes in input set participate together.
 #'
-#' @param complexes complexes data frame (obtained using
-#'     \code{\link{import_omnipath_complexes}})
-#' @param select_genes vector containing the genes for whom complexes will be
-#'     retrieved (hgnc format).
-#' @param total_match [default=FALSE] logical indicating if the user wants to
-#'     get all the complexes where any of the input genes participate (FALSE)
-#'     or to get only the complexes where all the input genes participate
-#'     together (TRUE).
+#' @param complexes Data frame of protein complexes (obtained using
+#'     \code{\link{complexes}}).
+#' @param genes Character: search complexes where these genes present.
+#' @param all_genes Logical: select only complexes where all of the genes
+#'     present together. By default complexes where any of the genes can be
+#'     found are returned.
 #'
 #' @export
 #'
 #' @return Data frame of complexes
 #'
 #' @examples
-#' complexes <- import_omnipath_complexes(
+#' complexes <- complexes(
 #'     filter_databases = c("CORUM", "hu.MAP")
 #' )
 #' query_genes <- c("LMNA", "BANF1")
-#' complexes_query_genes <- get_complex_genes(complexes, query_genes)
+#' complexes_with_query_genes <- complex_genes(complexes, query_genes)
 #'
-#' @seealso \code{\link{import_omnipath_complexes}}
-get_complex_genes <- function(
-    complexes = import_omnipath_complexes(),
-    select_genes,
-    total_match = FALSE
+#' @seealso \code{\link{complexes}}
+#' @aliases get_complex_genes
+complex_genes <- function(
+    complexes = complexes(),
+    genes,
+    all_genes = FALSE
 ){
 
-    if(is.null(select_genes)){
-        stop("A vector of genes should be provided")
+    if(is.null(genes)){
+        stop('A vector of genes should be provided')
     }
 
-    if (!is.logical(total_match)){
-        stop("total_match parameter should be logical")
+    if (!is.logical(all_genes)){
+        stop('all_genes parameter should be logical')
     }
 
-    if (total_match){
+    if (all_genes){
         complexes_geneset <-
         complexes[
             which(unlist(lapply(
                 strsplit(complexes$components_genesymbols, '_'),
                 function(x){
-                    sum(x %in% select_genes) == length(select_genes)
+                    sum(x %in% genes) == length(genes)
                 }
             ))),
         ]
@@ -77,10 +76,22 @@ get_complex_genes <- function(
         complexes[
             which(unlist(lapply(
                 strsplit(complexes$components_genesymbols, '_'),
-                function(x){any(x %in% select_genes)}
+                function(x){any(x %in% genes)}
             ))),
         ]
     }
 
     return(complexes_geneset)
+}
+
+
+# Aliases (old names) to be Deprecated
+#' @rdname complex_genes
+#' @param ... Passed to \code{complex_genes}.
+#' @export
+#'
+#' @noRd
+get_complex_genes <- function(...){
+    .Deprecated('get_complex_genes')
+    complex_genes(...)
 }

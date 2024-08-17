@@ -595,7 +595,7 @@ translate_ids <- function(
 #' target columns are distinguished by the suffexes added to their names.
 #'
 #' @examples
-#' ia <- import_omnipath_interactions()
+#' ia <- omnipath()
 #' translate_ids_multi(ia, source = uniprot, target, ensp, ensembl = TRUE)
 #'
 #' @importFrom magrittr %>% %<>% extract

@@ -35,19 +35,19 @@
 #' function.
 #'
 #' @param network Behaviour depends on type: if list, will be passed as
-#'     arguments to \code{\link{import_omnipath_interactions}} to obtain a
+#'     arguments to \code{\link{omnipath_interactions}} to obtain a
 #'     network data frame; if a data frame or tibble, it will be used as a
 #'     network data frame; if a character vector, will be assumed to be a
 #'     set of resource names and interactions will be queried from these
 #'     resources.
 #' @param annot Either the name of an annotation resource (for a list of
-#'     available resources call \code{\link{get_annotation_resources}}), or
+#'     available resources call \code{\link{annotation_resources}}), or
 #'     an annotation data frame. If the data frame contains more than one
 #'     resources, only the first one will be used.
 #' @param network_args List: if `network` is a resource name, pass these
-#'     additional arguments to \code{\link{import_omnipath_interactions}}.
+#'     additional arguments to \code{\link{omnipath_interactions}}.
 #' @param annot_args List: if `annot` is a resource name, pass these
-#'     additional arguments to \code{\link{import_omnipath_annotations}}.
+#'     additional arguments to \code{\link{omnipath_annotations}}.
 #' @param ... Column names selected from the annotation data frame (passed
 #'     to \code{dplyr::select}, if empty all columns will be selected.)
 #'
@@ -56,7 +56,7 @@
 #'
 #' @examples
 #' signalink_with_pathways <-
-#'     annotated_network('SignaLink3', 'SignaLink_pathway')
+#'     annotated_network("SignaLink3", "SignaLink_pathway")
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom checkmate assert_data_frame
@@ -81,7 +81,7 @@ annotated_network <- function(
     {`if`(is.character(.), list(resources = .), .)} %>%
     {`if`(
         just_a_list(.),
-        exec(import_omnipath_interactions, !!!., !!!network_args),
+        exec(omnipath_interactions, !!!., !!!network_args),
         .
     )} %>%
     assert_data_frame
@@ -90,7 +90,7 @@ annotated_network <- function(
     if_null(list()) %>%
     {`if`(
         is.character(.),
-        exec(import_omnipath_annotations, resources = ., !!!annot_args),
+        exec(annotations, resources = ., !!!annot_args),
         .
     )} %>%
     {`if`('record_id' %in% names(.), pivot_annotations(.), .)} %>%

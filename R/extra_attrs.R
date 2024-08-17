@@ -84,12 +84,12 @@ deserialize_json_col <- function(data, col, ...) {
 #' the provided data frame.
 #'
 #' @param data An interaction data frame, as provided by any of the
-#'     \code{import...interactions} functions.
+#'     \code{\link{omnipath-interactions}} functions.
 #'
 #' @return Character: the names of the extra attributes in the data frame.
 #'
 #' @examples
-#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' i <- omnipath(fields = "extra_attrs")
 #' extra_attrs(i)
 #'
 #' @importFrom magrittr %>%
@@ -131,7 +131,7 @@ extra_attrs <- function(data){
 #'     or character type if
 #'
 #' @examples
-#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' i <- omnipath(fields = "extra_attrs")
 #' extra_attrs_to_cols(i, Cellinker_type, Macrophage_type)
 #' extra_attrs_to_cols(
 #'     i,
@@ -248,7 +248,7 @@ extra_attrs_to_cols <- function(
 #' @return Logical: TRUE if the data frame has the "extra_attrs" column.
 #'
 #' @examples
-#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' i <- omnipath(fields = "extra_attrs")
 #' has_extra_attrs(i)
 #'
 #' @importFrom magrittr %>%
@@ -284,7 +284,7 @@ has_column <- function(data, col) {
 #' @return The data frame filtered to the records having the extra attribute.
 #'
 #' @examples
-#' i <- import_omnipath_interactions(fields = 'extra_attrs')
+#' i <- omnipath(fields = "extra_attrs")
 #' with_extra_attrs(i, Macrophage_type)
 #'
 #' @importFrom magrittr %>%
@@ -341,16 +341,16 @@ with_extra_attrs <- function(data, ...){
 #'     filtering criteria.
 #'
 #' @examples
-#' cl <- import_post_translational_interactions(
-#'     resources = 'Cellinker',
-#'     fields = 'extra_attrs'
+#' cl <- post_translational(
+#'     resources = "Cellinker",
+#'     fields = "extra_attrs"
 #' )
 #' # Only cell adhesion interactions from Cellinker
-#' filter_extra_attrs(cl, Cellinker_type = 'Cell adhesion')
+#' filter_extra_attrs(cl, Cellinker_type = "Cell adhesion")
 #'
-#' op <- import_omnipath_interactions(fields = 'extra_attrs')
+#' op <- omnipath(fields = "extra_attrs")
 #' # Any mechanism except phosphorylation
-#' filter_extra_attrs(op, .SIGNOR_mechanism = 'phosphorylation')
+#' filter_extra_attrs(op, .SIGNOR_mechanism = "phosphorylation")
 #'
 #' @importFrom magrittr %>% %<>% not
 #' @importFrom purrr reduce2 map_lgl compose pluck
@@ -430,7 +430,7 @@ filter_extra_attrs <- function(data, ..., na_ok = TRUE){
 #'     extra attribute occuring in the data frame.
 #'
 #' @examples
-#' op <- import_omnipath_interactions(fields = 'extra_attrs')
+#' i <- omnipath(fields = "extra_attrs")
 #' extra_attr_values(op, SIGNOR_mechanism)
 #'
 #' @importFrom magrittr %>%

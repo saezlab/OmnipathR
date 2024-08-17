@@ -426,7 +426,7 @@ omnipath_post_download <- function(
 #' @param dots List: dots from the parent.
 #' @param ... Override arguments.
 #'
-#' @return A list of arguments for `import_omnipath`.
+#' @return A list of arguments for `omnipath_query`.
 #'
 #' @importFrom magrittr %>% inset2 extract
 #' @importFrom stringr str_extract
@@ -567,7 +567,7 @@ omnipath_check_param <- function(param){
     # checking for wrong resource names
     if(!is.null(param$resources)){
 
-        all_resources <- get_resources(param$query_type)
+        all_resources <- resources(param$query_type)
         unknown_resources <- setdiff(param$resources, all_resources)
 
         if(length(unknown_resources) != 0){
