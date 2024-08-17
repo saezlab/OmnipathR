@@ -155,7 +155,6 @@ intercell <- function(
     )
     args$consensus_percentile <- NULL
     args$loc_consensus_percentile <- NULL
-    args$genesymbol_resource <- genesymbol_resource
 
     result <-
         exec(omnipath_query, !!!args) %>%
