@@ -288,7 +288,7 @@ for a given gene in this particular case.
 ```{r pathwayextra}
 ## We query and store the interactions into a dataframe
 iactions <-
-    pathwayextra
+    pathwayextra(
         resources = c("Wang", "Lit-BM-17"),
         organism = 10090  # mouse
     )
@@ -313,7 +313,7 @@ going to focus on rat reactions targeting a particular gene.
 ```{r kinaseextra}
 ## We query and store the interactions into a dataframe
 phosphonetw <-
-    kinaseextra
+    kinaseextra(
         resources = c("PhosphoPoint", "PhosphoSite"),
         organism = 10116  # rat
     )
@@ -325,7 +325,7 @@ upstream_dpysl2 <- dplyr::filter(
 )
 
 ## We print these interactions:
-printupstream_dpysl2)
+print_interactions(upstream_dpysl2)
 ```
 
 ### Ligand-receptor Extra
@@ -337,7 +337,7 @@ ligand, CDH1 (Figure \@ref(fig:fig3)).
 
 ```{r ligrecextra}
 ## We query and store the interactions into a dataframe
-ligrec_netw <- ligrecextra
+ligrec_netw <- ligrecextra(
     resources = c("iTALK", "Baccin2019"),
     organism = 9606  # human
 )
@@ -399,7 +399,7 @@ downstream_gli1  <- dplyr::filter(
     source_genesymbol == "GLI1"
 )
 
-printdownstream_gli1)
+print_interactions(downstream_gli1)
 ```
 
 ### miRNA-target dataset
@@ -426,7 +426,7 @@ upstream_gli1 <- dplyr::filter(
     target_genesymbol == "GLI1"
 )
 
-printupstream_gli1)
+print_interactions(upstream_gli1)
 
 ## We transform the previous selections to graphs (igraph objects)
 downstream_gli1_g <- interaction_graph(downstream_gli1)
@@ -472,10 +472,10 @@ and Cellinker), but has prospects of a great growth in the future. As an
 example, lets look for targets of a cancer drug, the MEK inhibitor Trametinib:
 
 ```{r small-molecules}
-trametinib_targets <- small_molecule_protein
+trametinib_targets <- small_molecule(
     sources = "TRAMETINIB"
 )
-printtrametinib_targets)
+print_interactions(trametinib_targets)
 ```
 
 Note, the human readable compound names are not reliable, use PubChem CIDs
@@ -508,7 +508,7 @@ enzsub <- enzyme_substrate()
 
 ## We can select and print the reactions between a specific kinase and
 ## a specific substrate
-printdplyr::filter(
+print_interactions(dplyr::filter(
     enzsub,
     enzyme_genesymbol == "MAP2K1",
     substrate_genesymbol == "MAPK3"
@@ -522,7 +522,7 @@ enzsub <- signed_ptms(enzsub, interactions)
 
 ## We select again the same kinase and substrate. Now we have information
 ## about inhibition or activation when we print the enzyme-PTM relationships
-printdplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
+print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
     substrate_genesymbol=="MAPK3"))
 
 ## We can also transform the enzyme-PTM relationships into a graph.
