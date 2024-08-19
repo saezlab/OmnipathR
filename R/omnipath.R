@@ -447,6 +447,8 @@ omnipath_args <- function(dots, ...) {
     as.list %>%
     qs_synonyms %>%
     modifyList(defaults, .) %>%
+    inset2('...', NULL) %>%
+    c(list()) %>%
     modifyList(dots %>% qs_synonyms) %>%
     modifyList(override) %>%
     inset2('...', NULL) %T>%
