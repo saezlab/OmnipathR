@@ -53,7 +53,7 @@ attributes are only included if the `fields = "extra_attrs"` argument is
 provided.
 
 ```{r load-interactions}
-i <- post_translationalfields = 'extra_attrs')
+i <- post_translational(fields = 'extra_attrs')
 dplyr::select(i, source_genesymbol, target_genesymbol, extra_attrs)
 ```
 
