@@ -213,7 +213,7 @@ dedicated function in `OmnipathR`, above we provide links to their help
 pages. As an example, let's see the gene regulatory interactions:
 
 ```{r network}
-gri <- transcriptional)
+gri <- transcriptional()
 gri
 ```
 
