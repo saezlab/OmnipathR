@@ -86,7 +86,7 @@ interactions.
 
 ```{r tfs-from-network}
 tfs_from_network <-
-    transcriptional
+    transcriptional(
         # confidence levels;
         # we use only the 3 levels with highest confidence
         dorothea_levels = c('A', 'B', 'C'),

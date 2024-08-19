@@ -174,7 +174,7 @@ pathways <-
     )
 
 ## We visualize the first interactions in the data frame.
-printhead(pathways))
+print(head(pathways))
 ```
 
 ### Protein-protein interaction networks
