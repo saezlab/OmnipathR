@@ -407,7 +407,7 @@ We query the TF-target gene interactions into another data frame:
 
 ```{r tf-target-network}
 tf_target <-
-    transcriptional
+    transcriptional(
         # confidence levels;
         # we use only the 2 levels with highest confidence
         dorothea_levels = c('A', 'B'),

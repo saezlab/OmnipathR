@@ -415,14 +415,14 @@ the miRNA targeting *GLI1* and the genes regulated by this TF.
 
 ```{r mirnatarget}
 ## We query and store the interactions into a dataframe
-mirna_target <- mirnatarget
+mirna_targets <- mirna_target(
     resources = c("miR2Disease", "miRDeathDB")
 )
 
 ## We select the interactions where a miRNA is interacting with the TF
 ## used in the previous code chunk and we print these interactions.
 upstream_gli1 <- dplyr::filter(
-    mirna_target,
+    mirna_targets,
     target_genesymbol == "GLI1"
 )
 
