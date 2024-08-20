@@ -156,7 +156,7 @@ hmdb_xml2_parse <- function(dataset, fields) {
         xml_find_all(sprintf('//%s:%s', ns, dataset)) %>%
         {map(
             fields,
-            \(field, nodeset = .) {
+            function(field, nodeset = .) {
                 xml_find_first(nodeset, sprintf('./%s:%s', ns, field))
             }
         )} %>%
