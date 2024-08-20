@@ -413,8 +413,6 @@ translate_ids <- function(
     complexes_one_to_many = NULL
 ){
 
-    .slow_doctest()
-
     # NSE vs. R CMD check workaround
     To <- NULL
 
