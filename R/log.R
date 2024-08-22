@@ -39,7 +39,21 @@ ensure_loglevel <- function(level){
 #' @noRd
 omnipath_console_loglevel <- function(){
 
-    ensure_loglevel(options('omnipath.console_loglevel')[[1]])
+    console_loglevel('OmnipathR')
+
+}
+
+
+#' Log level threshold for console messages from a certain package
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+console_loglevel <- function(pkg = 'OmnipathR'){
+
+
+    'console_loglevel' %>%
+    pkg_getopt(pkg) %>%
+    ensure_loglevel
 
 }
 
@@ -54,17 +68,30 @@ omnipath_console_loglevel <- function(){
 #' # [1] "/home/denes/omnipathr/omnipathr-log/omnipathr-20210309-1642.log"
 #'
 #' @export
-#' @importFrom magrittr %>%
 #' @seealso \code{\link{omnipath_log}}
 omnipath_logfile <- function(){
+
+    logfile('OmnipathR')
+
+}
+
+
+#' Path to the current logfile of a package
+#'
+#' @param pkg Character: name of a package.
+#'
+#' @importFrom magrittr %>%
+#' @rdname omnipath_logfile
+#' @export
+logfile <- function(pkg = 'OmnipathR') {
 
     # NSE vs. R CMD check workaround
     get_logger_definitions <- NULL
 
-    if(!omnipath_has_logfile()) return()
+    if(!has_logfile(pkg)) return()
 
     (logger%:::%get_logger_definitions)(
-        namespace = 'OmnipathR'
+        namespace = pkg
     )[[2]]$appender %>%
     environment() %>%
     `$`('file') %>%
@@ -84,14 +111,28 @@ omnipath_logfile <- function(){
 #' }
 #'
 #' @export
-#' @importFrom magrittr %>%
 #' @seealso \code{\link{omnipath_logfile}}
 omnipath_log <- function(){
 
-    if(!omnipath_has_logfile()) return()
+    read_log('OmnipathR')
 
-    omnipath_logfile() %>%
-    file.show(title = 'OmnipathR log')
+}
+
+
+#' Browse the latest log from a package
+#'
+#' @param pkg Character: name of a package.
+#'
+#' @importFrom magrittr %>%
+#' @rdname omnipath_log
+#' @export
+read_log <- function(pkg = 'OmnipathR') {
+
+    if(!has_logfile(pkg)) return()
+
+    pkg %>%
+    logfile() %>%
+    file.show(title = sprintf('%s log', pkg))
 
 }
 
@@ -107,8 +148,19 @@ omnipath_log <- function(){
 #' omnipath_set_loglevel(logger::FATAL, target = 'console')
 #'
 #' @export
-#' @importFrom magrittr %<>% %>% equals
 omnipath_set_loglevel <- function(level, target = 'logfile'){
+
+    set_loglevel(level, target = target, pkg = 'OmnipathR')
+
+}
+
+
+#' Sets the log level for any package
+#'
+#' @importFrom magrittr %<>% %>% equals extract2
+#' @export
+#' @rdname omnipath_set_loglevel
+set_loglevel <- function(level, target = 'logfile', pkg = 'OmnipathR') {
 
     # NSE vs. R CMD check workaround
     namespaces <- NULL
@@ -116,14 +168,10 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
     level %<>% ensure_loglevel
     i_logger <- target %>% equals(c('console', 'logfile')) %>% which
 
-    omnipathr_loggers <- (logger%:::%namespaces)$OmnipathR
-    omnipathr_loggers[[i_logger]]$threshold <- level
+    loggers <- (logger%:::%namespaces) %>% extract2(pkg)
+    loggers[[i_logger]]$threshold <- level
 
-    assign(
-        'OmnipathR',
-        omnipathr_loggers,
-        envir = logger%:::%namespaces
-    )
+    assign(pkg, loggers, envir = logger%:::%namespaces)
 
     invisible(NULL)
 
@@ -134,7 +182,7 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
 #'
 #' Use this method to change during a session which messages you want to be
 #' printed on the console. Before loading the package, you can set it also by
-#' the config file, with the omnipath.console_loglevel key.
+#' the config file, with the omnipathr.console_loglevel key.
 #'
 #' @param level Character or class `loglevel`. The desired log level.
 #'
@@ -158,7 +206,7 @@ omnipath_set_console_loglevel <- function(level){
 #'
 #' Use this method to change during a session which messages you want to be
 #' written into the logfile. Before loading the package, you can set it also
-#' by the config file, with the omnipath.loglevel key.
+#' by the config file, with the "omnipathr.loglevel" key.
 #'
 #' @param level Character or class `loglevel`. The desired log level.
 #'
@@ -310,14 +358,27 @@ patch_ns <- function(name, patched, ns){
 
 #' Is the logfile enabled?
 #'
-#' @importFrom magrittr %>% equals not
-#' @importFrom stringr str_to_lower
-#' @importFrom rlang %||%
-#'
 #' @noRd
 omnipath_has_logfile <- function(){
 
-    getOption('omnipath.logfile') %||% '' %>%
+    has_logfile('OmnipathR')
+
+}
+
+
+#' Is the logfile enabled for a certain package?
+#'
+#' @param pkg Character: name of a package
+#'
+#' @importFrom magrittr %>% equals not
+#' @importFrom stringr str_to_lower
+#' @noRd
+has_logfile <- function(pkg = 'OmnipathR'){
+
+    str_to_lower(pkg) %>%
+    sprintf('%s.logfile', .) %>%
+    getOption %>%
+    if_null('') %>%
     str_to_lower %>%
     equals('none') %>%
     magrittr::not()

@@ -799,7 +799,7 @@ import_all_interactions <- function(...){
 
 #' Interaction resources available in Omnipath
 #'
-#' Names of the resources available in \url{https://omnipath.org/interactions}.
+#' Names of the resources available in \url{https://omnipathdb.org/interactions}.
 #'
 #' @param dataset a dataset within the interactions query type. Currently
 #' available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,

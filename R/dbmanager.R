@@ -28,7 +28,7 @@
 #' @noRd
 omnipath_init_db <- function(pkgname){
 
-    omnipath.env$db <-
+    omnipathr.env$db <-
         system.file(
             'db',
             'db_def.json',
@@ -39,7 +39,7 @@ omnipath_init_db <- function(pkgname){
         map(
             function(dbdef){
                 dbdef$lifetime %<>% if_empty(
-                    getOption('omnipath.db_lifetime')
+                    getOption('omnipathr.db_lifetime')
                 )
                 dbdef$package %<>% if_empty(pkgname)
                 dbdef$loaded <- FALSE
@@ -51,7 +51,7 @@ omnipath_init_db <- function(pkgname){
         )
 
     remove_tasks(pkgname)
-    omnipath.env$.dbloop <- create_loop(parent = global_loop())
+    omnipathr.env$.dbloop <- create_loop(parent = global_loop())
 
     db_lifetime_hook()
 
@@ -134,7 +134,7 @@ omnipath_show_db <- function(){
     # NSE vs. R CMD check workaround
     db <- NULL
 
-    omnipath.env$db %>%
+    omnipathr.env$db %>%
     tibble(db = .) %>%
     mutate(key = names(db)) %>%
     unnest_wider(db)
@@ -154,7 +154,7 @@ omnipath_show_db <- function(){
 #' @noRd
 db_lifetime_hook <- function(){
 
-    omnipath.env$db %<>%
+    omnipathr.env$db %<>%
         map(
             function(dbdef){
                 if(
@@ -180,7 +180,7 @@ db_lifetime_hook <- function(){
             }
         )
 
-    later(db_lifetime_hook, delay = 10, loop = omnipath.env$.dbloop)
+    later(db_lifetime_hook, delay = 10, loop = omnipathr.env$.dbloop)
 
 }
 
@@ -214,15 +214,15 @@ load_db <- function(key, param = list()){
 
     db_exists(key)
 
-    dbdef <- omnipath.env$db[[key]]
+    dbdef <- omnipathr.env$db[[key]]
     log_info('Loading database `%s`.', dbdef$name)
     loader <- get(dbdef$loader)
     param %<>% add_defaults(loader, dbdef$loader_param)
     db <- exec(loader, !!!param)
-    omnipath.env$db[[key]]$db <- db
-    omnipath.env$db[[key]]$latest_param <- param
-    omnipath.env$db[[key]]$loaded <- TRUE
-    omnipath.env$db[[key]]$last_used <- Sys.time()
+    omnipathr.env$db[[key]]$db <- db
+    omnipathr.env$db[[key]]$latest_param <- param
+    omnipathr.env$db[[key]]$loaded <- TRUE
+    omnipathr.env$db[[key]]$last_used <- Sys.time()
     log_info('Loaded database `%s`.', dbdef$name)
 
 }
@@ -266,8 +266,8 @@ get_db <- function(key, param = NULL, reload = FALSE, ...){
 
     db_exists(key)
 
-    omnipath.env$db[[key]]$last_used <- Sys.time()
-    dbdef <- omnipath.env$db[[key]]
+    omnipathr.env$db[[key]]$last_used <- Sys.time()
+    dbdef <- omnipathr.env$db[[key]]
 
     param %<>% if_null(list()) %>% c(list(...))
 
@@ -285,7 +285,7 @@ get_db <- function(key, param = NULL, reload = FALSE, ...){
 
     }
 
-    return(omnipath.env$db[[key]]$db)
+    return(omnipathr.env$db[[key]]$db)
 
 }
 
@@ -297,7 +297,7 @@ get_db <- function(key, param = NULL, reload = FALSE, ...){
 #' @noRd
 db_exists <- function(key){
 
-    if(!key %in% names(omnipath.env$db)){
+    if(!key %in% names(omnipathr.env$db)){
         msg <- sprintf('No database defined with key `%s`.', key)
         log_fatal(msg)
         stop(msg)

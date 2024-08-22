@@ -315,7 +315,7 @@ intercell_consensus_filter <- function(
 #' OmniPath
 #'
 #' Retrieves a list of the databases from
-#' \url{https://omnipath.org/intercell}.
+#' \url{https://omnipathdb.org/intercell}.
 #'
 #' @param dataset ignored at this query type
 #'
@@ -1229,7 +1229,7 @@ unique_intercell_network <- function(network, ...){
 
 #' Categories in the intercell database of OmniPath
 #'
-#' Retrieves a list of categories from \url{https://omnipath.org/intercell}.
+#' Retrieves a list of categories from \url{https://omnipathdb.org/intercell}.
 #'
 #' @return character vector with the different intercell categories
 #' @export
@@ -1294,7 +1294,7 @@ intercell_summary <- function(){
 #' of OmniPath
 #'
 #' Retrieves a list of the generic categories from
-#' \url{https://omnipath.org/intercell}.
+#' \url{https://omnipathdb.org/intercell}.
 #'
 #' @return character vector with the different intercell main classes
 #' @export

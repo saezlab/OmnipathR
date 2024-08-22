@@ -82,7 +82,7 @@ oma_supported_organisms <- function() {
 #' @param organism_a Name or identifier of an organism.
 #' @param organism_b Name or identifier of another organism.
 #' @param id_type The gene or protein identifier to use in the table. For a
-#'     list of supported ID types see `omnipath.env$id_types$oma`. In addition,
+#'     list of supported ID types see `omnipathr.env$id_types$oma`. In addition,
 #'     "genesymbol" is supported, in this case
 #'     \code{\link{oma_pairwise_genesymbols}} will be called automatically.
 #' @param mappings Character vector: control ambiguous mappings: \itemize{
@@ -127,7 +127,7 @@ oma_pairwise <- function(
 
     .slow_doctest()
 
-    if (!id_type %in% names(omnipath.env$id_types$oma)) {
+    if (!id_type %in% names(omnipathr.env$id_types$oma)) {
         return(
             environment() %>%
             as.list %>%
@@ -211,7 +211,7 @@ oma_pairwise <- function(
 #' @param organism_a Name or identifier of an organism.
 #' @param organism_b Name or identifier of another organism.
 #' @param id_type The gene or protein identifier to use in the table. For a
-#'     list of supported ID types see `omnipath.env$id_types$oma`. These are
+#'     list of supported ID types see `omnipathr.env$id_types$oma`. These are
 #'     the identifiers that will be translated to gene symbols.
 #' @param oma_id_type Character: the gene or protein identifier to be queried
 #'     from OMA. These IDs will be translated to `id_type`.
@@ -334,10 +334,10 @@ oma_id_type <- function(id_type) {
 
     id_type %<>% str_to_lower
 
-    omnipath.env$id_types$oma %>%
+    omnipathr.env$id_types$oma %>%
     extract2(id_type) %>%
     if_null(
-        omnipath.env$id_types$oma %>%
+        omnipathr.env$id_types$oma %>%
         set_names(., str_to_lower(.)) %>%
         extract2(id_type)
     ) %>%

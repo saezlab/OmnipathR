@@ -25,86 +25,145 @@
 #' These options describe the default settings for OmnipathR so you do not
 #' need to pass these parameters at each function call.
 #' Currently the only option useful for the public web service at
-#' omnipathdb.org is ``omnipath.license``. If you are a for-profit
+#' omnipathdb.org is ``omnipathr.license``. If you are a for-profit
 #' user set it to ``'commercial'`` to make sure all the data you download
 #' from OmniPath is legally allowed for commercial use. Otherwise just leave
 #' it as it is: ``'academic'``.
 #' If you don't use omnipathdb.org but within your organization you deployed
 #' your own pypath server and want to share data whith a limited availability
 #' to outside users, you may want to use a password. For this you can use
-#' the ``omnipath.password`` option.
+#' the ``omnipathr.password`` option.
 #' Also if you want the R package to work from another pypath server instead
-#' of omnipathdb.org, you can change the option ``omnipath.url``.
+#' of omnipathdb.org, you can change the option ``omnipathr.url``.
 #'
 #' @return Nothing, this is not a function but a list.
-.omnipath_options_defaults <- list(
-    omnipath.url = 'https://omnipathdb.org/',
-    omnipath.notls_url = 'http://no-tls.omnipathdb.org/',
-    omnipath.notls_fallback = TRUE,
-    omnipath.notls_force = FALSE,
-    omnipath.license = 'academic',
-    omnipath.password = NULL,
-    omnipath.print_urls = FALSE,
-    omnipath.loglevel = 'trace',
-    omnipath.console_loglevel = 'success',
-    omnipath.logdir = NULL,
-    omnipath.logfile = NULL,
-    omnipath.cachedir = NULL,
-    omnipath.cache_timeout = 5,
-    omnipath.use_cache = TRUE,
-    omnipath.retry_downloads = 3,
-    omnipath.retry_downloads_in_seconds = 5,
-    omnipath.db_lifetime = 300,
-    omnipath.nichenet_results_dir = 'nichenet_results',
-    omnipath.uploadlists_chunk_size = 5000,
-    omnipath.connect_timeout = 10,
-    omnipath.uniprot_idmapping_poll_interval = 3,
-    omnipath.uniprot_idmapping_timeout = 30,
-    omnipath.user_agent = paste0(
+.omnipathr_options_defaults <- list(
+    omnipathr.url = 'https://omnipathdb.org/',
+    omnipathr.notls_url = 'http://no-tls.omnipathdb.org/',
+    omnipathr.notls_fallback = TRUE,
+    omnipathr.notls_force = FALSE,
+    omnipathr.license = 'academic',
+    omnipathr.password = NULL,
+    omnipathr.print_urls = FALSE,
+    omnipathr.loglevel = 'trace',
+    omnipathr.console_loglevel = 'success',
+    omnipathr.logdir = NULL,
+    omnipathr.logfile = NULL,
+    omnipathr.cachedir = NULL,
+    omnipathr.cache_timeout = 5,
+    omnipathr.use_cache = TRUE,
+    omnipathr.retry_downloads = 3,
+    omnipathr.retry_downloads_in_seconds = 5,
+    omnipathr.db_lifetime = 300,
+    omnipathr.nichenet_results_dir = 'nichenet_results',
+    omnipathr.uploadlists_chunk_size = 5000,
+    omnipathr.connect_timeout = 10,
+    omnipathr.uniprot_idmapping_poll_interval = 3,
+    omnipathr.uniprot_idmapping_timeout = 30,
+    omnipathr.user_agent = paste0(
         'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) ',
         'Gecko/20100101 Firefox/120.0'
     ),
-    omnipath.complex_translation = TRUE,
-    omnipath.complex_translation_one_to_many = 12L
+    omnipathr.complex_translation = TRUE,
+    omnipathr.complex_translation_one_to_many = 12L
 )
 
 
-.omnipath_local_config_fname <- 'omnipathr.yml'
+#' Default options for a certain package
+#'
+#' @importFrom magrittr %>% extract2
+#' @importFrom stringr str_to_lower
+#' @noRd
+default_options <- function(pkg = 'OmnipathR') {
+
+    ns <- pkg %>% getNamespace
+
+    pkg %>%
+    str_to_lower %>%
+    sprintf('.%s_options_defaults', .) %>%
+    mget(envir = ns, ifnotfound = list(list())) %>%
+    extract2(1L)
+
+}
+
+
+#' Local config file name for a certain package
+#'
+#' @importFrom stringr str_to_lower
+#' @importFrom magrittr %>%
+#' @noRd
+local_config_fname <- function(pkg = 'OmnipathR') {
+
+    pkg %>% str_to_lower %>% sprintf('%s.yml', .)
+
+}
+
+
+#' Retrieves the user level config file path of OmnipathR
+#'
+#' @noRd
+omnipath_user_config_path <- function(){
+
+    user_config_path('OmnipathR', 'saezlab')
+
+}
 
 
 #' Retrieves the user level config file path
 #'
 #' @importFrom rappdirs user_config_dir
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_to_lower
 #'
 #' @noRd
-omnipath_get_user_config_path <- function(){
+user_config_path <- function(pkg = 'OmnipathR', author = 'saezlab'){
 
     file.path(
-        user_config_dir(appname = 'OmnipathR', appauthor = 'saezlab'),
-        'omnipathr.yml'
+        user_config_dir(appname = pkg, appauthor = author),
+        pkg %>% str_to_lower %>% sprintf('%s.yml', .)
     )
 
 }
 
 
-#' Retrieves the default config file path
+#' Default config file path of OmnipathR
 #'
 #' @param user Logical: prioritize the user level config even if a config in
 #'     the current working directory is available.
 #'
 #' @noRd
-omnipath_get_default_config_path <- function(user = FALSE){
+omnipath_default_config_path <- function(user = FALSE){
 
-    `if`(
-        file.exists(.omnipath_local_config_fname) && !user,
-        .omnipath_local_config_fname,
-        omnipath_get_user_config_path()
-    )
+    default_config_path(user = user, pkg = 'OmnipathR', author = 'saezlab')
 
 }
 
 
-#' Current config file path
+#' Default config path for a certain package
+#'
+#' @param user Logical: prioritize the user level config even if a config in
+#'     the current working directory is available.
+#' @param pkg Character: name of the package
+#' @param author Character: author of the package
+#'
+#' @return Character: path to the config file.
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+default_config_path <- function(
+    user = FALSE,
+    pkg = 'OmnipathR',
+    author = 'saezlab'
+){
+
+    pkg %>%
+    local_config_fname %>%
+    {`if`(file.exists(.) && !user, ., user_config_path(pkg, author))}
+
+}
+
+
+#' Current config file path of OmnipathR
 #'
 #' @param user Logical: prioritize the user level config even if a config in
 #'     the current working directory is available.
@@ -112,25 +171,35 @@ omnipath_get_default_config_path <- function(user = FALSE){
 #' @return Character: path to the config file.
 #'
 #' @examples
-#' omnipath_get_config_path()
+#' omnipath_config_path()
 #'
-#' @importFrom magrittr %>%
 #' @export
-omnipath_get_config_path <- function(user = FALSE){
+omnipath_config_path <- function(user = FALSE){
 
-    config_path_default <- omnipath_get_default_config_path(user = user)
+    config_path(user = user, pkg = 'OmnipathR')
 
-    config_path <- mget(
-        'omnipath_config',
+}
+
+
+#' Current config file path for a certain package
+#'
+#' @importFrom magrittr %>% extract2
+#' @importFrom stringr str_to_lower str_to_upper
+#' @export
+#' @rdname omnipath_config_path
+config_path <- function(user = FALSE, pkg = 'OmnipathR'){
+
+    default <- default_config_path(user = user, pkg = pkg)
+    glob_var <- pkg %>% str_to_lower %>% sprintf('%s_config', .)
+    env_var <- glob_var %>% str_to_upper
+
+    mget(
+        glob_var,
         envir = .GlobalEnv,
-        ifnotfound = Sys.getenv('OMNIPATHR_CONFIG')
-    )[[1]]
-
-    `if`(
-        nchar(config_path) > 0,
-        config_path,
-        config_path_default
+        ifnotfound = Sys.getenv(env_var)
     ) %>%
+    extract2(1L) %>%
+    {`if`(nchar(.) > 0L, ., default)} %>%
     .ensure_safe_path
 
 }
@@ -152,7 +221,7 @@ omnipath_get_config_path <- function(user = FALSE){
 #' \dontrun{
 #' # after this, all downloads will default to commercial licenses
 #' # i.e. the resources that allow only academic use will be excluded:
-#' options(omnipath.license = 'commercial')
+#' options(omnipathr.license = 'commercial')
 #' omnipath_save_config()
 #' }
 #'
@@ -164,13 +233,31 @@ omnipath_save_config <- function(
         local = FALSE
     ){
 
+    save_config(path = path, title = title, local = local, pkg = 'OmnipathR')
+
+}
+
+
+#' Save the configuration of a certain package
+#'
+#' @param pkg Character: name of the package
+#'
+#' @export
+#' @rdname omnipath_save_config
+save_config <- function(
+        path = NULL,
+        title = 'default',
+        local = FALSE,
+        pkg = 'OmnipathR'
+    ){
+
     path <-
         `if`(
             is.null(path),
             `if`(
                 local,
-                .omnipath_local_config_fname,
-                omnipath_get_config_path()
+                local_config_fname(pkg = pkg),
+                config_path(pkg = pkg)
             ),
             path
         ) %>%
@@ -179,10 +266,11 @@ omnipath_save_config <- function(
     if(.path_writable(path)){
 
         .ensure_dir(path)
+        env <- pkg %>% pkg_env
 
-        omnipath_options_to_config()
+        options_to_config(pkg = pkg)
         this_config <- list()
-        this_config[[title]] <- omnipath.env$config
+        this_config[[title]] <- env$config
 
         write_yaml(this_config, file = path)
 
@@ -212,9 +300,6 @@ omnipath_save_config <- function(
 #' }
 #'
 #' @export
-#' @importFrom yaml read_yaml write_yaml
-#' @importFrom magrittr %<>%
-#' @importFrom purrr map discard map_lgl
 omnipath_load_config <- function(
         path = NULL,
         title = 'default',
@@ -222,10 +307,32 @@ omnipath_load_config <- function(
         ...
     ){
 
+    load_config(path = path, title = title, user = user, pkg = 'OmnipathR', ...)
+
+}
+
+
+#' Load the coniguration of a certain package
+#'
+#' @param pkg Character: name of the package
+#'
+#' @importFrom yaml read_yaml write_yaml
+#' @importFrom magrittr %<>%
+#' @importFrom purrr map discard map_lgl
+#' @export
+#' @rdname omnipath_load_config
+load_config <- function(
+        path = NULL,
+        title = 'default',
+        user = FALSE,
+        pkg = 'OmnipathR',
+        ...
+    ){
+
     path <-
         `if`(
             is.null(path),
-            omnipath_get_config_path(user = user),
+            config_path(user = user, pkg = pkg),
             path
         ) %>%
         .ensure_safe_path
@@ -236,28 +343,13 @@ omnipath_load_config <- function(
         list()
     )
 
-    # Earlier we had the URLs in the config. Then I realized it's not a
-    # good practice, and apart from not having them any more, here we
-    # remove them from existing configs.
-    if(.path_writable(path) && yaml_config %>% map_lgl(is.list) %>% all){
-
-        yaml_config %<>% map(
-            ~`[`(
-                .x,
-                .x %>% names %>% discard(endsWith, '_url')
-            )
-        )
-        write_yaml(yaml_config, file = path)
-
-    }
-
     if(title %in% names(yaml_config)){
         this_config <- yaml_config[[title]]
     }else{
-        title <- names(yaml_config)[1]
+        title <- names(yaml_config)[1L]
         if(!is.null(title)){
             this_config <- yaml_config[[title]]
-        }else if(length(yaml_config) > 0){
+        }else if(length(yaml_config) > 0L){
             this_config <- yaml_config
         }else{
             this_config <- list()
@@ -268,20 +360,31 @@ omnipath_load_config <- function(
         this_config %<>% merge_lists(yaml_config[['default']])
     }
 
-    # ensure the `omnipath.` prefix for all parameter keys
+    # formerly the parameters of this package were prefixed with "omnipath."
+    # now the prefix should correspond to the package name lower case
+    # here we update the existing config files
+    if (this_config %>% names %>% str_detect('^omnipath\\.') %>% any) {
+        names(this_config) %<>% str_replace('^omnipath\\.', 'omnipathr.')
+        write_yaml(list(this_config) %>% set_names(title), file = path)
+    }
+
+    pkg_l <- pkg %>% pkg_prefix('', pkg = .)
+
+    # ensure the `pkg_lower.` prefix for all parameter keys
     names(this_config) <- ifelse(
-        startsWith(as.character(names(this_config)), 'omnipath.'),
+        startsWith(as.character(names(this_config)), pkg_l),
         names(this_config),
-        sprintf('omnipath.%s', names(this_config))
+        sprintf('%s%s', pkg_l, names(this_config))
     )
 
-    this_config %<>% merge_lists(.omnipath_options_defaults)
-    this_config %<>% merge_lists(omnipath_env_config(), .)
+    this_config %<>% merge_lists(default_options(pkg))
+    this_config %<>% merge_lists(env_config(pkg), .)
 
-    omnipath.env$config <- this_config
+    env <- pkg %>% pkg_env
+    env$config <- this_config
 
-    omnipath_options_to_config()
-    omnipath_config_to_options()
+    options_to_config(pkg = pkg)
+    config_to_options(pkg = pkg)
 
 }
 
@@ -292,9 +395,10 @@ omnipath_load_config <- function(
 #' @importFrom purrr map2 discard
 #' @importFrom stringr str_replace_all str_to_upper
 #' @noRd
-omnipath_env_config <- function(){
+env_config <- function(pkg = 'OmnipathR'){
 
-    .omnipath_options_defaults %>%
+    pkg %>%
+    default_options %>%
     map2(
         names(.),
         function(val, key){
@@ -310,11 +414,43 @@ omnipath_env_config <- function(){
 }
 
 
-#' Restores the built-in default values of all config parameters
+#' Restore the built-in default values of all config parameters of a package
+#'
+#' @param pkg Character: name of a package
+#'
+#' @importFrom magrittr %>%
+#' @export
+#' @rdname omnipath_reset_config
+reset_config <- function(save = NULL, reset_all = FALSE, pkg = 'OmnipathR'){
+
+    env <- pkg %>% pkg_env
+    env$config <- pkg %>% default_options
+
+    if(!reset_all){
+        options_to_config(pkg = pkg)
+    }
+
+    config_to_options(pkg = pkg)
+
+    if(!is.null(save)){
+        path <- `if`(
+            is.logical(save) && save,
+            config_path(pkg = pkg),
+            save
+        )
+        save_config(path, pkg = pkg)
+    }
+
+    invisible(env$config)
+
+}
+
+
+#' Restore the built-in default values of all config parameters of OmnipathR
 #'
 #' @param save If a path, the restored config will be also saved
 #'     to this file. If TRUE, the config will be saved to the current default
-#'     config path (see \code{\link{omnipath_get_config_path}}).
+#'     config path (see \code{\link{omnipath_config_path}}).
 #' @param reset_all Reset to their defaults also the options already set in
 #'     the R options.
 #'
@@ -328,75 +464,62 @@ omnipath_env_config <- function(){
 #' @return The config as a list.
 #'
 #' @export
+#' @importFrom purrr partial
 #' @seealso \code{\link{omnipath_load_config}, \link{omnipath_save_config}}
-omnipath_reset_config <- function(save = NULL, reset_all = FALSE){
-
-    omnipath.env$config <- .omnipath_options_defaults
-
-    if(!reset_all){
-        omnipath_options_to_config()
-    }
-
-    omnipath_config_to_options()
-
-    if(!is.null(save)){
-        path <- `if`(
-            is.logical(save) && save,
-            omnipath_get_config_path(),
-            save
-        )
-        omnipath_save_config(path)
-    }
-
-    invisible(omnipath.env$config)
-
-}
+omnipath_reset_config <- partial(reset_config, pkg = 'OmnipathR')
 
 
 #' Populates the config from the default local or user level config file
 #' or the built-in defaults.
 #'
 #' @noRd
-omnipath_init_config <- function(user = FALSE){
+init_config <- function(user = FALSE, pkg = 'OmnipathR'){
 
-    config_path <- omnipath_get_config_path(user = user)
-
-    if(file.exists(config_path)){
-        omnipath_load_config(config_path)
-    }else{
+    config_path(user = user, pkg = pkg) %>%
+    {`if`(
+        file.exists(.),
+        load_config(., pkg = pkg),
         # this normally happens only at the very first use of the package
-        omnipath_reset_config(save = config_path)
-    }
+        reset_config(save = ., pkg = pkg)
+    )}
 
 }
 
 
-#' Loads the settings from omnipath.env$config to options
+#' Populate the config of OmnipathR
+#'
+#' @importFrom purrr partial
+#' @noRd
+omnipath_init_config <- partial(init_config, pkg = 'OmnipathR')
+
+
+#' Loads the settings from omnipathr.env$config to options
 #'
 #' @noRd
-omnipath_config_to_options <- function(){
+config_to_options <- function(pkg = 'OmnipathR'){
 
-    do.call(options, omnipath.env$config)
+    env <- pkg %>% pkg_env
+    do.call(options, env$config)
 
 }
 
-#' Copies OmnipathR settings from options to omnipath.env$config
+
+#' Copy a package's settings from options to env$config
 #'
 #' @importFrom magrittr %>%
 #' @importFrom purrr discard
 #' @noRd
-omnipath_options_to_config <- function(){
+options_to_config <- function(pkg = 'OmnipathR'){
 
-    from_options <- do.call(
-        options,
-        as.list(names(.omnipath_options_defaults))
-    ) %>%
-    discard(is.null)
+    env <- pkg %>% pkg_env
 
-    omnipath.env$config <- merge_lists(
-        from_options,
-        omnipath.env$config
-    )
+    env$config <-
+        from_options <- do.call(
+            options,
+            as.list(names(default_options(pkg = pkg)))
+        ) %>%
+        discard(is.null) %>%
+        merge_lists(env$config)
 
 }
 
@@ -404,11 +527,13 @@ omnipath_options_to_config <- function(){
 #' Populates the URL register
 #'
 #' @importFrom purrr map
-#'
+#' @importFrom magrittr %>%
 #' @noRd
 .load_urls <- function(pkgname){
 
-    omnipath.env$urls <-
+    env <- pkgname %>% pkg_env
+
+    env$urls <-
         system.file(
             'internal',
             'urls.json',
@@ -421,26 +546,37 @@ omnipath_options_to_config <- function(){
 }
 
 
-#' Setting up the logfile and logging parameters.
+#' Set up the logfile and logging parameters for OmnipathR
+#'
+#' @noRd
+omnipath_init_log <- function(){
+
+    init_log('OmnipathR')
+
+}
+
+
+#' Set up the logfile and logging parameters.
 #'
 #' @importFrom magrittr %>% %T>%
 #' @importFrom rlang %||%
 #' @importFrom logger log_formatter log_appender log_layout appender_file
 #' @importFrom logger appender_console log_threshold layout_glue_generator
 #' @importFrom logger formatter_glue_or_sprintf
-#'
 #' @noRd
-omnipath_init_log <- function(pkgname = 'OmnipathR'){
+init_log <- function(pkg = 'OmnipathR'){
 
-    logfile_enabled <- omnipath_has_logfile()
+    logfile_enabled <- pkg %>% has_logfile()
+    pkg_l <- pkg %>% str_to_lower
 
     if(logfile_enabled){
 
         log_path <-
-            getOption('omnipath.logfile') %||%
+            'logfile' %>%
+            pkg_getopt(pkg) %||%
             file.path(
-                getOption('omnipath.logdir') %||% 'omnipathr-log',
-                sprintf('omnipathr-%s.log', format(Sys.time(), "%Y%m%d-%H%M"))
+                pkg_getopt('logdir', pkg) %||% sprintf('%s-log', pkg_l),
+                sprintf('%s-%s.log', pkg_l, format(Sys.time(), "%Y%m%d-%H%M"))
             ) %>%
             absolute_path() %T>%
             {dir.create(
@@ -457,7 +593,7 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
         # 2 = logfile
 
         loglevel <- sprintf(
-            'omnipath.%sloglevel',
+            '%sloglevel',
             `if`(idx == 1, 'console_', '')
         )
         appender <- `if`(
@@ -485,18 +621,18 @@ omnipath_init_log <- function(pkgname = 'OmnipathR'){
 
         log_formatter(
             formatter_glue_or_sprintf,
-            namespace = pkgname,
+            namespace = pkg,
             index = idx
         )
         log_threshold(
-            ensure_loglevel(options(loglevel)[[1]]),
-            namespace = pkgname,
+            ensure_loglevel(pkg_getopt(loglevel, pkg)),
+            namespace = pkg,
             index = idx
         )
-        log_appender(appender, namespace = pkgname, index = idx)
+        log_appender(appender, namespace = pkg, index = idx)
         log_layout(
             layout_glue_generator(format = layout_format),
-            namespace = pkgname,
+            namespace = pkg,
             index = idx
         )
 

@@ -1140,3 +1140,44 @@ pop <- function(lst, ...) {
     lst %>% extract(name) %>% {`if`(length(.) == 1L, unlist(.), .)}
 
 }
+
+
+#' Key of an option prefixed with lowercase package name
+#'
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_to_lower
+#' @noRd
+pkg_prefix <- function(string, pkg = 'OmnipathR') {
+
+    pkg %>%
+    str_to_lower %>%
+    sprintf('%s.%s', ., string)
+
+}
+
+
+#' Get an option prefixed with package name
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+pkg_getopt <- function(option, pkg = 'OmnipathR') {
+
+    option %>%
+    pkg_prefix(pkg) %>%
+    getOption
+
+}
+
+
+#' Environment of a certain package
+#'
+#' @importFrom stringr str_to_lower
+#' @importFrom magrittr %>%
+#' @noRd
+pkg_env <- function(pkg = 'OmnipathR') {
+
+    ns <- getNamespace(pkg)
+
+    pkg %>% str_to_lower %>% sprintf('%s.env', .) %>% get(envir = ns)
+
+}

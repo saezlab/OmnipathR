@@ -30,7 +30,7 @@ ensure_entity_type <- function(entity_type = NULL) {
         entity_type %>%
         if_null('.default') %>%
         str_to_lower() %>%
-        extract2(omnipath.env$entity_types, .)
+        extract2(omnipathr.env$entity_types, .)
 
     if (is.null(valid_et)) {
 
@@ -50,7 +50,7 @@ ensure_entity_type <- function(entity_type = NULL) {
 #' @noRd
 default_entity_type <- function() {
 
-    omnipath.env$entity_types$.default
+    omnipathr.env$entity_types$.default
 
 }
 
@@ -61,7 +61,7 @@ default_entity_type <- function() {
 #' @noRd
 .load_entity_types <- function(pkgname) {
 
-    omnipath.env$entity_types <-
+    omnipathr.env$entity_types <-
         system.file(
             'internal',
             'entity_types.yaml',

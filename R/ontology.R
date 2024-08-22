@@ -406,7 +406,7 @@ ontology_db_transformations <- function(db, fmt, c2p){
 #' Retrieves an ontology database with relations in the desired data
 #' structure. The database is automatically loaded and the requested data
 #' structure is constructed if necessary. The databases stay loaded up to a
-#' certain time period (see the option \code{omnipath.db_lifetime}). Hence
+#' certain time period (see the option \code{omnipathr.db_lifetime}). Hence
 #' the first one of repeated calls to this function might take long and the
 #' subsequent ones should be really quick.
 #'
@@ -460,7 +460,7 @@ get_ontology_db <- function(key, rel_fmt = 'tbl', child_parents = TRUE){
 
     }
 
-    omnipath.env$db[[key]]$db <- db
+    omnipathr.env$db[[key]]$db <- db
 
     get_db(key)
 

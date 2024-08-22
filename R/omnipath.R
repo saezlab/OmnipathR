@@ -285,8 +285,8 @@ omnipath_query <- function(
         param %>%
         omnipath_build_url %>%
         c(`if`(
-            getOption('omnipath.notls_fallback') &&
-            !getOption('omnipath.notls_force'),
+            getOption('omnipathr.notls_fallback') &&
+            !getOption('omnipathr.notls_force'),
             omnipath_build_url(param, notls = TRUE),
             NULL
         ))
@@ -595,7 +595,7 @@ omnipath_check_param <- function(param){
                 is.null(param[[opt]]) &&
                 !param$query_type %in% .omnipath_qt_nolicense
             ),
-            options(sprintf('omnipath.%s', opt)),
+            options(sprintf('omnipathr.%s', opt)),
             param[[opt]]
         )
 

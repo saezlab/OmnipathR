@@ -75,7 +75,7 @@ import_omnipath_enzsub <- function(...){
 #' Retrieves a list of enzyme-substrate resources available in OmniPath
 #'
 #' Get the names of the enzyme-substrate relationship resources available
-#' in \url{https://omnipath.org/enzsub}
+#' in \url{https://omnipathdb.org/enzsub}
 #'
 #' @param dataset ignored for this query type
 #' @return character vector with the names of the enzyme-substrate resources

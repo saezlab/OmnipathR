@@ -77,7 +77,7 @@ uniprot_id_mapping_table <- function(
     from <- .nse_ensure_str(!!enquo(from))
     to <- .nse_ensure_str(!!enquo(to))
 
-    chunk_size %<>% if_null(getOption('omnipath.uploadlists_chunk_size'))
+    chunk_size %<>% if_null(getOption('omnipathr.uploadlists_chunk_size'))
 
     identifiers %>%
     unique %T>%
@@ -147,8 +147,8 @@ uniprot_id_mapping_table <- function(
 
         jobid <- run_result$jobId
 
-        poll_interval <- getOption('omnipath.uniprot_idmapping_poll_interval')
-        timeout <- getOption('omnipath.uniprot_idmapping_timeout')
+        poll_interval <- getOption('omnipathr.uniprot_idmapping_poll_interval')
+        timeout <- getOption('omnipathr.uniprot_idmapping_timeout')
         max_polls <- ceiling(timeout / poll_interval)
 
         for(i in 1L:max_polls) {
@@ -295,11 +295,11 @@ uniprot_idmapping_id_types <- function() {
 #'     \code{uploadlists} is \code{FALSE}.
 #' @param complexes Logical: translate complexes by their members. Only
 #'     complexes where all members can be translated will be included in the
-#'     result. If \code{NULL}, the option `omnipath.complex_translation` will
+#'     result. If \code{NULL}, the option `omnipathr.complex_translation` will
 #'     be used.
 #' @param complexes_one_to_many Logical: allow combinatorial expansion or
 #'     use only the first target identifier for each member of each complex.
-#'     If \code{NULL}, the option `omnipath.complex_translation_one_to_many`
+#'     If \code{NULL}, the option `omnipathr.complex_translation_one_to_many`
 #'     will be used.
 #'
 #' @return
@@ -416,7 +416,7 @@ translate_ids <- function(
     # NSE vs. R CMD check workaround
     To <- NULL
 
-    complexes %<>% if_null(getOption('omnipath.complex_translation'))
+    complexes %<>% if_null(getOption('omnipathr.complex_translation'))
     organism %<>% ncbi_taxid
     entity_type %<>% ensure_entity_type
     ramp %<>% or(entity_type == 'small_molecule' && !hmdb && !chalmers)
@@ -1025,8 +1025,8 @@ id_translation_table <- function(
 #' @noRd
 id_type_in <- function(id_type, service){
 
-    id_type %in% names(omnipath.env$id_types[[service]]) ||
-    id_type %in% omnipath.env$id_types[[service]]
+    id_type %in% names(omnipathr.env$id_types[[service]]) ||
+    id_type %in% omnipathr.env$id_types[[service]]
 
 }
 
@@ -1038,7 +1038,7 @@ id_type_in <- function(id_type, service){
 #' @noRd
 .load_id_types <- function(pkgname){
 
-    omnipath.env$id_types <-
+    omnipathr.env$id_types <-
         system.file(
             'internal',
             'id_types.json',
@@ -1457,7 +1457,7 @@ uniprot_id_type <- function(label){
 uploadlists_id_type <- function(label, side = 'from'){
 
     label %>%
-    recode(!!!omnipath.env$id_types[[sprintf('uniprot_%s', side)]]) %>%
+    recode(!!!omnipathr.env$id_types[[sprintf('uniprot_%s', side)]]) %>%
     resource_id_type('uploadlists')
 
 }
@@ -1478,7 +1478,7 @@ uploadlists_id_type <- function(label, side = 'from'){
 #' @noRd
 resource_id_type <- function(label, resource){
 
-    label %>% recode(!!!omnipath.env$id_types[[resource]])
+    label %>% recode(!!!omnipathr.env$id_types[[resource]])
 
 }
 
@@ -1494,7 +1494,7 @@ resource_id_type <- function(label, resource){
 #' @noRd
 is_id_type <- function(label){
 
-    omnipath.env$id_types %>%
+    omnipathr.env$id_types %>%
     map(names) %>%
     unlist %>%
     is_in(label, .)
@@ -1860,7 +1860,7 @@ id_types <- function() {
     ramp_pro <- RAMP_GENE_ID_TYPES
     ramp_com <- ramp_met %>% intersect(ramp_pro)
 
-    omnipath.env$id_types %>%
+    omnipathr.env$id_types %>%
     {tibble(idtype = list(.))} %>%
     unnest_longer(idtype, indices_to = 'resource') %>%
     unnest_longer(
@@ -1905,7 +1905,7 @@ id_types <- function() {
 #'     numeric, it will be the maximum number of complex. The value `TRUE`
 #'     corresponds to 12, i.e. one complex in `d` can be translated to a
 #'     maximum of 12 complexes, which is the default.  If \code{NULL}, the
-#'     option `omnipath.complex_translation_one_to_many` will be used.
+#'     option `omnipathr.complex_translation_one_to_many` will be used.
 #'
 #' @param Data frame: the ID translation table with translation for complexes
 #'     added to it.
@@ -1927,7 +1927,7 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
 
     one_to_many %<>%
         if_null(
-            getOption('omnipath.complex_translation_one_to_many')
+            getOption('omnipathr.complex_translation_one_to_many')
         ) %>%
         {`if`(identical(., TRUE), 12L, .)} %>%
         {`if`(identical(., FALSE), ., 1L)}
@@ -2000,6 +2000,6 @@ translate_complexes <- function(d, ..., mapping, one_to_many = NULL) {
 #' @export
 id_translation_resources <- function() {
 
-    names(omnipath.env$id_types)
+    names(omnipathr.env$id_types)
 
 }

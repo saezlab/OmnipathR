@@ -185,7 +185,7 @@ import_omnipath_annotations <- function(...){
 #' Retrieves a list of available resources in the annotations database
 #' of OmniPath
 #'
-#' Get the names of the resources from \url{https://omnipath.org/annotations}.
+#' Get the names of the resources from \url{https://omnipathdb.org/annotations}.
 #'
 #' @param dataset ignored for this query type
 #' @param ... optional additional arguments

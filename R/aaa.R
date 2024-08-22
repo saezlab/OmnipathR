@@ -19,4 +19,4 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-omnipath.env <- new.env(parent = emptyenv())
+omnipathr.env <- new.env(parent = emptyenv())

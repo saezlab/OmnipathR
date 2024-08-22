@@ -31,11 +31,11 @@
 #' @noRd
 omnipath_url <- function(path_qs, notls = FALSE){
 
-    'omnipath.notls_force' %>%
+    'omnipathr.notls_force' %>%
     getOption %>%
     or(notls) %>%
     `if`('notls_', '') %>%
-    sprintf('omnipath.%surl', .) %>%
+    sprintf('omnipathr.%surl', .) %>%
     getOption %>%
     str_replace('/+$', '') %>%
     c(str_replace(path_qs, '^/+', '')) %>%
@@ -56,7 +56,7 @@ get_url <- function(key, param = list()){
 
     key %>%
     exec(.fn = sprintf, !!!param) %>%
-    `[[`(omnipath.env$urls, .)
+    `[[`(omnipathr.env$urls, .)
 
 }
 
@@ -193,12 +193,12 @@ download_base <- function(
     on.exit(options(op))
 
     url_loglevel <- `if`(
-        getOption('omnipath.print_urls'),
+        getOption('omnipathr.print_urls'),
         omnipath_console_loglevel(),
         logger::INFO
     )
 
-    retries <- getOption('omnipath.retry_downloads')
+    retries <- getOption('omnipathr.retry_downloads')
 
     log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
 
@@ -234,7 +234,7 @@ download_base <- function(
                     list(
                         handle = new_handle(
                             CONNECTTIMEOUT =
-                                getOption('omnipath.connect_timeout')
+                                getOption('omnipathr.connect_timeout')
                         ),
                         url = (httr%:::%handle_name)(url)
                     ),
@@ -334,7 +334,7 @@ download_base <- function(
 
                 log_warn(msg)
                 # to avoid too fast retries
-                Sys.sleep(getOption('omnipath.retry_downloads_in_seconds'))
+                Sys.sleep(getOption('omnipathr.retry_downloads_in_seconds'))
 
             }
 
@@ -361,7 +361,7 @@ curl_wrap_url <- function(url){
     url %>%
     curl(
         handle = new_handle(
-            CONNECTTIMEOUT = getOption('omnipath.connect_timeout')
+            CONNECTTIMEOUT = getOption('omnipathr.connect_timeout')
         )
     )
 
@@ -904,7 +904,7 @@ update_source_attrs <- function(obj, ...){
     # NSE vs. R CMD check workaround
     magic <- NULL
 
-    omnipath.env$mb <-
+    omnipathr.env$mb <-
         system.file(
             'internal',
             'magic_bytes.json',
@@ -938,11 +938,11 @@ archive_type <- function(path, url = NULL){
     # NSE vs. R CMD check workaround
     ext <- NULL
 
-    max_offset <- omnipath.env$mb %>% {length(.$magic) + .$offset} %>% max
+    max_offset <- omnipathr.env$mb %>% {length(.$magic) + .$offset} %>% max
 
     header <- readBin(path, 'raw', n = max_offset)
 
-    omnipath.env$mb %>%
+    omnipathr.env$mb %>%
     pmap(list) %>%
     detect(
         function(row){
@@ -974,7 +974,7 @@ archive_type <- function(path, url = NULL){
 user_agent <- function() {
 
     # NSE vs. R CMD check workaround
-    'omnipath.user_agent' %>%
+    'omnipathr.user_agent' %>%
     options %>%
     first %>%
     list('User-Agent' = .)

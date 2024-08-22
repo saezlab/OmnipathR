@@ -282,7 +282,7 @@ oma_code <- function(name) {
 #' @noRd
 .load_organisms <- function(pkgname){
 
-    omnipath.env$organisms <-
+    omnipathr.env$organisms <-
         system.file(
             'internal',
             'organisms.yaml',
@@ -322,7 +322,7 @@ oma_code <- function(name) {
 organism_for <- function(organism, resource, error = TRUE) {
 
     resource_info <-
-        omnipath.env$organisms %>%
+        omnipathr.env$organisms %>%
         extract2(resource %>% str_to_lower)
 
     resource_info$supported %<>% maybe_call

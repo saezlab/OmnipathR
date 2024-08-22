@@ -66,7 +66,7 @@ import_omnipath_complexes <- function(...){
 
 #' Retrieve a list of complex resources available in Omnipath
 #'
-#' Get the names of the resources from \url{https://omnipath.org/complexes}
+#' Get the names of the resources from \url{https://omnipathdb.org/complexes}
 #'
 #' @param dataset ignored for this query type
 #'

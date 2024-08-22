@@ -157,8 +157,8 @@ nichenet_main <- function(
     top_env <- environment()
 
     results_dir %>%
-    if_null(getOption('omnipath.nichenet_results_dir')) %>%
-    options(omnipath.nichenet_results_dir = .)
+    if_null(getOption('omnipathr.nichenet_results_dir')) %>%
+    options(omnipathr.nichenet_results_dir = .)
 
     log_success('Building NicheNet prior knowledge.')
 
@@ -829,7 +829,7 @@ nichenet_ligand_target_links <- function(
 #' @importFrom magrittr %>% %T>%
 nichenet_results_dir <- function(){
 
-    'omnipath.nichenet_results_dir' %>%
+    'omnipathr.nichenet_results_dir' %>%
     options %>%
     `[[`(1) %T>%
     dir.create(showWarnings = FALSE, recursive = TRUE)
