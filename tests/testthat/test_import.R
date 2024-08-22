@@ -123,18 +123,17 @@ test_log()
 # Here we build a list with parameters that we later iterate through
 # in order to test all the various download methods.
 test_items <- list(
-    omnipath_complexes = NULL,
-    omnipath_enzsub = NULL,
-    omnipath_intercell = NULL,
-    omnipath_annotations = NULL,
-    omnipath_interactions = list(datasets = 'omnipath'),
-    kinaseextra_interactions = list(datasets = 'kinaseextra'),
-    pathwayextra_interactions = list(datasets = 'pathwayextra'),
-    ligrecextra_interactions = list(datasets = 'ligrecextra'),
-    # dorothea_interactions = list(datasets = 'dorothea'),
-    tf_target_interactions = list(datasets = 'tf_target'),
-    tf_mirna_interactions = list(datasets = 'tf_mirna'),
-    mirnatarget_interactions = list(datasets = 'mirnatarget')
+    complexes = list(qt = 'complexes'),
+    enzyme_substrate = list(qt = 'enzsub'),
+    intercell = list(qt = 'intercell'),
+    annotations = list(qt = 'annotations'),
+    omnipath = list(datasets = 'omnipath'),
+    kinaseextra = list(datasets = 'kinaseextra'),
+    pathwayextra = list(datasets = 'pathwayextra'),
+    ligrecextra = list(datasets = 'ligrecextra'),
+    tf_target = list(datasets = 'tf_target'),
+    tf_mirna = list(datasets = 'tf_mirna'),
+    mirna_target = list(datasets = 'mirnatarget')
 )
 
 if(can_we_download_anything_at_all() && can_jsonlite_download()){
@@ -153,14 +152,12 @@ if(can_we_download_anything_at_all() && can_jsonlite_download()){
             intercell = 'database'
         )
 
-        method_name <- sprintf('import_%s', item)
+        method_name <- item
         method <- get(method_name)
-        dataset <- `if`(
-            'datasets' %in% names(test_items[[item]]),
-            test_items[[item]]$datasets,
-            NULL
-        )
-        query_type <- tail(strsplit(item, '_')[[1]], 1)
+        dataset <- test_items[[item]]['datasets']
+        query_type <-
+            test_items[[item]]['qt'] %>%
+            OmnipathR:::if_null('interactions')
 
         resources <- get_resources_test(
             query_type = query_type,
