@@ -766,8 +766,6 @@ uniprot_full_id_mapping_table <- function(
     organism = 9606
 ){
 
-    .slow_doctest()
-
     # NSE vs. R CMD check workaround
     From <- To <- NULL
 
