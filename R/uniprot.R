@@ -98,8 +98,6 @@ all_uniprots <- function(
     organism = 9606L
 ){
 
-    .slow_doctest()
-
     organism %<>% ncbi_taxid
 
     fields <- fields %>% paste(collapse = ',')
