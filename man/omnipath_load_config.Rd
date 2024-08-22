@@ -2,9 +2,18 @@
 % Please edit documentation in R/options.R
 \name{omnipath_load_config}
 \alias{omnipath_load_config}
+\alias{load_config}
 \title{Load the package configuration from a config file}
 \usage{
 omnipath_load_config(path = NULL, title = "default", user = FALSE, ...)
+
+load_config(
+  path = NULL,
+  title = "default",
+  user = FALSE,
+  pkg = "OmnipathR",
+  ...
+)
 }
 \arguments{
 \item{path}{Path to the config file.}
@@ -19,12 +28,16 @@ exists in the current directory. By default, the local config files
 have prioroty over the user level config.}
 
 \item{...}{Passed to \code{yaml::yaml.load_file}.}
+
+\item{pkg}{Character: name of the package}
 }
 \value{
 Invisibly returns the config as a list.
 }
 \description{
 Load the package configuration from a config file
+
+Load the coniguration of a certain package
 }
 \examples{
 \dontrun{

@@ -2,9 +2,12 @@
 % Please edit documentation in R/options.R
 \name{omnipath_save_config}
 \alias{omnipath_save_config}
+\alias{save_config}
 \title{Save the current package configuration}
 \usage{
 omnipath_save_config(path = NULL, title = "default", local = FALSE)
+
+save_config(path = NULL, title = "default", local = FALSE, pkg = "OmnipathR")
 }
 \arguments{
 \item{path}{Path to the config file. Directories and the file will be
@@ -16,18 +19,22 @@ contain multiple configurations, each identified by a title.}
 \item{local}{Save into a config file in the current directory instead of
 a user level config file. When loading, the config in the current
 directory has priority over the user level config.}
+
+\item{pkg}{Character: name of the package}
 }
 \value{
 Returns `NULL`.
 }
 \description{
 Save the current package configuration
+
+Save the configuration of a certain package
 }
 \examples{
 \dontrun{
 # after this, all downloads will default to commercial licenses
 # i.e. the resources that allow only academic use will be excluded:
-options(omnipath.license = 'commercial')
+options(omnipathr.license = 'commercial')
 omnipath_save_config()
 }
 

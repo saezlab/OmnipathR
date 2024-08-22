@@ -15,7 +15,7 @@ Returns `NULL`.
 \description{
 Use this method to change during a session which messages you want to be
 printed on the console. Before loading the package, you can set it also by
-the config file, with the omnipath.console_loglevel key.
+the config file, with the omnipathr.console_loglevel key.
 }
 \examples{
 omnipath_set_console_loglevel('warn')

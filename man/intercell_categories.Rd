@@ -11,7 +11,7 @@ intercell_categories()
 character vector with the different intercell categories
 }
 \description{
-Retrieves a list of categories from \url{https://omnipath.org/intercell}.
+Retrieves a list of categories from \url{https://omnipathdb.org/intercell}.
 }
 \examples{
 intercell_categories()

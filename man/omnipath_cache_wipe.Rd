@@ -20,7 +20,7 @@ except an empty cache database file.
 \dontrun{
 omnipath_cache_wipe()
 # the cache is completely empty:
-print(omnipath.env$cache)
+print(omnipathr.env$cache)
 # list()
 list.files(omnipath_get_cachedir())
 # [1] "cache.json"

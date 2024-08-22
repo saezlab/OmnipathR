@@ -2,9 +2,15 @@
 % Please edit documentation in R/log.R
 \name{omnipath_logfile}
 \alias{omnipath_logfile}
+\alias{logfile}
 \title{Path to the current OmnipathR log file}
 \usage{
 omnipath_logfile()
+
+logfile(pkg = "OmnipathR")
+}
+\arguments{
+\item{pkg}{Character: name of a package.}
 }
 \value{
 Character: path to the current logfile, or \code{NULL} if no
@@ -12,6 +18,8 @@ Character: path to the current logfile, or \code{NULL} if no
 }
 \description{
 Path to the current OmnipathR log file
+
+Path to the current logfile of a package
 }
 \examples{
 omnipath_logfile()

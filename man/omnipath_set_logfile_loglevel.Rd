@@ -15,7 +15,7 @@ Returns `NULL`.
 \description{
 Use this method to change during a session which messages you want to be
 written into the logfile. Before loading the package, you can set it also
-by the config file, with the omnipath.loglevel key.
+by the config file, with the "omnipathr.loglevel" key.
 }
 \examples{
 omnipath_set_logfile_loglevel('info')

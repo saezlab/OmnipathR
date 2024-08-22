@@ -17,7 +17,7 @@ annotation_resources(dataset = NULL, ...)
 character vector with the names of the annotation resources
 }
 \description{
-Get the names of the resources from \url{https://omnipath.org/annotations}.
+Get the names of the resources from \url{https://omnipathdb.org/annotations}.
 }
 \examples{
 annotation_resources()

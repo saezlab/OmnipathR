@@ -19,7 +19,7 @@ oma_pairwise_translated(
 \item{organism_b}{Name or identifier of another organism.}
 
 \item{id_type}{The gene or protein identifier to use in the table. For a
-list of supported ID types see `omnipath.env$id_types$oma`. These are
+list of supported ID types see `omnipathr.env$id_types$oma`. These are
 the identifiers that will be translated to gene symbols.}
 
 \item{oma_id_type}{Character: the gene or protein identifier to be queried

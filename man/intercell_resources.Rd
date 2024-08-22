@@ -16,7 +16,7 @@ character vector with the names of the databases
 }
 \description{
 Retrieves a list of the databases from
-\url{https://omnipath.org/intercell}.
+\url{https://omnipathdb.org/intercell}.
 }
 \examples{
 intercell_resources()

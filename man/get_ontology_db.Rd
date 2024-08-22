@@ -30,7 +30,7 @@ A list with the following elements: 1) "names" a table with
 Retrieves an ontology database with relations in the desired data
 structure. The database is automatically loaded and the requested data
 structure is constructed if necessary. The databases stay loaded up to a
-certain time period (see the option \code{omnipath.db_lifetime}). Hence
+certain time period (see the option \code{omnipathr.db_lifetime}). Hence
 the first one of repeated calls to this function might take long and the
 subsequent ones should be really quick.
 }

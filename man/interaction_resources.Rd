@@ -17,7 +17,7 @@ available datasets are `omnipath`, `kinaseextra`, `pathwayextra`,
 Character: names of the interaction resources.
 }
 \description{
-Names of the resources available in \url{https://omnipath.org/interactions}.
+Names of the resources available in \url{https://omnipathdb.org/interactions}.
 }
 \examples{
 interaction_resources()

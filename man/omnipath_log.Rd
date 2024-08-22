@@ -2,15 +2,23 @@
 % Please edit documentation in R/log.R
 \name{omnipath_log}
 \alias{omnipath_log}
+\alias{read_log}
 \title{Browse the current OmnipathR log file}
 \usage{
 omnipath_log()
+
+read_log(pkg = "OmnipathR")
+}
+\arguments{
+\item{pkg}{Character: name of a package.}
 }
 \value{
 Returns `NULL`.
 }
 \description{
 Browse the current OmnipathR log file
+
+Browse the latest log from a package
 }
 \examples{
 \dontrun{
