@@ -168,13 +168,10 @@ inconclusive data).
 interaction_resources()
 
 ## The interactions are stored into a data frame.
-pathways <-
-    omnipath(
-        resources = c("SignaLink3", "PhosphoSite", "SIGNOR")
-    )
+pathways <- omnipath(resources = c("SignaLink3", "PhosphoSite", "SIGNOR"))
 
 ## We visualize the first interactions in the data frame.
-print(head(pathways))
+print_interactions(head(pathways))
 ```
 
 ### Protein-protein interaction networks
@@ -301,7 +298,7 @@ iactions_amfr <- dplyr::filter(
 )
 
 ## We print these interactions:
-print(iactions_amfr)
+print_interactions(iactions_amfr)
 ```
 
 ### Kinase Extra
@@ -472,9 +469,7 @@ and Cellinker), but has prospects of a great growth in the future. As an
 example, lets look for targets of a cancer drug, the MEK inhibitor Trametinib:
 
 ```{r small-molecules}
-trametinib_targets <- small_molecule(
-    sources = "TRAMETINIB"
-)
+trametinib_targets <- small_molecule(sources = "TRAMETINIB")
 print_interactions(trametinib_targets)
 ```
 
@@ -522,8 +517,13 @@ enzsub <- signed_ptms(enzsub, interactions)
 
 ## We select again the same kinase and substrate. Now we have information
 ## about inhibition or activation when we print the enzyme-PTM relationships
-print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=="MAP2K1",
-    substrate_genesymbol=="MAPK3"))
+print_interactions(
+    dplyr::filter(
+        enzsub,
+        enzyme_genesymbol=="MAP2K1",
+        substrate_genesymbol=="MAPK3"
+    )
+)
 
 ## We can also transform the enzyme-PTM relationships into a graph.
 enzsub_g <- enzsub_graph(enzsub = enzsub)
@@ -560,7 +560,7 @@ since it will be used again in the forthcoming sections.
 complex_resources()
 
 ## We query and store complexes from some sources into a dataframe.
-complexes <- complexes(resources = c("CORUM", "hu.MAP"))
+the_complexes <- complexes(resources = c("CORUM", "hu.MAP"))
 
 ## We check all the molecular complexes where a set of genes participate
 query_genes <- c("WRN", "PARP1")
@@ -568,9 +568,9 @@ query_genes <- c("WRN", "PARP1")
 ## Complexes where any of the input genes participate
 wrn_parp1_complexes <- unique(
     complex_genes(
-        complexes,
-        query_genes,
-        total_match = FALSE
+        the_complexes,
+        genes = query_genes,
+        all_genes = FALSE
     )
 )
 
@@ -580,8 +580,9 @@ head(wrn_parp1_complexes$components_genesymbols, 6)
 ## Complexes where all the input genes participate jointly
 complexes_query_genes_join <- unique(
     complex_genes(
-        complexes,query_genes,
-        total_match=TRUE
+        the_complexes,
+        genes = query_genes,
+        all_genes = TRUE
     )
 )
 
@@ -639,11 +640,11 @@ annotation_resources()
 ## in the previous section.
 
 ## We first get the annotations of the complex itself:
-annotations <- annotations(
+cplx_annot <- annotations(
     proteins = paste0("COMPLEX:", wrn_parp1_complexes$components_genesymbols)
 )
 
-head(dplyr::select(annotations, source, label, value), 10)
+head(dplyr::select(cplx_annot, source, label, value), 10)
 ```
 
 Afterwards, we explore the annotations of the individual components of the
@@ -653,19 +654,20 @@ checking their cellular location.
 
 Then, we explore some annotations of its individual components. Pathways
 where the proteins belong:
+
 ```{r annotations_components}
-annotations <- annotations(
+comp_annot <- annotations(
     proteins = wrn_parp1_cplx_genes,
     resources = "NetPath"
 )
 
-dplyr::select(annotations, genesymbol, value)
+dplyr::select(comp_annot, genesymbol, value)
 ```
 
 Subcellular localization of our proteins:
 
 ```{r subcell_loc}
-annotations <- annotations(
+subcell_loc <- annotations(
     proteins = wrn_parp1_cplx_genes,
     resources = "ComPPI"
 )
@@ -675,7 +677,7 @@ Since we have same record_id for some results of our query, we spread these
 records across columns:
 
 ```{r annot_spread}
-tidyr::spread(annotations, label, value) %>%
+tidyr::spread(subcell_loc, label, value) %>%
 dplyr::arrange(desc(score)) %>%
 dplyr::top_n(10, score)
 ```
@@ -687,7 +689,7 @@ if the data contains more than one resources, a list of data frames
 will be returned.
 
 ```{r annot_wide}
-signaling_pathways <- annotations(
+signalink_pathways <- annotations(
     resources = "SignaLink_pathway",
     wide = TRUE
 )
@@ -718,14 +720,14 @@ intracellular.
 intercell_generic_categories()
 
 ## We import the intercell data into a dataframe
-intercell <- intercell(
+intercell_loc <- intercell(
     scope = "generic",
     aspect = "locational"
 )
 
 ## We check the intercell annotations for the individual components of
 ## our previous complex. We filter our data to print it in a good format
-dplyr::filter(intercell, genesymbol %in% wrn_parp1_cplx_genes) %>%
+dplyr::filter(intercell_loc, genesymbol %in% wrn_parp1_cplx_genes) %>%
 dplyr::distinct(genesymbol, parent, .keep_all = TRUE) %>%
 dplyr::select(category, genesymbol, parent) %>%
 dplyr::arrange(genesymbol)
