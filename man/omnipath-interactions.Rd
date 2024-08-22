@@ -74,7 +74,7 @@ translation will be called automatically on the downloaded human data
 before returning the result.}
     \item{\code{resources}}{Character vector: name of one or more resources. Restrict
 the data to these resources. For a complete list of available resources,
-call the `get_<query_type>_resources` functions for the query type of
+call the `<query_type>_resources` functions for the query type of
 interst.}
     \item{\code{datasets}}{Character vector: name of one or more datasets. In the
 interactions query type a number of datasets are available. The default
