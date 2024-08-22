@@ -92,7 +92,7 @@ The metabolite identifier translation available here is also integrated into
 the package's translation service, available by the `translate_ids` and other
 functions.
 
-```{r chalmers-idtrans}
+```{r chalmers-idtrans, eval = FALSE}
 translate_ids('MAM00001', 'metabolicatlas', 'recon3d', chalmers = TRUE)
 ```
 
@@ -115,7 +115,7 @@ the `comp` column. In the original data the compartment codes are postfixes of
 the metabolite IDs, here we move them into a separate column, leaving the
 Metabolic Atlas IDs clean and usable.
 
-```{r chalmers}
+```{r chalmers, eval = FALSE}
 ch <- chalmers_gem_network()
 
 ch
@@ -131,13 +131,13 @@ tables, available by the `stitch_actions()` and `stitch_links()` functions,
 respectively. STITCH supports a broad variety of organisms, please refer to
 their website at (https://stitch.embl.de/).
 
-```{r stitch-actions}
+```{r stitch-actions, eval = FALSE}
 sta <- stitch_actions()
 
 sta
 ```
 
-```{r stitch-links}
+```{r stitch-links, eval = FALSE}
 stl <- stitch_links()
 
 stl
@@ -155,7 +155,7 @@ identifiers is available. The `record_id` column uniquely identifies the
 original records. Multiple rows with the same `record_id` are due to
 one-to-many identifier translation.
 
-```{r stitch}
+```{r stitch, eval = FALSE}
 st <- stitch_network()
 
 st
@@ -188,7 +188,7 @@ all data downloaded and HMDB ID translation data preprocessed, the build
 takes 3-4 minutes; the complete PKN is also saved in the cache, if this is
 available, loading it takes only a few seconds.
 
-```{r cosmos}
+```{r cosmos, eval = FALSE}
 pkn <- cosmos_pkn()
 
 pkn
