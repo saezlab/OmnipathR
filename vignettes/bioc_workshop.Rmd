@@ -528,7 +528,7 @@ exclude all OmniPath resources which don't allow for-profit use:
 options(omnipath.license = 'commercial')
 ```
 
-The internal state is contained by the `omnipath.env` environment.
+The internal state is contained by the `omnipathr.env` environment.
 
 ## Further information
 
