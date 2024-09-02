@@ -83,6 +83,7 @@ Imports:
     tidyselect,
     tools,
     utils,
+    vctrs,
     withr,
     XML,
     xml2,
