@@ -222,7 +222,7 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 #' @param cache Logical: use caching, load data from and save to the. The cache
 #'     directory by default belongs to the user, located in the user's default
 #'     cache directory, and named "OmnipathR". Find out about it by
-#'     \code{\link{omnipath_get_cachedir}}. Can be changed by
+#'     \code{getOption("omnipathr.cachedir")}. Can be changed by
 #'     \code{\link{omnipath_set_cachedir}}.
 #' @param ... Additional parameters for the OmniPath web service. These
 #'     parameters will be processed, validated and included in the query

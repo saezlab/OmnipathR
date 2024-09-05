@@ -1300,13 +1300,14 @@ intercell_summary <- function(){
 #' @export
 #'
 #' @examples
-#' get_intercell_generic_categories()
+#' intercell_generic_categories()
 #'
 #' @seealso \itemize{
 #'     \item{\code{\link{intercell}}}
 #'     \item{\code{\link{intercell_categories}}}
 #'     \item{\code{\link{intercell_summary}}}
 #' }
+#' @aliases get_intercell_generic_categories
 intercell_generic_categories <- function(){
 
     return(

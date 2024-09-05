@@ -47,7 +47,7 @@
 #' @param network_args List: if `network` is a resource name, pass these
 #'     additional arguments to \code{\link{omnipath_interactions}}.
 #' @param annot_args List: if `annot` is a resource name, pass these
-#'     additional arguments to \code{\link{omnipath_annotations}}.
+#'     additional arguments to \code{\link{annotations}}.
 #' @param ... Column names selected from the annotation data frame (passed
 #'     to \code{dplyr::select}, if empty all columns will be selected.)
 #'
