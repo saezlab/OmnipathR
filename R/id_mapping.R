@@ -1853,6 +1853,9 @@ ensembl_uniprot <- function(ens_id_type = 'ensg', organism = 9606L){
 #' }
 id_types <- function() {
 
+    # NSE vs. R CMD check workaround
+    idtype <- entity_type <- NULL
+
     hmdb_met <- hmdb_metabolite_fields()
     hmdb_pro <- hmdb_protein_fields()
     hmdb_com <- hmdb_met %>% intersect(hmdb_pro)

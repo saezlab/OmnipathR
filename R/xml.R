@@ -81,7 +81,7 @@ parse_in_chunks <- function(
 
     repeat {
 
-        chunk <- con %>% readChar(n = chunk_size)
+        chunk <- con %>% readChar(nchars = chunk_size)
 
         if (length(chunk) == 0L) break
 

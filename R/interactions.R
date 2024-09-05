@@ -763,6 +763,8 @@ import_small_molecule_protein_interactions <- function(...){
 all_interactions <- function(
     dorothea_levels = c('A', 'B'),
     types = NULL,
+    fields = NULL,
+    exclude = NULL,
     ...
 ){
 

@@ -172,6 +172,9 @@ ramp_id_mapping_table_impl <- function(from, to, version = '2.5.4') {
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround
+    rampId <- sourceId <- resource <- ID <- NULL
+
     from <- .nse_ensure_str(!!enquo(from)) %>% ramp_id_type
     to <- .nse_ensure_str(!!enquo(to)) %>% ramp_id_type
 

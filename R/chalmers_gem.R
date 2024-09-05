@@ -72,6 +72,11 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround
+    mets <- metNames <- metFormulas <- inchis <- rxns <- lb <- ub <-
+    grRules <- reversible <- direction <- reactants <- products <-
+    orphan <- NULL
+
     log_info('Processing Chalmers SysBio GEM.')
 
     raw <- chalmers_gem_raw(organism = organism)
@@ -211,7 +216,7 @@ chalmers_gem_network <- function(
 
     # NSE vs R CMD check workaround
     orphan <- ri <- grRules <- reactants <- products <- reversible <-
-    met_to_gene <- target <- NULL
+    met_to_gene <- target <- reverse <- ensg <- metabolicatlas <- NULL
 
     if (metab_max_degree < 1L) {
         '`metab_max_degree` cannot be less than 1.' %T>% log_error %>% stop
@@ -326,7 +331,7 @@ binary_from_reaction <- function(
 
     # NSE vs R CMD check workaround
     source_comp <- target_comp <- target <- ri <- ci <-
-    source_id <- target_id <- NULL
+    source_id <- target_id <- reversible <- NULL
 
     list(
         s = .nse_ensure_str(!!enquo(gene_col)),

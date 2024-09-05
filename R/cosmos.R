@@ -228,7 +228,7 @@ cosmos_pkn <- function(
     )
 
     chalmers <- chalmers_gem_network(
-        organism = organism,
+        organism_or_gem = organism,
         protein_ids = protein_ids,
         metabolite_ids = metabolite_ids,
         metab_max_degree = chalmers_gem_metab_max_degree
@@ -281,7 +281,6 @@ cosmos_pkn <- function(
 #'     \item{\code{\link{omnipath-interactions}}}
 #' }
 omnipath_for_cosmos <- function(
-
         organism = 9606L,
         resources = NULL,
         datasets = NULL,
@@ -291,7 +290,7 @@ omnipath_for_cosmos <- function(
     ) {
 
     # NSE vs. R CMD check workaround
-    consensus_stimulation <- consensus_inhibition <- NULL
+    consensus_stimulation <- consensus_inhibition <- record_id <- NULL
 
     organism %<>% organism_for('omnipath')
     paste0(

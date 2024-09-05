@@ -44,6 +44,9 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround
+    chemical <- protein <- NULL
+
     organism %<>% organism_for('stitch')
     log_trace('Loading STITCH protein-small molecule links.')
 
@@ -85,6 +88,9 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 
     .slow_doctest()
+
+    # NSE vs. R CMD check workaround
+    action <- item_id_a <- item_id_b <- NULL
 
     organism %<>% organism_for('stitch')
     log_trace('Loading STITCH actions.')
@@ -208,7 +214,8 @@ stitch_network <- function(
     # NSE vs. R CMD check workaround
     chemical <- protein <- item_id_a <- item_id_b <- CID <- HMDB <-
     a_is_acting <- ensp <- genesymbol <- pubchem <- hmdb <-
-    hmdb_source <- hmdb_target <- item_id <- action <- NULL
+    hmdb_source <- hmdb_target <- item_id <- action <-
+    combined_score <- experimental <- NULL
 
     log_info(
         paste0(
