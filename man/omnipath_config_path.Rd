@@ -12,6 +12,8 @@ config_path(user = FALSE, pkg = "OmnipathR")
 \arguments{
 \item{user}{Logical: prioritize the user level config even if a config in
 the current working directory is available.}
+
+\item{pkg}{Character: name of the package.}
 }
 \value{
 Character: path to the config file.

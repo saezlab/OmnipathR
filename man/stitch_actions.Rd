@@ -10,6 +10,8 @@ stitch_actions(organism = "human", prefixes = FALSE)
 \item{organism}{Character or integer: name or NCBI Taxonomy ID of an
 organism. STITCH supports many organisms, please refer to their web site
 at \url{https://stitch.embl.de/}.}
+
+\item{prefixes}{Logical: include the prefixes in front of identifiers.}
 }
 \value{
 Data frame of STITCH actions.

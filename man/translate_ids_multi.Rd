@@ -37,6 +37,11 @@ the same ID type. For the target identifiers new columns will be
 created with the desired names, with the suffixes added. If no suffixes
 provided, the names of the source columns will be used instead.}
 
+\item{suffixes}{Column name suffixes in case the names should be composed of
+stem and suffix.}
+
+\item{suffix_sep}{Character: separator between the stem and suffixes.}
+
 \item{uploadlists}{Force using the `uploadlists` service from UniProt.
 By default the plain query interface is used (implemented in
 \code{\link{uniprot_full_id_mapping_table}} in this package).

@@ -18,6 +18,8 @@ config path (see \code{\link{omnipath_config_path}}).}
 the R options.}
 
 \item{pkg}{Character: name of a package}
+
+\item{...}{Ignored.}
 }
 \value{
 The config as a list.

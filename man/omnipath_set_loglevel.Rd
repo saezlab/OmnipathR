@@ -13,6 +13,8 @@ set_loglevel(level, target = "logfile", pkg = "OmnipathR")
 \item{level}{Character or class `loglevel`. The desired log level.}
 
 \item{target}{Character, either 'logfile' or 'console'}
+
+\item{pkg}{Character: name of the package.}
 }
 \value{
 Returns `NULL`.
