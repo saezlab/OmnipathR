@@ -154,9 +154,9 @@ if(can_we_download_anything_at_all() && can_jsonlite_download()){
 
         method_name <- item
         method <- get(method_name)
-        dataset <- test_items[[item]]['datasets']
+        dataset <- test_items[[item]]$datasets
         query_type <-
-            test_items[[item]]['qt'] %>%
+            test_items[[item]]$qt %>%
             OmnipathR:::if_null('interactions')
 
         resources <- get_resources_test(
