@@ -1280,6 +1280,8 @@ chalmers_gem_id_mapping_table <- function(
         organism = 'Human'
     ) {
 
+    .slow_doctest()
+
     to <- .nse_ensure_str(!!enquo(to)) %>% chalmers_gem_id_type
     from <- .nse_ensure_str(!!enquo(from)) %>% chalmers_gem_id_type
 
