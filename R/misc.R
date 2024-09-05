@@ -1078,7 +1078,11 @@ compact_repr <- function(obj, limit = 10L) {
 
         obj %<>% {`if`(
             is.atomic(.),
-            as.character(.),
+            `if`(
+                 length(.) == 0L,
+                 sprintf('%s(0)', typeof(.)),
+                 as.character(.)
+            ),
             sprintf('<%s>', class(.))
         )}
 
