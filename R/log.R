@@ -157,6 +157,8 @@ omnipath_set_loglevel <- function(level, target = 'logfile'){
 
 #' Sets the log level for any package
 #'
+#' @param pkg Character: name of the package.
+#'
 #' @importFrom magrittr %<>% %>% equals extract2
 #' @export
 #' @rdname omnipath_set_loglevel

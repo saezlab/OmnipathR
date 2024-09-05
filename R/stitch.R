@@ -26,6 +26,7 @@
 #' @param organism Character or integer: name or NCBI Taxonomy ID of an
 #'     organism. STITCH supports many organisms, please refer to their web site
 #'     at \url{https://stitch.embl.de/}.
+#' @param prefixes Logical: include the prefixes in front of identifiers.
 #'
 #' @return Data frame: organism specific STITCH links dataset.
 #'
@@ -71,6 +72,7 @@ stitch_links <- function(organism = 'human', prefixes = FALSE) {
 #' @param organism Character or integer: name or NCBI Taxonomy ID of an
 #'     organism. STITCH supports many organisms, please refer to their web site
 #'     at \url{https://stitch.embl.de/}.
+#' @param prefixes Logical: include the prefixes in front of identifiers.
 #'
 #' @return Data frame of STITCH actions.
 #'

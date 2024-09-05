@@ -183,6 +183,8 @@ omnipath_config_path <- function(user = FALSE){
 
 #' Current config file path for a certain package
 #'
+#' @param pkg Character: name of the package.
+#'
 #' @importFrom magrittr %>% extract2
 #' @importFrom stringr str_to_lower str_to_upper
 #' @export
@@ -453,6 +455,7 @@ reset_config <- function(save = NULL, reset_all = FALSE, pkg = 'OmnipathR'){
 #'     config path (see \code{\link{omnipath_config_path}}).
 #' @param reset_all Reset to their defaults also the options already set in
 #'     the R options.
+#' @param ... Ignored.
 #'
 #' @examples
 #' \dontrun{
