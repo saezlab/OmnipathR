@@ -29,7 +29,7 @@ resources, only the first one will be used.}
 additional arguments to \code{\link{omnipath_interactions}}.}
 
 \item{annot_args}{List: if `annot` is a resource name, pass these
-additional arguments to \code{\link{omnipath_annotations}}.}
+additional arguments to \code{\link{annotations}}.}
 
 \item{...}{Column names selected from the annotation data frame (passed
 to \code{dplyr::select}, if empty all columns will be selected.)}

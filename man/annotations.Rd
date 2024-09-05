@@ -74,7 +74,7 @@ ambiguous translation.}
     \item{\code{cache}}{Logical: use caching, load data from and save to the. The cache
 directory by default belongs to the user, located in the user's default
 cache directory, and named "OmnipathR". Find out about it by
-\code{\link{omnipath_get_cachedir}}. Can be changed by
+\code{getOption("omnipathr.cachedir")}. Can be changed by
 \code{\link{omnipath_set_cachedir}}.}
   }}
 }

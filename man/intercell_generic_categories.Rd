@@ -2,6 +2,7 @@
 % Please edit documentation in R/intercell.R
 \name{intercell_generic_categories}
 \alias{intercell_generic_categories}
+\alias{get_intercell_generic_categories}
 \title{Retrieves a list of the generic categories in the intercell database
 of OmniPath}
 \usage{
@@ -15,7 +16,7 @@ Retrieves a list of the generic categories from
 \url{https://omnipathdb.org/intercell}.
 }
 \examples{
-get_intercell_generic_categories()
+intercell_generic_categories()
 
 }
 \seealso{

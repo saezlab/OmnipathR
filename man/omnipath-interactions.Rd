@@ -60,7 +60,13 @@ lncrna_mrna(...)
 
 small_molecule(...)
 
-all_interactions(dorothea_levels = c("A", "B"), types = NULL, ...)
+all_interactions(
+  dorothea_levels = c("A", "B"),
+  types = NULL,
+  fields = NULL,
+  exclude = NULL,
+  ...
+)
 }
 \arguments{
 \item{...}{
@@ -130,7 +136,7 @@ ambiguous translation.}
     \item{\code{cache}}{Logical: use caching, load data from and save to the. The cache
 directory by default belongs to the user, located in the user's default
 cache directory, and named "OmnipathR". Find out about it by
-\code{\link{omnipath_get_cachedir}}. Can be changed by
+\code{getOption("omnipathr.cachedir")}. Can be changed by
 \code{\link{omnipath_set_cachedir}}.}
   }}
 
