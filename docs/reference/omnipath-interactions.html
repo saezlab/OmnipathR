@@ -141,7 +141,7 @@ can be metabolites, intrinsic ligands or drug compounds.'><meta property="og:ima
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.15</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.25</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -262,16 +262,7 @@ can be metabolites, intrinsic ligands or drug compounds.</p>
 <span></span>
 <span><span class="fu">dorothea</span><span class="op">(</span>dorothea_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">tf_target</span><span class="op">(</span></span>
-<span>  resources <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  organism <span class="op">=</span> <span class="st">"human"</span>,</span>
-<span>  fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  default_fields <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  references_by_resource <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  strict_evidences <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">tf_target</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">transcriptional</span><span class="op">(</span>dorothea_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -285,7 +276,13 @@ can be metabolites, intrinsic ligands or drug compounds.</p>
 <span></span>
 <span><span class="fu">small_molecule</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">all_interactions</span><span class="op">(</span>dorothea_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, types <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">all_interactions</span><span class="op">(</span></span>
+<span>  dorothea_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>  types <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -304,7 +301,7 @@ before returning the result.</p></dd>
     <dt><code>resources</code></dt>
 <dd><p>Character vector: name of one or more resources. Restrict
 the data to these resources. For a complete list of available resources,
-call the `get_&lt;query_type&gt;_resources` functions for the query type of
+call the `&lt;query_type&gt;_resources` functions for the query type of
 interst.</p></dd>
 
     <dt><code>datasets</code></dt>
@@ -317,10 +314,6 @@ network published in the 2016 OmniPath paper.</p></dd>
 <dd><p>Character or logical: TRUE or FALS or "yes" or "no".
 Include the `genesymbols` column in the results. OmniPath uses UniProt
 IDs as the primary identifiers, gene symbols are optional.</p></dd>
-
-    <dt><code>fields</code></dt>
-<dd><p>Character vector: additional fields to include in the result.
-For a list of available fields, call `query_info("interactions")`.</p></dd>
 
     <dt><code>default_fields</code></dt>
 <dd><p>Logical: if TRUE, the default fields will be included.</p></dd>
@@ -362,11 +355,6 @@ supported by resources that allow for-profit use.</p></dd>
 provide a special password here which enables the use of `license =
 "ignore"` option, completely bypassing the license filter.</p></dd>
 
-    <dt><code>exclude</code></dt>
-<dd><p>Character vector: resource or dataset names to be excluded.
-The data will be filtered after download to remove records of the
-excluded datasets and resources.</p></dd>
-
     <dt><code>json_param</code></dt>
 <dd><p>List: parameters to pass to the `jsonlite::fromJSON` when
 processing JSON columns embedded in the downloaded data. Such columns
@@ -394,7 +382,7 @@ ambiguous translation.</p></dd>
 <dd><p>Logical: use caching, load data from and save to the. The cache
 directory by default belongs to the user, located in the user's default
 cache directory, and named "OmnipathR". Find out about it by
-<code>omnipath_get_cachedir</code>. Can be changed by
+<code>getOption("omnipathr.cachedir")</code>. Can be changed by
 <code><a href="omnipath_set_cachedir.html">omnipath_set_cachedir</a></code>.</p></dd>
 
 
@@ -410,6 +398,20 @@ default.</p></dd>
 <dt id="arg-types">types<a class="anchor" aria-label="anchor" href="#arg-types"></a></dt>
 <dd><p>Character: interaction types, such as "transcriptional",
 "post_transcriptional", "post_translational", etc.</p></dd>
+
+
+<dt id="arg-fields">fields<a class="anchor" aria-label="anchor" href="#arg-fields"></a></dt>
+<dd><p>Character: additional fields (columns) to be included in the
+result. For a list of available fields, see <code><a href="query_info.html">query_info</a></code>.</p></dd>
+
+
+<dt id="arg-exclude">exclude<a class="anchor" aria-label="anchor" href="#arg-exclude"></a></dt>
+<dd><p>Character: names of datasets or resource to be excluded from
+the result. By deafult, the records supported by only these resources or
+datasets will be removed from the output. If <code>strict_evidences =
+TRUE</code>, the resource, reference and causality information in the data
+frame will be reconstructed to remove all information coming from the
+excluded resources.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -436,46 +438,46 @@ the ones without literature references</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>**Post-translational (protein-protein, PPI) interactions**</p>
+    <p><strong>Post-translational (protein-protein, PPI) interactions</strong></p>
 <ul><li><p><code>omnipath</code>: the OmniPath data as defined in the 2016 paper,
-        an arbitrary optimum between coverage and quality. This dataset
-        contains almost entirely causal (stimulatory or inhibitory; i.e.
-        activity flow , according to the SBGN standard), physical
-        interactions between pairs of proteins, curated by experts
-        from the literature.</p></li>
+an arbitrary optimum between coverage and quality. This dataset
+contains almost entirely causal (stimulatory or inhibitory; i.e.
+activity flow , according to the SBGN standard), physical
+interactions between pairs of proteins, curated by experts
+from the literature.</p></li>
 <li><p><code>pathwayextra</code>: activity flow interactions without literature
-        references.</p></li>
+references.</p></li>
 <li><p><code>kinaseextra</code>: enzyme-substrate interactions without
-        literature references.</p></li>
+literature references.</p></li>
 <li><p><code>ligrecextra</code>: ligand-receptor interactions without
-        literature references.</p></li>
+literature references.</p></li>
 <li><p><code>post_translational</code>: all post-translational
-        (protein-protein, PPI) interactions; this is the combination of the
-        *omnipath*, *pathwayextra*, *kinaseextra* and *ligrecextra*
-        datasets.</p></li>
-</ul><p>**TF-target (gene regulatory, GRN) interactions**</p>
+(protein-protein, PPI) interactions; this is the combination of the
+<em>omnipath</em>, <em>pathwayextra</em>, <em>kinaseextra</em> and <em>ligrecextra</em>
+datasets.</p></li>
+</ul><p><strong>TF-target (gene regulatory, GRN) interactions</strong></p>
 <ul><li><p><code>collectri</code>: transcription factor (TF)-target
-        interactions from CollecTRI.</p></li>
+interactions from CollecTRI.</p></li>
 <li><p><code>dorothea</code>: transcription factor (TF)-target
-        interactions from DoRothEA</p></li>
+interactions from DoRothEA</p></li>
 <li><p><code>tf_target</code>: transcription factor
-        (TF)-target interactions from other resources</p></li>
+(TF)-target interactions from other resources</p></li>
 <li><p><code>transcriptional</code>: all transcription factor
-        (TF)-target interactions; this is the combination of the
-        *collectri*, *dorothea* and *tf_target* datasets.</p></li>
-</ul><p>**Post-transcriptional (miRNA-target) and other RNA related interactions**</p>
+(TF)-target interactions; this is the combination of the
+<em>collectri</em>, <em>dorothea</em> and <em>tf_target</em> datasets.</p></li>
+</ul><p><strong>Post-transcriptional (miRNA-target) and other RNA related interactions</strong></p>
 <p>In these datasets we intend to collect the literature curated resources,
 hence we don't include some of the most well known large databases if those
 are based on predictions or high-throughput assays.</p>
 <ul><li><p><code>mirna_target</code>: miRNA-mRNA interactions</p></li>
 <li><p><code>tf_mirna</code>: TF-miRNA interactions</p></li>
 <li><p><code>lncrna_mrna</code>: lncRNA-mRNA interactions</p></li>
-</ul><p>**Other interaction access functions**</p>
+</ul><p><strong>Other interaction access functions</strong></p>
 <ul><li><p><code>small_molecule</code>: interactions between small molecules and
-        proteins. Currently this is a small, experimental dataset that
-        includes drug-target, ligand-receptor, enzyme-metabolite and other
-        interactions. In the future this will be largely expanded and
-        divided into multiple datasets.</p></li>
+proteins. Currently this is a small, experimental dataset that
+includes drug-target, ligand-receptor, enzyme-metabolite and other
+interactions. In the future this will be largely expanded and
+divided into multiple datasets.</p></li>
 <li><p><code>all_interactions</code>: all the interaction datasets combined.</p></li>
 </ul></div>
     <div class="section level2">
@@ -653,7 +655,13 @@ are based on predictions or high-throughput assays.</p>
 <span class="r-in"><span>    resources <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"HPRD"</span>, <span class="st">"BioGRID"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    organism <span class="op">=</span> <span class="fl">9606</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'exclude' not found</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following resources are not available: HPRD, BioGRID. Check the resource names for spelling mistakes.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in omnipath_check_result(result, url):</span> Failed to download data from OmniPath:</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> URL: https://omnipathdb.org/ineractions?resources=HPRD,BioGRID&amp;datasets=collectri,dorothea,kinaseextra,ligrecextra,lncrna_mrna,mirnatarget,omnipath,pathwayextra,small_molecule,tf_mirna,tf_target,tfregulons&amp;dorothea_levels=A,B&amp;fields=type,dorothea_level&amp;license=academic&amp;types=lncrna_post_transcriptional,mirna_transcriptional,post_transcriptional,post_translational,small_molecule_protein,transcriptional</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> Failed to download data from OmniPath:</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> URL: http://no-tls.omnipathdb.org/ineractions?resources=HPRD,BioGRID&amp;datasets=collectri,dorothea,kinaseextra,ligrecextra,lncrna_mrna,mirnatarget,omnipath,pathwayextra,small_molecule,tf_mirna,tf_target,tfregulons&amp;dorothea_levels=A,B&amp;fields=type,dorothea_level&amp;license=academic&amp;types=lncrna_post_transcriptional,mirna_transcriptional,post_transcriptional,post_translational,small_molecule_protein,transcriptional</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

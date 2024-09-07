@@ -37,7 +37,7 @@ columns are provided as stem+suffixes, they must be the same ID type."><meta pro
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.25</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,6 +133,15 @@ created with the desired names, with the suffixes added. If no suffixes
 provided, the names of the source columns will be used instead.</p></dd>
 
 
+<dt id="arg-suffixes">suffixes<a class="anchor" aria-label="anchor" href="#arg-suffixes"></a></dt>
+<dd><p>Column name suffixes in case the names should be composed of
+stem and suffix.</p></dd>
+
+
+<dt id="arg-suffix-sep">suffix_sep<a class="anchor" aria-label="anchor" href="#arg-suffix-sep"></a></dt>
+<dd><p>Character: separator between the stem and suffixes.</p></dd>
+
+
 <dt id="arg-uploadlists">uploadlists<a class="anchor" aria-label="anchor" href="#arg-uploadlists"></a></dt>
 <dd><p>Force using the `uploadlists` service from UniProt.
 By default the plain query interface is used (implemented in
@@ -192,7 +201,7 @@ target columns are distinguished by the suffexes added to their names.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ia</span> <span class="op">&lt;-</span> <span class="fu"><a href="import_omnipath_interactions.html">import_omnipath_interactions</a></span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ia</span> <span class="op">&lt;-</span> <span class="fu"><a href="omnipath-interactions.html">omnipath</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">translate_ids_multi</span><span class="op">(</span><span class="va">ia</span>, source <span class="op">=</span> <span class="va">uniprot</span>, <span class="va">target</span>, <span class="va">ensp</span>, ensembl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 560,056 × 17</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    source target source_genesymbol target_genesymbol is_directed is_stimulation</span>

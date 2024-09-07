@@ -21,7 +21,7 @@ etc."><meta property="og:image" content="https://saezlab.github.io/OmnipathR/log
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.15</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.25</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -191,7 +191,7 @@ before returning the result.</p></dd>
     <dt><code>resources</code></dt>
 <dd><p>Character vector: name of one or more resources. Restrict
 the data to these resources. For a complete list of available resources,
-call the `get_&lt;query_type&gt;_resources` functions for the query type of
+call the `&lt;query_type&gt;_resources` functions for the query type of
 interst.</p></dd>
 
     <dt><code>fields</code></dt>
@@ -260,7 +260,7 @@ ambiguous translation.</p></dd>
 <dd><p>Logical: use caching, load data from and save to the. The cache
 directory by default belongs to the user, located in the user's default
 cache directory, and named "OmnipathR". Find out about it by
-<code>omnipath_get_cachedir</code>. Can be changed by
+<code>getOption("omnipathr.cachedir")</code>. Can be changed by
 <code><a href="omnipath_set_cachedir.html">omnipath_set_cachedir</a></code>.</p></dd>
 
 
