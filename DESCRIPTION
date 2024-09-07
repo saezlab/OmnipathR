@@ -91,7 +91,6 @@ Imports:
     zip
 Suggests:
     BiocStyle,
-    biomaRt,
     bookdown,
     ggplot2,
     ggraph,
