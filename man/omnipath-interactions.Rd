@@ -89,8 +89,6 @@ network published in the 2016 OmniPath paper.}
     \item{\code{genesymbols}}{Character or logical: TRUE or FALS or "yes" or "no".
 Include the `genesymbols` column in the results. OmniPath uses UniProt
 IDs as the primary identifiers, gene symbols are optional.}
-    \item{\code{fields}}{Character vector: additional fields to include in the result.
-For a list of available fields, call `query_info("interactions")`.}
     \item{\code{default_fields}}{Logical: if TRUE, the default fields will be included.}
     \item{\code{silent}}{Logical: if TRUE, no messages will be printed. By default a
 summary message is printed upon successful download.}
@@ -113,9 +111,6 @@ supported by resources that allow for-profit use.}
     \item{\code{password}}{Character: password for the OmniPath web service. You can
 provide a special password here which enables the use of `license =
 "ignore"` option, completely bypassing the license filter.}
-    \item{\code{exclude}}{Character vector: resource or dataset names to be excluded.
-The data will be filtered after download to remove records of the
-excluded datasets and resources.}
     \item{\code{json_param}}{List: parameters to pass to the `jsonlite::fromJSON` when
 processing JSON columns embedded in the downloaded data. Such columns
 are "extra_attrs" and "evidences". These are optional columns which
@@ -146,6 +141,16 @@ default.}
 
 \item{types}{Character: interaction types, such as "transcriptional",
 "post_transcriptional", "post_translational", etc.}
+
+\item{fields}{Character: additional fields (columns) to be included in the
+result. For a list of available fields, see \code{\link{query_info}}.}
+
+\item{exclude}{Character: names of datasets or resource to be excluded from
+the result. By deafult, the records supported by only these resources or
+datasets will be removed from the output. If \code{strict_evidences =
+TRUE}, the resource, reference and causality information in the data
+frame will be reconstructed to remove all information coming from the
+excluded resources.}
 }
 \value{
 A dataframe of molecular interactions.

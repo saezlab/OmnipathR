@@ -80,7 +80,7 @@ cplx <- complexes(resources = c("CORUM", "hu.MAP"))
 }
 \seealso{
 \itemize{
-    \item{\code{\link{complexe_resources}}}
+    \item{\code{\link{complex_resources}}}
     \item{\code{\link{query_info}}}
     \item{\code{\link{omnipath_query}}}
 }
