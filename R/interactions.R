@@ -746,6 +746,14 @@ import_small_molecule_protein_interactions <- function(...){
 #' default.
 #' @param types Character: interaction types, such as "transcriptional",
 #'     "post_transcriptional", "post_translational", etc.
+#' @param fields Character: additional fields (columns) to be included in the
+#'     result. For a list of available fields, see \code{\link{query_info}}.
+#' @param exclude Character: names of datasets or resource to be excluded from
+#'     the result. By deafult, the records supported by only these resources or
+#'     datasets will be removed from the output. If \code{strict_evidences =
+#'     TRUE}, the resource, reference and causality information in the data
+#'     frame will be reconstructed to remove all information coming from the
+#'     excluded resources.
 #' @param ... Arguments passed to \code{\link{omnipath_query}}.
 #' @inheritDotParams omnipath_query -datasets -query_type
 #'

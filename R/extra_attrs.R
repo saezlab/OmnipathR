@@ -430,7 +430,7 @@ filter_extra_attrs <- function(data, ..., na_ok = TRUE){
 #'     extra attribute occuring in the data frame.
 #'
 #' @examples
-#' i <- omnipath(fields = "extra_attrs")
+#' op <- omnipath(fields = "extra_attrs")
 #' extra_attr_values(op, SIGNOR_mechanism)
 #'
 #' @importFrom magrittr %>%
