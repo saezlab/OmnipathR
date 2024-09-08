@@ -2,7 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^_pkgdown\.yml$
-^doc.*$
+^doc/.*$
 ^pkgdown$
 ^OmnipathR.Rcheck.*$
 ^OmnipathR-manual.*$
@@ -49,3 +49,5 @@ r-devel-ubuntu.sh
 ssl-issues
 ^playground.*$
 ^build.*$
+^.github/.*$
+^.gitignore$
