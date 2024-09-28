@@ -150,7 +150,7 @@ omnipath_interactions <- function(...){
 #'
 #' @noRd
 import_omnipath_interactions <- function(...){
-    .Deprecated('import_omnipath_interactions')
+    .Deprecated('omnipath_interactions')
     omnipath_interactions(...)
 }
 
@@ -238,7 +238,7 @@ pathwayextra <- function(...){
 #'
 #' @noRd
 import_pathwayextra_interactions <- function(...){
-    .Deprecated('import_pathwayextra_interactions')
+    .Deprecated('pathwayextra')
     pathwayextra(...)
 }
 
@@ -284,7 +284,7 @@ kinaseextra <- function(...){
 #'
 #' @noRd
 import_kinaseextra_interactions <- function(...){
-    .Deprecated('import_kinaseextra_interactions')
+    .Deprecated('kinaseextra')
     kinaseextra(...)
 }
 
@@ -329,7 +329,7 @@ ligrecextra <- function(...){
 #'
 #' @noRd
 import_ligrecextra_interactions <- function(...){
-    .Deprecated('import_ligrecextra_interactions')
+    .Deprecated('ligrecextra')
     ligrecextra(...)
 }
 
@@ -370,7 +370,7 @@ post_translational <- function(...){
 #'
 #' @noRd
 import_post_translational_interactions <- function(...){
-    .Deprecated('import_post_translational_interactions')
+    .Deprecated('post_translational')
     post_translational(...)
 }
 
@@ -428,7 +428,7 @@ dorothea <- function(dorothea_levels = c('A', 'B'), ...){
 #'
 #' @noRd
 import_dorothea_interactions <- function(...){
-    .Deprecated('import_dorothea_interactions')
+    .Deprecated('dorothea')
     dorothea(...)
 }
 
@@ -474,7 +474,7 @@ tf_target <- function(...){
 #'
 #' @noRd
 import_tf_target_interactions <- function(...){
-    .Deprecated('import_tf_target_interactions')
+    .Deprecated('tf_target')
     tf_target(...)
 }
 
@@ -524,7 +524,7 @@ transcriptional <- function(dorothea_levels = c('A', 'B'), ...){
 #'
 #' @noRd
 import_transcriptional_interactions <- function(...){
-    .Deprecated('import_transcriptional_interactions')
+    .Deprecated('transcriptional')
     transcriptional(...)
 }
 
@@ -599,7 +599,7 @@ mirna_target <- function(...){
 #'
 #' @noRd
 import_mirnatarget_interactions <- function(...){
-    .Deprecated('import_mirnatarget_interactions')
+    .Deprecated('mirna_target')
     mirna_target(...)
 }
 
@@ -642,7 +642,7 @@ tf_mirna <- function(...){
 #'
 #' @noRd
 import_tf_mirna_interactions <- function(...){
-    .Deprecated('import_tf_mirna_interactions')
+    .Deprecated('tf_mirna')
     tf_mirna(...)
 }
 
@@ -685,7 +685,7 @@ lncrna_mrna <- function(...){
 #'
 #' @noRd
 import_lncrna_mrna_interactions <- function(...){
-    .Deprecated('import_lncrna_mrna_interactions')
+    .Deprecated('lncrna_mrna')
     lncrna_mrna(...)
 }
 
@@ -732,7 +732,7 @@ small_molecule <- function(...){
 #'
 #' @noRd
 import_small_molecule_protein_interactions <- function(...){
-    .Deprecated('import_small_molecule_protein_interactions')
+    .Deprecated('small_molecule')
     small_molecule(...)
 }
 
@@ -802,7 +802,7 @@ all_interactions <- function(
 #'
 #' @noRd
 import_all_interactions <- function(...){
-    .Deprecated('import_all_interactions')
+    .Deprecated('all_interactions')
     all_interactions(...)
 }
 
@@ -853,7 +853,7 @@ interaction_resources <- function(dataset = NULL){
 #'
 #' @noRd
 get_interaction_resources <- function(...){
-    .Deprecated('get_interaction_resources')
+    .Deprecated('interaction_resources')
     interaction_resources(...)
 }
 

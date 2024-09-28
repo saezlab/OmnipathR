@@ -94,7 +94,7 @@ resources <- function(
 #'
 #' @noRd
 get_resources <- function(...){
-    .Deprecated('get_resources')
+    .Deprecated('resources')
     resources(...)
 }
 

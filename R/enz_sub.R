@@ -67,7 +67,7 @@ enzyme_substrate <- function(...){
 #'
 #' @noRd
 import_omnipath_enzsub <- function(...){
-    .Deprecated('import_omnipath_enzsub')
+    .Deprecated('enzyme_substrate')
     enzyme_substrate(...)
 }
 
@@ -104,7 +104,7 @@ enzsub_resources <- function(dataset = NULL){
 #'
 #' @noRd
 get_enzsub_resources <- function(...){
-    .Deprecated('get_enzsub_resources')
+    .Deprecated('enzsub_resources')
     enzsub_resources(...)
 }
 

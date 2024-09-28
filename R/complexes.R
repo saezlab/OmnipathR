@@ -59,7 +59,7 @@ complexes <- function(...){
 #'
 #' @noRd
 import_omnipath_complexes <- function(...){
-    .Deprecated('import_omnipath_complexes')
+    .Deprecated('complexes')
     complexes(...)
 }
 
@@ -96,6 +96,6 @@ complex_resources <- function(dataset = NULL){
 #'
 #' @noRd
 get_complex_resources <- function(...){
-    .Deprecated('get_complex_resources')
+    .Deprecated('complex_resources')
     complex_resources(...)
 }

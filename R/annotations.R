@@ -177,7 +177,7 @@ annotations <- function(proteins = NULL, wide = FALSE, ...){
 #'
 #' @noRd
 import_omnipath_annotations <- function(...){
-    .Deprecated('import_omnipath_annotations')
+    .Deprecated('annotations')
     annotations(...)
 }
 
@@ -216,7 +216,7 @@ annotation_resources <- function(dataset = NULL, ...){
 #'
 #' @noRd
 get_annotation_resources <- function(...){
-    .Deprecated('get_annotation_resources')
+    .Deprecated('annotation_resources')
     annotation_resources(...)
 }
 

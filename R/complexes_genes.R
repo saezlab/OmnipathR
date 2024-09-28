@@ -90,6 +90,6 @@ complex_genes <- function(
 #'
 #' @noRd
 get_complex_genes <- function(...){
-    .Deprecated('get_complex_genes')
+    .Deprecated('complex_genes')
     complex_genes(...)
 }

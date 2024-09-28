@@ -176,7 +176,7 @@ intercell <- function(
 #'
 #' @noRd
 import_omnipath_intercell <- function(...){
-    .Deprecated('import_omnipath_intercell')
+    .Deprecated('intercell')
     intercell(...)
 }
 
@@ -350,7 +350,7 @@ intercell_resources <- function(dataset = NULL){
 #'
 #' @noRd
 get_intercell_resources <- function(...){
-    .Deprecated('get_intercell_resources')
+    .Deprecated('intercell_resources')
     intercell_resources(...)
 }
 
@@ -665,7 +665,7 @@ intercell_network <- function(
 #'
 #' @noRd
 import_intercell_network <- function(...){
-    .Deprecated('import_intercell_network')
+    .Deprecated('intercell_network')
     intercell_network(...)
 }
 
@@ -1261,7 +1261,7 @@ intercell_categories <- function(){
 #'
 #' @noRd
 get_intercell_categories <- function(...){
-    .Deprecated('get_intercell_categories')
+    .Deprecated('intercell_categories')
     intercell_categories(...)
 }
 
@@ -1325,7 +1325,7 @@ intercell_generic_categories <- function(){
 #'
 #' @noRd
 get_intercell_generic_categories <- function(...){
-    .Deprecated('get_intercell_generic_categories')
+    .Deprecated('intercell_generic_categories')
     intercell_generic_categories(...)
 }
 
