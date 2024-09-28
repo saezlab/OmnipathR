@@ -29,6 +29,7 @@
 #'
 #' @importFrom readr cols
 #' @importFrom magrittr %>%
+#' @importFrom dplyr mutate
 #' @export
 #' @seealso \code{\link{ensembl_organisms}}
 oma_organisms <- function() {
@@ -38,9 +39,7 @@ oma_organisms <- function() {
         reader_param = list(
             col_names = c(
                 'oma_code',
-                'oma_tax_id',
                 'ncbi_tax_id',
-                'gtdb_genome',
                 'latin_name',
                 'genome_source',
                 'oma_version'
@@ -48,6 +47,10 @@ oma_organisms <- function() {
             col_types = cols(),
             skip = 3L
         )
+    ) %>%
+    mutate(
+        gtdb_tax_id = ifelse(ncbi_tax_id < 0L, -ncbi_tax_id, NA),
+        ncbi_tax_id = ifelse(ncbi_tax_id < 0L, NA, ncbi_tax_id)
     )
 
 }
