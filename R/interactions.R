@@ -784,7 +784,7 @@ all_interactions <- function(
 
     args <- omnipath_args(
         list(...),
-        query_type = 'ineractions',
+        query_type = 'interactions',
         types = types,
         datasets = datasets,
         fields = fields
