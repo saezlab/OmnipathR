@@ -19,8 +19,8 @@ An `R` client for the **OmniPath** web service and many other resources.
 
   <https://omnipathdb.org/>
 
-The web service implements a very simple REST style API. This package make
-requests by the HTTP protocol to retreive the data. Hence, fast Internet
+The web service implements a very simple REST-style API. This package makes
+requests by the HTTP protocol to retrieve the data. Hence, fast Internet
 access is required for a proper use of *OmnipathR*.
 
 #### What is OmniPath?
@@ -50,23 +50,23 @@ TF census, TRRUST and Vinayagam et al. 2011.
 
 The latest version of the reference manual is available from
 <https://static.omnipathdb.org/omnipathr_manual.pdf>. Tutorials can be
-found at <https://workflows.omnipathdb.org/>. Sroll down for quick start
+found at <https://workflows.omnipathdb.org/>. Scroll down for quick start
 examples.
 
 ## OmniPath query types
 
-We provide here a brief summary about the data available through *OmnipathR*.
+We provide here a brief summary of the data available through *OmnipathR*.
 *OmnipathR* provides access to 5 types of queries:
 
 1. **Interactions**: protein-protein interactions from different datasets.
 2. **Enzyme-substrate**: enzyme-PTM (post-translational modification)
     relationships.
 3. **Complexes**: comprehensive database of more than 22000 protein complexes.
-4. **Annotations**: large variety of data about proteins and complexes
+4. **Annotations**: large variety of data about protein and complex
     features.
 5. **Intercell**: information on the roles in inter-cellular signaling.
 
-For a more detailed information, we recommend you to visit the following
+For more detailed information, we recommend you to visit the following
 sites:
 
   <https://omnipathdb.org/>
@@ -95,7 +95,7 @@ if (!requireNamespace('BiocManager', quietly = TRUE))
 
 ## Last release in Bioconductor
 BiocManager::install('OmnipathR', version = '3.12')
-## Development version with the lastest updates
+## Development version with the latest updates
 BiocManager::install('OmnipathR', version = 'devel')
 ```
 
@@ -173,7 +173,7 @@ print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
 
 ```
 
-Find shortest paths on the directed network between proteins:
+Find the shortest paths on the directed network between proteins:
 ```{r}
 print_path_es(shortest_paths(OPI_g,from = 'TYRO3',to = 'STAT3',
     output = 'epath')$epath[[1]],OPI_g)
@@ -227,11 +227,11 @@ use pypath if you want to:
   protein sequences, processing BioPAX, etc.
 
 With *pypath* it's also possible to run your own web service and serve your
-custom databases to the *OmnipathR* R client and the *omnipath* Python cient.
+custom databases to the *OmnipathR* R client and the *omnipath* Python client.
 
 ## Feedbacks, bug reports, features
 
-Feedbacks and bugreports are always very welcome!
+Feedbacks and bug reports are always very welcome!
 
 Please use the Github issue page to report bugs or for questions:
 
