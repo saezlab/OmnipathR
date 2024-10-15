@@ -34,6 +34,9 @@
 #' @seealso \code{\link{ensembl_organisms}}
 oma_organisms <- function() {
 
+    # NSE vs. R CMD check workaround
+    ncbi_tax_id <- NULL
+
     'oma_species' %>%
     generic_downloader(
         reader_param = list(
