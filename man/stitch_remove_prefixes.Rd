@@ -15,6 +15,9 @@ stitch_remove_prefixes(d, ..., remove = TRUE)
 \item{remove}{Logical: remove the prefixes? If FALSE, this function does
 nothing.}
 }
+\value{
+Data frame with prefixes removed in the specified columns.
+}
 \description{
 STITCH adds the NCBI Taxonomy ID as a prefix to Ensembl protein identifiers,
 e.g. "9606.ENSP00000170630", and "CID" followed by "s" or "m"
@@ -24,7 +27,7 @@ prefixes, leaving only the identifiers.
 }
 \examples{
 stitch_remove_prefixes(
-    tibble(a = c('9606.ENSP00000170630', 'CIDs00012345')),
+    data.frame(a = c('9606.ENSP00000170630', 'CIDs00012345')),
     a
 )
 

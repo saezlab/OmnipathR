@@ -128,9 +128,11 @@ stitch_actions <- function(organism = 'human', prefixes = FALSE) {
 #' @param remove Logical: remove the prefixes? If FALSE, this function does
 #'     nothing.
 #'
+#' @return Data frame with prefixes removed in the specified columns.
+#'
 #' @examples
 #' stitch_remove_prefixes(
-#'     tibble(a = c('9606.ENSP00000170630', 'CIDs00012345')),
+#'     data.frame(a = c('9606.ENSP00000170630', 'CIDs00012345')),
 #'     a
 #' )
 #'
