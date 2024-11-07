@@ -18,7 +18,11 @@ translate_ids(
   organism = 9606,
   reviewed = TRUE,
   complexes = NULL,
-  complexes_one_to_many = NULL
+  complexes_one_to_many = NULL,
+  track = FALSE,
+  inspect = FALSE,
+  inspect_grp = NULL,
+  expand = TRUE
 )
 }
 \arguments{
@@ -77,6 +81,22 @@ be used.}
 use only the first target identifier for each member of each complex.
 If \code{NULL}, the option \code{omnipathr.complex_translation_one_to_many}
 will be used.}
+
+\item{track}{Logical: Track the records (rows) in the input data frame by
+adding a column \code{record_id} with the original row numbers.}
+
+\item{inspect}{Logical: inspect the mappings for each ID for ambiguity.
+If TRUE, for each translated column, a new column will be inculded with
+values \code{one-to-one}, \code{one-to-many}, \code{many-to-one} or \code{many-to-many}.}
+
+\item{inspect_grp}{Character vector: additional column names to group by
+during inspecting ambiguity. By default, the identifier columns (from
+and to) will be used to determine the ambiguity of mappings.}
+
+\item{expand}{Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
+expanded to multiple rows, resulting character type columns; if
+\code{FALSE}, the original rows will be kept intact, and the target
+columns will be lists of character vectors.}
 }
 \value{
 \itemize{
@@ -146,7 +166,12 @@ in the original data frame yields multiple rows or elements in the
 returned data frame or vector(s).
 }
 \examples{
-d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
+d <- data.frame(
+    uniprot_id = c(
+        'P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5',
+        'P01258', 'P06881', 'P42771', 'Q8N726'
+    )
+)
 d <- translate_ids(d, uniprot_id = uniprot, genesymbol)
 d
 #   uniprot_id genesymbol
