@@ -301,6 +301,18 @@ uniprot_idmapping_id_types <- function() {
 #'     use only the first target identifier for each member of each complex.
 #'     If \code{NULL}, the option `omnipathr.complex_translation_one_to_many`
 #'     will be used.
+#' @param track Logical: Track the records (rows) in the input data frame by
+#'     adding a column `record_id` with the original row numbers.
+#' @param inspect Logical: inspect the mappings for each ID for ambiguity.
+#'     If TRUE, for each translated column, a new column will be inculded with
+#'     values `one-to-one`, `one-to-many`, `many-to-one` or `many-to-many`.
+#' @param inspect_grp Character vector: additional column names to group by
+#'     during inspecting ambiguity. By default, the identifier columns (from
+#'     and to) will be used to determine the ambiguity of mappings.
+#' @param expand Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
+#'     expanded to multiple rows, resulting character type columns; if
+#'     \code{FALSE}, the original rows will be kept intact, and the target
+#'     columns will be lists of character vectors.
 #'
 #' @return
 #' \itemize{
@@ -365,7 +377,12 @@ uniprot_idmapping_id_types <- function() {
 #' returned data frame or vector(s).
 #'
 #' @examples
-#' d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
+#' d <- data.frame(
+#'     uniprot_id = c(
+#'         'P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5',
+#'         'P01258', 'P06881', 'P42771', 'Q8N726'
+#'     )
+#' )
 #' d <- translate_ids(d, uniprot_id = uniprot, genesymbol)
 #' d
 #' #   uniprot_id genesymbol
@@ -374,12 +391,15 @@ uniprot_idmapping_id_types <- function() {
 #' # 3     P43897       TSFM
 #' # 4     Q9Y2P5    SLC27A5
 #'
-#' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym
+#' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym syms
 #' @importFrom magrittr %>% %<>% or
-#' @importFrom dplyr pull left_join inner_join mutate select
-#' @importFrom purrr map reduce2
+#' @importFrom tibble tibble
+#' @importFrom dplyr pull left_join inner_join mutate select row_number
+#' @importFrom dplyr group_by summarize reframe first across
+#' @importFrom purrr map reduce2 map_chr
 #' @importFrom logger log_fatal
 #' @importFrom utils tail
+#' @importFrom tidyr unnest_longer
 #' @export
 #'
 #' @seealso \itemize{
@@ -410,7 +430,11 @@ translate_ids <- function(
     organism = 9606,
     reviewed = TRUE,
     complexes = NULL,
-    complexes_one_to_many = NULL
+    complexes_one_to_many = NULL,
+    track = FALSE,
+    inspect = FALSE,
+    inspect_grp = NULL,
+    expand = TRUE
 ){
 
     # NSE vs. R CMD check workaround
@@ -428,6 +452,10 @@ translate_ids <- function(
     from_type <- id_types[1]
     to_cols <- id_cols %>% tail(-1)
     to_types <- id_types %>% tail(-1)
+    inspect_grp <- map(enquos(inspect_grp), .nse_ensure_str) %>% unlist
+    tmp_rownum_col <- '__omnipathr_tmp_record_id'
+    inspect %<>% toggle_label('_inspect')
+    track %<>% toggle_label('record_id')
 
     use_vector <- !inherits(d, 'data.frame')
 
@@ -448,10 +476,13 @@ translate_ids <- function(
     join_method <- `if`(keep_untranslated, left_join, inner_join)
 
     d %<>%
+    {`if`(track$toggle, mutate(., !!sym(track$label) := row_number()), .)} %>%
     reduce2(
         to_cols,
         to_types,
         function(d, to_col, to_type){
+
+            inspect_col <- sprintf('%s%s', to_col, inspect$label)
 
             translation_table <-
                 id_translation_table(
@@ -479,7 +510,8 @@ translate_ids <- function(
                         )
                     ),
                     .
-                )}
+                )} %>%
+                {`if`(expand, ., group_by(., From) %>% summarize(To = list(To)))}
 
             log_trace(
                 '%i rows before translation, %i %s IDs in column `%s`.',
@@ -494,20 +526,59 @@ translate_ids <- function(
                 translation_table,
                 by = 'From' %>% set_names(from_col)
             ) %>%
-            mutate(!!sym(to_col) := To) %>%
             {`if`(keep_untranslated, ., filter(., !is.na(To)))} %>%
+            {`if`(
+                expand,
+                .,
+                mutate(., To = ifelse(is.na(To), character(0L), To))
+            )} %>%
+            {`if`(
+                inspect$toggle,
+                group_by(., !!sym(from_col), !!!syms(inspect_grp)) %>%
+                mutate(
+                    !!sym(inspect_col) := ifelse(
+                        n_distinct(unlist(To, recursive = FALSE), na.rm = TRUE) > 1L,
+                        'to-many',
+                        'to-one'
+                    ),
+                ) %>%
+                ungroup %>%
+                mutate(!!sym(tmp_rownum_col) := row_number()) %>%
+                unnest_longer(To) %>%
+                group_by(To, !!!syms(inspect_grp)) %>%
+                mutate(
+                   !!sym(inspect_col) := sprintf(
+                       '%s-%s',
+                       ifelse(
+                           n_distinct(!!sym(from_col), na.rm = TRUE) > 1L,
+                           'many',
+                           'one'
+                       ),
+                       !!sym(inspect_col)
+                   )
+                ) %>%
+                ungroup %>%
+                {`if`(
+                    expand,
+                    .,
+                    group_by(., !!sym(tmp_rownum_col)) %>%
+                    reframe(To = list(To), across(-To, first))
+                )} %>%
+                select(-!!sym(tmp_rownum_col)),
+                .
+            )} %>%
+            mutate(!!sym(to_col) := To) %>%
             select(-To)
-
             log_trace(
                 paste0(
                     '%i rows after translation; translated %i `%s` ',
                     'IDs in column `%s` to %i `%s` IDs in column `%s`.'
                 ),
                 nrow(d),
-                d %>% pull(!!sym(from_col)) %>% n_distinct,
+                d %>% pull(!!sym(from_col)) %>% unlist %>% n_distinct,
                 from_type,
                 from_col,
-                d %>% pull(!!sym(to_col)) %>% n_distinct,
+                d %>% pull(!!sym(to_col)) %>% unlist %>% n_distinct,
                 to_type,
                 to_col
             )

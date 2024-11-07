@@ -1185,3 +1185,20 @@ pkg_env <- function(pkg = 'OmnipathR') {
     pkg %>% str_to_lower %>% sprintf('%s.env', .) %>% get(envir = ns)
 
 }
+
+
+#' Expand a compact argument notation
+#'
+#' `value` is either a logical or a character: having a character value
+#' corresponds to logical TRUE, and in addition, it overrides the label, which
+#' otherwise would be `default`.
+#'
+#' @noRd
+toggle_label <- function(value, default) {
+
+    list(
+         toggle = is.character(value) || is.logical(value) && value,
+         label = `if`(is.character(value), value, default)
+    )
+
+}
