@@ -395,7 +395,7 @@ uniprot_idmapping_id_types <- function() {
 #' @importFrom magrittr %>% %<>% or
 #' @importFrom tibble tibble
 #' @importFrom dplyr pull left_join inner_join mutate select row_number
-#' @importFrom dplyr group_by summarize reframe first across
+#' @importFrom dplyr group_by summarize reframe first across relocate rename
 #' @importFrom purrr map reduce2 map_chr
 #' @importFrom logger log_fatal
 #' @importFrom utils tail
@@ -452,7 +452,6 @@ translate_ids <- function(
     from_type <- id_types[1]
     to_cols <- id_cols %>% tail(-1)
     to_types <- id_types %>% tail(-1)
-    inspect_grp <- map(enquos(inspect_grp), .nse_ensure_str) %>% unlist
     tmp_rownum_col <- '__omnipathr_tmp_record_id'
     inspect %<>% toggle_label('_inspect')
     track %<>% toggle_label('record_id')
@@ -562,13 +561,18 @@ translate_ids <- function(
                     expand,
                     .,
                     group_by(., !!sym(tmp_rownum_col)) %>%
-                    reframe(To = list(To), across(-To, first))
+                    reframe(
+                        To = list(To),
+                        across(where(is.list), ~extract(.x, 1L)),
+                        across(where(is.character), first)
+                    )
                 )} %>%
                 select(-!!sym(tmp_rownum_col)),
                 .
             )} %>%
-            mutate(!!sym(to_col) := To) %>%
-            select(-To)
+            relocate(To, .after = last_col()) %>%
+            rename(!!sym(to_col) := To)
+
             log_trace(
                 paste0(
                     '%i rows after translation; translated %i `%s` ',
