@@ -30,8 +30,6 @@
     patch_logger_metavar()
     patch_logger_appender()
     omnipath_init_log()
-    log_info('Welcome to OmnipathR!')
-    log_info('OmnipathR version: %s', packageVersion(pkgname))
 
     buildserver <- .on_buildserver()
 
