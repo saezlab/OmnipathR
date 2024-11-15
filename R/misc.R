@@ -1202,3 +1202,30 @@ toggle_label <- function(value, default) {
     )
 
 }
+
+
+#' Cast a value to a boolean
+#'
+#' Imitates Python `bool(value)`.
+#'
+#' @return Logical: TRUE if value is TRUE, or is a number other than 0, or a
+#'     character other than an empty string, or a list or vector longer than 0,
+#'     except if it is a single NA, or if it is a data frame. FALSE otherwise.
+#'
+#' @noRd
+bool <- function(value) {
+
+    !is.null(value) &&
+    !(
+        length(value) == 1L &&
+        is.na(value)
+    ) && (
+        is.data.frame(value) ||
+        is.list(value) && length(value) > 0L ||
+        is.vector(value) && length(value) > 1L ||
+        is.character(value) && nchar(value) > 0L ||
+        is.numeric(value) && value != 0L ||
+        is.logical(value) && value
+    )
+
+}
