@@ -303,10 +303,18 @@ uniprot_idmapping_id_types <- function() {
 #'     will be used.
 #' @param track Logical: Track the records (rows) in the input data frame by
 #'     adding a column `record_id` with the original row numbers.
-#' @param inspect Logical: inspect the mappings for each ID for ambiguity.
-#'     If TRUE, for each translated column, a new column will be inculded with
-#'     values `one-to-one`, `one-to-many`, `many-to-one` or `many-to-many`.
-#' @param inspect_grp Character vector: additional column names to group by
+#' @param quantify_ambiguity Logical or character: inspect the mappings for each
+#'     ID for ambiguity. If TRUE, for each translated column, two new columns
+#'     will be created with numeric values, representing the ambiguity of the
+#'     mapping on the "from" and "to" side of the translation, respectively.
+#'     If a character value provided, it will be used as a column name suffix
+#'     for the new columns.
+#' @param qualify_ambiguity Logical or character: inspect the mappings for each
+#'     ID for ambiguity. If TRUE, for each translated column, a new column
+#'     will be inculded with values `one-to-one`, `one-to-many`, `many-to-one`
+#'     or `many-to-many`. If a character value provided, it will be used as a
+#'     column name suffix for the new column.
+#' @param ambiguity_groups Character vector: additional column names to group by
 #'     during inspecting ambiguity. By default, the identifier columns (from
 #'     and to) will be used to determine the ambiguity of mappings.
 #' @param expand Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
@@ -394,12 +402,11 @@ uniprot_idmapping_id_types <- function() {
 #' @importFrom rlang !! !!! enquo := enquos quo_text set_names sym syms
 #' @importFrom magrittr %>% %<>% or
 #' @importFrom tibble tibble
-#' @importFrom dplyr pull left_join inner_join mutate select row_number
-#' @importFrom dplyr group_by summarize reframe first across relocate rename
-#' @importFrom purrr map reduce2 map_chr
+#' @importFrom dplyr pull left_join inner_join mutate row_number
+#' @importFrom dplyr relocate rename bind_rows group_by summarize
+#' @importFrom purrr map reduce2 discard
 #' @importFrom logger log_fatal
 #' @importFrom utils tail
-#' @importFrom tidyr unnest_longer
 #' @export
 #'
 #' @seealso \itemize{
@@ -432,8 +439,9 @@ translate_ids <- function(
     complexes = NULL,
     complexes_one_to_many = NULL,
     track = FALSE,
-    inspect = FALSE,
-    inspect_grp = NULL,
+    quantify_ambiguity = FALSE,
+    qualify_ambiguity = FALSE,
+    ambiguity_groups = NULL,
     expand = TRUE
 ){
 
@@ -448,12 +456,10 @@ translate_ids <- function(
     ids <- ellipsis_to_char(...)
     id_cols <- names(ids)
     id_types <- unlist(ids)
-    from_col <- id_cols[1]
-    from_type <- id_types[1]
-    to_cols <- id_cols %>% tail(-1)
-    to_types <- id_types %>% tail(-1)
-    tmp_rownum_col <- '__omnipathr_tmp_record_id'
-    inspect %<>% toggle_label('_inspect')
+    from_col <- id_cols[1L]
+    from_type <- id_types[1L]
+    to_cols <- id_cols %>% tail(-1L)
+    to_types <- id_types %>% tail(-1L)
     track %<>% toggle_label('record_id')
 
     use_vector <- !inherits(d, 'data.frame')
@@ -480,8 +486,6 @@ translate_ids <- function(
         to_cols,
         to_types,
         function(d, to_col, to_type){
-
-            inspect_col <- sprintf('%s%s', to_col, inspect$label)
 
             translation_table <-
                 id_translation_table(
@@ -531,47 +535,20 @@ translate_ids <- function(
                 .,
                 mutate(., To = ifelse(is.na(To), character(0L), To))
             )} %>%
-            {`if`(
-                inspect$toggle,
-                group_by(., !!sym(from_col), !!!syms(inspect_grp)) %>%
-                mutate(
-                    !!sym(inspect_col) := ifelse(
-                        n_distinct(unlist(To, recursive = FALSE), na.rm = TRUE) > 1L,
-                        'to-many',
-                        'to-one'
-                    ),
-                ) %>%
-                ungroup %>%
-                mutate(!!sym(tmp_rownum_col) := row_number()) %>%
-                unnest_longer(To) %>%
-                group_by(To, !!!syms(inspect_grp)) %>%
-                mutate(
-                   !!sym(inspect_col) := sprintf(
-                       '%s-%s',
-                       ifelse(
-                           n_distinct(!!sym(from_col), na.rm = TRUE) > 1L,
-                           'many',
-                           'one'
-                       ),
-                       !!sym(inspect_col)
-                   )
-                ) %>%
-                ungroup %>%
-                {`if`(
-                    expand,
-                    .,
-                    group_by(., !!sym(tmp_rownum_col)) %>%
-                    reframe(
-                        To = list(To),
-                        across(where(is.list), ~extract(.x, 1L)),
-                        across(where(is.character), first)
-                    )
-                )} %>%
-                select(-!!sym(tmp_rownum_col)),
-                .
-            )} %>%
             relocate(To, .after = last_col()) %>%
-            rename(!!sym(to_col) := To)
+            rename(!!sym(to_col) := To) %>%
+            {`if`(
+                bool(quantify_ambiguity) || bool(qualify_ambiguity),
+                ambiguity(
+                    .,
+                    !!sym(from_col),
+                    !!sym(to_col),
+                    groups = ambiguity_groups,
+                    quantify = quantify_ambiguity,
+                    qualify = qualify_ambiguity
+                ),
+                .
+            )}
 
             log_trace(
                 paste0(
@@ -604,6 +581,169 @@ translate_ids <- function(
     }
 
     return(d)
+
+}
+
+
+#' Inspect the ambiguity of a mapping
+#'
+#' @param d Data frame: a data frame with two columns to be inspected. It might
+#'     contain arbitrary other columns. Existing grouping will be removed.
+#' @param groups Character vector of column names. Inspect ambiguity within
+#'     these groups; by default, ambiguity is determined across all rows.
+#' @param record_id Character or symbol: a column identifying unique records;
+#'     if not provided, each row will be considered a unique record.
+#' @param quantify Logical or character: inspect the mappings for each
+#'     ID for ambiguity. If TRUE, for each translated column, two new columns
+#'     will be created with numeric values, representing the ambiguity of the
+#'     mapping on the "from" and "to" side of the translation, respectively.
+#'     If a character value provided, it will be used as a column name suffix
+#'     for the new columns.
+#' @param qualify Logical or character: inspect the mappings for each
+#'     ID for ambiguity. If TRUE, for each translated column, a new column
+#'     will be inculded with values `one-to-one`, `one-to-many`, `many-to-one`
+#'     or `many-to-many`. If a character value provided, it will be used as a
+#'     column name suffix for the new column.
+#' @param expand Logical: override the expansion of target columns, including
+#'     `to_col`: by default, this function expands data into multiple rows if
+#'     the `to_col` has already been expanded. Using this argument, the
+#'     `to_col` and other target columns will be lists of vectors for `expand =
+#'     FALSE`, and simple vectors for `expand = TRUE`.
+#'
+#' @return A data frame (tibble) with ambiguity information added in new
+#'     columns, as described at the "quantify" and "qualify" arguments.
+#'
+#' @importFrom rlang !! !!! enquo := sym syms set_names
+#' @importFrom magrittr %>% %<>% or extract not
+#' @importFrom dplyr pull mutate select row_number cur_group_id n_distinct
+#' @importFrom dplyr group_by summarize reframe first across relocate rename
+#' @importFrom tidyselect where all_of any_of last_col
+#' @importFrom tidyr unnest_longer
+#' @export
+ambiguity <- function(
+        d,
+        from_col,
+        to_col,
+        groups = NULL,
+        record_id = NULL,
+        quantify = TRUE,
+        qualify = TRUE,
+        expand = NULL
+    ) {
+
+    # NSE vs. R CMD check workaround
+    To <- NULL
+
+    if (!bool(quantify) && !bool(qualify)) {
+        return(d)
+    }
+
+    from_col <- .nse_ensure_str(!!enquo(from_col))
+    to_col <- .nse_ensure_str(!!enquo(to_col))
+    record_id <- '__omnipathr_tmp_record_id'
+    quantify %<>% toggle_label('ambiguity')
+    qualify %<>% toggle_label('ambiguity')
+    qualify$label %<>% sprintf('%s_%s_%s', from_col, to_col, .)
+    quantify_from <- sprintf('%s_%s_from_%s', from_col, to_col, quantify$label)
+    quantify_to <- sprintf('%s_%s_to_%s', from_col, to_col, quantify$label)
+    collapsed <- d %>% pull(to_col) %>% is.list
+    expand %<>% if_null(collapsed %>% not)
+    collapse <- collapsed %>% or(expand) %>% not
+    one_many <- function(v) {ifelse(v == 1L, 'one', 'many')}
+
+    d %>%
+    group_by(., !!sym(from_col), !!!syms(groups)) %>%
+    mutate(
+        !!sym(quantify_to) := n_distinct(
+            unlist(!!sym(to_col), recursive = FALSE),
+            na.rm = TRUE
+        )
+    ) %>%
+    {`if`(
+        collapse,
+        mutate(., !!sym(record_id) := cur_group_id()),
+        .
+    )} %>%
+    ungroup %>%
+    {`if`(
+        collapse,
+        .,
+        mutate(., !!sym(record_id) := row_number())
+    )} %>%
+    unnest_longer(!!sym(to_col)) %>%
+    group_by(!!sym(to_col), !!!syms(groups)) %>%
+    mutate(
+        !!sym(quantify_from) := n_distinct(
+            unlist(!!sym(from_col), recursive = FALSE),
+            na.rm = TRUE
+        )
+    ) %>%
+    ungroup %>%
+    {`if`(
+        qualify$toggle,
+        mutate(
+            .,
+            !!sym(qualify$label) := sprintf(
+                '%s-to-%s',
+                one_many(!!sym(quantify_from)),
+                one_many(!!sym(quantify_to))
+            )
+        ),
+        .
+    )} %>%
+    {`if`(
+        quantify$toggle,
+        rowwise(.) %>%
+        mutate(
+            across(
+                all_of(c(quantify_to, quantify_from)),
+                ~set_names(.x, !!sym(to_col))
+            )
+        ) %>%
+        ungroup %>%
+        relocate(all_of(c(quantify_to, quantify_from)), .after = last_col()),
+        select(., -all_of(c(quantify_to, quantify_from)))
+    )} %>%
+    {`if`(
+        qualify$toggle,
+        rowwise(.) %>%
+        mutate(
+            !!sym(qualify$label) := set_names(!!sym(qualify$label), !!sym(to_col))
+        ) %>%
+        ungroup %>%
+        relocate(!!sym(qualify$label), .after = last_col()),
+        select(., -(!!!syms(qualify$label)))
+    )} %>%
+    {`if`(
+        expand,
+        mutate(
+            .,
+            across(
+                any_of(c(quantify_to, quantify_from, qualify$label)),
+                ~unlist(.x)
+            )
+        ),
+        group_by(., !!sym(record_id)) %>%
+        {list(
+            cols = colnames(.),
+            df = reframe(
+                .,
+                across(
+                    any_of(c(
+                        to_col,
+                        qualify$label,
+                        quantify_from,
+                        quantify_to
+                    )),
+                    ~list(.x)
+                ),
+                across(where(is.list), ~extract(.x, 1L)),
+                across(where(~!is.list(.x)), first)
+            )
+        )} %>%
+        {relocate(.$df, all_of(.$cols))}
+    )} %>%
+    select(-!!sym(record_id))
 
 }
 
