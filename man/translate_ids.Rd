@@ -20,8 +20,9 @@ translate_ids(
   complexes = NULL,
   complexes_one_to_many = NULL,
   track = FALSE,
-  inspect = FALSE,
-  inspect_grp = NULL,
+  quantify_ambiguity = FALSE,
+  qualify_ambiguity = FALSE,
+  ambiguity_groups = NULL,
   expand = TRUE
 )
 }
@@ -85,11 +86,20 @@ will be used.}
 \item{track}{Logical: Track the records (rows) in the input data frame by
 adding a column \code{record_id} with the original row numbers.}
 
-\item{inspect}{Logical: inspect the mappings for each ID for ambiguity.
-If TRUE, for each translated column, a new column will be inculded with
-values \code{one-to-one}, \code{one-to-many}, \code{many-to-one} or \code{many-to-many}.}
+\item{quantify_ambiguity}{Logical or character: inspect the mappings for each
+ID for ambiguity. If TRUE, for each translated column, two new columns
+will be created with numeric values, representing the ambiguity of the
+mapping on the "from" and "to" side of the translation, respectively.
+If a character value provided, it will be used as a column name suffix
+for the new columns.}
 
-\item{inspect_grp}{Character vector: additional column names to group by
+\item{qualify_ambiguity}{Logical or character: inspect the mappings for each
+ID for ambiguity. If TRUE, for each translated column, a new column
+will be inculded with values \code{one-to-one}, \code{one-to-many}, \code{many-to-one}
+or \code{many-to-many}. If a character value provided, it will be used as a
+column name suffix for the new column.}
+
+\item{ambiguity_groups}{Character vector: additional column names to group by
 during inspecting ambiguity. By default, the identifier columns (from
 and to) will be used to determine the ambiguity of mappings.}
 
