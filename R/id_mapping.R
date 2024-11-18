@@ -591,8 +591,6 @@ translate_ids <- function(
 #'     contain arbitrary other columns. Existing grouping will be removed.
 #' @param groups Character vector of column names. Inspect ambiguity within
 #'     these groups; by default, ambiguity is determined across all rows.
-#' @param record_id Character or symbol: a column identifying unique records;
-#'     if not provided, each row will be considered a unique record.
 #' @param quantify Logical or character: inspect the mappings for each
 #'     ID for ambiguity. If TRUE, for each translated column, two new columns
 #'     will be created with numeric values, representing the ambiguity of the
@@ -625,7 +623,6 @@ ambiguity <- function(
         from_col,
         to_col,
         groups = NULL,
-        record_id = NULL,
         quantify = TRUE,
         qualify = TRUE,
         expand = NULL
