@@ -720,7 +720,7 @@ ambiguity <- function(
             .,
             across(
                 any_of(c(quantify_to, quantify_from, qualify$label)),
-                ~unlist(.x)
+                ~unname(unlist(.x))
             )
         ),
         group_by(., !!sym(record_id)) %>%
