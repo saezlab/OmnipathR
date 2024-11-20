@@ -1229,3 +1229,91 @@ bool <- function(value) {
     )
 
 }
+
+
+#' Translates quantified ambiguity to qualitative labels
+#'
+#' @param x Numeric vector.
+#'
+#' @return Character vector of: "none", "one", or "many".
+#'
+#' @importFrom dplyr case_whem
+#' @noRd
+one_many <- function(x) {
+
+    case_when(
+        x == 0L ~ 'none',
+        x == 1L ~ 'one',
+        .default = 'many'
+    )
+
+}
+
+
+#' Converts empty vectors in a list column to NA values
+#'
+#' @importFrom dplyr pull mutate
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @importFrom rlang enquo := !! sym
+#' @noRd
+len0_to_na <- function(lst) {
+
+    if (is.list(lst)) {
+
+        na <- lst %>% na_of_class
+
+        lst %<>%
+        map(~`if`(length(.x) == 0L, na, .x))
+
+    }
+
+    return(lst)
+
+}
+
+
+#' @importFrom magrittr %>%
+#' @noRd
+na_of_class <- function(x) {
+
+    x %>%
+    list_class %>%
+    {get(sprintf('as.%s', .))(NA)}
+
+}
+
+
+#' @importFrom magrittr %>%
+#' @noRd
+list_class <- function(x) {
+
+    x %>%
+    head(100L) %>%
+    unlist %>%
+    class
+
+}
+
+
+#' Converts to NA values in a list column to empty vectors
+#'
+#' @importFrom dplyr pull mutate
+#' @importFrom magrittr %>%
+#' @importFrom purrr map
+#' @importFrom rlang enquo := !! sym
+#' @noRd
+na_to_len0 <- function(lst) {
+
+    if (is.list(lst)) {
+
+        cls <- lst %>% list_class
+
+        lst %<>%
+        map(~`if`(extract(.x, 1L) %>% is.na, cls(0L), .x))
+
+    }
+
+    return(lst)
+
+}
