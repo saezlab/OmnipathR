@@ -530,11 +530,6 @@ translate_ids <- function(
                 by = 'From' %>% set_names(from_col)
             ) %>%
             {`if`(keep_untranslated, ., filter(., !is.na(To)))} %>%
-            {`if`(
-                expand,
-                .,
-                mutate(., To = ifelse(is.na(To), character(0L), To))
-            )} %>%
             relocate(To, .after = last_col()) %>%
             rename(!!sym(to_col) := To) %>%
             {`if`(
@@ -548,6 +543,11 @@ translate_ids <- function(
                     qualify = qualify_ambiguity
                 ),
                 .
+            )} %>%
+            {`if`(
+                expand,
+                .,
+                mutate(., !!sym(to_col) := na_to_len0(!!sym(to_col)))
             )}
 
             log_trace(
@@ -614,7 +614,8 @@ translate_ids <- function(
 #' @importFrom rlang !! !!! enquo := sym syms set_names
 #' @importFrom magrittr %>% %<>% or extract not
 #' @importFrom dplyr pull mutate select row_number cur_group_id n_distinct
-#' @importFrom dplyr group_by summarize reframe first across relocate rename
+#' @importFrom dplyr group_by summarize reframe first across relocate
+#' @importFrom dplyr case_when rename
 #' @importFrom tidyselect where all_of any_of last_col
 #' @importFrom tidyr unnest_longer
 #' @export
@@ -646,9 +647,13 @@ ambiguity <- function(
     collapsed <- d %>% pull(to_col) %>% is.list
     expand %<>% if_null(collapsed %>% not)
     collapse <- collapsed %>% or(expand) %>% not
-    one_many <- function(v) {ifelse(v == 1L, 'one', 'many')}
 
     d %>%
+    {`if`(
+        collapsed,
+        mutate(., !!sym(to_col) := len0_to_na(!!sym(to_col))),
+        .
+    )} %>%
     group_by(., !!sym(from_col), !!!syms(groups)) %>%
     mutate(
         !!sym(quantify_to) := n_distinct(
@@ -670,9 +675,13 @@ ambiguity <- function(
     unnest_longer(!!sym(to_col)) %>%
     group_by(!!sym(to_col), !!!syms(groups)) %>%
     mutate(
-        !!sym(quantify_from) := n_distinct(
-            unlist(!!sym(from_col), recursive = FALSE),
-            na.rm = TRUE
+        !!sym(quantify_from) := ifelse(
+            is.na(!!sym(to_col)),
+            1L,
+            n_distinct(
+                unlist(!!sym(from_col), recursive = FALSE),
+                na.rm = TRUE
+            )
         )
     ) %>%
     ungroup %>%
