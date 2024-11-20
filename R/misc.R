@@ -1237,7 +1237,7 @@ bool <- function(value) {
 #'
 #' @return Character vector of: "none", "one", or "many".
 #'
-#' @importFrom dplyr case_whem
+#' @importFrom dplyr case_when
 #' @noRd
 one_many <- function(x) {
 
