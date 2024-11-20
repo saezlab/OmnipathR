@@ -1279,7 +1279,7 @@ na_of_class <- function(x) {
 
     x %>%
     list_class %>%
-    {get(sprintf('as.%s', .))(NA)}
+    {.(NA)}
 
 }
 
@@ -1291,7 +1291,8 @@ list_class <- function(x) {
     x %>%
     head(100L) %>%
     unlist %>%
-    class
+    class %>%
+    {get(sprintf('as.%s', .))}
 
 }
 
