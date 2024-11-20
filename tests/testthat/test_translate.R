@@ -29,8 +29,8 @@ library(tidyselect)
 omnipath_set_console_loglevel('fatal')
 
 input0 <- tibble(
-    a = c('A', 'A', 'A', 'B', 'C', 'D', 'E'),
-    b = c('a', 'b', 'c', 'd', 'a', 'e', 'e')
+    a = c('A', 'A', 'A', 'B', 'C', 'D', 'E', 'F'),
+    b = c('a', 'b', 'c', 'd', 'a', 'e', 'e', NA)
 )
 
 input1 <-
@@ -40,10 +40,10 @@ input1 <-
     summarize_all(~extract(., 1L))
 
 output_expanded <- tibble(
-    a = c('A', 'A', 'A', 'B', 'C', 'D', 'E'),
-    b = c('a', 'b', 'c', 'd', 'a', 'e', 'e'),
-    a_b_to_ambiguity = c(3L, 3L, 3L, 1L, 1L, 1L, 1L),
-    a_b_from_ambiguity = c(2L, 1L, 1L, 1L, 2L, 2L, 2L),
+    a = c('A', 'A', 'A', 'B', 'C', 'D', 'E', 'F'),
+    b = c('a', 'b', 'c', 'd', 'a', 'e', 'e', NA),
+    a_b_to_ambiguity = c(3L, 3L, 3L, 1L, 1L, 1L, 1L, 0L),
+    a_b_from_ambiguity = c(2L, 1L, 1L, 1L, 2L, 2L, 2L, 1L),
     a_b_ambiguity = c(
         'many-to-many',
         'one-to-many',
@@ -51,7 +51,8 @@ output_expanded <- tibble(
         'one-to-one',
         'many-to-one',
         'many-to-one',
-        'many-to-one'
+        'many-to-one',
+        'one-to-none'
     )
 )
 
@@ -61,7 +62,7 @@ output_collapsed <-
     reframe(across(everything(), ~list(.x))) %>%
     ungroup %>%
     rowwise %>%
-    mutate(across(ends_with('ambiguity'), ~list(set_names(.x, b)))) %>%
+    mutate(across(ends_with('ambiguity'), ~list(set_names(.x, replace_na(b, ''))))) %>%
     ungroup
 
 
