@@ -1197,9 +1197,18 @@ pkg_env <- function(pkg = 'OmnipathR') {
 toggle_label <- function(value, default) {
 
     list(
-         toggle = is.character(value) || is.logical(value) && value,
-         label = `if`(is.character(value), value, default)
+        toggle = is.character(value) || is.logical(value) && value,
+        label = `if`(is.character(value), value, default)
     )
+
+}
+
+
+#' @importFrom magrittr %>%
+#' @noRd
+label_toggle <- function(value) {
+
+    value %>% {`if`(.$toggle, .$label, FALSE)}
 
 }
 
@@ -1230,6 +1239,14 @@ bool <- function(value) {
 
 }
 
+
+#' @importFrom rlang as_function
+#' @noRd
+doif <- function(.data, cond, fn, ...) {
+
+    `if`(cond, as_function(fn)(.data, ...), .data)
+
+}
 
 #' Translates quantified ambiguity to qualitative labels
 #'
@@ -1318,3 +1335,5 @@ na_to_len0 <- function(lst) {
     return(lst)
 
 }
+
+
