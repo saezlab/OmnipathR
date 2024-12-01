@@ -23,6 +23,8 @@ translate_ids(
   quantify_ambiguity = FALSE,
   qualify_ambiguity = FALSE,
   ambiguity_groups = NULL,
+  ambiguity_global = FALSE,
+  ambiguity_summary = FALSE,
   expand = TRUE
 )
 }
@@ -103,10 +105,18 @@ column name suffix for the new column.}
 during inspecting ambiguity. By default, the identifier columns (from
 and to) will be used to determine the ambiguity of mappings.}
 
+\item{ambiguity_global}{Logical or character: if \code{ambiguity_groups} are
+provided, analyse ambiguity also globally, across the whole data frame.
+Character value provides a custom suffix for the columns quantifying
+and qualifying global ambiguity.}
+
+\item{ambiguity_summary}{Logical: generate a summary about the ambiguity of the
+translation and make it available as an attribute.
+columns will be lists of character vectors.}
+
 \item{expand}{Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
 expanded to multiple rows, resulting character type columns; if
-\code{FALSE}, the original rows will be kept intact, and the target
-columns will be lists of character vectors.}
+\code{FALSE}, the original rows will be kept intact, and the target}
 }
 \value{
 \itemize{

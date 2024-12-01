@@ -11,7 +11,9 @@ ambiguity(
   groups = NULL,
   quantify = TRUE,
   qualify = TRUE,
-  expand = NULL
+  expand = NULL,
+  global = FALSE,
+  summary = FALSE
 )
 }
 \arguments{
@@ -39,6 +41,14 @@ column name suffix for the new column.}
 the `to_col` has already been expanded. Using this argument, the
 `to_col` and other target columns will be lists of vectors for `expand =
 FALSE`, and simple vectors for `expand = TRUE`.}
+
+\item{global}{Logical or character: if `groups` are provided, analyse
+ambiguity also globally, across the whole data frame. Character value
+provides a custom suffix for the columns quantifying and qualifying
+global ambiguity.}
+
+\item{summary}{Logical: generate a summary about the ambiguity of the
+translation and make it available as an attribute.}
 }
 \value{
 A data frame (tibble) with ambiguity information added in new
