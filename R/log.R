@@ -340,24 +340,6 @@ patch_logger_metavar <- function(){
 }
 
 
-#' Unlocks a binding in a namespace, changes its value and locks the
-#' binding again
-#'
-#' @noRd
-patch_ns <- function(name, patched, ns){
-
-    ulb <- get('unlockBinding')
-    lb <- get('lockBinding')
-
-    if(name %in% names(ns)){
-        ulb(name, as.environment(ns))
-        assign(name, patched, ns)
-        lb(name, as.environment(ns))
-    }
-
-}
-
-
 #' Is the logfile enabled?
 #'
 #' @noRd
