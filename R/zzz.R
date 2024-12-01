@@ -29,6 +29,7 @@
     omnipath_init_config()
     patch_logger_metavar()
     patch_logger_appender()
+    patch_attr_preserving_all()
     omnipath_init_log()
 
     buildserver <- .on_buildserver()
