@@ -17,7 +17,7 @@ identifiers."><meta property="og:image" content="https://saezlab.github.io/Omnip
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.15.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,14 @@ identifiers.</p>
 <span>  organism <span class="op">=</span> <span class="fl">9606</span>,</span>
 <span>  reviewed <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  complexes <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  complexes_one_to_many <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  complexes_one_to_many <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  track <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  quantify_ambiguity <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  qualify_ambiguity <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ambiguity_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ambiguity_global <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ambiguity_summary <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  expand <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -167,6 +174,53 @@ use only the first target identifier for each member of each complex.
 If <code>NULL</code>, the option <code>omnipathr.complex_translation_one_to_many</code>
 will be used.</p></dd>
 
+
+<dt id="arg-track">track<a class="anchor" aria-label="anchor" href="#arg-track"></a></dt>
+<dd><p>Logical: Track the records (rows) in the input data frame by
+adding a column <code>record_id</code> with the original row numbers.</p></dd>
+
+
+<dt id="arg-quantify-ambiguity">quantify_ambiguity<a class="anchor" aria-label="anchor" href="#arg-quantify-ambiguity"></a></dt>
+<dd><p>Logical or character: inspect the mappings for each
+ID for ambiguity. If TRUE, for each translated column, two new columns
+will be created with numeric values, representing the ambiguity of the
+mapping on the "from" and "to" side of the translation, respectively.
+If a character value provided, it will be used as a column name suffix
+for the new columns.</p></dd>
+
+
+<dt id="arg-qualify-ambiguity">qualify_ambiguity<a class="anchor" aria-label="anchor" href="#arg-qualify-ambiguity"></a></dt>
+<dd><p>Logical or character: inspect the mappings for each
+ID for ambiguity. If TRUE, for each translated column, a new column
+will be inculded with values <code>one-to-one</code>, <code>one-to-many</code>, <code>many-to-one</code>
+or <code>many-to-many</code>. If a character value provided, it will be used as a
+column name suffix for the new column.</p></dd>
+
+
+<dt id="arg-ambiguity-groups">ambiguity_groups<a class="anchor" aria-label="anchor" href="#arg-ambiguity-groups"></a></dt>
+<dd><p>Character vector: additional column names to group by
+during inspecting ambiguity. By default, the identifier columns (from
+and to) will be used to determine the ambiguity of mappings.</p></dd>
+
+
+<dt id="arg-ambiguity-global">ambiguity_global<a class="anchor" aria-label="anchor" href="#arg-ambiguity-global"></a></dt>
+<dd><p>Logical or character: if <code>ambiguity_groups</code> are
+provided, analyse ambiguity also globally, across the whole data frame.
+Character value provides a custom suffix for the columns quantifying
+and qualifying global ambiguity.</p></dd>
+
+
+<dt id="arg-ambiguity-summary">ambiguity_summary<a class="anchor" aria-label="anchor" href="#arg-ambiguity-summary"></a></dt>
+<dd><p>Logical: generate a summary about the ambiguity of the
+translation and make it available as an attribute.
+columns will be lists of character vectors.</p></dd>
+
+
+<dt id="arg-expand">expand<a class="anchor" aria-label="anchor" href="#arg-expand"></a></dt>
+<dd><p>Logical: if <code>TRUE</code>, ambiguous (to-many) mappings will be
+expanded to multiple rows, resulting character type columns; if
+<code>FALSE</code>, the original rows will be kept intact, and the target</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -215,7 +269,12 @@ returned data frame or vector(s).</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>uniprot_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'P00533'</span>, <span class="st">'Q9ULV1'</span>, <span class="st">'P43897'</span>, <span class="st">'Q9Y2P5'</span><span class="op">)</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    uniprot_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="st">'P00533'</span>, <span class="st">'Q9ULV1'</span>, <span class="st">'P43897'</span>, <span class="st">'Q9Y2P5'</span>,</span></span>
+<span class="r-in"><span>        <span class="st">'P01258'</span>, <span class="st">'P06881'</span>, <span class="st">'P42771'</span>, <span class="st">'Q8N726'</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">translate_ids</span><span class="op">(</span><span class="va">d</span>, uniprot_id <span class="op">=</span> <span class="va">uniprot</span>, <span class="va">genesymbol</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   uniprot_id genesymbol</span>
@@ -223,6 +282,10 @@ returned data frame or vector(s).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     Q9ULV1       FZD4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     P43897       TSFM</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     Q9Y2P5    SLC27A5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     P01258      CALCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     P06881      CALCA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7     P42771     CDKN2A</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     Q8N726     CDKN2A</span>
 <span class="r-in"><span><span class="co">#   uniprot_id genesymbol</span></span></span>
 <span class="r-in"><span><span class="co"># 1     P00533       EGFR</span></span></span>
 <span class="r-in"><span><span class="co"># 2     Q9ULV1       FZD4</span></span></span>
@@ -240,7 +303,7 @@ returned data frame or vector(s).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

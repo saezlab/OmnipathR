@@ -35,7 +35,7 @@
 
     <a class="navbar-brand me-2" href="index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.15.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@
 </h3>
 <p><em>OmnipathR</em> retrieves the data from the OmniPath web service at</p>
 <p><a href="https://omnipathdb.org/" class="external-link uri">https://omnipathdb.org/</a></p>
-<p>The web service implements a very simple REST style API. This package make requests by the HTTP protocol to retreive the data. Hence, fast Internet access is required for a proper use of <em>OmnipathR</em>.</p>
+<p>The web service implements a very simple REST-style API. This package makes requests by the HTTP protocol to retrieve the data. Hence, fast Internet access is required for a proper use of <em>OmnipathR</em>.</p>
 <div class="section level4">
 <h4 id="what-is-omnipath">What is OmniPath?<a class="anchor" aria-label="anchor" href="#what-is-omnipath"></a>
 </h4>
@@ -118,12 +118,12 @@
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The latest version of the reference manual is available from <a href="https://static.omnipathdb.org/omnipathr_manual.pdf" class="external-link uri">https://static.omnipathdb.org/omnipathr_manual.pdf</a>. Tutorials can be found at <a href="https://workflows.omnipathdb.org/" class="external-link uri">https://workflows.omnipathdb.org/</a>. Sroll down for quick start examples.</p>
+<p>The latest version of the reference manual is available from <a href="https://static.omnipathdb.org/omnipathr_manual.pdf" class="external-link uri">https://static.omnipathdb.org/omnipathr_manual.pdf</a>. Tutorials can be found at <a href="https://workflows.omnipathdb.org/" class="external-link uri">https://workflows.omnipathdb.org/</a>. Scroll down for quick start examples.</p>
 </div>
 <div class="section level2">
 <h2 id="omnipath-query-types">OmniPath query types<a class="anchor" aria-label="anchor" href="#omnipath-query-types"></a>
 </h2>
-<p>We provide here a brief summary about the data available through <em>OmnipathR</em>. <em>OmnipathR</em> provides access to 5 types of queries:</p>
+<p>We provide here a brief summary of the data available through <em>OmnipathR</em>. <em>OmnipathR</em> provides access to 5 types of queries:</p>
 <ol style="list-style-type: decimal">
 <li>
 <strong>Interactions</strong>: protein-protein interactions from different datasets.</li>
@@ -132,11 +132,11 @@
 <li>
 <strong>Complexes</strong>: comprehensive database of more than 22000 protein complexes.</li>
 <li>
-<strong>Annotations</strong>: large variety of data about proteins and complexes features.</li>
+<strong>Annotations</strong>: large variety of data about protein and complex features.</li>
 <li>
 <strong>Intercell</strong>: information on the roles in inter-cellular signaling.</li>
 </ol>
-<p>For a more detailed information, we recommend you to visit the following sites:</p>
+<p>For more detailed information, we recommend you to visit the following sites:</p>
 <p><a href="https://omnipathdb.org/" class="external-link uri">https://omnipathdb.org/</a></p>
 <p><a href="https://omnipathdb.org/info" class="external-link uri">https://omnipathdb.org/info</a></p>
 <p><a href="https://github.com/saezlab/pypath/blob/master/webservice.rst" class="external-link uri">https://github.com/saezlab/pypath/blob/master/webservice.rst</a></p>
@@ -157,7 +157,7 @@
 <div class="section level2">
 <h2 id="last-release-in-bioconductor">Last release in Bioconductor<a class="anchor" aria-label="anchor" href="#last-release-in-bioconductor"></a>
 </h2>
-<p>BiocManager::install(‘OmnipathR’, version = ‘3.12’) ## Development version with the lastest updates BiocManager::install(‘OmnipathR’, version = ‘devel’)</p>
+<p>BiocManager::install(‘OmnipathR’, version = ‘3.12’) ## Development version with the latest updates BiocManager::install(‘OmnipathR’, version = ‘devel’)</p>
 <pre><code>
 ### From github
 
@@ -198,7 +198,7 @@ print_interactions(dplyr::filter(enzsub,enzyme_genesymbol=='MAP2K1',
 3 MAP2K1 (Q02750)       ====&gt; MAPK3_Y210 (P27361) phosphorylation           2
 4 MAP2K1 (Q02750)       ====&gt; MAPK3_T207 (P27361) phosphorylation           2
 </code></pre>
-<p>Find shortest paths on the directed network between proteins: ```{r} print_path_es(shortest_paths(OPI_g,from = ‘TYRO3’,to = ‘STAT3’, output = ‘epath’)$epath[<a href="https://omnipathdb.org/" class="external-link">1</a>],OPI_g)</p>
+<p>Find the shortest paths on the directed network between proteins: ```{r} print_path_es(shortest_paths(OPI_g,from = ‘TYRO3’,to = ‘STAT3’, output = ‘epath’)$epath[<a href="https://omnipathdb.org/" class="external-link">1</a>],OPI_g)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>       source interaction          target n_resources n_references</span></code></pre></div>
 <p>1 TYRO3 (Q06418) ==( ? )==&gt; AKT1 (P31749) 2 0 2 AKT1 (P31749) ==( - )==&gt; DAB2IP (Q5VWQ8) 3 1 3 DAB2IP (Q5VWQ8) ==( - )==&gt; STAT3 (P40763) 1 1</p>
 <pre><code>
@@ -240,13 +240,13 @@ Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 <li>Use the methods in <code>pypath.inputs</code> to download data from resources</li>
 <li>Use the various extra tools in <code>pypath.utils</code>, e.g. for identifier translation, homology translation, querying Gene Ontology, working with protein sequences, processing BioPAX, etc.</li>
 </ul>
-<p>With <em>pypath</em> it’s also possible to run your own web service and serve your custom databases to the <em>OmnipathR</em> R client and the <em>omnipath</em> Python cient.</p>
+<p>With <em>pypath</em> it’s also possible to run your own web service and serve your custom databases to the <em>OmnipathR</em> R client and the <em>omnipath</em> Python client.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="feedbacks-bug-reports-features">Feedbacks, bug reports, features<a class="anchor" aria-label="anchor" href="#feedbacks-bug-reports-features"></a>
 </h2>
-<p>Feedbacks and bugreports are always very welcome!</p>
+<p>Feedbacks and bug reports are always very welcome!</p>
 <p>Please use the Github issue page to report bugs or for questions:</p>
 <p><a href="https://github.com/saezlab/OmnipathR/issues" class="external-link uri">https://github.com/saezlab/OmnipathR/issues</a></p>
 <p>Many thanks for using <em>OmnipathR</em>!</p>
@@ -300,7 +300,7 @@ Pathway 6: DYRK2 -&gt; TBK1 -&gt; AKT2 -&gt; PEA15 -&gt; MAPK3 -&gt; MAPKAPK2
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

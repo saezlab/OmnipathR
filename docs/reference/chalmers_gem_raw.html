@@ -15,7 +15,7 @@ models created by Chalmers SysBio."><meta property="og:image" content="https://s
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.13.25</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.15.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,61 +109,10 @@ melanogaster) and 6239 (Caenorhabditis elegans).</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">chalmers_gem_raw</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ihuman</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> , , 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     [,1]                                                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> id                  "Human-GEM"                                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> description         "Generic genome-scale metabolic model of Homo sapiens"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxns                list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mets                list,8456                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S                   &lt;S4 class ‘dgCMatrix’ [package “Matrix”] with 6 slots&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lb                  numeric,12995                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ub                  numeric,12995                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rev                 numeric,12995                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> c                   numeric,12995                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b                   numeric,8456                                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> comps               list,9                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compNames           list,9                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxnNames            list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> grRules             list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxnGeneMat          &lt;S4 class ‘dgCMatrix’ [package “Matrix”] with 6 slots&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> subSystems          list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> eccodes             list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxnNotes            list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> genes               list,2889                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> geneShortNames      list,2889                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metNames            list,8456                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metComps            numeric,8456                                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> inchis              list,8456                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metFormulas         list,8456                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxnReferences       list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxnFrom             list,12995                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metFrom             list,8456                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rxnConfidenceScores numeric,12995                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metCharges          numeric,8456                                          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> version             "1.18.0"                                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> annotation          list,5                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"header")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"header")$description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "MATLAB 5.0 MAT-file, Platform: MACI64, Created on: Fri Dec  8 14:17:06 2023                                         "</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"header")$version</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "5"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"header")$endian</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "little"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"origin")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "cache"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"resource")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Chalmers GEM"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"url")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://raw.githubusercontent.com/SysBioChalmers/Human-GEM/main/model/Human-GEM.mat"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"source")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Chalmers GEM (raw.githubusercontent.com)"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, .y, .f, ..., .progress = .progress):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: col_types.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘R.matlab’</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -176,7 +125,7 @@ melanogaster) and 6239 (Caenorhabditis elegans).</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
