@@ -320,7 +320,13 @@ uniprot_idmapping_id_types <- function() {
 #' @param expand Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
 #'     expanded to multiple rows, resulting character type columns; if
 #'     \code{FALSE}, the original rows will be kept intact, and the target
-#'     columns will be lists of character vectors.
+#' @param ambiguity_global Logical or character: if `ambiguity_groups` are
+#'      provided, analyse ambiguity also globally, across the whole data frame.
+#'      Character value provides a custom suffix for the columns quantifying
+#'      and qualifying global ambiguity.
+#' @param ambiguity_summary Logical: generate a summary about the ambiguity of the
+#'      translation and make it available as an attribute.
+#'      columns will be lists of character vectors.
 #'
 #' @return
 #' \itemize{
@@ -442,6 +448,8 @@ translate_ids <- function(
     quantify_ambiguity = FALSE,
     qualify_ambiguity = FALSE,
     ambiguity_groups = NULL,
+    ambiguity_global = FALSE,
+    ambiguity_summary = FALSE,
     expand = TRUE
 ){
 
@@ -540,7 +548,9 @@ translate_ids <- function(
                     !!sym(to_col),
                     groups = ambiguity_groups,
                     quantify = quantify_ambiguity,
-                    qualify = qualify_ambiguity
+                    qualify = qualify_ambiguity,
+                    summary = ambiguity_summary,
+                    global = ambiguity_global
                 ),
                 .
             )} %>%
@@ -607,6 +617,12 @@ translate_ids <- function(
 #'     the `to_col` has already been expanded. Using this argument, the
 #'     `to_col` and other target columns will be lists of vectors for `expand =
 #'     FALSE`, and simple vectors for `expand = TRUE`.
+#' @param global Logical or character: if `groups` are provided, analyse
+#'      ambiguity also globally, across the whole data frame. Character value
+#'      provides a custom suffix for the columns quantifying and qualifying
+#'      global ambiguity.
+#' @param summary Logical: generate a summary about the ambiguity of the
+#'      translation and make it available as an attribute.
 #'
 #' @return A data frame (tibble) with ambiguity information added in new
 #'     columns, as described at the "quantify" and "qualify" arguments.
@@ -626,7 +642,9 @@ ambiguity <- function(
         groups = NULL,
         quantify = TRUE,
         qualify = TRUE,
-        expand = NULL
+        expand = NULL,
+        global = FALSE,
+        summary = FALSE
     ) {
 
     # NSE vs. R CMD check workaround
@@ -638,121 +656,264 @@ ambiguity <- function(
 
     from_col <- .nse_ensure_str(!!enquo(from_col))
     to_col <- .nse_ensure_str(!!enquo(to_col))
-    record_id <- '__omnipathr_tmp_record_id'
+    bygrp <- function(x){doif(x, !is.null(groups), ~sprintf('%s_bygroup', x))}
+    rm_bygrp <- function(x){doif(x, !is.null(groups), ~sub('_.*', '', x))}
     quantify %<>% toggle_label('ambiguity')
     qualify %<>% toggle_label('ambiguity')
-    qualify$label %<>% sprintf('%s_%s_%s', from_col, to_col, .)
-    quantify_from <- sprintf('%s_%s_from_%s', from_col, to_col, quantify$label)
-    quantify_to <- sprintf('%s_%s_to_%s', from_col, to_col, quantify$label)
+    quantify$label %<>% bygrp
+    qualify$label %<>% bygrp
+    qn_from <- sprintf('%s_%s_from_%s', from_col, to_col, quantify$label)
+    qn_to <- sprintf('%s_%s_to_%s', from_col, to_col, quantify$label)
+
+    record_id <- '__omnipathr_tmp_record_id'
+    global %<>% toggle_label('global')
+    global$toggle %<>% and(is.null(groups) %>% not)
+    summary %<>% toggle_label(sprintf('ambiguity_%s_%s', from_col, to_col))
     collapsed <- d %>% pull(to_col) %>% is.list
     expand %<>% if_null(collapsed %>% not)
     collapse <- collapsed %>% or(expand) %>% not
 
+    qn_cols <- c(qn_from, qn_to)
+    ql_col <- qualify$label %>% sprintf('%s_%s_%s', from_col, to_col, .)
+    q_cols <- c(qn_cols, ql_col)
+    lst_cols <- c(to_col, qn_to, ql_col)
+
+    distinct_ids <- function(l) {
+        unlist(l, recursive = FALSE) %>%
+        n_distinct(na.rm = TRUE)
+    }
+
+    log_trace(
+        'Translation ambiguity between columns `%s` and `%s`',
+        from_col,
+        to_col
+    )
+
     d %>%
-    {`if`(
+    # make sure we have NAs and not empty vectors for untranslated items
+    doif(
         collapsed,
-        mutate(., !!sym(to_col) := len0_to_na(!!sym(to_col))),
-        .
-    )} %>%
-    group_by(., !!sym(from_col), !!!syms(groups)) %>%
-    mutate(
-        !!sym(quantify_to) := n_distinct(
-            unlist(!!sym(to_col), recursive = FALSE),
-            na.rm = TRUE
-        )
+        ~mutate(.x, !!sym(to_col) := len0_to_na(!!sym(to_col)))
     ) %>%
-    {`if`(
-        collapse,
-        mutate(., !!sym(record_id) := cur_group_id()),
-        .
-    )} %>%
-    ungroup %>%
-    {`if`(
-        collapse,
-        .,
-        mutate(., !!sym(record_id) := row_number())
-    )} %>%
+    # quantify ambiguity on the "to" side (ID translates to N targets)
+    group_by(., !!sym(from_col), !!!syms(groups)) %>%
+    mutate(!!sym(qn_to) := distinct_ids(!!sym(to_col))) %>%
+    # create the "record_id", so later we know how to restore the original rows
+    doif(!collapse, ungroup) %>%
+    mutate(!!sym(record_id) := `if`(collapse, cur_group_id(), row_number())) %>%
+    doif(collapse, ungroup) %>%
+    # make sure the "to" identifiers are expanded
     unnest_longer(!!sym(to_col)) %>%
+    # quantify ambiguity on the "from" side (N IDs translate to one target)
     group_by(!!sym(to_col), !!!syms(groups)) %>%
     mutate(
-        !!sym(quantify_from) := ifelse(
+        !!sym(qn_from) := first(ifelse(
             is.na(!!sym(to_col)),
-            1L,
-            n_distinct(
-                unlist(!!sym(from_col), recursive = FALSE),
-                na.rm = TRUE
+            1L,  # NA is not a target ID, these should end up one-to-none
+            distinct_ids(!!sym(from_col))
+        ))
+    ) %>%
+    ungroup %>%
+    # compile qualitative column based on the quantitative ones
+    doif(
+        qualify$toggle,
+        ~mutate(
+            .x,
+            !!sym(ql_col) := sprintf(
+                '%s-to-%s',
+                one_many(!!sym(qn_from)),
+                one_many(!!sym(qn_to))
             )
         )
     ) %>%
-    ungroup %>%
-    {`if`(
-        qualify$toggle,
-        mutate(
-            .,
-            !!sym(qualify$label) := sprintf(
-                '%s-to-%s',
-                one_many(!!sym(quantify_from)),
-                one_many(!!sym(quantify_to))
-            )
-        ),
-        .
-    )} %>%
+    # add summary if required
+    doif(
+        summary$toggle,
+        ~exec(
+            ambiguity_summarize,
+            d = .x,
+            from_col = from_col,
+            to_col = to_col,
+            label = summary$label,
+            groups = groups,
+            !!!q_cols
+        )
+    ) %>%
+    # quantify columns: remove or move them to the end and name their values
     {`if`(
         quantify$toggle,
         rowwise(.) %>%
-        mutate(
-            across(
-                all_of(c(quantify_to, quantify_from)),
-                ~set_names(.x, !!sym(to_col))
-            )
-        ) %>%
+        mutate(across(all_of(qn_cols), ~set_names(.x, !!sym(to_col)))) %>%
+        mutate(!!sym(qn_from) := map_int(!!sym(qn_from), ~extract(.x, 1L))) %>%
         ungroup %>%
-        relocate(all_of(c(quantify_to, quantify_from)), .after = last_col()),
-        select(., -all_of(c(quantify_to, quantify_from)))
+        relocate(all_of(qn_cols), .after = last_col()),
+        select(., -all_of(qn_cols))
     )} %>%
+    # qualify column: remove or move it to the end and name its values
     {`if`(
         qualify$toggle,
         rowwise(.) %>%
-        mutate(
-            !!sym(qualify$label) := set_names(!!sym(qualify$label), !!sym(to_col))
-        ) %>%
+        mutate(!!sym(ql_col) := set_names(!!sym(ql_col), !!sym(to_col))) %>%
         ungroup %>%
-        relocate(!!sym(qualify$label), .after = last_col()),
-        select(., -(!!!syms(qualify$label)))
+        relocate(!!sym(ql_col), .after = last_col()),
+        select(., -(!!!syms(ql_col)))
     )} %>%
+    # expand new list cols or restore original rows based on "record_id"
     {`if`(
         expand,
-        mutate(
-            .,
-            across(
-                any_of(c(quantify_to, quantify_from, qualify$label)),
-                ~unname(unlist(.x))
-            )
-        ),
+        mutate(., across(any_of(q_cols), ~unname(unlist(.x)))),
         group_by(., !!sym(record_id)) %>%
         {list(
             cols = colnames(.),
             df = reframe(
                 .,
-                across(
-                    any_of(c(
-                        to_col,
-                        qualify$label,
-                        quantify_from,
-                        quantify_to
-                    )),
-                    ~list(.x)
-                ),
+                across(any_of(lst_cols), ~list(.x)),
                 across(where(is.list), ~extract(.x, 1L)),
                 across(where(~!is.list(.x)), first)
             )
         )} %>%
         {relocate(.$df, all_of(.$cols))}
     )} %>%
-    select(-!!sym(record_id))
+    select(-!!sym(record_id)) %>%
+    # do also the global ambiguity, if required
+    doif(
+        global$toggle,
+        ~ambiguity(
+            .x,
+            to_col = !!sym(to_col),
+            from_col = !!sym(from_col),
+            quantify = quantify %>% label_toggle %>% rm_bygrp,
+            qualify = qualify %>% label_toggle %>% rm_bygrp,
+            summary = summary %>% label_toggle,
+            expand = expand
+        )
+    )
 
 }
 
+
+#' Summarise the results of an ID translation ambiguity analysis
+#'
+#' @param d A data frame with all three output columns of the ambiguity
+#'     analysis (quantify_to, quantify_from and qualify) available under the
+#'     names provided in the rest of the arguments.
+#' @param from_col Character: name of the column with the original IDs.
+#' @param to_col Character: name of the column with the translated IDs.
+#' @param qn_from Character: name of the column with the numeric ambiguity on
+#'     the "from" side.
+#' @param qn_to Character: name of the column with the numeric ambiguity on
+#'     the "to" side.
+#' @param qualify Character: name of the column with the qualitative ambiguity
+#'     on the "to" side.
+#' @param label Character: name of the attribute to store the summary in.
+#'
+#' @return The input data frame with the summary appended to a data frame under
+#'     the attribute `label`.
+#'
+#' @importFrom tidyr unnest_longer nest unnest_wider
+#' @importFrom dplyr group_split group_by mutate summarise
+#' @importFrom dplyr case_when pull bind_cols first
+#' @importFrom tibble as_tibble
+#' @importFrom purrr map reduce
+#' @importFrom rlang set_names sym syms !! !!! := exec is_integer
+#' @importFrom stringr str_replace_all str_c
+#' @importFrom magrittr %<>% %>% set_attr extract2
+#' @noRd
+ambiguity_summarize <- function(
+        d,
+        from_col,
+        to_col,
+        qn_from,
+        qn_to,
+        qualify,
+        label = NULL,
+        groups = NULL
+    ) {
+
+    count <- function(
+            d,
+            grp_cols,
+            item_col,
+            transform = identity,
+            distrib = FALSE
+        ) {
+
+        prefix <-
+            grp_cols %>%
+            {case_when(
+                identical(., to_col) ~ 'from_',
+                identical(., from_col) ~ 'to_',
+                TRUE ~ ''
+            )}
+
+        .transform <- function(x) {
+
+            x %>% transform %>% str_replace_all('-', '_') %>% str_c(prefix, .)
+        }
+
+        total_col <- str_c(prefix, 'total')
+        distrib_col <- str_c(prefix, 'distrib')
+
+        d %>%
+        doif(
+            !distrib,
+            ~mutate(.x, !!sym(item_col) := .transform(!!sym(item_col)))
+        ) %>%
+        group_by(!!!syms(grp_cols)) %>%
+        summarise(
+            !!sym(item_col) := first(!!sym(item_col)),
+            .groups = 'drop'
+        ) %>%
+        pull(!!sym(item_col)) %>%
+        table %>%
+        as.list %>%
+        {`if`(
+              distrib,
+              tibble(!!sym(distrib_col) := .),
+              as_tibble(.) %>%
+              mutate(!!sym(total_col) := sum(.))
+        )}
+
+    }
+
+    counters <- list(
+        list(grp_cols = c(from_col, to_col), item_col = qualify),
+        list(grp_cols = from_col, item_col = qn_to, transform = one_many),
+        list(grp_cols = to_col, item_col = qn_from, transform = one_many)
+# This is an attempt to keep the ambiuity count distribution in the table
+# but so far it fails on the recursive nature of the downstream unnest
+#        list(grp_cols = from_col, item_col = qn_to, distrib = TRUE),
+#        list(grp_cols = to_col, item_col = qn_from, distrib = TRUE)
+    )
+
+    count_all <- function(d) {
+        counters %>%
+        map(~exec(count, d, !!!.x)) %>%
+        bind_cols %>%
+        mutate(scope = scope)
+    }
+
+    log_trace(
+        'Summarizing translation ambiguity for columns `%s`, `%s` and `%s`',
+        qn_from, qn_to, qualify
+    )
+
+    scope <- `if`(is.null(groups), 'global', 'group')
+
+    d %>%
+    unnest_longer(c(from_col, to_col, qualify, qn_from, qn_to)) %>%
+    nest(.by = groups) %>%
+    mutate(summary = map(data, count_all)) %>%
+    select(-data) %>%
+    unnest_wider(summary) %>%
+    mutate(across(where(is_integer), ~replace_na(.x, 0L))) %>%
+    bind_rows(attr(d, label), .) %>%
+    relocate(scope, .after = last_col()) %>%
+    arrange(scope) %>%
+    set_attr(d, label, .) %>%
+    tbl_attrs
+
+}
 
 #' Translate gene, protein and small molecule identifiers from multiple columns
 #'
