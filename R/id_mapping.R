@@ -1396,6 +1396,7 @@ id_translation_table <- function(
     }
 
     result %>%
+    hmdb_old_ids(from, to) %>%
     trim_and_distinct
 
 }
@@ -1586,6 +1587,42 @@ hmdb_id_mapping_table <- function(to, from, entity_type = 'metabolite') {
         name = 'hmdb_id_mapping_table',
         args = list(from, to),
         callback = hmdb_id_mapping_table_impl
+    )
+
+}
+
+
+#' Take care about 5 and 7 digit HMDB IDs
+#'
+#' @importFrom dplyr mutate bind_rows
+#' @importFrom magrittr %>% extract
+#' @importFrom stringr str_to_lower str_detect str_match
+#' @noRd
+hmdb_old_ids <- function(d, from, to){
+
+    is_hmdb <- function(i) {i %>% str_to_lower %>% str_detect('^hmdb')}
+
+    fmt_hmdb <- function(v, fmt = 7L) {
+        fmt <- 'HMDB%%0%ii' %>% sprintf(fmt)
+
+        v %>%
+        str_match('HMDB(\\d+)') %>%
+        extract(,2L) %>%
+        as.integer %>%
+        sprintf(fmt, .)
+    }
+
+    d %>%
+    doif(
+        is_hmdb(from),
+        ~bind_rows(
+            mutate(.x, From = fmt_hmdb(From)),
+            mutate(.x, From = fmt_hmdb(From, 5L))
+        )
+    ) %>%
+    doif(
+        is_hmdb(to),
+        ~mutate(.x, To = fmt_hmdb(To))
     )
 
 }
