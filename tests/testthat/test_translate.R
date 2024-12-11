@@ -24,6 +24,7 @@ library(tibble)
 library(dplyr)
 library(magrittr)
 library(tidyselect)
+library(purrr)
 
 
 omnipath_set_console_loglevel('fatal')
@@ -36,14 +37,14 @@ input0 <- tibble(
 input1 <-
     input0 %>%
     group_by(a) %>%
-    mutate(b = list(b)) %>%
-    summarize_all(~extract(., 1L))
+    summarize(b = list(b)) %>%
+    mutate(b = map(b, ~discard(.x, is.na)))
 
 output_expanded <- tibble(
     a = c('A', 'A', 'A', 'B', 'C', 'D', 'E', 'F'),
     b = c('a', 'b', 'c', 'd', 'a', 'e', 'e', NA),
-    a_b_to_ambiguity = c(3L, 3L, 3L, 1L, 1L, 1L, 1L, 0L),
     a_b_from_ambiguity = c(2L, 1L, 1L, 1L, 2L, 2L, 2L, 1L),
+    a_b_to_ambiguity = c(3L, 3L, 3L, 1L, 1L, 1L, 1L, 0L),
     a_b_ambiguity = c(
         'many-to-many',
         'one-to-many',
@@ -62,7 +63,11 @@ output_collapsed <-
     reframe(across(everything(), ~list(.x))) %>%
     ungroup %>%
     rowwise %>%
-    mutate(across(ends_with('ambiguity'), ~list(set_names(.x, replace_na(b, ''))))) %>%
+    mutate(
+        across(all_of(c('a_b_from_ambiguity', 'a_b_ambiguity')),
+        ~list(set_names(.x, replace_na(b, ''))))
+    ) %>%
+    mutate(a_b_to_ambiguity = first(a_b_to_ambiguity)) %>%
     ungroup
 
 

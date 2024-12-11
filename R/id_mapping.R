@@ -676,7 +676,7 @@ ambiguity <- function(
     qn_cols <- c(qn_from, qn_to)
     ql_col <- qualify$label %>% sprintf('%s_%s_%s', from_col, to_col, .)
     q_cols <- c(qn_cols, ql_col)
-    lst_cols <- c(to_col, qn_to, ql_col)
+    lst_cols <- c(to_col, qn_from, ql_col)
 
     distinct_ids <- function(l) {
         unlist(l, recursive = FALSE) %>%
@@ -744,7 +744,7 @@ ambiguity <- function(
         quantify$toggle,
         rowwise(.) %>%
         mutate(across(all_of(qn_cols), ~set_names(.x, !!sym(to_col)))) %>%
-        mutate(!!sym(qn_from) := map_int(!!sym(qn_from), ~extract(.x, 1L))) %>%
+        mutate(!!sym(qn_to) := map_int(!!sym(qn_to), ~extract(.x, 1L))) %>%
         ungroup %>%
         relocate(all_of(qn_cols), .after = last_col()),
         select(., -all_of(qn_cols))

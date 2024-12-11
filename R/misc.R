@@ -1296,6 +1296,7 @@ na_of_class <- function(x) {
 
     x %>%
     list_class %>%
+    {get(sprintf('as.%s', .))} %>%
     {.(NA)}
 
 }
@@ -1308,8 +1309,7 @@ list_class <- function(x) {
     x %>%
     head(100L) %>%
     unlist %>%
-    class %>%
-    {get(sprintf('as.%s', .))}
+    class
 
 }
 
@@ -1325,10 +1325,10 @@ na_to_len0 <- function(lst) {
 
     if (is.list(lst)) {
 
-        cls <- lst %>% list_class
+        cls <- lst %>% na_of_class
 
         lst %<>%
-        map(~`if`(extract(.x, 1L) %>% is.na, cls(0L), .x))
+        map(~`if`(extract(.x, 1L) %>% is.na, , .x))
 
     }
 
