@@ -445,7 +445,7 @@ download_to_cache <- function(
 #'     allowing \code{reader} to download the file.
 #' @param ... Passed to \code{\link{download_base}}.
 #'
-#' @importFrom magrittr %>% %<>%
+#' @importFrom magrittr %>% %<>% equals
 #' @importFrom readr read_tsv cols
 #' @importFrom rlang exec !!!
 #' @importFrom logger log_trace
@@ -463,12 +463,17 @@ generic_downloader <- function(
     ...
 ){
 
-    reader_param %<>% add_defaults(
-        reader,
-        list(
-            col_types = cols(),
-            show_col_types = FALSE,
-            progress = FALSE
+    reader_param %<>% doif(
+        reader %>% environment %>% getNamespaceName %>% equals('readr'),
+        ~add_defaults(
+            .x,
+            reader,
+            list(
+                col_types = cols(),
+                show_col_types = FALSE,
+                progress = FALSE,
+
+            )
         )
     )
 
