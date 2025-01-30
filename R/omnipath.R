@@ -184,7 +184,10 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 #' @param format Character: if "json", JSON will be retrieved and processed
 #'     into a nested list; any other value will return data frame.
 #' @param download_args List: parameters to pass to the download function,
-#'     which is `readr::read_tsv` by default, and `jsonlite::safe_load`.
+#'     which is \code{readr::read_tsv} by default, and
+#'     \code{jsonlite::stream_in} if \code{format = "json"}. Note: as these are
+#'     both wrapped into a downloader using \code{curl::curl}, a curl handle
+#'     can be also passed here under the name \code{handle}.
 #' @param references_by_resource Logical: if TRUE,, in the `references`
 #'     column the PubMed IDs will be prefixed with the names of the resources
 #'     they are coming from. If FALSE, the `references` column will be a list
@@ -242,7 +245,7 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom tibble as_tibble
-#' @importFrom readr read_tsv cols col_character
+#' @importFrom readr cols col_character
 #' @importFrom utils modifyList
 #' @importFrom rlang !!!
 #' @export
@@ -295,7 +298,7 @@ omnipath_query <- function(
         cache = cache
     )
     dataframe_defaults <- list(
-        fun = read_tsv,
+        fun = curl_read_tsv,
         col_types = `if`(
             'dorothea_level' %in% param$fields,
             cols(dorothea_level = col_character()),
@@ -305,7 +308,7 @@ omnipath_query <- function(
         show_col_types = FALSE
     )
     json_defaults <- list(
-        fun = safe_json,
+        fun = curl_read_json,
         simplifyDataFrame = FALSE
     )
     download_args %<>%
@@ -363,30 +366,34 @@ omnipath_post_download <- function(
     result %<>% deserialize_extra_attrs(!!!param$json_param)
     result %<>% deserialize_evidences(!!!param$json_param)
 
-    if(strict_evidences && param$query_type == 'interactions') {
-        result %<>% only_from(
-            datasets = param$datasets,
-            resources = param$resources,
-            .keep = param$keep_evidences
-        )
-    }
+    if (is.data.frame(result)) {
 
-    if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
-        result %<>% count_references
-        result %<>% count_resources
-    }
+        if(strict_evidences && param$query_type == 'interactions') {
+            result %<>% only_from(
+                datasets = param$datasets,
+                resources = param$resources,
+                .keep = param$keep_evidences
+            )
+        }
 
-    if(is.data.frame(result)){
-        result %<>% as_tibble
-    }
+        if(param$query_type %in% c('interactions', 'enzsub') && add_counts){
+            result %<>% count_references
+            result %<>% count_resources
+        }
 
-    if(!is_empty_2(param$orthology_targets)){
-        result %<>% omnipath_orthology_translate(param)
-    } else if(
-        !is_empty_2(param$genesymbol_resource) &&
-        str_to_lower(param$genesymbol_resource[1L]) != 'uniprot'
-    ) {
-        result %<>% update_genesymbols(param, param$organisms[1L])
+        if(is.data.frame(result)){
+            result %<>% as_tibble
+        }
+
+        if(!is_empty_2(param$orthology_targets)){
+            result %<>% omnipath_orthology_translate(param)
+        } else if(
+            !is_empty_2(param$genesymbol_resource) &&
+            str_to_lower(param$genesymbol_resource[1L]) != 'uniprot'
+        ) {
+            result %<>% update_genesymbols(param, param$organisms[1L])
+        }
+
     }
 
     from_cache <- result %>% is_from_cache

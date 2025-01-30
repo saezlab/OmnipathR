@@ -189,9 +189,6 @@ download_base <- function(
 
     }
 
-    op <- options(timeout = 600)
-    on.exit(options(op))
-
     url_loglevel <- `if`(
         getOption('omnipathr.print_urls'),
         omnipath_console_loglevel(),
@@ -232,10 +229,7 @@ download_base <- function(
                 # http_param %<>% c(list(add_headers(.headers = req_headers)))
                 handle = structure(
                     list(
-                        handle = new_handle(
-                            CONNECTTIMEOUT =
-                                getOption('omnipathr.connect_timeout')
-                        ),
+                        handle = omnipath_new_handle(),
                         url = (httr%:::%handle_name)(url)
                     ),
                     class = 'handle'
@@ -301,16 +295,8 @@ download_base <- function(
 
         log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
 
-        the_url <- `if`(
-            isNamespace(environment(fun)) &&
-            getNamespaceName(environment(fun)) == 'readr' &&
-            !endsWith(url, 'gz'),
-            curl_wrap_url(url),
-            url
-        )
-
         result <- tryCatch(
-            exec(fun, the_url, !!!args),
+            exec(fun, url, !!!args),
             error = identity
         )
 
@@ -347,23 +333,6 @@ download_base <- function(
     }
 
     return(result)
-
-}
-
-
-#' Converts URL to curl connection and sets curl options on it
-#'
-#' @importFrom magrittr %>%
-#' @importFrom curl curl new_handle
-#' @noRd
-curl_wrap_url <- function(url){
-
-    url %>%
-    curl(
-        handle = new_handle(
-            CONNECTTIMEOUT = getOption('omnipathr.connect_timeout')
-        )
-    )
 
 }
 
@@ -446,14 +415,14 @@ download_to_cache <- function(
 #' @param ... Passed to \code{\link{download_base}}.
 #'
 #' @importFrom magrittr %>% %<>% equals
-#' @importFrom readr read_tsv cols
+#' @importFrom readr cols
 #' @importFrom rlang exec !!!
 #' @importFrom logger log_trace
 #'
 #' @noRd
 generic_downloader <- function(
     url_key,
-    reader = read_tsv,
+    reader = curl_read_tsv,
     url_key_param = list(),
     url_param = list(),
     reader_param = list(),
@@ -471,8 +440,7 @@ generic_downloader <- function(
             list(
                 col_types = cols(),
                 show_col_types = FALSE,
-                progress = FALSE,
-
+                progress = FALSE
             )
         )
     )
@@ -983,5 +951,86 @@ user_agent <- function() {
     options %>%
     first %>%
     list('User-Agent' = .)
+
+}
+
+
+#' Download by curl, read by read_tsv
+#'
+#' @importFrom readr read_tsv
+#' @noRd
+curl_read_tsv <- function(url, curl_param = list(), ...) {
+
+    omnipath_curl(url, curl_param, callback = read_tsv, ...)
+
+}
+
+
+#' Download by curl, read by stream_in
+#'
+# #' @importFrom jsonlite stream_in
+#' @importFrom jsonlite fromJSON
+#' @noRd
+curl_read_json <- function(url, curl_param = list(), ...) {
+
+    # this is a temporary replacement for jsonlite::stream_in
+    # because the server returns JSON without any newlines
+    # and then stream_in overflows the stack and crashes
+    json_readlines <- function(con, ...) {
+
+        jsonlite::fromJSON(readLines(con, warn = FALSE), ...)
+
+    }
+
+    omnipath_curl(url, curl_param, callback = json_readlines, ...)
+
+}
+
+
+#' Download by curl with OmnipathR specific options
+#'
+#' @param url Character: URL to download
+#' @param curl_param List: parameters to pass to \code{curl::new_handle}
+#' @param callback Optional, a function to call on the connection.
+#' @param ... Passed to \code{callback}
+#'
+#' @importFrom readr read_tsv
+#' @importFrom curl curl
+#' @importFrom rlang exec !!!
+#' @importFrom magrittr %<>%
+#' @noRd
+omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
+
+
+    handle <- exec(omnipath_new_handle, !!!curl_param)
+    con <- curl(url, open = 'rb', handle = handle)
+
+    if (!is.null(callback)) {
+        on.exit(close(con))
+        return(callback(con, ...))
+    }
+
+    return(con)
+
+}
+
+
+#' Create a new curl handle with OmnipathR specific options
+#'
+#' @importFrom rlang exec !!!
+#' @importFrom magrittr %>%
+#' @importFrom curl new_handle
+#' @noRd
+omnipath_new_handle <- function(...) {
+
+    from_config <- list(
+        CONNECTTIMEOUT =
+            getOption('omnipathr.connect_timeout'),
+        TIMEOUT = getOption('omnipathr.http_timeout')
+    )
+
+    args <- list(...) %>% merge_lists(from_config)
+
+    exec(new_handle, !!!args)
 
 }
