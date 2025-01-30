@@ -96,7 +96,10 @@ summary message is printed upon successful download.}
     \item{\code{format}}{Character: if "json", JSON will be retrieved and processed
 into a nested list; any other value will return data frame.}
     \item{\code{download_args}}{List: parameters to pass to the download function,
-which is `readr::read_tsv` by default, and `jsonlite::safe_load`.}
+which is \code{readr::read_tsv} by default, and
+\code{jsonlite::stream_in} if \code{format = "json"}. Note: as these are
+both wrapped into a downloader using \code{curl::curl}, a curl handle
+can be also passed here under the name \code{handle}.}
     \item{\code{references_by_resource}}{Logical: if TRUE,, in the `references`
 column the PubMed IDs will be prefixed with the names of the resources
 they are coming from. If FALSE, the `references` column will be a list

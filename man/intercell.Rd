@@ -104,7 +104,10 @@ summary message is printed upon successful download.}
     \item{\code{format}}{Character: if "json", JSON will be retrieved and processed
 into a nested list; any other value will return data frame.}
     \item{\code{download_args}}{List: parameters to pass to the download function,
-which is `readr::read_tsv` by default, and `jsonlite::safe_load`.}
+which is \code{readr::read_tsv} by default, and
+\code{jsonlite::stream_in} if \code{format = "json"}. Note: as these are
+both wrapped into a downloader using \code{curl::curl}, a curl handle
+can be also passed here under the name \code{handle}.}
     \item{\code{license}}{Character: license restrictions. By default, data from
 resources allowing "academic" use is returned by OmniPath. If you use
 the data for work in a company, you can provide "commercial" or

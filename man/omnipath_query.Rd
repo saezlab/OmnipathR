@@ -69,7 +69,10 @@ summary message is printed upon successful download.}
 \item{logicals}{Character vector: fields to be cast to logical.}
 
 \item{download_args}{List: parameters to pass to the download function,
-which is `readr::read_tsv` by default, and `jsonlite::safe_load`.}
+which is \code{readr::read_tsv} by default, and
+\code{jsonlite::stream_in} if \code{format = "json"}. Note: as these are
+both wrapped into a downloader using \code{curl::curl}, a curl handle
+can be also passed here under the name \code{handle}.}
 
 \item{format}{Character: if "json", JSON will be retrieved and processed
 into a nested list; any other value will return data frame.}
