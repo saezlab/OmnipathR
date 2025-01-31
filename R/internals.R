@@ -1015,8 +1015,16 @@ omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
 
     if (!is.null(callback)) {
 
-        result <- callback(con, ...)
-        close(con)
+        result <-
+            tryCatch(
+                { callback(con, ...) },
+                error = function(e) {
+                    stop(e)
+                },
+                finally = {
+                    close(con)
+                }
+            )
 
         handle_received <- `%:::%`('curl', 'handle_received')
         handle_speed <- `%:::%`('curl', 'handle_speed')
