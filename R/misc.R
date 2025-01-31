@@ -1031,16 +1031,6 @@ unique_sorted <- function(v) {
 }
 
 
-#' Joins a list of words by comma and space
-#'
-#' @noRd
-enum_format <- function(words) {
-
-    paste(words, collapse = ', ')
-
-}
-
-
 #' Compact string representation for any R object
 #'
 #' @param obj An R object.
@@ -1337,3 +1327,53 @@ na_to_len0 <- function(lst) {
 }
 
 
+#' Formats size in bytes
+#'
+#' @param size Numeric: size in bytes
+#'
+#' @return Character: formatted size
+#'
+#' @importFrom utils object.size
+#' @importFrom magrittr %>%
+#' @noRd
+format_bytes <- function(size) {
+
+    structure(size, class = 'object_size') %>%
+    format(units = 'auto')
+
+}
+
+
+#' Converts seconds to human-readable format
+#'
+#' @importFrom magrittr %>%
+#' @importFrom lubridate seconds_to_period
+#' @importFrom stringr str_to_lower
+#' @noRd
+format_period <- function(seconds) {
+
+    seconds %>%
+    seconds_to_period %>%
+    str_to_lower
+
+}
+
+
+#' Extracts the domain name from a URL
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang %||%
+#' @importFrom httr parse_url
+#'
+#' @noRd
+domain_from_url <- function(url) {
+
+    # NSE vs. R CMD check Workaround
+    hostname <- NULL
+
+    url %>%
+    parse_url %>%
+    parse_url %>%
+    `$`(hostname) %||% 'unknown domain'
+
+}
