@@ -57,8 +57,18 @@
     omnipathr.db_lifetime = 300L,
     omnipathr.nichenet_results_dir = 'nichenet_results',
     omnipathr.uploadlists_chunk_size = 5000,
+    # CURL options
     omnipathr.http_timeout = 300L,
+    omnipathr.curl_verbose = FALSE,
     omnipathr.connect_timeout = 10L,
+    omnipathr.tcp_keepalive = TRUE,
+    omnipathr.tcp_keepintvl = 13L,
+    omnipathr.tcp_keepidle = 10L,
+    omnipathr.tcp_keepcnt = 10L,
+    omnipathr.upkeep_interval_ms = 3e04L,
+    omnipathr.ssl_verifypeer = TRUE,
+    omnipathr.ssl_verifyhost = TRUE,
+    # CURL options end
     omnipathr.uniprot_idmapping_poll_interval = 3L,
     omnipathr.uniprot_idmapping_timeout = 30L,
     omnipathr.user_agent = paste0(

@@ -20,6 +20,23 @@
 #
 
 
+READR_DEFAULTS = list(
+    col_types = cols(),
+    show_col_types = FALSE,
+    progress = FALSE
+)
+
+CURL_DEBUG_TYPES = list(
+    '* ',   # info
+    '<=',  # hdr in
+    '=>',  # hdr out
+    '< ',   # data in
+    ' >',   # data out
+    '<*',  # tls data in
+    '*>'   # tls data out
+)
+
+
 #' Prepend the current OmniPath server domain to an URL
 #'
 #' @param path_qs Character: part of the URL after the domain: the path and
@@ -432,17 +449,11 @@ generic_downloader <- function(
     ...
 ){
 
+    log_trace('Downloading by `generic_downloader`.')
+
     reader_param %<>% doif(
         reader %>% environment %>% getNamespaceName %>% equals('readr'),
-        ~add_defaults(
-            .x,
-            reader,
-            list(
-                col_types = cols(),
-                show_col_types = FALSE,
-                progress = FALSE
-            )
-        )
+        ~add_defaults(.x, reader, READR_DEFAULTS)
     )
 
     url <- url_parser(
@@ -792,18 +803,13 @@ paths_in_archive <- function(archive_data){
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang %||%
-#' @importFrom httr parse_url
 #'
 #' @noRd
 source_attrs <- function(data, resource, url){
 
-    # NSE vs. R CMD check Workaround
-    hostname <- NULL
-
     domain <-
         url %||% 'unknown domain' %>%
-        parse_url %>%
-        `$`(hostname) %||% 'unknown domain'
+        domain_from_url
 
     source <- `if`(
         is.null(resource),
@@ -961,7 +967,9 @@ user_agent <- function() {
 #' @noRd
 curl_read_tsv <- function(url, curl_param = list(), ...) {
 
-    omnipath_curl(url, curl_param, callback = read_tsv, ...)
+    args <- list(...) %>% add_defaults(read_tsv, READR_DEFAULTS)
+
+    exec(omnipath_curl, url, curl_param, callback = read_tsv, !!!args)
 
 }
 
@@ -995,7 +1003,7 @@ curl_read_json <- function(url, curl_param = list(), ...) {
 #' @param ... Passed to \code{callback}
 #'
 #' @importFrom readr read_tsv
-#' @importFrom curl curl
+#' @importFrom curl curl handle_data
 #' @importFrom rlang exec !!!
 #' @importFrom magrittr %<>%
 #' @noRd
@@ -1006,11 +1014,53 @@ omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
     con <- curl(url, open = 'rb', handle = handle)
 
     if (!is.null(callback)) {
-        on.exit(close(con))
-        return(callback(con, ...))
+
+        result <- callback(con, ...)
+        close(con)
+
+        handle_received <- `%:::%`('curl', 'handle_received')
+        handle_speed <- `%:::%`('curl', 'handle_speed')
+        domain <- url %>% domain_from_url
+        stats <- handle %>% handle_data
+
+        log_trace(
+            paste(
+                'Downloaded %s in %s from %s (%s/s); Redirect: %s, DNS look',
+                'up: %s, Connection: %s, Pretransfer: %s, First byte at: %s'
+            ),
+            handle %>% handle_received %>% format_bytes,
+            stats$times['total'] %>% format_period,
+            domain,
+            handle %>% handle_speed %>% extract(1L) %>% format_bytes,
+            stats$times['redirect'] %>% format_period,
+            stats$times['namelookup'] %>% format_period,
+            stats$times['connect'] %>% format_period,
+            stats$times['pretransfer'] %>% format_period,
+            stats$times['starttransfer'] %>% format_period
+        )
+
+        return(result)
+
     }
 
     return(con)
+
+}
+
+
+#' Curl debug callback
+#'
+#' @importFrom logger log_trace
+#' @noRd
+curl_debug <- function(type, data) {
+
+    data %<>% {`if`(
+        type == 2L || type == 3L || type == 5L || type == 6L,
+        sprintf('%i bytes of data', length(.)),
+        readBin(., 'character')
+    )}
+
+    log_trace('CURL DEBUG[%s]: %s', CURL_DEBUG_TYPES[[type + 1L]], data)
 
 }
 
@@ -1024,12 +1074,23 @@ omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
 omnipath_new_handle <- function(...) {
 
     from_config <- list(
-        CONNECTTIMEOUT =
+        connecttimeout =
             getOption('omnipathr.connect_timeout'),
-        TIMEOUT = getOption('omnipathr.http_timeout')
+        timeout = getOption('omnipathr.http_timeout'),
+        debugfunction = curl_debug,
+        verbose = getOption('omnipathr.curl_verbose'),
+        tcp_keepalive = getOption('omnipathr.tcp_keepalive'),
+        tcp_keepintvl = getOption('omnipathr.tcp_keepintvl'),
+        tcp_keepidle = getOption('omnipathr.tcp_keepidle'),
+        tcp_keepcnt = getOption('omnipathr.tcp_keepcnt'),
+        upkeep_interval_ms = getOption('omnipathr.upkeep_interval_ms'),
+        ssl_verifypeer = getOption('omnipathr.ssl_verifypeer'),
+        ssl_verifyhost = getOption('omnipathr.ssl_verifyhost')
     )
 
     args <- list(...) %>% merge_lists(from_config)
+
+    log_trace('Curl options: %s', compact_repr(args))
 
     exec(new_handle, !!!args)
 
