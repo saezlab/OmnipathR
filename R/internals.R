@@ -1090,7 +1090,7 @@ omnipath_new_handle <- function(...) {
 
     args <- list(...) %>% merge_lists(from_config)
 
-    log_trace('Curl options: %s', compact_repr(args))
+    log_trace('Curl options: %s', compact_repr(args, limit = 99L))
 
     exec(new_handle, !!!args)
 

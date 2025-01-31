@@ -1042,7 +1042,7 @@ unique_sorted <- function(v) {
 #' @importFrom magrittr %>% %<>% is_greater_than
 #' @importFrom utils head
 #' @noRd
-compact_repr <- function(obj, limit = 10L) {
+compact_repr <- function(obj, limit = 10L, sep = ',') {
 
     if (is.data.frame(obj)) {
 
@@ -1061,7 +1061,7 @@ compact_repr <- function(obj, limit = 10L) {
             c(dots) %>%
             paste(names(.), '=', ., sep = '') %>%
             str_replace('^=', '') %>%
-            paste(collapse = ',') %>%
+            paste(collapse = sep) %>%
             sprintf('[%s]', .)
 
     } else {

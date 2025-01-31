@@ -41,6 +41,8 @@
     }
 
     omnipath_init_cache()
+    log_session_info()
+    log_curl_version()
 
     if(buildserver) {
 

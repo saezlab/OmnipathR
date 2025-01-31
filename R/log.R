@@ -426,3 +426,41 @@ appender_delay <- function(pkg) {
 switch_logfile <- function(pkg, path) {
 
 }
+
+
+#' Log the curl version
+#'
+#' @importFrom curl curl_version
+#' @importFrom purrr map2_chr
+#' @importFrom logger log_info
+#' @importFrom magrittr %>%
+#' @noRd
+log_curl_version <- function() {
+
+    curl_version() %>%
+    map2_chr(names(.), ~sprintf('%s: %s', .y, paste(.x, collapse = ', '))) %>%
+    paste0(collapse = '; ') %>%
+    log_info('CURL: %s', .)
+
+}
+
+
+#' Log the session info
+#'
+#' @importFrom sessioninfo session_info
+#' @importFrom logger log_info
+#' @importFrom magrittr %>% extract2
+#' @noRd
+log_session_info <- function() {
+
+    session_info() %>%
+    extract2('platform') %>%
+    compact_repr(limit = 999L, sep = '; ') %>%
+    log_info('Session info: %s', .)
+
+    session_info(info = 'external') %>%
+    extract2('external') %>%
+    compact_repr(limit = 999L, sep = '; ') %>%
+    log_info('External libraries: %s', .)
+
+}
