@@ -68,7 +68,28 @@ deserialize_json_col <- function(data, col, ...) {
         {log_trace('Converting JSON column `%s` to list.', col)} %>%
         mutate(!!sym(col) := map(!!sym(col), fromJSON, !!!fromjson_args)),
         .
+    )} %>%
+    {`if`(
+        !is.data.frame(data),
+        map(., ~exec(json_in_list, .x, key = col, !!!fromjson_args)),
+        .
     )}
+
+}
+
+
+#' In each sublist, deserialize a JSON encoded value if key exists
+#'
+#' @importFrom jsonlite fromJSON
+#' @importFrom magrittr %<>%
+#' @noRd
+json_in_list <- function(x, key, ...) {
+
+    if(!is.null(x[[key]]) && is.character(x[[key]])) {
+        x[[key]] %<>% fromJSON(...)
+    }
+
+    x
 
 }
 
