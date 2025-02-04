@@ -1076,8 +1076,8 @@ curl_debug <- function(type, data) {
 #' Create a new curl handle with OmnipathR specific options
 #'
 #' @importFrom rlang exec !!!
-#' @importFrom magrittr %>%
-#' @importFrom curl new_handle
+#' @importFrom magrittr %>% %<>% extract
+#' @importFrom curl new_handle curl_options
 #' @noRd
 omnipath_new_handle <- function(...) {
 
@@ -1096,7 +1096,26 @@ omnipath_new_handle <- function(...) {
         ssl_verifyhost = getOption('omnipathr.ssl_verifyhost')
     )
 
-    args <- list(...) %>% merge_lists(from_config)
+    args <-
+        list(...) %>%
+        merge_lists(from_config)
+
+
+    param_noavail <-
+        args %>%
+        names %>%
+        setdiff(curl_options() %>% names)
+
+    if (length(param_noavail) > 0L) {
+
+        log_trace(
+            'The following curl options are not available: %s',
+            compact_repr(param_noavail)
+        )
+
+        args %<>% extract(names(.) %>% setdiff(param_noavail))
+
+    }
 
     log_trace('Curl options: %s', compact_repr(args, limit = 99L))
 
