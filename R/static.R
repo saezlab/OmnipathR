@@ -118,7 +118,7 @@ static_tables <- function() {
 #' @examples
 #' static_table("annotations", "PROGENy")
 #'
-#' @importFrom logger log_warn log_error
+#' @importFrom logger log_warn
 #' @importFrom magrittr %>% %<>% extract
 #' @importFrom stringr str_to_lower str_detect
 #' @importFrom dplyr pull filter
@@ -171,7 +171,7 @@ static_table <- function(
                     'see `static_tables()`.'
                 ) %>%
                 sprintf(query, resource, organism)
-            log_error(msg)
+            log_error_with_info(msg)
             stop(msg)
         },
         .

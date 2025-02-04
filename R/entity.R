@@ -35,7 +35,7 @@ ensure_entity_type <- function(entity_type = NULL) {
     if (is.null(valid_et)) {
 
         err <- sprintf('Unknown entity type: `%s`.', entity_type)
-        log_error(err)
+        log_error_with_info(err)
         stop(err)
 
     }

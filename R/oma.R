@@ -117,7 +117,6 @@ oma_supported_organisms <- function() {
 #' @importFrom magrittr %<>% %>%
 #' @importFrom readr cols
 #' @importFrom utils tail
-#' @importFrom logger log_error
 #' @importFrom dplyr across mutate filter
 #' @importFrom stringr str_extract str_detect
 #' @importFrom tidyselect starts_with
@@ -157,7 +156,7 @@ oma_pairwise <- function(
                 `if`(arg == 'id_type', 'ID type', 'organism'),
                 args[[arg]]
             )
-            log_error(msg)
+            log_error_with_info(msg)
             stop(msg)
         }
     }
@@ -189,7 +188,7 @@ oma_pairwise <- function(
                 ),
                 id_type
             )
-            log_error(msg)
+            log_error_with_info(msg)
             stop(msg)
         },
         .

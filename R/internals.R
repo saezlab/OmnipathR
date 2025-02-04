@@ -159,7 +159,7 @@ url_parser <- function(
 #'
 #' @return The output of the downloader function \code{fun}.
 #'
-#' @importFrom logger log_level log_error log_warn log_trace
+#' @importFrom logger log_level log_warn log_trace
 #' @importFrom httr POST GET content write_disk
 #' @importFrom httr add_headers status_code headers
 #' @importFrom magrittr %>% %<>%
@@ -330,7 +330,7 @@ download_base <- function(
 
             if(attempt == retries){
 
-                log_error(msg)
+                log_error_with_info(msg)
                 stop(result)
 
             }else{

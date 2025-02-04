@@ -195,7 +195,7 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
 #' @importFrom dplyr mutate across select bind_rows filter
 #' @importFrom dplyr left_join row_number arrange
 #' @importFrom tidyr unnest_longer
-#' @importFrom logger log_info log_error
+#' @importFrom logger log_info
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{chalmers_gem}}}
@@ -219,7 +219,9 @@ chalmers_gem_network <- function(
     met_to_gene <- target <- reverse <- ensg <- metabolicatlas <- NULL
 
     if (metab_max_degree < 1L) {
-        '`metab_max_degree` cannot be less than 1.' %T>% log_error %>% stop
+        '`metab_max_degree` cannot be less than 1.' %T>%
+        log_error_with_info %>%
+        stop
     }
 
     organism_or_gem %<>% `if`(is_list(.), ., chalmers_gem(.))

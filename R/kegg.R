@@ -225,7 +225,7 @@ kegg_pathway_list <- function(){
 #' @importFrom tidyr unnest_wider separate_rows
 #' @importFrom dplyr mutate row_number
 #' @importFrom tibble tibble
-#' @importFrom logger log_error log_trace
+#' @importFrom logger log_trace
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{kegg_process}}}
@@ -267,7 +267,7 @@ kegg_pathway_download <- function(
 
         error = function(err){
 
-            log_error(
+            log_error_with_info(
                 paste0(
                     'Failed to download KEGG pathway `%s` (URL: %s). ',
                     'Unless you provided an invalid pathway_id or there ',

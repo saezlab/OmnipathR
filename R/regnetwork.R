@@ -212,7 +212,6 @@ mirna_or_protein <- function(ids){
 #' certificate is the "InCommon RSA Server CA" one.
 #'
 #' @importFrom stringr str_detect
-#' @importFrom logger log_error
 #' @noRd
 regnetwork_error <- function(e){
 
@@ -234,7 +233,7 @@ regnetwork_error <- function(e){
             ) %>%
             sprintf('%s The original error: %s', ., cond)
 
-        log_error(msg)
+        log_error_with_info(msg)
         warning(msg)
         return(NULL)
 

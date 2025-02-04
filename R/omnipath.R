@@ -1157,7 +1157,7 @@ swap_undirected <- function(data){
 #' @param ... Passed to the internal function \code{download_base} and
 #'     from there ultimately to \code{fun}.
 #'
-#' @importFrom logger log_trace log_info log_error
+#' @importFrom logger log_trace log_info
 #' @noRd
 omnipath_download <- function(url, fun, cache = NULL, ...) {
 
@@ -1194,6 +1194,7 @@ omnipath_download <- function(url, fun, cache = NULL, ...) {
                     the_url,
                     conditionMessage(e)
                 )
+                log_all_info('OmnipathR')
             }
         )
 

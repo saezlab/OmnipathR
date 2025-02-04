@@ -81,7 +81,7 @@ must_have_evidences <- function(data, wide_ok = FALSE, env = parent.frame()){
             ) %>%
             sprintf(parent_call %>% as.character %>% extract(1L))
 
-        log_error(m)
+        log_error_with_info(m)
         do.call(stop, list(m), envir = env)
 
     }

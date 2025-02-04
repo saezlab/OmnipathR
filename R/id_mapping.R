@@ -96,7 +96,7 @@ uniprot_id_mapping_table <- function(
 #'
 #' @importFrom magrittr %<>% extract2 %>%
 #' @importFrom httr POST GET accept_json content
-#' @importFrom logger log_trace log_error
+#' @importFrom logger log_trace
 #' @importFrom stringr str_replace
 #' @importFrom readr read_tsv cols
 #'
@@ -141,7 +141,7 @@ uniprot_id_mapping_table <- function(
             msg <- run_result$messages %>%
                 paste(collapse = ' ') %>%
                 sprintf('Error at querying UniProt ID mapping: %s', .)
-            log_error(msg)
+            log_error_with_info(msg)
             stop(msg)
         }
 
@@ -172,7 +172,7 @@ uniprot_id_mapping_table <- function(
                     'Error at querying UniProt ID mapping: %s',
                     status$messages
                 )
-                log_error(msg)
+                log_error_with_info(msg)
                 stop(msg)
 
             }
@@ -1045,7 +1045,7 @@ translate_ids_multi <- function(
     if(length(source_cols) == 0L) {
 
         msg <- 'translate_ids_multi: no source column provided.'
-        log_error(msg)
+        log_error_with_info(msg)
         stop(msg)
 
     }
@@ -1063,7 +1063,7 @@ translate_ids_multi <- function(
             ) %>%
             sprintf(length(suffixes), length(source_cols))
 
-        log_error(msg)
+        log_error_with_info(msg)
         stop(msg)
 
     }

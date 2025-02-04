@@ -41,8 +41,7 @@
     }
 
     omnipath_init_cache()
-    log_session_info()
-    log_curl_version()
+    log_all_info(pkgname)
 
     if(buildserver) {
 
@@ -57,7 +56,7 @@
         tryCatch(
             omnipath_cache_wipe(),
             error = function(e){
-                logger::log_error('Failed to wipe cache: %s.', e)
+                log_error_with_info('Failed to wipe cache: %s.', e)
                 logger::log_trace('On a build server, unlocking cache db.')
             }
         )

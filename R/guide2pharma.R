@@ -49,7 +49,6 @@
 #' @importFrom stringr str_to_lower str_replace_all
 #' @importFrom tidyr separate_rows
 #' @importFrom tibble tibble
-#' @importFrom logger log_error
 guide2pharma_download <- function(){
 
     .slow_doctest()
@@ -104,7 +103,7 @@ guide2pharma_download <- function(){
             get_url %>%
             close_connection
 
-            log_error(
+            log_error_with_info(
                 paste0(
                     'Failed to download data from Guide to Pharmacology ',
                     '(guidetopharmacology.org). Most likely it is due to ',

@@ -435,7 +435,7 @@ switch_logfile <- function(pkg, path) {
 #' @importFrom logger log_info
 #' @importFrom magrittr %>%
 #' @noRd
-log_curl_version <- function() {
+log_curl_info <- function() {
 
     curl_version() %>%
     map2_chr(names(.), ~sprintf('%s: %s', .y, paste(.x, collapse = ', '))) %>%
@@ -462,5 +462,54 @@ log_session_info <- function() {
     extract2('external') %>%
     compact_repr(limit = 999L, sep = '; ') %>%
     log_info('External libraries: %s', .)
+
+}
+
+
+#' Log package metadata
+#'
+#' @importFrom utils packageDescription
+#' @importFrom purrr map2_chr
+#' @importFrom stringr str_to_lower
+#' @noRd
+log_pkg_info <- function(pkg) {
+
+    fields <- c(
+        'Packaged',
+        'Date/Publication',
+        'Built',
+        'Version',
+        'Repository'
+    )
+
+    packageDescription(pkg, fields = fields) %>%
+    unlist %>%
+    map2_chr(names(.) %>% str_to_lower, ~sprintf('%s: %s', .y, .x)) %>%
+    log_info('Package `%s` %s', pkg, .)
+
+}
+
+
+#' Log all info about package, platform, environment, libraries
+#'
+#' @importFrom logger log_info
+#' @noRd
+log_all_info <- function(pkg) {
+
+    log_pkg_info(pkg)
+    log_session_info()
+    log_curl_info()
+
+}
+
+
+#' Log error and all info
+#'
+#' @importFrom logger log_error
+#' @noRd
+log_error_with_info <- function(...) {
+
+    log_error(...)
+    log_all_info('OmnipathR')
 
 }

@@ -129,7 +129,7 @@ ensembl_organisms <- function(){
 #' @importFrom purrr map_chr
 #' @importFrom readr cols col_character read_tsv type_convert
 #' @importFrom dplyr slice_tail slice_head
-#' @importFrom logger log_warn log_trace log_error
+#' @importFrom logger log_warn log_trace
 #' @export
 biomart_query <- function(
     attrs = NULL,
@@ -165,7 +165,7 @@ biomart_query <- function(
     if(!nchar(attrs)){
 
         msg <- 'BioMart: the query must contain at least one attribute.'
-        log_error(msg)
+        log_error_with_info(msg)
         stop(msg)
 
     }

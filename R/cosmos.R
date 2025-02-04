@@ -121,7 +121,10 @@ cosmos_pkn <- function(
     'R.matlab' %>%
     missing_packages %>%
     paste(collapse = ', ') %>%
-    {`if`(nchar(.), sprintf('Missing packages: %s', .) %T>% log_error %>% stop)}
+    {`if`(
+        nchar(.),
+        sprintf('Missing packages: %s', .) %T>% log_error_with_info %>% stop
+    )}
 
     with_cache(
         name = 'COSMOS_PKN_%s' %>% sprintf(organism),

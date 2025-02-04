@@ -36,7 +36,6 @@
 #' pubmed_open(interactions$references[1])
 #'
 #' @importFrom magrittr %<>% %>%
-#' @importFrom logger log_error
 #' @importFrom withr local_options
 #' @importFrom stringr str_split str_replace_all
 #' @importFrom purrr walk
@@ -48,7 +47,7 @@ pubmed_open <- function(pmids, browser = NULL, sep = ';', max_pages = 25L){
 
     if(is_empty_2(browser)){
 
-        logger::log_error(
+        log_error_with_info(
             'To open pages in a web browser, set the `browser` option. ',
             'For example: options(browser = "firefox").'
         )
@@ -71,7 +70,7 @@ pubmed_open <- function(pmids, browser = NULL, sep = ';', max_pages = 25L){
     as.character %>%
     {`if`(
         length(.) > max_pages,
-        logger::log_error(
+        log_error_with_info(
             paste0(
                 'To open %i pages in a browser, increase the ',
                 '`max_pages` parameter (currently %i).'

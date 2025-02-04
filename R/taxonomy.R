@@ -317,7 +317,7 @@ oma_code <- function(name) {
 #' # Caenorhabditis elegans (PRJNA13758).
 #'
 #' @importFrom magrittr %>% %<>% extract2
-#' @importFrom logger log_warn log_error
+#' @importFrom logger log_warn
 #' @export
 organism_for <- function(organism, resource, error = TRUE) {
 
@@ -363,7 +363,7 @@ organism_for <- function(organism, resource, error = TRUE) {
 
         if (error) {
 
-            log_error(msg)
+            log_error_with_info(msg)
             stop(msg)
 
         } else {
