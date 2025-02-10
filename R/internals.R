@@ -434,7 +434,9 @@ generic_downloader <- function(
     log_trace('Downloading by `generic_downloader`.')
 
     reader_param %<>% doif(
-        reader %>% environment %>% getNamespaceName %>% equals('readr'),
+        reader %>%
+        environment %>%
+        {isNamespace(.) && getNamespaceName(.) %>% equals('readr')},
         ~add_defaults(.x, reader, READR_DEFAULTS)
     )
 
