@@ -1363,7 +1363,7 @@ format_period <- function(seconds) {
 #'
 #' @importFrom magrittr %>%
 #' @importFrom rlang %||%
-#' @importFrom httr parse_url
+#' @importFrom httr2 url_parse
 #'
 #' @noRd
 domain_from_url <- function(url) {
@@ -1372,8 +1372,7 @@ domain_from_url <- function(url) {
     hostname <- NULL
 
     url %>%
-    parse_url %>%
-    parse_url %>%
+    url_parse %>%
     `$`(hostname) %||% 'unknown domain'
 
 }

@@ -95,7 +95,8 @@ uniprot_id_mapping_table <- function(
 #' R CMD check workaround, see details at \code{uniprot_id_mapping_table}
 #'
 #' @importFrom magrittr %<>% extract2 %>%
-#' @importFrom httr POST GET accept_json content
+#' @importFrom httr2 req_body_form req_headers req_perform resp_body_json
+#' @importFrom httr2 request
 #' @importFrom logger log_trace
 #' @importFrom stringr str_replace
 #' @importFrom readr read_tsv cols
@@ -134,8 +135,11 @@ uniprot_id_mapping_table <- function(
     if(!from_cache){
 
         run_result <-
-            POST(run_url, body = post, accept_json()) %>%
-            content(as = 'parsed')
+            request(run_url) %>%
+            req_body_form(post) %>%
+            req_headers('Accept' = 'application/json') %>%
+            req_perform() %>%
+            resp_body_json()
 
         if(!is.null(run_result$messages)) {
             msg <- run_result$messages %>%
@@ -162,8 +166,10 @@ uniprot_id_mapping_table <- function(
             log_trace('Polling `%s`', status_url)
 
             status <-
-                GET(status_url, accept_json()) %>%
-                content(as = 'parsed')
+                request(status_url) %>%
+                req_headers('Accept' = 'application/json') %>%
+                req_perform() %>%
+                resp_body_json()
 
             if(!is.null(status$results) || !is.null(status$failedIds)){
                 break
@@ -191,8 +197,10 @@ uniprot_id_mapping_table <- function(
                 url_key = 'uniprot_idmapping_details',
                 url_param = list(jobid)
             ) %>%
-            GET(accept_json()) %>%
-            content(as = 'parsed') %>%
+            request() %>%
+            req_headers('Accept' = 'application/json') %>%
+            req_perform() %>%
+            resp_body_json() %>%
             extract2('redirectURL') %>%
             str_replace('/idmapping/results/', '/idmapping/stream/') %>%
             str_replace('/results/', '/results/stream/') %>%
