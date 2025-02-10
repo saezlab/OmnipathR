@@ -1009,32 +1009,44 @@ omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
                 }
             )
 
-        handle_received <- `%:::%`('curl', 'handle_received')
-        handle_speed <- `%:::%`('curl', 'handle_speed')
-        domain <- url %>% domain_from_url
-        stats <- handle %>% handle_data
-
-        log_trace(
-            paste(
-                'Downloaded %s in %s from %s (%s/s); Redirect: %s, DNS look',
-                'up: %s, Connection: %s, Pretransfer: %s, First byte at: %s'
-            ),
-            handle %>% handle_received %>% format_bytes,
-            stats$times['total'] %>% format_period,
-            domain,
-            handle %>% handle_speed %>% extract(1L) %>% format_bytes,
-            stats$times['redirect'] %>% format_period,
-            stats$times['namelookup'] %>% format_period,
-            stats$times['connect'] %>% format_period,
-            stats$times['pretransfer'] %>% format_period,
-            stats$times['starttransfer'] %>% format_period
-        )
+        log_curl_stats(handle, url)
 
         return(result)
 
     }
 
     return(con)
+
+}
+
+
+#' Log message with download statistics
+#'
+#' @importFrom magrittr %>% extract
+#' @importFrom logger log_trace
+#' @noRd
+log_curl_stats <- function(handle, url) {
+
+    handle_received <- `%:::%`('curl', 'handle_received')
+    handle_speed <- `%:::%`('curl', 'handle_speed')
+    domain <- url %>% domain_from_url
+    stats <- handle %>% handle_data
+
+    log_trace(
+        paste(
+            'Downloaded %s in %s from %s (%s/s); Redirect: %s, DNS look',
+            'up: %s, Connection: %s, Pretransfer: %s, First byte at: %s'
+        ),
+        handle %>% handle_received %>% format_bytes,
+        stats$times['total'] %>% format_period,
+        domain,
+        handle %>% handle_speed %>% extract(1L) %>% format_bytes,
+        stats$times['redirect'] %>% format_period,
+        stats$times['namelookup'] %>% format_period,
+        stats$times['connect'] %>% format_period,
+        stats$times['pretransfer'] %>% format_period,
+        stats$times['starttransfer'] %>% format_period
+    )
 
 }
 
