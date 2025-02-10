@@ -30,6 +30,7 @@
     patch_logger_metavar()
     patch_logger_appender()
     patch_attr_preserving_all()
+    patch_httr2_keep_handle()
     omnipath_init_log()
 
     buildserver <- .on_buildserver()
