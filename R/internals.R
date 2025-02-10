@@ -122,16 +122,10 @@ url_parser <- function(
 #'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
 #'     be used to download the data and the contents will be channeled to
 #'     \code{fun} to read it.
-#' @param http_param List: further parameters for \code{httr::GET} or
-#'     \code{httr::POST}. Used only if \code{path} is not \code{NULL} or
-#'     if \code{post} is not \code{NULL}.
-#' @param content_param List: further parameters for \code{httr::content}.
-#'     Used only if \code{path} is \code{NULL} and \code{post} is not
-#'     \code{NULL}.
 #' @param path Character: if not `NULL` the file will be downloaded
 #'     to this path and the path will be returned.
-#' @param req_headers List: a list of HTTP headers. Passed to
-#'     `httr::add_headers`, used only if the downloader function is set up
+#' @param http_headers List: a list of HTTP headers. Passed to
+#'     `httr2::req_headers`, used only if the downloader function is set up
 #'     here (see details at param `fun`).
 #' @param init_url Character: retrieve first this URL, to obtain cookies
 #'     or start a session.
@@ -160,8 +154,8 @@ url_parser <- function(
 #' @return The output of the downloader function \code{fun}.
 #'
 #' @importFrom logger log_level log_warn log_trace
-#' @importFrom httr POST GET content write_disk
-#' @importFrom httr add_headers status_code headers
+#' @importFrom httr2 request req_options req_body_form req_perform
+#' @importFrom httr2 resp_body_string resp_status req_headers
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec %||%
 #' @importFrom curl new_handle
@@ -171,10 +165,8 @@ download_base <- function(
     url,
     fun = NULL,
     post = NULL,
-    http_param = list(),
-    content_param = list(),
     path = NULL,
-    req_headers = list(),
+    http_headers = list(),
     init_url = NULL,
     init_headers = NULL,
     return_response = FALSE,
@@ -191,16 +183,16 @@ download_base <- function(
 
         init_response <- download_base(
             url = init_url,
-            req_headers = init_headers,
+            http_headers = init_headers,
             return_response = TRUE
         )
 
         if(!is.null(extract_headers)){
 
-            req_headers <-
+            http_headers <-
                 init_response %>%
                 extract_headers %>%
-                {merge_lists(req_headers, .)}
+                {merge_lists(http_headers, .)}
 
         }
 
@@ -222,53 +214,38 @@ download_base <- function(
         ignore_contents ||
         is.null(fun) ||
         use_httr
-    ){
+){
+
+        log_trace('Downloading by `httr2` in `download_base`.')
 
         reader <- fun %||% identity
 
         fun <- function(url, post = NULL, ...){
 
-            # NSE vs. R CMD check workaround
-            httr <- handle_name <- NULL
+            log_trace('Preparing httr2 request.')
 
-            http_param %<>% ensure_list_2
-            content_param %<>% ensure_list_2
-            http_method <- `if`(is.null(post), GET, POST)
-            http_param$body <- post
-            req_headers %<>% list_null
+            http_headers %<>% list_null
 
-            http_param %<>% c(list(
-                add_headers(.headers = unlist(req_headers)),
-                # we create new handle in each call just to be able to set
-                # a custom connect timeout; the benefit of this is
-                # questionnable, maybe we should just remove this;
-                # then we can simply do:
-                # http_param %<>% c(list(add_headers(.headers = req_headers)))
-                handle = structure(
-                    list(
-                        handle = omnipath_new_handle(),
-                        url = (httr%:::%handle_name)(url)
-                    ),
-                    class = 'handle'
-                )
-            ))
+            curlopt <- omnipath_new_handle(args_only = TRUE)
 
-            if(!is.null(path)){
+            req <-
+                url %>%
+                request() %>%
+                req_headers(!!!http_headers) %>%
+                req_options(!!!curlopt) %>%
+                doif(!is.null(post), ~req_body_form(.x, !!!post))
 
-                http_param %<>% c(list(write_disk(path, overwrite = TRUE)))
+            resp <-
+                req %T>%
+                {log_trace('Sending HTTP request.')} %>%
+                req_perform(path = path)
 
-            }
-
-            response <- exec(
-                http_method,
-                url = url,
-                !!!http_param
-            )
-            http_status <- status_code(response)
+            http_status <- resp %>% resp_status
             msg <- sprintf('HTTP %i', http_status)
 
             if(http_status != 200L){
 
+                msg %<>% sprintf('%s: %s', resp %>% resp_status_desc)
                 log_warn(msg)
                 stop(msg)
 
@@ -276,20 +253,27 @@ download_base <- function(
 
             log_trace(msg)
 
+            if (!is.null(handle <- resp$request %>% attr('handle'))) {
+
+                log_curl_stats(handle, url)
+
+            } else {
+
+                log_trace('No downlad stats available: no curl handle.')
+
+            }
+
             result <- FALSE
 
-            if(return_response){
+            if (return_response) {
 
-                result <- response
+                result <- resp
 
-            }else{
+            } else if (is.null(path) && !ignore_contents) {
 
-                if(is.null(path) && !ignore_contents){
+                log_trace('Calling reader callback on response.')
 
-                    result <- exec(content, response, !!!content_param) %>%
-                    reader(...)
-
-                }
+                result <- resp %>% resp_body_string %>% reader(...)
 
             }
 
@@ -369,8 +353,8 @@ download_base <- function(
 #'     will be attempted.
 #' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
 #'     will be used to download the data, otherwise \code{httr::POST}.
-#' @param req_headers List: a list of HTTP headers. Passed to
-#'     `httr::add_headers`, used only if the downloader function is set up
+#' @param http_headers List: a list of HTTP headers. Passed to
+#'     `httr2::req_headers`, used only if the downloader function is set up
 #'     here (see details at param `fun`).
 #'
 #' @noRd
@@ -378,10 +362,9 @@ download_to_cache <- function(
     url_key,
     url_key_param = list(),
     url_param = list(),
-    http_param = list(),
     ext = NULL,
     post = NULL,
-    req_headers = NULL
+    http_headers = NULL
 ){
 
     url <- url_parser(
@@ -400,9 +383,8 @@ download_to_cache <- function(
             url = url,
             fun = NULL,
             path = version$path,
-            http_param = http_param,
             post = post,
-            req_headers = req_headers
+            http_headers = http_headers
         )
         omnipath_cache_download_ready(version)
 
@@ -596,7 +578,7 @@ archive_downloader <- function(
             url = url,
             path = version$path,
             post = post,
-            req_headers = http_headers,
+            http_headers = http_headers,
             ...
         )
         omnipath_cache_download_ready(version)
@@ -1009,7 +991,6 @@ curl_read_json <- function(url, curl_param = list(), ...) {
 #' @noRd
 omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
 
-
     handle <- exec(omnipath_new_handle, !!!curl_param)
     con <- curl(url, open = 'rb', handle = handle)
 
@@ -1075,11 +1056,18 @@ curl_debug <- function(type, data) {
 
 #' Create a new curl handle with OmnipathR specific options
 #'
+#' @param ... Curl options named by their curl/httr2 synonyms. See the output of
+#'     \code{curl::curl_options}.
+#' @param args_only Logical: if \code{TRUE} return only the arguments, otherwise
+#'     return a curl handle.
+#'
+#' @return A list of arguments if \code{args_only = TRUE}, otherwise a curl handle.
+#'
 #' @importFrom rlang exec !!!
 #' @importFrom magrittr %>% %<>% extract
 #' @importFrom curl new_handle curl_options
 #' @noRd
-omnipath_new_handle <- function(...) {
+omnipath_new_handle <- function(args_only = FALSE, ...) {
 
     from_config <- list(
         connecttimeout =
@@ -1119,6 +1107,6 @@ omnipath_new_handle <- function(...) {
 
     log_trace('Curl options: %s', compact_repr(args, limit = 99L))
 
-    exec(new_handle, !!!args)
+    `if`(args_only, args, exec(new_handle, !!!args))
 
 }
