@@ -441,6 +441,8 @@ omnipath_post_download <- function(
 #' @noRd
 omnipath_args <- function(dots, ...) {
 
+    log_trace('Processing args for OmniPath query')
+
     calling_env <- parent.frame()
     override <- list(...) %>% qs_synonyms
     calling_fun <- sys.function(-1L)
