@@ -39,7 +39,7 @@
 ensembl_organisms_raw <- function(){
 
     'ensembl_organisms' %>%
-    download_to_cache(req_headers = user_agent()) %>%
+    download_to_cache(http_headers = user_agent()) %>%
     read_html %>%
     html_element('table') %>%
     html_table()
@@ -191,7 +191,7 @@ biomart_query <- function(
             progress = FALSE
         ),
         use_httr = TRUE,
-        req_headers = user_agent()
+        http_headers = user_agent()
     ) %>%
     {`if`(
         slice_tail(., n = 1L) %>% extract2(1L) %>% equals('[success]'),

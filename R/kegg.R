@@ -217,7 +217,6 @@ kegg_pathway_list <- function(){
 #' # #   uniprot_source <chr>, kegg_id_target <chr>,
 #' # #   genesymbol_target <chr>, uniprot_target <chr>
 #'
-#' @importFrom httr add_headers
 #' @importFrom rlang exec !!! %||%
 #' @importFrom xml2 read_xml xml_find_all xml_attr xml_child xml_children
 #' @importFrom purrr map
@@ -258,7 +257,7 @@ kegg_pathway_download <- function(
             download_to_cache(
                 url_key = 'kegg_kgml',
                 url_param = list(pathway_id),
-                http_param = exec(add_headers, !!!req_hdrs),
+                http_headers = req_hdrs,
                 ext = 'xml'
             ) %>%
             read_xml
