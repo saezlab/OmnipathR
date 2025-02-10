@@ -58,7 +58,7 @@ Imports:
     curl,
     digest,
     dplyr(>= 1.1.0),
-    httr,
+    httr2,
     igraph,
     jsonlite,
     later,
