@@ -548,7 +548,8 @@ translate_ids <- function(
             ) %>%
             {`if`(keep_untranslated, ., filter(., !is.na(To)))} %>%
             relocate(To, .after = last_col()) %>%
-            rename(!!sym(to_col) := To) %>%
+            mutate(!!sym(to_col) := To) %>%
+            select(-To) %>%
             {`if`(
                 bool(quantify_ambiguity) || bool(qualify_ambiguity),
                 ambiguity(
@@ -640,7 +641,7 @@ translate_ids <- function(
 #' @importFrom magrittr %>% %<>% or extract not
 #' @importFrom dplyr pull mutate select row_number cur_group_id n_distinct
 #' @importFrom dplyr group_by summarize reframe first across relocate
-#' @importFrom dplyr case_when rename
+#' @importFrom dplyr case_when
 #' @importFrom tidyselect where all_of any_of last_col
 #' @importFrom tidyr unnest_longer
 #' @export
