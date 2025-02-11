@@ -100,6 +100,7 @@ uniprot_id_mapping_table <- function(
 #' @importFrom logger log_trace
 #' @importFrom stringr str_replace
 #' @importFrom readr read_tsv cols
+#' @importFrom rlang !!!
 #'
 #' @noRd
 .uniprot_id_mapping_table <- function(
@@ -136,7 +137,7 @@ uniprot_id_mapping_table <- function(
 
         run_result <-
             request(run_url) %>%
-            req_body_form(post) %>%
+            req_body_form(!!!post) %>%
             req_headers('Accept' = 'application/json') %>%
             req_perform() %>%
             resp_body_json()
