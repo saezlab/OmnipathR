@@ -929,14 +929,19 @@ omnipath_cache_load <- function(
 
         data <- readRDS(path)
         log_trace('Loaded data from RDS `%s`.', path)
+
         return(data %>% origin_cache)
 
     }else{
+
         log_info(
             'No version is available for key `%s` (%s).',
             record$key,
             url
         )
+
+        return(NULL)
+
     }
 
 }
