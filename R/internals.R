@@ -987,14 +987,47 @@ curl_read_json <- function(url, curl_param = list(), ...) {
 #' @param ... Passed to \code{callback}
 #'
 #' @importFrom readr read_tsv
-#' @importFrom curl curl handle_data
+#' @importFrom curl curl handle_data curl_fetch_disk
+#' @importFrom fs path_ext
+#' @importFrom logger log_trace
 #' @importFrom rlang exec !!!
-#' @importFrom magrittr %<>%
+#' @importFrom magrittr %>% extract2
 #' @noRd
-omnipath_curl <- function(url, curl_param = list(), callback = NULL, ...) {
+omnipath_curl <- function(
+        url,
+        curl_param = list(),
+        callback = NULL,
+        compr = NULL,
+        ...
+    ) {
 
     handle <- exec(omnipath_new_handle, !!!curl_param)
-    con <- curl(url, open = 'rb', handle = handle)
+
+    COMPR <- list(gz = gzfile, bz2 = bzfile, xz = xzfile)
+    fname <- url %>% fname_from_url
+    compr %<>% if_null(
+        fname %>% path_ext %>% intersect(names(COMPR)) %>% if_null_len0(NULL)
+    )
+
+    if (!is.null(compr)) {
+
+        path <- url %>% fname_from_url %>% file.path(tempdir(), .)
+        log_trace(
+            paste0(
+               '`%s` compressed file, downloading to ',
+               'temporary location: `%s`'
+            ),
+            compr,
+            path
+        )
+        curl_fetch_disk(url, path, handle = handle)
+        con <- COMPR %>% extract2(compr) %>% exec(path, open = 'rb')
+
+    } else {
+
+        con <- curl(url, open = 'rb', handle = handle)
+
+    }
 
     if (!is.null(callback)) {
 
