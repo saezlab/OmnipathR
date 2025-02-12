@@ -1376,3 +1376,19 @@ domain_from_url <- function(url) {
     `$`(hostname) %||% 'unknown domain'
 
 }
+
+
+#' Extracts the filename from a URL
+#'
+#' @importFrom magrittr %>% extract2
+#' @importFrom httr2 url_parse
+#'
+#' @noRd
+fname_from_url <- function(url) {
+
+    url %>%
+    url_parse() %>%
+    extract2('path') %>%
+    basename
+
+}
