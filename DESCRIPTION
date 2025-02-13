@@ -105,6 +105,5 @@ Suggests:
     R.matlab,
     sigmajs,
     smoof,
-    supraHex,
     testthat
 RoxygenNote: 7.3.2
