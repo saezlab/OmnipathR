@@ -321,7 +321,7 @@ chalmers_gem_network <- function(
 #' @importFrom magrittr %>% inset2
 #' @importFrom dplyr filter select bind_rows mutate rename
 #' @importFrom tidyr unnest_longer separate_wider_regex
-#' @importFrom stringr str_replace str_c
+#' @importFrom stringr str_replace_all str_c
 #' @noRd
 binary_from_reaction <- function(
         reactions,
@@ -349,16 +349,14 @@ binary_from_reaction <- function(
         {select(.$r, ri, ci, source = !!sym(.$t), target = !!sym(.$s))} %>%
         mutate(reverse = TRUE, met_to_gene = !met_to_gene)
     )} %>%
-    mutate(
-        across(
-            c(source, target),
-            ~str_replace(.x, '^\\(?(ENS[A-Z]+\\d+)\\)?$', '\\1')
-        )
-    ) %>%
+    mutate(across(c(source, target), ~str_replace_all(.x, '[\\(\\)]', ''))) %>%
     filter(!is.na(source), !is.na(target)) %>%
     separate_wider_regex(
         c(source, target),
-        patterns = c(id = '(?:MAM|ENSG)\\d+', comp = '[cmxrelgni]?'),
+        patterns = c(
+            id = '(?:MAM\\d+|[-\\w\\.:\'\\[\\]]+)',
+            comp = '[cmxrelgni]??'
+        ),
         names_sep = '_'
     ) %>%
     mutate(comp = as.factor(str_c(source_comp, target_comp))) %>%
