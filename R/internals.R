@@ -122,6 +122,7 @@ url_parser <- function(
 #'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
 #'     be used to download the data and the contents will be channeled to
 #'     \code{fun} to read it.
+#' @param payload Character or list: HTTP POST body (raw or JSON).
 #' @param path Character: if not `NULL` the file will be downloaded
 #'     to this path and the path will be returned.
 #' @param http_headers List: a list of HTTP headers. Passed to
@@ -174,6 +175,7 @@ download_base <- function(
     ignore_contents = FALSE,
     extract_headers = NULL,
     use_httr = FALSE,
+    payload = NULL,
     ...
 ){
 
@@ -210,11 +212,12 @@ download_base <- function(
 
     if(
         !is.null(post) ||
+        !is.null(payload) ||
         !is.null(path) ||
         ignore_contents ||
         is.null(fun) ||
         use_httr
-){
+    ){
 
         log_trace('Downloading by `httr2` in `download_base`.')
 
@@ -222,46 +225,15 @@ download_base <- function(
 
         fun <- function(url, post = NULL, ...){
 
-            log_trace('Preparing httr2 request.')
-
-            http_headers %<>% list_null
-
-            curlopt <- omnipath_new_handle(args_only = TRUE)
-
             req <-
                 url %>%
-                request() %>%
-                req_headers(!!!http_headers) %>%
-                req_options(!!!curlopt) %>%
-                doif(!is.null(post), ~req_body_form(.x, !!!post))
+                omnipath_httr2_req(
+                    http_headers = http_headers,
+                    post = post,
+                    payload = payload
+                )
 
-            resp <-
-                req %T>%
-                {log_trace('Sending HTTP request.')} %>%
-                req_perform(path = path)
-
-            http_status <- resp %>% resp_status
-            msg <- sprintf('HTTP %i', http_status)
-
-            if(http_status != 200L){
-
-                msg %<>% sprintf('%s: %s', resp %>% resp_status_desc)
-                log_warn(msg)
-                stop(msg)
-
-            }
-
-            log_trace(msg)
-
-            if (!is.null(handle <- resp$request %>% attr('handle'))) {
-
-                log_curl_stats(handle, url)
-
-            } else {
-
-                log_trace('No downlad stats available: no curl handle.')
-
-            }
+            resp <- req %>% omnipath_httr2_perform(path = path)
 
             result <- FALSE
 
@@ -949,11 +921,11 @@ user_agent <- function() {
 #'
 #' @importFrom readr read_tsv
 #' @noRd
-curl_read_tsv <- function(url, curl_param = list(), ...) {
+curl_read_tsv <- function(url, curlopt = list(), ...) {
 
     args <- list(...) %>% add_defaults(read_tsv, READR_DEFAULTS)
 
-    exec(omnipath_curl, url, curl_param, callback = read_tsv, !!!args)
+    exec(omnipath_curl, url, curlopt = curlopt, callback = read_tsv, !!!args)
 
 }
 
@@ -963,7 +935,7 @@ curl_read_tsv <- function(url, curl_param = list(), ...) {
 # #' @importFrom jsonlite stream_in
 #' @importFrom jsonlite fromJSON
 #' @noRd
-curl_read_json <- function(url, curl_param = list(), ...) {
+curl_read_json <- function(url, curlopt = list(), ...) {
 
     # this is a temporary replacement for jsonlite::stream_in
     # because the server returns JSON without any newlines
@@ -974,7 +946,7 @@ curl_read_json <- function(url, curl_param = list(), ...) {
 
     }
 
-    omnipath_curl(url, curl_param, callback = json_readlines, ...)
+    omnipath_curl(url, curlopt = curlopt, callback = json_readlines, ...)
 
 }
 
@@ -982,7 +954,7 @@ curl_read_json <- function(url, curl_param = list(), ...) {
 #' Download by curl with OmnipathR specific options
 #'
 #' @param url Character: URL to download
-#' @param curl_param List: parameters to pass to \code{curl::new_handle}
+#' @param curlopt List: parameters to pass to \code{curl::new_handle}
 #' @param callback Optional, a function to call on the connection.
 #' @param ... Passed to \code{callback}
 #'
@@ -995,13 +967,13 @@ curl_read_json <- function(url, curl_param = list(), ...) {
 #' @noRd
 omnipath_curl <- function(
         url,
-        curl_param = list(),
+        curlopt = list(),
         callback = NULL,
         compr = NULL,
         ...
     ) {
 
-    handle <- exec(omnipath_new_handle, !!!curl_param)
+    handle <- exec(omnipath_new_handle, !!!curlopt)
 
     COMPR <- list(gz = gzfile, bz2 = bzfile, xz = xzfile)
     fname <- url %>% fname_from_url
@@ -1155,5 +1127,215 @@ omnipath_new_handle <- function(args_only = FALSE, ...) {
     log_trace('Curl options: %s', compact_repr(args, limit = 99L))
 
     `if`(args_only, args, exec(new_handle, !!!args))
+
+}
+
+
+#' Create an httr2 request
+#'
+#' @param url Character: URL
+#' @param http_headers List: HTTP headers
+#' @param default_headers Logical: if \code{TRUE} add default headers
+#'     configured in the OmnipathR package options.
+#' @param curlopt List: curl options
+#' @param post List: POST body (form data)
+#' @param payload Character or list: POST body (raw or JSON)
+#'
+#' @return An httr2 request object
+#'
+#' @importFrom magrittr %>% %<>%
+#' @importFrom rlang exec !!!
+#' @importFrom httr2 request req_headers req_options
+#' @importFrom httr2 req_body_form req_body_raw req_body_json
+#' @noRd
+omnipath_httr2_req <- function(
+        url,
+        http_headers = list(),
+        default_headers = FALSE,
+        curlopt = list(),
+        post = NULL,
+        payload = NULL
+    ) {
+
+    log_trace('Preparing httr2 request to URL `%s`.', url)
+
+    http_headers %<>%
+        list_null %>%
+        {`if`(default_headers, merge_lists(omnipath_http_headers(), .), .)}
+
+    log_trace('HTTP headers: %s', compact_repr(http_headers, limit = 99L))
+
+    curlopt <- exec(omnipath_new_handle, args_only = TRUE, !!!curlopt)
+
+    url %>%
+    request() %>%
+    req_headers(!!!http_headers) %>%
+    req_options(!!!curlopt) %>%
+    doif(!is.null(post), ~req_body_form(.x, !!!post)) %>%
+    doif(
+        !is.null(payload) && is_string(payload),
+        ~req_body_raw(.x, payload)
+    ) %>%
+    doif(
+        !is.null(payload) && is.list(payload),
+        ~req_body_json(.x, payload)
+    ) %T>%
+    {log_trace('HTTP headers: %s', .$headers %>% unclass %>% compact_repr(99L))}
+
+}
+
+
+#' Perform an httr2 request
+#'
+#' @param req An httr2 request object.
+#' @param path Character: optional, path to write the response to.
+#'
+#' @return An httr2 response object
+#'
+#' @importFrom magrittr %>%
+#' @importFrom httr2 req_perform resp_status resp_status_desc
+#' @importFrom logger log_trace log_warn
+omnipath_httr2_perform <- function(req, path = NULL) {
+
+    log_trace('Sending HTTP request.')
+
+    resp <- req %>% req_perform(path = path)
+
+    http_status <- resp %>% resp_status
+    msg <- sprintf('HTTP %i (%s)', http_status, resp %>% resp_status_desc)
+
+    if (is_http_error(resp)) {
+
+        log_warn(msg)
+        stop(msg)
+
+    }
+
+    log_trace(msg)
+
+    if (!is.null(handle <- resp$request %>% attr('handle'))) {
+
+        log_curl_stats(handle, req$url)
+
+    } else {
+
+        log_trace('No downlad stats available: no curl handle.')
+
+    }
+
+    log_trace(
+        'Response headers: %s',
+        resp$headers %>% unclass %>% compact_repr(limit = 99L)
+    )
+
+    resp
+
+}
+
+
+#' Default HTTP headers
+#'
+#' @return A named character vector
+#'
+#' @importFrom rlang set_names
+#' @importFrom stringr str_split_fixed str_trim
+#' @importFrom magrittr %>% extract
+#' @noRd
+omnipath_http_headers <- function() {
+
+    'omnipathr.default_http_headers' %>%
+    getOption() %>%
+    str_split_fixed(':', 2L) %>%
+    {set_names(
+        extract(., , 2L) %>% str_trim,
+        extract(., , 1L)
+    )}
+
+}
+
+
+#' Check if an HTTP request resulted in an error
+#'
+#' @param resp An httr2 response object
+#'
+#' @return Logical: TRUE if the HTTP status is not between 200 and 399.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom httr2 resp_status
+#' @noRd
+is_http_error <- function(resp) {
+
+    resp %>%
+    resp_status %>%
+    {. < 200L || . > 399L}
+
+}
+
+
+
+#' Check if an HTTP request resulted in a redirect
+#'
+#' @param resp An httr2 response object
+#'
+#' @return Logical: TRUE if the HTTP status is 3xx.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom httr2 resp_status
+#' @noRd
+is_http_redirect <- function(resp) {
+
+    resp %>%
+    resp_status %>%
+    {. > 299L && . < 400L}
+
+}
+
+
+#' Get the redirect location from a HTTP response
+#'
+#' @param resp An httr2 response object
+#'
+#' @return Character: the location if it exists, `NULL` otherwise.
+#'
+#' @importFrom magrittr %>% extract2
+#' @importFrom httr2 resp_headers url_parse
+#' @noRd
+redirect_location <- function(resp) {
+
+    url <- resp$request$url %>% url_parse
+
+    resp %>%
+    resp_headers %>%
+    extract2('location') %>%
+    {`if`(
+        is.null(.),
+        .,
+        `if`(
+            str_starts(., '/'),
+            sprintf('%s://%s%s', url$scheme, url$hostname, .),
+            .
+        )
+    )} %T>%
+    {log_trace('Redirect to location: %s', .)}
+
+}
+
+
+#' Get the value of an HTTP response header
+#'
+#' @param resp An httr2 response object
+#' @param key Character: the header name
+#'
+#' @return Character: the header value if it exists, `NULL` otherwise.
+#'
+#' @importFrom magrittr %>% extract
+#' @importFrom httr2 resp_headers
+#' @noRd
+omnipath_resp_headers <- function(resp, key) {
+
+    resp %>%
+    resp_headers %>%
+    unclass %>%
+    extract(names(.) == key)
 
 }
