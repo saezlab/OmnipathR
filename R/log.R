@@ -490,6 +490,28 @@ log_pkg_info <- function(pkg) {
 }
 
 
+#' Log all loaded packages
+#'
+#' @importFrom sessioninfo session_info
+#' @importFrom dplyr mutate pull
+#' @importFrom tibble as_tibble
+#' @importFrom logger log_info
+#' @importFrom magrittr %>% extract2
+#' @noRd
+log_packages <- function() {
+
+    session_info(info = 'packages') %>%
+    extract2('packages') %>%
+    as_tibble %>%
+    mutate(summary = sprintf('%s %s(%s)', package, loadedversion, date)) %>%
+    pull(summary) %>%
+    paste(collapse = '; ') %>%
+    log_info('Loaded packages: %s', .)
+
+
+}
+
+
 #' Log all info about package, platform, environment, libraries
 #'
 #' @importFrom logger log_info
@@ -498,6 +520,7 @@ log_all_info <- function(pkg) {
 
     log_pkg_info(pkg)
     log_session_info()
+    log_packages()
     log_curl_info()
 
 }
