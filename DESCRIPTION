@@ -101,7 +101,6 @@ Suggests:
     mlrMBO,
     parallelMap,
     ParamHelpers,
-    Rgraphviz,
     R.matlab,
     sigmajs,
     smoof,
