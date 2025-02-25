@@ -22,11 +22,9 @@
 
 #' Acquire a cookie if necessary
 #'
-#' @param curl_verbose Logical. Perform CURL requests in verbose mode for
-#'     debugging purposes.
 #' @param url Character. URL to download to get the cookie.
-#' @param init_url Character. An initial URL to download to get the cookie,
-#'     before downloading ``url`` with the cookie.
+#' @param http_headers List: HTTP headers.
+#' @param default_headers Logical: if TRUE, add the default headers.
 #' @param post List: HTTP POST parameters.
 #' @param payload Data to send as payload.
 #' @param init_post List: HTTP POST parameters for ``init_url``.
@@ -36,21 +34,65 @@
 #' @importFrom readr read_tsv cols
 #' @importFrom curl new_handle handle_setopt curl_fetch_memory handle_cookies
 #' @importFrom logger log_trace
-#' @export
+#' @importFrom purrr pluck
+#' @noRd
 #'
 #' @return A list with cache file path, cookies and response headers.
-cookie <- function(
-    url,
-    init_url = NULL,
-    post = NULL,
-    payload = NULL,
-    init_post = NULL,
-    init_payload = NULL,
-    curl_verbose = FALSE
-){
+omnipath_init_cookies <- function(
+        url,
+        http_headers = list(),
+        default_headers = FALSE,
+        post = NULL,
+        payload = NULL,
+        curlopt = list()
+    ){
 
-    .slow_doctest()
+    cookies <- NULL
 
+    while (TRUE) {
+
+        curlopt$followlocation <- FALSE
+
+        req <-
+            url %>%
+            omnipath_httr2_req(
+                post = post,
+                payload = payload,
+                http_headers = http_headers,
+                default_headers = default_headers,
+                curlopt = curlopt
+            )
+
+        resp <-
+            req %>%
+            omnipath_httr2_perform()
+
+        cookies %<>% append(
+            resp %>%
+            omnipath_resp_headers('set-cookie') %T>%
+            log_trace('Cookies: %s', .)
+        )
+
+        if (resp %>% is_http_redirect) {
+
+            url <- resp %>% redirect_location
+
+        } else {
+
+            break
+
+        }
+
+    }
+
+    cookies
+
+}
+
+
+
+#' @noRd
+inbiomap_cookie <- function( ) {
     # NSE vs. R CMD check workaround
     name <- value <- login_url <- NULL
 
@@ -137,8 +179,3 @@ cookie <- function(
 
 }
 
-
-#' @noRd
-post_payload <- function(post = NULL, payload = NULL) {
-
-}
