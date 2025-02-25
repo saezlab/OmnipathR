@@ -1392,3 +1392,17 @@ fname_from_url <- function(url) {
     basename
 
 }
+
+
+#' Checks if an object is a string
+#'
+#' @param x Object to check.
+#'
+#' @return `TRUE` if the object is a string, `FALSE` otherwise.
+#'
+#' @noRd
+is_string <- function(x) {
+
+    is.character(x) && length(x) == 1L
+
+}
