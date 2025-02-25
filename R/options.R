@@ -66,14 +66,30 @@
     omnipathr.tcp_keepidle = 10L,
     omnipathr.tcp_keepcnt = 13L,
     omnipathr.upkeep_interval_ms = 3e04L,
-    omnipathr.ssl_verifypeer = TRUE,
-    omnipathr.ssl_verifyhost = TRUE,
+    omnipathr.ssl_verifypeer = 1L,
+    omnipathr.ssl_verifyhost = 2L,
     # CURL options end
     omnipathr.uniprot_idmapping_poll_interval = 3L,
     omnipathr.uniprot_idmapping_timeout = 30L,
     omnipathr.user_agent = paste0(
-        'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) ',
-        'Gecko/20100101 Firefox/120.0'
+        'Mozilla/5.0 (X11; Linux x86_64; rv:134.0) ',
+        'Gecko/20100101 Firefox/134.0'
+    ),
+    omnipathr.default_http_headers = list(
+        paste0(
+           'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:134.0) ',
+           'Gecko/20100101 Firefox/134.0'
+        ),
+        paste0(
+           'Accept: text/html,application/xhtml+xml,',
+           'application/xml;q=0.9,*/*;q=0.8'
+        ),
+        'Accept-Encoding: gzip, deflate, br, zstd',
+        'Accept-Language: en-GB,en;q=0.5',
+        'Sec-GPC: 1',
+        'Upgrade-Insecure-Requests: 1',
+        'Cache-Control: no-cache',
+        'Pragma: no-cache'
     ),
     omnipathr.complex_translation = TRUE,
     omnipathr.complex_translation_one_to_many = 12L
