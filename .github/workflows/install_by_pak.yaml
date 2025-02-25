@@ -24,6 +24,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
     steps:
       - uses: actions/checkout@v4
@@ -48,4 +49,6 @@ jobs:
         run: Rscript -e 'install.packages("pak")'
 
       - name: Install OmnipathR from git by pak
-        run: Rscript -e 'pak::pkg_install("saezlab/OmnipathR")'
+        run: |
+          Rscript -e \
+          'pak::pkg_install("saezlab/OmnipathR@'${{ env.BRANCH_NAME }}'")'
