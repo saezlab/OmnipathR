@@ -30,9 +30,13 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install libglpk40
+      - name: Install libglpk40 (Ubuntu)
         if: ${{ matrix.config.os == 'ubuntu-latest' }}
         run: sudo apt-get install -y libglpk40
+
+      - name: Install xquartz (Mac OS)
+        if: ${{ matrix.config.os == 'macos-latest' }}
+        run: brew install --cask xquartz
 
       - uses: r-lib/actions/setup-r@v2
         with:
