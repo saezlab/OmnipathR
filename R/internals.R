@@ -278,7 +278,7 @@ download_base <- function(
             error = identity
         )
 
-        if(inherits(result, 'error')){
+        if(inherits(result, 'condition')){
 
             msg <-
                 sprintf(
@@ -978,6 +978,7 @@ omnipath_curl <- function(
         ...
     ) {
 
+    log_trace('HTTP request by `omnipath_curl`.')
     handle <- exec(omnipath_new_handle, !!!curlopt)
 
     COMPR <- list(gz = gzfile, bz2 = bzfile, xz = xzfile)
@@ -997,12 +998,29 @@ omnipath_curl <- function(
             compr,
             path
         )
-        curl_fetch_disk(url, path, handle = handle)
-        con <- COMPR %>% extract2(compr) %>% exec(path, open = 'rb')
+        curl_call <- quote(curl_fetch_disk(url, path, handle = handle))
 
     } else {
 
-        con <- curl(url, open = 'rb', handle = handle)
+        curl_call <- quote(curl(url, open = 'rb', handle = handle))
+
+    }
+
+    con <- tryCatch(eval(curl_call), error = identity, warning = identity)
+
+    log_curl_stats(handle, url)
+
+    if (inherits(con, 'condition')) {
+
+        msg <- conditionMessage(con)
+        log_warn('HTTP request failed with error: %s', msg)
+        stop(msg)
+
+    }
+
+    if (!is.null(compr)) {
+
+        con <- COMPR %>% extract2(compr) %>% exec(path, open = 'rb')
 
     }
 
@@ -1018,8 +1036,6 @@ omnipath_curl <- function(
                     close(con)
                 }
             )
-
-        log_curl_stats(handle, url)
 
         return(result)
 
