@@ -308,5 +308,18 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "kegg_organisms": {
+        "name": ["List of organisms in KEGG"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "kegg_organisms_load",
+        "loader_param": {
+            "rebuild": false
+        },
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }
