@@ -116,6 +116,7 @@
     ],
     "kegg_pw_png": "https://www.genome.jp/kegg/pathway/%s/%s.png",
     "kegg_pw_info": "https://www.genome.jp/entry/pathway+%s",
+    "kegg_rest": "https://rest.kegg.jp/%s",
     "preppi": [
         "https://honiglab.c2b2.columbia.edu/PrePPI/ref/",
         "preppi_final600.txt.tar.gz"
