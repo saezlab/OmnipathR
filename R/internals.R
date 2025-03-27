@@ -86,6 +86,7 @@ get_url <- function(key, param = list()){
 #' returned from the options).
 #'
 #' @importFrom magrittr %>%
+#' @importFrom stringr str_starts
 #' @importFrom utils URLencode
 #'
 #' @noRd
@@ -96,7 +97,11 @@ url_parser <- function(
 ){
 
     url_key %>%
-    get_url(url_key_param) %>%
+    {`if`(
+        str_starts(., 'https?://'),
+        .,
+        get_url(., url_key_param)
+    )} %>%
     c(url_param) %>%
     do.call(what = sprintf) %>%
     URLencode()
