@@ -964,7 +964,7 @@ curl_read_json <- function(url, curlopt = list(), ...) {
 #' @param ... Passed to \code{callback}
 #'
 #' @importFrom readr read_tsv
-#' @importFrom curl curl handle_data curl_fetch_disk
+#' @importFrom curl curl curl_fetch_disk
 #' @importFrom fs path_ext
 #' @importFrom logger log_trace
 #' @importFrom rlang exec !!!
@@ -1050,6 +1050,9 @@ omnipath_curl <- function(
 #'
 #' @importFrom magrittr %>% extract
 #' @importFrom logger log_trace
+#' @importFrom curl handle_data
+#' @importFrom stringr str_split
+#' @importFrom utils head
 #' @noRd
 log_curl_stats <- function(handle, url) {
 
@@ -1057,6 +1060,19 @@ log_curl_stats <- function(handle, url) {
     handle_speed <- `%:::%`('curl', 'handle_speed')
     domain <- url %>% domain_from_url
     stats <- handle %>% handle_data
+    headers <-
+        stats$headers %>%
+        rawToChar %>%
+        str_split('[\r\n]+') %>%
+        unlist %>%
+        head(-1L)
+
+    log_trace(
+        'HTTP v%s %s: status %s.',
+        stats$http_version,
+        stats$method,
+        stats$status_code
+    )
 
     log_trace(
         paste(
@@ -1073,6 +1089,8 @@ log_curl_stats <- function(handle, url) {
         stats$times['pretransfer'] %>% format_period,
         stats$times['starttransfer'] %>% format_period
     )
+
+    log_trace('HTTP headers: %s', headers %>% paste0(collapse = '; '))
 
 }
 
