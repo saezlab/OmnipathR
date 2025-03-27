@@ -1234,6 +1234,7 @@ omnipath_httr2_req <- function(
 #' @importFrom magrittr %>%
 #' @importFrom httr2 req_perform resp_status resp_status_desc
 #' @importFrom logger log_trace log_warn
+#' @noRd
 omnipath_httr2_perform <- function(req, path = NULL) {
 
     log_trace('Sending HTTP request.')
