@@ -39,3 +39,47 @@ metalinksdb_sqlite <- function() {
     sqlite_downloader()
 
 }
+
+
+#' List tables in MetalinksDB
+#'
+#' @return Character vector of table names in the MetalinksDB SQLite database.
+#'
+#' @examples
+#' metalinksdb_tables()
+#'
+#' @importFrom magrittr %>%
+#' @importFrom RSQLite dbListTables
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{metalinksdb_sqlite}}}
+#' }
+metalinksdb_tables <- function() {
+
+    metalinksdb_sqlite() %>% dbListTables
+
+}
+
+
+#' A table from MetalinksDB
+
+#' @param name Character. The name of the MetalinksDB table to fetch.
+#'
+#' @return A data frame (tibble) of one table from the MetalinksDB SQLite database.
+#'
+#' @examples
+#' metalinksdb_table('pathway')
+#'
+#' @importFrom magrittr %>%
+#' @importFrom RSQLite dbReadTable
+#' @importFrom tibble as_tibble
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{metalinksdb_sqlite}}}
+#'     \item{\code{\link{metalinksdb_tables}}}
+#' }
+metalinksdb_table <- function(name) {
+
+    metalinksdb_sqlite() %>% dbReadTable(name) %>% as_tibble()
+
+}

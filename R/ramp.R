@@ -111,7 +111,7 @@ ramp_tables <- function(version = RAMP_LATEST_VERSION) {
 #' @param name Character. The name of the RaMP table to fetch.
 #' @param version Character. The version of RaMP to download.
 #'
-#' @return Character vector of table names in the RaMP SQLite database.
+#' @return A data frame (tibble) of one table from the RaMP SQLite database.
 #'
 #' @examples
 #' ramp_table('source')
