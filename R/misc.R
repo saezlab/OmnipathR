@@ -1285,7 +1285,7 @@ len0_to_na <- function(lst) {
 na_of_class <- function(x) {
 
     x %>%
-    list_class %>%
+    list_class_name %>%
     {get(sprintf('as.%s', .))} %>%
     {.(NA)}
 
@@ -1295,6 +1295,15 @@ na_of_class <- function(x) {
 #' @importFrom magrittr %>%
 #' @noRd
 list_class <- function(x) {
+
+    x %>% list_class_name %>% get
+
+}
+
+
+#' @importFrom magrittr %>%
+#' @noRd
+list_class_name <- function(x) {
 
     x %>%
     head(100L) %>%
@@ -1315,10 +1324,10 @@ na_to_len0 <- function(lst) {
 
     if (is.list(lst)) {
 
-        cls <- lst %>% na_of_class
+        cls <- lst %>% list_class
 
         lst %<>%
-        map(~`if`(extract(.x, 1L) %>% is.na, , .x))
+        map(~`if`(is.null(.x) || is.na(.x[1L]), cls(0L), .x))
 
     }
 
