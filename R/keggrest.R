@@ -88,6 +88,13 @@ KEGG_OUTSIDE_DB_DRUG_TC <- c(
     'jtc'
 )
 
+KEGG_OUTSIDE_DB_ALL <- c(
+    KEGG_OUTSIDE_DB,
+    KEGG_OUTSIDE_DB_GENES,
+    KEGG_OUTSIDE_DB_COMPOUNDS,
+    KEGG_OUTSIDE_DB_DRUGS
+)
+
 KEGG_DATABASES_JA <- c(
     'disease_ja',
     'compound_ja',
@@ -124,6 +131,32 @@ KEGG_DB_GLKO <- c(
 
 KEGG_DB_WO_GLKO <- KEGG_DB_ORG %>% setdiff(KEGG_DB_GLKO)
 
+KEGG_COLUMNS <- list(
+    list = c('id', 'name'),
+    find = c('id', 'value'),
+    conv = c('id_a', 'id_b'),
+    link = c('id_a', 'id_b'),
+    ddi = c('drug_a', 'drug_b', 'interaction', 'mechanism')
+)
+
+KEGG_READERS <- list()
+
+KEGG_KID_PREFIXES <- list(
+    pathway = c('map', 'ko', 'ec', 'rn', '<org>'),
+    brite = c('br', 'jp', 'ko', '<org>'),
+    module = c('M', '<org>_M'),
+    orthology = 'K',
+    genome = 'T',
+    compound = 'C',
+    glycan = 'G',
+    reaction = 'R',
+    rclass = 'RC',
+    network = 'N',
+    disease = 'H',
+    drug = 'D',
+    dgroup = 'DG'
+)
+
 KEGG_API <- list(
     # the order of templates sometimes matters, see `kegg_query` for details;
     # the more specific ones should come first, to avoid a less specific one
@@ -139,8 +172,8 @@ KEGG_API <- list(
             organism = KEGG_ORGANISM
         ),
         list(
-             database = 'brite',
-             option = c('br', 'jp', 'ko', KEGG_ORGANISM)
+            database = 'brite',
+            option = c('br', 'jp', 'ko', KEGG_ORGANISM)
         ),
         list(
             database = KEGG_DB_ORG %>% setdiff(c('genes', 'ligand', 'kegg'))
@@ -408,62 +441,26 @@ kegg_query_match_template <- function(template, operation, ...) {
 
             idtype <- argnames[iarg]
 
-            if (!is_empty_2(idtype)) {
+            if (!is_empty_2(idtype) && !idtype == 'dbentries') {
 
                 arg %<>% str_replace('^(?:[-\\w]+:)?', sprintf('%s:', idtype))
 
             }
 
-            if (arg %>% str_detect('^[-\\w]+:') %>% all %>% not) {
+            result$error %<>% c(kegg_check_prefixes(arg, arg_template))
+            arg %<>% paste0(collapse = '+')
 
-                noprefix <- arg %>% extract(str_detect(., '^[-\\w]+:') %>% not)
-                msg <- sprintf(
-                    paste0(
-                        'In KEGG, <dbentries> must be prefixed with an ID ',
-                        'type (database or KEGG organism code), which also ',
-                        'can be provided here as an argument name. A sample ',
-                        'of the items missing this prefix: %s.'
-                    ),
-                    noprefix %>% head %>% paste0(collapse = ', ')
+        } else if (arg %>% kegg_valid_arg(arg_template) %>% not) {
+
+            msg <-
+                kegg_invalid_arg_msg(
+                    operation,
+                    arg,
+                    argname,
+                    arg_template
                 )
 
-                result$error %<>% c(msg)
-
-            } else {
-
-                prefix <- arg[1L] %>% str_extract('^[-\\w]+')
-
-                valid_prefix <-
-                    prefix %in% arg_template ||
-                    (
-                        KEGG_ORGANISM %in% arg_template &&
-                        prefix %in% kegg_organism_codes()
-                    )
-
-                if (!valid_prefix) {
-
-                    msg <- sprintf(
-                        paste0(
-                            '`%s` is an invalid prefix for <dbentries> in ',
-                            'KEGG operation `%s`. Valid prefixes are %s%s.'
-                        ),
-                        prefix,
-                        operation,
-                        arg_template %>% paste0(collapse = ', '),
-                        `if`(
-                            KEGG_ORGANISM %in% arg_template,
-                            ' and KEGG organism codes',
-                            ''
-                        )
-                    )
-
-                    result$error %<>% c(msg)
-
-                }
-
-            }
-
-            arg %<>% paste0(collapse = '+')
+            result$error %<>% c(msg)
 
         }
 
@@ -475,6 +472,121 @@ kegg_query_match_template <- function(template, operation, ...) {
     result$complete <- template_names %>% setdiff(result$names) %>% is_empty
 
     result
+
+}
+
+
+#' Checks whether all prefixes are valid in <dbentries>
+#'
+#' @param arg Character: the value of the argument.
+#' @param arg_template Character: the template of the argument.
+#'
+#' @return Character or NULL: NULL if all prefixes are valid; an error message
+#'     otherwise.
+#'
+#' @importFrom stringr str_detect str_extract str_replace
+#' @importFrom magrittr %>% is_in
+#' @importFrom purrr map
+#' @noRd
+kegg_check_prefixes <- function(arg, arg_template) {
+
+    msg <- NULL
+
+    valid_prefixes <-
+        map(arg_template, ~KEGG_KID_PREFIXES[[.x]]) %>%
+        unlist %>%
+        {doif(
+            str_detect(., KEGG_ORGANISM),
+            map(
+                .,
+                ~str_replace(.x, KEGG_ORGANISM, kegg_organism_codes())
+            )
+        )} %>%
+        unlist %>%
+        c(arg_template %>% intersect(KEGG_OUTSIDE_DB_ALL))
+
+    if (length(valid_prefixes) > 0L) {
+
+        which_valid <-
+            arg %>%
+            str_extract('^[-\\A-z]+:?') %>%
+            is_in(valid_prefixes) %>%
+            which
+
+        if (length(which_valid) > 0L) {
+
+            noprefix <- arg %>% extract(which_valid %>% head)
+            msg <- sprintf(
+                paste0(
+                    'In KEGG, <dbentries> must be prefixed with an ',
+                    'ID type (database or KEGG organism code), which ',
+                    'also can be provided here as an argument name.
+                    In this case, valid prefixes are %s. A sample ',
+                    'of the items missing this prefix: %s.'
+                ),
+                valid_prefixes %>% compact_repr,
+                noprefix %>% compact_repr
+            )
+
+        }
+
+    }
+
+    msg
+
+}
+
+
+#' Match an argument against its template
+#'
+#' @param arg Character: the argument to match.
+#' @param arg_template Character or NULL: the template to match against.
+#'
+#' @return Logical: whether the argument matches the template.
+#' @noRd
+kegg_valid_arg <- function(arg, arg_template) {
+
+    is.null(arg_template) ||
+    arg %in% arg_template ||
+    (
+        KEGG_ORGANISM %in% arg_template &&
+        arg %in% kegg_organism_codes()
+    )
+
+}
+
+
+#' Generate an invalid argument message
+#'
+#' @param operation Character: one of the KEGG REST API operations.
+#' @param argname Character: the name of the argument.
+#' @param arg Character: the value of the argument.
+#' @param arg_template Character: the template of the argument.
+#'
+#' @return Character: an error message.
+#' @noRd
+kegg_invalid_arg_msg <- function(
+        operation,
+        argname,
+        arg,
+        arg_template
+    ) {
+
+    sprintf(
+        paste0(
+            '`%s` is an invalid value for argument <%s> in ',
+            'KEGG operation `%s`. Valid values are %s%s.'
+        ),
+        arg,
+        argname,
+        operation,
+        arg_template %>% paste0(collapse = ', '),
+        `if`(
+            KEGG_ORGANISM %in% arg_template,
+            ' and KEGG organism codes',
+            ''
+        )
+    )
 
 }
 
