@@ -36,6 +36,8 @@ CURL_DEBUG_TYPES = list(
     '*>'   # tls data out
 )
 
+COMPR <- list(gz = gzfile, bz2 = bzfile, xz = xzfile)
+
 
 #' Prepend the current OmniPath server domain to an URL
 #'
@@ -499,6 +501,55 @@ xls_downloader <- function(
 }
 
 
+#' Generic method to download an SQLite database
+#'
+#' Downloads an SQLite database and extracts a table as a data frame.
+#'
+#' @param url_key Character: label of the built-in URL.
+#' @param ... Fields to be inserted into the URL.
+#' @param compr Character: the compression type. Either \code{NULL} or
+#'     \code{gzip}.
+#'
+#' @importFrom RSQLite SQLite dbConnect
+#' @noRd
+sqlite_downloader <- function(url_key, ..., url_param = list(), compr = NULL) {
+
+    fake_url <-
+        url_key %>%
+        c(list(...)) %>%
+        c(url_param) %>%
+        paste0(collapse = '_') %>%
+        sprintf('%s.sqlite', .)
+
+    cache_record <- omnipath_cache_latest_or_new(url = fake_url)
+    url <- get_url(url_key, url_param)
+    compr %<>% get_compr(url, .)
+
+    if (!cache_record$status == CACHE_STATUS$READY) {
+
+        cache_path <-
+            url_key %>%
+            download_to_cache(url_param = list(...))
+
+        if (is.null(compr)) {
+
+            file.copy(cache_path, cache_record$path)
+
+        } else {
+
+            decompr(cache_path, compr = compr, dest = cache_record$path)
+
+        }
+
+        omnipath_cache_download_ready(cache_record)
+
+    }
+
+    suppressWarnings(dbConnect(SQLite(), cache_record$path))
+
+}
+
+
 #' Generic method to download a zip archive
 #'
 #' Downloads a zip file or retrieves it from the cache. Returns the path
@@ -956,6 +1007,50 @@ curl_read_json <- function(url, curlopt = list(), ...) {
 }
 
 
+#' @noRd
+get_compr <- function(url, compr = NULL) {
+
+    compr %>%
+    if_null(
+        url %>%
+        fname_from_url %>%
+        path_ext %>%
+        intersect(names(COMPR)) %>%
+        if_null_len0(NULL)
+    )
+
+}
+
+
+#' @importFrom magrittr %>% %<>% extract2
+#' @importFrom R.utils decompressFile
+#' @noRd
+decompr <- function(path, compr = NULL, dest = NULL) {
+
+    compr %<>% get_compr(path, .)
+
+    if (is.null(compr)) {
+
+        open(path, 'r')
+
+    } else if (is.null(dest)) {
+
+        COMPR %>% extract2(compr) %>% exec(path, open = 'rb')
+
+    } else {
+
+        decompressFile(
+            path,
+            destname = dest,
+            remove = FALSE,
+            FUN = COMPR %>% extract2(compr),
+            ext = compr
+        )
+
+    }
+
+}
+
 #' Download by curl with OmnipathR specific options
 #'
 #' @param url Character: URL to download
@@ -980,12 +1075,7 @@ omnipath_curl <- function(
 
     log_trace('HTTP request by `omnipath_curl`.')
     handle <- exec(omnipath_new_handle, !!!curlopt)
-
-    COMPR <- list(gz = gzfile, bz2 = bzfile, xz = xzfile)
-    fname <- url %>% fname_from_url
-    compr %<>% if_null(
-        fname %>% path_ext %>% intersect(names(COMPR)) %>% if_null_len0(NULL)
-    )
+    compr %<>% get_compr(url, .)
 
     if (!is.null(compr)) {
 
@@ -1020,7 +1110,7 @@ omnipath_curl <- function(
 
     if (!is.null(compr)) {
 
-        con <- COMPR %>% extract2(compr) %>% exec(path, open = 'rb')
+        con <- path %>% decompr(compr)
 
     }
 
