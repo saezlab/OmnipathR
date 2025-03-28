@@ -625,8 +625,34 @@ kegg_api_path <- function(operation, ...) {
 #' @export
 kegg_request <- function(operation, ...) {
 
-    kegg_api_path(operation, ...) %>%
-    {generic_downloader(url_key = 'kegg_rest', url_param = list(.))}
+    path <- kegg_api_path(operation, ...)
+    args <- list()
+    reader <- KEGG_READERS %>% extract2(operation)
+    cols <-
+        if_null(
+            KEGG_COLUMNS %>% extract2(path),
+            KEGG_COLUMNS %>% extract2(operation)
+        )
+
+    if (reader %>% is.null %>% not) {
+
+        args$reader <- reader
+
+    }
+
+    if (cols %>% is.null %>% not) {
+
+        args$reader_param <- list(col_names = cols)
+
+    }
+
+    exec(
+        generic_downloader,
+        url_key = 'kegg_rest',
+        url_param = path %>% list,
+        resource = 'KEGG',
+        !!!args
+    )
 
 }
 
