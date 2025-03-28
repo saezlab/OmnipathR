@@ -253,6 +253,7 @@ KEGG_API <- list(
     )
 )
 
+REPREFIX <- '^[-\\w]+:'
 
 #' List of databases (endpoints) in the KEGG REST API
 #'
@@ -832,5 +833,54 @@ kegg_organisms_load <- function() {
 kegg_organism_codes <- function() {
 
     kegg_organisms() %>% pull(2L)
+
+}
+
+
+#' Remove prefix from KEGG foreign database identifiers
+#'
+#' @param data A data frame (tibble) with identifier column(s).
+#' @param ... Columns where the prefixes should be removed, as a tidyselect
+#'     selection. If empty, \code{everything()} is used to select all columns.
+#' @param .to_names Logical: if \code{TRUE}, the column names will be
+#'     updated to reflect the removed prefixes.
+#'
+#' @return A data frame (tibble) with the prefixes removed.
+#'
+#' @examples
+#' kegg_rm_prefix(kegg_list("ncbi-geneid", "hsa"))
+#'
+#' @importFrom stringr str_extract
+#' @importFrom dplyr across mutate rename
+#' @importFrom tidyselect everything
+#' @importFrom rlang !!! expr enquos
+#' @importFrom magrittr %>%
+#' @export
+kegg_rm_prefix <- function(data, ..., .to_names = TRUE) {
+
+    cols <-
+        enquos(...) %>%
+        {`if`(length(.) == 0L, expr(everything()), expr(c(!!!.)))} %>%
+        eval_select(data)
+
+    if (.to_names) {
+
+        name_update <-
+            cols %>%
+            {set_names(
+                names(.),
+                map_chr(
+                    .,
+                    ~str_extract(data[[.x]][1L], REPREFIX) %>%
+                    str_sub(end = -2L) %>%
+                    str_replace('-', '_')
+                )
+            )}
+
+    }
+
+    data %>%
+    mutate(across(cols, ~str_replace(.x, REPREFIX, ''))) %>%
+    {`if`(.to_names, rename(., !!!name_update), .)}
 
 }
