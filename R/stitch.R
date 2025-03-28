@@ -4,7 +4,7 @@
 #  This file is part of the `OmnipathR` R package
 #
 #  Copyright
-#  2018-2024
+#  2018-2025
 #  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
 #
 #  File author(s): Diego Mananes
