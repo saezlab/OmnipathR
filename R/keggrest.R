@@ -527,7 +527,7 @@ kegg_query_match_template <- function(template, operation, ...) {
 #'     otherwise.
 #'
 #' @importFrom stringr str_detect str_extract str_replace
-#' @importFrom magrittr %>% is_in set_colnames
+#' @importFrom magrittr %>% is_in set_colnames not
 #' @importFrom purrr map
 #' @importFrom tibble as_tibble
 #' @noRd
