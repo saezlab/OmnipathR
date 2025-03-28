@@ -12,7 +12,7 @@ ramp_table(name, version = RAMP_LATEST_VERSION)
 \item{version}{Character. The version of RaMP to download.}
 }
 \value{
-Character vector of table names in the RaMP SQLite database.
+A data frame (tibble) of one table from the RaMP SQLite database.
 }
 \description{
 Return table from RaMP database
