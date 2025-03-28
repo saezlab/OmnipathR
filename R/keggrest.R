@@ -527,8 +527,9 @@ kegg_query_match_template <- function(template, operation, ...) {
 #'     otherwise.
 #'
 #' @importFrom stringr str_detect str_extract str_replace
-#' @importFrom magrittr %>% is_in
+#' @importFrom magrittr %>% is_in set_colnames
 #' @importFrom purrr map
+#' @importFrom tibble as_tibble
 #' @noRd
 kegg_check_prefixes <- function(arg, arg_template) {
 
@@ -537,24 +538,29 @@ kegg_check_prefixes <- function(arg, arg_template) {
     valid_prefixes <-
         map(arg_template, ~KEGG_KID_PREFIXES[[.x]]) %>%
         unlist %>%
-        doif(
-            str_detect(., KEGG_ORGANISM) %>% any,
-            ~map(~str_replace(.x, KEGG_ORGANISM, kegg_organism_codes()))
-        ) %>%
-        unlist %>%
+        kegg_expand_org %>%
         c(arg_template %>% intersect(KEGG_OUTSIDE_DB_ALL))
 
     if (length(valid_prefixes) > 0L) {
 
-        which_valid <-
+        which_invalid <-
             arg %>%
-            str_extract('^[-\\A-z]+:?') %>%
-            is_in(valid_prefixes) %>%
+            str_extract('(^[-\\A-z]+):?((?:\\w+)?)', group = c(1L, 2L)) %>%
+            matrix(ncol = 2L) %>%
+            set_colnames(c('prefix', 'id')) %>%
+            as_tibble %>%
+            {
+                !is.na(.$prefix) &
+                !is.na(.$id) &
+                nchar(.$id) > 0L &
+                is_in(.$prefix, valid_prefixes)
+            } %>%
+            not %>%
             which
 
-        if (length(which_valid) > 0L) {
+        if (length(which_invalid) > 0L) {
 
-            noprefix <- arg %>% extract(which_valid %>% head)
+            noprefix <- arg %>% extract(which_invalid %>% head)
             msg <- sprintf(
                 paste0(
                     'In KEGG, <dbentries> must be prefixed with an ',
@@ -572,6 +578,39 @@ kegg_check_prefixes <- function(arg, arg_template) {
     }
 
     msg
+
+}
+
+
+#' Replace <org> in KEGG templates with all organism codes
+#'
+#' @param prefixes Character: the prefixes to expand.
+#'
+#' @return Character: the expanded prefixes.
+#'
+#' @importFrom stringr str_detect str_replace
+#' @importFrom purrr map
+#' @importFrom magrittr %<>% %>%
+#' @noRd
+kegg_expand_org <- function(prefixes) {
+
+    if (prefixes %>% str_detect(KEGG_ORGANISM) %>% any) {
+
+        org <- kegg_organism_codes()
+
+        prefixes %<>%
+            map(
+                ~`if`(
+                    str_detect(.x, KEGG_ORGANISM),
+                    str_replace(.x, KEGG_ORGANISM, org),
+                    .x
+                )
+            ) %>%
+            unlist
+
+    }
+
+    prefixes
 
 }
 
@@ -848,7 +887,7 @@ kegg_organism_codes <- function() {
 #' @return A data frame (tibble) with the prefixes removed.
 #'
 #' @examples
-#' kegg_rm_prefix(kegg_list("ncbi-geneid", "hsa"))
+#' kegg_rm_prefix(kegg_conv("ncbi-geneid", "hsa"))
 #'
 #' @importFrom stringr str_extract
 #' @importFrom dplyr across mutate rename
