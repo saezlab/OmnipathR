@@ -22,6 +22,6 @@ Data frame (tibble) of two columns with names "id" and "name";
 See \url{https://www.kegg.jp/kegg/rest/keggapi.html#list} for details.
 }
 \examples{
-kegg_list("ncbi-geneid", "hsa")
+kegg_list("pathway")
 
 }
