@@ -19,7 +19,7 @@ in tabular or JSON format, the tabular (data frame) being the default."><meta pr
 
     <a class="navbar-brand me-2" href="../index.html">OmnipathR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.15.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.15.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,7 @@ in tabular or JSON format, the tabular (data frame) being the default."><meta pr
     <li><a class="dropdown-item" href="../articles/drug_targets.html">Building protein networks around drug-targets using OmnipathR</a></li>
     <li><a class="dropdown-item" href="../articles/extra_attrs.html">Resource specific interaction attributes</a></li>
     <li><a class="dropdown-item" href="../articles/gene_ontology.html">Gene Ontology in OmnipathR</a></li>
+    <li><a class="dropdown-item" href="../articles/id_translation.html">Identifier translation</a></li>
     <li><a class="dropdown-item" href="../articles/nichenet.html">Using NicheNet with OmnipathR</a></li>
     <li><a class="dropdown-item" href="../articles/omnipath_intro.html">OmnipathR: an R client for the OmniPath web service</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Pathway construction</a></li>
@@ -155,7 +156,10 @@ summary message is printed upon successful download.</p></dd>
 
 <dt id="arg-download-args">download_args<a class="anchor" aria-label="anchor" href="#arg-download-args"></a></dt>
 <dd><p>List: parameters to pass to the download function,
-which is `readr::read_tsv` by default, and `jsonlite::safe_load`.</p></dd>
+which is <code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_tsv</a></code> by default, and
+<code><a href="https://jeroen.r-universe.dev/jsonlite/reference/stream_in.html" class="external-link">jsonlite::stream_in</a></code> if <code>format = "json"</code>. Note: as these are
+both wrapped into a downloader using <code><a href="https://jeroen.r-universe.dev/curl/reference/curl.html" class="external-link">curl::curl</a></code>, a curl handle
+can be also passed here under the name <code>handle</code>.</p></dd>
 
 
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
