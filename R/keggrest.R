@@ -767,9 +767,9 @@ kegg_conv <- function(...) {
 #' kegg_link("pathway", "hsa")
 #'
 #' @export
-kegg_find <- function(...) {
+kegg_link <- function(...) {
 
-    kegg_request('find', ...)
+    kegg_request('link', ...)
 
 }
 
