@@ -284,12 +284,44 @@ kegg_operations <- function() {
 }
 
 
+#' List of templates in the KEGG REST API
+#'
+#' @return A list of KEGG API templates.
+#'
+#' @examples
+#' kegg_api_templates()
+#'
+#' @export
+kegg_api_templates <- function() {
+
+    KEGG_API
+
+}
+
+
 #' Compile a query for the KEGG REST API
+#'
+#' @param operation Character: one of the KEGG REST API operations.
+#' @param ... Arguments for the API operation, as defined in the templates
+#'     available by \code{\link{kegg_api_templates}} and in the page
+#'     \url{https://www.kegg.jp/kegg/rest/keggapi.html}.
+#'
+#' @return A list with the following elements: \itemize{
+#'     \item operation - The KEGG API operation.
+#'     \item names - The names of the arguments.
+#'     \item query - The values of the arguments.
+#'     \item error - Error messages.
+#'     \item complete - Whether the query has all mandatory arguments.
+#' }
+#' Raises an error if fails to successfully compile a valid query.
+#'
+#' @examples
+#' kegg_query("conv", "compound", "pubchem")
 #'
 #' @importFrom magrittr %>% %<>% extract2 extract
 #' @importFrom rlang list2
 #' @importFrom logger log_warn log_error
-#' @noRd
+#' @export
 kegg_query <- function(operation, ...) {
 
     op_templates <- KEGG_API %>% extract2(operation)
@@ -619,9 +651,15 @@ kegg_api_path <- function(operation, ...) {
 
 #' Perform a KEGG REST API request
 #'
-#' @param operation Character: one of the KEGG REST API operations.
-#' @param ... Further parameters to \code{\link{kegg_request}}.
+#' @inheritParams kegg_query
 #'
+#' @return List or data frame: the data retrieved from the KEGG REST API.
+#'
+#' @examples
+#' kegg_request("conv", "compound", "pubchem")
+#'
+#' @importFrom rlang exec
+#' @importFrom magrittr %>% not extract2
 #' @export
 kegg_request <- function(operation, ...) {
 
@@ -656,6 +694,103 @@ kegg_request <- function(operation, ...) {
 
 }
 
+
+#' Obtain a list of KEGG entry identifiers and associated names
+#'
+#' See \url{https://www.kegg.jp/kegg/rest/keggapi.html#list} for details.
+#'
+#' @inheritDotParams kegg_query
+#'
+#' @return Data frame (tibble) of two columns with names "id" and "name";
+#'     except if the <database> argument is "organism", which results a
+#'     four columns data frame.
+#'
+#' @examples
+#' kegg_list("ncbi-geneid", "hsa")
+#'
+#' @export
+kegg_list <- function(...) {
+
+    kegg_request('list', ...)
+
+}
+
+
+#' Find entries in KEGG with matching query keyword or other query data
+#'
+#' See \url{https://www.kegg.jp/kegg/rest/keggapi.html#find} for details.
+#'
+#' @inheritDotParams kegg_query
+#'
+#' @return Data frame (tibble) of two columns with names "id" and "value".
+#'
+#' @examples
+#' kegg_find("genes", "shiga toxin")
+#'
+#' @export
+kegg_find <- function(...) {
+
+    kegg_request('find', ...)
+
+}
+
+
+#' Convert KEGG identifiers to/from outside identifiers
+#'
+#' See \url{https://www.kegg.jp/kegg/rest/keggapi.html#conv} for details.
+#'
+#' @inheritDotParams kegg_query
+#'
+#' @return Data frame (tibble) of two columns with names "id_a" and "id_b".
+#'
+#' @examples
+#' kegg_conv("compound", "pubchem")
+#'
+#' @export
+kegg_conv <- function(...) {
+
+    kegg_request('conv', ...)
+
+}
+
+
+#' Find related KEGG entries by using database cross-references
+#'
+#' See \url{https://www.kegg.jp/kegg/rest/keggapi.html#link} for details.
+#'
+#' @inheritDotParams kegg_query
+#'
+#' @return Data frame (tibble) of two columns with names "id_a" and "id_b".
+#'
+#' @examples
+#' kegg_link("pathway", "hsa")
+#'
+#' @export
+kegg_find <- function(...) {
+
+    kegg_request('find', ...)
+
+}
+
+
+#' Find adverse drug-drug interactions in KEGG
+#'
+#' See \url{https://www.kegg.jp/kegg/rest/keggapi.html#ddi} for details.
+#'
+#' @inheritDotParams kegg_query
+#'
+#' @return Data frame (tibble) of four columns with names "drug_a", "drug_b",
+#'     "interaction" and "mechanism".
+#'
+#' @examples
+#' kegg_ddi(c("D00564", "D00100", "D00109"))
+#'
+#' @export
+kegg_ddi <- function(...) {
+
+    kegg_request('ddi', ...)
+
+}
 
 
 #' List of organisms in KEGG
