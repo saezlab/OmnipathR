@@ -659,7 +659,7 @@ kegg_api_path <- function(operation, ...) {
 #' kegg_request("conv", "compound", "pubchem")
 #'
 #' @importFrom rlang exec
-#' @importFrom magrittr %>% not extract2
+#' @importFrom magrittr %>% not extract2 %T>%
 #' @export
 kegg_request <- function(operation, ...) {
 
@@ -690,7 +690,8 @@ kegg_request <- function(operation, ...) {
         url_param = path %>% list,
         resource = 'KEGG',
         !!!args
-    )
+    ) %T>%
+    load_success()
 
 }
 
