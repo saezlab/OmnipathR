@@ -326,8 +326,6 @@ download_base <- function(
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
-#' @param http_param List: further parameters for \code{httr::GET} or
-#'     \code{httr::POST}.
 #' @param ext Character: the file extension. If `NULL` a guess from the URL
 #'     will be attempted.
 #' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
@@ -463,10 +461,11 @@ generic_downloader <- function(
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param ext Character: the file extension, either xls or xlsx.
-#' @param http_param List: further parameters for \code{httr::GET} or
-#'     \code{httr::POST}.
 #' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
 #'     will be used to download the data, otherwise \code{httr::POST}.
+#' @param http_headers List: a list of HTTP headers. Passed to
+#'     `httr2::req_headers`, used only if the downloader function is set up
+#'     here (see details at param `fun`).
 #'
 #' @importFrom magrittr %>%
 #' @importFrom readxl read_excel
@@ -480,7 +479,7 @@ xls_downloader <- function(
     url_param = list(),
     ext = 'xlsx',
     resource = NULL,
-    http_param = list(),
+    http_headers = NULL,
     post = NULL
 ){
 
@@ -489,7 +488,7 @@ xls_downloader <- function(
         url_key_param = url_key_param,
         url_param = url_param,
         ext = ext,
-        http_param = http_param,
+        http_headers = http_headers,
         post = post
     )
 
