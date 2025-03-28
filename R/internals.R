@@ -507,29 +507,29 @@ xls_downloader <- function(
 #'
 #' @param url_key Character: label of the built-in URL.
 #' @param ... Fields to be inserted into the URL.
+#' @param id_param List: additional data that might not be part of the URL but
+#'     required to uniquely identify the downloaded resource.
 #' @param compr Character: the compression type. Either \code{NULL} or
 #'     \code{gzip}.
 #'
 #' @importFrom RSQLite SQLite dbConnect
 #' @noRd
-sqlite_downloader <- function(url_key, ..., url_param = list(), compr = NULL) {
+sqlite_downloader <- function(url_key, ..., id_param = list(), compr = NULL) {
 
     fake_url <-
         url_key %>%
         c(list(...)) %>%
-        c(url_param) %>%
+        c(id_param) %>%
         paste0(collapse = '_') %>%
         sprintf('%s.sqlite', .)
 
     cache_record <- omnipath_cache_latest_or_new(url = fake_url)
-    url <- get_url(url_key, url_param)
+    url <- url_parser(url_key, url_param = list(...))
     compr %<>% get_compr(url, .)
 
     if (!cache_record$status == CACHE_STATUS$READY) {
 
-        cache_path <-
-            url_key %>%
-            download_to_cache(url_param = list(...))
+        cache_path <- url %>% download_to_cache
 
         if (is.null(compr)) {
 
