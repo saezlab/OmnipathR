@@ -9,8 +9,17 @@ kegg_request(operation, ...)
 \arguments{
 \item{operation}{Character: one of the KEGG REST API operations.}
 
-\item{...}{Further parameters to \code{\link{kegg_request}}.}
+\item{...}{Arguments for the API operation, as defined in the templates
+available by \code{\link{kegg_api_templates}} and in the page
+\url{https://www.kegg.jp/kegg/rest/keggapi.html}.}
+}
+\value{
+List or data frame: the data retrieved from the KEGG REST API.
 }
 \description{
 Perform a KEGG REST API request
+}
+\examples{
+kegg_request("conv", "compound", "pubchem")
+
 }
