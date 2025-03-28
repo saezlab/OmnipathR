@@ -56,6 +56,8 @@ RAMP_GENE_ID_TYPES <- c(
     "brenda"
 )
 
+RAMP_LATEST_VERSION <- '2.5.4'
+
 
 #' Download and open RaMP database SQLite
 #'
@@ -71,7 +73,7 @@ RAMP_GENE_ID_TYPES <- c(
 #' @seealso \itemize{
 #'     \item{\code{\link{ramp_tables}}}
 #' }
-ramp_sqlite <- function(version = '2.5.4') {
+ramp_sqlite <- function(version = RAMP_LATEST_VERSION) {
 
     .slow_doctest()
 
@@ -95,7 +97,7 @@ ramp_sqlite <- function(version = '2.5.4') {
 #' @seealso \itemize{
 #'     \item{\code{\link{ramp_sqlite}}}
 #' }
-ramp_tables <- function(version = '2.5.4') {
+ramp_tables <- function(version = RAMP_LATEST_VERSION) {
 
     .slow_doctest()
 
@@ -122,7 +124,7 @@ ramp_tables <- function(version = '2.5.4') {
 #'     \item{\code{\link{ramp_sqlite}}}
 #'     \item{\code{\link{ramp_tables}}}
 #' }
-ramp_table <- function(name, version = '2.5.4') {
+ramp_table <- function(name, version = RAMP_LATEST_VERSION) {
 
     .slow_doctest()
 
@@ -153,7 +155,7 @@ ramp_table <- function(name, version = '2.5.4') {
 #'     \item{\code{\link{ramp_tables}}}
 #'     \item{\code{\link{ramp_table}}}
 #' }
-ramp_id_mapping_table_impl <- function(from, to, version = '2.5.4') {
+ramp_id_mapping_table_impl <- function(from, to, version = RAMP_LATEST_VERSION) {
 
     .slow_doctest()
 
