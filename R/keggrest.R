@@ -747,7 +747,7 @@ kegg_request <- function(operation, ...) {
 #'     four columns data frame.
 #'
 #' @examples
-#' kegg_list("ncbi-geneid", "hsa")
+#' kegg_list("pathway")
 #'
 #' @export
 kegg_list <- function(...) {
