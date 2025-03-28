@@ -1387,7 +1387,10 @@ domain_from_url <- function(url) {
 fname_from_url <- function(url) {
 
     url %>%
-    url_parse() %>%
+    {tryCatch(
+        url_parse(.),
+        error = function(e) {list(path = basename(.))}
+    )} %>%
     extract2('path') %>%
     basename
 
