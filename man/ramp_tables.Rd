@@ -4,7 +4,7 @@
 \alias{ramp_tables}
 \title{List tables in RaMP database}
 \usage{
-ramp_tables(version = "2.5.4")
+ramp_tables(version = RAMP_LATEST_VERSION)
 }
 \arguments{
 \item{version}{Character. The version of RaMP to download.}

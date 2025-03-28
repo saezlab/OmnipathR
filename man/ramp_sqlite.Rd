@@ -4,7 +4,7 @@
 \alias{ramp_sqlite}
 \title{Download and open RaMP database SQLite}
 \usage{
-ramp_sqlite(version = "2.5.4")
+ramp_sqlite(version = RAMP_LATEST_VERSION)
 }
 \arguments{
 \item{version}{Character. The version of RaMP to download.}

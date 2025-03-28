@@ -4,7 +4,7 @@
 \alias{ramp_table}
 \title{Return table from RaMP database}
 \usage{
-ramp_table(name, version = "2.5.4")
+ramp_table(name, version = RAMP_LATEST_VERSION)
 }
 \arguments{
 \item{name}{Character. The name of the RaMP table to fetch.}
