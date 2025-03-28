@@ -399,6 +399,11 @@ uniprot_idmapping_id_types <- function() {
 #' in the original data frame yields multiple rows or elements in the
 #' returned data frame or vector(s).
 #'
+#' The columns in the translation must be character type. Some ID types are
+#' numeric, such as the ones from NCBI, these are sometimes present in data
+#' frames as double or integer type. This function will convert those columns
+#' to character.
+#'
 #' @examples
 #' d <- data.frame(
 #'     uniprot_id = c(
@@ -498,6 +503,7 @@ translate_ids <- function(
     join_method <- `if`(keep_untranslated, left_join, inner_join)
 
     d %<>%
+    ensure_character(!!sym(from_col)) %>%
     {`if`(track$toggle, mutate(., !!sym(track$label) := row_number()), .)} %>%
     reduce2(
         to_cols,
@@ -531,6 +537,7 @@ translate_ids <- function(
                     ),
                     .
                 )} %>%
+                ensure_character(From, To) %>%
                 {`if`(expand, ., group_by(., From) %>% summarize(To = list(To)))}
 
             log_trace(

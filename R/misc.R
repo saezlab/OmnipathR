@@ -1418,3 +1418,23 @@ is_string <- function(x) {
     is.character(x) && length(x) == 1L
 
 }
+
+
+#' Ensures that the selected columns in the data frame are character types
+#'
+#' @param d A data frame.
+#' @param ... Column names or \code{tidyselect} selection to ensure
+#'     as character.
+#'
+#' @importFrom rlang !!! enquos
+#' @importFrom dplyr mutate across
+#' @importFrom magrittr %>%
+#'
+#' @noRd
+ensure_character <- function(d, ...) {
+
+    cols <- enquos(...)
+
+    d %>% mutate(across(c(!!!cols), as.character))
+
+}
