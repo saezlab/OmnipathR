@@ -22,6 +22,6 @@ A data frame (tibble) with the prefixes removed.
 Remove prefix from KEGG foreign database identifiers
 }
 \examples{
-kegg_rm_prefix(kegg_list("ncbi-geneid", "hsa"))
+kegg_rm_prefix(kegg_conv("ncbi-geneid", "hsa"))
 
 }

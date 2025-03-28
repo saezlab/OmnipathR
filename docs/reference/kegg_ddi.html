@@ -81,8 +81,13 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">kegg_ddi</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D00564"</span>, <span class="st">"D00100"</span>, <span class="st">"D00109"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in kegg_query(operation, ...):</span> kegg_query: failed to match arguments against any query template for operation `ddi`. The arguments provided: [[D00564,D00100,D00109]]. Errors for template `dbentries`: In KEGG, &lt;dbentries&gt; must be prefixed with an ID type (database or KEGG organism code), which also can be provided here as an argument name.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>                     In this case, valid prefixes are [D,ndc,yj]. A sample of the items missing this prefix: [D00564,D00100,D00109].</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   drug_a    drug_b    interaction mechanism   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> dr:D00100 dr:D00564 CI,P        unclassified</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> dr:D00109 dr:D00564 P           unclassified</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> dr:D00564 dr:D00100 CI,P        unclassified</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> dr:D00564 dr:D00109 P           unclassified</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
