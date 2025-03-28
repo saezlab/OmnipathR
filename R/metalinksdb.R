@@ -49,14 +49,17 @@ metalinksdb_sqlite <- function() {
 #' metalinksdb_tables()
 #'
 #' @importFrom magrittr %>%
-#' @importFrom RSQLite dbListTables
+#' @importFrom RSQLite dbListTables dbDisconnect
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{metalinksdb_sqlite}}}
 #' }
 metalinksdb_tables <- function() {
 
-    metalinksdb_sqlite() %>% dbListTables
+    con <- metalinksdb_sqlite()
+    on.exit(dbDisconnect(con))
+
+    con %>% dbListTables
 
 }
 
@@ -71,7 +74,7 @@ metalinksdb_tables <- function() {
 #' metalinksdb_table('pathway')
 #'
 #' @importFrom magrittr %>%
-#' @importFrom RSQLite dbReadTable
+#' @importFrom RSQLite dbReadTable dbDisconnect
 #' @importFrom tibble as_tibble
 #' @export
 #' @seealso \itemize{
@@ -80,6 +83,9 @@ metalinksdb_tables <- function() {
 #' }
 metalinksdb_table <- function(name) {
 
-    metalinksdb_sqlite() %>% dbReadTable(name) %>% as_tibble()
+    con <- metalinksdb_sqlite()
+    on.exit(dbDisconnect(con))
+
+    con %>% dbReadTable(name) %>% as_tibble()
 
 }

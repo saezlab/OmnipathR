@@ -101,7 +101,10 @@ ramp_tables <- function(version = RAMP_LATEST_VERSION) {
 
     .slow_doctest()
 
-    version %>% ramp_sqlite %>% dbListTables
+    con <- version %>% ramp_sqlite
+    on.exit(dbDisconnect(con))
+
+    con %>% dbListTables
 
 }
 
@@ -128,7 +131,10 @@ ramp_table <- function(name, version = RAMP_LATEST_VERSION) {
 
     .slow_doctest()
 
-    version %>% ramp_sqlite %>% dbReadTable(name) %>% as_tibble()
+    con <- version %>% ramp_sqlite
+    on.exit(dbDisconnect(con))
+
+    con %>% dbReadTable(name) %>% as_tibble()
 
 }
 
