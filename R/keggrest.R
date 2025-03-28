@@ -133,6 +133,7 @@ KEGG_DB_WO_GLKO <- KEGG_DB_ORG %>% setdiff(KEGG_DB_GLKO)
 
 KEGG_COLUMNS <- list(
     list = c('id', 'name'),
+    `list/organism` = c('genome', 'kegg_name', 'latin_name', 'phylogeny'),
     find = c('id', 'value'),
     conv = c('id_a', 'id_b'),
     link = c('id_a', 'id_b'),
@@ -205,8 +206,16 @@ KEGG_API <- list(
             source_db = KEGG_ORGANISM
         ),
         list(
+            target_db = KEGG_ORGANISM,
+            source_db = KEGG_OUTSIDE_DB_GENES
+        ),
+        list(
             target_db = KEGG_OUTSIDE_DB_COMPOUNDS,
             source_db = KEGG_DB_COMPOUNDS
+        ),
+        list(
+            target_db = KEGG_DB_COMPOUNDS,
+            source_db = KEGG_OUTSIDE_DB_COMPOUNDS
         ),
         list(
             target_db = c(KEGG_ORGANISM, KEGG_OUTSIDE_DB_GENES, KEGG_DB_GENES),
@@ -455,8 +464,8 @@ kegg_query_match_template <- function(template, operation, ...) {
             msg <-
                 kegg_invalid_arg_msg(
                     operation,
-                    arg,
                     argname,
+                    arg,
                     arg_template
                 )
 
@@ -495,13 +504,10 @@ kegg_check_prefixes <- function(arg, arg_template) {
     valid_prefixes <-
         map(arg_template, ~KEGG_KID_PREFIXES[[.x]]) %>%
         unlist %>%
-        {doif(
-            str_detect(., KEGG_ORGANISM),
-            map(
-                .,
-                ~str_replace(.x, KEGG_ORGANISM, kegg_organism_codes())
-            )
-        )} %>%
+        doif(
+            str_detect(., KEGG_ORGANISM) %>% any,
+            ~map(~str_replace(.x, KEGG_ORGANISM, kegg_organism_codes()))
+        ) %>%
         unlist %>%
         c(arg_template %>% intersect(KEGG_OUTSIDE_DB_ALL))
 
@@ -580,7 +586,7 @@ kegg_invalid_arg_msg <- function(
         arg,
         argname,
         operation,
-        arg_template %>% paste0(collapse = ', '),
+        arg_template %>% setdiff(KEGG_ORGANISM) %>% paste0(collapse = ', '),
         `if`(
             KEGG_ORGANISM %in% arg_template,
             ' and KEGG organism codes',
