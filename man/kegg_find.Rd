@@ -5,29 +5,21 @@
 \title{Find entries in KEGG with matching query keyword or other query data}
 \usage{
 kegg_find(...)
-
-kegg_find(...)
 }
 \arguments{
 \item{...}{
-  Arguments passed on to \code{\link[=kegg_query]{kegg_query}}, \code{\link[=kegg_query]{kegg_query}}
+  Arguments passed on to \code{\link[=kegg_query]{kegg_query}}
   \describe{
     \item{\code{operation}}{Character: one of the KEGG REST API operations.}
   }}
 }
 \value{
 Data frame (tibble) of two columns with names "id" and "value".
-
-Data frame (tibble) of two columns with names "id_a" and "id_b".
 }
 \description{
 See \url{https://www.kegg.jp/kegg/rest/keggapi.html#find} for details.
-
-See \url{https://www.kegg.jp/kegg/rest/keggapi.html#link} for details.
 }
 \examples{
 kegg_find("genes", "shiga toxin")
-
-kegg_link("pathway", "hsa")
 
 }
