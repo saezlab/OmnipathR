@@ -184,6 +184,11 @@ chemical ID types which are not shown here, see \code{\link{id_types}}.
 The mapping between identifiers can be ambiguous. In this case one row
 in the original data frame yields multiple rows or elements in the
 returned data frame or vector(s).
+
+The columns in the translation must be character type. Some ID types are
+numeric, such as the ones from NCBI, these are sometimes present in data
+frames as double or integer type. This function will convert those columns
+to character.
 }
 \examples{
 d <- data.frame(
