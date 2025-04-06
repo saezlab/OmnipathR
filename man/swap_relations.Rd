@@ -25,7 +25,7 @@ Reverse the direction of ontology relations
 goslim_url <-
     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 path <- tempfile()
-httr::GET(goslim_url, httr::write_disk(path, overwrite = TRUE))
+curl::curl_fetch_disk(goslim_url, path)
 obo <- obo_parser(path)
 unlink(path)
 rel_swapped <- swap_relations(obo$relations)

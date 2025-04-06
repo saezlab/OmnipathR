@@ -27,7 +27,7 @@ new_version <- omnipath_cache_latest_or_new(url = bioc_url)
 new_version$status
 # [1] "unknown"
 # download the file
-httr::GET(bioc_url, httr::write_disk(new_version$path, overwrite = TRUE))
+curl::curl_fetch_disk(bioc_url, new_version$path)
 # report to the cache database that the download is ready
 omnipath_cache_download_ready(new_version)
 # now the status is ready:

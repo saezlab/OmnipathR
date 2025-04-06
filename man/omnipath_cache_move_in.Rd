@@ -46,7 +46,7 @@ omnipath_cache_move_in(path, url = 'the_download_address')
 
 bioc_url <- 'https://bioconductor.org/'
 html_file <- tempfile(fileext = '.html')
-httr::GET(bioc_url, httr::write_disk(html_file, overwrite = TRUE))
+curl::curl_fetch_disk(bioc_url, html_file)
 omnipath_cache_move_in(path = html_file, url = bioc_url)
 omnipath_cache_remove(url = bioc_url) # cleaning up
 

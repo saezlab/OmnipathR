@@ -33,7 +33,7 @@ also need it in list format.
 goslim_url <-
     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 path <- tempfile()
-httr::GET(goslim_url, httr::write_disk(path, overwrite = TRUE))
+curl::curl_fetch_disk(goslim_url, path)
 obo <- obo_parser(path, tables = FALSE)
 unlink(path)
 rel_tbl <- relations_list_to_table(obo$relations)

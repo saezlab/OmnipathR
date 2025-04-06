@@ -22,7 +22,7 @@ bioc_url <- 'https://bioconductor.org/'
 version <- omnipath_cache_latest_or_new(url = bioc_url)
 version$path
 # [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1"
-httr::GET(bioc_url, httr::write_disk(version$path, overwrite = TRUE))
+curl::curl_fetch_disk(bioc_url, version$path)
 key <- omnipath_cache_key(url = bioc_url)
 omnipath_cache_set_ext(key = key, ext = 'html')
 version <- omnipath_cache_latest_or_new(url = bioc_url)

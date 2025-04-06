@@ -21,7 +21,7 @@ Nested list from a table of ontology relations
 goslim_url <-
     "http://current.geneontology.org/ontology/subsets/goslim_generic.obo"
 path <- tempfile()
-httr::GET(goslim_url, httr::write_disk(path, overwrite = TRUE))
+curl::curl_fetch_disk(goslim_url, path)
 obo <- obo_parser(path, tables = TRUE)
 unlink(path)
 rel_list <- relations_table_to_list(obo$relations)
