@@ -387,7 +387,7 @@ has_logfile <- function(pkg = 'OmnipathR'){
 log_welcome <- function(pkg) {
 
     log_info('Welcome to OmnipathR!')
-    log_info('OmnipathR version: %s', packageVersion(pkgname))
+    log_info('OmnipathR version: %s', packageVersion(pkg))
 
 }
 
@@ -499,6 +499,9 @@ log_pkg_info <- function(pkg) {
 #' @importFrom magrittr %>% extract2
 #' @noRd
 log_packages <- function() {
+
+    # NSE vs. R CMD check workaround
+    package <- loadedversion <- NULL
 
     session_info(info = 'packages') %>%
     extract2('packages') %>%

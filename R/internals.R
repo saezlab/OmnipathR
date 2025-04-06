@@ -186,6 +186,9 @@ download_base <- function(
     ...
 ){
 
+    # NSE vs. R CMD check workaround
+    headers <- response <- NULL
+
     on.exit(close_connection(url))
 
     if(!is.null(init_url)){

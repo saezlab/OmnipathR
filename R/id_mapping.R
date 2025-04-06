@@ -468,7 +468,7 @@ translate_ids <- function(
 ){
 
     # NSE vs. R CMD check workaround
-    To <- NULL
+    To <- From <- NULL
 
     complexes %<>% if_null(getOption('omnipathr.complex_translation'))
     organism %<>% ncbi_taxid
@@ -846,6 +846,9 @@ ambiguity_summarize <- function(
         label = NULL,
         groups = NULL
     ) {
+
+    # NSE vs. R CMD check workaround
+    data <- NULL
 
     count <- function(
             d,
