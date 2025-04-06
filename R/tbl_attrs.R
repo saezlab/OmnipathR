@@ -59,8 +59,8 @@ group_by.tbl_attrs <- function(.data, ...) {
 
 #' @importFrom magrittr %>%
 #' @export
-ungroup.tbl_attrs <- function(.data, ...) {
-    NextMethod() %>% tbl_attrs(.data, .ignore = 'groups')
+ungroup.tbl_attrs <- function(x, ...) {
+    NextMethod() %>% tbl_attrs(x, .ignore = 'groups')
 }
 
 
