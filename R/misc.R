@@ -910,7 +910,7 @@ indent <- function(lines, depth = 4L){
 #' @noRd
 safe_json <- function(path, encoding = 'UTF-8', ...){
 
-    lines <- suppressWarnings(readLines(con = path, encoding = encoding))
+    lines <- readLines(con = path, encoding = encoding)
 
     log_trace('Reading JSON from `%s` (encoding: %s).', path, encoding)
 
@@ -1090,7 +1090,7 @@ compact_repr <- function(obj, limit = 10L, sep = ',') {
 #' @return Integer: uncompressed size of the file the connection points to.
 #'
 #' @importFrom zip zip_list
-#' @importFrom magrittr %>% extract extract2
+#' @importFrom magrittr %>% extract extract2 equals
 #' @importFrom stringr str_split
 #' @noRd
 file_size <- function(con) {
@@ -1099,14 +1099,14 @@ file_size <- function(con) {
     summary %>%
     extract2('description') %>%
     {`if`(
-        class(con)[1L] == 'unz',
+        class(con) %>%  extract(1L) %>% equals('unz'),
 
         str_split(., ':') %>%
         extract2(1L) %>%
         {extract(zip_list(.[1L]), 1L, 'uncompressed_size')},
 
         {`if`(
-            class(con)[1L] == 'file',
+            class(con) %>% extract(1L) %>% equals('file'),
             file.info(.) %>%
             extract(1L, 'size'),
             NA

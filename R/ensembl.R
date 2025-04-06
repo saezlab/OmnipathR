@@ -184,7 +184,7 @@ biomart_query <- function(
     'biomart' %>%
     generic_downloader(
         url_param = list(query),
-        reader = function(...){suppressWarnings(read_tsv(...))},
+        reader = function(...){read_tsv(...)},
         reader_param = list(
             col_names = col_names,
             col_types = cols(.default = col_character()),

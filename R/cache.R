@@ -62,8 +62,7 @@ omnipath_default_cachedir <- function(){
     user_cache_dir() %>%
     .ensure_safe_path(directory = TRUE) %>%
     file.path('OmnipathR') %>%
-    normalizePath(mustWork = FALSE) %>%
-    suppressWarnings()
+    normalizePath(mustWork = FALSE)
 
 }
 
@@ -195,7 +194,7 @@ omnipath_lock_cache_db <- function(){
 omnipath_unlock_cache_db <- function(){
 
     omnipath_cache_lock_path() %>%
-    {suppressWarnings(file.remove(.))}
+    {`if`(file.exists(.), file.remove(.), FALSE)}
 
 }
 

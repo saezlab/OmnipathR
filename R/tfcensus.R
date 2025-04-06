@@ -45,14 +45,13 @@
 #' @export
 #' @importFrom magrittr %T>%
 tfcensus_download <- function(){
-    suppressWarnings(
-        generic_downloader(
-            url_key = 'tfcensus',
-            reader_param = list(
-                skip = 11
-            ),
-            resource = 'TF census'
-        )
+
+    generic_downloader(
+        url_key = 'tfcensus',
+        reader_param = list(
+            skip = 11
+        ),
+        resource = 'TF census'
     ) %T>%
     load_success()
 

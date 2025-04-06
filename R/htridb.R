@@ -49,18 +49,16 @@ htridb_download <- function(){
 
     .slow_doctest()
 
-    suppressWarnings(
-        generic_downloader(
-            url_key = 'htridb',
-            reader = read_delim,
-            reader_param = list(
-                delim = ';',
-                col_types = cols(
-                    X8 = col_skip()
-                )
-            ),
-            resource = 'HTRIdb'
-        )
+    generic_downloader(
+        url_key = 'htridb',
+        reader = read_delim,
+        reader_param = list(
+            delim = ';',
+            col_types = cols(
+                X8 = col_skip()
+            )
+        ),
+        resource = 'HTRIdb'
     ) %T>%
     load_success()
 

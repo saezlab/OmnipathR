@@ -546,7 +546,7 @@ sqlite_downloader <- function(url_key, ..., id_param = list(), compr = NULL) {
 
     }
 
-    suppressWarnings(dbConnect(SQLite(), cache_record$path))
+    dbConnect(SQLite(), cache_record$path)
 
 }
 

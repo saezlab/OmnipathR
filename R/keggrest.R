@@ -408,6 +408,9 @@ kegg_query <- function(operation, ...) {
 #' @noRd
 kegg_query_match_template <- function(template, operation, ...) {
 
+    # NSE vs. R CMD check workaround
+    vctrs <- minimal_names <- NULL
+
     args <- list2(...)
     argnames <- args %>% (vctrs%:::%minimal_names)
     iarg_noname <- argnames %>% {nchar(.)  == 0L} %>% which

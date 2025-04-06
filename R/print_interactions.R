@@ -147,12 +147,12 @@ print_interactions <- function(interactions, refs=FALSE){
 #' interactions <- omnipath(resources = "SignaLink3")
 #' OPI_g <- interaction_graph(interactions = interactions)
 #' print_path_es(
-#'     suppressWarnings(igraph::shortest_paths(
+#'     igraph::shortest_paths(
 #'         OPI_g,
 #'         from = 'TYRO3',
 #'         to = 'STAT3',
 #'         output = 'epath'
-#'     ))$epath[[1]],
+#'     )$epath[[1]],
 #'     OPI_g
 #' )
 #'

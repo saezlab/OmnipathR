@@ -453,7 +453,7 @@ chalmers_gem_metabolites <- function(organism = 'Human') {
 
     organism %<>% organism_for('chalmers-gem')
 
-    suppressWarnings(generic_downloader(
+    generic_downloader(
         'chalmers_gem',
         reader = read_tsv,
         url_key_param = list(),
@@ -462,7 +462,7 @@ chalmers_gem_metabolites <- function(organism = 'Human') {
         resource = 'Chalmers GEM',
         post = NULL,
         use_httr = FALSE
-    )) %T>%
+    ) %T>%
     load_success()
 
 }

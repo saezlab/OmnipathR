@@ -185,8 +185,8 @@ inbiomap_download <- function(...){
         genesymbol_a = .extract_gs(synonyms_a),
         genesymbol_b = .extract_gs(synonyms_b),
         inferred = grepl('inference', detection_methods, fixed = TRUE),
-        score1 = suppressWarnings(as.numeric(score1)),
-        score2 = suppressWarnings(as.numeric(score2))
+        score1 = as.numeric(score1),
+        score2 = as.numeric(score2)
     ) %>%
     select(
         uniprot_a,
