@@ -70,7 +70,7 @@ deserialize_json_col <- function(data, col, ...) {
         .
     )} %>%
     {`if`(
-        !is.data.frame(data),
+        !is.data.frame(data) && is.null(names(data)),
         map(., ~exec(json_in_list, .x, key = col, !!!fromjson_args)),
         .
     )}
