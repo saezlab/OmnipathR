@@ -616,6 +616,8 @@ translate_ids <- function(
 #'
 #' @param d Data frame: a data frame with two columns to be inspected. It might
 #'     contain arbitrary other columns. Existing grouping will be removed.
+#' @param from_col Character: column name of the "from" side of the mapping.
+#' @param to_col Character: column name of the "to" side of the mapping.
 #' @param groups Character vector of column names. Inspect ambiguity within
 #'     these groups; by default, ambiguity is determined across all rows.
 #' @param quantify Logical or character: inspect the mappings for each
