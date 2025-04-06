@@ -20,6 +20,10 @@ ambiguity(
 \item{d}{Data frame: a data frame with two columns to be inspected. It might
 contain arbitrary other columns. Existing grouping will be removed.}
 
+\item{from_col}{Character: column name of the "from" side of the mapping.}
+
+\item{to_col}{Character: column name of the "to" side of the mapping.}
+
 \item{groups}{Character vector of column names. Inspect ambiguity within
 these groups; by default, ambiguity is determined across all rows.}
 
