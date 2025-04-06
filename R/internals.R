@@ -122,13 +122,12 @@ url_parser <- function(
 #'     as its first argument. Alternatively, it can be `NULL` or a function
 #'     for reading the data, in the latter case `path` must be provided, or
 #'     one of the `use_httr` or the `ignore_contents` parameters should be
-#'     `TRUE`. In all these cases, `httr::GET` or `httr::POST` will be used
-#'     to download the file.
+#'     `TRUE`. In all these cases, \code{httr2} will be used.
 #' @param post List with HTTP POST data. If \code{NULL}, the function
 #'     \code{fun} will execute the download and potentially the reading from
-#'     the retrieved data. If \code{post} is a list, \code{httr::POST} will
-#'     be used to download the data and the contents will be channeled to
-#'     \code{fun} to read it.
+#'     the retrieved data. If \code{post} is a list, an \code{httr2} POST
+#'     request  will be used to download the data and the contents will be
+#'     channeled to \code{fun} to read it.
 #' @param payload Character or list: HTTP POST body (raw or JSON).
 #' @param path Character: if not `NULL` the file will be downloaded
 #'     to this path and the path will be returned.
@@ -155,7 +154,7 @@ url_parser <- function(
 #'     response object retrieved from `init_url` and returns a list of
 #'     HTTP headers which can be used in the main request. Must be provided
 #'     if `init_url` is not `NULL`.
-#' @param use_httr Logical: use `httr::GET` to download the data even if no
+#' @param use_httr Logical: use `httr2` to download the data even if no
 #'     other argument or condition implies this.
 #' @param ... Passed to \code{fun}.
 #'
@@ -331,8 +330,8 @@ download_base <- function(
 #' returned from the options).
 #' @param ext Character: the file extension. If `NULL` a guess from the URL
 #'     will be attempted.
-#' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
-#'     will be used to download the data, otherwise \code{httr::POST}.
+#' @param post List with HTTP POST data. If \code{NULL}, a GET request
+#'     will be issued.
 #' @param http_headers List: a list of HTTP headers. Passed to
 #'     `httr2::req_headers`, used only if the downloader function is set up
 #'     here (see details at param `fun`).
@@ -389,7 +388,7 @@ download_to_cache <- function(
 #' @param reader_param List: options for the reader function.
 #' @param resource Character: name of the resource.
 #' @param post List with HTTP POST parameters.
-#' @param use_httr Logical: force to use \code{httr::GET} instead of
+#' @param use_httr Logical: force to use \code{httr2} instead of
 #'     allowing \code{reader} to download the file.
 #' @param ... Passed to \code{\link{download_base}}.
 #'
@@ -464,8 +463,8 @@ generic_downloader <- function(
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #' @param ext Character: the file extension, either xls or xlsx.
-#' @param post List with HTTP POST data. If \code{NULL}, \code{httr::GET}
-#'     will be used to download the data, otherwise \code{httr::POST}.
+#' @param post List with HTTP POST data. If \code{NULL}, a GET request
+#'     will be used to download the data.
 #' @param http_headers List: a list of HTTP headers. Passed to
 #'     `httr2::req_headers`, used only if the downloader function is set up
 #'     here (see details at param `fun`).

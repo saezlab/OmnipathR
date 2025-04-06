@@ -348,7 +348,7 @@ omnipath_cache_search <- function(pattern, ...){
 #'
 #' bioc_url <- 'https://bioconductor.org/'
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
-#' httr::GET(bioc_url, httr::write_disk(version$path, overwrite = TRUE))
+#' curl::curl_fetch_disk(bioc_url, version$path)
 #' omnipath_cache_download_ready(version)
 #' key <- omnipath_cache_key(bioc_url)
 #' omnipath_cache_remove(key = key)
@@ -1046,7 +1046,7 @@ omnipath_cache_save <- function(
 #'
 #' bioc_url <- 'https://bioconductor.org/'
 #' html_file <- tempfile(fileext = '.html')
-#' httr::GET(bioc_url, httr::write_disk(html_file, overwrite = TRUE))
+#' curl::curl_fetch_disk(bioc_url, html_file)
 #' omnipath_cache_move_in(path = html_file, url = bioc_url)
 #' omnipath_cache_remove(url = bioc_url) # cleaning up
 #'
@@ -1111,7 +1111,7 @@ omnipath_cache_move_in <- function(
 #' new_version$status
 #' # [1] "unknown"
 #' # download the file
-#' httr::GET(bioc_url, httr::write_disk(new_version$path, overwrite = TRUE))
+#' curl::curl_fetch_disk(bioc_url, new_version$path)
 #' # report to the cache database that the download is ready
 #' omnipath_cache_download_ready(new_version)
 #' # now the status is ready:
@@ -1288,7 +1288,7 @@ omnipath_cache_update_status <- function(
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
 #' version$path
 #' # [1] "/home/denes/.cache/OmnipathR/41346a00fb20d2a9df03-1"
-#' httr::GET(bioc_url, httr::write_disk(version$path, overwrite = TRUE))
+#' curl::curl_fetch_disk(bioc_url, version$path)
 #' key <- omnipath_cache_key(url = bioc_url)
 #' omnipath_cache_set_ext(key = key, ext = 'html')
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
@@ -1444,7 +1444,7 @@ omnipath_cache_latest_version <- function(record){
 #' # creating an example cache record
 #' bioc_url <- 'https://bioconductor.org/'
 #' version <- omnipath_cache_latest_or_new(url = bioc_url)
-#' httr::GET(bioc_url, httr::write_disk(version$path, overwrite = TRUE))
+#' curl::curl_fetch_disk(bioc_url, version$path)
 #' omnipath_cache_download_ready(version)
 #' record <- dplyr::first(omnipath_cache_search('biocond'))
 #'
