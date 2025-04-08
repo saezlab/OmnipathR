@@ -1,3 +1,24 @@
+# OmnipathR v4.0.0
+
+## Features
+
++ ID translation ambiguity analysis
++ KEGG REST API client
++ New metabolomics resources: HMDB, RaMP, Chalmers Sysbio GEMs, STITCH,
++ Metabolite-protein interactions from MetalinksDB
++ Metabolite ID translation using RaMP and HMDB data
+
+## Technical
+
++ Rewritten and improved parameter processing for OmniPath queries
++ Rewritten downloaders based on `curl` and `httr2`
++ Fine control over `curl` handlers
++ Detailed log messages about HTTP requests
++ Diagnostic log messages: session info, libraries, versions, platform info,
+  curl options, HTTP timings, headers
++ Option to include `curl` debug log in the log file
++ Robust TCP keep-alive parameters that hopefully fix rest.uniprot.org dowloads
+
 # OmnipathR v3.2.0
 
 + New resource: PrePPI
