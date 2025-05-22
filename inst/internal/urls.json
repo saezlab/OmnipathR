@@ -159,6 +159,6 @@
         "main/db/RaMP_SQLite_v%s.sqlite.gz"
     ],
     "metalinksdb": [
-        "https://figshare.com/ndownloader/files/47567597"
+        "https://rescued.omnipathdb.org/metalinks_v045.db"
     ]
 }
