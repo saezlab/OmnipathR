@@ -27,6 +27,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate rename_with bind_cols across full_join select
+#' @importFrom dplyr coalesce
 #' @importFrom tidyselect vars_select_helpers everything
 #' @importFrom stringr str_to_lower
 #' @noRd
@@ -34,31 +35,32 @@ taxon_names_table <- function(){
 
     # NSE vs. R CMD check workaround
     ncbi_tax_id <- oma_version <- genome_source <-
-    latin_name.x <- latin_name.y <- NULL
+    latin_name.x <- latin_name.y <- common_name <- code <- synonym <- NULL
 
     ensembl_organisms() %>%
+    rename(common_name_ensembl = common_name) %>%
     full_join(
         oma_organisms() %>%
         select(-genome_source, -oma_version),
+        by = 'ncbi_tax_id',
+        suffix = c('_ensembl', '_oma')
+    ) %>%
+    full_join(
+        uniprot_organisms() %>%
+        rename(
+            uniprot_code = code,
+            latin_name_synonym = synonym,
+            latin_name_uniprot = latin_name,
+            common_name_uniprot = common_name
+        ),
         by = 'ncbi_tax_id'
     ) %>%
     mutate(
-        latin_name = ifelse(
-            is.na(latin_name.y),
-            latin_name.x,
-            latin_name.y
-        )
-    ) %>%
-    select(-latin_name.x, -latin_name.y) %>%
-    {bind_cols(
-        mutate(
-            .,
-            across(vars_select_helpers$where(is.character), str_to_lower),
-            ncbi_tax_id = as.character(ncbi_tax_id)
-        ) %>%
-        rename_with(.fn = paste, .cols = everything(), 'l', sep = '_'),
-        .
-    )}
+        latin_name = coalesce(latin_name_uniprot, latin_name_ensembl, latin_name_oma),
+        common_name = coalesce(common_name_ensembl, common_name_uniprot),
+        ncbi_tax_id = as.character(ncbi_tax_id),
+        across(vars_select_helpers$where(is.character), str_to_lower, .names = '{.col}_l'),
+    )
 
 }
 
@@ -81,7 +83,7 @@ taxon_names_table <- function(){
 #' taxon_name("human", "latin")
 #' # [1] "Homo sapiens"
 #'
-#' @importFrom magrittr %<>% %>%
+#' @importFrom magrittr %<>% %>% extract
 #' @importFrom rlang enquo !! !!!
 #' @importFrom dplyr filter first if_any recode pull
 #' @importFrom tidyselect ends_with
@@ -98,7 +100,8 @@ taxon_name <- function(name, name_type){
         english = 'common_name',
         ensembl = 'ensembl_id',
         oma = 'oma_code',
-        oma_name = 'oma_code'
+        oma_name = 'oma_code',
+        uniprot = 'uniprot_code'
     )
 
     name_type <-
@@ -113,7 +116,7 @@ taxon_name <- function(name, name_type){
         if_any(ends_with('_l'), ~ .x == name)
     ) %>%
     pull(name_type) %>%
-    first %>%
+    extract(which.min(nchar(.))) %>%
     if_null_len0(NA)
 
 }
