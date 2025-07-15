@@ -125,3 +125,80 @@ all_uniprots <- function(
     load_success()
 
 }
+
+#' UniProt taxonomy data
+#'
+#' @return A tibble with columns: \code{code}, \code{kingdom}, \code{ncbi_tax_id}, \code{latin_name}, \code{common_name}, \code{synonym}.
+#'
+#' @examples
+#' uniprot_organisms()
+#'
+#' @importFrom stringr str_detect str_match str_remove str_trim
+#' @importFrom purrr map2
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_rows
+#' @importFrom magrittr %>% %<>%
+#' @importFrom tidyr unnest_wider
+#' @export
+uniprot_organisms <- function() {
+
+    read_uniprot_taxonomy <- function(con, ...) {
+
+        lines <- readLines(con)
+        sep_idx <- which(str_detect(lines, "^_____"))[1]
+        lines %<>% .[sep_idx + 1L:length(.)]
+        entry_starts <- which(!str_detect(lines, "^\\s"))
+        entry_ends <- c(entry_starts[-1L] - 1L, length(lines))
+
+        # Parse each entry
+        entries <- map2(
+            entry_starts,
+            entry_ends,
+            function(start, end) {
+                entry_lines <- lines[start:end]
+                m <- str_match(entry_lines[1],
+                "^([A-Z0-9]+)\\s+([A-Z])\\s+(\\d+):\\s+N=(.+)$")
+                code <- m[2]
+                kingdom <- m[3]
+                ncbi_tax_id <- m[4]
+                latin_name <- m[5]
+                common_name <- NA_character_
+                synonym <- NA_character_
+
+                if (length(entry_lines) > 1L) {
+                    for (l in entry_lines[-1L]) {
+                        if (is.na(l)) {
+                            break
+                        } else if (str_detect(l, "C=")) {
+                            common_name <- str_remove(l, "^\\s*C=") %>% str_trim()
+                        } else if (str_detect(l, "S=")) {
+                            synonym <- str_remove(l, "^\\s*S=") %>% str_trim()
+                        }
+                    }
+                }
+
+                list(
+                    code = code,
+                    kingdom = kingdom,
+                    ncbi_tax_id = as.integer(ncbi_tax_id),
+                    latin_name = latin_name,
+                    common_name = common_name,
+                    synonym = synonym
+                )
+            }
+        )
+
+        entries %>%
+        tibble(entries = .) %>%
+        unnest_wider(entries)
+
+    }
+
+    generic_downloader(
+        url_key = 'uniprot_organisms',
+        reader = read_uniprot_taxonomy,
+        resource = 'UniProt'
+    )
+
+}
+
