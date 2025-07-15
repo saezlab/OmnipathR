@@ -14,10 +14,18 @@ chalmers-gem:
     - Drosophila melanogaster (Fruit fly)
     - Caenorhabditis elegans (PRJNA13758)
     - Caenorhabditis elegans (Nematode, N2)
+    - Norway rat - BN/NHsdMcwi
+    - Rat - SHR/Utx RGD_8142385
+    - Rat - SHRSP/BbbUtx
+    - Rat - WKY/Bbb RGD_1581635
   custom:
     Caenorhabditis elegans (PRJNA13758): Worm
     Drosophila melanogaster (Fruit fly): Fruitfly
     Caenorhabditis elegans (Nematode, N2): Worm
+    Norway rat - BN/NHsdMcwi: Rat
+    Rat - SHR/Utx RGD_8142385: Rat
+    Rat - SHRSP/BbbUtx: Rat
+    Rat - WKY/Bbb RGD_1581635: Rat
 cosmos:
   id_type: ncbi_taxid
   supported:
