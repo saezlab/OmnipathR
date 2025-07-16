@@ -58,7 +58,6 @@ taxon_names_table <- function(){
     mutate(
         latin_name = coalesce(latin_name_uniprot, latin_name_ensembl, latin_name_oma),
         common_name = coalesce(common_name_ensembl, common_name_uniprot),
-        ncbi_tax_id = as.character(ncbi_tax_id),
         across(vars_select_helpers$where(is.character), str_to_lower, .names = '{.col}_l'),
     )
 
@@ -113,7 +112,7 @@ taxon_name <- function(name, name_type){
 
     get_db('organisms') %>%
     filter(
-        if_any(ends_with('_l'), ~ .x == name)
+        if_any(ends_with('_l') | 'ncbi_tax_id', ~ .x == name)
     ) %>%
     pull(name_type) %>%
     extract(which.min(nchar(.))) %>%
