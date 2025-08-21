@@ -239,7 +239,7 @@ stitch_network <- function(
         stitch_links(organism) %>%
         filter(
             combined_score >= min_score,
-            experimental >= min_score | database >= min_score
+            experimental >= min_score / 2L | database >= min_score / 2L
         ) %>%
         select(
             item_id_a = chemical,
