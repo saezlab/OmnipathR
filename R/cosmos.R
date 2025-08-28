@@ -227,7 +227,8 @@ cosmos_pkn <- function(
         min_score = stitch_score,
         protein_ids = protein_ids,
         metabolite_ids = metabolite_ids,
-        cosmos = TRUE
+        cosmos = TRUE,
+        metabolite_protein_only = TRUE
     )
 
     chalmers <- chalmers_gem_network(
