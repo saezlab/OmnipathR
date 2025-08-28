@@ -184,6 +184,8 @@ stitch_remove_prefixes <- function(d, ..., remove = TRUE) {
 #'     and "b" sides of the interaction, respectively. The default ID type for
 #'     metabolites is PubChem CID, and HMDB IDs and KEGG IDs are included.
 #' @param cosmos Logical: use COSMOS format?
+#' @param metabolite_protein_only Logical: keep only metabolite-protein
+#'     interactions, remove protein-metabolite ones.
 #'
 #' @return A data frame of STITCH chemical-protein and protein-chemical
 #' interactions with their effect signs, and optionally with identifiers
@@ -210,7 +212,8 @@ stitch_network <- function(
         min_score = 700L,
         protein_ids = c('uniprot', 'genesymbol'),
         metabolite_ids = c('hmdb', 'kegg'),
-        cosmos = FALSE
+        cosmos = FALSE,
+        metabolite_protein_only = FALSE
     ) {
 
     .slow_doctest()
@@ -224,13 +227,15 @@ stitch_network <- function(
     log_info(
         paste0(
            'Building STITCH GEM: organism=%s, min_score=%i, ',
-           'protein_ids=%s, metabolite_ids=%s, cosmos=%s'
+           'protein_ids=%s, metabolite_ids=%s, cosmos=%s, ',
+           'metabolite_protein_only=%s'
         ),
         organism,
         min_score,
         paste0(protein_ids, collapse = ','),
         paste0(metabolite_ids, collapse = ','),
-        cosmos
+        cosmos,
+        metabolite_protein_only
     )
 
     organism %<>% organism_for('stitch')
@@ -239,7 +244,7 @@ stitch_network <- function(
         stitch_links(organism) %>%
         filter(
             combined_score >= min_score,
-            experimental >= min_score / 2L | database >= min_score / 2L
+            experimental >= min_score | database >= min_score
         ) %>%
         select(
             item_id_a = chemical,
@@ -290,6 +295,13 @@ stitch_network <- function(
             sign = ifelse(sign == 'inhibition', -1L, 1L)
         ),
         .,
+    )} %>%
+    {`if`(
+        metabolite_protein_only,
+        filter(., startsWith(item_id_b, 'ENS')) %>%
+        select(-paste(protein_ids, 'a', sep = '_')) %>%
+        select(-paste(metabolite_ids, 'b', sep = '_')),
+        .
     )} %T>%
     {log_info('STITCH GEM ready: %i interactions.', nrow(.))}
 
