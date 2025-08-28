@@ -278,14 +278,16 @@ stitch_network <- function(
         !!!syms(protein_ids),
         suffixes = c('a', 'b'),
         ensembl = TRUE,
-        organism = organism
+        organism = organism,
+        expand = FALSE
     ) %>%
     translate_ids_multi(
         item_id = pubchem,
         !!!syms(metabolite_ids),
         suffixes = c('a', 'b'),
         entity_type = 'metabolite',
-        organism = organism
+        organism = organism,
+        expand = FALSE
     ) %>%
     rename(sign = action) %>%
     {`if`(

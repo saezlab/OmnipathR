@@ -1016,11 +1016,13 @@ translate_ids_multi <- function(
     uploadlists = FALSE,
     ensembl = FALSE,
     hmdb = FALSE,
+    ramp = FALSE,
     chalmers = FALSE,
     entity_type = NULL,
     keep_untranslated = TRUE,
     organism = 9606,
-    reviewed = TRUE
+    reviewed = TRUE,
+    expand = TRUE
 ) {
 
     ids <- ellipsis_to_char(...)
@@ -1103,11 +1105,13 @@ translate_ids_multi <- function(
             uploadlists = uploadlists,
             ensembl = ensembl,
             hmdb = hmdb,
+            ramp = ramp,
             chalmers = chalmers,
             entity_type = entity_type,
             keep_untranslated = keep_untranslated,
             organism = organism,
-            reviewed = reviewed
+            reviewed = reviewed,
+            expand = expand
         ),
         .init = d
     )

@@ -164,5 +164,11 @@
     ],
     "metalinksdb": [
         "https://rescued.omnipathdb.org/metalinks_v045.db"
+    ],
+    "recon3d_bigg": [
+        "http://bigg.ucsd.edu/models/Recon3D"
+    ],
+    "recon3d_vmh":[
+        "https://www.vmh.life/files/reconstructions/Recon/3D.01/"
     ]
 }
