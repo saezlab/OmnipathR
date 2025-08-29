@@ -166,7 +166,10 @@
         "https://rescued.omnipathdb.org/metalinks_v045.db"
     ],
     "recon3d_bigg": [
-        "http://bigg.ucsd.edu/models/Recon3D"
+        "http://bigg.ucsd.edu/static/models/Recon3D.mat.gz"
+    ],
+    "recon3d_bigg_json": [
+        "http://bigg.ucsd.edu/static/models/Recon3D.json.gz"
     ],
     "recon3d_vmh":[
         "https://www.vmh.life/files/reconstructions/Recon/3D.01/"
