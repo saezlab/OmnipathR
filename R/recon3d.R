@@ -41,13 +41,28 @@ recon3d_table <- function(name){
 #' @return Data frame: tibble of metabolites.
 #' @importFrom tidyr unnest
 #' @export
-recon3d_metabolites <- function(){
+recon3d_metabolites <- function(extra_hmdb=TRUE){
 
     recon3d_table("metabolites") %>%
     unnest(notes) %>%
     unnest(original_bigg_ids) %>%
-    unnest(annotation)
-
+    unnest(annotation) %>%
+    {`if`(
+      extra_hmdb,
+      left_join(
+        .,
+        recon3d_raw_vmh() %>% 
+          chalmers_gem_matlab_tibble("mets", "metHMDBID") %>%
+          unnest(cols = c('mets', 'metHMDBID')) %>% 
+          unnest(cols = c('mets')),
+        by = c("original_bigg_ids" = "mets")
+      ) %>% 
+        rowwise() %>%
+        mutate(hmdb = list(if_null(unique(c(hmdb,metHMDBID)),NA_character_))) %>%
+        select(-metHMDBID)
+        ,
+      .
+    )}
 }
 
 #' Reactions from Recon-3D
@@ -107,7 +122,7 @@ recon3d_compartments <- function(){
 
 
 #' @export
-recon3d_raw_model <- function() {
+recon3d_raw_vmh <- function() {
   'recon3d_model' %>%
     generic_downloader(
       reader = R.matlab::readMat,
