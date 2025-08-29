@@ -1,5 +1,7 @@
-recon3d_raw <- function(){
-  'recon3d_bigg' %>%
+
+#' @export
+recon3d_raw_matlab <- function() {
+    'recon3d_bigg' %>%
     generic_downloader(
       reader = R.matlab::readMat,
       url_key_param = list(),
@@ -12,3 +14,11 @@ recon3d_raw <- function(){
 }
 
 
+#' @export
+recon3d_raw <- function() {
+
+    path <- download_to_cache('recon3d_bigg_json')
+
+    safe_json(path)
+
+}
