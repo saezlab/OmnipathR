@@ -23,7 +23,11 @@ recon3d_raw <- function() {
 
 #' @noRd
 recon3d_table <- function(name){
-   recon3d_raw() %>% extract2(name) %>% tibble()
+
+    recon3d_raw() %>%
+    extract2(name) %>%
+    tibble()
+
 }
 
 
@@ -94,5 +98,9 @@ recon3d_genes <- function(){
 #' @return Data frame: tibble of compartments.
 #' @export
 recon3d_compartments <- function(){
-    recon3d_table("compartments") %>% unnest() 
+
+    recon3d_raw() %>%
+    extract2('compartments') %>%
+    {tibble(code = names(.), name = unlist(.))}
+
 }
