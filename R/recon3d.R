@@ -76,7 +76,11 @@ recon3d_reactions <- function(){
 #' @return Data frame: tibble of genes.
 #' @export
 recon3d_genes <- function(){
-    recon3d_table("genes")
+    recon3d_table("genes") %>%
+    unnest(notes) %>%
+    unnest(annotation) %>%
+    unnest(original_bigg_ids) %>%
+    slice(-1)
 }
 
 
@@ -90,5 +94,5 @@ recon3d_genes <- function(){
 #' @return Data frame: tibble of compartments.
 #' @export
 recon3d_compartments <- function(){
-    recon3d_table("compartments")
+    recon3d_table("compartments") %>% unnest() 
 }
