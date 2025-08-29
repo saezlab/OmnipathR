@@ -104,3 +104,18 @@ recon3d_compartments <- function(){
     {tibble(code = names(.), name = unlist(.))}
 
 }
+
+
+#' @export
+recon3d_raw_model <- function() {
+  'recon3d_model' %>%
+    generic_downloader(
+      reader = R.matlab::readMat,
+      url_key_param = list(),
+      reader_param = list(),
+      resource = 'Recon-3D',
+      post = NULL,
+      use_httr = FALSE
+    ) %T>%
+    load_success()
+}

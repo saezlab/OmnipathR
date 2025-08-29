@@ -171,7 +171,7 @@
     "recon3d_bigg_json": [
         "http://bigg.ucsd.edu/static/models/Recon3D.json.gz"
     ],
-    "recon3d_vmh":[
-        "https://www.vmh.life/files/reconstructions/Recon/3D.01/"
+    "recon3d_model":[
+        "https://www.vmh.life/files/reconstructions/Recon/3D.01/Recon3DModel_301.mat"
     ]
 }
