@@ -910,9 +910,9 @@ indent <- function(lines, depth = 4L){
 #' @noRd
 safe_json <- function(path, encoding = 'UTF-8', ...){
 
-    lines <- readLines(con = path, encoding = encoding)
-
     log_trace('Reading JSON from `%s` (encoding: %s).', path, encoding)
+
+    lines <- readLines(con = path, encoding = encoding)
 
     json_ok <- jsonlite::validate(txt = lines)
 
