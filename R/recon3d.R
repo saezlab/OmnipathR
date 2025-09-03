@@ -1,16 +1,12 @@
 
 #' @export
 recon3d_raw_matlab <- function() {
+
     'recon3d_bigg' %>%
-    generic_downloader(
-      reader = R.matlab::readMat,
-      url_key_param = list(),
-      reader_param = list(),
-      resource = 'recon3d_bigg',
-      post = NULL,
-      use_httr = FALSE
-    ) %T>%
-    load_success()
+    download_to_cache() %>%
+    gunzip(temporary = TRUE, remove = FALSE) %>%
+    R.matlab::readMat()
+
 }
 
 
@@ -41,7 +37,7 @@ recon3d_table <- function(name){
 #' @return Data frame: tibble of metabolites.
 #' @importFrom tidyr unnest
 #' @export
-recon3d_metabolites <- function(extra_hmdb=TRUE){
+recon3d_metabolites <- function(extra_hmdb = TRUE){
 
     recon3d_table("metabolites") %>%
     unnest(notes) %>%
@@ -51,18 +47,19 @@ recon3d_metabolites <- function(extra_hmdb=TRUE){
       extra_hmdb,
       left_join(
         .,
-        recon3d_raw_vmh() %>% 
+        recon3d_raw_vmh() %>%
           chalmers_gem_matlab_tibble("mets", "metHMDBID") %>%
-          unnest(cols = c('mets', 'metHMDBID')) %>% 
+          unnest(cols = c('mets', 'metHMDBID')) %>%
           unnest(cols = c('mets')),
         by = c("original_bigg_ids" = "mets")
-      ) %>% 
+      ) %>%
         rowwise() %>%
-        mutate(hmdb = list(if_null(unique(c(hmdb,metHMDBID)),NA_character_))) %>%
+        mutate(hmdb = list(if_null(unique(c(hmdb, metHMDBID)), NA_character_))) %>%
         select(-metHMDBID)
         ,
       .
     )}
+
 }
 
 #' Reactions from Recon-3D
@@ -81,6 +78,7 @@ recon3d_reactions <- function(){
     unnest(metabolites) %>%
     unnest(original_bigg_ids) %>%
     relocate(original_bigg_ids, .after = 2L)
+
 
 }
 
@@ -123,6 +121,7 @@ recon3d_compartments <- function(){
 
 #' @export
 recon3d_raw_vmh <- function() {
+
   'recon3d_model' %>%
     generic_downloader(
       reader = R.matlab::readMat,
@@ -133,4 +132,5 @@ recon3d_raw_vmh <- function() {
       use_httr = FALSE
     ) %T>%
     load_success()
+
 }
