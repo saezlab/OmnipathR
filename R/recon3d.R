@@ -1,4 +1,10 @@
 
+#' Recon3D model from BiGG
+#'
+#' Returns the content extracted from Matlab file.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom R.utils gunzip
 #' @export
 recon3d_raw_matlab <- function() {
 

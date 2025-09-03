@@ -12,11 +12,13 @@ translate_ids_multi(
   uploadlists = FALSE,
   ensembl = FALSE,
   hmdb = FALSE,
+  ramp = FALSE,
   chalmers = FALSE,
   entity_type = NULL,
   keep_untranslated = TRUE,
   organism = 9606,
-  reviewed = TRUE
+  reviewed = TRUE,
+  expand = TRUE
 )
 }
 \arguments{

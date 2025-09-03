@@ -9,7 +9,8 @@ stitch_network(
   min_score = 700L,
   protein_ids = c("uniprot", "genesymbol"),
   metabolite_ids = c("hmdb", "kegg"),
-  cosmos = FALSE
+  cosmos = FALSE,
+  metabolite_protein_only = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,9 @@ and "b" sides of the interaction, respectively. The default ID type for
 metabolites is PubChem CID, and HMDB IDs and KEGG IDs are included.}
 
 \item{cosmos}{Logical: use COSMOS format?}
+
+\item{metabolite_protein_only}{Logical: keep only metabolite-protein
+interactions, remove protein-metabolite ones.}
 }
 \value{
 A data frame of STITCH chemical-protein and protein-chemical
