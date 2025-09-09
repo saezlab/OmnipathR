@@ -173,5 +173,8 @@
     ],
     "recon3d_model":[
         "https://www.vmh.life/files/reconstructions/Recon/3D.01/Recon3DModel_301.mat"
+    ],
+    "kinasephos": [
+        "https://awi.cuhk.edu.cn/KinasePhos/dataset.csv"
     ]
 }
