@@ -23,7 +23,8 @@
 READR_DEFAULTS = list(
     col_types = cols(),
     show_col_types = FALSE,
-    progress = FALSE
+    progress = FALSE,
+    delim = '\t'
 )
 
 CURL_DEBUG_TYPES = list(
@@ -976,13 +977,13 @@ user_agent <- function() {
 
 #' Download by curl, read by read_tsv
 #'
-#' @importFrom readr read_tsv
+#' @importFrom readr read_delim
 #' @noRd
 curl_read_tsv <- function(url, curlopt = list(), ...) {
 
-    args <- list(...) %>% add_defaults(read_tsv, READR_DEFAULTS)
+    args <- list(...) %>% add_defaults(read_delim, READR_DEFAULTS)
 
-    exec(omnipath_curl, url, curlopt = curlopt, callback = read_tsv, !!!args)
+    exec(omnipath_curl, url, curlopt = curlopt, callback = read_delim, !!!args)
 
 }
 
