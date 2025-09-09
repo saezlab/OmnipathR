@@ -230,7 +230,45 @@ cosmos_pkn <- function(
         cosmos = TRUE,
         metabolite_protein_only = TRUE
     )
-
+    
+    ligrec_pkn = curated_ligand_receptor_interactions() %>% distinct()
+    
+    tf_mRNA = collectri()
+    
+    KSN = enzyme_substrate(resources = c("PhosphoSite", "DEPOD","SIGNOR")) %>%
+      mutate(
+        target = paste(substrate_genesymbol,paste(
+          residue_type,residue_offset,sep = ""),sep = "_"
+        )) %>%
+      mutate(mor = case_when(
+        modification == "phosphorylation" ~ 1,
+        modification == "dephosphorylation" ~ -1,
+        TRUE ~ NA_real_
+      )) %>%
+      select(
+        source = enzyme_genesymbol,
+        target = target,
+        mor = mor)
+    
+    kinasephos = kinasephos()
+    
+    
+    
+    
+    core_pkn = omnipath() %>%
+      filter(!is.na(references)) %>%
+      filter(consensus_stimulation == 1 | consensus_inhibition == 1) %>%
+      mutate(sign = consensus_stimulation - consensus_inhibition) %>%
+      select(source = source_genesymbol,target = target_genesymbol,sign) %>%
+      {bind_rows(
+        filter(.,sign != 0),
+        filter(.,sign == 0) %>% mutate(sign=1),
+        filter(.,sign == 0) %>% mutate(sign = -1)
+      )} %>% as.data.frame()
+    
+    
+      
+    
     chalmers <- chalmers_gem_network(
         organism_or_gem = organism,
         protein_ids = protein_ids,
