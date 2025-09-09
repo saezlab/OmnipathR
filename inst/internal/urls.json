@@ -46,6 +46,10 @@
         "https://rest.uniprot.org/uniprotkb/stream?",
         "format=tsv&fields=%s&query=organism_id:%d%s"
     ],
+    "new_uniprot_query" : [
+        "https://rest.uniprot.org/uniprotkb/stream?",
+        "format=tsv&fields=%s&query=%s"
+    ],
     "uniprot_backup": [
         "https://wwwdev.ebi.ac.uk/uniprot/api/uniprotkb/stream?",
         "format=tsv&fields=%s&query=organism_id:%d%s"

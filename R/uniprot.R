@@ -126,6 +126,24 @@ all_uniprots <- function(
 
 }
 
+
+#' @noRd
+uniprot_query <- function(fields = 'accession', accessions = NULL) {
+
+    fields <- fields %>% paste(collapse = ',')
+    accessions <- accessions %>% sprintf('accession:%s', .) %>% paste(collapse = ' OR ')
+
+    generic_downloader(
+        url_key = 'new_uniprot_query',
+        url_param = list(fields, accession = accessions),
+        reader_param = list(progress = FALSE),
+        resource = 'UniProt'
+    ) %T>%
+    load_success()
+
+}
+
+
 #' UniProt taxonomy data
 #'
 #' @return A tibble with columns: \code{code}, \code{kingdom}, \code{ncbi_tax_id}, \code{latin_name}, \code{common_name}, \code{synonym}.
