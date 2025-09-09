@@ -208,6 +208,7 @@ cosmos_pkn <- function(
     metabolite_ids = c('hmdb', 'kegg'),
     chalmers_gem_metab_max_degree = 400L,
     stitch_score = 700L,
+    ksn_list = c("PhosphoSite", "DEPOD","SIGNOR"),
     ...
 ) {
 
@@ -221,53 +222,14 @@ cosmos_pkn <- function(
         ),
         organism
     )
-
-    stitch <- stitch_network(
-        organism = organism,
-        min_score = stitch_score,
-        protein_ids = protein_ids,
-        metabolite_ids = metabolite_ids,
-        cosmos = TRUE,
-        metabolite_protein_only = TRUE
-    )
-    
-    ligrec_pkn = curated_ligand_receptor_interactions() %>% distinct()
-    
-    tf_mRNA = collectri()
-    
-    KSN = enzyme_substrate(resources = c("PhosphoSite", "DEPOD","SIGNOR")) %>%
-      mutate(
-        target = paste(substrate_genesymbol,paste(
-          residue_type,residue_offset,sep = ""),sep = "_"
-        )) %>%
-      mutate(mor = case_when(
-        modification == "phosphorylation" ~ 1,
-        modification == "dephosphorylation" ~ -1,
-        TRUE ~ NA_real_
-      )) %>%
-      select(
-        source = enzyme_genesymbol,
-        target = target,
-        mor = mor)
-    
-    kinasephos = kinasephos()
     
     
-    
-    
-    core_pkn = omnipath() %>%
-      filter(!is.na(references)) %>%
-      filter(consensus_stimulation == 1 | consensus_inhibition == 1) %>%
-      mutate(sign = consensus_stimulation - consensus_inhibition) %>%
-      select(source = source_genesymbol,target = target_genesymbol,sign) %>%
-      {bind_rows(
-        filter(.,sign != 0),
-        filter(.,sign == 0) %>% mutate(sign=1),
-        filter(.,sign == 0) %>% mutate(sign = -1)
-      )} %>% as.data.frame()
-    
-    
-      
+    stitch = cosmos_stitch(organism = organism,stitch_score = stitch_score,protein_ids = c('uniprot', 'genesymbol'),
+                  metabolite_idsc('hmdb', 'kegg'))
+    ksn = cosmos_ksn(ksn_list)
+    signaling = cosmos_signaling()  
+    grn = cosmos_grn()
+    ligrec = cosmos_ligrec()
     
     chalmers <- chalmers_gem_network(
         organism_or_gem = organism,
@@ -287,6 +249,55 @@ cosmos_pkn <- function(
 
 }
 
+cosmos_stitch <- function(organism,stitch_score,protein_ids,metabolite_ids){
+  stitch = stitch_network(
+    organism = organism,
+    min_score = stitch_score,
+    protein_ids = protein_ids,
+    metabolite_ids = metabolite_ids,
+    cosmos = TRUE,
+    metabolite_protein_only = TRUE
+  )
+}
+cosmos_ksn <- function(ksn_list){
+  KSN = enzyme_substrate(resources = ksn_list) %>%
+    mutate(
+      target = paste(substrate_genesymbol,paste(
+        residue_type,residue_offset,sep = ""),sep = "_"
+      )) %>%
+    mutate(mor = case_when(
+      modification == "phosphorylation" ~ 1,
+      modification == "dephosphorylation" ~ -1,
+      TRUE ~ NA_real_
+    )) %>%
+    select(
+      source = enzyme_genesymbol,
+      target = target,
+      mor = mor)
+  
+  # kinasephos = kinasephos()
+}
+
+cosmos_signaling <- function(){
+  core_pkn = omnipath() %>%
+    filter(!is.na(references)) %>%
+    filter(consensus_stimulation == 1 | consensus_inhibition == 1) %>%
+    mutate(sign = consensus_stimulation - consensus_inhibition) %>%
+    select(source = source_genesymbol,target = target_genesymbol,sign) %>%
+    {bind_rows(
+      filter(.,sign != 0),
+      filter(.,sign == 0) %>% mutate(sign=1),
+      filter(.,sign == 0) %>% mutate(sign = -1)
+    )} %>% as.data.frame()
+}
+
+cosmos_grn <- function(){
+  tf_mRNA = collectri()
+}
+
+cosmos_ligrec <- function(){
+  ligrec_pkn = curated_ligand_receptor_interactions() %>% distinct()
+}
 
 #' OmniPath PPI for the COSMOS PKN
 #'
@@ -330,7 +341,7 @@ omnipath_for_cosmos <- function(
         id_types = c('uniprot', 'genesymbol'),
         ...
     ) {
-
+  
     # NSE vs. R CMD check workaround
     consensus_stimulation <- consensus_inhibition <- record_id <- NULL
 
