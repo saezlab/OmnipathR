@@ -1196,7 +1196,8 @@ omnipath_download <- function(url, fun, cache = NULL, ...) {
                     the_url,
                     conditionMessage(e)
                 )
-                log_all_info('OmnipathR')
+                nothing <- log_all_info('OmnipathR')
+                NULL
             }
         )
 
