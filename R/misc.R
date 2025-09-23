@@ -1448,3 +1448,45 @@ ensure_character <- function(d, ...) {
     d %>% mutate(across(c(!!!cols), as.character))
 
 }
+
+
+#' Checks if an object has names
+#'
+#' @param value An object
+#'
+#' @return `TRUE` if the object has names, `FALSE` otherwise
+#'
+#' @importFrom magrittr %>% not
+#' @noRd
+named <- function(value) {
+
+    names(value) %>% is.null %>% not
+
+}
+
+
+#' Checks if all names of a list or vector are non-empty
+#'
+#' @param value A list or vector.
+#'
+#' @return `TRUE` if all names are non-empty, `FALSE` otherwise
+#'
+#' @importFrom magrittr %>%
+#' @importFrom purrr map_lgl
+#' @noRd
+all_named <- function(value) {
+
+    value %>% names %>% map_lgl(~ !is.na(.x) && nchar(.x) > 0L) %>% all
+
+}
+
+
+#' Last element of a list or vector
+#'
+#' @importFrom magrittr %>%
+#' @noRd
+last <- function(value) {
+
+    value[length(value)] %>% unlist
+
+}
