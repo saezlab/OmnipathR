@@ -690,17 +690,14 @@ omnipath_build_url <- function(param, notls = FALSE){
 
     }
 
-    url <-
-        .omnipath_querystring_param %>%
-        reduce(
-            function(url, key){
-                omnipath_url_add_param(url, key, param[[key]])
-            },
-            .init = baseurl
-        ) %>%
-        URLencode
-
-    return(url)
+    .omnipath_querystring_param %>%
+    reduce(
+        function(url, key){
+            omnipath_url_add_param(url, key, param[[key]])
+        },
+        .init = baseurl
+    ) %>%
+    URLencode
 
 }
 
