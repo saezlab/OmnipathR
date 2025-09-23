@@ -112,10 +112,10 @@ chalmers_gem <- function(organism = 'Human', orphans = TRUE) {
                 map(str_split, ' and ') %>%
                 map(discard, is_empty_2)
             ),
-            orphan = are_na(map_lgl(
+            orphan = map_lgl(
                 grRules,
-                ~any(map_lgl(.x, ~any(str_detect(.x, '^\\d+$'))))
-            )),
+                ~any(map_lgl(.x, ~any(is.na(.x))))
+            ),
             reactants = map2(
                 1L:n(),
                 direction,
