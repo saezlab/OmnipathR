@@ -1002,6 +1002,16 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 }
 
 
+#' Disable bypassing slow doctests
+#'
+#' @noRd
+disable_doctest_bypass <- function() {
+
+    omnipathr.env$doctest_bypass <- FALSE
+
+}
+
+
 #' Packages that seem to be missing from library
 #'
 #' @importFrom magrittr %>%
