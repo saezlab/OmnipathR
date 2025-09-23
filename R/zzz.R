@@ -34,6 +34,7 @@
     omnipath_init_log()
 
     buildserver <- .on_buildserver()
+    omnipathr.env$doctest_bypass <- TRUE
 
     if(buildserver){
 

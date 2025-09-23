@@ -960,6 +960,16 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 }
 
 
+#' Bypassing slow doctests is enabled
+#'
+#' @noRd
+.doctest_bypass <- function() {
+
+    omnipathr.env$doctest_bypass
+
+}
+
+
 #' Bypass slow doctests
 #'
 #' Makes the calling function return a value, bypassing further execution.
@@ -976,7 +986,7 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 #' @noRd
 .slow_doctest <- function(value = NULL, env = parent.frame()){
 
-    if(.on_buildserver()){
+    if(.doctest_bypass() && .on_buildserver()){
 
         log_trace('Bypassing call: `%s`.', deparse(sys.call(-1L)))
         log_trace(paste(
