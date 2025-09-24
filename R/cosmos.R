@@ -135,7 +135,6 @@ cosmos_pkn <- function(
 }
 
 
-
 #' Build prior knowledge network for COSMOS
 #'
 #' The prior knowledge network (PKN) used by COSMOS is a network of
@@ -222,15 +221,15 @@ cosmos_pkn <- function(
         ),
         organism
     )
-    
-    
+
+
     stitch = cosmos_stitch(organism = organism,stitch_score = stitch_score,protein_ids = c('uniprot', 'genesymbol'),
                   metabolite_idsc('hmdb', 'kegg'))
     ksn = cosmos_ksn(ksn_list)
-    signaling = cosmos_signaling()  
+    signaling = cosmos_signaling()
     grn = cosmos_grn()
     ligrec = cosmos_ligrec()
-    
+
     chalmers <- chalmers_gem_network(
         organism_or_gem = organism,
         protein_ids = protein_ids,
@@ -259,6 +258,9 @@ cosmos_stitch <- function(organism,stitch_score,protein_ids,metabolite_ids){
     metabolite_protein_only = TRUE
   )
 }
+
+
+#' @noRd
 cosmos_ksn <- function(ksn_list){
   KSN = enzyme_substrate(resources = ksn_list) %>%
     mutate(
@@ -274,10 +276,12 @@ cosmos_ksn <- function(ksn_list){
       source = enzyme_genesymbol,
       target = target,
       mor = mor)
-  
+
   # kinasephos = kinasephos()
 }
 
+
+#' @noRd
 cosmos_signaling <- function(){
   core_pkn = omnipath() %>%
     filter(!is.na(references)) %>%
@@ -291,13 +295,18 @@ cosmos_signaling <- function(){
     )} %>% as.data.frame()
 }
 
+
+#' @noRd
 cosmos_grn <- function(){
   tf_mRNA = collectri()
 }
 
+
+#' @noRd
 cosmos_ligrec <- function(){
   ligrec_pkn = curated_ligand_receptor_interactions() %>% distinct()
 }
+
 
 #' OmniPath PPI for the COSMOS PKN
 #'
@@ -341,7 +350,7 @@ omnipath_for_cosmos <- function(
         id_types = c('uniprot', 'genesymbol'),
         ...
     ) {
-  
+
     # NSE vs. R CMD check workaround
     consensus_stimulation <- consensus_inhibition <- record_id <- NULL
 
