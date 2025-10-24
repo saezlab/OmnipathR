@@ -38,8 +38,22 @@
 #' @export
 ensembl_organisms_raw <- function(){
 
-    'ensembl_organisms' %>%
-    download_to_cache(http_headers = user_agent()) %>%
+    tryCatch(
+        'ensembl_organisms' %>%
+        download_to_cache(http_headers = user_agent()),
+        error = function(err) {
+
+            log_error_with_info(
+                'Failed to download Ensembl organisms table.',
+                err
+            )
+
+            log_trace('Accessing Ensembl organisms table from rescued repo.')
+            'ensembl_organisms_rescued' %>%
+            download_to_cache(http_headers = user_agent())
+
+        }
+    ) %>%
     read_html %>%
     html_element('table') %>%
     html_table()
