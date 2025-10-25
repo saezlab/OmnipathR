@@ -8,6 +8,8 @@
 #' @export
 recon3d_raw_matlab <- function() {
 
+    .slow_doctest()
+
     'recon3d_bigg' %>%
     download_to_cache() %>%
     gunzip(temporary = TRUE, remove = FALSE) %>%
@@ -16,15 +18,31 @@ recon3d_raw_matlab <- function() {
 }
 
 
+#' Recon-3D from JSON
+#'
+#' @examples
+#' recon3d_raw()
+#'
+#' @importFrom magrittr %>%
 #' @export
 recon3d_raw <- function() {
+
+    .slow_dowtest()
+
     download_to_cache('recon3d_bigg_json') %>%
     safe_json()
+
 }
 
 
+#' Move Recon-3D from Matlab object to tibble
+#'
+#' @param name Character: top level name in the Matlab object.
+#'
 #' @noRd
 recon3d_table <- function(name){
+
+    .slow_dowtest()
 
     recon3d_raw() %>%
     extract2(name) %>%
@@ -45,25 +63,27 @@ recon3d_table <- function(name){
 #' @export
 recon3d_metabolites <- function(extra_hmdb = TRUE){
 
+    .slow_dowtest()
+
     recon3d_table("metabolites") %>%
     unnest(notes) %>%
     unnest(original_bigg_ids) %>%
     unnest(annotation) %>%
     {`if`(
-      extra_hmdb,
-      left_join(
-        .,
-        recon3d_raw_vmh() %>%
-          chalmers_gem_matlab_tibble("mets", "metHMDBID") %>%
-          unnest(cols = c('mets', 'metHMDBID')) %>%
-          unnest(cols = c('mets')),
-        by = c("original_bigg_ids" = "mets")
-      ) %>%
+        extra_hmdb,
+        left_join(
+            .,
+            recon3d_raw_vmh() %>%
+            gem_matlab_tibble("mets", "metHMDBID") %>%
+            unnest(cols = c('mets', 'metHMDBID')) %>%
+            unnest(cols = c('mets')),
+            by = c("original_bigg_ids" = "mets")
+        ) %>%
         rowwise() %>%
         mutate(hmdb = list(if_null(unique(c(hmdb, metHMDBID)), NA_character_))) %>%
         select(-metHMDBID)
         ,
-      .
+        .
     )}
 
 }
@@ -79,12 +99,13 @@ recon3d_metabolites <- function(extra_hmdb = TRUE){
 #' @export
 recon3d_reactions <- function(){
 
+    .slow_dowtest()
+
     recon3d_table("reactions") %>%
     unnest(notes) %>%
     unnest(metabolites) %>%
     unnest(original_bigg_ids) %>%
     relocate(original_bigg_ids, .after = 2L)
-
 
 }
 
@@ -99,11 +120,15 @@ recon3d_reactions <- function(){
 #' @return Data frame: tibble of genes.
 #' @export
 recon3d_genes <- function(){
+
+    .slow_dowtest()
+
     recon3d_table("genes") %>%
     unnest(notes) %>%
     unnest(annotation) %>%
     unnest(original_bigg_ids) %>%
     slice(-1)
+
 }
 
 
@@ -118,6 +143,8 @@ recon3d_genes <- function(){
 #' @export
 recon3d_compartments <- function(){
 
+    .slow_dowtest()
+
     recon3d_raw() %>%
     extract2('compartments') %>%
     {tibble(code = names(.), name = unlist(.))}
@@ -125,17 +152,25 @@ recon3d_compartments <- function(){
 }
 
 
+#' Recon-3D model from Virtual Metabolic Human
+#'
+#' @examples
+#' recon3d_raw_vmh()
+#'
+#' @importFrom magrittr %>%
 #' @export
 recon3d_raw_vmh <- function() {
 
-  'recon3d_model' %>%
+    .slow_dowtest()
+
+    'recon3d_model' %>%
     generic_downloader(
-      reader = R.matlab::readMat,
-      url_key_param = list(),
-      reader_param = list(),
-      resource = 'Recon-3D',
-      post = NULL,
-      use_httr = FALSE
+        reader = R.matlab::readMat,
+        url_key_param = list(),
+        reader_param = list(),
+        resource = 'Recon-3D',
+        post = NULL,
+        use_httr = FALSE
     ) %T>%
     load_success()
 
