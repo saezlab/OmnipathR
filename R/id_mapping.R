@@ -980,6 +980,7 @@ ambiguity_summarize <- function(
 #'     less download and data storage.
 #' @param ensembl Logical: use data from Ensembl BioMart instead of UniProt.
 #' @param hmdb Logical: use HMDB ID translation data.
+#' @param ramp Logical: use RaMP ID translation data.
 #' @param chalmers Logical: use ID translation data from Chalmers Sysbio GEM.
 #' @param entity_type Character: "gene" and "smol" are short symbols for
 #'     proteins, genes and small molecules respectively. Several other synonyms
@@ -987,12 +988,15 @@ ambiguity_summarize <- function(
 #' @param keep_untranslated In case the output is a data frame, keep the
 #'     records where the source identifier could not be translated. At
 #'     these records the target identifier will be NA.
-#' @param reviewed Translate only reviewed (\code{TRUE}), only unreviewed
-#'     (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
-#'     if \code{uploadlists} is \code{FALSE}.
 #' @param organism Character or integer, name or NCBI Taxonomy ID of the
 #'     organism (by default 9606 for human). Matters only if
 #'     \code{uploadlists} is \code{FALSE}.
+#' @param reviewed Translate only reviewed (\code{TRUE}), only unreviewed
+#'     (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
+#'     if \code{uploadlists} is \code{FALSE}.
+#' @param expand Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
+#'     expanded to multiple rows, resulting character type columns; if
+#'     \code{FALSE}, the original rows will be kept intact, and the target
 #'
 #' @return
 #' A data frame with all source columns translated to all target identifiers.

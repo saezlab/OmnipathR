@@ -55,6 +55,8 @@ recon3d_table <- function(name){
 #'
 #' @rdname recon3d
 #'
+#' @param extra_hmdb Logical: add extra HMDB IDs from Virtual Metabolic Human.
+#'
 #' @examples
 #' recon3d_metabolites()
 #'
