@@ -15,6 +15,9 @@ recon3d_genes()
 
 recon3d_compartments()
 }
+\arguments{
+\item{extra_hmdb}{Logical: add extra HMDB IDs from Virtual Metabolic Human.}
+}
 \value{
 Data frame: tibble of metabolites.
 

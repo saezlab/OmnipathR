@@ -56,6 +56,8 @@ less download and data storage.}
 
 \item{hmdb}{Logical: use HMDB ID translation data.}
 
+\item{ramp}{Logical: use RaMP ID translation data.}
+
 \item{chalmers}{Logical: use ID translation data from Chalmers Sysbio GEM.}
 
 \item{entity_type}{Character: "gene" and "smol" are short symbols for
@@ -73,6 +75,10 @@ organism (by default 9606 for human). Matters only if
 \item{reviewed}{Translate only reviewed (\code{TRUE}), only unreviewed
 (\code{FALSE}) or both (\code{NULL}) UniProt records. Matters only
 if \code{uploadlists} is \code{FALSE}.}
+
+\item{expand}{Logical: if \code{TRUE}, ambiguous (to-many) mappings will be
+expanded to multiple rows, resulting character type columns; if
+\code{FALSE}, the original rows will be kept intact, and the target}
 }
 \value{
 A data frame with all source columns translated to all target identifiers.
