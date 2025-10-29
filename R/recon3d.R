@@ -27,7 +27,7 @@ recon3d_raw_matlab <- function() {
 #' @export
 recon3d_raw <- function() {
 
-    .slow_dowtest()
+    .slow_doctest()
 
     download_to_cache('recon3d_bigg_json') %>%
     safe_json()
@@ -42,7 +42,7 @@ recon3d_raw <- function() {
 #' @noRd
 recon3d_table <- function(name){
 
-    .slow_dowtest()
+    .slow_doctest()
 
     recon3d_raw() %>%
     extract2(name) %>%
@@ -65,7 +65,7 @@ recon3d_table <- function(name){
 #' @export
 recon3d_metabolites <- function(extra_hmdb = TRUE){
 
-    .slow_dowtest()
+    .slow_doctest()
 
     recon3d_table("metabolites") %>%
     unnest(notes) %>%
@@ -101,7 +101,7 @@ recon3d_metabolites <- function(extra_hmdb = TRUE){
 #' @export
 recon3d_reactions <- function(){
 
-    .slow_dowtest()
+    .slow_doctest()
 
     recon3d_table("reactions") %>%
     unnest(notes) %>%
@@ -123,7 +123,7 @@ recon3d_reactions <- function(){
 #' @export
 recon3d_genes <- function(){
 
-    .slow_dowtest()
+    .slow_doctest()
 
     recon3d_table("genes") %>%
     unnest(notes) %>%
@@ -145,7 +145,7 @@ recon3d_genes <- function(){
 #' @export
 recon3d_compartments <- function(){
 
-    .slow_dowtest()
+    .slow_doctest()
 
     recon3d_raw() %>%
     extract2('compartments') %>%
@@ -163,7 +163,7 @@ recon3d_compartments <- function(){
 #' @export
 recon3d_raw_vmh <- function() {
 
-    .slow_dowtest()
+    .slow_doctest()
 
     'recon3d_model' %>%
     generic_downloader(
