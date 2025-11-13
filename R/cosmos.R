@@ -198,9 +198,7 @@ cosmos_pkn <- function(
 #'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #'
 #' @importFrom magrittr %>%
-#'
 #' @noRd
-#'
 .cosmos_pkn <- function(
     organism = 'human',
     protein_ids = c('uniprot', 'genesymbol'),
@@ -223,12 +221,16 @@ cosmos_pkn <- function(
     )
 
 
-    stitch = cosmos_stitch(organism = organism,stitch_score = stitch_score,protein_ids = c('uniprot', 'genesymbol'),
-                  metabolite_idsc('hmdb', 'kegg'))
-    ksn = cosmos_ksn(ksn_list)
-    signaling = cosmos_signaling()
-    grn = cosmos_grn()
-    ligrec = cosmos_ligrec()
+    stitch <- cosmos_stitch(
+        organism = organism,
+        stitch_score = stitch_score,
+        protein_ids = c('uniprot', 'genesymbol'),
+        metabolite_ids = c('hmdb', 'kegg')
+    )
+    ksn <- cosmos_ksn(ksn_list)
+    signaling <- cosmos_signaling()
+    grn <- cosmos_grn()
+    ligrec <- cosmos_ligrec()
 
     chalmers <- chalmers_gem_network(
         organism_or_gem = organism,
@@ -248,36 +250,58 @@ cosmos_pkn <- function(
 
 }
 
-cosmos_stitch <- function(organism,stitch_score,protein_ids,metabolite_ids){
-  stitch = stitch_network(
-    organism = organism,
-    min_score = stitch_score,
-    protein_ids = protein_ids,
-    metabolite_ids = metabolite_ids,
-    cosmos = TRUE,
-    metabolite_protein_only = TRUE
-  )
+
+#' @noRd
+cosmos_stitch <- function(
+    organism,
+    stitch_score,
+    protein_ids,
+    metabolite_ids
+){
+
+    stitch = stitch_network(
+        organism = organism,
+        min_score = stitch_score,
+        protein_ids = protein_ids,
+        metabolite_ids = metabolite_ids,
+        cosmos = TRUE,
+        metabolite_protein_only = TRUE
+    )
+
 }
 
 
 #' @noRd
 cosmos_ksn <- function(ksn_list){
-  KSN = enzyme_substrate(resources = ksn_list) %>%
-    mutate(
-      target = paste(substrate_genesymbol,paste(
-        residue_type,residue_offset,sep = ""),sep = "_"
-      )) %>%
-    mutate(mor = case_when(
-      modification == "phosphorylation" ~ 1,
-      modification == "dephosphorylation" ~ -1,
-      TRUE ~ NA_real_
-    )) %>%
-    select(
-      source = enzyme_genesymbol,
-      target = target,
-      mor = mor)
 
-  # kinasephos = kinasephos()
+    # NSE vs. R CMD check workaround
+    residue_type <- residue_offset <- substrate_genesymbol <-
+        modification <- mor <- target <- NULL
+
+    KSN <-
+        enzyme_substrate(resources = ksn_list) %>%
+        mutate(
+           target = sprintf(
+               '%s_%s%i',
+               substrate_genesymbol,
+               residue_type,
+               residue_offset
+           )
+        ) %>%
+        mutate(
+            mor = case_when(
+                modification == "phosphorylation" ~ 1L,
+                modification == "dephosphorylation" ~ -1L,
+                TRUE ~ NA_integer_
+            )
+        ) %>%
+        select(
+            source = enzyme_genesymbol,
+            target = target,
+            mor = mor
+        )
+
+    # kinasephos = kinasephos()
 }
 
 
