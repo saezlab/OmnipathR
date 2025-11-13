@@ -35,7 +35,9 @@ taxon_names_table <- function(){
 
     # NSE vs. R CMD check workaround
     ncbi_tax_id <- oma_version <- genome_source <-
-    latin_name.x <- latin_name.y <- common_name <- code <- synonym <- NULL
+    latin_name.x <- latin_name.y <- common_name <- code <- synonym <-
+    latin_name_uniprot <- latin_name_ensembl <- latin_name_oma <-
+    common_name_uniprot <- common_name_ensembl <- NULL
 
     ensembl_organisms() %>%
     rename(common_name_ensembl = common_name) %>%

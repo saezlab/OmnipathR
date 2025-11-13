@@ -65,6 +65,9 @@ recon3d_table <- function(name){
 #' @export
 recon3d_metabolites <- function(extra_hmdb = TRUE){
 
+    # NSE vs. R CMD check workaround
+    hmdb <- notes <- original_bigg_ids <- annotation <- metHMDBID <- NULL
+
     .slow_doctest()
 
     recon3d_table("metabolites") %>%
@@ -101,6 +104,9 @@ recon3d_metabolites <- function(extra_hmdb = TRUE){
 #' @export
 recon3d_reactions <- function(){
 
+    # NSE vs. R CMD check workaround
+    notes <- metabolites <- original_bigg_ids <- NULL
+
     .slow_doctest()
 
     recon3d_table("reactions") %>%
@@ -123,13 +129,16 @@ recon3d_reactions <- function(){
 #' @export
 recon3d_genes <- function(){
 
+    # NSE vs. R CMD check workaround
+    notes <- annotation <- original_bigg_ids <- NULL
+
     .slow_doctest()
 
     recon3d_table("genes") %>%
     unnest(notes) %>%
     unnest(annotation) %>%
     unnest(original_bigg_ids) %>%
-    slice(-1)
+    slice(-1L)
 
 }
 
