@@ -22,7 +22,7 @@
 
 #' @importFrom magrittr %>% %<>% extract
 #' @noRd
-copy_attrs <- function(to, from, .ignore = NULL) {
+copy_all_attrs <- function(to, from, .ignore = NULL) {
 
     attrs <-
         attributes(from) %>%
@@ -44,7 +44,7 @@ copy_attrs <- function(to, from, .ignore = NULL) {
 #' @importFrom magrittr %<>%
 #' @noRd
 tbl_attrs <- function(data, original = NULL, .ignore = NULL) {
-    data %<>% copy_attrs(original, .ignore = .ignore)
+    data %<>% copy_all_attrs(original, .ignore = .ignore)
     class(data) %<>% c('tbl_attrs', .)
     return(data)
 }
@@ -139,7 +139,7 @@ patch_attr_preserving <- function(f) {
                 call[[1L]] <- original
                 obj <- eval(call[[tbl_name]], parent.frame())
                 result <- eval(call, parent.frame())
-                result %<>% copy_attrs(obj, .ignore = 'groups')
+                result %<>% copy_all_attrs(obj, .ignore = 'groups')
                 if (inherits(obj, 'tbl_attrs')) {
                     class(result) %<>% c('tbl_attrs', .)
                 }
