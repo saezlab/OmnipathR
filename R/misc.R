@@ -1401,8 +1401,22 @@ domain_from_url <- function(url) {
     hostname <- NULL
 
     url %>%
-    url_parse %>%
-    `$`(hostname) %||% 'unknown domain'
+    safe_parse_url %>%
+    `$`(hostname)
+
+}
+
+
+#' Attempt to parse URL
+#'
+#' @importFrom httr2 url_parse
+#' @noRd
+safe_parse_url <- function(url) {
+
+    tryCatch(
+        url_parse(url),
+        error = function(e) {list(hostname = 'unknown domain', url = url)}
+    )
 
 }
 
@@ -1417,7 +1431,7 @@ fname_from_url <- function(url) {
 
     url %>%
     {tryCatch(
-        url_parse(.),
+    url_parse(.),
         error = function(e) {list(path = basename(.))}
     )} %>%
     extract2('path') %>%
