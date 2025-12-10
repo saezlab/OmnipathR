@@ -22,7 +22,8 @@
 
 #' Keep the curl handle in httr2 under the `handle` attribute of `request`
 #'
-#' @importFrom rlang !!! fn_fmls_syms new_function expr current_env
+#' @importFrom rlang !!! fn_fmls_syms new_function expr current_env base_env
+#' @importFrom rlang new_environment
 #' @noRd
 patch_httr2_keep_handle <- function() {
 
@@ -35,15 +36,23 @@ patch_httr2_keep_handle <- function() {
 
         if (is.null(attr(original, PATCHED))) {
 
+            fmls_original <- formals(original)
+
             patched <- new_function(
-                args = formals(original),
+                args = fmls_original,
                 body = expr({
                     if (!is.null(handle)) {
                         attr(req, 'handle') <- handle
                     }
-                    ORIGINAL(!!!fn_fmls_syms())
+                    ORIGINAL(!!!fn_fmls_syms(original))
                 }),
-                env = current_env()
+                env = new_environment(
+                    list(
+                        ORIGINAL = original,
+                        original_formals = fmls_original
+                    ),
+                    parent = base_env()
+                )
             )
 
             environment(patched)$ORIGINAL <- original
