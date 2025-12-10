@@ -183,5 +183,11 @@
     ],
     "kinasephos": [
         "https://awi.cuhk.edu.cn/KinasePhos/dataset.csv"
+    ],
+    "metatlas_models": [
+        "https://metabolicatlas.org/api/v2/repository/models/"
+    ],
+    "metatlas_model": [
+        ""
     ]
 }
