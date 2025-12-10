@@ -188,6 +188,6 @@
         "https://metabolicatlas.org/api/v2/repository/models/"
     ],
     "metatlas_model": [
-        ""
+        "https://metabolicatlas.org/%s"
     ]
 }
