@@ -36,7 +36,7 @@
 #' @importFrom tidyr unnest_wider
 #' @importFrom dplyr rename mutate select coalesce
 #' @export
-metabolic_atlas_models <- function() {
+metabolic_atlas_list_models <- function() {
 
     # NSE vs. R CMD check workaround
     gemodelset <- sample <- description <- description2 <- NULL
@@ -53,7 +53,7 @@ metabolic_atlas_models <- function() {
 }
 
 
-#' Download and load a Metabolic Atlas model
+#' Download and load one or more SBML models from Metabolic Atlas
 #'
 #' Downloads a genome-scale metabolic model (GEM) from Metabolic Atlas and
 #' loads it using the SBMLR package (optional dependency).
@@ -76,16 +76,22 @@ metabolic_atlas_models <- function() {
 #' }
 #'
 #' @importFrom magrittr %>%
+#' @importFrom magrittr %<>%
 #' @importFrom rlang eval_tidy enexprs
-#' @importFrom dplyr filter slice
+#' @importFrom dplyr filter slice pull
 #' @importFrom logger log_info log_error log_warn
 #' @export
-metabolic_atlas_model <- function(...) {
+metabolic_atlas_models <- function(...) {
+
+    # NSE vs. R CMD check workaround
+    id <- name <- files <- path <- organism <- tissue <- cell_type <-
+        condition <- reaction_count <- metabolite_count <- gene_count <-
+        year <- NULL
 
     sbmlr_available <- requireNamespace("SBMLR", quietly = TRUE)
 
     if (!sbmlr_available) {
-        msg <- "SBMLR package not available, install with: install.packages('SBMLR')"
+        msg <- "SBMLR package not available, install with: BiocManager::install('SBMLR')"
         log_warn(msg)
         warning(msg, call. = FALSE)
     }
@@ -93,10 +99,10 @@ metabolic_atlas_model <- function(...) {
     args <- list(...)
 
     # Handle different argument types
-    models <- if (length(args) == 1 && is.data.frame(args[[1]])) {
-        args[[1]]
-    } else if (length(args) == 1 && is.numeric(args[[1]])) {
-        metabolic_atlas_models() %>% filter(id %in% args[[1]])
+    models <- if (length(args) == 1L && is.data.frame(args[[1L]])) {
+        args[[1L]]
+    } else if (length(args) == 1L && is.numeric(args[[1L]])) {
+        metabolic_atlas_models() %>% filter(id %in% args[[1L]])
     } else {
         filter_exprs <- enexprs(...)
         models <- metabolic_atlas_models()
@@ -106,28 +112,52 @@ metabolic_atlas_model <- function(...) {
         models
     }
 
-    # NSE vs. R CMD check workaround
-    id <- name <- files <- NULL
+    if (nrow(models) == 0L) {
+        msg <- sprintf("No models found matching the criteria")
+        log_error(msg)
+        stop(msg, call. = FALSE)
+    }
 
-    models <- models %>% slice(1)
+    models %>%
+    {map(
+        seq_len(nrow(.)),
+        ~metabolic_atlas_model(slice(., .x))
+    )} %>%
+    {`if`(length(.) == 1L, .[[1L]], .)}
 
-    sbml_path <- models$files[[1]] %>%
+}
+
+
+#' Download and load an SBML model from Metabolic Atlas
+#'
+#' @noRd
+metabolic_atlas_model <- function(model_row) {
+
+    sbml_path <-
+        model_row$files[[1L]] %>%
         filter(format == "SBML") %>%
-        slice(1) %>%
+        slice(1L) %>%
         pull(path)
 
-    log_info("Downloading model: %s (ID: %s)", models$name[1], models$id[1])
+    log_info(
+        "Downloading model: %s %s",
+        model_row$name,
+        model_row %>%
+            select(
+                id, organism, tissue, cell_type, condition,
+                reaction_count, metabolite_count, gene_count, year
+            ) %>%
+            as.list %>%
+            compact_repr
+    )
 
-    if (sbmlr_available) {
-        archive_extractor(
-            url_key = "metatlas_model",
-            url_param = list(sbml_path),
-            reader = SBMLR::readSBML
-        )
-    } else {
-        download_to_cache(
-            url_key = "metatlas_model",
-            url_param = list(sbml_path)
-        )
-    }
+    dl_args <- list(
+        url_key = "metatlas_model",
+        url_param = list(sbml_path),
+        reader = `if`(sbmlr_available, SBMLR::readSBML, NULL)
+    )
+    method <- `if`(sbmlr_available, archive_extractor, download_to_cache)
+
+    method(!!!dl_args)
+
 }
