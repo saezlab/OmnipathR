@@ -69,13 +69,11 @@ metabolic_atlas_list_models <- function() {
 #'     from xml2 if SBMLR is not available.
 #'
 #' @examples
-#' \dontrun{
 #' # Load model by ID
 #' model <- metabolic_atlas_model(1)
 #'
 #' # Load first human model
-#' model <- metabolic_atlas_model(organism == "Homo sapiens")
-#' }
+#' model <- metabolic_atlas_model(tissue = "Cervix")
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
