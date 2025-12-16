@@ -2,19 +2,32 @@
 % Please edit documentation in R/metatlas.R
 \name{metabolic_atlas_models}
 \alias{metabolic_atlas_models}
-\title{List of GEMs in Metabolic Atlas}
+\title{Download and load one or more SBML models from Metabolic Atlas}
 \usage{
-metabolic_atlas_models()
+metabolic_atlas_models(..., return_xml = FALSE)
+}
+\arguments{
+\item{...}{Arguments to filter models. Either:
+- A data frame of filtered models from metabolic_atlas_models()
+- Integer vector: model ID(s) from the `id` column
+- Expressions passed to dplyr::filter() (e.g., organism == 'Homo sapiens')}
+
+\item{return_xml}{Logical: return an XML document object even if the SBMLR
+package is installed.}
 }
 \value{
-A data frame (tibble) of GEMs.
+A model object loaded by SBMLR, or an XML document object
+    from xml2 if SBMLR is not available.
 }
 \description{
-Metabolic Atlas is a repository of genome scale models of metabolism (GEMs)
-for various organisms, tissues and conditions. This function returns a list
-of the available GEMs. Read more at \url{https://metabolicatlas.org}.
+Downloads a genome-scale metabolic model (GEM) from Metabolic Atlas and
+loads it using the SBMLR package (optional dependency).
 }
 \examples{
-metabolic_atlas_models()
+# Load model by ID
+model <- metabolic_atlas_model(1)
+
+# Load first human model
+model <- metabolic_atlas_model(tissue = "Cervix")
 
 }
