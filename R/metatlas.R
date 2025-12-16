@@ -62,9 +62,11 @@ metabolic_atlas_list_models <- function() {
 #'     - A data frame of filtered models from metabolic_atlas_models()
 #'     - Integer vector: model ID(s) from the `id` column
 #'     - Expressions passed to dplyr::filter() (e.g., organism == 'Homo sapiens')
+#' @param return_xml Logical: return an XML document object even if the SBMLR
+#'     package is installed.
 #'
-#' @return A model object loaded by SBMLR, or the path to the downloaded
-#'     SBML file if SBMLR is not available.
+#' @return A model object loaded by SBMLR, or an XML document object
+#'     from xml2 if SBMLR is not available.
 #'
 #' @examples
 #' \dontrun{
@@ -82,12 +84,10 @@ metabolic_atlas_list_models <- function() {
 #' @importFrom purrr map
 #' @importFrom logger log_info log_error log_warn
 #' @export
-metabolic_atlas_models <- function(...) {
+metabolic_atlas_models <- function(..., return_xml = FALSE) {
 
     # NSE vs. R CMD check workaround
-    id <- name <- files <- path <- organism <- tissue <- cell_type <-
-        condition <- reaction_count <- metabolite_count <- gene_count <-
-        year <- NULL
+    name <- files <- path <- NULL
 
     sbmlr_available <- requireNamespace("SBMLR", quietly = TRUE)
 
@@ -122,7 +122,7 @@ metabolic_atlas_models <- function(...) {
     models %>%
     {map(
         seq_len(nrow(.)),
-        ~metabolic_atlas_model(slice(models, .x))
+        ~metabolic_atlas_model(slice(models, .x), return_xml = return_xml)
     )} %>%
     {`if`(length(.) == 1L, .[[1L]], .)}
 
@@ -131,19 +131,24 @@ metabolic_atlas_models <- function(...) {
 
 #' Download and load an SBML model from Metabolic Atlas
 #'
+#' @importFrom xml2 read_xml
 #' @noRd
-metabolic_atlas_model <- function(model_row) {
+metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
 
-    sbmlr_available <- requireNamespace("SBMLR", quietly = TRUE)
+    # NSE vs. R CMD check workaround
+    id <- organism <- tissue <- cell_type <- condition <-
+        reaction_count <- metabolite_count <- gene_count <- year <- NULL
+
+    use_sbmlr <- requireNamespace('SBMLR', quietly = TRUE) & !return_xml
 
     sbml_path <-
         model_row$files[[1L]] %>%
-        filter(format == "SBML") %>%
+        filter(format == 'SBML') %>%
         slice(1L) %>%
         pull(path)
 
     log_info(
-        "Downloading model: %s %s",
+        'Downloading model: %s %s',
         model_row$name,
         model_row %>%
             select(
@@ -154,17 +159,13 @@ metabolic_atlas_model <- function(model_row) {
             compact_repr
     )
 
-    method <- download_to_cache
+    method <- archive_extractor
     dl_args <- list(
-        url_key = "metatlas_model",
+        url_key = 'metatlas_model',
         url_param = list(sbml_path),
-        ext = 'zip'
+        reader = `if`(use_sbmlr, SBMLR::readSBML, xml2::read_xml),
+        to_tempdir = use_sbmlr
     )
-
-    if (sbmlr_available) {
-        method <- archive_extractor
-        dl_args$reader <- SBMLR::readSBML
-    }
 
     exec(method, !!!dl_args)
 
