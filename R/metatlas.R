@@ -79,6 +79,7 @@ metabolic_atlas_list_models <- function() {
 #' @importFrom magrittr %<>%
 #' @importFrom rlang eval_tidy enexprs
 #' @importFrom dplyr filter slice pull
+#' @importFrom purrr map
 #' @importFrom logger log_info log_error log_warn
 #' @export
 metabolic_atlas_models <- function(...) {
@@ -96,16 +97,16 @@ metabolic_atlas_models <- function(...) {
         warning(msg, call. = FALSE)
     }
 
-    args <- list(...)
+    # Capture expressions first to prevent immediate evaluation
+    filter_exprs <- enexprs(...)
 
     # Handle different argument types
-    models <- if (length(args) == 1L && is.data.frame(args[[1L]])) {
-        args[[1L]]
-    } else if (length(args) == 1L && is.numeric(args[[1L]])) {
-        metabolic_atlas_models() %>% filter(id %in% args[[1L]])
+    models <- if (length(filter_exprs) == 1L && is.data.frame(filter_exprs[[1L]])) {
+        filter_exprs[[1L]]
+    } else if (length(filter_exprs) == 1L && is.numeric(filter_exprs[[1L]])) {
+        metabolic_atlas_list_models() %>% filter(id %in% filter_exprs[[1L]])
     } else {
-        filter_exprs <- enexprs(...)
-        models <- metabolic_atlas_models()
+        models <- metabolic_atlas_list_models()
         for (expr in filter_exprs) {
             models <- models %>% filter(eval_tidy(expr, data = models))
         }
@@ -121,7 +122,7 @@ metabolic_atlas_models <- function(...) {
     models %>%
     {map(
         seq_len(nrow(.)),
-        ~metabolic_atlas_model(slice(., .x))
+        ~metabolic_atlas_model(slice(models, .x))
     )} %>%
     {`if`(length(.) == 1L, .[[1L]], .)}
 
@@ -132,6 +133,8 @@ metabolic_atlas_models <- function(...) {
 #'
 #' @noRd
 metabolic_atlas_model <- function(model_row) {
+
+    sbmlr_available <- requireNamespace("SBMLR", quietly = TRUE)
 
     sbml_path <-
         model_row$files[[1L]] %>%
@@ -151,13 +154,18 @@ metabolic_atlas_model <- function(model_row) {
             compact_repr
     )
 
+    method <- download_to_cache
     dl_args <- list(
         url_key = "metatlas_model",
         url_param = list(sbml_path),
-        reader = `if`(sbmlr_available, SBMLR::readSBML, NULL)
+        ext = 'zip'
     )
-    method <- `if`(sbmlr_available, archive_extractor, download_to_cache)
 
-    method(!!!dl_args)
+    if (sbmlr_available) {
+        method <- archive_extractor
+        dl_args$reader <- SBMLR::readSBML
+    }
+
+    exec(method, !!!dl_args)
 
 }
