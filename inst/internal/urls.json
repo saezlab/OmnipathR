@@ -189,5 +189,8 @@
     ],
     "metatlas_model": [
         "https://metabolicatlas.org/api/v2/repository/%s"
+    ],
+    "metatlas_integrated_models": [
+        "https://metabolicatlas.org/api/v2/repository/integrated_models"
     ]
 }

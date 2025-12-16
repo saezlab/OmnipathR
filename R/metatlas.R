@@ -20,11 +20,16 @@
 #  Git repo: https://github.com/saezlab/OmnipathR
 #
 
-#' List of GEMs in Metabolic Atlas
+#' List of original GEMs in Metabolic Atlas
 #'
 #' Metabolic Atlas is a repository of genome scale models of metabolism (GEMs)
 #' for various organisms, tissues and conditions. This function returns a list
 #' of the available GEMs. Read more at \url{https://metabolicatlas.org}.
+#'
+#' @param integrated Logical: list the integrated (standard) GEMs. These are
+#'     available by a separate API in Metabolic Atlas. There are 7 integrated
+#'     GEMs available by the API, and 23 standard GEMs listed in Metabolic
+#'     Atlas in total. In the repository a total of 360 models are available.
 #'
 #' @return A data frame (tibble) of GEMs.
 #'
@@ -36,19 +41,24 @@
 #' @importFrom tidyr unnest_wider
 #' @importFrom dplyr rename mutate select coalesce
 #' @export
-metabolic_atlas_list_models <- function() {
+metabolic_atlas_list_models <- function(integrated = FALSE) {
 
     # NSE vs. R CMD check workaround
     gemodelset <- sample <- description <- description2 <- NULL
 
-    'metatlas_models' %>%
+    c('metatlas', `if`(integrated, 'integrated', NULL), 'models') %>%
+    paste0(collapse = '_') %>%
     download_to_cache() %>%
     safe_json() %>%
     tibble() %>%
-    rename(description2 = description) %>%
-    unnest_wider(c(gemodelset, sample)) %>%
-    mutate(description = coalesce(description, description2)) %>%
-    select(-description2)
+    {`if`(
+        integrated,
+        unnest_wider(., sample),
+        rename(., description2 = description) %>%
+        unnest_wider(c(gemodelset, sample)) %>%
+        mutate(description = coalesce(description, description2)) %>%
+        select(-description2)
+    )}
 
 }
 
