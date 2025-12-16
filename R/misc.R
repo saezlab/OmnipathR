@@ -912,7 +912,7 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 
     log_trace('Reading JSON from `%s` (encoding: %s).', path, encoding)
 
-    lines <- readLines(con = path, encoding = encoding)
+    lines <- readLines(con = path, encoding = encoding, warn = FALSE)
 
     json_ok <- jsonlite::validate(txt = lines)
 
