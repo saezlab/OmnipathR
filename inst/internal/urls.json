@@ -192,5 +192,11 @@
     ],
     "metatlas_integrated_models": [
         "https://metabolicatlas.org/api/v2/repository/integrated_models"
+    ],
+    "metatlas_standard_gems_index": [
+        "https://metabolicatlas.github.io/standard-GEM-validation/index.json"
+    ],
+    "metatlas_standard_gem": [
+        "https://metabolicatlas.github.io/standard-GEM-validation/results/%s.json"
     ]
 }

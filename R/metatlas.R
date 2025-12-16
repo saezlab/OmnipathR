@@ -137,6 +137,98 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 }
 
 
+#' List standard GEMs from Metabolic Atlas API
+#'
+#' Retrieves information about standard GEMs from Metabolic Atlas validation JSON API.
+#'
+#' @return A data frame (tibble) with standard GEMs metadata and release information.
+#'     Each model may have multiple rows, one for each release. The `latest` column
+#'     indicates the most recent release for each model.
+#'
+#' @examples
+#' metabolic_atlas_list_standard_models()
+#'
+#' @importFrom magrittr %>%
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_rows mutate
+#' @importFrom purrr map map2
+#' @importFrom jsonlite fromJSON
+#' @export
+metabolic_atlas_list_standard_models <- function() {
+
+    download_to_cache("metatlas_standard_gems_index") %>%
+    safe_json() %>%
+    unlist(use.names = FALSE) %>%
+    map(metabolic_atlas_gem_info) %>%
+    bind_rows()
+
+}
+
+
+#' Download and parse JSON metadata for one standard GEM from Metabolic Atlas
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr bind_rows last
+#' @importFrom purrr map
+#' @importFrom stringr str_split
+#' @importFrom logger log_trace
+#' @importFrom tibble tibble
+#' @importFrom rlang %||%
+#' @noRd
+metabolic_atlas_gem_info <- function(repo_name) {
+
+    gem_name <- repo_name %>% str_split("/") %>% unlist %>% last
+    log_trace('Loading metadata about `%s` GEM.', gem_name)
+    gem_json <-
+        download_to_cache(
+            "metatlas_standard_gem",
+            url_param = list(gem_name)
+        ) %>%
+        safe_json
+
+    metadata <- gem_json$metadata
+
+    gem_json$releases %>%
+    {`if`(
+        length(.) == 0L,
+        NA_character_ %>%
+        rep(3L) %>%
+        as.list %>%
+        set_names(c("version", "commit", "date")) %>%
+        list,
+    )} %>%
+    map(
+        function(release) {
+            tibble(
+                model_name = gem_name,
+                description = metadata$description %||% NA_character_,
+                organism = metadata$organism %||% NA_character_,
+                tissue = metadata$tissue %||% NA_character_,
+                cell_type = metadata$cell_type %||% NA_character_,
+                version = release$version %||% NA_character_,
+                commit = release$commit %||% NA_character_,
+                date = release$date %||% NA_character_,
+                git_url = metadata$git_url %||% NA_character_,
+                doi = metadata$doi %||% NA_character_,
+                citation = metadata$citation %||% NA_character_,
+                authors = if (is.list(metadata$authors)) {
+                    paste(metadata$authors, collapse = "; ")
+                } else {
+                    metadata$authors %||% NA_character_
+                },
+                reaction_count = metadata$reaction_count %||% NA_integer_,
+                metabolite_count = metadata$metabolite_count %||% NA_integer_,
+                gene_count = metadata$gene_count %||% NA_integer_,
+                year = if (!is.null(metadata$year)) as.character(metadata$year) else NA_character_
+            )
+        }
+    ) %>%
+    bind_rows()
+
+}
+
+
+
 #' Download and load an SBML model from Metabolic Atlas
 #'
 #' @importFrom xml2 read_xml
