@@ -89,7 +89,7 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 
     sbmlr_available <- requireNamespace("SBMLR", quietly = TRUE)
 
-    if (!sbmlr_available) {
+    if (!sbmlr_available && !return_xml) {
         msg <- "SBMLR package not available, install with: BiocManager::install('SBMLR')"
         log_warn(msg)
         warning(msg, call. = FALSE)
@@ -157,11 +157,19 @@ metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
             compact_repr
     )
 
+    silent_sbml <- function(x) {
+        capture.output(
+            assign('result', SBMLR::readSBML(x), envir = environment()),
+            type = 'output'
+        )
+        result
+    }
+
     method <- archive_extractor
     dl_args <- list(
         url_key = 'metatlas_model',
         url_param = list(sbml_path),
-        reader = `if`(use_sbmlr, SBMLR::readSBML, xml2::read_xml),
+        reader = `if`(use_sbmlr, silent_sbml, xml2::read_xml),
         to_tempdir = use_sbmlr
     )
 
