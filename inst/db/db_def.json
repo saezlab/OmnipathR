@@ -321,5 +321,16 @@
         "latest_param": [],
         "loaded": false,
         "db": []
+    },
+    "metatlas_gems": {
+        "name": ["Metabolic Atlas standard GEMs"],
+        "last_used": [],
+        "lifetime": [],
+        "package": [],
+        "loader": "metabolic_atlas_list_gems",
+        "loader_param": {},
+        "latest_param": [],
+        "loaded": false,
+        "db": []
     }
 }
