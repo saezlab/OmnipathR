@@ -206,3 +206,165 @@ gem_find_file <- function(repo_tree, pattern, directory = NULL) {
     matches
 
 }
+
+
+#' Load a TSV annotation file from a standard-GEM repository
+#'
+#' Downloads and parses a TSV file from a Metabolic Atlas standard-GEM
+#' repository. This is the generic loader for annotation files like
+#' reactions.tsv, metabolites.tsv, and genes.tsv.
+#'
+#' @param gem Character: name of the GEM (e.g., "Human-GEM") or full repo path.
+#' @param ref Character: git reference (tag, branch, or commit SHA). If NULL,
+#'     defaults to the latest version.
+#' @param file Character: name of the TSV file to load. Can be just the base
+#'     name (e.g., "reactions") or full filename (e.g., "reactions.tsv").
+#'     The file is expected to be in the "model" directory.
+#'
+#' @return A tibble with the TSV contents, or NULL if the file is not found.
+#'
+#' @examples
+#' reactions <- metatlas_gem_tsv("Human-GEM", file = "reactions")
+#' metabolites <- metatlas_gem_tsv("Human-GEM", ref = "v1.17.0", file = "metabolites")
+#'
+#' @importFrom magrittr %>% %<>% %T>%
+#' @importFrom readr read_tsv
+#' @importFrom stringr str_detect
+#' @importFrom logger log_info log_warn
+#' @export
+metatlas_gem_tsv <- function(gem, ref = NULL, file) {
+
+    .slow_doctest()
+
+    # Resolve GEM info
+    gem_info <- gem_repo_info(gem)
+
+    if (is.null(gem_info)) {
+        return(NULL)
+    }
+
+    # Default to latest version if ref not specified
+    ref %<>% if_null(gem_info$latest_version)
+
+    # Ensure file has .tsv extension
+    if (!str_detect(file, '\\.tsv$')) {
+        file <- sprintf('%s.tsv', file)
+    }
+
+    # Find the file in the repo tree
+    repo_tree <- gem_info$repo_tree[[1L]]
+    file_path <- gem_find_file(repo_tree, sprintf('%s$', file), 'model')
+
+    if (is.null(file_path)) {
+        msg <- sprintf(
+            'File `%s` not found in GEM `%s` at ref `%s`.',
+            file, gem_info$model_name, ref
+        )
+        log_warn(msg)
+        warning(msg)
+        return(NULL)
+    }
+
+    # Use first match if multiple found
+    file_path <- file_path[1L]
+
+    log_info(
+        'Loading %s from %s (ref: %s)',
+        file_path, gem_info$model_name, ref
+    )
+
+    gem_download_file(
+        git_host = gem_info$git_host,
+        git_repo = gem_info$git_repo,
+        ref = ref,
+        path = file_path,
+        reader = read_tsv,
+        reader_param = list(show_col_types = FALSE)
+    ) %T>%
+    load_success()
+
+}
+
+
+#' Load reaction annotations from a standard-GEM repository
+#'
+#' Downloads and parses the reactions.tsv file from a Metabolic Atlas
+#' standard-GEM repository. This file contains reaction identifiers mapped
+#' to various databases (KEGG, BiGG, Recon3D, MetaNetX, Rhea, etc.).
+#'
+#' @param gem Character: name of the GEM (e.g., "Human-GEM") or full repo path.
+#' @param ref Character: git reference (tag, branch, or commit SHA). If NULL,
+#'     defaults to the latest version.
+#'
+#' @return A tibble with reaction annotations, or NULL if the file is not found.
+#'
+#' @examples
+#' reactions <- metatlas_gem_reactions("Human-GEM")
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{metatlas_gem_tsv}}}
+#'     \item{\code{\link{metatlas_gem_metabolites}}}
+#'     \item{\code{\link{metatlas_gem_genes}}}
+#' }
+metatlas_gem_reactions <- function(gem, ref = NULL) {
+
+    metatlas_gem_tsv(gem = gem, ref = ref, file = 'reactions')
+
+}
+
+
+#' Load metabolite annotations from a standard-GEM repository
+#'
+#' Downloads and parses the metabolites.tsv file from a Metabolic Atlas
+#' standard-GEM repository. This file contains metabolite identifiers mapped
+#' to various databases (HMDB, ChEBI, KEGG, PubChem, LipidMaps, etc.).
+#'
+#' @param gem Character: name of the GEM (e.g., "Human-GEM") or full repo path.
+#' @param ref Character: git reference (tag, branch, or commit SHA). If NULL,
+#'     defaults to the latest version.
+#'
+#' @return A tibble with metabolite annotations, or NULL if the file is not found.
+#'
+#' @examples
+#' metabolites <- metatlas_gem_metabolites("Human-GEM")
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{metatlas_gem_tsv}}}
+#'     \item{\code{\link{metatlas_gem_reactions}}}
+#'     \item{\code{\link{metatlas_gem_genes}}}
+#' }
+metatlas_gem_metabolites <- function(gem, ref = NULL) {
+
+    metatlas_gem_tsv(gem = gem, ref = ref, file = 'metabolites')
+
+}
+
+
+#' Load gene annotations from a standard-GEM repository
+#'
+#' Downloads and parses the genes.tsv file from a Metabolic Atlas
+#' standard-GEM repository. This file contains gene identifiers mapped
+#' to Ensembl, UniProt, NCBI Entrez, gene symbols, and other databases.
+#'
+#' @param gem Character: name of the GEM (e.g., "Human-GEM") or full repo path.
+#' @param ref Character: git reference (tag, branch, or commit SHA). If NULL,
+#'     defaults to the latest version.
+#'
+#' @return A tibble with gene annotations, or NULL if the file is not found.
+#'
+#' @examples
+#' genes <- metatlas_gem_genes("Human-GEM")
+#'
+#' @export
+#' @seealso \itemize{
+#'     \item{\code{\link{metatlas_gem_tsv}}}
+#'     \item{\code{\link{metatlas_gem_reactions}}}
+#'     \item{\code{\link{metatlas_gem_metabolites}}}
+#' }
+metatlas_gem_genes <- function(gem, ref = NULL) {
+
+    metatlas_gem_tsv(gem = gem, ref = ref, file = 'genes')
+
+}
