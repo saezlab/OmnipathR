@@ -192,6 +192,8 @@ db_lifetime_hook <- function(){
 #' @param param List: override the defaults or pass further parameters to
 #'     the database loader function. See the loader functions and their
 #'     default parameters in \code{\link{omnipath_show_db}}.
+#' @param reload Logical: if TRUE, bypass the on-disk cache and reload from
+#'     the original source. The result will still be saved to cache.
 #'
 #' @return Returns \code{NULL}.
 
@@ -199,18 +201,19 @@ db_lifetime_hook <- function(){
 #' This function loads a database which is stored within the package
 #' namespace until its expiry. The loaded database is accessible by
 #' \code{\link{get_db}} and the loading process is typically initiated by
-#' \code{\link{get_db}}, not by the users directly.
+#' \code{\link{get_db}}, not by the users directly. Databases are cached
+#' on disk as RDS files for faster loading in subsequent sessions.
 #'
 #' @examples
 #' load_db('go_slim')
 #' omnipath_show_db()
 #'
 #' @importFrom magrittr %<>%
-#' @importFrom logger log_fatal log_info
+#' @importFrom logger log_fatal log_info log_trace
 #' @importFrom rlang exec !!!
 #' @export
 #' @seealso  \code{\link{omnipath_show_db}, \link{get_db}}
-load_db <- function(key, param = list()){
+load_db <- function(key, param = list(), reload = FALSE){
 
     db_exists(key)
 
@@ -218,7 +221,26 @@ load_db <- function(key, param = list()){
     log_info('Loading database `%s`.', dbdef$name)
     loader <- get(dbdef$loader)
     param %<>% add_defaults(loader, dbdef$loader_param)
-    db <- exec(loader, !!!param)
+
+    # Use synthetic URL for cache key, with params as POST data
+    cache_url <- sprintf('db://%s', key)
+    db <- NULL
+
+    # Try loading from on-disk cache first (unless reload is requested)
+    if (!reload) {
+        log_trace('Checking on-disk cache for database `%s`.', key)
+        db <- omnipath_cache_load(url = cache_url, post = param)
+    }
+
+    if (is.null(db)) {
+        # Load from source
+        log_trace('Loading database `%s` from source.', key)
+        db <- exec(loader, !!!param)
+        # Save to on-disk cache
+        log_trace('Saving database `%s` to on-disk cache.', key)
+        omnipath_cache_save(db, url = cache_url, post = param)
+    }
+
     omnipathr.env$db[[key]]$db <- db
     omnipathr.env$db[[key]]$latest_param <- param
     omnipathr.env$db[[key]]$loaded <- TRUE
@@ -233,7 +255,8 @@ load_db <- function(key, param = list()){
 #' Databases are resources which might be costly to load but can be used many
 #' times by functions which usually automatically load and retrieve them from
 #' the database manager. Each database has a lifetime and will be unloaded
-#' automatically upon expiry.
+#' automatically upon expiry. Databases are also cached on disk as RDS files
+#' for faster loading in subsequent sessions.
 #'
 #' @param key Character: the key of the database to load. For a list of
 #'     available keys see \code{\link{omnipath_show_db}}.
@@ -243,11 +266,10 @@ load_db <- function(key, param = list()){
 #'     is already loaded with different parameters it will be reloaded
 #'     with the new parameters only if the \code{reload} option is
 #'     \code{TRUE}.
-#' @param reload Reload the database if \code{param} passed here is different
-#'     from the parameters used the last time the database was loaded. If
-#'     different functions with different parameters access the database
-#'     repeatedly and request reload the frequent reloads might cost
-#'     substantial time and resource use.
+#' @param reload Logical: if TRUE, force reload from the original source,
+#'     bypassing both the in-memory cache and the on-disk cache. The result
+#'     will still be saved to cache. Also triggers reload if \code{param}
+#'     differs from the parameters used last time.
 #' @param ... Arguments for the loader function of the database. These
 #'     override the default arguments.
 #'
@@ -271,17 +293,18 @@ get_db <- function(key, param = NULL, reload = FALSE, ...){
 
     param %<>% if_null(list()) %>% c(list(...))
 
+    param_changed <- FALSE
     if(length(param) != 0 && dbdef$loaded){
 
         loader <- get(dbdef$loader)
         param %<>% add_defaults(loader, dbdef$loader_param)
-        reload <- !lists_identical(dbdef$latest_param, param)
+        param_changed <- !lists_identical(dbdef$latest_param, param)
 
     }
 
-    if(!dbdef$loaded || reload){
+    if(!dbdef$loaded || reload || param_changed){
 
-        load_db(key, param = param)
+        load_db(key, param = param, reload = reload)
 
     }
 
