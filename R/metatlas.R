@@ -137,96 +137,182 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 }
 
 
-#' List standard GEMs from Metabolic Atlas API
+#' List standard GEMs from Metabolic Atlas
 #'
-#' Retrieves information about standard GEMs from Metabolic Atlas validation JSON API.
+#' Retrieves information about standard GEMs from Metabolic Atlas.
 #'
 #' @return A data frame (tibble) with standard GEMs metadata and release information.
 #'     Each model may have multiple rows, one for each release. The `latest` column
-#'     indicates the most recent release for each model.
+#'     indicates the most recent release for each model. The `repo_tree` column
+#'     contains a character vector of file paths in the repository at the latest
+#'     version, or NULL if the `gert` or `git2r` packages are not available.
 #'
 #' @examples
-#' metabolic_atlas_list_standard_models()
+#' metabolic_atlas_list_gems()
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
-#' @importFrom dplyr bind_rows mutate
-#' @importFrom purrr map map2
-#' @importFrom jsonlite fromJSON
+#' @importFrom dplyr mutate
+#' @importFrom purrr map pmap
+#' @importFrom tidyr unnest
 #' @export
-metabolic_atlas_list_standard_models <- function() {
+metabolic_atlas_list_gems <- function() {
 
     download_to_cache("metatlas_standard_gems_index") %>%
     safe_json() %>%
-    unlist(use.names = FALSE) %>%
-    map(metabolic_atlas_gem_info) %>%
-    bind_rows()
+    tibble(git_host = names(.), git_repo = .) %>%
+    unnest(git_repo) %>%
+    mutate(
+        gem_info = map(git_repo, metabolic_atlas_gem_info),
+        git_url = sprintf('https://%s.com/%s', git_host, git_repo)
+    ) %>%
+    unnest(gem_info) %>%
+    mutate(
+        repo_tree = pmap(
+            list(git_host, git_repo, latest_version),
+            .git_repo_tree
+        )
+    )
 
 }
 
 
 #' Download and parse JSON metadata for one standard GEM from Metabolic Atlas
 #'
-#' @importFrom magrittr %>%
-#' @importFrom dplyr bind_rows last
-#' @importFrom purrr map
+#' @importFrom magrittr %>% extract extract2
+#' @importFrom dplyr bind_rows mutate first
+#' @importFrom purrr map map_chr
 #' @importFrom stringr str_split
 #' @importFrom logger log_trace
 #' @importFrom tibble tibble
-#' @importFrom rlang %||%
+#' @importFrom rlang %||% set_names
 #' @noRd
 metabolic_atlas_gem_info <- function(repo_name) {
 
-    gem_name <- repo_name %>% str_split("/") %>% unlist %>% last
+    gem_name <- repo_name %>% str_split('/') %>% unlist %>% last
+
     log_trace('Loading metadata about `%s` GEM.', gem_name)
+
     gem_json <-
         download_to_cache(
             "metatlas_standard_gem",
             url_param = list(gem_name)
         ) %>%
-        safe_json
+        safe_json(simplifyDataFrame = FALSE) %>%
+        extract2(gem_name)
 
     metadata <- gem_json$metadata
 
-    gem_json$releases %>%
-    {`if`(
-        length(.) == 0L,
-        NA_character_ %>%
-        rep(3L) %>%
-        as.list %>%
-        set_names(c("version", "commit", "date")) %>%
-        list,
-    )} %>%
-    map(
-        function(release) {
-            tibble(
-                model_name = gem_name,
-                description = metadata$description %||% NA_character_,
-                organism = metadata$organism %||% NA_character_,
-                tissue = metadata$tissue %||% NA_character_,
-                cell_type = metadata$cell_type %||% NA_character_,
-                version = release$version %||% NA_character_,
-                commit = release$commit %||% NA_character_,
-                date = release$date %||% NA_character_,
-                git_url = metadata$git_url %||% NA_character_,
-                doi = metadata$doi %||% NA_character_,
-                citation = metadata$citation %||% NA_character_,
-                authors = if (is.list(metadata$authors)) {
-                    paste(metadata$authors, collapse = "; ")
-                } else {
-                    metadata$authors %||% NA_character_
-                },
-                reaction_count = metadata$reaction_count %||% NA_integer_,
-                metabolite_count = metadata$metabolite_count %||% NA_integer_,
-                gene_count = metadata$gene_count %||% NA_integer_,
-                year = if (!is.null(metadata$year)) as.character(metadata$year) else NA_character_
-            )
-        }
+    releases <-
+        gem_json$releases %>%
+        set_names(map_chr(., ~names(.x) %>% extract(1L))) %>%
+        map(
+            function(release) {
+                release %>%
+                extract2(1L) %>%
+                extract2('standard-GEM') %>%
+                extract2(2L) %>%
+                extract2('test_results')
+            }
+        )
+
+    tibble(
+        model_name = gem_name,
+        releases = list(releases),
+        commits = metadata$commits %||% NA_integer_,
+        contributors = metadata$contributors %||% NA_integer_,
+        latest_commit_date = metadata$latest_commit_date %||% NA_character_,
+        owner = metadata$owner %||% NA_character_,
+        avatar = metadata$avatar %||% NA_character_
     ) %>%
-    bind_rows()
+    mutate(
+        latest_version = map_chr(releases, ~names(.x) %>% first)
+    )
 
 }
 
+
+#' Get the directory tree of a git repository at a specific reference
+#'
+#' Uses the GitHub or GitLab API to retrieve the repository tree at a given
+#' reference.
+#'
+#' @param git_host Character: git host ("github" or "gitlab").
+#' @param git_repo Character: repository path in "owner/repo" format.
+#' @param ref Character: git reference (tag, branch, or commit SHA).
+#'
+#' @return A character vector of file paths in the repository, or NULL if
+#'     an error occurred.
+#'
+#' @importFrom logger log_trace log_warn
+#' @importFrom jsonlite fromJSON
+#' @importFrom utils URLencode
+#' @noRd
+.git_repo_tree <- function(git_host, git_repo, ref) {
+
+    # Handle missing reference
+    if (is.na(ref) || is.null(ref) || ref == '') {
+        return(NULL)
+    }
+
+    log_trace('Getting repository tree for %s/%s at ref %s', git_host, git_repo, ref)
+
+    tryCatch({
+
+        if (git_host == 'github') {
+
+            url_key <- 'github_repo_tree'
+            url_param <- list(git_repo, ref)
+            http_headers <- list(
+                Accept = 'application/vnd.github.v3+json',
+                `User-Agent` = 'OmnipathR'
+            )
+
+        } else if (git_host == 'gitlab') {
+
+            url_key <- 'gitlab_repo_tree'
+            # GitLab requires URL-encoded project path
+            encoded_repo <- URLencode(git_repo, reserved = TRUE)
+            url_param <- list(encoded_repo, ref)
+            http_headers <- list(`User-Agent` = 'OmnipathR')
+
+        } else {
+
+            log_warn('Unsupported git host: %s', git_host)
+            return(NULL)
+
+        }
+
+        tree_data <- generic_downloader(
+            url_key = url_key,
+            reader = jsonlite::fromJSON,
+            url_param = url_param,
+            reader_param = list(simplifyDataFrame = TRUE),
+            http_headers = http_headers,
+            use_httr = TRUE
+        )
+
+        # Extract paths - GitHub uses tree$path, GitLab returns path directly
+        if (git_host == 'github') {
+            if (!is.null(tree_data$tree) && nrow(tree_data$tree) > 0) {
+                tree_data$tree$path
+            } else {
+                NULL
+            }
+        } else {
+            if (is.data.frame(tree_data) && nrow(tree_data) > 0) {
+                tree_data$path
+            } else {
+                NULL
+            }
+        }
+
+    }, error = function(e) {
+        log_warn('Failed to get repository tree for %s/%s: %s', git_host, git_repo, e$message)
+        NULL
+    })
+
+}
 
 
 #' Download and load an SBML model from Metabolic Atlas
