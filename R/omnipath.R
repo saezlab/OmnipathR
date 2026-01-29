@@ -80,6 +80,7 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     'loops',
     'enzymes',
     'substrates',
+    'enzyme_substrate',
     'partners',
     'proteins',
     'entity_types',
@@ -91,16 +92,17 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     'source',
     'categories',
     'parent',
-    'transmitter',
-    'receiver',
-    'secreted',
-    'plasma_membrane_transmembrane',
-    'plasma_membrane_peripheral',
+    'sec',
+    'pmp',
+    'pmtm',
+    'trans',
+    'rec',
     'topology',
     'causality',
     'license',
     'password',
-    'types'
+    'types',
+    'limit'
 )
 
 
@@ -121,7 +123,12 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     modification = 'types',
     type = 'types',
     interaction_type = 'types',
-    interaction_types = 'types'
+    interaction_types = 'types',
+    plasma_membrane_transmembrane = 'pmtm',
+    secreted = 'sec',
+    plasma_membrane_peripheral = 'pmp',
+    transmitter = 'trans',
+    receiver = 'rec'
 )
 
 
