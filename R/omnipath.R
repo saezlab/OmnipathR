@@ -92,11 +92,11 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     'source',
     'categories',
     'parent',
-    'sec',
-    'pmp',
-    'pmtm',
-    'trans',
-    'rec',
+    'secreted',
+    'plasma_membrane_peripheral',
+    'plasma_membrane_transmembrane',
+    'transmitter',
+    'receiver',
     'topology',
     'causality',
     'license',
@@ -124,11 +124,11 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     type = 'types',
     interaction_type = 'types',
     interaction_types = 'types',
-    plasma_membrane_transmembrane = 'pmtm',
-    secreted = 'sec',
-    plasma_membrane_peripheral = 'pmp',
-    transmitter = 'trans',
-    receiver = 'rec'
+    pmtm = 'plasma_membrane_transmembrane',
+    sec = 'secreted',
+    pmp = 'plasma_membrane_peripheral',
+    trans = 'transmitter',
+    rec = 'receiver'
 )
 
 
@@ -285,11 +285,14 @@ omnipath_query <- function(
     resources %<>% setdiff(exclude)
     cache %<>% use_cache
 
+
+    log_trace('Param in `omnipath_query`: %s', compact_repr(as.list(environment()), limit = 1000))
     param <-
         environment() %>%
         as.list %>%
         c(list(...)) %>%
         omnipath_check_param
+    log_trace('Param in `omnipath_query`: %s', compact_repr(param, limit = 1000))
 
     url <-
         param %>%
@@ -632,7 +635,7 @@ qs_synonyms <- function(param) {
     for(name in names(param)){
         if(
             name %in% names(.omnipath_querystring_synonyms) &&
-            !.omnipath_querystring_synonyms[[name]] %in% names(param)
+            is.null(.omnipath_querystring_synonyms[[name]] %>% extract2(param, .))
         ){
             new_name <- .omnipath_querystring_synonyms[[name]]
             param %<>%
@@ -970,6 +973,8 @@ omnipath_check_result <- function(result, url){
 cast_logicals <- function(data, logicals = NULL){
 
     true_values <- c('True', '1', 'TRUE', 'T', 'yes', 'YES', 'Y', 'y')
+
+    logicals %<>% intersect(names(data))
 
     for(name in logicals){
         data[[name]] <- (
