@@ -16,7 +16,6 @@
 #' @importFrom purrr map_dfr
 #' @importFrom tibble tibble
 #' 
-#' @importFrom requests request req_perform 
 #' @importFrom httr2 resp_body_json resp_body_string
 #'
 #' @export
@@ -35,10 +34,6 @@ get_wikipathways_pathways <- function(species = NULL) {
         resource = "WikiPathways"
     )
     
-    # data <- request("https://www.wikipathways.org/json/listPathways.json") %>%
-    #     req_perform() %>%
-    #     resp_body_json()
-
     organisms <- data$organisms
     if (is.null(organisms) || length(organisms) == 0) {
         return(
@@ -86,7 +81,6 @@ get_wikipathways_pathways <- function(species = NULL) {
 #' @importFrom stringr fixed str_detect str_trim
 #' 
 #' @importFrom httr2 resp_body_json resp_body_string
-#' @importFrom requests request req_perform
 #'
 #' @noRd
 norm_met_id <- function(db, id) {
@@ -129,12 +123,6 @@ fetch_gpml <- function(wpid) {
         url_param = list(wpid, wpid),
         ext = "gpml"
     )
-    
-    # url = sprintf("https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml", wpid, wpid)
-    # resp <- request(url) %>%
-    #     req_perform()
-    # 
-    # read_xml(resp_body_string(resp))
     
     read_xml(path)
 

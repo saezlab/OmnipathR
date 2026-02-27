@@ -71,7 +71,6 @@ Imports:
     rappdirs,
     readr(>= 2.0.0),
     readxl,
-    requests,
     rlang,
     rmarkdown,
     RSQLite,
