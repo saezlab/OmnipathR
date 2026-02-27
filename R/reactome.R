@@ -169,23 +169,6 @@ get_reactome_pathway_relations <- function(species = NULL) {
         reader_param = list(col_names = c("Parent", "Child")),
         resource = "Reactome"
     )
-    
-    # relations <- 
-    #     request("https://reactome.org/download/current/ReactomePathwaysRelation.txt") %>%
-    #     req_perform() %>%
-    #     resp_body_string() %>%
-    #     read_delim(
-    #         delim = "\t",
-    #         col_names = c("Parent", "Child"),
-    #         trim_ws = TRUE,
-    #         show_col_types = FALSE
-    #     ) %>%
-    #     filter(
-    #         str_starts(Parent, "R-HSA-"),
-    #         str_starts(Child, "R-HSA-")
-    #     ) %>%
-    #     as.data.frame()
-    
 
     if (is.null(species)) {
         return(relations %>% transmute(Parent, Child))
@@ -235,19 +218,6 @@ get_reactome_pathways <- function(species = NULL) {
         ),
         resource = "Reactome"
     )
-    
-    # pathways <- 
-    #     request("https://reactome.org/download/current/ReactomePathways.txt") %>%
-    #     req_perform() %>%
-    #     resp_body_string() %>%
-    #     read_delim(
-    #         delim = "\t",
-    #         col_names = c("pathway_id", "pathway_name", "species"),
-    #         trim_ws = TRUE,
-    #         show_col_types = FALSE
-    #     ) %>%
-    #     as.data.frame()
-    
 
     if (is.null(species)) {
         return(pathways %>% transmute(pathway_id, pathway_name, species))
