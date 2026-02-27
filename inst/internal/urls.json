@@ -199,6 +199,12 @@
     "metatlas_standard_gem": [
         "https://metabolicatlas.github.io/standard-GEM-validation/results/%s.json"
     ],
+    "wikipathways_list": [
+        "https://www.wikipathways.org/json/listPathways.json"
+    ],
+    "wikipathways_gpml": [
+        "https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml"
+    ],
     "github_repo_tree": [
         "https://api.github.com/repos/%s/git/trees/%s?recursive=1"
     ],
