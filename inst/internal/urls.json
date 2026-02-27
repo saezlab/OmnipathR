@@ -205,6 +205,18 @@
     "wikipathways_gpml": [
         "https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml"
     ],
+    "reactome_pathway_relations": [
+        "https://reactome.org/download/current/ReactomePathwaysRelation.txt"
+    ],
+    "reactome_pathways": [
+        "https://reactome.org/download/current/ReactomePathways.txt"
+    ],
+    "reactome_participants": [
+        "https://reactome.org/ContentService/data/participants/%s"
+    ],
+    "reactome_chebi2pathways": [
+        "https://reactome.org/download/current/ChEBI2Reactome_All_Levels.txt"
+    ],
     "github_repo_tree": [
         "https://api.github.com/repos/%s/git/trees/%s?recursive=1"
     ],
