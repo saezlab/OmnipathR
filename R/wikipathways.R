@@ -124,11 +124,11 @@ norm_met_id <- function(db, id) {
 #' @noRd
 fetch_gpml <- function(wpid) {
 
-    path <- download_to_cache(
-        url_key = "wikipathways_gpml",
-        url_param = list(wpid, wpid),
-        ext = "gpml"
-    )
+    # path <- download_to_cache(
+    #     url_key = "wikipathways_gpml",
+    #     url_param = list(wpid, wpid),
+    #     ext = "gpml"
+    # )
     
     ## devel version with direct request instead of generic_downloader
     url = sprintf("https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml", wpid, wpid)
