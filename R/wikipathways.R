@@ -16,7 +16,11 @@
 #' @importFrom purrr map_dfr
 #' @importFrom tibble tibble
 #' 
-#' @importFrom httr2 resp_body_json resp_body_string
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter transmute
+#' @importFrom purrr map_dfr if_null
+#' @importFrom tibble tibble
+#' @importFrom httr2 request req_perform resp_body_json
 #'
 #' @export
 #' @examples
@@ -85,7 +89,6 @@ get_wikipathways_pathways <- function(species = NULL) {
 #' @return Character: `db:id` or `NA_character_` if missing.
 #'
 #' @importFrom stringr fixed str_detect str_trim
-#' 
 #' @importFrom httr2 resp_body_json resp_body_string
 #'
 #' @noRd
@@ -119,6 +122,8 @@ norm_met_id <- function(db, id) {
 #'
 #' @return An `xml_document`.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom httr2 request req_perform resp_body_string
 #' @importFrom xml2 read_xml
 #'
 #' @noRd
@@ -289,6 +294,9 @@ get_metabolite_pathway_table <- function(
 #'   `metabolites`. If any pathway failed, the failures tibble is attached as
 #'   `attr(out, "failures")`.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter
+#' 
 #' @export
 #' @examples
 #' .slow_doctest()
@@ -363,6 +371,11 @@ get_wikipathways <- function(
 #' WikiPathways endpoint. Identifier IRIs from identifiers.org are normalised
 #' and redundant prefixes are removed.
 #'
+#' @importFrom magrittr %>%
+#' @importFrom httr2 request req_method req_body_form req_headers req_timeout req_perform resp_body_json
+#' @importFrom tibble tibble
+#' @importFrom dplyr filter select bind_rows left_join group_by summarise n_distinct
+#' 
 #' @examples
 #' \dontrun{
 #' df <- get_wikipathways_metabolites_sparql(
@@ -539,7 +552,8 @@ all_pages |>
         n_metabolites_in_pathway = dplyr::n_distinct(met_id),
         metabolites = paste(sort(unique(met_id)), collapse = "; "),
         .groups = "drop"
-    )
+    ) %>%
+    as.data.frame()
     
 }
 
