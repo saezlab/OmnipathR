@@ -326,7 +326,7 @@ get_pathway_participants <- function(
     out <- mapping %>%
         group_by(pathway_id, pathway_name, pathway_url, species) %>%
         summarise(
-            chebi_ids = list(sort(unique(chebi_id))),
+            chebi_ids = paste(sort(unique(chebi_id)), collapse = ", "),
             .groups = "drop"
         )
 
@@ -352,7 +352,7 @@ get_pathway_participants <- function(
 #' @param pathway_ids Character: optional list of pathway IDs to query.
 #' @param out_path Character: optional CSV output path for the main table.
 #'
-#' @return A tibble with columns `pathway_id`, `pathway_name`, `pathway_url`,
+#' @return A data.frame with columns `pathway_id`, `pathway_name`, `pathway_url`,
 #'   `species`, `chebi_ids` (list column).
 #'
 #' @export
@@ -372,6 +372,7 @@ get_reactome <- function(
         pathway_ids = pathway_ids,
         species = species,
         out_path = out_path
-    )
-
+    ) %>%
+    as.data.frame()
+    
 }
