@@ -247,7 +247,7 @@ get_reactome_pathways <- function(species = NULL) {
 #' @param out_path Character: optional CSV output path for the main table.
 #'
 #' @return A tibble with columns `pathway_id`, `pathway_name`, `pathway_url`,
-#'   `species`, `chebi_ids` (list column). When writing to CSV, the list
+#'   `species`, `chebi_ids`. When writing to CSV, the list
 #'   column is serialized by `write.csv`.
 #'
 #' @importFrom dplyr filter group_by summarise
@@ -326,7 +326,7 @@ get_pathway_participants <- function(
     out <- mapping %>%
         group_by(pathway_id, pathway_name, pathway_url, species) %>%
         summarise(
-            chebi_ids = paste(sort(unique(chebi_id)), collapse = ", "),
+            chebi_ids = paste0(sort(unique(chebi_id)), collapse = ", "),
             .groups = "drop"
         )
     
@@ -353,7 +353,7 @@ get_pathway_participants <- function(
 #' @param out_path Character: optional CSV output path for the main table.
 #'
 #' @return A data.frame with columns `pathway_id`, `pathway_name`, `pathway_url`,
-#'   `species`, `chebi_ids` (list column).
+#'   `species`, `chebi_ids`.
 #'
 #' @export
 #' @examples
