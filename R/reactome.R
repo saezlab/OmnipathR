@@ -130,15 +130,15 @@ empty_reactome_pathways <- function() {
 #'
 #' @noRd
 empty_reactome_chebi_map <- function() {
-
+    
     tibble(
         pathway_id = character(),
         pathway_name = character(),
         pathway_url = character(),
         species = character(),
-        chebi_ids = list()
+        chebi_ids = character()
     )
-
+    
 }
 
 #' Reactome pathway relations
@@ -329,7 +329,7 @@ get_pathway_participants <- function(
             chebi_ids = paste(sort(unique(chebi_id)), collapse = ", "),
             .groups = "drop"
         )
-
+    
     if (nrow(out) == 0) {
         out <- empty_reactome_chebi_map()
     }
