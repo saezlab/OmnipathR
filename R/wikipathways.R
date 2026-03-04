@@ -15,12 +15,8 @@
 #' @importFrom dplyr filter transmute
 #' @importFrom purrr map_dfr
 #' @importFrom tibble tibble
-#' 
-#' @importFrom magrittr %>%
-#' @importFrom dplyr filter transmute
-#' @importFrom purrr map_dfr if_null
-#' @importFrom tibble tibble
 #' @importFrom httr2 request req_perform resp_body_json
+#' @importFrom rlang %||%
 #'
 #' @export
 #' @examples
@@ -63,10 +59,10 @@ get_wikipathways_pathways <- function(species = NULL) {
 
         map_dfr(pws, function(pw) {
             tibble(
-                pathway_id = if_null(pw$id, NA_character_),
-                pathway_name = if_null(pw$name, NA_character_),
-                pathway_url = if_null(pw$url, NA_character_),
-                organism_species = if_null(pw$species, NA_character_)
+                pathway_id = pw$id %||% NA_character_,
+                pathway_name = pw$name %||% NA_character_,
+                pathway_url = pw$url %||% NA_character_,
+                organism_species = pw$species %||% NA_character_
             )
         })
 
@@ -345,7 +341,8 @@ get_wikipathways <- function(
 #' metabolites per pathway is also reported.
 #'
 #' @param species Character scalar. Exact organism name as used by
-#'   WikiPathways, for example \code{"Homo sapiens"}.
+#'   WikiPathways, for example \code{"Homo sapiens"}. If \code{NULL},
+#'   do not filter by species.
 #' @param page_size Integer. Number of records retrieved per SPARQL page.
 #'   Larger values reduce the number of HTTP requests but may increase
 #'   endpoint load. Default is \code{50000}.
@@ -392,8 +389,18 @@ get_wikipathways_metabolites_sparql <- function(
     max_retries = 4,
     sleep_base = 1
 ) {
-    stopifnot(is.character(species), length(species) == 1, nzchar(species))
+    if (!is.null(species)) {
+        stopifnot(is.character(species), length(species) == 1, nzchar(species))
+    }
     endpoint <- "https://sparql.wikipathways.org/sparql"
+    species_clause <- if (is.null(species)) {
+        ""
+    } else {
+        sprintf(
+            '           wp:organismName "%s" ;\n',
+            gsub('"', '\\"', species, fixed = TRUE)
+        )
+    }
     
     all_pages <- NULL
     
@@ -412,7 +419,7 @@ SELECT DISTINCT
   ?met_xref
 WHERE {
   ?pathway a wp:Pathway ;
-           wp:organismName "%s" ;
+%s
            dcterms:identifier ?pathway_id ;
            dc:title ?pathway_name .
 
@@ -432,7 +439,7 @@ WHERE {
 LIMIT %d
 OFFSET %d
 ',
-    gsub('"', '\\"', species, fixed = TRUE),
+    species_clause,
     as.integer(page_size),
     as.integer((p - 1L) * page_size)
         )
@@ -558,4 +565,3 @@ all_pages |>
 }
 
 
-df_wikipathways <- get_wikipathways_metabolites_sparql()
