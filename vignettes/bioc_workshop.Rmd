@@ -311,7 +311,7 @@ either corrects the mistake or gives a warning or error:
 
 ```{r uniprot-loc-1}
 uniprot_loc <- annotations(
-    resources = 'Uniprot_location',
+    resources = 'UniProt_location',
     wide = TRUE
 )
 ```
