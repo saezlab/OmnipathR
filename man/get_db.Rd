@@ -17,11 +17,10 @@ is already loaded with different parameters it will be reloaded
 with the new parameters only if the \code{reload} option is
 \code{TRUE}.}
 
-\item{reload}{Reload the database if \code{param} passed here is different
-from the parameters used the last time the database was loaded. If
-different functions with different parameters access the database
-repeatedly and request reload the frequent reloads might cost
-substantial time and resource use.}
+\item{reload}{Logical: if TRUE, force reload from the original source,
+bypassing both the in-memory cache and the on-disk cache. The result
+will still be saved to cache. Also triggers reload if \code{param}
+differs from the parameters used last time.}
 
 \item{...}{Arguments for the loader function of the database. These
 override the default arguments.}
@@ -34,7 +33,8 @@ An object with the database contents. The exact format depends
 Databases are resources which might be costly to load but can be used many
 times by functions which usually automatically load and retrieve them from
 the database manager. Each database has a lifetime and will be unloaded
-automatically upon expiry.
+automatically upon expiry. Databases are also cached on disk as RDS files
+for faster loading in subsequent sessions.
 }
 \examples{
 organisms <- get_db('organisms')
