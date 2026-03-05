@@ -369,7 +369,6 @@ get_wikipathways <- function(
 #' and redundant prefixes are removed.
 #'
 #' @importFrom magrittr %>%
-#' @importFrom httr2 request req_method req_body_form req_headers req_timeout req_perform resp_body_json
 #' @importFrom tibble tibble
 #' @importFrom dplyr filter select bind_rows left_join group_by summarise n_distinct
 #' 
@@ -392,175 +391,205 @@ get_wikipathways_metabolites_sparql <- function(
     if (!is.null(species)) {
         stopifnot(is.character(species), length(species) == 1, nzchar(species))
     }
-    endpoint <- "https://sparql.wikipathways.org/sparql"
-    species_clause <- if (is.null(species)) {
-        ""
+
+    endpoint <- url_parser(url_key = "wikipathways_sparql")
+
+    extract_binding_value <- function(bindings, field) {
+        if (is.data.frame(bindings)) {
+            if (
+                field %in% names(bindings) &&
+                is.data.frame(bindings[[field]]) &&
+                "value" %in% names(bindings[[field]])
+            ) {
+                return(bindings[[field]]$value)
+            }
+            return(rep(NA_character_, nrow(bindings)))
+        }
+
+        vapply(
+            bindings,
+            function(binding) {
+                if (!is.null(binding[[field]]$value)) {
+                    as.character(binding[[field]]$value)
+                } else {
+                    NA_character_
+                }
+            },
+            character(1)
+        )
+    }
+
+    normalize_pubchem <- function(xref) {
+        xref %>%
+            str_replace("^PUBCHEM:", "") %>%
+            str_replace("^PUBCHEM\\.COMPOUND:", "") %>%
+            {ifelse(grepl("^[0-9]+$", .), paste0("CID", .), .)} %>%
+            str_replace("^(CID[0-9]+).*$", "\\1")
+    }
+
+    if (is.null(species)) {
+        species_clause <- ""
     } else {
-        sprintf(
+        species_clause <- sprintf(
             '           wp:organismName "%s" ;\n',
             gsub('"', '\\"', species, fixed = TRUE)
         )
     }
     
-    all_pages <- NULL
+    all_pages <- list()
     
-    for (p in seq_len(max_pages)) {
+    for (page_idx in seq_len(max_pages)) {
         
-        qry <- sprintf(
+        sparql_query <- sprintf(
             '
-PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
-PREFIX dc:      <http://purl.org/dc/elements/1.1/>
-PREFIX dcterms: <http://purl.org/dc/terms/>
+            PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+            PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+            PREFIX dcterms: <http://purl.org/dc/terms/>
 
-SELECT DISTINCT
-  ?pathway_id
-  (STR(?pathway_name) AS ?pathway_name_str)
-  ?met_db
-  ?met_xref
-WHERE {
-  ?pathway a wp:Pathway ;
-%s
-           dcterms:identifier ?pathway_id ;
-           dc:title ?pathway_name .
+            SELECT DISTINCT
+                ?pathway_id
+                (STR(?pathway_name) AS ?pathway_name_str)
+                ?met_db
+                ?met_xref
+            WHERE {
+                ?pathway a wp:Pathway ;
+                %s
+                dcterms:identifier ?pathway_id ;
+                dc:title ?pathway_name .
 
-  ?metabolite a wp:Metabolite ;
-              dcterms:isPartOf ?pathway .
+            ?metabolite a wp:Metabolite ;
+                dcterms:isPartOf ?pathway .
 
-  { ?metabolite wp:bdbHmdb ?met_xref . BIND("HMDB" AS ?met_db) }
-  UNION
-  { ?metabolite wp:bdbChEBI ?met_xref . BIND("CHEBI" AS ?met_db) }
-  UNION
-  { ?metabolite wp:bdbPubChem ?met_xref . BIND("PUBCHEM" AS ?met_db) }
-  UNION
-  { ?metabolite wp:bdbWikidata ?met_xref . BIND("WIKIDATA" AS ?met_db) }
-  UNION
-  { ?metabolite wp:bdbCas ?met_xref . BIND("CAS" AS ?met_db) }
-}
-LIMIT %d
-OFFSET %d
-',
-    species_clause,
-    as.integer(page_size),
-    as.integer((p - 1L) * page_size)
-        )
-        
-        ok <- FALSE
-        for (attempt in seq_len(max_retries)) {
-            resp <- try(
-                httr2::request(endpoint) |>
-                    httr2::req_method("POST") |>
-                    httr2::req_body_form(query = qry) |>
-                    httr2::req_headers(Accept = "application/sparql-results+json") |>
-                    httr2::req_timeout(180) |>
-                    httr2::req_perform(),
-                silent = TRUE
-            )
-            if (!inherits(resp, "try-error")) {
-                ok <- TRUE
-                break
+            { ?metabolite wp:bdbHmdb ?met_xref . BIND("HMDB" AS ?met_db) }
+            UNION
+            { ?metabolite wp:bdbChEBI ?met_xref . BIND("CHEBI" AS ?met_db) }
+            UNION
+            { ?metabolite wp:bdbPubChem ?met_xref . BIND("PUBCHEM" AS ?met_db) }
+            UNION
+            { ?metabolite wp:bdbWikidata ?met_xref . BIND("WIKIDATA" AS ?met_db) }
+            UNION
+            { ?metabolite wp:bdbCas ?met_xref . BIND("CAS" AS ?met_db) }
             }
-            Sys.sleep(sleep_base * (2 ^ (attempt - 1)))
-        }
-        if (!ok) stop("SPARQL endpoint failed after retries (last error):\n", as.character(resp))
-        
-        js <- httr2::resp_body_json(resp, simplifyVector = TRUE)
-        b <- js$results$bindings
-        
-        empty <- is.null(b) || (is.data.frame(b) && nrow(b) == 0) || (is.list(b) && length(b) == 0)
+            LIMIT %d
+            OFFSET %d
+            ',
+            species_clause,
+            as.integer(page_size),
+            as.integer((page_idx - 1L) * page_size)
+        )
+
+        response <- tryCatch(
+            download_base(
+                url = endpoint,
+                fun = jsonlite::fromJSON,
+                post = list(query = sparql_query),
+                http_headers = list(
+                    Accept = "application/sparql-results+json"
+                ),
+                simplifyVector = FALSE
+            ),
+            error = function(e) {
+                msg <- sprintf(
+                    "WikiPathways SPARQL request failed (page %d): %s",
+                    page_idx,
+                    conditionMessage(e)
+                )
+                logger::log_error(msg)
+                stop(msg)
+            }
+        )
+
+        bindings <- response$results$bindings
+
+        empty <- is.null(bindings) ||
+            (is.data.frame(bindings) && nrow(bindings) == 0) ||
+            (is.list(bindings) && length(bindings) == 0)
         if (empty) break
         
-        if (is.data.frame(b)) {
-            pathway_id <- if ("pathway_id" %in% names(b) && is.data.frame(b$pathway_id) && "value" %in% names(b$pathway_id)) b$pathway_id$value else rep(NA_character_, nrow(b))
-            pathway_name <- if ("pathway_name_str" %in% names(b) && is.data.frame(b$pathway_name_str) && "value" %in% names(b$pathway_name_str)) b$pathway_name_str$value else rep(NA_character_, nrow(b))
-            met_db <- if ("met_db" %in% names(b) && is.data.frame(b$met_db) && "value" %in% names(b$met_db)) b$met_db$value else rep(NA_character_, nrow(b))
-            met_xref <- if ("met_xref" %in% names(b) && is.data.frame(b$met_xref) && "value" %in% names(b$met_xref)) b$met_xref$value else rep(NA_character_, nrow(b))
-        } else {
-            pathway_id <- vapply(b, function(x) if (!is.null(x$pathway_id$value)) as.character(x$pathway_id$value) else NA_character_, character(1))
-            pathway_name <- vapply(b, function(x) if (!is.null(x$pathway_name_str$value)) as.character(x$pathway_name_str$value) else NA_character_, character(1))
-            met_db <- vapply(b, function(x) if (!is.null(x$met_db$value)) as.character(x$met_db$value) else NA_character_, character(1))
-            met_xref <- vapply(b, function(x) if (!is.null(x$met_xref$value)) as.character(x$met_xref$value) else NA_character_, character(1))
-        }
+        pathway_id <- extract_binding_value(bindings, "pathway_id")
+        pathway_name <- extract_binding_value(bindings, "pathway_name_str")
+        met_db <- extract_binding_value(bindings, "met_db")
+        met_xref <- extract_binding_value(bindings, "met_xref")
         
-        df_page <- tibble::tibble(
+        df_page <- tibble(
             pathway_id = pathway_id,
             pathway_name = pathway_name,
             met_db = toupper(trimws(met_db)),
             met_xref_raw = toupper(trimws(met_xref))
-        ) |>
-            dplyr::filter(!is.na(pathway_id), !is.na(met_db), !is.na(met_xref_raw), met_xref_raw != "")
-        
-        x <- df_page$met_xref_raw
-        
-        # identifiers.org IRIs and URL fragments
-        x <- sub("^HTTPS?://IDENTIFIERS\\.ORG/", "", x)
-        x <- sub("^.*/", "", x)
-        
-        # Remove repeated DB prefixes inside the xref payload
-        x <- gsub("^(CHEBI:)+", "CHEBI:", x)
-        x <- gsub("^(HMDB:)+", "HMDB:", x)
-        x <- gsub("^(WIKIDATA:)+", "WIKIDATA:", x)
-        x <- gsub("^(PUBCHEM:)+", "PUBCHEM:", x)
-        
-        # Normalise per DB to the formats you asked for
-        met_id <- x
-        
-        # CHEBI: keep CHEBI:#### (strip any extra CHEBI: already handled above)
-        met_id[df_page$met_db == "CHEBI"] <- sub("^(CHEBI:[0-9]+).*$", "\\1", x[df_page$met_db == "CHEBI"])
-        
-        # HMDB: keep HMDB####### (no HMDB: prefix)
-        tmp_hmdb <- gsub("^HMDB:", "", x[df_page$met_db == "HMDB"])
-        met_id[df_page$met_db == "HMDB"] <- sub("^(HMDB[0-9A-Z]+).*$", "\\1", tmp_hmdb)
-        
-        # WIKIDATA: keep Q#### (no prefix)
-        met_id[df_page$met_db == "WIKIDATA"] <- sub("^WIKIDATA:", "", x[df_page$met_db == "WIKIDATA"])
-        met_id[df_page$met_db == "WIKIDATA"] <- sub("^(Q[0-9]+).*$", "\\1", met_id[df_page$met_db == "WIKIDATA"])
-        
-        # PUBCHEM: keep CID#### (no prefix)
-        tmp_pub <- x[df_page$met_db == "PUBCHEM"]
-        tmp_pub <- sub("^PUBCHEM:", "", tmp_pub)
-        tmp_pub <- sub("^PUBCHEM\\.COMPOUND:", "", tmp_pub)
-        tmp_pub <- sub("^CID", "CID", tmp_pub)
-        tmp_pub <- ifelse(grepl("^[0-9]+$", tmp_pub), paste0("CID", tmp_pub), tmp_pub)
-        tmp_pub <- sub("^(CID[0-9]+).*$", "\\1", tmp_pub)
-        met_id[df_page$met_db == "PUBCHEM"] <- tmp_pub
-        
-        # CAS: keep whatever numeric/hyphen form, no CAS: prefix
-        tmp_cas <- x[df_page$met_db == "CAS"]
-        tmp_cas <- sub("^CAS:", "", tmp_cas)
-        met_id[df_page$met_db == "CAS"] <- tmp_cas
-        
-        df_page$met_id <- met_id
-        
-        df_page <- df_page |>
-            dplyr::filter(!is.na(met_id), nzchar(met_id)) |>
-            dplyr::select(pathway_id, pathway_name, met_id)
-        
-        all_pages <- if (is.null(all_pages)) df_page else dplyr::bind_rows(all_pages, df_page)
+        ) %>%
+        filter(
+            !is.na(pathway_id),
+            !is.na(met_db),
+            !is.na(met_xref_raw),
+            met_xref_raw != ""
+        ) %>%
+        mutate(
+            met_xref_clean = met_xref_raw %>%
+                str_replace(
+                    "^HTTPS?://IDENTIFIERS\\.ORG/",
+                    ""
+                ) %>%
+                str_replace("^.*/", "") %>%
+                str_replace("^(CHEBI:)+", "CHEBI:") %>%
+                str_replace("^(HMDB:)+", "HMDB:") %>%
+                str_replace("^(WIKIDATA:)+", "WIKIDATA:") %>%
+                str_replace("^(PUBCHEM:)+", "PUBCHEM:")
+        ) %>%
+        mutate(
+            met_id = case_when(
+                met_db == "CHEBI" ~ str_replace(
+                    met_xref_clean,
+                    "^(CHEBI:[0-9]+).*$",
+                    "\\1"
+                ),
+                met_db == "HMDB" ~ met_xref_clean %>%
+                    str_replace("^HMDB:", "") %>%
+                    str_replace("^(HMDB[0-9A-Z]+).*$", "\\1"),
+                met_db == "WIKIDATA" ~ met_xref_clean %>%
+                    str_replace("^WIKIDATA:", "") %>%
+                    str_replace("^(Q[0-9]+).*$", "\\1"),
+                met_db == "PUBCHEM" ~ normalize_pubchem(met_xref_clean),
+                met_db == "CAS" ~ str_replace(
+                    met_xref_clean,
+                    "^CAS:",
+                    ""
+                ),
+                TRUE ~ met_xref_clean
+            )
+        ) %>%
+        filter(!is.na(met_id), nzchar(met_id)) %>%
+        select(pathway_id, pathway_name, met_id)
+
+        all_pages[[length(all_pages) + 1L]] <- df_page
     }
 
-if (is.null(all_pages) || nrow(all_pages) == 0) {
-    return(
-        tibble::tibble(
-            pathway_id = character(),
-            pathway_name = character(),
-            pathway_url = character(),
-            metabolites = character()
+    all_pages <- all_pages %>%
+        Filter(f = Negate(is.null), .) %>%
+        bind_rows()
+
+    if (is.null(all_pages) || nrow(all_pages) == 0) {
+        return(
+            tibble(
+                pathway_id = character(),
+                pathway_name = character(),
+                pathway_url = character(),
+                metabolites = character()
+            )
         )
-    )
-}
+    }
 
-pws <- get_wikipathways_pathways(species = species) |>
-    dplyr::select(pathway_id, pathway_url)
+    pws <- get_wikipathways_pathways(species = species) %>%
+        select(pathway_id, pathway_url)
 
-all_pages |>
-    dplyr::left_join(pws, by = "pathway_id") |>
-    dplyr::group_by(pathway_id, pathway_name, pathway_url) |>
-    dplyr::summarise(
-        n_metabolites_in_pathway = dplyr::n_distinct(met_id),
-        metabolites = paste(sort(unique(met_id)), collapse = "; "),
-        .groups = "drop"
-    ) %>%
-    as.data.frame()
+    all_pages %>%
+        left_join(pws, by = "pathway_id") %>%
+        group_by(pathway_id, pathway_name, pathway_url) %>%
+        summarise(
+            n_metabolites_in_pathway = n_distinct(met_id),
+            metabolites = paste(sort(unique(met_id)), collapse = "; "),
+            .groups = "drop"
+        ) %>%
+        as.data.frame()
     
 }
 
