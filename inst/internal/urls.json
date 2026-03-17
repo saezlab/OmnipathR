@@ -208,6 +208,10 @@
     "wikipathways_gpml": [
         "https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml"
     ],
+    "chebi_all_children_in_path": [
+        "https://www.ebi.ac.uk/chebi/backend/api/public/ontology/all_children_in_path?",
+        "relation=%s&entity=%s&three_star_only=%s&page=%s&size=%s&download=%s"
+    ],
     "reactome_pathway_relations": [
         "https://reactome.org/download/current/ReactomePathwaysRelation.txt"
     ],

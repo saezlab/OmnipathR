@@ -389,12 +389,18 @@ get_wikipathways_metabolites_sparql <- function(
     sleep_base = 1
 ) {
     if (!is.null(species)) {
-        stopifnot(is.character(species), length(species) == 1, nzchar(species))
+        stopifnot(
+            is.character(species), 
+            length(species) == 1, 
+            nzchar(species)
+        )
     }
 
     endpoint <- url_parser(url_key = "wikipathways_sparql")
 
     extract_binding_value <- function(bindings, field) {
+        ## parses sql field data
+        
         if (is.data.frame(bindings)) {
             if (
                 field %in% names(bindings) &&
@@ -403,7 +409,13 @@ get_wikipathways_metabolites_sparql <- function(
             ) {
                 return(bindings[[field]]$value)
             }
-            return(rep(NA_character_, nrow(bindings)))
+            
+            return(
+                rep(
+                    NA_character_, 
+                    nrow(bindings)
+                )
+            )
         }
 
         vapply(
@@ -420,24 +432,56 @@ get_wikipathways_metabolites_sparql <- function(
     }
 
     normalize_pubchem <- function(xref) {
+        # normalized pubchem meabolite id strings
+        
         xref %>%
-            str_replace("^PUBCHEM:", "") %>%
-            str_replace("^PUBCHEM\\.COMPOUND:", "") %>%
-            {ifelse(grepl("^[0-9]+$", .), paste0("CID", .), .)} %>%
-            str_replace("^(CID[0-9]+).*$", "\\1")
+            str_replace(
+                "^PUBCHEM:", ""
+            ) %>%
+            str_replace(
+                "^PUBCHEM\\.COMPOUND:", ""
+            ) %>%
+            {
+                ifelse(
+                    grepl(
+                        "^[0-9]+$", 
+                        .
+                    ), 
+                    paste0(
+                        "CID", 
+                        .
+                    ), 
+                    .
+                )
+            } %>%
+            str_replace(
+                "^(CID[0-9]+).*$", "\\1"
+            )
     }
 
+    # optionally add species to sql query if provided by user
     if (is.null(species)) {
         species_clause <- ""
     } else {
-        species_clause <- sprintf(
-            '           wp:organismName "%s" ;\n',
-            gsub('"', '\\"', species, fixed = TRUE)
-        )
+        species_clause <- 
+            sprintf(
+                '           wp:organismName "%s" ;\n',
+                gsub(
+                    '"', '\\"', species, fixed = TRUE
+                )
+            )
     }
+    
     
     all_pages <- list()
     
+    # main loop over all pages
+    # this code does not retrieve everything at once but rather iterates over
+    # multiple pages, calling the API multiple times, doing:
+    # - construct current SQL query
+    # - retrieve response data
+    # - parse response data
+    # -> iteratively creating response object from multiple SQL queries
     for (page_idx in seq_len(max_pages)) {
         
         sparql_query <- sprintf(
@@ -478,6 +522,7 @@ get_wikipathways_metabolites_sparql <- function(
             as.integer((page_idx - 1L) * page_size)
         )
 
+        # retrieve json response with sql query from endpoint
         response <- tryCatch(
             download_base(
                 url = endpoint,
@@ -506,11 +551,13 @@ get_wikipathways_metabolites_sparql <- function(
             (is.list(bindings) && length(bindings) == 0)
         if (empty) break
         
+        # extract all columns
         pathway_id <- extract_binding_value(bindings, "pathway_id")
         pathway_name <- extract_binding_value(bindings, "pathway_name_str")
         met_db <- extract_binding_value(bindings, "met_db")
         met_xref <- extract_binding_value(bindings, "met_xref")
         
+        # construct dataframe from current SQL query response
         df_page <- tibble(
             pathway_id = pathway_id,
             pathway_name = pathway_name,
@@ -560,9 +607,12 @@ get_wikipathways_metabolites_sparql <- function(
         filter(!is.na(met_id), nzchar(met_id)) %>%
         select(pathway_id, pathway_name, met_id)
 
+        
+        # append parsed results of current query to all_pages
         all_pages[[length(all_pages) + 1L]] <- df_page
     }
 
+    
     all_pages <- all_pages %>%
         Filter(f = Negate(is.null), .) %>%
         bind_rows()
@@ -577,10 +627,11 @@ get_wikipathways_metabolites_sparql <- function(
             )
         )
     }
-
+    
     pws <- get_wikipathways_pathways(species = species) %>%
         select(pathway_id, pathway_url)
 
+    # return full result table
     all_pages %>%
         left_join(pws, by = "pathway_id") %>%
         group_by(pathway_id, pathway_name, pathway_url) %>%

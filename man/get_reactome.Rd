@@ -2,7 +2,7 @@
 % Please edit documentation in R/reactome.R
 \name{get_reactome}
 \alias{get_reactome}
-\title{Reactome ChEBI mapping per pathway}
+\title{Get Reactome ChEBI mappings per pathway}
 \usage{
 get_reactome(species = "Homo sapiens", pathway_ids = NULL, out_path = NULL)
 }

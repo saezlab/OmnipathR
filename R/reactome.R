@@ -8,7 +8,7 @@
 #'
 #' @noRd
 reactome_species_table <- function() {
-
+    
     tibble(
         code = c(
             "BTA", "CEL", "CFA", "DRE",
@@ -35,7 +35,7 @@ reactome_species_table <- function() {
             "Xenopus tropicalis"
         )
     )
-
+    
 }
 
 #' Normalize Reactome species input
@@ -49,46 +49,81 @@ reactome_species_table <- function() {
 #'
 #' @noRd
 normalize_reactome_species <- function(species) {
-
+    
     if (is.null(species)) {
-        return(list(code = NULL, name = NULL, valid = TRUE))
+        return(
+            list(code = NULL, name = NULL, valid = TRUE)
+        )
     }
-
+    
     if (length(species) == 0) {
-        log_warn(sprintf("Reactome species is empty."))
-        return(list(code = NA_character_, name = NA_character_, valid = FALSE))
+        log_warn(
+            sprintf("Reactome species is empty.")
+        )
+        
+        return(
+            list(code = NA_character_, name = NA_character_, valid = FALSE)
+        )
     }
-
+    
     if (length(species) > 1) {
-        log_warn(sprintf(
-            "Multiple Reactome species values provided; using first: %s",
-            species[[1]]
-        ))
+        log_warn(
+            sprintf(
+                "Multiple Reactome species values provided; using first: %s",
+                species[[1]]
+            )
+        )
         species <- species[[1]]
     }
-
-    species <- str_trim(as.character(species))
+    
+    species <- str_trim(
+        as.character(species)
+    )
+    
     if (is.na(species) || species == "") {
-        log_warn(sprintf("Reactome species is empty."))
-        return(list(code = NA_character_, name = NA_character_, valid = FALSE))
+        log_warn(
+            sprintf(
+                "Reactome species is empty."
+            )
+        )
+        
+        return(
+            list(code = NA_character_, name = NA_character_, valid = FALSE)
+        )
     }
-
+    
     table <- reactome_species_table()
     species_upper <- toupper(species)
-
+    
     idx <- match(species_upper, table$code)
+    
     if (!is.na(idx)) {
-        return(list(code = table$code[idx], name = table$name[idx], valid = TRUE))
+        return(
+            list(code = table$code[idx], name = table$name[idx], valid = TRUE)
+        )
     }
-
+    
     idx <- match(tolower(species), tolower(table$name))
+    
     if (!is.na(idx)) {
-        return(list(code = table$code[idx], name = table$name[idx], valid = TRUE))
+        return(
+            list(code = table$code[idx], name = table$name[idx], valid = TRUE)
+        )
     }
-
-    log_warn(sprintf("Unknown Reactome species: %s", species))
-    list(code = NA_character_, name = NA_character_, valid = FALSE)
-
+    
+    log_warn(
+        sprintf(
+            "Unknown Reactome species: %s", 
+            species
+        )
+    )
+    
+    list(
+        code = NA_character_, 
+        name = NA_character_, 
+        valid = FALSE
+    )
+    
 }
 
 #' Empty Reactome relations table
@@ -99,9 +134,12 @@ normalize_reactome_species <- function(species) {
 #'
 #' @noRd
 empty_reactome_relations <- function() {
-
-    tibble(Parent = character(), Child = character())
-
+    
+    tibble(
+        Parent = character(), 
+        Child = character()
+    )
+    
 }
 
 #' Empty Reactome pathways table
@@ -112,13 +150,13 @@ empty_reactome_relations <- function() {
 #'
 #' @noRd
 empty_reactome_pathways <- function() {
-
+    
     tibble(
         pathway_id = character(),
         pathway_name = character(),
         species = character()
     )
-
+    
 }
 
 #' Empty Reactome ChEBI mapping table
@@ -163,30 +201,36 @@ empty_reactome_chebi_map <- function() {
 #' head(relations)
 #' }
 get_reactome_pathway_relations <- function(species = NULL) {
-
-    relations <- generic_downloader(
-        url_key = "reactome_pathway_relations",
-        reader_param = list(col_names = c("Parent", "Child")),
-        resource = "Reactome"
-    )
-
+    
+    relations <- 
+        generic_downloader(
+            url_key = "reactome_pathway_relations",
+            reader_param = list(col_names = c("Parent", "Child")),
+            resource = "Reactome"
+        )
+    
     if (is.null(species)) {
-        return(relations %>% transmute(Parent, Child))
+        return(
+            relations %>% transmute(Parent, Child)
+        )
     }
-
+    
     sp <- normalize_reactome_species(species)
     if (!sp$valid) {
-        return(empty_reactome_relations())
+        return(
+            empty_reactome_relations()
+        )
     }
-
+    
     pattern <- sprintf("R-%s-", sp$code)
+    
     relations %>%
         filter(
             str_detect(Parent, fixed(pattern)),
             str_detect(Child, fixed(pattern))
         ) %>%
         transmute(Parent, Child)
-
+    
 }
 
 #' Reactome pathways
@@ -210,28 +254,41 @@ get_reactome_pathway_relations <- function(species = NULL) {
 #' head(pathways)
 #' }
 get_reactome_pathways <- function(species = NULL) {
-
-    pathways <- generic_downloader(
-        url_key = "reactome_pathways",
-        reader_param = list(
-            col_names = c("pathway_id", "pathway_name", "species")
-        ),
-        resource = "Reactome"
-    )
-
+    
+    pathways <- 
+        generic_downloader(
+            url_key = "reactome_pathways",
+            reader_param = list(
+                col_names = c("pathway_id", "pathway_name", "species")
+            ),
+            resource = "Reactome"
+        )
+    
     if (is.null(species)) {
-        return(pathways %>% transmute(pathway_id, pathway_name, species))
+        return(
+            pathways %>% 
+                transmute(
+                    pathway_id, pathway_name, species
+                )
+        )
     }
-
+    
     sp <- normalize_reactome_species(species)
+    
     if (!sp$valid) {
-        return(empty_reactome_pathways())
+        return(
+            empty_reactome_pathways()
+        )
     }
-
+    
     pathways %>%
-        filter(species == sp$name) %>%
-        transmute(pathway_id, pathway_name, species)
-
+        filter(
+            species == sp$name
+        ) %>%
+        transmute(
+            pathway_id, pathway_name, species
+        )
+    
 }
 
 #' Reactome pathway participants (ChEBI mapping)
@@ -269,49 +326,68 @@ get_pathway_participants <- function(
     species = NULL,
     out_path = NULL
 ) {
-
-    mapping <- generic_downloader(
-        url_key = "reactome_chebi2pathways",
-        reader_param = list(
-            col_names = c(
-                "chebi_id",
-                "pathway_id",
-                "pathway_url",
-                "pathway_name",
-                "evidence",
-                "species"
+    
+    mapping <- 
+        generic_downloader(
+            url_key = "reactome_chebi2pathways",
+            reader_param = list(
+                col_names = c(
+                    "chebi_id",
+                    "pathway_id",
+                    "pathway_url",
+                    "pathway_name",
+                    "evidence",
+                    "species"
+                ),
+                col_types = cols(.default = col_character())
             ),
-            col_types = cols(.default = col_character())
-        ),
-        resource = "Reactome"
-    )
-
+            resource = "Reactome"
+        )
+    
     if (!is.null(species)) {
         sp <- normalize_reactome_species(species)
         if (!sp$valid) {
-            return(empty_reactome_chebi_map())
+            return(
+                empty_reactome_chebi_map()
+            )
         }
-        mapping <- mapping %>% filter(species == sp$name)
+        mapping <- mapping %>% 
+            filter(
+                species == sp$name
+            )
     }
-
+    
     if (!is.null(pathway_ids)) {
         pathway_ids <- as.character(pathway_ids)
-        invalid_ids <- pathway_ids[
-            is.na(pathway_ids) |
-            !nzchar(pathway_ids) |
-            !str_detect(pathway_ids, "^R-[A-Z]{3}-")
-        ]
+        
+        invalid_ids <- 
+            pathway_ids[
+                is.na(pathway_ids) |
+                !nzchar(pathway_ids) |
+                !str_detect(pathway_ids, "^R-[A-Z]{3}-")
+            ]
+        
         if (length(invalid_ids) > 0) {
             unique(invalid_ids) %>%
                 sort() %>%
-                lapply(function(id) {
-                    log_warn(sprintf("Invalid Reactome pathway ID: %s", id))
-                })
+                lapply(
+                    function(id) {
+                        log_warn(sprintf("Invalid Reactome pathway ID: %s", id))
+                    }
+                )
         }
-        pathway_ids <- setdiff(pathway_ids, invalid_ids)
-        mapping <- mapping %>% filter(pathway_id %in% pathway_ids)
+        pathway_ids <- 
+            setdiff(
+                pathway_ids, 
+                invalid_ids
+            )
+        
+        mapping <- mapping %>% 
+            filter(
+                pathway_id %in% pathway_ids
+            )
     }
-
+    
     mapping <- mapping %>%
         filter(!is.na(chebi_id) & chebi_id != "") %>%
         mutate(
@@ -322,9 +398,14 @@ get_pathway_participants <- function(
                 paste0("CHEBI:", chebi_id)
             )
         )
-
+    
     out <- mapping %>%
-        group_by(pathway_id, pathway_name, pathway_url, species) %>%
+        group_by(
+            pathway_id, 
+            pathway_name, 
+            pathway_url, 
+            species
+        ) %>%
         summarise(
             chebi_ids = paste0(sort(unique(chebi_id)), collapse = ", "),
             .groups = "drop"
@@ -333,16 +414,21 @@ get_pathway_participants <- function(
     if (nrow(out) == 0) {
         out <- empty_reactome_chebi_map()
     }
-
+    
     if (!is.null(out_path)) {
-        write.csv(out, out_path, row.names = FALSE, fileEncoding = "UTF-8")
+        write.csv(
+            out, 
+            out_path, 
+            row.names = FALSE, 
+            fileEncoding = "UTF-8"
+        )
     }
-
+    
     out
-
+    
 }
 
-#' Reactome ChEBI mapping per pathway
+#' Get Reactome ChEBI mappings per pathway
 #'
 #' Retrieves ChEBI identifiers mapped to Reactome pathways and returns a
 #' per-pathway list of ChEBI IDs.
@@ -362,17 +448,18 @@ get_pathway_participants <- function(
 #' df <- get_reactome(species = "Homo sapiens")
 #' head(df)
 #' }
-get_reactome <- function(
-    species = "Homo sapiens",
-    pathway_ids = NULL,
-    out_path = NULL
-) {
-
-    get_pathway_participants(
-        pathway_ids = pathway_ids,
-        species = species,
-        out_path = out_path
-    ) %>%
-    as.data.frame()
+get_reactome <- 
+    function(
+        species = "Homo sapiens",
+        pathway_ids = NULL,
+        out_path = NULL
+    ) {
     
+        get_pathway_participants(
+            pathway_ids = pathway_ids,
+            species = species,
+            out_path = out_path
+        ) %>%
+            as.data.frame()
+        
 }
