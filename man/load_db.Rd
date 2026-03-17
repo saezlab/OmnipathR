@@ -4,7 +4,7 @@
 \alias{load_db}
 \title{Load a built in database}
 \usage{
-load_db(key, param = list())
+load_db(key, param = list(), reload = FALSE)
 }
 \arguments{
 \item{key}{Character: the key of the database to load. For a list of
@@ -13,6 +13,9 @@ available keys see \code{\link{omnipath_show_db}}.}
 \item{param}{List: override the defaults or pass further parameters to
 the database loader function. See the loader functions and their
 default parameters in \code{\link{omnipath_show_db}}.}
+
+\item{reload}{Logical: if TRUE, bypass the on-disk cache and reload from
+the original source. The result will still be saved to cache.}
 }
 \value{
 Returns \code{NULL}.
@@ -24,7 +27,8 @@ Load a built in database
 This function loads a database which is stored within the package
 namespace until its expiry. The loaded database is accessible by
 \code{\link{get_db}} and the loading process is typically initiated by
-\code{\link{get_db}}, not by the users directly.
+\code{\link{get_db}}, not by the users directly. Databases are cached
+on disk as RDS files for faster loading in subsequent sessions.
 }
 \examples{
 load_db('go_slim')

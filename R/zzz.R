@@ -26,6 +26,9 @@
 #' @noRd
 .onLoad <- function(libname, pkgname){
 
+    # Suppress common "incomplete final line" warnings globally
+    .suppress_readlines_warnings()
+
     omnipath_init_config()
     patch_logger_metavar()
     patch_logger_appender()
@@ -86,5 +89,40 @@
         )
 
     }
+
+}
+
+
+#' Suppress common "incomplete final line" warnings globally
+#'
+#' This function sets up a global warning handler that specifically filters
+#' out the harmless "incomplete final line found" warning that occurs when
+#' reading files without trailing newlines, while preserving other important
+#' warnings.
+#'
+#' @importFrom logger log_trace
+#' @noRd
+.suppress_readlines_warnings <- function() {
+
+    # Store original warning handler
+    original_warning_handler <- getOption("warning.expression")
+
+    # Set up custom warning handler
+    options(warning.expression = expression({
+        # Call the original warning handler if it exists
+        if (!is.null(original_warning_handler)) {
+            eval(original_warning_handler)
+        }
+
+        # Filter out specific "incomplete final line" warnings
+        # Pattern matches variations like "incomplete final line found on 'file'"
+        if (grepl("incomplete final line", conditionMessage(condition), fixed = TRUE)) {
+            # Log the suppression at trace level for debugging
+            logger::log_trace("Suppressed readLines warning: %s", conditionMessage(condition))
+            invokeRestart("muffleWarning")
+        }
+    }))
+
+    logger::log_trace("Global readLines warning suppression enabled")
 
 }

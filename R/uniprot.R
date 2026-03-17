@@ -162,7 +162,7 @@ uniprot_organisms <- function() {
 
     read_uniprot_taxonomy <- function(con, ...) {
 
-        lines <- readLines(con)
+        lines <- readLines(con, warn = FALSE)
         sep_idx <- which(str_detect(lines, "^_____"))[1]
         lines %<>% .[sep_idx + 1L:length(.)]
         entry_starts <- which(!str_detect(lines, "^\\s"))

@@ -700,7 +700,7 @@ archive_extractor <- function(
     )
 
     # fallback to the first file
-    path <- `if`(is.null(path), paths_in_archive(archive_data)[1], path)
+    path <- `if`(is.null(path), paths_in_archive(archive_data)[1L], path)
 
     if(!path %in% paths_in_archive(archive_data)){
 
@@ -728,6 +728,7 @@ archive_extractor <- function(
 
     }
 
+    log_trace('Path in archive: `%s`', path)
     xls <- path %>% endsWith(c('xls', 'xlsx')) %>% any && extract_xls
 
     if(archive_data$ext == 'zip'){
@@ -741,8 +742,6 @@ archive_extractor <- function(
 
             if(xls) {
                 reader <- read_excel
-            }else{
-                return(con)
             }
 
         }else{

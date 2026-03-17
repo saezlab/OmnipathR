@@ -183,5 +183,57 @@
     ],
     "kinasephos": [
         "https://awi.cuhk.edu.cn/KinasePhos/dataset.csv"
+    ],
+    "metatlas_models": [
+        "https://metabolicatlas.org/api/v2/repository/models/"
+    ],
+    "metatlas_model": [
+        "https://metabolicatlas.org/api/v2/repository/%s"
+    ],
+    "metatlas_integrated_models": [
+        "https://metabolicatlas.org/api/v2/repository/integrated_models"
+    ],
+    "metatlas_standard_gems_index": [
+        "https://metabolicatlas.github.io/standard-GEM-validation/index.json"
+    ],
+    "metatlas_standard_gem": [
+        "https://metabolicatlas.github.io/standard-GEM-validation/results/%s.json"
+    ],
+    "wikipathways_list": [
+        "https://www.wikipathways.org/json/listPathways.json"
+    ],
+    "wikipathways_sparql": [
+        "https://sparql.wikipathways.org/sparql"
+    ],
+    "wikipathways_gpml": [
+        "https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml"
+    ],
+    "chebi_all_children_in_path": [
+        "https://www.ebi.ac.uk/chebi/backend/api/public/ontology/all_children_in_path?",
+        "relation=%s&entity=%s&three_star_only=%s&page=%s&size=%s&download=%s"
+    ],
+    "reactome_pathway_relations": [
+        "https://reactome.org/download/current/ReactomePathwaysRelation.txt"
+    ],
+    "reactome_pathways": [
+        "https://reactome.org/download/current/ReactomePathways.txt"
+    ],
+    "reactome_participants": [
+        "https://reactome.org/ContentService/data/participants/%s"
+    ],
+    "reactome_chebi2pathways": [
+        "https://reactome.org/download/current/ChEBI2Reactome_All_Levels.txt"
+    ],
+    "github_repo_tree": [
+        "https://api.github.com/repos/%s/git/trees/%s?recursive=1"
+    ],
+    "gitlab_repo_tree": [
+        "https://gitlab.com/api/v4/projects/%s/repository/tree?ref=%s&recursive=true&per_page=1000"
+    ],
+    "github_raw_file": [
+        "https://raw.githubusercontent.com/%s/%s/%s"
+    ],
+    "gitlab_raw_file": [
+        "https://gitlab.com/%s/-/raw/%s/%s"
     ]
 }

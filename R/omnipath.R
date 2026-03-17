@@ -80,6 +80,7 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     'loops',
     'enzymes',
     'substrates',
+    'enzyme_substrate',
     'partners',
     'proteins',
     'entity_types',
@@ -91,16 +92,17 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     'source',
     'categories',
     'parent',
+    'secreted',
+    'plasma_membrane_peripheral',
+    'plasma_membrane_transmembrane',
     'transmitter',
     'receiver',
-    'secreted',
-    'plasma_membrane_transmembrane',
-    'plasma_membrane_peripheral',
     'topology',
     'causality',
     'license',
     'password',
-    'types'
+    'types',
+    'limit'
 )
 
 
@@ -121,7 +123,12 @@ ORGANISMS_SUPPORTED <- c(9606L, 10090L, 10116L)
     modification = 'types',
     type = 'types',
     interaction_type = 'types',
-    interaction_types = 'types'
+    interaction_types = 'types',
+    pmtm = 'plasma_membrane_transmembrane',
+    sec = 'secreted',
+    pmp = 'plasma_membrane_peripheral',
+    trans = 'transmitter',
+    rec = 'receiver'
 )
 
 
@@ -278,11 +285,14 @@ omnipath_query <- function(
     resources %<>% setdiff(exclude)
     cache %<>% use_cache
 
+
+    log_trace('Param in `omnipath_query`: %s', compact_repr(as.list(environment()), limit = 1000))
     param <-
         environment() %>%
         as.list %>%
         c(list(...)) %>%
         omnipath_check_param
+    log_trace('Param in `omnipath_query`: %s', compact_repr(param, limit = 1000))
 
     url <-
         param %>%
@@ -625,7 +635,7 @@ qs_synonyms <- function(param) {
     for(name in names(param)){
         if(
             name %in% names(.omnipath_querystring_synonyms) &&
-            !.omnipath_querystring_synonyms[[name]] %in% names(param)
+            is.null(.omnipath_querystring_synonyms[[name]] %>% extract2(param, .))
         ){
             new_name <- .omnipath_querystring_synonyms[[name]]
             param %<>%
@@ -963,6 +973,8 @@ omnipath_check_result <- function(result, url){
 cast_logicals <- function(data, logicals = NULL){
 
     true_values <- c('True', '1', 'TRUE', 'T', 'yes', 'YES', 'Y', 'y')
+
+    logicals %<>% intersect(names(data))
 
     for(name in logicals){
         data[[name]] <- (

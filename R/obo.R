@@ -118,7 +118,7 @@ obo_parser <- function(
     term_subset <- list()
 
     raw <-
-        readLines(con) %>%
+        readLines(con, warn = FALSE) %>%
         str_split_fixed(':', n = 2) %>%
         `colnames<-`(c('key', 'value')) %>%
         as_tibble() %>%

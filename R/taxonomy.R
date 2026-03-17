@@ -34,7 +34,7 @@
 taxon_names_table <- function(){
 
     # NSE vs. R CMD check workaround
-    ncbi_tax_id <- oma_version <- genome_source <-
+    ncbi_tax_id <- genome_version <- genome_source <-
     latin_name.x <- latin_name.y <- common_name <- code <- synonym <-
     latin_name_uniprot <- latin_name_ensembl <- latin_name_oma <-
     common_name_uniprot <- common_name_ensembl <- NULL
@@ -43,7 +43,7 @@ taxon_names_table <- function(){
     rename(common_name_ensembl = common_name) %>%
     full_join(
         oma_organisms() %>%
-        select(-genome_source, -oma_version),
+        select(-genome_source, -genome_version),
         by = 'ncbi_tax_id',
         suffix = c('_ensembl', '_oma')
     ) %>%

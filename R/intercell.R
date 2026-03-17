@@ -125,24 +125,7 @@ intercell <- function(
     ...
 ){
 
-    topology %<>%
-        topology_long %>%
-        {reduce(
-            TOPOLOGIES,
-            function(topos, topo){
-                arg_value <- get(topo)
-                `if`(
-                    is.null(arg_value),
-                    topos,
-                    `if`(
-                        arg_value,
-                        union(topos, topo),
-                        setdiff(topos, topo)
-                    )
-                )
-            },
-            .init = .
-        )}
+    topology %<>% topology_long
 
     args <- c(as.list(environment()), list(...))
     args$query_type <- 'intercell'
@@ -155,6 +138,8 @@ intercell <- function(
     )
     args$consensus_percentile <- NULL
     args$loc_consensus_percentile <- NULL
+
+    log_trace('Args for `omnipath_query`: %s', compact_repr(args, limit = 1000))
 
     result <-
         exec(omnipath_query, !!!args) %>%
@@ -249,11 +234,15 @@ intercell_consensus_filter <- function(
     thresholds <-
         data %>%
         filter(scope == 'generic' & source == 'composite') %>%
-        group_by(parent) %>%
-        filter(
-            consensus_score >= quantile(consensus_score, percentile)
-        ) %>%
-        ungroup %>%
+        {`if`(
+            nrow(.) == 0L,
+            .,
+            group_by(., parent) %>%
+            filter(
+                consensus_score >= quantile(consensus_score, percentile)
+            ) %>%
+            ungroup
+        )} %>%
         select(parent, uniprot) %>%
         distinct
 

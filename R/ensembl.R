@@ -40,6 +40,7 @@ ensembl_organisms_raw <- function(){
 
     tryCatch(
         'ensembl_organisms' %>%
+        sprintf('%s%s', ., `if`(.on_buildserver(), '_rescued', '')) %>%
         download_to_cache(http_headers = user_agent()),
         error = function(err) {
 
