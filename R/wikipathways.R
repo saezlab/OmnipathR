@@ -27,17 +27,17 @@
 #' }
 get_wikipathways_pathways <- function(species = NULL) {
 
-    # data <- generic_downloader(
-    #     url_key = "wikipathways_list",
-    #     reader = curl_read_json,
-    #     reader_param = list(simplifyVector = FALSE),
-    #     resource = "WikiPathways"
-    # )
+    data <- generic_downloader(
+        url_key = "wikipathways_list",
+        reader = curl_read_json,
+        reader_param = list(simplifyVector = FALSE),
+        resource = "WikiPathways"
+    )
     
     ## devel version with direct request instead of generic_downloader
-    data <- request("https://www.wikipathways.org/json/listPathways.json") %>%
-        req_perform() %>%
-        resp_body_json()
+    # data <- request("https://www.wikipathways.org/json/listPathways.json") %>%
+    #     req_perform() %>%
+    #     resp_body_json()
     
     
     organisms <- data$organisms
@@ -125,16 +125,16 @@ norm_met_id <- function(db, id) {
 #' @noRd
 fetch_gpml <- function(wpid) {
 
-    # path <- download_to_cache(
-    #     url_key = "wikipathways_gpml",
-    #     url_param = list(wpid, wpid),
-    #     ext = "gpml"
-    # )
+    path <- download_to_cache(
+        url_key = "wikipathways_gpml",
+        url_param = list(wpid, wpid),
+        ext = "gpml"
+    )
     
-    ## devel version with direct request instead of generic_downloader
-    url = sprintf("https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml", wpid, wpid)
-    resp <- request(url) %>%
-        req_perform()
+    # ## devel version with direct request instead of generic_downloader
+    # url = sprintf("https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml", wpid, wpid)
+    # resp <- request(url) %>%
+    #     req_perform()
 
     read_xml(resp_body_string(resp))
     
