@@ -196,6 +196,10 @@ biomart_query <- function(
 
     log_trace('BioMart query: %s', query)
 
+    biomart_url <-
+        'biomart' %>%
+        url_parser(url_param = list(query))
+
     'biomart' %>%
     generic_downloader(
         url_param = list(query),
@@ -219,6 +223,23 @@ biomart_query <- function(
             log_warn(
                 .[[1]]
             )
+            if(
+                ncol(.) < length(col_names) ||
+                any(grepl('Query ERROR', .[[1]], fixed = TRUE))
+            ){
+                omnipath_cache_remove(url = biomart_url)
+                msg <- sprintf(
+                    paste0(
+                        'Failed BioMart query: the Ensembl BioMart ',
+                        'returned an error instead of data. This is ',
+                        'likely a temporary issue on the Ensembl server ',
+                        'side. Response: %s'
+                    ),
+                    paste(.[[1]], collapse = ' ')
+                )
+                log_error_with_info(msg)
+                stop(msg)
+            }
             .
         }
     )} %>%
