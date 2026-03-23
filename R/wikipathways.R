@@ -556,6 +556,3 @@ all_pages |>
     as.data.frame()
     
 }
-
-
-df_wikipathways <- get_wikipathways_metabolites_sparql()
