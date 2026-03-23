@@ -17,7 +17,7 @@ all pathways (subject to species filter).}
 }
 \value{
 A tibble with columns `pathway_id`, `pathway_name`, `pathway_url`,
-  `species`, `chebi_ids` (list column). When writing to CSV, the list
+  `species`, `chebi_ids`. When writing to CSV, the list
   column is serialized by `write.csv`.
 }
 \description{

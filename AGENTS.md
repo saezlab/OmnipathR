@@ -229,3 +229,14 @@ The package provides several sophisticated download functions that integrate cac
 - **Performance monitoring**: Regular benchmarking of download and processing speeds
 
 This package represents years of development in computational systems biology, combining rigorous database integration with user-friendly R programming patterns to create a powerful tool for molecular biology research.
+
+## Saezverse Reference
+
+Use this Saezverse entry as the cross-repo reference for OmnipathR. When
+working on OmnipathR here, check the Saezverse OmnipathR spec for the
+high-level package description, architecture summary, dependencies, and
+known issues to ensure changes stay aligned.
+
+- Saezverse repository: https://github.com/saezlab/saezverse
+- OmnipathR spec: human/packages/omnipathr.md
+- Last reviewed: 2026-03-03

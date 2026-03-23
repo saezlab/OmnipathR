@@ -2,7 +2,7 @@
 % Please edit documentation in R/reactome.R
 \name{get_reactome}
 \alias{get_reactome}
-\title{Reactome ChEBI mapping per pathway}
+\title{Get Reactome ChEBI mappings per pathway}
 \usage{
 get_reactome(species = "Homo sapiens", pathway_ids = NULL, out_path = NULL)
 }
@@ -15,8 +15,8 @@ get_reactome(species = "Homo sapiens", pathway_ids = NULL, out_path = NULL)
 \item{out_path}{Character: optional CSV output path for the main table.}
 }
 \value{
-A tibble with columns `pathway_id`, `pathway_name`, `pathway_url`,
-  `species`, `chebi_ids` (list column).
+A data.frame with columns `pathway_id`, `pathway_name`, `pathway_url`,
+  `species`, `chebi_ids`.
 }
 \description{
 Retrieves ChEBI identifiers mapped to Reactome pathways and returns a

@@ -172,6 +172,9 @@
     "metalinksdb": [
         "https://rescued.omnipathdb.org/metalinks_v045.db"
     ],
+    "macdb_download_file": [
+        "https://ngdc.cncb.ac.cn/macdb/api/get_download_file?file_type=%s"
+    ],
     "recon3d_bigg": [
         "http://bigg.ucsd.edu/static/models/Recon3D.mat.gz"
     ],
@@ -202,8 +205,15 @@
     "wikipathways_list": [
         "https://www.wikipathways.org/json/listPathways.json"
     ],
+    "wikipathways_sparql": [
+        "https://sparql.wikipathways.org/sparql"
+    ],
     "wikipathways_gpml": [
         "https://www.wikipathways.org/wikipathways-assets/pathways/%s/%s.gpml"
+    ],
+    "chebi_all_children_in_path": [
+        "https://www.ebi.ac.uk/chebi/backend/api/public/ontology/all_children_in_path?",
+        "relation=%s&entity=%s&three_star_only=%s&page=%s&size=%s&download=%s"
     ],
     "reactome_pathway_relations": [
         "https://reactome.org/download/current/ReactomePathwaysRelation.txt"

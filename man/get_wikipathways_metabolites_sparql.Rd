@@ -14,7 +14,8 @@ get_wikipathways_metabolites_sparql(
 }
 \arguments{
 \item{species}{Character scalar. Exact organism name as used by
-WikiPathways, for example \code{"Homo sapiens"}.}
+WikiPathways, for example \code{"Homo sapiens"}. If \code{NULL},
+do not filter by species.}
 
 \item{page_size}{Integer. Number of records retrieved per SPARQL page.
 Larger values reduce the number of HTTP requests but may increase
