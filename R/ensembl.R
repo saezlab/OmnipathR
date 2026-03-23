@@ -141,10 +141,12 @@ ensembl_organisms <- function(){
 #' # # . with 46,924 more rows
 #'
 #' @importFrom magrittr %<>% %>% %T>% extract2 equals
-#' @importFrom purrr map_chr
+#' @importFrom purrr map_chr map
 #' @importFrom readr cols col_character read_tsv type_convert
 #' @importFrom dplyr slice_tail slice_head
 #' @importFrom logger log_warn log_trace
+#' @importFrom tibble tibble
+#' @importFrom rlang set_names !!!
 #' @export
 biomart_query <- function(
     attrs = NULL,
@@ -237,6 +239,17 @@ biomart_query <- function(
                     ),
                     paste(.[[1]], collapse = ' ')
                 )
+                if(.on_buildserver()){
+                    log_warn(msg)
+                    warning(msg)
+                    return(
+                        col_names %>%
+                        set_names(., .) %>%
+                        as.list %>%
+                        map(~character(0L)) %>%
+                        tibble(!!!.)
+                    )
+                }
                 log_error_with_info(msg)
                 stop(msg)
             }
