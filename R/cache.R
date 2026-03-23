@@ -440,13 +440,18 @@ omnipath_cache_remove <- function(
         ),
         .
     )} %>%
-    map(
-        omnipath_cache_keep_versions,
-        max_age = max_age,
-        min_age = min_age,
-        status = status,
-        only_latest = only_latest
-    ) %>%
+    {`if`(
+        has_version_filtering,
+        map(
+            .,
+            omnipath_cache_keep_versions,
+            max_age = max_age,
+            min_age = min_age,
+            status = status,
+            only_latest = only_latest
+        ),
+        .
+    )} %>%
     {`if`(
         has_key && has_version_filtering,
         map(
