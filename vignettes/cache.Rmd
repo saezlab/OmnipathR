@@ -1,0 +1,183 @@
+---
+title: "OmnipathR Cache System"
+author:
+    - name: Dénes Türei
+output:
+    BiocStyle::html_document:
+        number_sections: yes
+        toc: yes
+        toc_depth: 4
+        pandoc_args:
+            - '--lua-filter=scholarly-metadata.lua'
+            - '--lua-filter=author-info-blocks.lua'
+vignette: >
+    %\VignetteIndexEntry{OmnipathR Cache System}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+# Overview
+
+OmnipathR uses a local file-based cache to avoid redundant downloads.
+Every resource downloaded through the package's download machinery is
+automatically stored in the cache directory and looked up on subsequent
+requests. The cache keeps an inventory in a JSON file (`cache.json`) and
+stores downloaded data as RDS files alongside it.
+
+# Cache directory
+
+By default the cache lives under the platform's user cache directory
+(e.g. `~/.cache/OmnipathR` on Linux). You can query or change it at any
+time:
+
+```{r eval=FALSE}
+library(OmnipathR)
+
+# Current cache directory
+omnipath_get_cachedir()
+
+# Change to a custom location
+omnipath_set_cachedir("/tmp/my_omnipathr_cache")
+
+# Reset to default
+omnipath_set_cachedir()
+```
+
+# Data structures
+
+## Cache records
+
+Each unique download is identified by a **cache key**: a SHA-1 hash of the
+URL, HTTP POST parameters and payload. A **cache record** stores:
+
+- `key` -- the SHA-1 identifier
+- `url` -- the original URL
+- `post` -- HTTP POST parameters, if any
+- `payload` -- HTTP body payload, if any
+- `ext` -- file extension (derived from the URL)
+- `versions` -- a named list of version entries
+
+## Versions
+
+A single cache record can have multiple **versions**, numbered sequentially.
+Each version tracks:
+
+- `number` -- version identifier (character: "1", "2", ...)
+- `path` -- absolute path to the cached file
+- `dl_started` -- timestamp when the download started
+- `dl_finished` -- timestamp when the download completed
+- `status` -- one of `unknown`, `started`, `ready`, `failed`, `deleted`
+
+When a resource is re-downloaded, a new version is appended rather than
+overwriting the existing one.
+
+## The cache database (`cache.json`)
+
+All cache records are persisted in `cache.json` inside the cache directory.
+This file is read into memory before any cache operation and written back
+afterwards. A lock file (`cache.lock`) prevents concurrent writes.
+
+# Core operations
+
+## Saving and loading
+
+Downloads are cached automatically by the package's download functions.
+You can also interact with the cache directly:
+
+```{r eval=FALSE}
+# Save an R object into the cache
+omnipath_cache_save(my_data, url = "https://example.com/data.tsv")
+
+# Load it back
+my_data <- omnipath_cache_load(url = "https://example.com/data.tsv")
+```
+
+`omnipath_cache_load` returns `NULL` when no cached version is available.
+The loaded object carries an `origin = "cache"` attribute so you can tell
+whether data came from the network or the cache.
+
+## Searching
+
+Find cache entries by URL pattern (regular expression):
+
+```{r eval=FALSE}
+# Find all cached BioMart queries
+omnipath_cache_search("biomart")
+
+# Find all cached OmniPath downloads
+omnipath_cache_search("omnipathdb\\.org")
+```
+
+## Removing entries
+
+Remove specific entries by key or URL:
+
+```{r eval=FALSE}
+# By URL
+omnipath_cache_remove(url = "https://example.com/data.tsv")
+
+# By key
+key <- omnipath_cache_key(url = "https://example.com/data.tsv")
+omnipath_cache_remove(key = key)
+```
+
+Remove entries by age or status:
+
+```{r eval=FALSE}
+# Remove everything older than 30 days
+omnipath_cache_remove(max_age = 30)
+
+# Remove failed downloads
+omnipath_cache_remove(status = "failed")
+
+# Keep only the latest version of each entry
+omnipath_cache_remove(only_latest = TRUE)
+```
+
+Wipe the entire cache:
+
+```{r eval=FALSE}
+omnipath_cache_remove(wipe = TRUE)
+# or equivalently:
+omnipath_cache_wipe()
+```
+
+## Cleanup
+
+Two cleanup functions keep the cache tidy:
+
+- `omnipath_cache_clean_db()` -- removes database entries whose files have
+  been deleted outside the cache system (e.g. manually).
+- `omnipath_cache_clean()` -- removes orphaned files in the cache directory
+  that are not tracked in the database.
+- `omnipath_cache_autoclean()` -- keeps only the latest ready version of
+  each entry and removes the rest.
+
+# Cache key generation
+
+Keys are deterministic SHA-1 hashes. The same URL and POST parameters
+always produce the same key:
+
+```{r eval=FALSE}
+omnipath_cache_key(url = "https://omnipathdb.org/interactions")
+# [1] "95ee739b50bbfea2c48e5c86a64525084a1dab30"
+```
+
+POST parameters and payloads are included in the hash, so different queries
+to the same endpoint receive different cache keys.
+
+# Locking
+
+Cache operations that modify `cache.json` use a file-based lock
+(`cache.lock`) to prevent corruption from concurrent access. If a lock is
+left behind after a crash, you can remove it manually:
+
+```{r eval=FALSE}
+omnipath_unlock_cache_db()
+```
+
+# Session info {.unnumbered}
+
+```{r session_info, echo=FALSE}
+sessionInfo()
+```
