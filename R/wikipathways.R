@@ -136,9 +136,9 @@ fetch_gpml <- function(wpid) {
     # resp <- request(url) %>%
     #     req_perform()
 
-    read_xml(resp_body_string(resp))
+    # read_xml(resp_body_string(resp))
 
-    # read_xml(path)
+    read_xml(path)
 
 }
 
