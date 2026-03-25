@@ -19,7 +19,6 @@ Retrieves the full pathway list from WikiPathways and optionally filters by
 species.
 }
 \examples{
-.slow_doctest()
 \dontrun{
 pathways <- get_wikipathways_pathways(species = "Homo sapiens")
 head(pathways)

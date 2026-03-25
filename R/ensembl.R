@@ -141,10 +141,12 @@ ensembl_organisms <- function(){
 #' # # . with 46,924 more rows
 #'
 #' @importFrom magrittr %<>% %>% %T>% extract2 equals
-#' @importFrom purrr map_chr
+#' @importFrom purrr map_chr map
 #' @importFrom readr cols col_character read_tsv type_convert
 #' @importFrom dplyr slice_tail slice_head
 #' @importFrom logger log_warn log_trace
+#' @importFrom tibble tibble
+#' @importFrom rlang set_names !!!
 #' @export
 biomart_query <- function(
     attrs = NULL,
@@ -196,32 +198,67 @@ biomart_query <- function(
 
     log_trace('BioMart query: %s', query)
 
-    'biomart' %>%
-    generic_downloader(
-        url_param = list(query),
-        reader = function(...){read_tsv(...)},
-        reader_param = list(
-            col_names = col_names,
-            col_types = cols(.default = col_character()),
-            progress = FALSE
-        ),
-        use_httr = TRUE,
-        http_headers = user_agent()
-    ) %>%
-    {`if`(
-        slice_tail(., n = 1L) %>% extract2(1L) %>% equals('[success]'),
-        slice_head(., n = -1L),
-        {
-            log_warn(
-                'BioMart: missing success flag, data might ',
-                'be incomplete or contain error message!'
-            )
-            log_warn(
-                .[[1]]
-            )
-            .
+    biomart_url <-
+        'biomart' %>%
+        url_parser(url_param = list(query))
+
+    result <-
+        'biomart' %>%
+        generic_downloader(
+            url_param = list(query),
+            reader = function(...){read_tsv(...)},
+            reader_param = list(
+                col_names = col_names,
+                col_types = cols(.default = col_character()),
+                progress = FALSE
+            ),
+            use_httr = TRUE,
+            http_headers = user_agent()
+        ) %>%
+        {`if`(
+            slice_tail(., n = 1L) %>% extract2(1L) %>% equals('[success]'),
+            slice_head(., n = -1L),
+            {
+                log_warn(
+                    'BioMart: missing success flag, data might ',
+                    'be incomplete or contain error message!'
+                )
+                log_warn(
+                    .[[1]]
+                )
+                .
+            }
+        )}
+
+    if(
+        ncol(result) < length(col_names) ||
+        any(grepl('Query ERROR', result[[1L]], fixed = TRUE))
+    ){
+        omnipath_cache_remove(url = biomart_url)
+        msg <- sprintf(
+            paste0(
+                'Failed BioMart query: the Ensembl BioMart ',
+                'returned an error instead of data. This is ',
+                'likely a temporary issue on the Ensembl server ',
+                'side. Response: %s'
+            ),
+            paste(result[[1L]], collapse = ' ')
+        )
+        if(.on_buildserver()){
+            log_warn(msg)
+            warning(msg)
+            empty <- col_names %>%
+                set_names(., .) %>%
+                as.list %>%
+                map(~character(0L)) %>%
+                tibble(!!!.)
+            return(empty)
         }
-    )} %>%
+        log_error_with_info(msg)
+        stop(msg)
+    }
+
+    result %>%
     type_convert(col_types = cols()) %>%
     `attr<-`('oraganism', NCBI_TAX_ID) %T>%
     load_success()

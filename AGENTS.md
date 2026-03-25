@@ -190,6 +190,36 @@ For new developers working with OmnipathR:
    omnipath_cache_clean_db()
    ```
 
+### Slow Doctests (`.slow_doctest`)
+Functions that download data or take a long time must call `.slow_doctest()`
+as the **first line of the function body**. On build servers this makes the
+function return `NULL` immediately, skipping the example within
+Bioconductor's 40-minute timeout. On regular machines it is a no-op.
+
+**Correct placement** (inside the function body):
+```r
+my_function <- function() {
+
+    .slow_doctest()
+
+    # ... actual code ...
+}
+```
+
+**Wrong placement** (in the `@examples` block — will fail R CMD check
+because `.slow_doctest` is not exported):
+```r
+#' @examples
+#' .slow_doctest()
+#' \dontrun{
+#' my_function()
+#' }
+```
+
+When a slow-doctest function calls another slow-doctest function, both
+should have `.slow_doctest()` in their body so each can return early
+independently.
+
 ### Error Handling Guidelines
 - **Proper logging**: Always use this pattern for errors/warnings:
    1. Create message with `sprintf()`

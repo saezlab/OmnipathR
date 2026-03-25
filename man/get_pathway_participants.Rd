@@ -26,7 +26,6 @@ filters by species and/or pathway IDs. Returns a per-pathway list of ChEBI
 IDs.
 }
 \examples{
-.slow_doctest()
 \dontrun{
 tbl <- get_pathway_participants(species = "HSA")
 head(tbl)

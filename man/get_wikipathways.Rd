@@ -27,7 +27,6 @@ Retrieves WikiPathways pathways (optionally filtered by species) and parses
 the GPML to extract metabolite identifiers.
 }
 \examples{
-.slow_doctest()
 \dontrun{
 df <- get_wikipathways(species = "Homo sapiens")
 head(df)

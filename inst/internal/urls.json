@@ -172,6 +172,9 @@
     "metalinksdb": [
         "https://rescued.omnipathdb.org/metalinks_v045.db"
     ],
+    "macdb_download_file": [
+        "https://ngdc.cncb.ac.cn/macdb/api/get_download_file?file_type=%s"
+    ],
     "recon3d_bigg": [
         "http://bigg.ucsd.edu/static/models/Recon3D.mat.gz"
     ],

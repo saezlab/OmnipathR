@@ -18,7 +18,6 @@ Retrieves parent-child relationships between Reactome pathways and
 optionally filters by species.
 }
 \examples{
-.slow_doctest()
 \dontrun{
 relations <- get_reactome_pathway_relations("HSA")
 head(relations)
