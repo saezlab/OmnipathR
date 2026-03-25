@@ -195,14 +195,15 @@ empty_reactome_chebi_map <- function() {
 #'
 #' @export
 #' @examples
-#' .slow_doctest()
 #' \dontrun{
 #' relations <- get_reactome_pathway_relations("HSA")
 #' head(relations)
 #' }
 get_reactome_pathway_relations <- function(species = NULL) {
-    
-    relations <- 
+
+    .slow_doctest()
+
+    relations <-
         generic_downloader(
             url_key = "reactome_pathway_relations",
             reader_param = list(col_names = c("Parent", "Child")),
@@ -248,14 +249,15 @@ get_reactome_pathway_relations <- function(species = NULL) {
 #'
 #' @export
 #' @examples
-#' .slow_doctest()
 #' \dontrun{
 #' pathways <- get_reactome_pathways("Homo sapiens")
 #' head(pathways)
 #' }
 get_reactome_pathways <- function(species = NULL) {
-    
-    pathways <- 
+
+    .slow_doctest()
+
+    pathways <-
         generic_downloader(
             url_key = "reactome_pathways",
             reader_param = list(
@@ -316,7 +318,6 @@ get_reactome_pathways <- function(species = NULL) {
 #'
 #' @export
 #' @examples
-#' .slow_doctest()
 #' \dontrun{
 #' tbl <- get_pathway_participants(species = "HSA")
 #' head(tbl)
@@ -326,8 +327,10 @@ get_pathway_participants <- function(
     species = NULL,
     out_path = NULL
 ) {
-    
-    mapping <- 
+
+    .slow_doctest()
+
+    mapping <-
         generic_downloader(
             url_key = "reactome_chebi2pathways",
             reader_param = list(
@@ -443,18 +446,19 @@ get_pathway_participants <- function(
 #'
 #' @export
 #' @examples
-#' .slow_doctest()
 #' \dontrun{
 #' df <- get_reactome(species = "Homo sapiens")
 #' head(df)
 #' }
-get_reactome <- 
+get_reactome <-
     function(
         species = "Homo sapiens",
         pathway_ids = NULL,
         out_path = NULL
     ) {
-    
+
+        .slow_doctest()
+
         get_pathway_participants(
             pathway_ids = pathway_ids,
             species = species,

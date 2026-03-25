@@ -20,12 +20,13 @@
 #'
 #' @export
 #' @examples
-#' .slow_doctest()
 #' \dontrun{
 #' pathways <- get_wikipathways_pathways(species = "Homo sapiens")
 #' head(pathways)
 #' }
 get_wikipathways_pathways <- function(species = NULL) {
+
+    .slow_doctest()
 
     data <- generic_downloader(
         url_key = "wikipathways_list",
@@ -295,7 +296,6 @@ get_metabolite_pathway_table <- function(
 #'
 #' @export
 #' @examples
-#' .slow_doctest()
 #' \dontrun{
 #' df <- get_wikipathways(species = "Homo sapiens")
 #' head(df)
@@ -305,6 +305,8 @@ get_wikipathways <- function(
     out_path = NULL,
     failures_path = NULL
 ) {
+
+    .slow_doctest()
 
     pathways <- get_wikipathways_pathways(species = species)
     metabolite_tbl <- get_metabolite_pathway_table(

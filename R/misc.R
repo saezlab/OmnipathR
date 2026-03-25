@@ -983,7 +983,7 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 #' @return This function does not return anything, its parent returns
 #'     `value`.
 #'
-#' @export
+#' @noRd
 .slow_doctest <- function(value = NULL, env = parent.frame()){
 
     if(.doctest_bypass() && .on_buildserver()){
