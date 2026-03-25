@@ -333,6 +333,15 @@ metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
         slice(1L) %>%
         pull(path)
 
+    if (length(sbml_path) == 0L) {
+        log_warn(
+            'No SBML file available for model `%s` (id=%s).',
+            model_row$name,
+            model_row$id
+        )
+        return(NULL)
+    }
+
     log_info(
         'Downloading model: %s %s',
         model_row$name,

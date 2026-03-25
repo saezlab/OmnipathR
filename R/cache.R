@@ -1686,6 +1686,10 @@ omnipath_cache_version <- function(
 #' @export
 omnipath_cache_key <- function(url, post = NULL, payload = NULL){
 
+    if (length(url) == 0L) {
+        return(character(0L))
+    }
+
     url %>%
     omnipath_url_to_list(post, payload) %>%
     pmap(list) %>%
