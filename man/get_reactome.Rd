@@ -23,7 +23,6 @@ Retrieves ChEBI identifiers mapped to Reactome pathways and returns a
 per-pathway list of ChEBI IDs.
 }
 \examples{
-.slow_doctest()
 \dontrun{
 df <- get_reactome(species = "Homo sapiens")
 head(df)

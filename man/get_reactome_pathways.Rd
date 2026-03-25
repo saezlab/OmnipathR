@@ -18,7 +18,6 @@ Retrieves Reactome pathway IDs, names and species. Optionally filters by
 species.
 }
 \examples{
-.slow_doctest()
 \dontrun{
 pathways <- get_reactome_pathways("Homo sapiens")
 head(pathways)
