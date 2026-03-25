@@ -34,7 +34,9 @@
 #' @return A data frame (tibble) of GEMs.
 #'
 #' @examples
+#' \dontrun{
 #' metabolic_atlas_models()
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
@@ -42,6 +44,8 @@
 #' @importFrom dplyr rename mutate select coalesce
 #' @export
 metabolic_atlas_list_models <- function(integrated = FALSE) {
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     gemodelset <- sample <- description <- description2 <- NULL
@@ -79,11 +83,13 @@ metabolic_atlas_list_models <- function(integrated = FALSE) {
 #'     from xml2 if SBMLR is not available.
 #'
 #' @examples
+#' \dontrun{
 #' # Load model by ID
 #' model <- metabolic_atlas_model(1)
 #'
 #' # Load first human model
 #' model <- metabolic_atlas_model(tissue = "Cervix")
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
@@ -93,6 +99,8 @@ metabolic_atlas_list_models <- function(integrated = FALSE) {
 #' @importFrom logger log_info log_error log_warn
 #' @export
 metabolic_atlas_models <- function(..., return_xml = FALSE) {
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     name <- files <- path <- NULL
