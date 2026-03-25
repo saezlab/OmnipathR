@@ -1,130 +1,76 @@
 #!/usr/bin/env Rscript
 
-#' Reactome species table
+#
+#  This file is part of the `OmnipathR` R package
+#
+#  Copyright
+#  2018-2026
+#  Saez Lab, Uniklinik RWTH Aachen, Heidelberg University
+#
+#  File author(s): Alberto Valdeolivas
+#                  Dénes Türei (turei.denes@gmail.com)
+#                  Attila Gábor
+#
+#  Distributed under the MIT (Expat) License.
+#  See accompanying file `LICENSE` or find a copy at
+#      https://directory.fsf.org/wiki/License:Expat
+#
+#  Website: https://r.omnipathdb.org/
+#  Git repo: https://github.com/saezlab/OmnipathR
+#
+
+
+#' Reactome species codes
 #'
-#' @return A tibble with `code` and `name`.
-#'
-#' @importFrom tibble tibble
+#' Named character vector: latin names to three-letter Reactome codes.
 #'
 #' @noRd
-reactome_species_table <- function() {
-    
-    tibble(
-        code = c(
-            "BTA", "CEL", "CFA", "DRE",
-            "DDI", "DME", "GGA", "HSA",
-            "MMU", "MTU", "PFA", "RNO",
-            "SCE", "SPO", "SSC", "XTR"
-        ),
-        name = c(
-            "Bos taurus",
-            "Caenorhabditis elegans",
-            "Canis familiaris",
-            "Danio rerio",
-            "Dictyostelium discoideum",
-            "Drosophila melanogaster",
-            "Gallus gallus",
-            "Homo sapiens",
-            "Mus musculus",
-            "Mycobacterium tuberculosis",
-            "Plasmodium falciparum",
-            "Rattus norvegicus",
-            "Saccharomyces cerevisiae",
-            "Schizosaccharomyces pombe",
-            "Sus scrofa",
-            "Xenopus tropicalis"
-        )
-    )
-    
+REACTOME_SPECIES <- c(
+    `Bos taurus` = 'BTA',
+    `Caenorhabditis elegans` = 'CEL',
+    `Canis familiaris` = 'CFA',
+    `Danio rerio` = 'DRE',
+    `Dictyostelium discoideum` = 'DDI',
+    `Drosophila melanogaster` = 'DME',
+    `Gallus gallus` = 'GGA',
+    `Homo sapiens` = 'HSA',
+    `Mus musculus` = 'MMU',
+    `Mycobacterium tuberculosis` = 'MTU',
+    `Plasmodium falciparum` = 'PFA',
+    `Rattus norvegicus` = 'RNO',
+    `Saccharomyces cerevisiae` = 'SCE',
+    `Schizosaccharomyces pombe` = 'SPO',
+    `Sus scrofa` = 'SSC',
+    `Xenopus tropicalis` = 'XTR'
+)
+
+
+#' Reactome species code from organism identifier
+#'
+#' @param organism Character or integer: any organism name or identifier
+#'     accepted by \code{\link{latin_name}}.
+#'
+#' @return Character: three-letter Reactome code, or \code{NA} if the
+#'     organism is not in Reactome.
+#'
+#' @importFrom magrittr %>%
+#' @importFrom logger log_warn
+#'
+#' @noRd
+reactome_species_code <- function(organism) {
+
+    organism %<>% latin_name
+
+    code <- REACTOME_SPECIES[organism]
+
+    if (is.na(code)) {
+        log_warn('Unknown Reactome species: `%s`.', organism)
+    }
+
+    code
+
 }
 
-#' Normalize Reactome species input
-#'
-#' @param species Character: species code or full species name.
-#'
-#' @return List with `code`, `name` and `valid`.
-#'
-#' @importFrom logger log_warn
-#' @importFrom stringr str_trim
-#'
-#' @noRd
-normalize_reactome_species <- function(species) {
-    
-    if (is.null(species)) {
-        return(
-            list(code = NULL, name = NULL, valid = TRUE)
-        )
-    }
-    
-    if (length(species) == 0) {
-        log_warn(
-            sprintf("Reactome species is empty.")
-        )
-        
-        return(
-            list(code = NA_character_, name = NA_character_, valid = FALSE)
-        )
-    }
-    
-    if (length(species) > 1) {
-        log_warn(
-            sprintf(
-                "Multiple Reactome species values provided; using first: %s",
-                species[[1]]
-            )
-        )
-        species <- species[[1]]
-    }
-    
-    species <- str_trim(
-        as.character(species)
-    )
-    
-    if (is.na(species) || species == "") {
-        log_warn(
-            sprintf(
-                "Reactome species is empty."
-            )
-        )
-        
-        return(
-            list(code = NA_character_, name = NA_character_, valid = FALSE)
-        )
-    }
-    
-    table <- reactome_species_table()
-    species_upper <- toupper(species)
-    
-    idx <- match(species_upper, table$code)
-    
-    if (!is.na(idx)) {
-        return(
-            list(code = table$code[idx], name = table$name[idx], valid = TRUE)
-        )
-    }
-    
-    idx <- match(tolower(species), tolower(table$name))
-    
-    if (!is.na(idx)) {
-        return(
-            list(code = table$code[idx], name = table$name[idx], valid = TRUE)
-        )
-    }
-    
-    log_warn(
-        sprintf(
-            "Unknown Reactome species: %s", 
-            species
-        )
-    )
-    
-    list(
-        code = NA_character_, 
-        name = NA_character_, 
-        valid = FALSE
-    )
-    
-}
 
 #' Empty Reactome relations table
 #'
@@ -134,13 +80,11 @@ normalize_reactome_species <- function(species) {
 #'
 #' @noRd
 empty_reactome_relations <- function() {
-    
-    tibble(
-        Parent = character(), 
-        Child = character()
-    )
-    
+
+    tibble(Parent = character(), Child = character())
+
 }
+
 
 #' Empty Reactome pathways table
 #'
@@ -150,25 +94,26 @@ empty_reactome_relations <- function() {
 #'
 #' @noRd
 empty_reactome_pathways <- function() {
-    
+
     tibble(
         pathway_id = character(),
         pathway_name = character(),
         species = character()
     )
-    
+
 }
+
 
 #' Empty Reactome ChEBI mapping table
 #'
-#' @return A tibble with columns `pathway_id`, `pathway_name`, `pathway_url`,
-#'   `species`, `chebi_ids`.
+#' @return A tibble with columns `pathway_id`, `pathway_name`,
+#'     `pathway_url`, `species`, `chebi_ids`.
 #'
 #' @importFrom tibble tibble
 #'
 #' @noRd
 empty_reactome_chebi_map <- function() {
-    
+
     tibble(
         pathway_id = character(),
         pathway_name = character(),
@@ -176,18 +121,19 @@ empty_reactome_chebi_map <- function() {
         species = character(),
         chebi_ids = character()
     )
-    
+
 }
+
 
 #' Reactome pathway relations
 #'
 #' Retrieves parent-child relationships between Reactome pathways and
-#' optionally filters by species.
+#' optionally filters by organism.
 #'
-#' @param species Character: species code (e.g. "HSA") or full name
-#'   (e.g. "Homo sapiens"). If `NULL`, returns all species.
+#' @param organism Character or integer: organism name, common name or
+#'     NCBI Taxonomy ID. If \code{NULL}, returns all organisms.
 #'
-#' @return A tibble with columns `Parent`, `Child`.
+#' @return A tibble with columns \code{Parent}, \code{Child}.
 #'
 #' @importFrom dplyr filter transmute
 #' @importFrom stringr fixed str_detect
@@ -196,274 +142,259 @@ empty_reactome_chebi_map <- function() {
 #' @export
 #' @examples
 #' \dontrun{
-#' relations <- get_reactome_pathway_relations("HSA")
+#' relations <- reactome_pathway_relations(9606)
 #' head(relations)
 #' }
-get_reactome_pathway_relations <- function(species = NULL) {
+reactome_pathway_relations <- function(organism = NULL) {
 
     .slow_doctest()
+
+    # NSE vs. R CMD check workaround
+    Parent <- Child <- NULL
 
     relations <-
         generic_downloader(
-            url_key = "reactome_pathway_relations",
-            reader_param = list(col_names = c("Parent", "Child")),
-            resource = "Reactome"
+            url_key = 'reactome_pathway_relations',
+            reader_param = list(col_names = c('Parent', 'Child')),
+            resource = 'Reactome'
         )
-    
-    if (is.null(species)) {
-        return(
-            relations %>% transmute(Parent, Child)
-        )
-    }
-    
-    sp <- normalize_reactome_species(species)
-    if (!sp$valid) {
-        return(
+
+    if (is.null(organism)) {
+
+        relations %>% transmute(Parent, Child)
+
+    } else {
+
+        code <- reactome_species_code(organism)
+
+        if (is.na(code)) {
             empty_reactome_relations()
-        )
+        } else {
+            pattern <- sprintf('R-%s-', code)
+            relations %>%
+                filter(
+                    str_detect(Parent, fixed(pattern)),
+                    str_detect(Child, fixed(pattern))
+                ) %>%
+                transmute(Parent, Child)
+        }
+
     }
-    
-    pattern <- sprintf("R-%s-", sp$code)
-    
-    relations %>%
-        filter(
-            str_detect(Parent, fixed(pattern)),
-            str_detect(Child, fixed(pattern))
-        ) %>%
-        transmute(Parent, Child)
-    
+
 }
+
 
 #' Reactome pathways
 #'
-#' Retrieves Reactome pathway IDs, names and species. Optionally filters by
-#' species.
+#' Retrieves Reactome pathway IDs, names and species. Optionally filters
+#' by organism.
 #'
-#' @param species Character: species code (e.g. "HSA") or full name
-#'   (e.g. "Homo sapiens"). If `NULL`, returns all species.
+#' @param organism Character or integer: organism name, common name or
+#'     NCBI Taxonomy ID. If \code{NULL}, returns all organisms.
 #'
-#' @return A tibble with columns `pathway_id`, `pathway_name`, `species`.
+#' @return A tibble with columns \code{pathway_id}, \code{pathway_name},
+#'     \code{species}.
 #'
 #' @importFrom dplyr filter transmute
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' pathways <- get_reactome_pathways("Homo sapiens")
+#' pathways <- reactome_pathways(9606)
 #' head(pathways)
 #' }
-get_reactome_pathways <- function(species = NULL) {
+reactome_pathways <- function(organism = NULL) {
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround
+    pathway_id <- pathway_name <- species <- NULL
+
     pathways <-
         generic_downloader(
-            url_key = "reactome_pathways",
+            url_key = 'reactome_pathways',
             reader_param = list(
-                col_names = c("pathway_id", "pathway_name", "species")
+                col_names = c('pathway_id', 'pathway_name', 'species')
             ),
-            resource = "Reactome"
+            resource = 'Reactome'
         )
-    
-    if (is.null(species)) {
-        return(
-            pathways %>% 
-                transmute(
-                    pathway_id, pathway_name, species
-                )
-        )
-    }
-    
-    sp <- normalize_reactome_species(species)
-    
-    if (!sp$valid) {
-        return(
+
+    if (is.null(organism)) {
+
+        pathways %>% transmute(pathway_id, pathway_name, species)
+
+    } else {
+
+        organism %<>% latin_name
+
+        if (is.na(organism)) {
             empty_reactome_pathways()
-        )
+        } else {
+            pathways %>%
+                filter(.data$species == organism) %>%
+                transmute(pathway_id, pathway_name, species)
+        }
+
     }
-    
-    pathways %>%
-        filter(
-            species == sp$name
-        ) %>%
-        transmute(
-            pathway_id, pathway_name, species
-        )
-    
+
 }
 
-#' Reactome pathway participants (ChEBI mapping)
+
+#' Reactome ChEBI pathway mapping
 #'
 #' Retrieves ChEBI identifiers mapped to Reactome pathways and optionally
-#' filters by species and/or pathway IDs. Returns a per-pathway list of ChEBI
-#' IDs.
+#' filters by organism and/or pathway IDs. Returns a per-pathway list of
+#' ChEBI IDs.
 #'
-#' @param pathway_ids Character: Reactome pathway IDs to keep. If `NULL`, keeps
-#'   all pathways (subject to species filter).
-#' @param species Character: species code (e.g. "HSA") or full name
-#'   (e.g. "Homo sapiens"). If `NULL`, returns all species.
-#' @param out_path Character: optional CSV output path for the main table.
+#' @param pathway_ids Character: Reactome pathway IDs to keep. If
+#'     \code{NULL}, keeps all pathways (subject to organism filter).
+#' @param organism Character or integer: organism name, common name or
+#'     NCBI Taxonomy ID. If \code{NULL}, returns all organisms.
+#' @param out_path Character: optional CSV output path.
 #'
-#' @return A tibble with columns `pathway_id`, `pathway_name`, `pathway_url`,
-#'   `species`, `chebi_ids`. When writing to CSV, the list
-#'   column is serialized by `write.csv`.
+#' @return A tibble with columns \code{pathway_id}, \code{pathway_name},
+#'     \code{pathway_url}, \code{species}, \code{chebi_ids}.
 #'
-#' @importFrom dplyr filter group_by summarise
+#' @importFrom dplyr filter group_by summarise mutate if_else
 #' @importFrom logger log_warn
-#' @importFrom magrittr %>%
-#' @importFrom readr cols col_character
-#' @importFrom stringr str_detect
-#' @importFrom utils write.csv
+#' @importFrom magrittr %>% %<>%
+#' @importFrom purrr walk
+#' @importFrom readr cols col_character write_csv
+#' @importFrom stringr str_detect str_trim
+#' @importFrom rlang .data
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' tbl <- get_pathway_participants(species = "HSA")
+#' tbl <- reactome_chebi_pathways(organism = 9606)
 #' head(tbl)
 #' }
-get_pathway_participants <- function(
+reactome_chebi_pathways <- function(
     pathway_ids = NULL,
-    species = NULL,
+    organism = NULL,
     out_path = NULL
 ) {
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround
+    chebi_id <- pathway_id <- pathway_name <- pathway_url <-
+        species <- chebi_ids <- NULL
+
     mapping <-
         generic_downloader(
-            url_key = "reactome_chebi2pathways",
+            url_key = 'reactome_chebi2pathways',
             reader_param = list(
                 col_names = c(
-                    "chebi_id",
-                    "pathway_id",
-                    "pathway_url",
-                    "pathway_name",
-                    "evidence",
-                    "species"
+                    'chebi_id', 'pathway_id', 'pathway_url',
+                    'pathway_name', 'evidence', 'species'
                 ),
                 col_types = cols(.default = col_character())
             ),
-            resource = "Reactome"
+            resource = 'Reactome'
         )
-    
-    if (!is.null(species)) {
-        sp <- normalize_reactome_species(species)
-        if (!sp$valid) {
-            return(
-                empty_reactome_chebi_map()
-            )
+
+    if (!is.null(organism)) {
+
+        organism %<>% latin_name
+
+        if (is.na(organism)) {
+            return(empty_reactome_chebi_map())
         }
-        mapping <- mapping %>% 
-            filter(
-                species == sp$name
-            )
+
+        mapping %<>% filter(.data$species == organism)
+
     }
-    
+
     if (!is.null(pathway_ids)) {
-        pathway_ids <- as.character(pathway_ids)
-        
-        invalid_ids <- 
+
+        pathway_ids %<>% as.character
+
+        invalid_ids <-
             pathway_ids[
                 is.na(pathway_ids) |
                 !nzchar(pathway_ids) |
-                !str_detect(pathway_ids, "^R-[A-Z]{3}-")
+                !str_detect(pathway_ids, '^R-[A-Z]{3}-')
             ]
-        
-        if (length(invalid_ids) > 0) {
-            unique(invalid_ids) %>%
-                sort() %>%
-                lapply(
-                    function(id) {
-                        log_warn(sprintf("Invalid Reactome pathway ID: %s", id))
-                    }
-                )
+
+        if (length(invalid_ids) > 0L) {
+            invalid_ids %>%
+                unique %>%
+                sort %>%
+                walk(~log_warn('Invalid Reactome pathway ID: %s', .x))
         }
-        pathway_ids <- 
-            setdiff(
-                pathway_ids, 
-                invalid_ids
-            )
-        
-        mapping <- mapping %>% 
-            filter(
-                pathway_id %in% pathway_ids
-            )
+
+        pathway_ids %<>% setdiff(invalid_ids)
+        mapping %<>% filter(pathway_id %in% pathway_ids)
+
     }
-    
-    mapping <- mapping %>%
-        filter(!is.na(chebi_id) & chebi_id != "") %>%
+
+    mapping %<>%
+        filter(!is.na(chebi_id), chebi_id != '') %>%
         mutate(
-            chebi_id = str_trim(chebi_id),
-            chebi_id = ifelse(
-                str_detect(chebi_id, "^CHEBI:"),
-                chebi_id,
-                paste0("CHEBI:", chebi_id)
-            )
-        )
-    
-    out <- mapping %>%
-        group_by(
-            pathway_id, 
-            pathway_name, 
-            pathway_url, 
-            species
+            chebi_id = chebi_id %>%
+                str_trim %>%
+                {if_else(str_detect(., '^CHEBI:'), ., paste0('CHEBI:', .))}
         ) %>%
+        group_by(pathway_id, pathway_name, pathway_url, species) %>%
         summarise(
-            chebi_ids = paste0(sort(unique(chebi_id)), collapse = ", "),
-            .groups = "drop"
+            chebi_ids = chebi_id %>%
+                unique %>%
+                sort %>%
+                paste(collapse = ', '),
+            .groups = 'drop'
         )
-    
-    if (nrow(out) == 0) {
-        out <- empty_reactome_chebi_map()
+
+    if (nrow(mapping) == 0L) {
+        mapping <- empty_reactome_chebi_map()
     }
-    
+
     if (!is.null(out_path)) {
-        write.csv(
-            out, 
-            out_path, 
-            row.names = FALSE, 
-            fileEncoding = "UTF-8"
-        )
+        write_csv(mapping, out_path)
     }
-    
-    out
-    
+
+    mapping
+
 }
 
-#' Get Reactome ChEBI mappings per pathway
+
+#' Reactome ChEBI mappings
 #'
 #' Retrieves ChEBI identifiers mapped to Reactome pathways and returns a
-#' per-pathway list of ChEBI IDs.
+#' per-pathway list of ChEBI IDs as a data frame.
 #'
-#' @param species Character: species code (e.g. "HSA") or full name
-#'   (e.g. "Homo sapiens"). If `NULL`, returns all species.
+#' @param organism Character or integer: organism name, common name or
+#'     NCBI Taxonomy ID. Defaults to human.
 #' @param pathway_ids Character: optional list of pathway IDs to query.
-#' @param out_path Character: optional CSV output path for the main table.
+#' @param out_path Character: optional CSV output path.
 #'
-#' @return A data.frame with columns `pathway_id`, `pathway_name`, `pathway_url`,
-#'   `species`, `chebi_ids`.
+#' @return A data frame with columns \code{pathway_id},
+#'     \code{pathway_name}, \code{pathway_url}, \code{species},
+#'     \code{chebi_ids}.
+#'
+#' @importFrom magrittr %>%
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' df <- get_reactome(species = "Homo sapiens")
+#' df <- reactome_chebi(organism = 9606)
 #' head(df)
 #' }
-get_reactome <-
-    function(
-        species = "Homo sapiens",
-        pathway_ids = NULL,
-        out_path = NULL
-    ) {
+reactome_chebi <- function(
+    organism = 9606L,
+    pathway_ids = NULL,
+    out_path = NULL
+) {
 
-        .slow_doctest()
+    .slow_doctest()
 
-        get_pathway_participants(
-            pathway_ids = pathway_ids,
-            species = species,
-            out_path = out_path
-        ) %>%
-            as.data.frame()
-        
+    reactome_chebi_pathways(
+        pathway_ids = pathway_ids,
+        organism = organism,
+        out_path = out_path
+    ) %>%
+    as.data.frame
+
 }
