@@ -339,7 +339,7 @@ metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
     # NSE vs. R CMD check workaround
     id <- organism <- tissue <- cell_type <- condition <-
         reaction_count <- metabolite_count <- gene_count <- year <-
-        format <- NULL
+        format <- path <- NULL
 
     use_sbmlr <- requireNamespace('SBMLR', quietly = TRUE) & !return_xml
 
