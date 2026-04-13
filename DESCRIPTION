@@ -102,6 +102,7 @@ Suggests:
     parallelMap,
     ParamHelpers,
     R.matlab,
+    SBMLR,
     sigmajs,
     smoof,
     testthat
