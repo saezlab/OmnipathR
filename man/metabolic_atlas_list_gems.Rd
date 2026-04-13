@@ -17,6 +17,8 @@ A data frame (tibble) with standard GEMs metadata and release information.
 Retrieves information about standard GEMs from Metabolic Atlas.
 }
 \examples{
+\dontrun{
 metabolic_atlas_list_gems()
+}
 
 }

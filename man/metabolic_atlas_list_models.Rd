@@ -21,6 +21,8 @@ for various organisms, tissues and conditions. This function returns a list
 of the available GEMs. Read more at \url{https://metabolicatlas.org}.
 }
 \examples{
+\dontrun{
 metabolic_atlas_models()
+}
 
 }
