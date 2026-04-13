@@ -27,6 +27,9 @@
 #' @noRd
 patch_httr2_keep_handle <- function() {
 
+    # NSE vs. R CMD check workaround (used inside expr())
+    handle <- ORIGINAL <- NULL
+
     PATCHED <- 'omnipathr_patched'
 
     if (requireNamespace('httr2', quietly = TRUE)) {

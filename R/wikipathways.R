@@ -49,7 +49,7 @@ wikipathways_pathways <- function(organism = NULL) {
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
-    organism_species <- NULL
+    organism_species <- pathway_id <- pathway_name <- pathway_url <- NULL
 
     data <- generic_downloader(
         url_key = 'wikipathways_list',

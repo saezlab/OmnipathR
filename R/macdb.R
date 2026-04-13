@@ -90,6 +90,10 @@ macdb_metabolite_cancer_associations <- function() {
 
     .slow_doctest()
 
+    # NSE vs. R CMD check workaround
+    `case_control_p-value` <- log2FC <- case_concentration <-
+        control_concentration <- NULL
+
     met <- macdb_download_table('metabolite')
     study <- macdb_download_table('study')
 

@@ -276,7 +276,7 @@ cosmos_ksn <- function(ksn_list){
 
     # NSE vs. R CMD check workaround
     residue_type <- residue_offset <- substrate_genesymbol <-
-        modification <- mor <- target <- NULL
+        modification <- mor <- target <- enzyme_genesymbol <- NULL
 
     KSN <-
         enzyme_substrate(resources = ksn_list) %>%

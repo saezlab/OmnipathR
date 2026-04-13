@@ -85,10 +85,10 @@ metabolic_atlas_list_models <- function(integrated = FALSE) {
 #' @examples
 #' \dontrun{
 #' # Load model by ID
-#' model <- metabolic_atlas_model(1)
+#' model <- metabolic_atlas_models(1)
 #'
 #' # Load first human model
-#' model <- metabolic_atlas_model(tissue = "Cervix")
+#' model <- metabolic_atlas_models(tissue = "Cervix")
 #' }
 #'
 #' @importFrom magrittr %>%
@@ -103,7 +103,7 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
-    name <- files <- path <- NULL
+    name <- files <- path <- id <- NULL
 
     sbmlr_available <- requireNamespace("SBMLR", quietly = TRUE)
 
@@ -156,7 +156,9 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 #'     version, or NULL if the `gert` or `git2r` packages are not available.
 #'
 #' @examples
+#' \dontrun{
 #' metabolic_atlas_list_gems()
+#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
@@ -165,6 +167,11 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 #' @importFrom tidyr unnest
 #' @export
 metabolic_atlas_list_gems <- function() {
+
+    .slow_doctest()
+
+    # NSE vs. R CMD check workaround
+    git_host <- git_repo <- gem_info <- latest_version <- NULL
 
     download_to_cache("metatlas_standard_gems_index") %>%
     safe_json() %>%
@@ -331,7 +338,8 @@ metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
 
     # NSE vs. R CMD check workaround
     id <- organism <- tissue <- cell_type <- condition <-
-        reaction_count <- metabolite_count <- gene_count <- year <- NULL
+        reaction_count <- metabolite_count <- gene_count <- year <-
+        format <- NULL
 
     use_sbmlr <- requireNamespace('SBMLR', quietly = TRUE) & !return_xml
 
@@ -362,9 +370,11 @@ metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
             compact_repr
     )
 
+    readSBML <- SBMLR %:::% readSBML
+
     silent_sbml <- function(x) {
         capture.output(
-            assign('result', SBMLR::readSBML(x), envir = environment()),
+            result <- readSBML(x),
             type = 'output'
         )
         result
