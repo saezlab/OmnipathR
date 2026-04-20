@@ -370,7 +370,7 @@ metabolic_atlas_model <- function(model_row, return_xml = FALSE) {
             compact_repr
     )
 
-    readSBML <- SBMLR %:::% readSBML
+    readSBML <- `%:::%`('SBMLR', 'readSBML')
 
     silent_sbml <- function(x) {
         capture.output(
