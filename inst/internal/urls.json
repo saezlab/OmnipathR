@@ -105,7 +105,7 @@
         "https://zenodo.org/record/3260758/files/expression_settings.rds"
     ],
     "hpo": [
-        "https://release-assets.githubusercontent.com/github-production-release-asset/41063438/075bd655-de72-4dd8-9799-bef6eefa2671"
+        "https://github.com/obophenotype/human-phenotype-ontology/releases/latest/download/genes_to_phenotype.txt"
     ],
     "go_annot": [
         "http://current.geneontology.org/annotations/goa_%s.gaf.gz"

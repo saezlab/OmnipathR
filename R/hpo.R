@@ -52,6 +52,8 @@
 #' @importFrom tidyselect where
 hpo_download <- function(){
 
+    .slow_doctest()
+
     'hpo' %>%
     generic_downloader(
         reader_param = list(
