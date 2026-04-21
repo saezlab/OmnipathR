@@ -6,6 +6,9 @@
 \usage{
 recon3d_raw_vmh()
 }
+\value{
+List: the Recon3D model as parsed from the VMH SBML file.
+}
 \description{
 Recon-3D model from Virtual Metabolic Human
 }

@@ -6,6 +6,9 @@
 \usage{
 recon3d_raw()
 }
+\value{
+List: the Recon3D model as parsed from JSON.
+}
 \description{
 Recon-3D from JSON
 }

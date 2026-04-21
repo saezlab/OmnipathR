@@ -6,6 +6,9 @@
 \usage{
 recon3d_raw_matlab()
 }
+\value{
+List: the Recon3D model as read from the Matlab file.
+}
 \description{
 Returns the content extracted from Matlab file.
 }
