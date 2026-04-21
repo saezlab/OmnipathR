@@ -132,11 +132,7 @@ annotations <- function(proteins = NULL, wide = FALSE, ...){
                 )
             )
 
-        cat('Downloading ')
-
         for(proteins_chunk in proteins_chunks){
-
-            cat('.')
 
             parts <- append(
                 parts,
@@ -151,8 +147,6 @@ annotations <- function(proteins = NULL, wide = FALSE, ...){
             )
 
         }
-
-        cat(' ready.\n')
 
         result <- do.call(rbind, parts)
 

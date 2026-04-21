@@ -205,8 +205,9 @@ wikipathways_metabolite_table <- function(
         )
     )
 
-    rows <- vector('list', n)
-    failures <- list()
+    state <- new.env(parent = emptyenv())
+    state$rows <- vector('list', n)
+    state$failures <- list()
 
     for (i in seq_len(n)) {
 
@@ -214,7 +215,7 @@ wikipathways_metabolite_table <- function(
 
         pb$tick(tokens = list(
             wpid = wpid %>% str_trunc(12L) %>% str_pad(12L, 'right'),
-            nfail = length(failures)
+            nfail = length(state$failures)
         ))
 
         tryCatch({
@@ -235,7 +236,7 @@ wikipathways_metabolite_table <- function(
                 unique %>%
                 sort
 
-            rows[[i]] <- tibble(
+            state$rows[[i]] <- tibble(
                 pathway_id = wpid,
                 pathway_name = pathways_tbl$pathway_name[i],
                 pathway_url = pathways_tbl$pathway_url[i],
@@ -244,12 +245,12 @@ wikipathways_metabolite_table <- function(
 
         }, error = function(e) {
 
-            failures[[length(failures) + 1L]] <<- tibble(
+            state$failures[[length(state$failures) + 1L]] <- tibble(
                 pathway_id = wpid,
                 pathway_name = pathways_tbl$pathway_name[i],
                 error = conditionMessage(e)
             )
-            rows[[i]] <<- NULL
+            state$rows[[i]] <- NULL
             log_warn(
                 'WikiPathways GPML parse failed for %s: %s',
                 wpid,
@@ -260,10 +261,10 @@ wikipathways_metabolite_table <- function(
 
     }
 
-    result <- bind_rows(rows)
+    result <- bind_rows(state$rows)
 
-    if (length(failures) > 0L) {
-        failures_tbl <- bind_rows(failures)
+    if (length(state$failures) > 0L) {
+        failures_tbl <- bind_rows(state$failures)
         attr(result, 'failures') <- failures_tbl
         log_warn(
             'WikiPathways: %d pathway(s) failed.',

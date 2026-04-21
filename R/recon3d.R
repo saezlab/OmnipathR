@@ -25,6 +25,8 @@
 #'
 #' Returns the content extracted from Matlab file.
 #'
+#' @return List: the Recon3D model as read from the Matlab file.
+#'
 #' @importFrom magrittr %>%
 #' @importFrom R.utils gunzip
 #' @export
@@ -41,6 +43,8 @@ recon3d_raw_matlab <- function() {
 
 
 #' Recon-3D from JSON
+#'
+#' @return List: the Recon3D model as parsed from JSON.
 #'
 #' @examples
 #' recon3d_raw()
@@ -186,6 +190,8 @@ recon3d_compartments <- function(){
 
 
 #' Recon-3D model from Virtual Metabolic Human
+#'
+#' @return List: the Recon3D model as parsed from the VMH SBML file.
 #'
 #' @examples
 #' recon3d_raw_vmh()

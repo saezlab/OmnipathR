@@ -20,18 +20,6 @@
 #
 
 
-#' Try how non standard evaluation works
-#'
-#' @noRd
-nse_test <- function(a, ..., b = FALSE){
-
-    print(a)
-    print(b)
-
-    print(enquos(...) %>% map(.nse_ensure_str))
-
-}
-
 
 #' All UniProt ACs for one organism
 #'
