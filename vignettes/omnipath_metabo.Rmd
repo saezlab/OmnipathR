@@ -1,0 +1,178 @@
+---
+title: "The omnipath-metabo Web Service Client"
+author:
+    - name: OmniPath Team
+output:
+    BiocStyle::html_document:
+        number_sections: yes
+        toc: yes
+        toc_depth: 4
+        pandoc_args:
+            - '--lua-filter=scholarly-metadata.lua'
+            - '--lua-filter=author-info-blocks.lua'
+vignette: >
+    %\VignetteIndexEntry{The omnipath-metabo Web Service Client}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+# Overview
+
+[omnipath-metabo](https://github.com/saezlab/omnipath-metabo) is a Python
+package that builds and serves metabolite, compound and reaction-related
+prior-knowledge, most notably the **COSMOS PKN** (prior-knowledge network
+for multi-omics causal reasoning) and a growing set of other **specialized
+networks** (e.g. MetalinksDB, LIANA). It exposes this data over a REST API
+at `https://metabo.omnipathdb.org`.
+
+The `metabo_*` functions in OmnipathR are a thin, cached client for that
+web service. They are **unrelated** to `cosmos_pkn()` (see
+`vignette("cosmos")`), which builds a PKN locally from STITCH, the Chalmers
+GEM and OmniPath -- the two do not share code or output, and using one does
+not preclude using the other.
+
+```{r eval=FALSE}
+library(OmnipathR)
+```
+
+# Discovering what's available
+
+The set of PKN categories, organisms and contributing resources reflects
+whatever the service currently has built and cached -- nothing here is
+hard-coded in the package, so these calls always return the current state
+of the service:
+
+```{r eval=FALSE}
+metabo_cosmos_categories()
+#> [1] "transporters"      "receptors"         "allosteric"
+#> [4] "enzyme_metabolite" "ppi"               "grn"
+
+metabo_cosmos_organisms()
+#> [1]  9606 10090 10116
+
+metabo_cosmos_resources()
+#> # A tibble: 12 x 2
+#>   category     resource
+#>   <chr>        <chr>
+#> 1 allosteric   BRENDA
+#> ...
+```
+
+# Retrieving a COSMOS PKN subset
+
+`metabo_cosmos_pkn()` retrieves the PKN for one organism, optionally
+restricted to one or more categories and/or contributing resources:
+
+```{r eval=FALSE}
+# One category
+transporters <- metabo_cosmos_pkn(organism = 9606, categories = "transporters")
+
+# Several categories
+metabolic <- metabo_cosmos_pkn(
+    organism = 9606,
+    categories = c("enzyme_metabolite", "transporters")
+)
+
+# The full PKN (default)
+full_pkn <- metabo_cosmos_pkn(organism = "human")
+```
+
+Every interaction carries `source`, `target`, an effect sign (`mor`), the
+contributing `resource`, and an `attrs` list column preserving
+resource-specific metadata (such as `reaction_id` for metabolic-reaction
+edges) for future use -- see `?metabo_cosmos_pkn` for the full column
+reference.
+
+Results are cached locally through OmnipathR's existing download cache, so
+repeating an identical query does not re-hit the network:
+
+```{r eval=FALSE}
+# First call downloads and caches
+metabo_cosmos_pkn(organism = 9606, categories = "transporters")
+
+# Second, identical call is served from the local cache
+metabo_cosmos_pkn(organism = 9606, categories = "transporters")
+```
+
+# Combined, purpose-named views
+
+Two convenience wrappers cover the most common combinations without
+needing to assemble a category list by hand:
+
+```{r eval=FALSE}
+# The complete network connecting metabolism to signalling and gene
+# regulation -- equivalent to categories = "all"
+signaling_pkn <- metabo_metabolic_signaling_pkn(organism = 9606)
+
+# Metabolite-protein interactions only (receptor + allosteric-regulation
+# categories) -- comparable in scope to a resource like MetalinksDB, but
+# derived from the COSMOS PKN build itself
+metalinks_like <- metabo_metabolite_protein_pkn(organism = 9606)
+```
+
+For any other combination, call `metabo_cosmos_pkn()` directly with the
+`categories` you need.
+
+# Querying any specialized network
+
+Beyond the COSMOS PKN, the service registers other specialized networks
+(e.g. MetalinksDB, LIANA). `metabo_networks()` lists what is currently
+registered -- again, discovered at call time, not hard-coded:
+
+```{r eval=FALSE}
+metabo_networks()
+#> # A tibble: 2 x 6
+#>   name        kind             schema_name  combined_relation included_sources built_at
+#>   <chr>       <chr>            <chr>        <chr>             <list>           <chr>
+#> 1 liana       ligand_receptor  custom_views liana_ligand_re...  <chr [5]>       2026-06-...
+#> 2 metalinksdb compound_protein custom_views metalinksdb_rel...  <chr [12]>      2026-06-...
+```
+
+Retrieve one page of interactions, or page through the whole network:
+
+```{r eval=FALSE}
+metabo_network_status("metalinksdb")
+metabo_network_resources("metalinksdb")
+
+# One page
+page <- metabo_network_interactions("metalinksdb", limit = 1000)
+
+# The complete network, paged automatically
+all_rows <- metabo_network_interactions("metalinksdb", paginate = TRUE)
+```
+
+The column set of the returned table is not fixed by OmnipathR -- it
+reflects whatever the requested network exposes, so new networks are
+served correctly without a package update.
+
+Requesting an unknown network name raises a clear error pointing back at
+`metabo_networks()`, instead of a raw HTTP failure:
+
+```{r eval=FALSE}
+metabo_network_interactions("not-a-real-network")
+#> Error: Unknown network: 'not-a-real-network' (use `metabo_networks()` to
+#> list valid names).
+```
+
+# Configuration
+
+Like the main OmniPath API client, the omnipath-metabo base URL is
+configurable, e.g. to point at a development or staging deployment:
+
+```{r eval=FALSE}
+omnipath_get_option("omnipathr.metabo_url")
+#> [1] "https://metabo.omnipathdb.org/"
+
+omnipath_set_option(omnipathr.metabo_url = "https://metabo-dev.omnipathdb.org/")
+```
+
+It can also be set via the `OMNIPATHR_METABO_URL` environment variable.
+
+# Current limitations
+
+- Only the binary (flat source-target edge list) PKN representation is
+  supported. A reaction-grouped ("hypergraph") representation, collapsing
+  rows that share the same `attrs$reaction_id` into one multi-substrate
+  hyperedge, is not yet implemented.
+- Only JSON transfer is supported; the service's Parquet response format
+  is not used by this client.
