@@ -11,7 +11,10 @@
   convenience views; `metabo_networks()`, `metabo_network_status()`,
   `metabo_network_resources()` and `metabo_network_interactions()` for any
   specialized network registered on the service (e.g. MetalinksDB, LIANA).
-  Unrelated to the existing, locally-built `cosmos_pkn()`.
+  Unrelated to the existing, locally-built `cosmos_pkn()`. `metabo_cosmos_pkn()`
+  also accepts `cell_surface_only` and `include_orphans`, applied client-side
+  to the (always maximally inclusive) cached data, mirroring the equivalent
+  build-time parameters of the Python package's local build functions.
 
 # OmnipathR v4.0.0
 

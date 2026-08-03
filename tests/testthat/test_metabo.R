@@ -85,6 +85,42 @@ if (can_connect_metabo()) {
     )
 
     test_that(
+        'metabo_cosmos_pkn cell_surface_only narrows to plasma-membrane interactions',
+        {
+            all_tr <- metabo_cosmos_pkn(organism = 9606, categories = 'transporters')
+            cs_tr <- metabo_cosmos_pkn(
+                organism = 9606,
+                categories = 'transporters',
+                cell_surface_only = TRUE
+            )
+            expect_lt(nrow(cs_tr), nrow(all_tr))
+            expect_true(all(
+                vapply(cs_tr$locations, function(x) 'e' %in% x, logical(1))
+            ))
+        }
+    )
+
+    test_that(
+        'metabo_cosmos_pkn include_orphans = FALSE drops orphan reactions',
+        {
+            all_em <- metabo_cosmos_pkn(organism = 9606, categories = 'enzyme_metabolite')
+            no_orphans <- metabo_cosmos_pkn(
+                organism = 9606,
+                categories = 'enzyme_metabolite',
+                include_orphans = FALSE
+            )
+            expect_lt(nrow(no_orphans), nrow(all_em))
+            expect_true(all(
+                !vapply(
+                    no_orphans$attrs$orphan,
+                    function(x) isTRUE(x) || identical(x, 'True'),
+                    logical(1)
+                )
+            ))
+        }
+    )
+
+    test_that(
         'metabo_cosmos_pkn returns an empty result for an organism with no data',
         {
             empty <- metabo_cosmos_pkn(organism = 1L, categories = 'transporters')

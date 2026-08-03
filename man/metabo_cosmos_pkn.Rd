@@ -4,7 +4,14 @@
 \alias{metabo_cosmos_pkn}
 \title{COSMOS prior-knowledge network from the omnipath-metabo web service}
 \usage{
-metabo_cosmos_pkn(organism = 9606, categories = "all", resources = NULL, ...)
+metabo_cosmos_pkn(
+  organism = 9606,
+  categories = "all",
+  resources = NULL,
+  cell_surface_only = FALSE,
+  include_orphans = TRUE,
+  ...
+)
 }
 \arguments{
 \item{organism}{Character or integer: name, common name, latin name or
@@ -18,6 +25,25 @@ for the complete PKN.}
 contributed by these resources (see
 \code{\link{metabo_cosmos_resources}}). By default all resources
 are included.}
+
+\item{cell_surface_only}{Logical: if \code{TRUE}, keep only interactions
+touching the plasma membrane/cell surface (\code{'e'} present in the
+\code{locations} column). Applied client-side after download, since
+the cached data served by the web service is always built with the
+maximally inclusive default (equivalent to
+\code{cell_surface_only = FALSE}); this can only narrow the result,
+it cannot broaden it beyond what is cached. Mirrors the
+\code{cell_surface_only} build-time parameter of the Python
+\code{omnipath_metabo} package's \code{build_transporters()} /
+\code{build_receptors()}.}
+
+\item{include_orphans}{Logical: if \code{FALSE}, drop orphan-reaction
+pseudo-enzyme nodes (rows where \code{attrs$orphan} is \code{TRUE}
+-- metabolic reactions with no known gene rule). Applied
+client-side for the same reason as \code{cell_surface_only}: the
+cache already includes orphans by default. Mirrors the
+\code{include_orphans} build-time parameter of the Python package's
+GEM/Recon3D resource builders.}
 
 \item{...}{Ignored; reserved for future extensions of the web service.}
 }
@@ -47,6 +73,17 @@ The output is always a binary (flat source-target edge list)
     one multi-substrate/product hyperedge, is not yet implemented -- the
     data needed for it is already present in the \code{attrs} column,
     so this can be added later without a web service change.
+
+    \code{cell_surface_only} and \code{include_orphans} only ever
+    restrict the result: the web service's pre-built cache is always
+    the most inclusive variant (\code{cell_surface_only = FALSE},
+    orphans included), so any narrower view is reproducible client-side
+    from what is already downloaded. Parameters that would require
+    \emph{more} data than the cache holds -- selecting a different GEM,
+    excluding individual contributing resources at build time, or any
+    other on-demand rebuild -- are not supported by this function; the
+    web service does not expose them, and reproducing them requires the
+    local Python build (\code{omnipath_metabo.datasets.cosmos}).
 }
 \examples{
 \dontrun{
@@ -55,6 +92,12 @@ transporters <- metabo_cosmos_pkn(
     categories = 'transporters'
 )
 transporters
+
+cell_surface_transporters <- metabo_cosmos_pkn(
+    organism = 9606,
+    categories = 'transporters',
+    cell_surface_only = TRUE
+)
 }
 
 }
