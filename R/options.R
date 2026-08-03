@@ -34,11 +34,16 @@
 #' to outside users, you may want to use a password. For this you can use
 #' the ``omnipathr.password`` option.
 #' Also if you want the R package to work from another pypath server instead
-#' of omnipathdb.org, you can change the option ``omnipathr.url``.
+#' of omnipathdb.org, you can change the option ``omnipathr.url``. Similarly,
+#' ``omnipathr.metabo_url`` points to the deployment of the omnipath-metabo
+#' web service (COSMOS PKN and other specialized networks) queried by the
+#' ``metabo_*`` functions; change it to work against a development or
+#' staging deployment instead of the public one.
 #'
 #' @return Nothing, this is not a function but a list.
 .omnipathr_options_defaults <- list(
     omnipathr.url = 'https://omnipathdb.org/',
+    omnipathr.metabo_url = 'https://metabo.omnipathdb.org/',
     omnipathr.notls_url = 'http://no-tls.omnipathdb.org/',
     omnipathr.notls_fallback = TRUE,
     omnipathr.notls_force = FALSE,

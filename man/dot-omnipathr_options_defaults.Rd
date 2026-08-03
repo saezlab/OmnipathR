@@ -5,7 +5,7 @@
 \alias{.omnipathr_options_defaults}
 \title{Default values for the package options}
 \format{
-An object of class \code{list} of length 35.
+An object of class \code{list} of length 36.
 }
 \usage{
 .omnipathr_options_defaults
@@ -26,6 +26,10 @@ your own pypath server and want to share data whith a limited availability
 to outside users, you may want to use a password. For this you can use
 the ``omnipathr.password`` option.
 Also if you want the R package to work from another pypath server instead
-of omnipathdb.org, you can change the option ``omnipathr.url``.
+of omnipathdb.org, you can change the option ``omnipathr.url``. Similarly,
+``omnipathr.metabo_url`` points to the deployment of the omnipath-metabo
+web service (COSMOS PKN and other specialized networks) queried by the
+``metabo_*`` functions; change it to work against a development or
+staging deployment instead of the public one.
 }
 \keyword{datasets}

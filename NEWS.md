@@ -1,3 +1,18 @@
+# OmnipathR v4.1.0
+
+## Features
+
++ `metabo_*` functions: a cached REST client for the `omnipath-metabo` web
+  service (`omnipathr.metabo_url` option, default
+  `https://metabo.omnipathdb.org/`) -- `metabo_cosmos_pkn()` and discovery
+  helpers (`metabo_cosmos_categories()`, `metabo_cosmos_organisms()`,
+  `metabo_cosmos_resources()`, `metabo_cosmos_status()`) for the COSMOS PKN;
+  `metabo_metabolic_signaling_pkn()` and `metabo_metabolite_protein_pkn()`
+  convenience views; `metabo_networks()`, `metabo_network_status()`,
+  `metabo_network_resources()` and `metabo_network_interactions()` for any
+  specialized network registered on the service (e.g. MetalinksDB, LIANA).
+  Unrelated to the existing, locally-built `cosmos_pkn()`.
+
 # OmnipathR v4.0.0
 
 ## Features
