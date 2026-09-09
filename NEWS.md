@@ -1,3 +1,29 @@
+# OmnipathR v4.1.0
+
+## Features
+
++ `metabo_*` functions: a cached REST client for the `omnipath-metabo` web
+  service (`omnipathr.metabo_url` option, default
+  `https://metabo.omnipathdb.org/`) -- `metabo_cosmos_pkn()` and discovery
+  helpers (`metabo_cosmos_categories()`, `metabo_cosmos_organisms()`,
+  `metabo_cosmos_resources()`, `metabo_cosmos_status()`) for the COSMOS PKN;
+  `metabo_metabolic_signaling_pkn()` and `metabo_metabolite_protein_pkn()`
+  convenience views; `metabo_networks()`, `metabo_network_status()`,
+  `metabo_network_resources()` and `metabo_network_interactions()` for any
+  specialized network registered on the service (e.g. MetalinksDB, LIANA).
+  Unrelated to the existing, locally-built `cosmos_pkn()`. `metabo_cosmos_pkn()`
+  also accepts `cell_surface_only` and `include_orphans`, applied client-side
+  to the (always maximally inclusive) cached data, mirroring the equivalent
+  build-time parameters of the Python package's local build functions. The
+  `omnipath-metabo` service is experimental: the first `metabo_*` call in a
+  session warns that its data is not stable and is unsuitable for
+  reproducible research, silenceable with
+  `options(omnipathr.metabo_warn_experimental = FALSE)`.
+  `metabo_network_interactions()` takes no paging parameters -- its
+  `offset`/`paginate` arguments were removed and `limit` now defaults to
+  `NULL` (whole network in one request), since every network the service
+  currently publishes fits in one HTTP transaction.
+
 # OmnipathR v4.0.0
 
 ## Features
