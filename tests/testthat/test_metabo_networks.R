@@ -69,11 +69,20 @@ if (can_connect_metabo()) {
     )
 
     test_that(
-        'metabo_network_interactions respects the page size limit',
+        'metabo_network_interactions respects the row limit',
         {
             page <- metabo_network_interactions('metalinksdb', limit = 10L)
             expect_lte(nrow(page), 10L)
             expect_gt(nrow(page), 0L)
+        }
+    )
+
+    test_that(
+        'metabo_network_interactions with no limit returns the whole network',
+        {
+            status <- metabo_network_status('metalinksdb')
+            all_rows <- metabo_network_interactions('metalinksdb')
+            expect_equal(nrow(all_rows), status$row_count)
         }
     )
 

@@ -77,11 +77,49 @@
 }
 
 
+#' Warns once per session that omnipath-metabo is an experimental service
+#'
+#' Per constitution Principle VIII / FR-014: the first \code{metabo_*} call
+#' in a session warns that the data is experimental, not stable, and
+#' unsuitable for reproducible research. Silenceable through
+#' \code{getOption('omnipathr.metabo_warn_experimental')}; never repeats
+#' once it has fired, regardless of the option, for the rest of the
+#' session.
+#'
+#' @return Logical: \code{TRUE} if this call emitted the warning,
+#'     \code{FALSE} if it was already emitted earlier in the session or is
+#'     silenced.
+#'
+#' @importFrom logger log_warn
+#'
+#' @noRd
+.metabo_warn_experimental <- function(){
+
+    already_warned <- isTRUE(omnipathr.env$metabo_warned)
+    silenced <- !isTRUE(getOption('omnipathr.metabo_warn_experimental'))
+
+    if (already_warned || silenced) return(invisible(FALSE))
+
+    log_warn(paste(
+        'The omnipath-metabo service is experimental: its data is not',
+        'stable, is unsuitable for reproducible research, and serves',
+        'experimentation with the new database. Silence this warning with',
+        '`options(omnipathr.metabo_warn_experimental = FALSE)`.'
+    ))
+
+    omnipathr.env$metabo_warned <- TRUE
+
+    invisible(TRUE)
+
+}
+
+
 #' Queries an endpoint of the omnipath-metabo web service
 #'
 #' Thin wrapper around \code{\link{generic_downloader}}: caching, retry and
 #' logging all come from the existing OmnipathR download infrastructure, no
-#' new machinery is introduced here.
+#' new machinery is introduced here. Every call passes through the
+#' once-per-session experimental-data warning (\code{.metabo_warn_experimental}).
 #'
 #' @param path Character: the endpoint path, e.g. \code{'cosmos/pkn'}.
 #' @param ... Named query string parameters, passed to
@@ -95,6 +133,8 @@
 #'
 #' @noRd
 .metabo_query <- function(path, ..., reader_param = list()){
+
+    .metabo_warn_experimental()
 
     generic_downloader(
         url_key = .metabo_build_url(path, ...),
@@ -122,6 +162,41 @@
 .metabo_is_not_found <- function(cond){
 
     grepl('error: 404', conditionMessage(cond), fixed = TRUE)
+
+}
+
+
+#' Queries the omnipath-metabo service, translating a not-found condition
+#'
+#' The one place (FR-015) that inspects a caught condition with
+#' \code{\link{.metabo_is_not_found}} and decides what "not found" means
+#' for a given caller -- \code{\link{metabo_cosmos_pkn}} treats it as "no
+#' data for this request" and returns \code{NULL}; the generic
+#' \code{/networks} endpoints (\code{R/metabo_networks.R}) treat it as an
+#' unknown network name and raise a friendly error. Every other failure
+#' (e.g. the service being unreachable) propagates unchanged.
+#'
+#' @param path Character: endpoint path, passed to \code{\link{.metabo_query}}.
+#' @param ... Passed to \code{\link{.metabo_query}}.
+#' @param on_not_found Function of one argument (the caught condition),
+#'     called instead of raising when the condition is a 404. Its return
+#'     value becomes this function's return value.
+#'
+#' @return The parsed JSON response, or whatever \code{on_not_found} returns.
+#'
+#' @noRd
+.metabo_query_or <- function(path, ..., on_not_found){
+
+    tryCatch(
+        .metabo_query(path, ...),
+        error = function(e){
+
+            if (!.metabo_is_not_found(e)) stop(e)
+
+            on_not_found(e)
+
+        }
+    )
 
 }
 
@@ -409,17 +484,13 @@ metabo_cosmos_pkn <- function(
 
     organism %<>% ncbi_taxid()
 
-    data <- tryCatch(
-        .metabo_query(
-            'cosmos/pkn',
-            organism = organism,
-            categories = categories,
-            resources = resources,
-            format = 'json'
-        ),
-        error = function(e){
-
-            if (!.metabo_is_not_found(e)) stop(e)
+    data <- .metabo_query_or(
+        'cosmos/pkn',
+        organism = organism,
+        categories = categories,
+        resources = resources,
+        format = 'json',
+        on_not_found = function(e){
 
             log_warn(
                 'omnipath-metabo: no cached PKN for organism = %s, categories = %s.',

@@ -36,6 +36,29 @@ can_connect_metabo <- function(){
 }
 
 
+test_that(
+    'the experimental-data warning fires once per session, silenceable',
+    {
+        metabo_env <- OmnipathR:::omnipathr.env
+        old_warned <- metabo_env$metabo_warned
+        old_option <- getOption('omnipathr.metabo_warn_experimental')
+        on.exit({
+            metabo_env$metabo_warned <- old_warned
+            options(omnipathr.metabo_warn_experimental = old_option)
+        }, add = TRUE)
+
+        # Fresh session: first call warns, the immediate repeat does not.
+        metabo_env$metabo_warned <- NULL
+        expect_true(OmnipathR:::.metabo_warn_experimental())
+        expect_false(OmnipathR:::.metabo_warn_experimental())
+
+        # The option silences it even in a fresh session.
+        metabo_env$metabo_warned <- NULL
+        options(omnipathr.metabo_warn_experimental = FALSE)
+        expect_false(OmnipathR:::.metabo_warn_experimental())
+    }
+)
+
 if (can_connect_metabo()) {
 
     test_that(

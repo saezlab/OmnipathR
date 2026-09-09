@@ -4,14 +4,7 @@
 \alias{metabo_network_interactions}
 \title{Interactions of a specialized network on omnipath-metabo}
 \usage{
-metabo_network_interactions(
-  name,
-  source = NULL,
-  limit = 1000L,
-  offset = 0L,
-  paginate = FALSE,
-  ...
-)
+metabo_network_interactions(name, source = NULL, limit = NULL, ...)
 }
 \arguments{
 \item{name}{Character: a network name, as listed by
@@ -20,16 +13,10 @@ metabo_network_interactions(
 \item{source}{Character: restrict the result to interactions from this
 contributing source. \code{NULL} (default) returns all sources.}
 
-\item{limit}{Integer: maximum rows per request (server default 1000,
-maximum 100000).}
-
-\item{offset}{Integer: number of rows to skip (for manual paging).}
-
-\item{paginate}{Logical: if \code{TRUE}, repeatedly request subsequent
-pages (starting after \code{offset}, one request per page, each
-individually cached) and combine them into a single
-table, until a page shorter than \code{limit} is returned. If
-\code{FALSE} (default), returns only the first page.}
+\item{limit}{Integer: maximum rows to return. \code{NULL} (default)
+returns the whole network in one request -- every network currently
+published by the service fits in one HTTP transaction, so there is
+no paging parameter and no paging loop (FR-007).}
 
 \item{...}{Ignored; reserved for future extensions of the web service.}
 }
@@ -47,7 +34,7 @@ served correctly without a package update.
 \examples{
 \dontrun{
 page <- metabo_network_interactions('metalinksdb', limit = 10)
-all_rows <- metabo_network_interactions('metalinksdb', paginate = TRUE)
+all_rows <- metabo_network_interactions('metalinksdb')
 }
 
 }

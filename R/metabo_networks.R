@@ -90,10 +90,10 @@
 #' clear error
 #'
 #' The download machinery raises an R error for a 404 HTTP status before
-#' this package ever sees a response body (see \code{.metabo_is_not_found}
-#' in \code{R/metabo.R}), which is how the server responds to an unknown
-#' network name -- so that condition is caught and re-raised here with a
-#' message naming the problem and pointing at
+#' this package ever sees a response body, which is how the server responds
+#' to an unknown network name -- \code{\link{.metabo_query_or}}
+#' (\code{R/metabo.R}) is the one place that catches this; here it is
+#' re-raised with a message naming the problem and pointing at
 #' \code{\link{metabo_networks}}, per the package's error-handling
 #' convention (\code{log_error()} then \code{stop()}). Any other failure
 #' (e.g. the service being unreachable) is left untouched.
@@ -103,11 +103,9 @@
 #' @noRd
 .metabo_query_network <- function(path, name, ...){
 
-    data <- tryCatch(
-        .metabo_query(path, ...),
-        error = function(e){
-
-            if (!.metabo_is_not_found(e)) stop(e)
+    data <- .metabo_query_or(
+        path, ...,
+        on_not_found = function(e){
 
             msg <- sprintf(
                 "Unknown network: '%s' (use `metabo_networks()` to list valid names).",
@@ -248,14 +246,10 @@ metabo_network_resources <- function(name){
 #'     \code{\link{metabo_networks}}.
 #' @param source Character: restrict the result to interactions from this
 #'     contributing source. \code{NULL} (default) returns all sources.
-#' @param limit Integer: maximum rows per request (server default 1000,
-#'     maximum 100000).
-#' @param offset Integer: number of rows to skip (for manual paging).
-#' @param paginate Logical: if \code{TRUE}, repeatedly request subsequent
-#'     pages (starting after \code{offset}, one request per page, each
-#'     individually cached) and combine them into a single
-#'     table, until a page shorter than \code{limit} is returned. If
-#'     \code{FALSE} (default), returns only the first page.
+#' @param limit Integer: maximum rows to return. \code{NULL} (default)
+#'     returns the whole network in one request -- every network currently
+#'     published by the service fits in one HTTP transaction, so there is
+#'     no paging parameter and no paging loop (FR-007).
 #' @param ... Ignored; reserved for future extensions of the web service.
 #'
 #' @return A tibble of interaction rows; the column set varies by network,
@@ -264,11 +258,10 @@ metabo_network_resources <- function(name){
 #' @examples
 #' \dontrun{
 #' page <- metabo_network_interactions('metalinksdb', limit = 10)
-#' all_rows <- metabo_network_interactions('metalinksdb', paginate = TRUE)
+#' all_rows <- metabo_network_interactions('metalinksdb')
 #' }
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr bind_rows
 #'
 #' @export
 #' @seealso \itemize{
@@ -278,50 +271,22 @@ metabo_network_resources <- function(name){
 metabo_network_interactions <- function(
     name,
     source = NULL,
-    limit = 1000L,
-    offset = 0L,
-    paginate = FALSE,
+    limit = NULL,
     ...
 ){
 
     .slow_doctest()
 
     .metabo_assert_network_name(name)
-    .metabo_assert_count(limit, 'limit')
-    .metabo_assert_count(offset, 'offset')
+    if (!is.null(limit)) .metabo_assert_count(limit, 'limit')
 
-    fetch_page <- function(offset){
-
-        .metabo_query_network(
-            sprintf('networks/%s/interactions', name),
-            name,
-            source = source,
-            limit = limit,
-            offset = offset,
-            format = 'json'
-        )
-
-    }
-
-    rows <- fetch_page(offset)$rows %>% .metabo_rows_to_tibble()
-
-    if (paginate) {
-
-        repeat {
-
-            offset <- offset + limit
-            page <- fetch_page(offset)$rows %>% .metabo_rows_to_tibble()
-
-            if (nrow(page) == 0L) break
-
-            rows <- bind_rows(rows, page)
-
-            if (nrow(page) < limit) break
-
-        }
-
-    }
-
-    rows
+    .metabo_query_network(
+        sprintf('networks/%s/interactions', name),
+        name,
+        source = source,
+        limit = limit,
+        format = 'json'
+    )$rows %>%
+    .metabo_rows_to_tibble()
 
 }

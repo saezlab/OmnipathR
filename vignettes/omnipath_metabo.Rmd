@@ -31,6 +31,14 @@ web service. They are **unrelated** to `cosmos_pkn()` (see
 GEM and OmniPath -- the two do not share code or output, and using one does
 not preclude using the other.
 
+**The `omnipath-metabo` service is experimental.** Its data is not stable
+and is unsuitable for reproducible research; it serves experimentation with
+the new database. The first `metabo_*` call in a session warns about this
+once; silence the warning with
+`options(omnipathr.metabo_warn_experimental = FALSE)`. When the service
+stabilizes, these function names stay unchanged and the warning is
+dropped.
+
 ```{r eval=FALSE}
 library(OmnipathR)
 ```
@@ -128,17 +136,19 @@ metabo_networks()
 #> 2 metalinksdb compound_protein custom_views metalinksdb_rel...  <chr [12]>      2026-06-...
 ```
 
-Retrieve one page of interactions, or page through the whole network:
+Retrieve a capped number of rows, or the whole network in one call --
+every network the service currently publishes fits in a single HTTP
+transaction, so there is no paging parameter and no loop to run:
 
 ```{r eval=FALSE}
 metabo_network_status("metalinksdb")
 metabo_network_resources("metalinksdb")
 
-# One page
+# Capped
 page <- metabo_network_interactions("metalinksdb", limit = 1000)
 
-# The complete network, paged automatically
-all_rows <- metabo_network_interactions("metalinksdb", paginate = TRUE)
+# The whole network, one request
+all_rows <- metabo_network_interactions("metalinksdb")
 ```
 
 The column set of the returned table is not fixed by OmnipathR -- it

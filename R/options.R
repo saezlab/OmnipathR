@@ -38,12 +38,16 @@
 #' ``omnipathr.metabo_url`` points to the deployment of the omnipath-metabo
 #' web service (COSMOS PKN and other specialized networks) queried by the
 #' ``metabo_*`` functions; change it to work against a development or
-#' staging deployment instead of the public one.
+#' staging deployment instead of the public one. The ``metabo_*`` functions
+#' reach an experimental service, so the first one called in a session warns
+#' about this; set ``omnipathr.metabo_warn_experimental`` to ``FALSE`` to
+#' silence that warning.
 #'
 #' @return Nothing, this is not a function but a list.
 .omnipathr_options_defaults <- list(
     omnipathr.url = 'https://omnipathdb.org/',
     omnipathr.metabo_url = 'https://metabo.omnipathdb.org/',
+    omnipathr.metabo_warn_experimental = TRUE,
     omnipathr.notls_url = 'http://no-tls.omnipathdb.org/',
     omnipathr.notls_fallback = TRUE,
     omnipathr.notls_force = FALSE,

@@ -5,7 +5,7 @@
 \alias{.omnipathr_options_defaults}
 \title{Default values for the package options}
 \format{
-An object of class \code{list} of length 36.
+An object of class \code{list} of length 37.
 }
 \usage{
 .omnipathr_options_defaults
@@ -30,6 +30,9 @@ of omnipathdb.org, you can change the option ``omnipathr.url``. Similarly,
 ``omnipathr.metabo_url`` points to the deployment of the omnipath-metabo
 web service (COSMOS PKN and other specialized networks) queried by the
 ``metabo_*`` functions; change it to work against a development or
-staging deployment instead of the public one.
+staging deployment instead of the public one. The ``metabo_*`` functions
+reach an experimental service, so the first one called in a session warns
+about this; set ``omnipathr.metabo_warn_experimental`` to ``FALSE`` to
+silence that warning.
 }
 \keyword{datasets}

@@ -14,7 +14,15 @@
   Unrelated to the existing, locally-built `cosmos_pkn()`. `metabo_cosmos_pkn()`
   also accepts `cell_surface_only` and `include_orphans`, applied client-side
   to the (always maximally inclusive) cached data, mirroring the equivalent
-  build-time parameters of the Python package's local build functions.
+  build-time parameters of the Python package's local build functions. The
+  `omnipath-metabo` service is experimental: the first `metabo_*` call in a
+  session warns that its data is not stable and is unsuitable for
+  reproducible research, silenceable with
+  `options(omnipathr.metabo_warn_experimental = FALSE)`.
+  `metabo_network_interactions()` takes no paging parameters -- its
+  `offset`/`paginate` arguments were removed and `limit` now defaults to
+  `NULL` (whole network in one request), since every network the service
+  currently publishes fits in one HTTP transaction.
 
 # OmnipathR v4.0.0
 
