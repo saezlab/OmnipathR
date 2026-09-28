@@ -16,7 +16,7 @@ kegg_list(...)
 \value{
 Data frame (tibble) of two columns with names "id" and "name";
     except if the <database> argument is "organism", which results a
-    four columns data frame.
+    three columns data frame ("genome", "kegg_name" and "latin_name").
 }
 \description{
 See \url{https://www.kegg.jp/kegg/rest/keggapi.html#list} for details.
