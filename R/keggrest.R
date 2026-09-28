@@ -133,7 +133,6 @@ KEGG_DB_WO_GLKO <- KEGG_DB_ORG %>% setdiff(KEGG_DB_GLKO)
 
 KEGG_COLUMNS <- list(
     list = c('id', 'name'),
-    `list/organism` = c('genome', 'kegg_name', 'latin_name', 'phylogeny'),
     find = c('id', 'value'),
     conv = c('id_a', 'id_b'),
     link = c('id_a', 'id_b'),
@@ -707,6 +706,10 @@ kegg_api_path <- function(operation, ...) {
 kegg_request <- function(operation, ...) {
 
     path <- kegg_api_path(operation, ...)
+    # KEGG retired `list/organism` (HTTP 400); `list/genome` has the same
+    # content, only in a different shape, see `kegg_genome_to_organisms`
+    organisms <- path == 'list/organism'
+    if (organisms) path <- 'list/genome'
     args <- list()
     reader <- KEGG_READERS %>% extract2(operation)
     cols <-
@@ -734,7 +737,38 @@ kegg_request <- function(operation, ...) {
         resource = 'KEGG',
         !!!args
     ) %T>%
-    load_success()
+    load_success() %>%
+    {`if`(organisms, kegg_genome_to_organisms(.), .)}
+
+}
+
+
+#' Reshape the output of `list/genome` into a table of organisms
+#'
+#' In `list/genome`, the organism code and the name are combined in one
+#' field, e.g. "hsa; Homo sapiens (human)". The phylogeny column of the
+#' retired `list/organism` endpoint is not available here.
+#'
+#' @param genomes Data frame: the output of `list/genome`.
+#'
+#' @return Data frame (tibble) with columns "genome", "kegg_name" and
+#'     "latin_name".
+#'
+#' @importFrom magrittr %>%
+#' @importFrom dplyr rename
+#' @importFrom tidyr separate
+#' @noRd
+kegg_genome_to_organisms <- function(genomes) {
+
+    genomes %>%
+    rename(genome = 1L) %>%
+    separate(
+        2L,
+        into = c('kegg_name', 'latin_name'),
+        sep = '; ',
+        extra = 'merge',
+        fill = 'right'
+    )
 
 }
 
@@ -747,7 +781,7 @@ kegg_request <- function(operation, ...) {
 #'
 #' @return Data frame (tibble) of two columns with names "id" and "name";
 #'     except if the <database> argument is "organism", which results a
-#'     four columns data frame.
+#'     three columns data frame ("genome", "kegg_name" and "latin_name").
 #'
 #' @examples
 #' kegg_list("pathway")
