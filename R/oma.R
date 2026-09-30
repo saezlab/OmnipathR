@@ -27,32 +27,121 @@
 #' @examples
 #' oma_organisms()
 #'
-#' @importFrom readr cols
 #' @importFrom magrittr %>%
-#' @importFrom dplyr mutate
+#' @importFrom logger log_warn log_error
 #' @export
 #' @seealso \code{\link{ensembl_organisms}}
 oma_organisms <- function() {
 
-    # NSE vs. R CMD check workaround
-    ncbi_tax_id <- NULL
+    url <- url_parser('oma_species')
 
-    'oma_species' %>%
-    generic_downloader(
-        reader_param = list(
-            col_names = c(
-                'oma_code',
-                'oma_tax_id',
-                'ncbi_tax_id',
-                'genome_gtdb',
-                'latin_name',
-                'genome_source',
-                'genome_version'
-            ),
-            col_types = cols(),
-            skip = 3L
-        )
+    for (attempt in seq(2L)) {
+
+        result <- generic_downloader('oma_species', reader = oma_species_reader)
+
+        if (oma_organisms_valid(result)) {
+
+            return(result)
+
+        }
+
+        # a malformed table might have been loaded from or saved to the
+        # cache: remove it, so it is downloaded again next time
+        omnipath_cache_remove(url = url)
+
+        if (attempt == 1L) {
+
+            msg <- sprintf(
+                'Malformed OMA organism table (from `%s`), downloading again.',
+                url
+            )
+            log_warn(msg)
+
+        }
+
+    }
+
+    msg <- sprintf(
+        paste0(
+            'Failed to retrieve a valid OMA organism table from `%s`. ',
+            'The file might be unavailable or its format might have changed.'
+        ),
+        url
     )
+    log_error(msg)
+    stop(msg)
+
+}
+
+
+#' Download and read the OMA species table
+#'
+#' The number of comment lines on the top of the file, and the presence of a
+#' header row varies between OMA releases. Here we remove all lines starting
+#' by "#" and the header row, and read the rest with fixed column names and
+#' types.
+#'
+#' @param url Character: URL of the OMA species file.
+#' @param ... Ignored.
+#'
+#' @return A data frame with organism identifiers.
+#'
+#' @importFrom readr read_tsv cols col_character col_integer
+#' @importFrom magrittr %>%
+#' @noRd
+oma_species_reader <- function(url, ...) {
+
+    omnipath_curl(
+        url,
+        callback = function(con) {
+
+            lines <- readLines(con, warn = FALSE, encoding = 'UTF-8')
+            lines <- lines[
+                nzchar(lines) &
+                !startsWith(lines, '#') &
+                !startsWith(lines, 'OMA_Code\t')
+            ]
+
+            read_tsv(
+                I(lines),
+                col_names = c(
+                    'oma_code',
+                    'oma_tax_id',
+                    'ncbi_tax_id',
+                    'genome_gtdb',
+                    'latin_name',
+                    'genome_source',
+                    'genome_version'
+                ),
+                col_types = cols(
+                    oma_tax_id = col_integer(),
+                    ncbi_tax_id = col_integer(),
+                    .default = col_character()
+                ),
+                quote = '',
+                progress = FALSE
+            )
+
+        }
+    )
+
+}
+
+
+#' Check if the OMA organism table looks valid
+#'
+#' @param data A data frame returned by the OMA species reader.
+#'
+#' @return Logical: TRUE if the table has the expected columns, the NCBI
+#'     Taxonomy IDs are numeric and human is present.
+#'
+#' @noRd
+oma_organisms_valid <- function(data) {
+
+    is.data.frame(data) &&
+    all(c('oma_code', 'ncbi_tax_id', 'latin_name') %in% colnames(data)) &&
+    is.numeric(data$ncbi_tax_id) &&
+    9606L %in% data$ncbi_tax_id
 
 }
 
