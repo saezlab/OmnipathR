@@ -23,7 +23,8 @@ than this age}
 \item{min_age}{Age of cache items in days. Remove everything more recent
 than this age}
 
-\item{status}{Remove items having any of the states listed here}
+\item{status}{Keep only the versions having any of the states listed
+here, and remove the others. By default versions of any state are kept}
 
 \item{only_latest}{Keep only the latest version}
 
