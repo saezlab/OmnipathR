@@ -315,7 +315,8 @@ omnipath_cache_search <- function(pattern, ...){
 #'     than this age
 #' @param min_age Age of cache items in days. Remove everything more recent
 #'     than this age
-#' @param status Remove items having any of the states listed here
+#' @param status Keep only the versions having any of the states listed
+#'     here, and remove the others. By default versions of any state are kept
 #' @param only_latest Keep only the latest version
 #' @param autoclean Remove the entries about failed downloads, the files in
 #'     the cache directory which are missing from the cache database, and the
@@ -387,6 +388,7 @@ omnipath_cache_remove <- function(
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom purrr map keep map_lgl discard
+#' @importFrom rlang %||%
 #'
 #' @noRd
 .omnipath_cache_remove <- cache_locked %@% function(
@@ -447,7 +449,7 @@ omnipath_cache_remove <- function(
             omnipath_cache_keep_versions,
             max_age = max_age,
             min_age = min_age,
-            status = status,
+            status = status %||% unlist(CACHE_STATUS),
             only_latest = only_latest
         ),
         .

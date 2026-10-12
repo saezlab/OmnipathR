@@ -198,6 +198,32 @@ test_that('omnipath_cache_remove by URL removes only the target entry', {
 })
 
 
+test_that('omnipath_cache_remove with max_age removes only old versions', {
+
+    original <- setup_test_cache()
+    on.exit(teardown_test_cache(original))
+
+    url_old <- 'https://test.example.com/age_old'
+    url_new <- 'https://test.example.com/age_new'
+    omnipath_cache_save(data.frame(x = 1), url = url_old)
+    omnipath_cache_save(data.frame(x = 2), url = url_new)
+
+    # make the first record two days old
+    env <- OmnipathR:::omnipathr.env
+    key_old <- omnipath_cache_key(url = url_old)
+    version <- names(env$cache[[key_old]]$versions)[1]
+    env$cache[[key_old]]$versions[[version]]$dl_finished <-
+        Sys.time() - 2 * 24 * 3600
+    OmnipathR:::omnipath_write_cache_db()
+
+    omnipath_cache_remove(url = c(url_old, url_new), max_age = 1)
+
+    expect_null(omnipath_cache_load(url = url_old))
+    expect_equal(omnipath_cache_load(url = url_new)$x, 2)
+
+})
+
+
 test_that('omnipath_cache_remove with no args does not wipe cache', {
 
     original <- setup_test_cache()
