@@ -70,15 +70,22 @@ resources <- function(
         query_type
     )
 
-    resources_url <- omnipath_url('resources')
-    resources <- safe_json(path = resources_url)
+    resources <- generic_downloader(
+        url_key = omnipath_url('resources'),
+        reader = curl_read_json,
+        resource = 'OmniPath'
+    )
 
     return(
         sort(Filter(
             function(resource){
                 query_type %in% names(resources[[resource]]$queries) &&
                 null_or_matches(resources[[resource]], datasets) &&
-                null_or_matches(resources[[resource]], generic_categories)
+                null_or_matches(
+                    resources[[resource]],
+                    generic_categories,
+                    key = 'categories'
+                )
             },
             names(resources)
         ))
