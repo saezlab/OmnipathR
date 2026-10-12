@@ -24,8 +24,6 @@ Retrieves ChEBI identifiers mapped to Reactome pathways and returns a
 per-pathway list of ChEBI IDs as a data frame.
 }
 \examples{
-\dontrun{
 df <- reactome_chebi(organism = 9606)
 head(df)
-}
 }

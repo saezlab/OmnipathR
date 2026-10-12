@@ -17,14 +17,19 @@ After this operation the cache directory will be completely empty,
 except an empty cache database file.
 }
 \examples{
-\dontrun{
+# use a temporary cache directory, not the real cache
+old_cachedir <- getOption('omnipathr.cachedir')
+tmp_cachedir <- tempfile('omnipathr_cache_')
+omnipath_set_cachedir(tmp_cachedir)
+file.create(file.path(tmp_cachedir, 'example.txt'))
+
 omnipath_cache_wipe()
-# the cache is completely empty:
-print(omnipathr.env$cache)
-# list()
-list.files(omnipath_get_cachedir())
-# [1] "cache.json"
-}
+# only the empty cache database is left:
+list.files(tmp_cachedir)
+
+# restore the original cache directory
+omnipath_set_cachedir(old_cachedir)
+unlink(tmp_cachedir, recursive = TRUE)
 
 
 }

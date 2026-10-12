@@ -16,8 +16,23 @@ operations use \code{\link{omnipath_cache_remove}} and
 \code{\link{omnipath_cache_clean}}.
 }
 \examples{
-\dontrun{
+# use a temporary cache directory, not the real cache
+old_cachedir <- getOption('omnipathr.cachedir')
+tmp_cachedir <- tempfile('omnipathr_cache_')
+omnipath_set_cachedir(tmp_cachedir)
+
+# one complete and one unfinished download
+version <- omnipath_cache_latest_or_new(url = 'https://example.org/a')
+writeLines('example', version$path)
+omnipath_cache_download_ready(version)
+unfinished <- omnipath_cache_latest_or_new(url = 'https://example.org/b')
+
 omnipath_cache_autoclean()
-}
+# only the complete download is kept:
+purrr::map_chr(omnipath_cache_search('example.org'), 'url')
+
+# restore the original cache directory
+omnipath_set_cachedir(old_cachedir)
+unlink(tmp_cachedir, recursive = TRUE)
 
 }

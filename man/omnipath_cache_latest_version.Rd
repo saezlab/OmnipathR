@@ -16,3 +16,14 @@ Character: the version ID with the most recent download finished
 \description{
 Finds the most recent version in a cache record
 }
+\examples{
+# a minimal cache record with two completed downloads
+record <- list(
+    versions = list(
+        `1` = list(status = 'ready', dl_finished = Sys.time() - 3600),
+        `2` = list(status = 'ready', dl_finished = Sys.time())
+    )
+)
+omnipath_cache_latest_version(record)
+
+}

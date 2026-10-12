@@ -39,6 +39,18 @@ A network data frame or an igraph object, depending on the
 \description{
 Extract a custom subnetwork from a large network
 }
+\examples{
+interactions <- tibble::tibble(
+    source = c('P00533', 'P04626', 'P00533'),
+    target = c('P04626', 'P62993', 'P62993'),
+    source_genesymbol = c('EGFR', 'ERBB2', 'EGFR'),
+    target_genesymbol = c('ERBB2', 'GRB2', 'GRB2'),
+    sources = c('SIGNOR;SPIKE', 'SIGNOR', 'SPIKE')
+)
+# ERBB2 and its downstream neighbours
+subnetwork(interactions, nodes = 'ERBB2', mode = 'out')
+
+}
 \seealso{
 \itemize{
     \item{\code{\link{interaction_graph}}}

@@ -25,8 +25,6 @@ filters by organism and/or pathway IDs. Returns a per-pathway list of
 ChEBI IDs.
 }
 \examples{
-\dontrun{
 tbl <- reactome_chebi_pathways(organism = 9606)
 head(tbl)
-}
 }

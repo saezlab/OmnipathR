@@ -18,7 +18,6 @@ Downloads all KEGG pathways and creates a table of protein-pathway
 annotations.
 }
 \examples{
-\dontrun{
 kegg_pw_annot <- kegg_pathway_annotations()
 kegg_pw_annot
 # # A tibble: 7,341 x 4
@@ -30,7 +29,6 @@ kegg_pw_annot
 #  4 O95267  RASGRP1    MAPK signaling pathway hsa04010
 #  5 P62834  RAP1A      MAPK signaling pathway hsa04010
 # # . with 7,336 more rows
-}
 
 }
 \seealso{

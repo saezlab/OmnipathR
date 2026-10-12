@@ -78,9 +78,7 @@ takes 3-4 minutes; the complete PKN is also saved in the cache, if this is
 available, loading it takes only a few seconds.
 }
 \examples{
-\dontrun{
-    human_cosmos <- cosmos_pkn(organism = "human")
-}
+human_cosmos <- cosmos_pkn(organism = 'human')
 
 }
 \references{

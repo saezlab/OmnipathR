@@ -20,8 +20,6 @@ Retrieves the full pathway list from WikiPathways and optionally filters
 by organism.
 }
 \examples{
-\dontrun{
 pathways <- wikipathways_pathways(organism = 9606)
 head(pathways)
-}
 }

@@ -27,6 +27,26 @@ The input data frame with the evidences in the selected columns
 \description{
 Filter evidences by dataset, resource and license
 }
+\examples{
+ev <- function(resource, dataset = 'omnipath') {
+    list(resource = resource, dataset = dataset, references = list())
+}
+interactions <- tibble::tibble(
+    source_genesymbol = c('EGFR', 'ERBB2'),
+    target_genesymbol = c('ERBB2', 'GRB2'),
+    evidences = list(
+        list(directed = list(ev('SIGNOR'), ev('SPIKE'))),
+        list(directed = list(ev('SIGNOR'), ev('HPRD', 'pathwayextra')))
+    )
+)
+filtered <- filter_evidences(
+    interactions,
+    datasets = 'omnipath',
+    exclude = 'SPIKE'
+)
+filtered$evidences
+
+}
 \seealso{
 \itemize{
     \item{\code{\link{only_from}}}

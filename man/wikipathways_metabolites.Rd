@@ -28,8 +28,6 @@ Retrieves WikiPathways pathways (optionally filtered by organism) and
 parses GPML files to extract metabolite identifiers.
 }
 \examples{
-\dontrun{
 df <- wikipathways_metabolites(organism = 9606)
 head(df)
-}
 }

@@ -65,8 +65,6 @@ endpoint. Identifier IRIs from identifiers.org are normalised and
 redundant prefixes are removed.
 }
 \examples{
-\dontrun{
 df <- wikipathways_metabolites_sparql(organism = 9606)
 head(df)
-}
 }

@@ -40,9 +40,18 @@ Load the package configuration from a config file
 Load the coniguration of a certain package
 }
 \examples{
-\dontrun{
-# load the config from a custom config file:
-omnipath_load_config(path = 'my_custom_omnipath_config.yml')
-}
+# a custom config file in a temporary location
+config_file <- tempfile(fileext = '.yml')
+writeLines(c('default:', '  omnipathr.retry_downloads: 5'), config_file)
+
+# options already set in the session have priority over the file
+old_retry <- getOption('omnipathr.retry_downloads')
+options(omnipathr.retry_downloads = NULL)
+omnipath_load_config(path = config_file)
+getOption('omnipathr.retry_downloads')
+
+# restore the previous setting
+options(omnipathr.retry_downloads = old_retry)
+unlink(config_file)
 
 }

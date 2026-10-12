@@ -61,3 +61,11 @@ A data frame (tibble) with ambiguity information added in new
 \description{
 Inspect the ambiguity of a mapping
 }
+\examples{
+d <- tibble::tibble(
+    uniprot = c('P00533', 'P04626', 'P04626', 'Q9Y6K9'),
+    genesymbol = c('EGFR', 'ERBB2', 'HER2', 'IKBKG')
+)
+ambiguity(d, uniprot, genesymbol)
+
+}

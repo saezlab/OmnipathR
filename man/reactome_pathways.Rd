@@ -19,8 +19,6 @@ Retrieves Reactome pathway IDs, names and species. Optionally filters
 by organism.
 }
 \examples{
-\dontrun{
 pathways <- reactome_pathways(9606)
 head(pathways)
-}
 }

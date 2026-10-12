@@ -28,7 +28,6 @@ the TF is included in the TF census (Vaquerizas et al. 2009). The code for
 filtering is adapted from DoRothEA, written by Christian Holland.
 }
 \examples{
-\dontrun{
 remap_interactions <- remap_filtered()
 nrow(remap_interactions)
 # [1] 145680
@@ -44,7 +43,6 @@ remap_interactions
 #  4 ADNP              AC007792.1
 #  5 ADNP              AC011288.2
 # # . with 30,320 more rows
-}
 
 }
 \seealso{

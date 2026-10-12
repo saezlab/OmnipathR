@@ -19,3 +19,13 @@ The input data frame with the new column "datasets" added.
 From logical columns for each dataset, here we create a column that is
 a list of character vectors, containing dataset labels.
 }
+\examples{
+interactions <- tibble::tibble(
+    source_genesymbol = c('EGFR', 'TP53'),
+    target_genesymbol = c('ERBB2', 'MDM2'),
+    omnipath = c(TRUE, TRUE),
+    dorothea = c(FALSE, TRUE)
+)
+datasets_one_column(interactions)
+
+}

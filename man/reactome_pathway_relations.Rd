@@ -18,8 +18,6 @@ Retrieves parent-child relationships between Reactome pathways and
 optionally filters by organism.
 }
 \examples{
-\dontrun{
 relations <- reactome_pathway_relations(9606)
 head(relations)
-}
 }

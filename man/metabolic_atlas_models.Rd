@@ -24,12 +24,10 @@ Downloads a genome-scale metabolic model (GEM) from Metabolic Atlas and
 loads it using the SBMLR package (optional dependency).
 }
 \examples{
-\dontrun{
 # Load model by ID
 model <- metabolic_atlas_models(1)
 
 # Load first human model
-model <- metabolic_atlas_models(tissue = "Cervix")
-}
+model <- metabolic_atlas_models(tissue = 'Cervix')
 
 }

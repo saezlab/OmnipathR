@@ -26,7 +26,6 @@ Downloads all pathway diagrams in the KEGG Pathways database in KGML
 format and processes the XML to extract the interactions.
 }
 \examples{
-\dontrun{
 kegg_pw <- kegg_pathways_download(simplify = TRUE)
 kegg_pw
 # # A tibble: 6,765 x 6
@@ -38,7 +37,6 @@ kegg_pw
 #  4 O95267         P62070         PPrel activ. RASGRP1
 #  5 P62834         P15056         PPrel activ. RAP1A
 # # . with 6,760 more rows, and 1 more variable: genesymbol_target <chr>
-}
 
 }
 \seealso{

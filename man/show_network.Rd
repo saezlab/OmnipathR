@@ -21,11 +21,19 @@ returns a sigmaJS object for the subgraph formed by the neighbors of a node
 of interest.
 }
 \examples{
-\dontrun{
-# get interactions from omnipath
-interactions <- omnipath()
-# create and plot the network containing ATM neighbors
-viz_sigmajs_neighborhood(interactions_df = interactions, int_node = "ATM")
+interactions <- tibble::tibble(
+    source = c('P00533', 'P04626', 'P00533'),
+    target = c('P04626', 'P62993', 'P62993'),
+    source_genesymbol = c('EGFR', 'ERBB2', 'EGFR'),
+    target_genesymbol = c('ERBB2', 'GRB2', 'GRB2'),
+    sources = c('SIGNOR;SPIKE', 'SIGNOR', 'SPIKE'),
+    consensus_stimulation = c(1L, 1L, 0L),
+    curation_effort = c(4L, 2L, 1L)
+)
+if (requireNamespace('sigmajs', quietly = TRUE)) {
+    network_plot <- show_network(interactions, node = 'EGFR')
+    # open the plot in the viewer only in an interactive session
+    if (interactive()) network_plot
 }
 
 }

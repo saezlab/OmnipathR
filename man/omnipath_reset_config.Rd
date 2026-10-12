@@ -30,11 +30,17 @@ Restore the built-in default values of all config parameters of a package
 Restore the built-in default values of all config parameters of OmnipathR
 }
 \examples{
-\dontrun{
-# restore the defaults and write them to the default config file:
-omnipath_reset_config()
-omnipath_save_config()
-}
+old_options <- options()[startsWith(names(options()), 'omnipathr.')]
+config_file <- tempfile(fileext = '.yml')
+
+options(omnipathr.license = 'commercial')
+# restore the defaults and write them to a temporary config file:
+omnipath_reset_config(save = config_file, reset_all = TRUE)
+getOption('omnipathr.license')
+
+# restore the previous settings
+options(old_options)
+unlink(config_file)
 
 }
 \seealso{

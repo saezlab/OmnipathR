@@ -31,11 +31,17 @@ Save the current package configuration
 Save the configuration of a certain package
 }
 \examples{
-\dontrun{
-# after this, all downloads will default to commercial licenses
-# i.e. the resources that allow only academic use will be excluded:
+# save to a temporary file, not to the user level config
+config_file <- tempfile(fileext = '.yml')
+old_license <- getOption('omnipathr.license')
+# with this config, all downloads default to commercial licenses,
+# i.e. the resources that allow only academic use are excluded:
 options(omnipathr.license = 'commercial')
-omnipath_save_config()
-}
+omnipath_save_config(path = config_file)
+head(readLines(config_file))
+
+# restore the previous setting
+options(omnipathr.license = old_license)
+unlink(config_file)
 
 }

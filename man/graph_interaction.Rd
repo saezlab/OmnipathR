@@ -24,6 +24,18 @@ function. Networks can be easily converted to igraph objects, then
 you can make use of all igaph methods, and at the end, get back the
 interactions in a data frame, along with all new edge and node attributes.
 }
+\examples{
+interactions <- tibble::tibble(
+    source = c('P00533', 'P04626', 'P00533'),
+    target = c('P04626', 'P62993', 'P62993'),
+    source_genesymbol = c('EGFR', 'ERBB2', 'EGFR'),
+    target_genesymbol = c('ERBB2', 'GRB2', 'GRB2'),
+    sources = c('SIGNOR;SPIKE', 'SIGNOR', 'SPIKE')
+)
+g <- interaction_graph(interactions)
+graph_interaction(g, implode = TRUE)
+
+}
 \seealso{
 \code{\link{interaction_graph}}
 }
