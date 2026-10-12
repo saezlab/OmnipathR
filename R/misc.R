@@ -940,12 +940,17 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 #'
 #' Build servers are for automated testing of packages. Bioconductor and
 #' Saez Lab (developers & maintainers of this package) both run their own
-#' build servers.
+#' build servers. They run as the users `biocbuild` and `omnipath`. Set the
+#' environment variable `OMNIPATHR_BUILDSERVER=true` to get the same
+#' behaviour under any other user, e.g. for a local `R CMD check`.
+#'
+#' @param user Character: name of the user running R.
 #'
 #' @noRd
-.on_buildserver <- function(){
+.on_buildserver <- function(user = Sys.info()['user']){
 
-    Sys.info()['user'] %in% c('biocbuild', 'omnipath')
+    tolower(Sys.getenv('OMNIPATHR_BUILDSERVER')) == 'true' ||
+    user %in% c('biocbuild', 'omnipath')
 
 }
 
@@ -991,7 +996,8 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
         log_trace('Bypassing call: `%s`.', deparse(sys.call(-1L)))
         log_trace(paste(
             'This behaviour is intended for running R CMD check',
-            'within limited time and is triggered solely by the user name.',
+            'within limited time and is triggered by the user name or',
+            'by the environment variable `OMNIPATHR_BUILDSERVER`.',
             'Please report if you see this anywhere outside of a',
             'Bioconductor build server.'
         ))

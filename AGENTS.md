@@ -220,6 +220,14 @@ When a slow-doctest function calls another slow-doctest function, both
 should have `.slow_doctest()` in their body so each can return early
 independently.
 
+An example that passes the result of a slow-doctest function to another
+function gets `NULL` on build servers. Give that function `.slow_doctest()`
+too, or let the example use a small stand-in object.
+
+Build servers are detected by the user name (`biocbuild`, `omnipath`). To
+reproduce the build-server behaviour under another user, e.g. in a local
+`R CMD check`, set `OMNIPATHR_BUILDSERVER=true`.
+
 ### Error Handling Guidelines
 - **Proper logging**: Always use this pattern for errors/warnings:
    1. Create message with `sprintf()`
