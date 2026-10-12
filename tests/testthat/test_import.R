@@ -136,7 +136,21 @@ test_items <- list(
     mirna_target = list(datasets = 'mirnatarget')
 )
 
-if(can_we_download_anything_at_all() && can_jsonlite_download()){
+#' These tests query the live OmniPath web service. A short outage of the
+#' service must not fail the Bioconductor build, so the Bioconductor build
+#' machines skip them. Our own daily build server runs them.
+on_bioc_buildserver <- function(){
+
+    Sys.info()[['user']] == 'biocbuild'
+
+}
+
+
+if(
+    !on_bioc_buildserver() &&
+    can_we_download_anything_at_all() &&
+    can_jsonlite_download()
+){
 
     top_env <- environment()
 
@@ -209,7 +223,7 @@ if(can_we_download_anything_at_all() && can_jsonlite_download()){
 }else{
 
     test_that(
-        'Skipping tests, could not establish connection.',
+        'Skipping tests: Bioconductor build machine or no connection.',
         expect_true(TRUE)
     )
 
