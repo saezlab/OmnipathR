@@ -374,8 +374,19 @@ giant_component <- function(graph){
 #' @return A network data frame or an igraph object, depending on the
 #'     ``return_df`` parameter.
 #'
+#' @examples
+#' interactions <- tibble::tibble(
+#'     source = c('P00533', 'P04626', 'P00533'),
+#'     target = c('P04626', 'P62993', 'P62993'),
+#'     source_genesymbol = c('EGFR', 'ERBB2', 'EGFR'),
+#'     target_genesymbol = c('ERBB2', 'GRB2', 'GRB2'),
+#'     sources = c('SIGNOR;SPIKE', 'SIGNOR', 'SPIKE')
+#' )
+#' # ERBB2 and its downstream neighbours
+#' subnetwork(interactions, nodes = 'ERBB2', mode = 'out')
+#'
 #' @importFrom magrittr %>% %<>%
-#' @importFrom igraph ego induced_subgraph
+#' @importFrom igraph ego induced_subgraph V
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{interaction_graph}}}
@@ -391,11 +402,8 @@ subnetwork <- function(
     return_df = TRUE
 ) {
 
-    # NSE vs R CMD check workaround
-    igraph_vs <- NULL
-
     network %<>% ensure_igraph
-    nodes %<>% igraph_vs(network)
+    nodes <- if (is.null(nodes)) V(network) else V(network)[nodes]
 
     network %>%
     ego(nodes = nodes, mode = mode, order = order, mindist = mindist) %>%
@@ -413,6 +421,19 @@ subnetwork <- function(
 #'     graph object.
 #'
 #' @return An igraph graph object.
+#'
+#' @examples
+#' interactions <- tibble::tibble(
+#'     source = c('P00533', 'P04626', 'P00533'),
+#'     target = c('P04626', 'P62993', 'P62993'),
+#'     source_genesymbol = c('EGFR', 'ERBB2', 'EGFR'),
+#'     target_genesymbol = c('ERBB2', 'GRB2', 'GRB2'),
+#'     sources = c('SIGNOR;SPIKE', 'SIGNOR', 'SPIKE')
+#' )
+#' g <- ensure_igraph(interactions)
+#' g
+#' # an igraph object is returned unchanged
+#' identical(ensure_igraph(g), g)
 #'
 #' @importFrom magrittr %>%
 #' @importFrom igraph is_igraph
@@ -439,6 +460,17 @@ ensure_igraph <- function(network) {
 #'     by semicolons.
 #'
 #' @return An interaction data frame.
+#'
+#' @examples
+#' interactions <- tibble::tibble(
+#'     source = c('P00533', 'P04626', 'P00533'),
+#'     target = c('P04626', 'P62993', 'P62993'),
+#'     source_genesymbol = c('EGFR', 'ERBB2', 'EGFR'),
+#'     target_genesymbol = c('ERBB2', 'GRB2', 'GRB2'),
+#'     sources = c('SIGNOR;SPIKE', 'SIGNOR', 'SPIKE')
+#' )
+#' g <- interaction_graph(interactions)
+#' graph_interaction(g, implode = TRUE)
 #'
 #' @importFrom igraph as_data_frame
 #' @importFrom tibble as_tibble
