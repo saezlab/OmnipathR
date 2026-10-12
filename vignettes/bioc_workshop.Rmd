@@ -446,9 +446,11 @@ original providers). As an example,
 of the available identifiers in the manual page of `translate_ids` function.
 The evaluation of the parameters is tidyverse style, and both UniProt's
 notation and a simple internal notation can be used. Furthermore, it can
-handle vectors, data frames or list of vectors.
+handle vectors, data frames or list of vectors. The translation data
+comes from UniProt. If UniProt does not answer, the output shows the
+error.
 
-```{r id-translate-vector}
+```{r id-translate-vector, error = TRUE}
 d <- data.frame(uniprot_id = c('P00533', 'Q9ULV1', 'P43897', 'Q9Y2P5'))
 d <- translate_ids(
     d,
@@ -483,8 +485,10 @@ network <- translate_ids(
 and also exposes the ontology tree in three different formats: as a
 data frame, as a list of lists or as an igraph graph object. All these
 can have two directions: child-to-parent (`c2p`) or parent-to-child (`p2c`).
+The ontology comes from the OBO Foundry server. If it does not answer,
+the outputs below show the error.
 
-```{r go}
+```{r go, error = TRUE}
 go <- go_ontology_download()
 go$rel_tbl_c2p
 ```
@@ -493,14 +497,14 @@ To convert the relations to list or graph format, use the
 `relations_table_to_list` or `relations_table_to_graph` functions. To
 swap between `c2p` and `p2c` use the `swap_relations` function.
 
-```{r go-graph}
+```{r go-graph, error = TRUE}
 go_graph <- relations_table_to_graph(go$rel_tbl_c2p)
 go_graph
 ```
 
 It can also translate term IDs to term names:
 
-```{r go-name}
+```{r go-name, error = TRUE}
 ontology_ensure_name('GO:0000022')
 ```
 

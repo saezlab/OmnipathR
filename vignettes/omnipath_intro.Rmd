@@ -590,12 +590,14 @@ complexes_query_genes_join <- unique(
 complexes_query_genes_join$components_genesymbols
 ```
 
-```{r enrichment}
+```{r enrichment, error = TRUE}
 wrn_parp1_cplx_genes <- unlist(
     strsplit(wrn_parp1_complexes$components_genesymbols, "_")
 )
 
-## We can perform an enrichment analyses with the genes in the complex
+## We can perform an enrichment analyses with the genes in the complex.
+## This queries the g:Profiler server. If the server does not answer,
+## the output shows the error.
 enrichment <- gprofiler2::gost(
     wrn_parp1_cplx_genes,
     significant = TRUE,
