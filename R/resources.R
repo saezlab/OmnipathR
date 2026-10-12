@@ -70,8 +70,14 @@ resources <- function(
         query_type
     )
 
+    resources_url <- omnipath_url('resources')
+
+    # The resource list changes when resources are added or removed on the
+    # server. A cached copy is used for one hour at most.
+    omnipath_cache_remove(url = resources_url, max_age = 1 / 24)
+
     resources <- generic_downloader(
-        url_key = omnipath_url('resources'),
+        url_key = resources_url,
         reader = curl_read_json,
         resource = 'OmniPath'
     )
