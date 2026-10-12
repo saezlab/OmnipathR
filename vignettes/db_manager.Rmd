@@ -62,8 +62,10 @@ this function every time you use the dataset. The first time it will be
 loaded, the subsequent times the already loaded dataset will be returned.
 This way each access is registered and extends the expiry time. Let's load
 the human UniProt-GeneSymbol table. Above we see its key is `up_gs`.
+The table comes from UniProt. If UniProt does not answer, the outputs
+below show the error.
 
-```{r get}
+```{r get, error = TRUE}
 up_gs <- get_db('up_gs')
 up_gs
 ```
@@ -93,7 +95,7 @@ counter:
 Sys.sleep(10)
 ```
 
-```{r expiry}
+```{r expiry, error = TRUE}
 up_gs <- get_db('up_gs')
 omnipath_show_db()
 ```

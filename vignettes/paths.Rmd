@@ -67,9 +67,11 @@ tfcensus <-
 ```
 
 Alternatively we can directly download the same dataset, but retrieving
-data from OmniPath is preferable most of the times:
+data from OmniPath is preferable most of the times. The direct download
+reaches the publisher's server. If that server does not answer, the
+output below shows the error:
 
-```{r tfcensus-direct}
+```{r tfcensus-direct, error = TRUE}
 library(purrr)
 
 tfcensus_direct <-
