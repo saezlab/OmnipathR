@@ -34,9 +34,7 @@
 #' @return A data frame (tibble) of GEMs.
 #'
 #' @examples
-#' \dontrun{
-#' metabolic_atlas_models()
-#' }
+#' metabolic_atlas_list_models()
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
@@ -83,13 +81,11 @@ metabolic_atlas_list_models <- function(integrated = FALSE) {
 #'     from xml2 if SBMLR is not available.
 #'
 #' @examples
-#' \dontrun{
 #' # Load model by ID
 #' model <- metabolic_atlas_models(1)
 #'
 #' # Load first human model
-#' model <- metabolic_atlas_models(tissue = "Cervix")
-#' }
+#' model <- metabolic_atlas_models(tissue = 'Cervix')
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
@@ -156,9 +152,7 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 #'     version, or NULL if the `gert` or `git2r` packages are not available.
 #'
 #' @examples
-#' \dontrun{
 #' metabolic_atlas_list_gems()
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble

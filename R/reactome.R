@@ -141,10 +141,8 @@ empty_reactome_chebi_map <- function() {
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' relations <- reactome_pathway_relations(9606)
 #' head(relations)
-#' }
 reactome_pathway_relations <- function(organism = NULL) {
 
     .slow_doctest()
@@ -201,10 +199,8 @@ reactome_pathway_relations <- function(organism = NULL) {
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' pathways <- reactome_pathways(9606)
 #' head(pathways)
-#' }
 reactome_pathways <- function(organism = NULL) {
 
     .slow_doctest()
@@ -267,10 +263,8 @@ reactome_pathways <- function(organism = NULL) {
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' tbl <- reactome_chebi_pathways(organism = 9606)
 #' head(tbl)
-#' }
 reactome_chebi_pathways <- function(
     pathway_ids = NULL,
     organism = NULL,
@@ -378,10 +372,8 @@ reactome_chebi_pathways <- function(
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' df <- reactome_chebi(organism = 9606)
 #' head(df)
-#' }
 reactome_chebi <- function(
     organism = 9606L,
     pathway_ids = NULL,

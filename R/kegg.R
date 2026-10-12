@@ -38,7 +38,6 @@
 #' @return A data frame (tibble) of interactions.
 #'
 #' @examples
-#' \dontrun{
 #' kegg_pw <- kegg_pathways_download(simplify = TRUE)
 #' kegg_pw
 #' # # A tibble: 6,765 x 6
@@ -50,7 +49,6 @@
 #' #  4 O95267         P62070         PPrel activ. RASGRP1
 #' #  5 P62834         P15056         PPrel activ. RAP1A
 #' # # . with 6,760 more rows, and 1 more variable: genesymbol_target <chr>
-#' }
 #'
 #' @importFrom magrittr %>%
 #' @importFrom progress progress_bar
@@ -682,7 +680,6 @@ kegg_info_tbl <- function(tbl){
 #' @return A data frame (tibble) with UniProt IDs and pathway names.
 #'
 #' @examples
-#' \dontrun{
 #' kegg_pw_annot <- kegg_pathway_annotations()
 #' kegg_pw_annot
 #' # # A tibble: 7,341 x 4
@@ -694,7 +691,6 @@ kegg_info_tbl <- function(tbl){
 #' #  4 O95267  RASGRP1    MAPK signaling pathway hsa04010
 #' #  5 P62834  RAP1A      MAPK signaling pathway hsa04010
 #' # # . with 7,336 more rows
-#' }
 #'
 #' @importFrom magrittr %<>% %>%
 #' @importFrom rlang %||%

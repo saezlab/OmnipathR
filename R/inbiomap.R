@@ -40,9 +40,7 @@
 #' @seealso \code{\link{inbiomap_download}}
 #'
 #' @examples
-#' \dontrun{
 #' inbiomap_psimitab <- inbiomap_raw()
-#' }
 inbiomap_raw <- function(curl_verbose = FALSE){
 
     .slow_doctest()
@@ -143,10 +141,8 @@ inbiomap_raw <- function(curl_verbose = FALSE){
 #' @seealso \code{\link{inbiomap_raw}}
 #'
 #' @examples
-#' \dontrun{
 #' inbiomap_interactions <- inbiomap_download()
 #' inbiomap_interactions
-#' }
 #' # # A tibble: 625,641 x 7
 #' #    uniprot_a uniprot_b genesymbol_a genesymbol_b inferred score1 score2
 #' #    <chr>     <chr>     <chr>        <chr>        <lgl>     <dbl>  <dbl>

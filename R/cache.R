@@ -584,14 +584,19 @@ omnipath_cache_clean_db <- cache_locked %@% function(){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' \dontrun{
+#' # use a temporary cache directory, not the real cache
+#' old_cachedir <- getOption('omnipathr.cachedir')
+#' tmp_cachedir <- tempfile('omnipathr_cache_')
+#' omnipath_set_cachedir(tmp_cachedir)
+#' file.create(file.path(tmp_cachedir, 'example.txt'))
+#'
 #' omnipath_cache_wipe()
-#' # the cache is completely empty:
-#' print(omnipathr.env$cache)
-#' # list()
-#' list.files(omnipath_get_cachedir())
-#' # [1] "cache.json"
-#' }
+#' # only the empty cache database is left:
+#' list.files(tmp_cachedir)
+#'
+#' # restore the original cache directory
+#' omnipath_set_cachedir(old_cachedir)
+#' unlink(tmp_cachedir, recursive = TRUE)
 #'
 #'
 #' @export
@@ -656,9 +661,24 @@ omnipath_cache_clean <- function(){
 #' @return Invisibl returns the cache database (list of cache records).
 #'
 #' @examples
-#' \dontrun{
+#' # use a temporary cache directory, not the real cache
+#' old_cachedir <- getOption('omnipathr.cachedir')
+#' tmp_cachedir <- tempfile('omnipathr_cache_')
+#' omnipath_set_cachedir(tmp_cachedir)
+#'
+#' # one complete and one unfinished download
+#' version <- omnipath_cache_latest_or_new(url = 'https://example.org/a')
+#' writeLines('example', version$path)
+#' omnipath_cache_download_ready(version)
+#' unfinished <- omnipath_cache_latest_or_new(url = 'https://example.org/b')
+#'
 #' omnipath_cache_autoclean()
-#' }
+#' # only the complete download is kept:
+#' purrr::map_chr(omnipath_cache_search('example.org'), 'url')
+#'
+#' # restore the original cache directory
+#' omnipath_set_cachedir(old_cachedir)
+#' unlink(tmp_cachedir, recursive = TRUE)
 #'
 #' @export
 omnipath_cache_autoclean <- function(){
@@ -1420,6 +1440,16 @@ omnipath_cache_next_version <- function(key){
 #'
 #' @return Character: the version ID with the most recent download finished
 #'     time
+#'
+#' @examples
+#' # a minimal cache record with two completed downloads
+#' record <- list(
+#'     versions = list(
+#'         `1` = list(status = 'ready', dl_finished = Sys.time() - 3600),
+#'         `2` = list(status = 'ready', dl_finished = Sys.time())
+#'     )
+#' )
+#' omnipath_cache_latest_version(record)
 #'
 #' @export
 omnipath_cache_latest_version <- function(record){

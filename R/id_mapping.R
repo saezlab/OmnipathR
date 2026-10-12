@@ -646,6 +646,13 @@ translate_ids <- function(
 #' @return A data frame (tibble) with ambiguity information added in new
 #'     columns, as described at the "quantify" and "qualify" arguments.
 #'
+#' @examples
+#' d <- tibble::tibble(
+#'     uniprot = c('P00533', 'P04626', 'P04626', 'Q9Y6K9'),
+#'     genesymbol = c('EGFR', 'ERBB2', 'HER2', 'IKBKG')
+#' )
+#' ambiguity(d, uniprot, genesymbol)
+#'
 #' @importFrom rlang !! !!! enquo := sym syms set_names
 #' @importFrom magrittr %>% %<>% or extract not
 #' @importFrom dplyr pull mutate select row_number cur_group_id n_distinct

@@ -43,7 +43,6 @@
 #' @return Data frame (tibble) with interactions.
 #'
 #' @examples
-#' \dontrun{
 #' cpdb_data <- consensuspathdb_download(
 #'     complex_max_size = 1,
 #'     min_score = .99
@@ -63,7 +62,6 @@
 #' #  4 DIP,Reac. 22210847,. TRPC1_HU.      0.998         2 STIM1_HU. TRUE
 #' # # . with 252,292 more rows, and 2 more variables: genesymbol_a <chr>,
 #' # #   genesymbol_b <chr
-#' }
 #'
 #' @importFrom readr read_tsv
 #' @importFrom tidyr separate_rows

@@ -984,6 +984,15 @@ interaction_types <- function() {
 #'
 #' @return The input data frame with the new column "datasets" added.
 #'
+#' @examples
+#' interactions <- tibble::tibble(
+#'     source_genesymbol = c('EGFR', 'TP53'),
+#'     target_genesymbol = c('ERBB2', 'MDM2'),
+#'     omnipath = c(TRUE, TRUE),
+#'     dorothea = c(FALSE, TRUE)
+#' )
+#' datasets_one_column(interactions)
+#'
 #' @importFrom magrittr %>%
 #' @importFrom rlang syms
 #' @importFrom dplyr rowwise mutate c_across select

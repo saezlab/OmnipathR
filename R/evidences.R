@@ -162,6 +162,25 @@ unnest_evidences <- function(data, longer = FALSE, .keep = FALSE) {
 #' @return The input data frame with the evidences in the selected columns
 #'    filtered.
 #'
+#' @examples
+#' ev <- function(resource, dataset = 'omnipath') {
+#'     list(resource = resource, dataset = dataset, references = list())
+#' }
+#' interactions <- tibble::tibble(
+#'     source_genesymbol = c('EGFR', 'ERBB2'),
+#'     target_genesymbol = c('ERBB2', 'GRB2'),
+#'     evidences = list(
+#'         list(directed = list(ev('SIGNOR'), ev('SPIKE'))),
+#'         list(directed = list(ev('SIGNOR'), ev('HPRD', 'pathwayextra')))
+#'     )
+#' )
+#' filtered <- filter_evidences(
+#'     interactions,
+#'     datasets = 'omnipath',
+#'     exclude = 'SPIKE'
+#' )
+#' filtered$evidences
+#'
 #' @importFrom magrittr %>%
 #' @importFrom rlang expr
 #' @importFrom tidyselect eval_select

@@ -247,12 +247,18 @@ config_path <- function(user = FALSE, pkg = 'OmnipathR'){
 #' @return Returns `NULL`.
 #'
 #' @examples
-#' \dontrun{
-#' # after this, all downloads will default to commercial licenses
-#' # i.e. the resources that allow only academic use will be excluded:
+#' # save to a temporary file, not to the user level config
+#' config_file <- tempfile(fileext = '.yml')
+#' old_license <- getOption('omnipathr.license')
+#' # with this config, all downloads default to commercial licenses,
+#' # i.e. the resources that allow only academic use are excluded:
 #' options(omnipathr.license = 'commercial')
-#' omnipath_save_config()
-#' }
+#' omnipath_save_config(path = config_file)
+#' head(readLines(config_file))
+#'
+#' # restore the previous setting
+#' options(omnipathr.license = old_license)
+#' unlink(config_file)
 #'
 #' @export
 #' @importFrom yaml write_yaml
@@ -323,10 +329,19 @@ save_config <- function(
 #' @return Invisibly returns the config as a list.
 #'
 #' @examples
-#' \dontrun{
-#' # load the config from a custom config file:
-#' omnipath_load_config(path = 'my_custom_omnipath_config.yml')
-#' }
+#' # a custom config file in a temporary location
+#' config_file <- tempfile(fileext = '.yml')
+#' writeLines(c('default:', '  omnipathr.retry_downloads: 5'), config_file)
+#'
+#' # options already set in the session have priority over the file
+#' old_retry <- getOption('omnipathr.retry_downloads')
+#' options(omnipathr.retry_downloads = NULL)
+#' omnipath_load_config(path = config_file)
+#' getOption('omnipathr.retry_downloads')
+#'
+#' # restore the previous setting
+#' options(omnipathr.retry_downloads = old_retry)
+#' unlink(config_file)
 #'
 #' @export
 omnipath_load_config <- function(
@@ -485,11 +500,17 @@ reset_config <- function(save = NULL, reset_all = FALSE, pkg = 'OmnipathR'){
 #' @param ... Ignored.
 #'
 #' @examples
-#' \dontrun{
-#' # restore the defaults and write them to the default config file:
-#' omnipath_reset_config()
-#' omnipath_save_config()
-#' }
+#' old_options <- options()[startsWith(names(options()), 'omnipathr.')]
+#' config_file <- tempfile(fileext = '.yml')
+#'
+#' options(omnipathr.license = 'commercial')
+#' # restore the defaults and write them to a temporary config file:
+#' omnipath_reset_config(save = config_file, reset_all = TRUE)
+#' getOption('omnipathr.license')
+#'
+#' # restore the previous settings
+#' options(old_options)
+#' unlink(config_file)
 #'
 #' @return The config as a list.
 #'

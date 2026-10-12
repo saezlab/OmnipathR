@@ -40,10 +40,8 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' pathways <- wikipathways_pathways(organism = 9606)
 #' head(pathways)
-#' }
 wikipathways_pathways <- function(organism = NULL) {
 
     .slow_doctest()
@@ -300,10 +298,8 @@ wikipathways_metabolite_table <- function(
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' df <- wikipathways_metabolites(organism = 9606)
 #' head(df)
-#' }
 wikipathways_metabolites <- function(
     organism = 9606L,
     out_path = NULL,
@@ -385,10 +381,8 @@ wikipathways_metabolites <- function(
 #'
 #' @export
 #' @examples
-#' \dontrun{
 #' df <- wikipathways_metabolites_sparql(organism = 9606)
 #' head(df)
-#' }
 wikipathways_metabolites_sparql <- function(
     organism = 9606L,
     page_size = 50000L,
@@ -396,6 +390,8 @@ wikipathways_metabolites_sparql <- function(
     max_retries = 4L,
     sleep_base = 1
 ) {
+
+    .slow_doctest()
 
     # NSE vs. R CMD check workaround
     pathway_id <- pathway_name <- met_db <- met_xref_raw <-

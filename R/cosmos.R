@@ -88,9 +88,7 @@
 #'     omics analysis. Molecular Systems Biology. 2021 Mar;17(3):e9923.
 #'
 #' @examples
-#' \dontrun{
-#'     human_cosmos <- cosmos_pkn(organism = "human")
-#' }
+#' human_cosmos <- cosmos_pkn(organism = 'human')
 #'
 #' @importFrom magrittr %>% %T>% %<>%
 #' @importFrom rlang exec !!!
