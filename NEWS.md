@@ -1,3 +1,28 @@
+# OmnipathR v4.1.1
+
+## Bug fixes
+
++ KEGG: the organism list comes from the `list/genome` endpoint, because
+  `list/organism` returns 400
++ `oma_organisms`: reads the new OMA header, and downloads the table again
+  when the cached copy is malformed
++ `subnetwork`: selects the vertices with `igraph::V()`
++ `omnipath_cache_remove`: with `max_age` or `min_age`, it removes only the
+  matching versions. Before, it removed all versions when `status` was not
+  given
++ `resources`: the category filter works again
+
+## Technical
+
++ `resources`: downloads with retries, and keeps the list in the cache for
+  one hour at most
++ The environment variable `OMNIPATHR_BUILDSERVER` marks a build server
++ Vignettes build when a third-party server does not answer; the chunk
+  shows the error
++ Tests of the live web service do not run on Bioconductor build machines
++ Runnable examples for 32 more manual pages
++ CITATION file in ASCII
+
 # OmnipathR v4.0.0
 
 ## Features
