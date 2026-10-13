@@ -53,6 +53,6 @@ citEntry(
     title = "OmnipathR: client for the OmniPath web service",
     note = "Bioconductor Package",
     year = 2019,
-    textVersion = "A Valdeolivas, D Turei, A Gabor (2019) “OmnipathR: client
-        for the OmniPath web service.” Bioconductor Package"
+    textVersion = "A Valdeolivas, D Turei, A Gabor (2019) 'OmnipathR: client
+        for the OmniPath web service.' Bioconductor Package"
 )
