@@ -375,7 +375,7 @@ giant_component <- function(graph){
 #'     ``return_df`` parameter.
 #'
 #' @importFrom magrittr %>% %<>%
-#' @importFrom igraph ego induced_subgraph
+#' @importFrom igraph ego induced_subgraph V
 #' @export
 #' @seealso \itemize{
 #'     \item{\code{\link{interaction_graph}}}
@@ -391,11 +391,8 @@ subnetwork <- function(
     return_df = TRUE
 ) {
 
-    # NSE vs R CMD check workaround
-    igraph_vs <- NULL
-
     network %<>% ensure_igraph
-    nodes %<>% igraph_vs(network)
+    nodes <- if (is.null(nodes)) V(network) else V(network)[nodes]
 
     network %>%
     ego(nodes = nodes, mode = mode, order = order, mindist = mindist) %>%
