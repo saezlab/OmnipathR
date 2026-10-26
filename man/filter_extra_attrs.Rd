@@ -38,7 +38,7 @@ cl <- post_translational(
 # Only cell adhesion interactions from Cellinker
 filter_extra_attrs(cl, Cellinker_type = "Cell adhesion")
 
-op <- omnipath(fields = "extra_attrs")
+op <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 # Any mechanism except phosphorylation
 filter_extra_attrs(op, .SIGNOR_mechanism = "phosphorylation")
 

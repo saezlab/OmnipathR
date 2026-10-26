@@ -26,7 +26,7 @@ if the attribute values are more complex objects. As the time of
 writing this, no such complex extra attribute exist in OmniPath.
 }
 \examples{
-op <- omnipath(fields = "extra_attrs")
+op <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 extra_attr_values(op, SIGNOR_mechanism)
 
 }

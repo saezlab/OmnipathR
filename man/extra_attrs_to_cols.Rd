@@ -28,7 +28,10 @@ Data frame with the new column created; the new column is list
 New columns from extra attributes
 }
 \examples{
-i <- omnipath(fields = "extra_attrs")
+i <- omnipath(
+    resources = c("Cellinker", "Macrophage"),
+    fields = "extra_attrs"
+)
 extra_attrs_to_cols(i, Cellinker_type, Macrophage_type)
 extra_attrs_to_cols(
     i,

@@ -110,7 +110,7 @@ json_in_list <- function(x, key, ...) {
 #' @return Character: the names of the extra attributes in the data frame.
 #'
 #' @examples
-#' i <- omnipath(fields = "extra_attrs")
+#' i <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 #' extra_attrs(i)
 #'
 #' @importFrom magrittr %>%
@@ -152,7 +152,10 @@ extra_attrs <- function(data){
 #'     or character type if
 #'
 #' @examples
-#' i <- omnipath(fields = "extra_attrs")
+#' i <- omnipath(
+#'     resources = c("Cellinker", "Macrophage"),
+#'     fields = "extra_attrs"
+#' )
 #' extra_attrs_to_cols(i, Cellinker_type, Macrophage_type)
 #' extra_attrs_to_cols(
 #'     i,
@@ -269,7 +272,7 @@ extra_attrs_to_cols <- function(
 #' @return Logical: TRUE if the data frame has the "extra_attrs" column.
 #'
 #' @examples
-#' i <- omnipath(fields = "extra_attrs")
+#' i <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 #' has_extra_attrs(i)
 #'
 #' @importFrom magrittr %>%
@@ -305,7 +308,10 @@ has_column <- function(data, col) {
 #' @return The data frame filtered to the records having the extra attribute.
 #'
 #' @examples
-#' i <- omnipath(fields = "extra_attrs")
+#' i <- omnipath(
+#'     resources = c("SIGNOR", "Macrophage"),
+#'     fields = "extra_attrs"
+#' )
 #' with_extra_attrs(i, Macrophage_type)
 #'
 #' @importFrom magrittr %>%
@@ -369,7 +375,7 @@ with_extra_attrs <- function(data, ...){
 #' # Only cell adhesion interactions from Cellinker
 #' filter_extra_attrs(cl, Cellinker_type = "Cell adhesion")
 #'
-#' op <- omnipath(fields = "extra_attrs")
+#' op <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 #' # Any mechanism except phosphorylation
 #' filter_extra_attrs(op, .SIGNOR_mechanism = "phosphorylation")
 #'
@@ -451,7 +457,7 @@ filter_extra_attrs <- function(data, ..., na_ok = TRUE){
 #'     extra attribute occuring in the data frame.
 #'
 #' @examples
-#' op <- omnipath(fields = "extra_attrs")
+#' op <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 #' extra_attr_values(op, SIGNOR_mechanism)
 #'
 #' @importFrom magrittr %>%
