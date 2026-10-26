@@ -54,6 +54,7 @@
     omnipathr.use_cache = TRUE,
     omnipathr.retry_downloads = 3L,
     omnipathr.retry_downloads_in_seconds = 5L,
+    omnipathr.retry_downloads_max_wait = 30L,
     omnipathr.db_lifetime = 300L,
     omnipathr.nichenet_results_dir = 'nichenet_results',
     omnipathr.uploadlists_chunk_size = 5000,

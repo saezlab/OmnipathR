@@ -83,14 +83,19 @@ get_url <- function(key, param = list()){
 
 #' Retrieves an URL and inserts variable parameters
 #'
-#' @param url_key Character: name of the option containing the URL
+#' @param url_key Character: name of the option containing the URL, or the
+#'     URL itself. If it has more than one element, the URLs after the first
+#'     one are fallbacks (e.g. mirrors) with the same contents.
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
 #'
+#' @return Character vector of URLs, one for each element of `url_key`.
+#'
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_starts
 #' @importFrom utils URLencode
+#' @importFrom purrr map_chr
 #'
 #' @noRd
 url_parser <- function(
@@ -100,14 +105,19 @@ url_parser <- function(
 ){
 
     url_key %>%
-    {`if`(
-        str_starts(., 'https?://'),
-        .,
-        get_url(., url_key_param)
-    )} %>%
-    c(url_param) %>%
-    do.call(what = sprintf) %>%
-    URLencode()
+    map_chr(
+        function(key){
+            key %>%
+            {`if`(
+                str_starts(., 'https?://'),
+                .,
+                get_url(., url_key_param)
+            )} %>%
+            c(url_param) %>%
+            do.call(what = sprintf) %>%
+            URLencode()
+        }
+    )
 
 }
 
@@ -118,7 +128,11 @@ url_parser <- function(
 #' http://bioconductor.org/developers/how-to/web-query/
 #' It tries to retrieve the resource one or several times before failing.
 #'
-#' @param url Character: the URL to download.
+#' @param url Character: the URL to download. Elements after the first
+#'     are fallback URLs (e.g. mirrors) for the same contents. Each round of
+#'     attempts tries all URLs, one after the other, and the rounds are
+#'     repeated `omnipathr.retry_downloads` times. If more than one URL is
+#'     given, the result has the URL that worked in its `url` attribute.
 #' @param fun The downloader function. Should be able to accept \code{url}
 #'     as its first argument. Alternatively, it can be `NULL` or a function
 #'     for reading the data, in the latter case `path` must be provided, or
@@ -167,6 +181,7 @@ url_parser <- function(
 #' @importFrom magrittr %>% %<>%
 #' @importFrom rlang !!! exec %||%
 #' @importFrom curl new_handle
+#' @importFrom purrr walk
 #'
 #' @noRd
 download_base <- function(
@@ -189,7 +204,7 @@ download_base <- function(
     # NSE vs. R CMD check workaround
     headers <- response <- NULL
 
-    on.exit(close_connection(url))
+    on.exit(walk(url, close_connection))
 
     if(!is.null(init_url)){
 
@@ -218,7 +233,16 @@ download_base <- function(
 
     retries <- getOption('omnipathr.retry_downloads')
 
-    log_level(level = url_loglevel, 'Retrieving URL: `%s`', url)
+    log_level(level = url_loglevel, 'Retrieving URL: `%s`', url[1L])
+
+    if (length(url) > 1L) {
+
+        log_trace(
+            'Fallback URLs: %s',
+            url[-1L] %>% sprintf('`%s`', .) %>% paste(collapse = ', ')
+        )
+
+    }
 
     if(
         !is.null(post) ||
@@ -276,46 +300,58 @@ download_base <- function(
 
     for(attempt in seq(retries)){
 
-        log_trace('Attempt %d/%d: `%s`', attempt, retries, url)
+        errors <- list()
 
-        result <- tryCatch(
-            exec(fun, url, !!!args),
-            error = identity
-        )
+        for(the_url in url){
 
-        if(inherits(result, 'condition')){
+            log_trace('Attempt %d/%d: `%s`', attempt, retries, the_url)
 
-            msg <-
-                sprintf(
-                    'Failed to download `%s` (attempt %d/%d); error: %s',
-                    url,
-                    attempt,
-                    retries,
-                    conditionMessage(result)
-                )
+            result <- tryCatch(
+                exec(fun, the_url, !!!args),
+                error = identity
+            )
 
-            if(attempt == retries){
+            if(!inherits(result, 'condition')){
 
-                log_error_with_info(msg)
-                stop(result)
+                if(length(url) > 1L && !is.null(result)){
 
-            }else{
+                    attr(result, 'url') <- the_url
 
-                log_warn(msg)
-                # to avoid too fast retries
-                Sys.sleep(getOption('omnipathr.retry_downloads_in_seconds'))
+                }
+
+                return(result)
 
             }
 
-        }else{
+            log_warn(
+                'Failed to download `%s` (attempt %d/%d); error: %s',
+                the_url,
+                attempt,
+                retries,
+                conditionMessage(result)
+            )
+            errors %<>% c(list(result))
 
-            break
+        }
+
+        if(attempt < retries){
+
+            wait <- retry_wait(errors, attempt)
+            log_warn('Next round of attempts in %.0f seconds.', wait)
+            # to avoid too fast retries
+            Sys.sleep(wait)
 
         }
 
     }
 
-    return(result)
+    log_error_with_info(
+        'Failed to download `%s` after %d rounds of attempts; last error: %s',
+        paste(url, collapse = '`, `'),
+        retries,
+        conditionMessage(result)
+    )
+    stop(result)
 
 }
 
@@ -325,7 +361,9 @@ download_base <- function(
 #' Retrieves a file by HTTP GET or POST and returns the path to the cache
 #' file.
 #'
-#' @param url_key Character: name of the option containing the URL
+#' @param url_key Character: name of the option containing the URL. If it
+#'     has more than one element, the URLs after the first one are
+#'     fallbacks (e.g. mirrors) with the same contents.
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
 #' returned from the options).
@@ -353,7 +391,13 @@ download_to_cache <- function(
         url_param = url_param
     )
 
-    version <- omnipath_cache_latest_or_new(url = url, post =post, ext = ext)
+    # the fallback URLs have the same contents, hence the cache
+    # stores the file under the first URL
+    version <- omnipath_cache_latest_or_new(
+        url = url[1L],
+        post = post,
+        ext = ext
+    )
 
     from_cache <- version$status == CACHE_STATUS$READY
 
@@ -372,7 +416,7 @@ download_to_cache <- function(
 
     version$path %>%
     origin_cache(from_cache) %>%
-    source_attrs(NULL, url)
+    source_attrs(NULL, url[1L])
 
 }
 
@@ -381,7 +425,9 @@ download_to_cache <- function(
 #' Downloads a table which can be read by a function from the \code{readr}
 #' package or other package.
 #'
-#' @param url_key Character: name of the option containing the URL
+#' @param url_key Character: name of the option containing the URL. If it
+#'     has more than one element, the URLs after the first one are
+#'     fallbacks (e.g. mirrors) with the same contents.
 #' @param reader Function: the function to download and read the data.
 #' @param url_key_param List: variables to insert into the `url_key`.
 #' @param url_param List: variables to insert into the URL string (which is
@@ -426,13 +472,21 @@ generic_downloader <- function(
         url_param = url_param
     )
 
-    log_trace('Looking up in cache: `%s`.', url)
+    # the fallback URLs have the same contents, hence the cache
+    # stores the data under the first URL
+    cache_url <- url[1L]
 
-    result <- omnipath_cache_load(url = url, post = post)
+    log_trace('Looking up in cache: `%s`.', cache_url)
+
+    result <- omnipath_cache_load(url = cache_url, post = post)
+    source_url <- cache_url
 
     if(is.null(result)){
 
-        log_trace('Could not find in cache, initiating download: `%s`.', url)
+        log_trace(
+            'Could not find in cache, initiating download: `%s`.',
+            cache_url
+        )
 
         result <-
             exec(
@@ -443,13 +497,15 @@ generic_downloader <- function(
                 !!!reader_param,
                 use_httr = use_httr,
                 ...
-            ) %>%
-            omnipath_cache_save(url = url, post = post)
+            )
+
+        source_url <- attr(result, 'url') %||% cache_url
+        result %<>% omnipath_cache_save(url = cache_url, post = post)
 
     }
 
     result %>%
-    source_attrs(resource, url)
+    source_attrs(resource, source_url)
 
 }
 
@@ -1323,22 +1379,49 @@ omnipath_httr2_req <- function(
 #' @return An httr2 response object
 #'
 #' @importFrom magrittr %>%
-#' @importFrom httr2 req_perform resp_status resp_status_desc
+#' @importFrom httr2 req_perform req_error resp_status resp_status_desc
 #' @importFrom logger log_trace log_warn
+#' @importFrom rlang abort
 #' @noRd
 omnipath_httr2_perform <- function(req, path = NULL) {
 
     log_trace('Sending HTTP request.')
 
-    resp <- req %>% req_perform(path = path)
+    # httr2 raises an error on HTTP 4xx and 5xx before we could log
+    # the status and the headers, hence we check the status here
+    resp <-
+        req %>%
+        req_error(is_error = function(resp) FALSE) %>%
+        req_perform(path = path)
 
     http_status <- resp %>% resp_status
     msg <- sprintf('HTTP %i (%s)', http_status, resp %>% resp_status_desc)
 
+    if (!identical(resp$url, req$url)) {
+
+        log_trace('Final URL after redirects: `%s`.', resp$url)
+
+    }
+
     if (is_http_error(resp)) {
 
-        log_warn(msg)
-        stop(msg)
+        retry_after <- resp %>% http_retry_after
+        log_warn(
+            '%s from `%s`; response headers: %s',
+            msg,
+            resp$url,
+            resp$headers %>% unclass %>% compact_repr(limit = 99L)
+        )
+        abort(
+            msg,
+            class = c(
+                sprintf('omnipathr_http_%i', http_status),
+                'omnipathr_http_error'
+            ),
+            status = http_status,
+            retry_after = retry_after,
+            url = resp$url
+        )
 
     }
 
@@ -1381,6 +1464,78 @@ omnipath_http_headers <- function() {
         extract(., , 2L) %>% str_trim,
         extract(., , 1L)
     )}
+
+}
+
+
+#' Wait time requested by the server in the Retry-After header
+#'
+#' @param resp An httr2 response object.
+#'
+#' @return Numeric: the number of seconds to wait, or `NULL` if the response
+#'     has no valid Retry-After header.
+#'
+#' @importFrom httr2 resp_header
+#' @noRd
+http_retry_after <- function(resp) {
+
+    value <- resp_header(resp, 'retry-after')
+
+    if (is.null(value)) {
+
+        return(NULL)
+
+    }
+
+    if (grepl('^[0-9]+$', value)) {
+
+        return(as.numeric(value))
+
+    }
+
+    # the header can be an HTTP date instead of a number of seconds
+    date <- suppressWarnings(
+        as.POSIXct(value, format = '%a, %d %b %Y %H:%M:%S', tz = 'GMT')
+    )
+
+    `if`(
+        is.na(date),
+        NULL,
+        max(0, as.numeric(difftime(date, Sys.time(), units = 'secs')))
+    )
+
+}
+
+
+#' Time to wait before the next round of download attempts
+#'
+#' The wait time grows linearly with the number of rounds. If a server
+#' limits the request rate or is overloaded (HTTP 429 or 503), and asks for
+#' a longer wait in the Retry-After header, the wait is that long, but never
+#' longer than the `omnipathr.retry_downloads_max_wait` option. The waits
+#' stay short, because a long wait can make a package check exceed its time
+#' limit on a build server.
+#'
+#' @param errors List of the conditions from the failed attempts of the
+#'     round.
+#' @param attempt Integer: the number of the round.
+#'
+#' @return Numeric: the number of seconds to wait.
+#'
+#' @importFrom purrr keep map_dbl
+#' @noRd
+retry_wait <- function(errors, attempt) {
+
+    max_wait <- getOption('omnipathr.retry_downloads_max_wait')
+    wait <- getOption('omnipathr.retry_downloads_in_seconds') * attempt
+
+    retry_after <-
+        errors %>%
+        keep(~inherits(.x, c('omnipathr_http_429', 'omnipathr_http_503'))) %>%
+        map_dbl(~.x$retry_after %||% 0) %>%
+        c(0)
+
+    min(max(wait, retry_after), max_wait)
 
 }
 

@@ -140,7 +140,13 @@
         "https://rescued.omnipathdb.org/ensembl-species.html"
     ],
     "biomart": [
-        "http://www.ensembl.org/biomart/martservice?query=%s"
+        "https://www.ensembl.org/biomart/martservice?query=%s"
+    ],
+    "biomart_useast": [
+        "https://useast.ensembl.org/biomart/martservice?query=%s"
+    ],
+    "biomart_asia": [
+        "https://asia.ensembl.org/biomart/martservice?query=%s"
     ],
     "homologene": [
         "https://rescued.omnipathdb.org/homologene.data"

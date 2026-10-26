@@ -1168,7 +1168,8 @@ swap_undirected <- function(data){
 #' @param ... Passed to the internal function \code{download_base} and
 #'     from there ultimately to \code{fun}.
 #'
-#' @importFrom logger log_trace log_info
+#' @importFrom logger log_trace log_info log_warn
+#' @importFrom rlang %||%
 #' @noRd
 omnipath_download <- function(url, fun, cache = NULL, ...) {
 
@@ -1193,33 +1194,27 @@ omnipath_download <- function(url, fun, cache = NULL, ...) {
 
     }
 
-    for(the_url in url) {
-
-        log_trace('Attempting `%s`', the_url)
-
-        result <- tryCatch(
-            download_base(the_url, fun, ...),
-            error = function(e) {
-                log_warn(
-                    'Failed to download: `%s`; error: %s',
-                    the_url,
-                    conditionMessage(e)
-                )
-                nothing <- log_all_info('OmnipathR')
-                NULL
-            }
-        )
-
-        if(!is.null(result)){
-
-            log_info('Successfully retrieved: `%s`', the_url)
-            if(cache) {
-                omnipath_cache_save(data = result, url = the_url)
-            }
-            attr(result, 'url') <- the_url
-            return(result)
-
+    result <- tryCatch(
+        download_base(url, fun, ...),
+        error = function(e) {
+            log_warn(
+                'Failed to download: `%s`; error: %s',
+                paste(url, collapse = '`, `'),
+                conditionMessage(e)
+            )
+            NULL
         }
+    )
+
+    if(!is.null(result)){
+
+        the_url <- attr(result, 'url') %||% url[1L]
+        log_info('Successfully retrieved: `%s`', the_url)
+        if(cache) {
+            omnipath_cache_save(data = result, url = the_url)
+        }
+        attr(result, 'url') <- the_url
+        return(result)
 
     }
 
