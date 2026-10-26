@@ -1,3 +1,37 @@
+# OmnipathR v4.1.2
+
+## Deprecated
+
++ The NicheNet functions (`nichenet_*`) are deprecated, and the NicheNet
+  vignette is removed. A new version will retrieve the NicheNet prior
+  knowledge built by the OmniPath server. The resource clients written for
+  NicheNet (e.g. EVEX, Harmonizome, ReMap) stay
++ `static_table` and `static_tables` are deprecated. The regular query
+  functions try the plain HTTP server if the HTTPS server fails
++ The packages mlrMBO, parallelMap, ParamHelpers and smoof are not in
+  Suggests any more. `nichenet_optimization` asks for them if they are not
+  installed
+
+## Bug fixes
+
++ `static_table`: works again for interaction tables. Before, it stopped
+  with "argument is of length zero" in `unnest_evidences`
++ Slow functions return their full result when another package calls them
+  on a build server. Before, they returned `NULL` in the checks of
+  dependent packages, such as wppi
+
+## Technical
+
++ The downloader accepts fallback URLs (mirrors). Each round of attempts
+  tries all URLs once, then the next round starts after a short wait
++ HTTP errors: the log shows the status, the final URL and the response
+  headers. After HTTP 429 or 503, the wait follows the `Retry-After`
+  header, but it is never longer than the new option
+  `omnipathr.retry_downloads_max_wait` (30 s)
++ `biomart_query`: tries the US East and Asia mirrors of Ensembl if the
+  main site fails. On build servers, if all mirrors fail, it gives a
+  warning and an empty table, and skips Ensembl for the rest of the session
+
 # OmnipathR v4.1.1
 
 ## Bug fixes
