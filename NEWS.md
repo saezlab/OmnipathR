@@ -7,6 +7,11 @@
   given
 + `resources`: the category filter works again
 + `subnetwork`: selects the vertices with `igraph::V()`
++ `static_table`: works again for interaction tables. Before, it stopped
+  with "argument is of length zero" in `unnest_evidences`
++ Slow functions return their full result when another package calls them
+  on a build server. Before, they returned `NULL` in the checks of
+  dependent packages
 
 ## Technical
 
@@ -15,6 +20,16 @@
 + Vignettes build when a third-party server does not answer; the chunk
   shows the error
 + Tests of the live web service do not run on Bioconductor build machines
++ The downloader accepts fallback URLs (mirrors). Each round of attempts
+  tries all URLs once, then the next round starts after a short wait
++ HTTP errors: the log shows the status, the final URL and the response
+  headers. After HTTP 429 or 503, the wait follows the `Retry-After`
+  header, but it is never longer than the new option
+  `omnipathr.retry_downloads_max_wait` (30 s)
++ `biomart_query`: tries the US East and Asia mirrors of Ensembl if the
+  main site fails. On build servers, if all mirrors fail, it gives a
+  warning and an empty table, and skips Ensembl for the rest of the session
++ Faster examples, to keep the check under the time limit
 
 # OmnipathR v4.0.1
 
