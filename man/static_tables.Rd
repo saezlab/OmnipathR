@@ -10,6 +10,12 @@ static_tables()
 A data frame listing the available tables.
 }
 \description{
+Deprecated: the static tables will be removed in the next Bioconductor
+release. Use the regular query functions, such as \code{\link{collectri}}
+or \code{\link{annotations}}: they try the plain HTTP server if the
+HTTPS server fails.
+}
+\details{
 A few resources and datasets are available also as plain TSV files and
 can be accessed without TLS. The purpose of these tables is to make the
 most often used OmniPath data available on computers with configuration

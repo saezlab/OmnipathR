@@ -382,7 +382,7 @@ omnipath_post_download <- function(
             result %<>% only_from(
                 datasets = param$datasets,
                 resources = param$resources,
-                .keep = param$keep_evidences
+                .keep = isTRUE(param$keep_evidences)
             )
         }
 

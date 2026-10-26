@@ -22,6 +22,11 @@
 
 #' List the static tables available from OmniPath
 #'
+#' Deprecated: the static tables will be removed in the next Bioconductor
+#' release. Use the regular query functions, such as \code{\link{collectri}}
+#' or \code{\link{annotations}}: they try the plain HTTP server if the
+#' HTTPS server fails.
+#'
 #' A few resources and datasets are available also as plain TSV files and
 #' can be accessed without TLS. The purpose of these tables is to make the
 #' most often used OmniPath data available on computers with configuration
@@ -46,6 +51,8 @@ static_tables <- function() {
 
     # NSE vs. R CMD check workaround
     fname <- organism <- time <- size <- NULL
+
+    .static_deprecated('static_tables')
 
     'omnipath_static' %>%
     url_parser %>%
@@ -85,6 +92,11 @@ static_tables <- function() {
 
 
 #' Retrieve a static table from OmniPath
+#'
+#' Deprecated: the static tables will be removed in the next Bioconductor
+#' release. Use the regular query functions, such as \code{\link{collectri}}
+#' or \code{\link{annotations}}: they try the plain HTTP server if the
+#' HTTPS server fails.
 #'
 #' A few resources and datasets are available also as plain TSV files and
 #' can be accessed without TLS. The purpose of these tables is to make the
@@ -136,6 +148,8 @@ static_table <- function(
 
     # NSE vs. R CMD check workaround
     .env <- NULL
+
+    .static_deprecated('static_table')
 
     log_warn(
          sprintf('Accessing `%s` as a static table: this is not ', resource),
@@ -212,5 +226,30 @@ static_table <- function(
         ),
         .
     )}
+
+}
+
+
+#' Deprecation warning for the static tables
+#'
+#' @param fun Character: name of the deprecated function.
+#'
+#' @return Returns `NULL` invisibly.
+#'
+#' @noRd
+.static_deprecated <- function(fun) {
+
+    .Deprecated(
+        msg = sprintf(
+            paste0(
+                '`%s` is deprecated: the static tables will be removed in ',
+                'the next Bioconductor release. Use the regular query ',
+                'functions, such as `collectri` or `annotations`.'
+            ),
+            fun
+        )
+    )
+
+    invisible(NULL)
 
 }
