@@ -17,6 +17,11 @@ produced by \code{\link{nichenet_lr_network}}.}
 The same list as `expression` with certain elements removed.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Removes from the expression data the perturbation experiments involving
 ligands without connections.
 }

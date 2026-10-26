@@ -25,6 +25,11 @@ TF census.}
 Data frame with gene regulatory interactions in NicheNet format.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Builds a gene regulatory network using data from the ReMap database
 and converts it to a format suitable for NicheNet.
 }

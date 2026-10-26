@@ -10,6 +10,11 @@ nichenet_results_dir()
 Character: path to the NicheNet results directory.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Path to the directory to save intermediate and final outputs from NicheNet
 methods.
 }

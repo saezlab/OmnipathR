@@ -10,8 +10,6 @@ An `R` client for the **OmniPath** web service and many other resources.
 * Functions for post-processing OmniPath data
 * Ensembl BioMart, UniProt and KEGG clients
 * Access to other databases (18+ resources, see below)
-* Integration to NicheNet, a method to infer ligand activities from
-   transcriptomics data
 
 ### OmniPath web service client
 

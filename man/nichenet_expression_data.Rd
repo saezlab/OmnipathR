@@ -12,6 +12,11 @@ Nested list, each element contains a data frame of processed
     expression data and key variables about the experiment.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 NicheNet uses expression data from a collection of published ligand or
 receptor KO or perturbation experiments to build its model. This function
 retrieves the original expression data, deposited in Zenodo

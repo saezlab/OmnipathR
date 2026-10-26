@@ -37,6 +37,11 @@ A tibble with columns ligand, target and weight (i.e. regulatory
     potential score).
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 A wrapper around \code{nichenetr::get_weighted_ligand_target_links} to
 compile a data frame with weighted links from the top ligands to their
 top targets.

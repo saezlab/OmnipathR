@@ -38,8 +38,7 @@ abstract: |
   features of the OmniPath web server. Apart from OmniPath, it provides
   direct access to more than 15 further signaling databases (such as BioPlex,
   InBioMap, EVEX, Harmonizome, etc) and contains a number of convenience
-  methods, such as igraph integration, and a close integration with the
-  NicheNet pipeline for ligand activity prediction from transcriptomics data.
+  methods, such as igraph integration.
   In this demo we show the diverse data in OmniPath and the versatile and
   convenient ways to access this data by OmnipathR.
 vignette: |
@@ -536,10 +535,8 @@ The internal state is contained by the `omnipathr.env` environment.
 
 ## Further information
 
-Find more examples in the other vignettes and the manual. For example, the
-NicheNet vignette presents the integratation between `OmnipathR` and
-`nichenetr`, a method for prediction of ligand-target gene connections.
-Another Bioconductor package `wppi` is able to add context specific scores
+Find more examples in the other vignettes and the manual. The
+Bioconductor package `wppi` is able to add context specific scores
 to networks, based on genes of interest, functional annotations and network
 proximity (random walks with restart). The new `paths` vignette presents
 some approaches to construct pathways from networks. The design of the

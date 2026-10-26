@@ -21,7 +21,9 @@ A named list with two elements: `weighted_networks` and
     `optimized_parameters`.
 }
 \description{
-Construct a NicheNet ligand-target model
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
 }
 \examples{
 \dontrun{

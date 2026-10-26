@@ -15,6 +15,11 @@ A named list with the intermediate and final outputs of the
     `weighted_networks` and `ligand_target_matrix`.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Loads a tiny network and runs the NicheNet pipeline with low number of
 iterations in the optimization process. This way the pipeline runs in
 a reasonable time in order to test the code. Due to the random subsampling

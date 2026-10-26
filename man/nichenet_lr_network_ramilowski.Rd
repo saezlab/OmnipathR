@@ -16,6 +16,11 @@ nichenet_lr_network_ramilowski(
 Data frame with ligand-receptor interactions in NicheNet format.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Downloads ligand-receptor interactions from Supplementary Table 2 of the
 paper 'A draft network of ligand–receptor-mediated multicellular signalling
 in human' (Ramilowski et al. 2015,

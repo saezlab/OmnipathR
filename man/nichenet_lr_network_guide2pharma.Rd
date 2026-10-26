@@ -10,6 +10,11 @@ nichenet_lr_network_guide2pharma()
 Data frame with ligand-receptor interactions in NicheNet format.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Downloads ligand-receptor interactions from the Guide to Pharmacology
 database and converts it to a format suitable for NicheNet.
 }

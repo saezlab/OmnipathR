@@ -35,6 +35,11 @@ A result object from the function \code{mlrMBO::mbo}. Among other
     corresponding to every input etc.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Optimize NicheNet method parameters, i.e. PageRank parameters and source
 weights, basedon a collection of experiments where the effect of a ligand
 on gene expression was measured.

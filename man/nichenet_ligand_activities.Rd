@@ -51,7 +51,9 @@ A named list with `ligand_activities` (a tibble giving several
     columns ligand, target and weight (i.e. regulatory potential score)).
 }
 \description{
-Calls the NicheNet ligand activity analysis
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
 }
 \examples{
 \dontrun{

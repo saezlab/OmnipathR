@@ -32,7 +32,9 @@ function it only affects the output file name.}
 A matrix containing ligand-target probability scores.
 }
 \description{
-Creates a NicheNet ligand-target matrix
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
 }
 \examples{
 \dontrun{

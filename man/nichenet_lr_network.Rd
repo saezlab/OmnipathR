@@ -36,6 +36,11 @@ A network data frame (tibble) with ligand-receptor interactions
     suitable for use with NicheNet.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Builds ligand-receptor network prior knowledge for NicheNet using multiple
 resources.
 }

@@ -10,6 +10,11 @@ nichenet_workarounds()
 Returns \code{NULL}.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 NicheNet requires the availability of some lazy loaded external data
 which are not available if the package is not loaded and attached. Also,
 the \code{BBmisc::convertToShortString} used for error reporting in

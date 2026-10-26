@@ -14,6 +14,11 @@ A network data frame (tibble) with signaling interactions
     suitable for use with NicheNet.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
 Supplementary Table S6. Find out more at
 \url{https://doi.org/10.1126/scisignal.2001699}.

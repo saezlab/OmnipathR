@@ -14,6 +14,11 @@ A network data frame (tibble) with signaling interactions
     suitable for use with NicheNet.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Builds signaling network prior knowledge using ConsensusPathDB (CPDB)
 data. Note, the interactions from CPDB are not directed and many of them
 comes from complex expansion. Find out more at

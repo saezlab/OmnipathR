@@ -102,6 +102,11 @@ A named list with the intermediate and final outputs of the
     `weighted_networks` and `ligand_target_matrix`.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Builds all prior knowledge data required by NicheNet. For this it calls
 a multitude of methods to download and combine data from various
 databases according to the settings. The content of the prior knowledge
@@ -111,8 +116,8 @@ optimization to build a NicheNet model. This results a weighted ligand-
 target matrix. Then, considering the expressed genes from user provided
 data, a gene set of interest and background genes, it executes the
 NicheNet ligand activity analysis.
-}
-\details{
+
+
 About \emph{small} and \emph{tiny} networks: Building a NicheNet model
 is computationally demanding, taking several hours to run. As this is
 related to the enormous size of the networks, to speed up testing we can

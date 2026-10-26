@@ -38,10 +38,7 @@ Description: A client for the OmniPath web service
     Gene Ontology, Guide to Pharmacology (IUPHAR/BPS), Harmonizome,
     HTRIdb, Human Phenotype Ontology, InWeb InBioMap, KEGG Pathway,
     Pathway Commons, Ramilowski et al. 2015, RegNetwork, ReMap, TF
-    census, TRRUST and Vinayagam et al. 2011. Furthermore, OmnipathR
-    features a close integration  with the NicheNet method for
-    ligand activity prediction from transcriptomics data, and its
-    R implementation `nichenetr` (available only on github).
+    census, TRRUST and Vinayagam et al. 2011.
 License: MIT + file LICENSE
 URL: https://r.omnipathdb.org/
 BugReports: https://github.com/saezlab/OmnipathR/issues
@@ -98,12 +95,8 @@ Suggests:
     ggraph,
     gprofiler2,
     knitr,
-    mlrMBO,
-    parallelMap,
-    ParamHelpers,
     R.matlab,
     SBMLR,
     sigmajs,
-    smoof,
     testthat
 RoxygenNote: 7.3.3

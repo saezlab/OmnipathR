@@ -21,10 +21,7 @@ package make requests by the HTTP protocol to retreive the data. Hence,
 fast Internet access is required for a propser use of OmnipathR.
 
 The package also provides some utility functions to filter, analyse and
-visualize the data. Furthermore, OmnipathR features a close integration
-with the NicheNet method for ligand activity prediction from
-transcriptomics data, and its R implementation nichenetr (available in
-CRAN).
+visualize the data.
 }
 \examples{
 \dontrun{

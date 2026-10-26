@@ -47,6 +47,11 @@ A named list with three network data frames (tibbles): the
     networks.
 }
 \description{
+Deprecated: the NicheNet support in OmnipathR will be removed in
+the next Bioconductor release. A new version will retrieve the
+NicheNet prior knowledge built by the OmniPath server.
+}
+\details{
 Builds network knowledge required by NicheNet. For this it calls
 a multitude of methods to download and combine data from various
 databases according to the settings. The content of the prior knowledge

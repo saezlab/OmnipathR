@@ -22,6 +22,10 @@
 
 #' Executes the full NicheNet pipeline
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds all prior knowledge data required by NicheNet. For this it calls
 #' a multitude of methods to download and combine data from various
 #' databases according to the settings. The content of the prior knowledge
@@ -150,6 +154,8 @@ nichenet_main <- function(
     quality_filter_param = list()
 ){
 
+    .nichenet_deprecated('nichenet_main')
+
     # NSE vs. R CMD check workaround
     optimization_results <- optimized_parameters <- use_weights_networks <-
     ligand_target_matrix <- NULL
@@ -239,6 +245,10 @@ nichenet_main <- function(
 
 #' Removes experiments with orphan ligands
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Removes from the expression data the perturbation experiments involving
 #' ligands without connections.
 #'
@@ -259,6 +269,8 @@ nichenet_main <- function(
 #' @importFrom purrr keep
 nichenet_remove_orphan_ligands <- function(expression, lr_network){
 
+    .nichenet_deprecated('nichenet_remove_orphan_ligands')
+
     .slow_doctest()
 
     all_ligands <- lr_network$from %>% unique
@@ -278,6 +290,10 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 
 
 #' Optimizes NicheNet model parameters
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Optimize NicheNet method parameters, i.e. PageRank parameters and source
 #' weights, basedon a collection of experiments where the effect of a ligand
@@ -310,6 +326,7 @@ nichenet_remove_orphan_ligands <- function(expression, lr_network){
 #' @importFrom magrittr %>% %T>% %<>%
 #' @importFrom purrr map
 #' @importFrom dplyr mutate
+#' @importFrom logger log_error
 nichenet_optimization <- function(
     networks,
     expression,
@@ -318,9 +335,26 @@ nichenet_optimization <- function(
     mlrmbo_optimization_param = list()
 ){
 
+    .nichenet_deprecated('nichenet_optimization')
+
     # R CMD check workaround
     nichenetr <- convert_expression_settings_evaluation <-
-    mlrmbo_optimization <- model_evaluation_optimization <- NULL
+    mlrmbo_optimization <- model_evaluation_optimization <-
+    smoof <- makeMultiObjectiveFunction <- ParamHelpers <- makeParamSet <-
+    makeNumericVectorParam <- NULL
+
+    missing <- missing_packages(c('smoof', 'ParamHelpers', 'mlrMBO'))
+
+    if(length(missing)){
+
+        msg <- sprintf(
+            'NicheNet optimization requires the packages: %s.',
+            enum_format(missing)
+        )
+        log_error(msg)
+        stop(msg)
+
+    }
 
     resources <-
         networks %>%
@@ -337,7 +371,7 @@ nichenet_optimization <- function(
     mof_topology_correction <-
         make_multi_objective_function_param %>%
         add_defaults(
-            fun = smoof::makeMultiObjectiveFunction,
+            fun = smoof%::%makeMultiObjectiveFunction,
             defaults = list(
                 name = 'nichenet_optimization',
                 description = paste(
@@ -345,36 +379,36 @@ nichenet_optimization <- function(
                     'expensive black-box function'
                 ),
                 fn = nichenetr%::%model_evaluation_optimization,
-                par.set = ParamHelpers::makeParamSet(
-                    ParamHelpers::makeNumericVectorParam(
+                par.set = (ParamHelpers%::%makeParamSet)(
+                    (ParamHelpers%::%makeNumericVectorParam)(
                         'source_weights',
                         len = n_resources,
                         lower = 0,
                         upper = 1,
                         tunable = FALSE
                     ),
-                    ParamHelpers::makeNumericVectorParam(
+                    (ParamHelpers%::%makeNumericVectorParam)(
                         'lr_sig_hub',
                         len = 1,
                         lower = 0,
                         upper = 1,
                         tunable = TRUE
                     ),
-                    ParamHelpers::makeNumericVectorParam(
+                    (ParamHelpers%::%makeNumericVectorParam)(
                         'gr_hub',
                         len = 1,
                         lower = 0,
                         upper = 1,
                         tunable = TRUE
                     ),
-                    ParamHelpers::makeNumericVectorParam(
+                    (ParamHelpers%::%makeNumericVectorParam)(
                         'ltf_cutoff',
                         len = 1,
                         lower = 0.9,
                         upper = 0.999,
                         tunable = TRUE
                     ),
-                    ParamHelpers::makeNumericVectorParam(
+                    (ParamHelpers%::%makeNumericVectorParam)(
                         'damping_factor',
                         len = 1,
                         lower = 0.01,
@@ -388,7 +422,7 @@ nichenet_optimization <- function(
                 minimize = rep(FALSE, 4)
             )
         ) %>%
-        do.call(what = smoof::makeMultiObjectiveFunction)
+        do.call(what = smoof%::%makeMultiObjectiveFunction)
 
     objective_function_param %<>%
         add_defaults(
@@ -439,6 +473,10 @@ nichenet_optimization <- function(
 
 #' Construct a NicheNet ligand-target model
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' @param optimization_results The outcome of NicheNet parameter optimization
 #'     as produced by \code{\link{nichenet_optimization}}.
 #' @param networks A list with NicheNet format signaling, ligand-receptor
@@ -467,6 +505,8 @@ nichenet_build_model <- function(
     networks,
     use_weights = TRUE
 ){
+
+    .nichenet_deprecated('nichenet_build_model')
 
     # R CMD check workaround
     nichenetr <- process_mlrmbo_nichenet_optimization <-
@@ -530,6 +570,10 @@ nichenet_build_model <- function(
 
 #' Creates a NicheNet ligand-target matrix
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' @param weighted_networks Weighted networks as provided by
 #'     \code{\link{nichenet_build_model}}.
 #' @param lr_network A data frame with ligand-receptor interactions, as
@@ -566,6 +610,8 @@ nichenet_ligand_target_matrix <- function(
     use_weights = TRUE,
     construct_ligand_target_matrix_param = list()
 ){
+
+    .nichenet_deprecated('nichenet_ligand_target_matrix')
 
     # R CMD check workaround
     nichenetr <- construct_ligand_target_matrix <- NULL
@@ -607,6 +653,10 @@ nichenet_ligand_target_matrix <- function(
 
 
 #' Calls the NicheNet ligand activity analysis
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' @param ligand_target_matrix A matrix with rows and columns corresponding
 #'     to ligands and targets, respectively. Produced by
@@ -671,6 +721,8 @@ nichenet_ligand_activities <- function(
     n_top_targets = 250
 ){
 
+    .nichenet_deprecated('nichenet_ligand_activities')
+
     # R CMD check workaround
     nichenetr <- predict_ligand_activities <- NULL
 
@@ -730,6 +782,10 @@ nichenet_ligand_activities <- function(
 
 
 #' Compiles a table with weighted ligand-target links
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' A wrapper around \code{nichenetr::get_weighted_ligand_target_links} to
 #' compile a data frame with weighted links from the top ligands to their
@@ -794,6 +850,8 @@ nichenet_ligand_target_links <- function(
     n_top_targets = 250
 ){
 
+    .nichenet_deprecated('nichenet_ligand_target_links')
+
     # R CMD check workaround
     nichenetr <- get_weighted_ligand_target_links <- NULL
 
@@ -816,6 +874,10 @@ nichenet_ligand_target_links <- function(
 
 #' Path to the current NicheNet results directory
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Path to the directory to save intermediate and final outputs from NicheNet
 #' methods.
 #'
@@ -829,6 +891,8 @@ nichenet_ligand_target_links <- function(
 #' @importFrom magrittr %>% %T>%
 nichenet_results_dir <- function(){
 
+    .nichenet_deprecated('nichenet_results_dir')
+
     'omnipathr.nichenet_results_dir' %>%
     options %>%
     `[[`(1) %T>%
@@ -838,6 +902,10 @@ nichenet_results_dir <- function(){
 
 
 #' Builds NicheNet network prior knowledge
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds network knowledge required by NicheNet. For this it calls
 #' a multitude of methods to download and combine data from various
@@ -911,6 +979,8 @@ nichenet_networks <- function(
     quality_filter_param = list()
 ){
 
+    .nichenet_deprecated('nichenet_networks')
+
     networks_rds_path <-
         nichenet_results_dir() %>%
         file.path('networks.rds')
@@ -946,6 +1016,10 @@ nichenet_networks <- function(
 
 
 #' Builds a NicheNet signaling network
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds signaling network prior knowledge for NicheNet using multiple
 #' resources.
@@ -1014,6 +1088,8 @@ nichenet_signaling_network <- function(
     only_omnipath = FALSE
 ){
 
+    .nichenet_deprecated('nichenet_signaling_network')
+
     .slow_doctest()
 
     environment() %>%
@@ -1025,6 +1101,10 @@ nichenet_signaling_network <- function(
 
 
 #' Builds a NicheNet ligand-receptor network
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds ligand-receptor network prior knowledge for NicheNet using multiple
 #' resources.
@@ -1073,6 +1153,8 @@ nichenet_lr_network <- function(
     quality_filter_param = list()
 ){
 
+    .nichenet_deprecated('nichenet_lr_network')
+
     .slow_doctest()
 
     environment() %>%
@@ -1084,6 +1166,10 @@ nichenet_lr_network <- function(
 
 
 #' Builds a NicheNet gene regulatory network
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds gene regulatory network prior knowledge for NicheNet using multiple
 #' resources.
@@ -1150,6 +1236,8 @@ nichenet_gr_network <- function(
     trrust = list(),
     only_omnipath = FALSE
 ){
+
+    .nichenet_deprecated('nichenet_gr_network')
 
     .slow_doctest()
 
@@ -1269,6 +1357,10 @@ nichenet_network <- function(
 
 #' Builds signaling network for NicheNet using OmniPath
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Retrieves network prior knowledge from OmniPath and provides it in
 #' a format suitable for NicheNet.
 #' This method never downloads the `ligrecextra` dataset because the
@@ -1298,6 +1390,8 @@ nichenet_signaling_network_omnipath <- function(
     ...
 ){
 
+    .nichenet_deprecated('nichenet_signaling_network_omnipath')
+
     args <- list(...)
     args$exclude %<>% union('ligrecextra')
     args$entity_types <- 'protein'
@@ -1309,6 +1403,10 @@ nichenet_signaling_network_omnipath <- function(
 
 
 #' Builds ligand-receptor network for NicheNet using OmniPath
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Retrieves network prior knowledge from OmniPath and provides it in
 #' a format suitable for NicheNet.
@@ -1353,6 +1451,8 @@ nichenet_lr_network_omnipath <- function(
     ...
 ){
 
+    .nichenet_deprecated('nichenet_lr_network_omnipath')
+
     .slow_doctest()
 
     import_intercell_network(...) %>%
@@ -1363,6 +1463,10 @@ nichenet_lr_network_omnipath <- function(
 
 
 #' Builds gene regulatory network for NicheNet using OmniPath
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Retrieves network prior knowledge from OmniPath and provides it in
 #' a format suitable for NicheNet.
@@ -1400,6 +1504,8 @@ nichenet_gr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
 ){
+
+    .nichenet_deprecated('nichenet_gr_network_omnipath')
 
     args <- list(...)
     args$exclude %<>% union('ligrecextra')
@@ -1444,6 +1550,10 @@ omnipath_interactions_postprocess <- function(interactions, type){
 
 #' NicheNet signaling network from PathwayCommons
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds signaling network prior knowledge for NicheNet using PathwayCommons.
 #'
 #' @param interaction_types Character vector with PathwayCommons interaction
@@ -1473,6 +1583,8 @@ nichenet_signaling_network_pathwaycommons <- function(
     ...
 ){
 
+    .nichenet_deprecated('nichenet_signaling_network_pathwaycommons')
+
     .slow_doctest()
 
     nichenet_pathwaycommons_common(
@@ -1484,6 +1596,10 @@ nichenet_signaling_network_pathwaycommons <- function(
 
 
 #' NicheNet signaling network from Harmonizome
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds signaling network prior knowledge for NicheNet using Harmonizome
 #'
@@ -1509,6 +1625,8 @@ nichenet_signaling_network_harmonizome <- function(
     ),
     ...
 ){
+
+    .nichenet_deprecated('nichenet_signaling_network_harmonizome')
 
     .slow_doctest()
 
@@ -1590,6 +1708,10 @@ harmonizome_nichenet_process <- function(dataset){
 
 #' NicheNet signaling network from Vinayagam
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds signaling network prior knowledge for NicheNet using Vinayagam 2011
 #' Supplementary Table S6. Find out more at
 #' \url{https://doi.org/10.1126/scisignal.2001699}.
@@ -1606,6 +1728,8 @@ harmonizome_nichenet_process <- function(dataset){
 #' @importFrom dplyr mutate select rename distinct
 #' @export
 nichenet_signaling_network_vinayagam <- function(...){
+
+    .nichenet_deprecated('nichenet_signaling_network_vinayagam')
 
     .slow_doctest()
 
@@ -1624,6 +1748,10 @@ nichenet_signaling_network_vinayagam <- function(...){
 
 
 #' Builds signaling network for NicheNet using ConsensusPathDB
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds signaling network prior knowledge using ConsensusPathDB (CPDB)
 #' data. Note, the interactions from CPDB are not directed and many of them
@@ -1651,6 +1779,8 @@ nichenet_signaling_network_vinayagam <- function(...){
 #' }
 nichenet_signaling_network_cpdb <- function(...){
 
+    .nichenet_deprecated('nichenet_signaling_network_cpdb')
+
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
@@ -1672,6 +1802,10 @@ nichenet_signaling_network_cpdb <- function(...){
 
 
 #' NicheNet signaling network from EVEX
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds signaling network prior knowledge for NicheNet from the EVEX
 #' database.
@@ -1702,6 +1836,8 @@ nichenet_signaling_network_evex <- function(
     indirect = FALSE,
     ...
 ){
+
+    .nichenet_deprecated('nichenet_signaling_network_evex')
 
     .slow_doctest()
 
@@ -1761,6 +1897,10 @@ nichenet_signaling_network_evex <- function(
 
 #' NicheNet signaling network from InWeb InBioMap
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds signaling network prior knowledge for NicheNet from the InWeb
 #' InBioMap database.
 #'
@@ -1781,6 +1921,8 @@ nichenet_signaling_network_evex <- function(
 #' @seealso \code{\link{nichenet_signaling_network}, \link{inbiomap_download}}
 nichenet_signaling_network_inbiomap <- function(...){
 
+    .nichenet_deprecated('nichenet_signaling_network_inbiomap')
+
     # NSE vs. R CMD check workaround
     genesymbol_a <- genesymbol_b <- NULL
 
@@ -1797,6 +1939,10 @@ nichenet_signaling_network_inbiomap <- function(...){
 
 #' Ligand-receptor network from Guide to Pharmacology
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Downloads ligand-receptor interactions from the Guide to Pharmacology
 #' database and converts it to a format suitable for NicheNet.
 #'
@@ -1812,6 +1958,8 @@ nichenet_signaling_network_inbiomap <- function(...){
 #' @importFrom purrr map map2
 #' @seealso \code{\link{nichenet_lr_network}, \link{guide2pharma_download}}
 nichenet_lr_network_guide2pharma <- function(){
+
+    .nichenet_deprecated('nichenet_lr_network_guide2pharma')
 
     .slow_doctest()
 
@@ -1865,6 +2013,10 @@ nichenet_lr_network_guide2pharma <- function(){
 
 #' Ligand-receptor network from Ramilowski 2015
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Downloads ligand-receptor interactions from Supplementary Table 2 of the
 #' paper 'A draft network of ligand–receptor-mediated multicellular signalling
 #' in human' (Ramilowski et al. 2015,
@@ -1893,6 +2045,8 @@ nichenet_lr_network_ramilowski <- function(
     evidences = c('literature supported', 'putative')
 ){
 
+    .nichenet_deprecated('nichenet_lr_network_ramilowski')
+
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
@@ -1911,6 +2065,10 @@ nichenet_lr_network_ramilowski <- function(
 
 
 #' NicheNet gene regulatory network from Harmonizome
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds gene regulatory network prior knowledge for NicheNet using
 #' Harmonizome
@@ -1949,6 +2107,8 @@ nichenet_gr_network_harmonizome <- function(
     ...
 ){
 
+    .nichenet_deprecated('nichenet_gr_network_harmonizome')
+
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
@@ -1975,6 +2135,10 @@ nichenet_gr_network_harmonizome <- function(
 
 #' NicheNet gene regulatory network from RegNetwork
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds a gene regulatory network using data from the RegNetwork database
 #' and converts it to a format suitable for NicheNet.
 #'
@@ -1991,6 +2155,8 @@ nichenet_gr_network_harmonizome <- function(
 #'     \item{\code{\link{nichenet_gr_network}}}
 #' }
 nichenet_gr_network_regnetwork <- function(){
+
+    .nichenet_deprecated('nichenet_gr_network_regnetwork')
 
     .slow_doctest()
 
@@ -2012,6 +2178,10 @@ nichenet_gr_network_regnetwork <- function(){
 
 #' NicheNet gene regulatory network from TRRUST
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds a gene regulatory network using data from the TRRUST database
 #' and converts it to a format suitable for NicheNet.
 #'
@@ -2028,6 +2198,8 @@ nichenet_gr_network_regnetwork <- function(){
 #' }
 nichenet_gr_network_trrust <- function(){
 
+    .nichenet_deprecated('nichenet_gr_network_trrust')
+
     .slow_doctest()
 
     trrust_download() %>%
@@ -2041,6 +2213,10 @@ nichenet_gr_network_trrust <- function(){
 
 #' NicheNet gene regulatory network from HTRIdb
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds a gene regulatory network using data from the HTRIdb database
 #' and converts it to a format suitable for NicheNet.
 #'
@@ -2053,6 +2229,8 @@ nichenet_gr_network_trrust <- function(){
 #' @importFrom magrittr %>%
 #' @seealso \code{\link{htridb_download}, \link{nichenet_gr_network}}
 nichenet_gr_network_htridb <- function(){
+
+    .nichenet_deprecated('nichenet_gr_network_htridb')
 
     .slow_doctest()
 
@@ -2071,6 +2249,10 @@ nichenet_gr_network_htridb <- function(){
 
 
 #' NicheNet gene regulatory network from ReMap
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds a gene regulatory network using data from the ReMap database
 #' and converts it to a format suitable for NicheNet.
@@ -2101,6 +2283,8 @@ nichenet_gr_network_remap <- function(
     only_known_tfs = TRUE
 ){
 
+    .nichenet_deprecated('nichenet_gr_network_remap')
+
     .slow_doctest()
 
     remap_filtered(
@@ -2117,6 +2301,10 @@ nichenet_gr_network_remap <- function(
 
 
 #' NicheNet gene regulatory network from EVEX
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' Builds a gene regulatory network using data from the EVEX database
 #' and converts it to a format suitable for NicheNet.
@@ -2149,6 +2337,8 @@ nichenet_gr_network_evex <- function(
     regulation_of_expression = FALSE
 ){
 
+    .nichenet_deprecated('nichenet_gr_network_evex')
+
     .slow_doctest()
 
     # NSE vs. R CMD check workaround
@@ -2180,6 +2370,10 @@ nichenet_gr_network_evex <- function(
 
 #' NicheNet gene regulatory network from PathwayCommons
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Builds gene regulation prior knowledge for NicheNet using PathwayCommons.
 #'
 #' @param interaction_types Character vector with PathwayCommons interaction
@@ -2201,6 +2395,8 @@ nichenet_gr_network_pathwaycommons <- function(
     interaction_types = 'controls-expression-of',
     ...
 ){
+
+    .nichenet_deprecated('nichenet_gr_network_pathwaycommons')
 
     .slow_doctest()
 
@@ -2285,6 +2481,10 @@ nichenet_common_postprocess <- function(
 #' Expression data from ligand-receptor perturbation experiments used by
 #' NicheNet
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' NicheNet uses expression data from a collection of published ligand or
 #' receptor KO or perturbation experiments to build its model. This function
 #' retrieves the original expression data, deposited in Zenodo
@@ -2307,6 +2507,8 @@ nichenet_common_postprocess <- function(
 #' @importFrom magrittr %T>%
 #' @export
 nichenet_expression_data <- function(){
+
+    .nichenet_deprecated('nichenet_expression_data')
 
     .slow_doctest()
 
@@ -2438,6 +2640,10 @@ nichenet_networks_small <- function(tiny = FALSE){
 
 #' Run the NicheNet pipeline with a little dummy network
 #'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
+#'
 #' Loads a tiny network and runs the NicheNet pipeline with low number of
 #' iterations in the optimization process. This way the pipeline runs in
 #' a reasonable time in order to test the code. Due to the random subsampling
@@ -2470,6 +2676,8 @@ nichenet_networks_small <- function(tiny = FALSE){
 #' @export
 nichenet_test <- function(...){
 
+    .nichenet_deprecated('nichenet_test')
+
     args <- list(...)
 
     args$mlrmbo_optimization_param <- merge_lists(
@@ -2483,6 +2691,10 @@ nichenet_test <- function(...){
 
 
 #' Workarounds using NicheNet without attaching the package
+#'
+#' Deprecated: the NicheNet support in OmnipathR will be removed in
+#' the next Bioconductor release. A new version will retrieve the
+#' NicheNet prior knowledge built by the OmniPath server.
 #'
 #' NicheNet requires the availability of some lazy loaded external data
 #' which are not available if the package is not loaded and attached. Also,
@@ -2504,6 +2716,8 @@ nichenet_test <- function(...){
 #' @importFrom rlang %||%
 #' @export
 nichenet_workarounds <- function(){
+
+    .nichenet_deprecated('nichenet_workarounds')
 
     # R CMD check workaround
     nichenetr <- BBmisc <- ncitations <-
@@ -2529,5 +2743,43 @@ nichenet_workarounds <- function(){
         patch_ns('convertToShortString', convertToShortString_new, ns)
 
     }
+
+}
+
+
+#' Deprecation warning for the NicheNet functions
+#'
+#' The NicheNet functions call each other, hence the warning is issued only
+#' at the first call of each function in an R session.
+#'
+#' @param fun Character: name of the deprecated function.
+#'
+#' @return Returns `NULL` invisibly.
+#'
+#' @noRd
+.nichenet_deprecated <- function(fun) {
+
+    if (fun %in% omnipathr.env$nichenet_deprecated) {
+
+        return(invisible(NULL))
+
+    }
+
+    omnipathr.env$nichenet_deprecated <-
+        c(omnipathr.env$nichenet_deprecated, fun)
+
+    .Deprecated(
+        msg = sprintf(
+            paste0(
+                '`%s` is deprecated: the NicheNet support in OmnipathR ',
+                'will be removed in the next Bioconductor release. A new ',
+                'version will retrieve the NicheNet prior knowledge built ',
+                'by the OmniPath server.'
+            ),
+            fun
+        )
+    )
+
+    invisible(NULL)
 
 }
