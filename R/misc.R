@@ -970,13 +970,52 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 }
 
 
+#' Is R building or checking OmnipathR itself?
+#'
+#' `R CMD check` sets the environment variable `_R_CHECK_PACKAGE_NAME_` to
+#' the name of the package under check. `R CMD build` sets no variable, but
+#' it builds the vignettes in the `vignettes` directory of the package, so
+#' the `DESCRIPTION` file one level up names the package. When another
+#' package (e.g. a dependant like wppi or decoupleR) is built or checked,
+#' this function returns `FALSE`, and the slow functions run in full.
+#'
+#' @return Logical: `TRUE` if the package being built or checked is
+#'     OmnipathR.
+#'
+#' @noRd
+.checking_omnipathr <- function() {
+
+    checked <- Sys.getenv('_R_CHECK_PACKAGE_NAME_')
+
+    if (nzchar(checked)) {
+
+        return(checked == 'OmnipathR')
+
+    }
+
+    desc <- file.path('..', 'DESCRIPTION')
+
+    file.exists(desc) &&
+    identical(
+        tryCatch(
+            unname(read.dcf(desc, fields = 'Package')[1L, 1L]),
+            error = function(e) NA_character_
+        ),
+        'OmnipathR'
+    )
+
+}
+
+
 #' Bypass slow doctests
 #'
 #' Makes the calling function return a value, bypassing further execution.
 #' Used in functions that normally take a long time to run, and hence, due
 #' to the 40 minutes timeout on Bioconductor build servers, we can not afford
 #' to run them. We still run these doctests daily on our own build server,
-#' so they fulfill their testing purpose.
+#' so they fulfill their testing purpose. The bypass applies only while R
+#' builds or checks OmnipathR itself: packages that depend on OmnipathR get
+#' the full result on the build servers too.
 #'
 #' @param value The value to return.
 #'
@@ -986,7 +1025,7 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 #' @noRd
 .slow_doctest <- function(value = NULL, env = parent.frame()){
 
-    if(.doctest_bypass() && .on_buildserver()){
+    if(.doctest_bypass() && .on_buildserver() && .checking_omnipathr()){
 
         log_trace('Bypassing call: `%s`.', deparse(sys.call(-1L)))
         log_trace(paste(
