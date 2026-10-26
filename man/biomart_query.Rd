@@ -30,7 +30,13 @@ biomart_query(
 Data frame with the query result
 }
 \description{
-Query the Ensembl BioMart web service
+The query goes to the main Ensembl site first. If it fails, the US East
+and the Asia mirrors are tried, then the next round of attempts starts
+with the main site again. On build servers, if all of them fail,
+a warning is issued and an empty data frame is returned, so a temporary
+outage of Ensembl does not fail the package check. After such a failure,
+the further queries in the same R session return an empty data frame
+without a download attempt.
 }
 \examples{
 cel_genes <- biomart_query(

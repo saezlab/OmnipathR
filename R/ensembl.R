@@ -112,7 +112,19 @@ ensembl_organisms <- function(){
 }
 
 
+# Ensembl BioMart servers, in the order we try them
+BIOMART_MIRRORS <- c('biomart', 'biomart_useast', 'biomart_asia')
+
+
 #' Query the Ensembl BioMart web service
+#'
+#' The query goes to the main Ensembl site first. If it fails, the US East
+#' and the Asia mirrors are tried, then the next round of attempts starts
+#' with the main site again. On build servers, if all of them fail,
+#' a warning is issued and an empty data frame is returned, so a temporary
+#' outage of Ensembl does not fail the package check. After such a failure,
+#' the further queries in the same R session return an empty data frame
+#' without a download attempt.
 #'
 #' @param attrs Character vector: one or more Ensembl attribute names.
 #' @param filters Character vector: one or more Ensembl filter names.
@@ -198,12 +210,25 @@ biomart_query <- function(
 
     log_trace('BioMart query: %s', query)
 
-    biomart_url <-
-        'biomart' %>%
-        url_parser(url_param = list(query))
+    empty <-
+        col_names %>%
+        set_names(., .) %>%
+        as.list %>%
+        map(~character(0L)) %>%
+        tibble(!!!.)
 
-    result <-
-        'biomart' %>%
+    if (.on_buildserver() && isTRUE(omnipathr.env$biomart_down)) {
+
+        log_warn(
+            'BioMart failed earlier in this session, ',
+            'skipping query on build server.'
+        )
+        return(empty)
+
+    }
+
+    result <- tryCatch(
+        BIOMART_MIRRORS %>%
         generic_downloader(
             url_param = list(query),
             reader = function(...){read_tsv(...)},
@@ -214,7 +239,43 @@ biomart_query <- function(
             ),
             use_httr = TRUE,
             http_headers = user_agent()
-        ) %>%
+        ),
+        error = identity
+    )
+
+    if (inherits(result, 'condition')) {
+
+        msg <- sprintf(
+            paste0(
+                'Failed BioMart query: all Ensembl mirrors (%s) failed. ',
+                'This is likely a temporary issue on the Ensembl server ',
+                'side. Last error: %s'
+            ),
+            paste(BIOMART_MIRRORS, collapse = ', '),
+            conditionMessage(result)
+        )
+
+        if (.on_buildserver()) {
+
+            # on build servers time is limited, if Ensembl does not respond
+            # now, we don't try again in this session
+            omnipathr.env$biomart_down <- TRUE
+            log_warn(msg)
+            warning(msg)
+            return(empty)
+
+        }
+
+        log_error_with_info(msg)
+        stop(result)
+
+    }
+
+    biomart_url <-
+        BIOMART_MIRRORS[1L] %>%
+        url_parser(url_param = list(query))
+
+    result %<>%
         {`if`(
             slice_tail(., n = 1L) %>% extract2(1L) %>% equals('[success]'),
             slice_head(., n = -1L),
@@ -247,11 +308,6 @@ biomart_query <- function(
         if(.on_buildserver()){
             log_warn(msg)
             warning(msg)
-            empty <- col_names %>%
-                set_names(., .) %>%
-                as.list %>%
-                map(~character(0L)) %>%
-                tibble(!!!.)
             return(empty)
         }
         log_error_with_info(msg)
