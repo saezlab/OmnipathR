@@ -367,6 +367,8 @@ signalink_ligrec <- function(...){
 #' @seealso \code{\link{curated_ligand_receptor_interactions}}
 curated_ligrec_stats <- function(...){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     resource <- data <- NULL
 

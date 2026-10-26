@@ -245,6 +245,8 @@ get_annotation_resources <- function(...){
 #' @export
 annotation_categories <- function(){
 
+    .slow_doctest()
+
     # NSE vs. R CMD check workaround
     value <- NULL
 

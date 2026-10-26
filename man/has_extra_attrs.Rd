@@ -16,7 +16,7 @@ Logical: TRUE if the data frame has the "extra_attrs" column.
 Tells if an interaction data frame has an extra_attrs column
 }
 \examples{
-i <- omnipath(fields = "extra_attrs")
+i <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 has_extra_attrs(i)
 
 }

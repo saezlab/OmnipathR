@@ -23,7 +23,7 @@ This function returns the names of the extra attributes available in
 the provided data frame.
 }
 \examples{
-i <- omnipath(fields = "extra_attrs")
+i <- omnipath(resources = "SIGNOR", fields = "extra_attrs")
 extra_attrs(i)
 
 }
