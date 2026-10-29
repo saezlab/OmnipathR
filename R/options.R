@@ -69,6 +69,8 @@
     omnipathr.upkeep_interval_ms = 3e04L,
     omnipathr.ssl_verifypeer = 1L,
     omnipathr.ssl_verifyhost = 2L,
+    # hosts that reset HTTP/2 streams of slow downloads: use HTTP/1.1
+    omnipathr.http1_hosts = c('rest.uniprot.org'),
     # CURL options end
     omnipathr.uniprot_idmapping_poll_interval = 3L,
     omnipathr.uniprot_idmapping_timeout = 30L,

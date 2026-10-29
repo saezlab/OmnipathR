@@ -1298,6 +1298,8 @@ nichenet_signaling_network_omnipath <- function(
     ...
 ){
 
+    .slow_doctest()
+
     args <- list(...)
     args$exclude %<>% union('ligrecextra')
     args$entity_types <- 'protein'
@@ -1355,6 +1357,8 @@ nichenet_lr_network_omnipath <- function(
 
     .slow_doctest()
 
+    .slow_doctest()
+
     import_intercell_network(...) %>%
     {exec(filter_intercell_network, ., !!!quality_filter_param)} %>%
     omnipath_interactions_postprocess(type = 'lr')
@@ -1400,6 +1404,8 @@ nichenet_gr_network_omnipath <- function(
     min_curation_effort = 0,
     ...
 ){
+
+    .slow_doctest()
 
     args <- list(...)
     args$exclude %<>% union('ligrecextra')

@@ -104,13 +104,11 @@ all_uniprots <- function(
         sprintf(' AND reviewed:%s', `if`(reviewed, 'true', 'false'))
     )
 
-    generic_downloader(
+    uniprot_download(
         url_key = 'new_uniprot',
         url_param = list(fields, organism, reviewed),
-        reader_param = list(progress = FALSE),
-        resource = 'UniProt'
-    ) %T>%
-    load_success()
+        fields = fields
+    )
 
 }
 
@@ -121,12 +119,90 @@ uniprot_query <- function(fields = 'accession', accessions = NULL) {
     fields <- fields %>% paste(collapse = ',')
     accessions <- accessions %>% sprintf('accession:%s', .) %>% paste(collapse = ' OR ')
 
-    generic_downloader(
+    uniprot_download(
         url_key = 'new_uniprot_query',
         url_param = list(fields, accession = accessions),
-        reader_param = list(progress = FALSE),
-        resource = 'UniProt'
-    ) %T>%
+        fields = fields
+    )
+
+}
+
+
+#' Download a table from the UniProt REST API
+#'
+#' On build servers the time is limited: if UniProt fails, we return an
+#' empty table and skip UniProt for the rest of the session.
+#'
+#' @param url_key Character: key of the URL in the URL store.
+#' @param url_param List: parameters for the URL template.
+#' @param fields Character: comma separated UniProt fields, one column for
+#'     each in the empty table.
+#'
+#' @return Data frame (tibble) with the UniProt records.
+#'
+#' @importFrom magrittr %>% %T>%
+#' @importFrom rlang set_names !!!
+#' @importFrom purrr map
+#' @importFrom tibble tibble
+#' @importFrom logger log_warn
+#' @noRd
+uniprot_download <- function(url_key, url_param, fields) {
+
+    empty <-
+        fields %>%
+        strsplit(',') %>%
+        unlist %>%
+        set_names(., .) %>%
+        as.list %>%
+        map(~character(0L)) %>%
+        tibble(!!!.)
+
+    if (.on_buildserver() && isTRUE(omnipathr.env$uniprot_down)) {
+
+        log_warn(
+            'UniProt failed earlier in this session, ',
+            'skipping query on build server.'
+        )
+        return(empty)
+
+    }
+
+    result <- tryCatch(
+        generic_downloader(
+            url_key = url_key,
+            url_param = url_param,
+            reader_param = list(progress = FALSE),
+            resource = 'UniProt'
+        ),
+        error = identity
+    )
+
+    if (inherits(result, 'condition')) {
+
+        msg <- sprintf(
+            paste0(
+                'Failed to download from UniProt. This is likely a ',
+                'temporary issue on the UniProt server side. ',
+                'Last error: %s'
+            ),
+            conditionMessage(result)
+        )
+
+        if (.on_buildserver()) {
+
+            omnipathr.env$uniprot_down <- TRUE
+            log_warn(msg)
+            warning(msg)
+            return(empty)
+
+        }
+
+        log_error_with_info(msg)
+        stop(result)
+
+    }
+
+    result %T>%
     load_success()
 
 }
