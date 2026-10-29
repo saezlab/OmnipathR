@@ -1131,6 +1131,7 @@ omnipath_curl <- function(
     ) {
 
     log_trace('HTTP request by `omnipath_curl`.')
+    curlopt %<>% merge_lists(host_curlopt(url))
     handle <- exec(omnipath_new_handle, !!!curlopt)
     compr %<>% get_compr(url, .)
 
@@ -1259,6 +1260,37 @@ curl_debug <- function(type, data) {
 }
 
 
+#' Curl options specific to the host of a URL
+#'
+#' Some servers reset the HTTP/2 stream of slow downloads, the transfer then
+#' fails with "HTTP/2 stream 1 was not closed cleanly". For the hosts in the
+#' `omnipathr.http1_hosts` option we use HTTP/1.1.
+#'
+#' @param url Character: a single URL.
+#'
+#' @return List of curl options, empty if no option applies to the host.
+#'
+#' @importFrom magrittr %>% extract
+#' @importFrom stringr str_match
+#' @importFrom logger log_trace
+#' @noRd
+host_curlopt <- function(url) {
+
+    host <- url %>% str_match('^[a-z]+://([^/:?#]+)') %>% extract(1L, 2L)
+
+    if (!is.na(host) && host %in% getOption('omnipathr.http1_hosts')) {
+
+        log_trace('Using HTTP/1.1 for host `%s`.', host)
+        # CURL_HTTP_VERSION_1_1
+        return(list(http_version = 2L))
+
+    }
+
+    list()
+
+}
+
+
 #' Create a new curl handle with OmnipathR specific options
 #'
 #' @param ... Curl options named by their curl/httr2 synonyms. See the output of
@@ -1351,6 +1383,7 @@ omnipath_httr2_req <- function(
 
     log_trace('HTTP headers: %s', compact_repr(http_headers, limit = 99L))
 
+    curlopt %<>% merge_lists(host_curlopt(url))
     curlopt <- exec(omnipath_new_handle, args_only = TRUE, !!!curlopt)
 
     url %>%

@@ -33,6 +33,8 @@
 #' @export
 kinasephos <- function() {
 
+    .slow_doctest()
+
     'kinasephos' %>%
     generic_downloader(
         resource = 'KinasePhos3.0',

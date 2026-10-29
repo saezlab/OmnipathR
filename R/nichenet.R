@@ -1391,6 +1391,7 @@ nichenet_signaling_network_omnipath <- function(
 ){
 
     .nichenet_deprecated('nichenet_signaling_network_omnipath')
+    .slow_doctest()
 
     args <- list(...)
     args$exclude %<>% union('ligrecextra')
@@ -1452,6 +1453,7 @@ nichenet_lr_network_omnipath <- function(
 ){
 
     .nichenet_deprecated('nichenet_lr_network_omnipath')
+    .slow_doctest()
 
     .slow_doctest()
 
@@ -1506,6 +1508,7 @@ nichenet_gr_network_omnipath <- function(
 ){
 
     .nichenet_deprecated('nichenet_gr_network_omnipath')
+    .slow_doctest()
 
     args <- list(...)
     args$exclude %<>% union('ligrecextra')

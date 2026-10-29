@@ -1,3 +1,17 @@
+# OmnipathR v4.1.3
+
+## Technical
+
++ Downloads from rest.uniprot.org use HTTP/1.1. Over HTTP/2, UniProt
+  sometimes resets slow transfers, and the download fails with "HTTP/2
+  stream 1 was not closed cleanly". The new option `omnipathr.http1_hosts`
+  lists the hosts that use HTTP/1.1
++ UniProt queries (`all_uniprots` and the functions built on it): on build
+  servers, if UniProt fails, they give a warning and an empty table, and
+  skip UniProt for the rest of the session
++ Faster examples on build servers: `kinasephos` and the deprecated
+  NicheNet network functions do not download in the checks of OmnipathR
+
 # OmnipathR v4.1.2
 
 ## Deprecated
