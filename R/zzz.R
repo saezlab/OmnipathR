@@ -36,7 +36,9 @@
     patch_httr2_keep_handle()
     omnipath_init_log()
 
-    buildserver <- .on_buildserver()
+    # verbose logging and cache wipe only when OmnipathR itself is checked:
+    # in the checks of dependants the log output gives NOTEs
+    buildserver <- .on_buildserver() && .checking_omnipathr()
     omnipathr.env$doctest_bypass <- TRUE
 
     if(buildserver){
