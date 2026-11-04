@@ -1,3 +1,12 @@
+# OmnipathR v4.0.4
+
+## Technical
+
++ On build servers, the verbose console log and the cache wipe at package
+  load happen only when R builds or checks OmnipathR itself. Before, the
+  log output gave a NOTE in the checks of the packages that depend on
+  OmnipathR
+
 # OmnipathR v4.0.3
 
 ## Technical
