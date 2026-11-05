@@ -22,25 +22,43 @@
 
 #' Table of Ensembl organisms
 #'
-#' A table with various taxon IDs and metadata about related Ensembl database
-#' contents, as shown at https://www.ensembl.org/info/about/species.html.
-#' The "Taxon ID" column contains the NCBI Taxonomy identifiers.
+#' A table of the organisms in Ensembl, as listed in the `species.json` file
+#' at https://ftp.ebi.ac.uk/pub/ensemblorganisms/. The table contains one row
+#' for each organism (species or strain) with at least one genome in Ensembl.
+#' If the EBI FTP is not available, a copy at https://rescued.omnipathdb.org/
+#' is used. On build servers, the copy is the first choice.
 #'
-#' @return The table described above as a data frame.
+#' @return A data frame with the following columns:
+#'     \describe{
+#'         \item{species}{Character: the name of the organism in Ensembl,
+#'             e.g. "Homo_sapiens".}
+#'         \item{ncbi_tax_id}{Integer: NCBI Taxonomy ID of the organism.}
+#'         \item{species_tax_id}{Integer: NCBI Taxonomy ID of the species.
+#'             For strains, it is different from \code{ncbi_tax_id}.}
+#'         \item{latin_name}{Character: scientific name.}
+#'         \item{common_name}{Character: English common name, \code{NA} for
+#'             most microorganisms.}
+#'     }
 #'
 #' @examples
 #' ens_org <- ensembl_organisms_raw()
 #' ens_org
 #'
-#' @importFrom magrittr %>%
-#' @importFrom dplyr first
-#' @importFrom rvest read_html html_element html_table
+#' @importFrom magrittr %>% %<>% extract2
+#' @importFrom jsonlite read_json
+#' @importFrom purrr map_int map_chr
+#' @importFrom tibble tibble
 #' @export
 ensembl_organisms_raw <- function(){
 
+    # the rescued copy contains only the fields below, it is faster to
+    # download than the original from the EBI FTP
+    url_keys <- c('ensembl_organisms', 'ensembl_organisms_rescued')
+    url_keys %<>% `if`(.on_buildserver(), rev(.), .)
+
+    organisms <-
     tryCatch(
-        'ensembl_organisms' %>%
-        sprintf('%s%s', ., `if`(.on_buildserver(), '_rescued', '')) %>%
+        url_keys[1L] %>%
         download_to_cache(http_headers = user_agent()),
         error = function(err) {
 
@@ -49,15 +67,25 @@ ensembl_organisms_raw <- function(){
                 err
             )
 
-            log_trace('Accessing Ensembl organisms table from rescued repo.')
-            'ensembl_organisms_rescued' %>%
+            log_trace('Accessing Ensembl organisms table from `%s`.', url_keys[2L])
+            url_keys[2L] %>%
             download_to_cache(http_headers = user_agent())
 
         }
     ) %>%
-    read_html %>%
-    html_element('table') %>%
-    html_table()
+    read_json %>%
+    extract2('species')
+
+    tibble(
+        species = names(organisms),
+        ncbi_tax_id = organisms %>% map_int('taxid') %>% unname,
+        species_tax_id = organisms %>% map_int('species_taxonomy_id') %>% unname,
+        latin_name = organisms %>% map_chr('scientific_name') %>% unname,
+        common_name =
+            organisms %>%
+            map_chr('common_name', .default = NA_character_) %>%
+            unname
+    )
 
 }
 
@@ -66,47 +94,79 @@ ensembl_organisms_raw <- function(){
 #'
 #' A table with various taxon names and identifiers: English common names,
 #' latin (scientific) names, Ensembl organism IDs and NCBI taxonomy IDs.
+#' The names and NCBI Taxonomy IDs are from \code{ensembl_organisms_raw}.
+#' The Ensembl organism IDs (e.g. "hsapiens") are the names of the Ensembl
+#' BioMart datasets, available only for the about 200 organisms in BioMart.
 #'
-#' @return A data frame with the above mentioned columns.
+#' @return A data frame with the above mentioned columns, one row for each
+#'     NCBI Taxonomy ID. For the organisms in BioMart, the column
+#'     `common_name` contains the name used in BioMart (e.g. "Mouse"), and
+#'     `common_name_alt` the name in the Ensembl organisms table (e.g.
+#'     "House mouse").
 #'
 #' @examples
 #' ens_org <- ensembl_organisms()
 #' ens_org
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr select mutate recode
-#' @importFrom purrr pmap_chr map_chr
-#' @importFrom stringr str_extract_all str_extract str_sub
-#' @importFrom rlang !!!
+#' @importFrom dplyr select mutate arrange distinct full_join coalesce
 #' @export
 ensembl_organisms <- function(){
 
     # NSE vs. R CMD check workaround
-    `Common name` <- `Scientific name` <- `Taxon ID` <- ensembl_id <- NULL
-
-    SPECIALS <- list(
-        bixbtaurus = 'bihybrid'
-    )
+    latin_name <- ncbi_tax_id <- common_name <- ensembl_id <-
+    latin_name_biomart <- common_name_biomart <- common_name_alt <- NULL
 
     ensembl_organisms_raw() %>%
-    select(
-        common_name = `Common name`,
-        latin_name = `Scientific name`,
-        ncbi_tax_id = `Taxon ID`
+    # one row per taxon: the shortest name, i.e. the species, not a strain
+    arrange(nchar(latin_name)) %>%
+    distinct(ncbi_tax_id, .keep_all = TRUE) %>%
+    select(common_name, latin_name, ncbi_tax_id) %>%
+    full_join(
+        ensembl_biomart_organisms(),
+        by = 'ncbi_tax_id',
+        suffix = c('', '_biomart')
     ) %>%
     mutate(
-        ensembl_id =
-            pmap_chr(
-                list(
-                    str_extract_all(latin_name, '\\b[A-z]') %>%
-                    map_chr(paste0, collapse = '') %>%
-                    str_to_lower %>%
-                    str_sub(end = -2L),
-                    str_extract(latin_name, '\\w+$')
-                ),
-                paste0
-            ),
-        ensembl_id = recode(ensembl_id, !!!SPECIALS)
+        latin_name = coalesce(latin_name, latin_name_biomart),
+        common_name_alt = common_name,
+        # the BioMart names are the short, familiar ones (e.g. "Mouse")
+        common_name = coalesce(common_name_biomart, common_name)
+    ) %>%
+    select(common_name, latin_name, ncbi_tax_id, ensembl_id, common_name_alt)
+
+}
+
+
+#' Organisms in Ensembl BioMart
+#'
+#' Ensembl BioMart is not developed any more, the latest release is at
+#' https://jun2026.archive.ensembl.org/biomart/. The organism IDs in this
+#' table are the dataset names in BioMart (without the "_gene_ensembl"
+#' suffix). The table is part of the package, because the organisms in
+#' BioMart do not change any more.
+#'
+#' @return A data frame with the columns `ensembl_id`, `ncbi_tax_id`,
+#'     `latin_name` and `common_name`.
+#'
+#' @importFrom readr read_tsv cols col_character col_integer
+#' @noRd
+ensembl_biomart_organisms <- function(){
+
+    system.file(
+        'internal',
+        'ensembl_biomart.tsv',
+        package = 'OmnipathR',
+        mustWork = TRUE
+    ) %>%
+    read_tsv(
+        col_types = cols(
+            ensembl_id = col_character(),
+            ncbi_tax_id = col_integer(),
+            latin_name = col_character(),
+            common_name = col_character()
+        ),
+        progress = FALSE
     )
 
 }

@@ -39,16 +39,36 @@ taxon_names_table <- function(){
     latin_name_uniprot <- latin_name_ensembl <- latin_name_oma <-
     common_name_uniprot <- common_name_ensembl <- NULL
 
-    ensembl_organisms() %>%
+    organism_table_safe(
+        ensembl_organisms,
+        common_name = character(),
+        latin_name = character(),
+        ncbi_tax_id = integer(),
+        ensembl_id = character()
+    ) %>%
     rename(common_name_ensembl = common_name) %>%
     full_join(
-        oma_organisms() %>%
+        organism_table_safe(
+            oma_organisms,
+            oma_code = character(),
+            ncbi_tax_id = integer(),
+            latin_name = character(),
+            genome_source = character(),
+            genome_version = character()
+        ) %>%
         select(-genome_source, -genome_version),
         by = 'ncbi_tax_id',
         suffix = c('_ensembl', '_oma')
     ) %>%
     full_join(
-        uniprot_organisms() %>%
+        organism_table_safe(
+            uniprot_organisms,
+            code = character(),
+            ncbi_tax_id = integer(),
+            latin_name = character(),
+            common_name = character(),
+            synonym = character()
+        ) %>%
         rename(
             uniprot_code = code,
             latin_name_synonym = synonym,
@@ -64,6 +84,59 @@ taxon_names_table <- function(){
     )
 
 }
+
+#' Load an organism table, or give an empty table if it fails
+#'
+#' The organism names come from several resources. If one of them is not
+#' available, the names from the others are still useful. This function
+#' calls the loader, and if it fails, or its result misses any of the
+#' required columns, it gives a warning and an empty table. The incomplete
+#' organism table is not saved to the cache.
+#'
+#' @param loader Function: loads an organism table.
+#' @param ... Zero length vectors: the required columns and their types.
+#'
+#' @return The table returned by the loader, or an empty table with the
+#'     columns in `...`.
+#'
+#' @importFrom tibble tibble
+#' @importFrom logger log_warn
+#' @noRd
+organism_table_safe <- function(loader, ...) {
+
+    columns <- list(...)
+    loader_name <- deparse(substitute(loader))
+    result <- tryCatch(loader(), error = identity)
+
+    if (
+        !is.data.frame(result) ||
+        !all(names(columns) %in% colnames(result))
+    ) {
+
+        msg <- sprintf(
+            paste0(
+                'Failed to load organism names by `%s`, the names from ',
+                'this resource will be missing. Reason: %s'
+            ),
+            loader_name,
+            `if`(
+                inherits(result, 'error'),
+                conditionMessage(result),
+                'missing columns'
+            )
+        )
+        log_warn(msg)
+        warning(msg)
+        result <- tibble(!!!columns)
+        # the database manager does not save incomplete tables to the cache
+        omnipathr.env$db_incomplete <- TRUE
+
+    }
+
+    result
+
+}
+
 
 #' Translate between organism names
 #'

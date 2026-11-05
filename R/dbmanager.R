@@ -209,8 +209,9 @@ db_lifetime_hook <- function(){
 #' omnipath_show_db()
 #'
 #' @importFrom magrittr %<>%
-#' @importFrom logger log_fatal log_info log_trace
+#' @importFrom logger log_fatal log_info log_trace log_warn
 #' @importFrom rlang exec !!!
+#' @importFrom utils packageVersion
 #' @export
 #' @seealso  \code{\link{omnipath_show_db}, \link{get_db}}
 load_db <- function(key, param = list(), reload = FALSE){
@@ -222,8 +223,9 @@ load_db <- function(key, param = list(), reload = FALSE){
     loader <- get(dbdef$loader)
     param %<>% add_defaults(loader, dbdef$loader_param)
 
-    # Use synthetic URL for cache key, with params as POST data
-    cache_url <- sprintf('db://%s', key)
+    # Use synthetic URL for cache key, with params as POST data; the package
+    # version in the key: a new version builds the databases again
+    cache_url <- sprintf('db://%s/%s', key, packageVersion('OmnipathR'))
     db <- NULL
 
     # Try loading from on-disk cache first (unless reload is requested)
@@ -235,10 +237,25 @@ load_db <- function(key, param = list(), reload = FALSE){
     if (is.null(db)) {
         # Load from source
         log_trace('Loading database `%s` from source.', key)
+        omnipathr.env$db_incomplete <- FALSE
         db <- exec(loader, !!!param)
-        # Save to on-disk cache
-        log_trace('Saving database `%s` to on-disk cache.', key)
-        omnipath_cache_save(db, url = cache_url, post = param)
+
+        if (isTRUE(omnipathr.env$db_incomplete)) {
+
+            # a part of the data failed to load: keep it only in this session
+            log_warn(
+                'Database `%s` is incomplete, not saving it to the cache.',
+                key
+            )
+
+        } else {
+
+            # Save to on-disk cache
+            log_trace('Saving database `%s` to on-disk cache.', key)
+            omnipath_cache_save(db, url = cache_url, post = param)
+
+        }
+
     }
 
     omnipathr.env$db[[key]]$db <- db

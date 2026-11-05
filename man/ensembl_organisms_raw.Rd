@@ -7,12 +7,24 @@
 ensembl_organisms_raw()
 }
 \value{
-The table described above as a data frame.
+A data frame with the following columns:
+    \describe{
+        \item{species}{Character: the name of the organism in Ensembl,
+            e.g. "Homo_sapiens".}
+        \item{ncbi_tax_id}{Integer: NCBI Taxonomy ID of the organism.}
+        \item{species_tax_id}{Integer: NCBI Taxonomy ID of the species.
+            For strains, it is different from \code{ncbi_tax_id}.}
+        \item{latin_name}{Character: scientific name.}
+        \item{common_name}{Character: English common name, \code{NA} for
+            most microorganisms.}
+    }
 }
 \description{
-A table with various taxon IDs and metadata about related Ensembl database
-contents, as shown at https://www.ensembl.org/info/about/species.html.
-The "Taxon ID" column contains the NCBI Taxonomy identifiers.
+A table of the organisms in Ensembl, as listed in the `species.json` file
+at https://ftp.ebi.ac.uk/pub/ensemblorganisms/. The table contains one row
+for each organism (species or strain) with at least one genome in Ensembl.
+If the EBI FTP is not available, a copy at https://rescued.omnipathdb.org/
+is used. On build servers, the copy is the first choice.
 }
 \examples{
 ens_org <- ensembl_organisms_raw()

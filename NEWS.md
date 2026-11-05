@@ -1,7 +1,27 @@
 # OmnipathR v4.0.4
 
+## Bug fixes
+
++ Organism names: the Ensembl species page is not available any more, and
+  the functions that translate organism names (e.g. `ncbi_taxid`,
+  `latin_name`) failed (#130). The Ensembl organisms now come from the
+  `species.json` file at https://ftp.ebi.ac.uk/pub/ensemblorganisms/. It
+  has more than 11,000 organisms, before there were about 340
++ `ensembl_organisms_raw` returns a different table: one row for each
+  organism in `species.json`, with the NCBI Taxonomy IDs of the organism and
+  of its species, the scientific and the common name
++ The Ensembl organism IDs (e.g. "hsapiens") are the names of the BioMart
+  datasets, from a table in the package. Before, they were derived from the
+  scientific names, and for some organisms (e.g. gorilla) they were wrong
++ If one of the resources of organism names (Ensembl, OMA or UniProt) is
+  not available, the names from the other resources are still available.
+  The incomplete table is not saved to the cache
++ The database cache keys contain the package version: after an upgrade,
+  the databases are built again from their sources
+
 ## Technical
 
++ rvest is not a dependency any more
 + On build servers, the verbose console log and the cache wipe at package
   load happen only when R builds or checks OmnipathR itself. Before, the
   log output gave a NOTE in the checks of the packages that depend on

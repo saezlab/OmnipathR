@@ -75,7 +75,6 @@ Imports:
     rmarkdown,
     RSQLite,
     R.utils,
-    rvest,
     sessioninfo,
     stats,
     stringi,

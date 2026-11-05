@@ -7,11 +7,18 @@
 ensembl_organisms()
 }
 \value{
-A data frame with the above mentioned columns.
+A data frame with the above mentioned columns, one row for each
+    NCBI Taxonomy ID. For the organisms in BioMart, the column
+    `common_name` contains the name used in BioMart (e.g. "Mouse"), and
+    `common_name_alt` the name in the Ensembl organisms table (e.g.
+    "House mouse").
 }
 \description{
 A table with various taxon names and identifiers: English common names,
 latin (scientific) names, Ensembl organism IDs and NCBI taxonomy IDs.
+The names and NCBI Taxonomy IDs are from \code{ensembl_organisms_raw}.
+The Ensembl organism IDs (e.g. "hsapiens") are the names of the Ensembl
+BioMart datasets, available only for the about 200 organisms in BioMart.
 }
 \examples{
 ens_org <- ensembl_organisms()
