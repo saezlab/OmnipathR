@@ -339,8 +339,7 @@ db_exists <- function(key){
 
     if(!key %in% names(omnipathr.env$db)){
         msg <- sprintf('No database defined with key `%s`.', key)
-        log_fatal(msg)
-        stop(msg)
+        omnipath_error(msg)
     }
 
 }

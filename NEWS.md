@@ -1,3 +1,40 @@
+# OmnipathR v4.1.5
+
+## Bug fixes
+
++ Cache lock: the cache database is locked by an operating system lock on
+  the file `cache.flock`, instead of the existence of the file `cache.lock`.
+  The lock is released even if the R process crashes or is killed, so a
+  stale lock can not block other processes any more. Before, a killed
+  process left the lock behind, and every later process failed with "The
+  cache directory is locked for longer than 5 seconds". Locking is also
+  atomic now, and the lock is released if an error occurs while it is held
++ The cache database is written to a temporary file and then renamed, so
+  it is never read half written
++ The default of the `omnipathr.cache_timeout` option is 60 seconds instead
+  of 5: the wait applies only while another live process holds the lock
++ `omnipath_unlock_cache_db` releases the lock of the current session, and
+  removes the legacy `cache.lock` file of older versions
++ On build servers, the cache is not wiped any more when the package is
+  loaded. Each R process of the build or check of OmnipathR wiped the cache
+  and removed its lock: all data was downloaded again several times, which
+  exceeded the time limit of the checks, and packages built at the same
+  time by the same user failed with a locked or wiped cache
+
+## New features
+
++ Errors raised by OmnipathR print debugging information to the console:
+  the OmnipathR version and the library it is loaded from, R and the
+  platform, the versions of the main dependencies, libcurl, and the cache
+  directory. The full information is printed at the first error of the
+  session, later errors print only the version line. The errors have the
+  class `omnipathr_error`
+
+## Technical
+
++ New dependency: filelock
++ `database_summary` is not run in the examples on build servers
+
 # OmnipathR v4.1.4
 
 ## Bug fixes

@@ -779,8 +779,7 @@ archive_extractor <- function(
             archive_data$url,
             archive_data$path
         )
-        logger::log_fatal(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 

@@ -50,7 +50,7 @@
     omnipathr.logdir = NULL,
     omnipathr.logfile = NULL,
     omnipathr.cachedir = NULL,
-    omnipathr.cache_timeout = 5L,
+    omnipathr.cache_timeout = 60L,
     omnipathr.use_cache = TRUE,
     omnipathr.retry_downloads = 3L,
     omnipathr.retry_downloads_in_seconds = 5L,

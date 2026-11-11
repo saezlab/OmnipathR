@@ -254,8 +254,7 @@ biomart_query <- function(
     if(!nchar(attrs)){
 
         msg <- 'BioMart: the query must contain at least one attribute.'
-        log_error_with_info(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 
@@ -370,8 +369,7 @@ biomart_query <- function(
             warning(msg)
             return(empty)
         }
-        log_error_with_info(msg)
-        stop(msg)
+        omnipath_error(msg)
     }
 
     result %>%

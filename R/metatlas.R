@@ -127,8 +127,7 @@ metabolic_atlas_models <- function(..., return_xml = FALSE) {
 
     if (nrow(models) == 0L) {
         msg <- sprintf("No models found matching the criteria")
-        log_error(msg)
-        stop(msg, call. = FALSE)
+        omnipath_error(msg, call = NULL)
     }
 
     models %>%

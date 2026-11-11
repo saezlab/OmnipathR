@@ -54,7 +54,7 @@ enzsub_graph <- function(enzsub){
         ) %in% colnames(enzsub)
         )
     ){
-        stop('The input data frame does not contain the required columns')
+        omnipath_error('The input data frame does not contain the required columns')
     }
 
     enzsub %>%
@@ -109,7 +109,7 @@ interaction_graph <- function(interactions = interactions){
         ) %in% colnames(interactions)
         )
     ){
-        stop('The input data frame does not contain the required columns')
+        omnipath_error('The input data frame does not contain the required columns')
     }
 
     # We give the proper format to the edges by calling to the function below
@@ -160,7 +160,7 @@ format_graph_edges <- function(df_interact, flag){
                 select(df_interact,
                 c(.data$target_genesymbol,.data$target))
         }else{
-            stop('Incorrect Input Flag')
+            omnipath_error('Incorrect Input Flag')
         }
     }
 
@@ -290,7 +290,7 @@ find_all_paths <- function(
 
         if(!attr %in% vertex_attr_names(graph)){
 
-            stop(sprintf('No such vertex attribute: `%s`.', attr))
+            omnipath_error(sprintf('No such vertex attribute: `%s`.', attr))
 
         }
 

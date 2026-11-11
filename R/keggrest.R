@@ -329,8 +329,7 @@ kegg_query <- function(operation, ...) {
     if (is.null(op_templates)) {
 
         msg <- 'Invalid operation: %s' %>% sprintf(operation)
-        log_error(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 
@@ -379,8 +378,7 @@ kegg_query <- function(operation, ...) {
     }
 
     msg <- errors %>% paste0(collapse = ' ')
-    log_error(msg)
-    stop(msg)
+    omnipath_error(msg)
 
 }
 

@@ -297,6 +297,8 @@ query_info <- function(query_type) {
 #' @export
 database_summary <- function(query_type, return_df = FALSE) {
 
+    .slow_doctest()
+
     query_type %>%
     sprintf('%s_summary', .) %>%
     omnipath_query(format = 'json') %>%

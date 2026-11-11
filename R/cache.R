@@ -30,7 +30,7 @@ CACHE_STATUS <- list(
 
 BEGINNING_OF_TIME <- as.POSIXct(0, origin = '1970-01-01')
 
-PROTECTED_FILES <- c('cache.lock', 'cache.json')
+PROTECTED_FILES <- c('cache.flock', 'cache.lock', 'cache.json')
 
 #' Sets up the cache once the module is loaded or after the cachedir option
 #' has been changed
@@ -147,54 +147,104 @@ omnipath_get_cachedir <- function(){
 }
 
 
-#' Creates a lock file in the cache directory in order to avoid simulatneous
-#' reading and writing of the cache file database
+#' Locks the cache database to avoid simultaneous reading and writing
 #'
+#' The lock is an operating system lock on the file `cache.flock` in the
+#' cache directory, so only one R process at a time can read and write the
+#' cache database. The operating system releases the lock if the process
+#' crashes or is killed, so a lock can not be left behind. The lock is
+#' reentrant: nested calls within the same process only count the depth,
+#' and the lock is released when the outermost caller releases it.
+#'
+#' @importFrom filelock lock
+#' @importFrom rlang %||%
 #' @noRd
 omnipath_lock_cache_db <- function(){
 
+    depth <- omnipathr.env$cache_lock_depth %||% 0L
 
-    lockfile <- omnipath_cache_lock_path()
+    if(depth == 0L){
 
-    for(i in seq(options('omnipathr.cache_timeout')[[1]])){
+        lck <- lock(
+            omnipath_cache_lock_path(),
+            exclusive = TRUE,
+            timeout = getOption('omnipathr.cache_timeout') * 1000
+        )
 
-        if(file.exists(lockfile)){
+        if(is.null(lck)){
 
-            Sys.sleep(1)
-
-        }else{
-
-            file.create(lockfile)
-            return(TRUE)
+            omnipath_locked_cache_error()
 
         }
 
+        omnipathr.env$cache_lock <- lck
+
     }
 
-    omnipath_locked_cache_error()
+    omnipathr.env$cache_lock_depth <- depth + 1L
+
+    invisible(TRUE)
 
 }
 
 
-#' Removes the lock file from the cache directory
+#' Releases one level of the cache database lock
 #'
-#' A lock file in the cache directory avoids simulatneous write and read.
-#' It's supposed to be removed after each read and write operation. This
-#' might not happen if the process crashes during such an operation. In
-#' this case you can manually call this function.
+#' @importFrom filelock unlock
+#' @importFrom rlang %||%
+#' @noRd
+omnipath_release_cache_db <- function(){
+
+    depth <- omnipathr.env$cache_lock_depth %||% 0L
+
+    if(depth == 1L && !is.null(omnipathr.env$cache_lock)){
+
+        unlock(omnipathr.env$cache_lock)
+        omnipathr.env$cache_lock <- NULL
+
+    }
+
+    omnipathr.env$cache_lock_depth <- max(depth - 1L, 0L)
+
+    invisible(depth > 0L)
+
+}
+
+
+#' Releases the cache database lock
 #'
-#' @return Logical: returns TRUE if the cache was locked and now is
-#'     unlocked; FALSE if it was not locked.
+#' The cache database is locked while an R process reads or writes it. This
+#' is an operating system lock: it is released when the process ends, even
+#' if it crashes or is killed, so normally you never need to call this
+#' function. It releases the lock held by the current R session, and it
+#' removes the lock file \code{cache.lock} that OmnipathR versions before 4.1.5
+#' used, and which could be left behind by a crashed process.
+#'
+#' @return Logical: TRUE if a lock was released or a legacy lock file was
+#'     removed; FALSE otherwise.
 #'
 #' @examples
 #' omnipath_unlock_cache_db()
 #'
-#' @importFrom magrittr %>%
+#' @importFrom filelock unlock
 #' @export
 omnipath_unlock_cache_db <- function(){
 
-    omnipath_cache_lock_path() %>%
-    {`if`(file.exists(.), file.remove(.), FALSE)}
+    held <- !is.null(omnipathr.env$cache_lock)
+
+    if(held){
+
+        unlock(omnipathr.env$cache_lock)
+        omnipathr.env$cache_lock <- NULL
+
+    }
+
+    omnipathr.env$cache_lock_depth <- 0L
+
+    legacy <- file.path(omnipath_get_cachedir(), 'cache.lock')
+    legacy_removed <- file.exists(legacy) && file.remove(legacy)
+
+    held || legacy_removed
 
 }
 
@@ -207,7 +257,7 @@ omnipath_unlock_cache_db <- function(){
 omnipath_cache_lock_path <- function(){
 
     omnipath_get_cachedir() %>%
-    file.path('cache.lock')
+    file.path('cache.flock')
 
 }
 
@@ -230,17 +280,15 @@ omnipath_cache_db_path <- function(){
 #' @noRd
 omnipath_locked_cache_error <- function(){
 
-    msg <- sprintf(
+    omnipath_error(
         paste0(
-            'The cache directory `%s` is locked for longer than %d seconds. ',
-            'If you keep experiencing this issue please call `omnipath_',
-            'unlock_cache_db()`. '
+            'Could not lock the cache database in `%s` within %d seconds: ',
+            'another R process is reading or writing it. To wait longer, ',
+            'increase the `omnipathr.cache_timeout` option.'
         ),
         omnipath_get_cachedir(),
-        options('omnipathr.cache_timeout')[[1]]
+        getOption('omnipathr.cache_timeout')
     )
-    logger::log_fatal(msg)
-    stop(msg)
 
 }
 
@@ -253,12 +301,12 @@ cache_locked <- decorator %@% function(FUN){
     function(...){
 
         omnipath_lock_cache_db()
+        on.exit(omnipath_release_cache_db())
         omnipath_read_cache_db()
 
         result <- FUN(...)
 
         omnipath_write_cache_db()
-        omnipath_unlock_cache_db()
 
         invisible(result)
 
@@ -479,7 +527,7 @@ omnipath_cache_remove <- function(
     if(autoclean){
 
         omnipath_write_cache_db()
-        omnipath_unlock_cache_db()
+        omnipath_release_cache_db()
 
         omnipath_cache_clean_db()
         omnipath_cache_autoclean()
@@ -743,8 +791,7 @@ omnipath_cache_get <- function(
         if(is.null(url)){
 
             msg <- 'Can not create cache record without an URL.'
-            logger::log_fatal(msg)
-            stop(msg)
+            omnipath_error(msg)
 
         }
 
@@ -949,8 +996,7 @@ omnipath_cache_load <- function(
                 ),
                 path
             )
-            log_fatal(msg)
-            stop(msg)
+            omnipath_error(msg)
         }
 
         data <- readRDS(path)
@@ -1598,8 +1644,7 @@ omnipath_cache_ensure_key <- function(
         if(is.null(url)){
 
             msg <- 'Neither key or URL is available.'
-            logger::log_fatal(msg)
-            stop(msg)
+            omnipath_error(msg)
 
         }
 
@@ -1835,9 +1880,16 @@ omnipath_cache_timestamps <- function(cache_db){
 #' @noRd
 omnipath_write_cache_db <- function(){
 
+    # write to a temporary file and rename it, so a process that reads the
+    # database without holding the lock never sees a half written file
+    path <- omnipath_cache_db_path()
+    tmp <- tempfile('cache.json.', tmpdir = dirname(path))
+
     omnipathr.env$cache %>%
     jsonlite::toJSON(pretty = TRUE, null = 'null') %>%
-    write(omnipath_cache_db_path())
+    write(tmp)
+
+    file.rename(tmp, path)
 
 }
 

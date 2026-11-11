@@ -99,8 +99,7 @@ annotations <- function(proteins = NULL, wide = FALSE, ...){
             'resources, depending on your interest.'
         )
 
-        log_fatal(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 

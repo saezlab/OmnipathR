@@ -68,8 +68,7 @@ oma_organisms <- function() {
         ),
         url
     )
-    log_error(msg)
-    stop(msg)
+    omnipath_error(msg)
 
 }
 
@@ -243,8 +242,7 @@ oma_pairwise <- function(
                 `if`(arg == 'id_type', 'ID type', 'organism'),
                 args[[arg]]
             )
-            log_error_with_info(msg)
-            stop(msg)
+            omnipath_error(msg)
         }
     }
 
@@ -275,8 +273,7 @@ oma_pairwise <- function(
                 ),
                 id_type
             )
-            log_error_with_info(msg)
-            stop(msg)
+            omnipath_error(msg)
         },
         .
     )} %>%

@@ -133,8 +133,7 @@ macdb_metabolite_cancer_associations <- function() {
             'MACdb study table missing required columns: %s.',
             paste(missing_study, collapse = ', ')
         )
-        log_error(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 
@@ -144,8 +143,7 @@ macdb_metabolite_cancer_associations <- function() {
             'MACdb metabolite table missing required columns: %s.',
             paste(missing_met, collapse = ', ')
         )
-        log_error(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 
@@ -189,8 +187,7 @@ macdb_metabolite_cancer_associations <- function() {
             'MACdb study table has duplicated Cohort_id values (first 10): %s.',
             paste(head(duplicate_cohort, 10L), collapse = ', ')
         )
-        log_error(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 

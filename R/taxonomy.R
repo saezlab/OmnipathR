@@ -440,8 +440,7 @@ organism_for <- function(organism, resource, error = TRUE) {
 
         if (error) {
 
-            log_error_with_info(msg)
-            stop(msg)
+            omnipath_error(msg)
 
         } else {
 

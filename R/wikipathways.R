@@ -504,8 +504,7 @@ wikipathways_metabolites_sparql <- function(
                     page_idx,
                     conditionMessage(e)
                 )
-                log_error(msg)
-                stop(msg)
+                omnipath_error(msg)
             }
         )
 

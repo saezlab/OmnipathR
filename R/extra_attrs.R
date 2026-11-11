@@ -501,7 +501,7 @@ must_have_extra_attrs <- function(data){
 
     if(!has_extra_attrs(data)){
 
-        stop('Data frame has no "extra_attrs" column.')
+        omnipath_error('Data frame has no "extra_attrs" column.')
 
     }
 

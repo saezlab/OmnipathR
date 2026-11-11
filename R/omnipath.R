@@ -954,12 +954,10 @@ omnipath_check_result <- function(result, url){
 
     if(length(result) == 1){
         server_msg <- paste(result[[1]], collapse = '\n')
-        stop(
-            sprintf(
-                'Failed to download data from OmniPath:\nURL: %s\n%s\n',
-                url,
-                server_msg
-            )
+        omnipath_error(
+            'Failed to download data from OmniPath:\nURL: %s\n%s\n',
+            url,
+            server_msg
         )
     }
 

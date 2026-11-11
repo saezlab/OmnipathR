@@ -529,13 +529,142 @@ log_all_info <- function(pkg) {
 }
 
 
+#' Compact debugging information for error reports
+#'
+#' The OmnipathR version and where it is loaded from, R and the platform,
+#' the versions of the dependencies that most often matter in bug reports,
+#' and the state of the cache.
+#'
+#' @return Character vector, one element per line.
+#'
+#' @importFrom utils packageVersion
+#' @importFrom curl curl_version
+#' @importFrom purrr map_chr
+#' @noRd
+omnipath_debug_info <- function() {
+
+    pkg_version <- function(pkg) {
+        tryCatch(
+            as.character(packageVersion(pkg)),
+            error = function(e) 'not installed'
+        )
+    }
+
+    deps <- c(
+        'httr2', 'curl', 'logger', 'dplyr', 'readr',
+        'jsonlite', 'rlang', 'igraph', 'filelock'
+    )
+
+    curl <- curl_version()
+    sys <- Sys.info()
+    cachedir <- getOption('omnipathr.cachedir') %||% 'not initialized'
+
+    c(
+        sprintf(
+            'OmnipathR %s, loaded from `%s`',
+            pkg_version('OmnipathR'),
+            tryCatch(
+                dirname(getNamespaceInfo('OmnipathR', 'path')),
+                error = function(e) 'unknown'
+            )
+        ),
+        sprintf(
+            '%s; %s; %s %s',
+            R.version.string,
+            R.version$platform,
+            sys[['sysname']],
+            sys[['release']]
+        ),
+        sprintf(
+            'Dependencies: %s',
+            paste(sprintf('%s %s', deps, map_chr(deps, pkg_version)),
+                collapse = ', ')
+        ),
+        sprintf(
+            'libcurl %s, %s; HTTP/2: %s',
+            curl$version,
+            curl$ssl_version,
+            isTRUE(curl$http2)
+        ),
+        sprintf(
+            'Cache: `%s`; lock held by this session: %s',
+            cachedir,
+            !is.null(omnipathr.env$cache_lock)
+        ),
+        sprintf(
+            'Build server: %s; checking OmnipathR itself: %s',
+            .on_buildserver(),
+            .checking_omnipathr()
+        )
+    )
+
+}
+
+
 #' Log error and all info
 #'
+#' Logs the error, then the compact debugging information at error level,
+#' so it reaches the console under the default console log level: on build
+#' servers this puts it into the build report. The full debugging
+#' information is printed once per session, later errors only print the
+#' first line. The full session information also goes to the log file.
+#'
 #' @importFrom logger log_error
+#' @importFrom purrr walk
 #' @noRd
 log_error_with_info <- function(...) {
 
     log_error(...)
-    log_all_info('OmnipathR')
+
+    omnipath_debug_info() %>%
+    {`if`(isTRUE(omnipathr.env$debug_info_logged), .[1L], .)} %>%
+    walk(~log_error('[debug info] %s', .x))
+
+    if (!isTRUE(omnipathr.env$debug_info_logged)) {
+
+        omnipathr.env$debug_info_logged <- TRUE
+        log_all_info('OmnipathR')
+
+    }
+
+}
+
+
+#' Signal an error from OmnipathR, with debugging information in the log
+#'
+#' Logs the message with `log_error_with_info`, then raises an error of
+#' class `omnipathr_error`.
+#'
+#' @param msg Character: the error message, a format string for `sprintf`
+#'     if `...` is not empty; or a condition: its message is used, and it
+#'     becomes the parent of the new error.
+#' @param ... Values for the format string.
+#' @param call The call shown in the error message.
+#'
+#' @importFrom rlang %||%
+#' @noRd
+omnipath_error <- function(msg, ..., call = sys.call(-1L)) {
+
+    parent <- NULL
+
+    if (inherits(msg, 'condition')) {
+
+        parent <- msg
+        msg <- conditionMessage(msg)
+
+    } else if (...length() > 0L) {
+
+        msg <- sprintf(msg, ...)
+
+    }
+
+    log_error_with_info('%s', msg)
+
+    stop(errorCondition(
+        msg,
+        class = 'omnipathr_error',
+        call = call,
+        parent = parent
+    ))
 
 }

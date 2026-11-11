@@ -52,11 +52,11 @@ complex_genes <- function(
 ){
 
     if(is.null(genes)){
-        stop('A vector of genes should be provided')
+        omnipath_error('A vector of genes should be provided')
     }
 
     if (!is.logical(all_genes)){
-        stop('all_genes parameter should be logical')
+        omnipath_error('all_genes parameter should be logical')
     }
 
     if (all_genes){

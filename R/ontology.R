@@ -252,8 +252,7 @@ swap_relations <- function(relations){
                 'swap_relations: the input data frame must have one of the ',
                 'following columns: "parents", "children" or "side2".'
             )
-            log_fatal(msg)
-            stop(msg)
+            omnipath_error(msg)
         }
     }
 

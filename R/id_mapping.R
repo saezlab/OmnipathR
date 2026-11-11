@@ -146,8 +146,7 @@ uniprot_id_mapping_table <- function(
             msg <- run_result$messages %>%
                 paste(collapse = ' ') %>%
                 sprintf('Error at querying UniProt ID mapping: %s', .)
-            log_error_with_info(msg)
-            stop(msg)
+            omnipath_error(msg)
         }
 
         jobid <- run_result$jobId
@@ -179,8 +178,7 @@ uniprot_id_mapping_table <- function(
                     'Error at querying UniProt ID mapping: %s',
                     status$messages
                 )
-                log_error_with_info(msg)
-                stop(msg)
+                omnipath_error(msg)
 
             }
 
@@ -495,8 +493,7 @@ translate_ids <- function(
     if(!from_col %in% names(d)){
 
         msg <- sprintf('translate_ids: no column named `%s`.', from_col)
-        log_fatal(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 
@@ -1080,8 +1077,7 @@ translate_ids_multi <- function(
     if(length(source_cols) == 0L) {
 
         msg <- 'translate_ids_multi: no source column provided.'
-        log_error_with_info(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 
@@ -1098,8 +1094,7 @@ translate_ids_multi <- function(
             ) %>%
             sprintf(length(suffixes), length(source_cols))
 
-        log_error_with_info(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 

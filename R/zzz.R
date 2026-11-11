@@ -36,8 +36,8 @@
     patch_httr2_keep_handle()
     omnipath_init_log()
 
-    # verbose logging and cache wipe only when OmnipathR itself is checked:
-    # in the checks of dependants the log output gives NOTEs
+    # verbose logging only when OmnipathR itself is checked: in the checks
+    # of dependants the log output gives NOTEs
     buildserver <- .on_buildserver() && .checking_omnipathr()
     omnipathr.env$doctest_bypass <- TRUE
 
@@ -52,22 +52,12 @@
 
     if(buildserver) {
 
-        logger::log_trace('Running on a build server, wiping cache.')
+        # The cache is not wiped here: every R process of a build or check
+        # loads the package, and the cache directory is shared with the
+        # packages that are built at the same time by the same user.
         cachedir <- omnipath_get_cachedir()
         logger::log_trace('Cache is at `%s`.', cachedir)
         logger::log_trace('Contains %i files.', length(list.files(cachedir)))
-        logger::log_trace(
-            'Cache is locked: %s.',
-            'cache.lock' %in% list.files(cachedir)
-        )
-        tryCatch(
-            omnipath_cache_wipe(),
-            error = function(e){
-                log_error_with_info('Failed to wipe cache: %s.', e)
-                logger::log_trace('On a build server, unlocking cache db.')
-            }
-        )
-        omnipath_unlock_cache_db()
 
         # report pandoc version for Bioc build server debugging
         logger::log_trace('Pandoc version: `%s`.', pandoc_version())
@@ -80,17 +70,6 @@
     .load_id_types(pkgname)
     .load_organisms(pkgname)
     .load_entity_types(pkgname)
-
-    if(buildserver){
-
-        omnipath_unlock_cache_db()
-
-        logger::log_trace(
-            'Cache locked: %s',
-            file.exists(omnipath_cache_lock_path())
-        )
-
-    }
 
 }
 

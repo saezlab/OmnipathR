@@ -351,8 +351,7 @@ nichenet_optimization <- function(
             'NicheNet optimization requires the packages: %s.',
             enum_format(missing)
         )
-        log_error(msg)
-        stop(msg)
+        omnipath_error(msg)
 
     }
 

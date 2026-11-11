@@ -185,8 +185,7 @@ static_table <- function(
                     'see `static_tables()`.'
                 ) %>%
                 sprintf(query, resource, organism)
-            log_error_with_info(msg)
-            stop(msg)
+            omnipath_error(msg)
         },
         .
     )} %>%

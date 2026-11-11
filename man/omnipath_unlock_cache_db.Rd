@@ -2,19 +2,21 @@
 % Please edit documentation in R/cache.R
 \name{omnipath_unlock_cache_db}
 \alias{omnipath_unlock_cache_db}
-\title{Removes the lock file from the cache directory}
+\title{Releases the cache database lock}
 \usage{
 omnipath_unlock_cache_db()
 }
 \value{
-Logical: returns TRUE if the cache was locked and now is
-    unlocked; FALSE if it was not locked.
+Logical: TRUE if a lock was released or a legacy lock file was
+    removed; FALSE otherwise.
 }
 \description{
-A lock file in the cache directory avoids simulatneous write and read.
-It's supposed to be removed after each read and write operation. This
-might not happen if the process crashes during such an operation. In
-this case you can manually call this function.
+The cache database is locked while an R process reads or writes it. This
+is an operating system lock: it is released when the process ends, even
+if it crashes or is killed, so normally you never need to call this
+function. It releases the lock held by the current R session, and it
+removes the lock file \code{cache.lock} that OmnipathR versions before 4.1.5
+used, and which could be left behind by a crashed process.
 }
 \examples{
 omnipath_unlock_cache_db()
