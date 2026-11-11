@@ -1,3 +1,15 @@
+# OmnipathR v4.1.6
+
+## Bug fixes
+
++ `consensuspathdb_download`: the UniProt ID mapping query used the ID type
+  labels of the retired UniProt API ("ACC", "GENENAME"), and UniProt
+  rejected it with HTTP 400
++ `uniprot_id_mapping_table`: if the UniProt ID mapping job does not finish
+  within `omnipathr.uniprot_idmapping_timeout`, it stops with an error that
+  names the job and its status. Before, it went on, and failed with "object
+  'result' not found"
+
 # OmnipathR v4.1.5
 
 ## Bug fixes

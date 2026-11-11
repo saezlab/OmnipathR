@@ -155,6 +155,8 @@ uniprot_id_mapping_table <- function(
         timeout <- getOption('omnipathr.uniprot_idmapping_timeout')
         max_polls <- ceiling(timeout / poll_interval)
 
+        ready <- FALSE
+
         for(i in 1L:max_polls) {
 
             status_url <-
@@ -172,6 +174,7 @@ uniprot_id_mapping_table <- function(
                 resp_body_json()
 
             if(!is.null(status$results) || !is.null(status$failedIds)){
+                ready <- TRUE
                 break
             }else if(!is.null(status$messages)){
                 msg <- sprintf(
@@ -184,6 +187,19 @@ uniprot_id_mapping_table <- function(
 
             Sys.sleep(poll_interval)
 
+        }
+
+        if(!ready){
+            omnipath_error(
+                paste0(
+                    'UniProt ID mapping job `%s` not finished in %d ',
+                    'seconds (status: %s). See the option ',
+                    '`omnipathr.uniprot_idmapping_timeout`.'
+                ),
+                jobid,
+                as.integer(timeout),
+                if_null(status$jobStatus, 'unknown')
+            )
         }
 
         log_trace(
