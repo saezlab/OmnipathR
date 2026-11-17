@@ -138,10 +138,11 @@ test_items <- list(
 
 #' These tests query the live OmniPath web service. A short outage of the
 #' service must not fail the Bioconductor build, so the Bioconductor build
-#' machines skip them. Our own daily build server runs them.
+#' machines and R-universe (`MY_UNIVERSE` is set) skip them. Our own daily
+#' build server runs them.
 on_bioc_buildserver <- function(){
 
-    Sys.info()[['user']] == 'biocbuild'
+    Sys.info()[['user']] == 'biocbuild' || nzchar(Sys.getenv('MY_UNIVERSE'))
 
 }
 

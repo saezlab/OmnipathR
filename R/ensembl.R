@@ -282,6 +282,7 @@ biomart_query <- function(
             'BioMart failed earlier in this session, ',
             'skipping query on build server.'
         )
+        omnipathr.env$db_incomplete <- TRUE
         return(empty)
 
     }
@@ -321,6 +322,7 @@ biomart_query <- function(
             omnipathr.env$biomart_down <- TRUE
             log_warn(msg)
             warning(msg)
+            omnipathr.env$db_incomplete <- TRUE
             return(empty)
 
         }
@@ -367,6 +369,7 @@ biomart_query <- function(
         if(.on_buildserver()){
             log_warn(msg)
             warning(msg)
+            omnipathr.env$db_incomplete <- TRUE
             return(empty)
         }
         omnipath_error(msg)

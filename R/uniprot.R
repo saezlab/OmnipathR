@@ -163,6 +163,7 @@ uniprot_download <- function(url_key, url_param, fields) {
             'UniProt failed earlier in this session, ',
             'skipping query on build server.'
         )
+        omnipathr.env$db_incomplete <- TRUE
         return(empty)
 
     }
@@ -193,6 +194,7 @@ uniprot_download <- function(url_key, url_param, fields) {
             omnipathr.env$uniprot_down <- TRUE
             log_warn(msg)
             warning(msg)
+            omnipathr.env$db_incomplete <- TRUE
             return(empty)
 
         }

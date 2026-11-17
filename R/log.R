@@ -592,9 +592,14 @@ omnipath_debug_info <- function() {
             !is.null(omnipathr.env$cache_lock)
         ),
         sprintf(
-            'Build server: %s; checking OmnipathR itself: %s',
+            'Build server: %s; checking OmnipathR itself: %s; R-universe: %s',
             .on_buildserver(),
-            .checking_omnipathr()
+            .checking_omnipathr(),
+            `if`(
+                nzchar(Sys.getenv('MY_UNIVERSE')),
+                Sys.getenv('MY_UNIVERSE'),
+                'no'
+            )
         )
     )
 

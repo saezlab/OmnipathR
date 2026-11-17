@@ -940,9 +940,11 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 #'
 #' Build servers are for automated testing of packages. Bioconductor and
 #' Saez Lab (developers & maintainers of this package) both run their own
-#' build servers. They run as the users `biocbuild` and `omnipath`. Set the
-#' environment variable `OMNIPATHR_BUILDSERVER=true` to get the same
-#' behaviour under any other user, e.g. for a local `R CMD check`.
+#' build servers. They run as the users `biocbuild` and `omnipath`.
+#' R-universe, where Bioconductor moves its builds, sets the environment
+#' variable `MY_UNIVERSE` during the builds. Set the environment variable
+#' `OMNIPATHR_BUILDSERVER=true` to get the same behaviour under any other
+#' user, e.g. for a local `R CMD check`.
 #'
 #' @param user Character: name of the user running R.
 #'
@@ -950,17 +952,18 @@ safe_json <- function(path, encoding = 'UTF-8', ...){
 .on_buildserver <- function(user = Sys.info()['user']){
 
     tolower(Sys.getenv('OMNIPATHR_BUILDSERVER')) == 'true' ||
+    nzchar(Sys.getenv('MY_UNIVERSE')) ||
     user %in% c('biocbuild', 'omnipath')
 
 }
 
 
-#' Is the package running on a Bioconductor build server?'
+#' Is the package running on a Bioconductor build server or on R-universe?
 #'
 #' @noRd
 .on_bioc_buildserver <- function(){
 
-    Sys.info()['user'] == 'biocbuild'
+    Sys.info()['user'] == 'biocbuild' || nzchar(Sys.getenv('MY_UNIVERSE'))
 
 }
 

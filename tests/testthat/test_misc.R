@@ -33,9 +33,18 @@ test_that('The environment variable marks a build server', {
 })
 
 
-test_that('Without the variable, only the build users are build servers', {
+test_that('R-universe is a build server', {
 
     withr::local_envvar(OMNIPATHR_BUILDSERVER = NA)
+    withr::local_envvar(MY_UNIVERSE = 'https://bioc.r-universe.dev')
+    expect_true(OmnipathR:::.on_buildserver(user = 'someone'))
+
+})
+
+
+test_that('Without the variables, only the build users are build servers', {
+
+    withr::local_envvar(OMNIPATHR_BUILDSERVER = NA, MY_UNIVERSE = NA)
     expect_false(OmnipathR:::.on_buildserver(user = 'someone'))
     expect_true(OmnipathR:::.on_buildserver(user = 'biocbuild'))
     expect_true(OmnipathR:::.on_buildserver(user = 'omnipath'))

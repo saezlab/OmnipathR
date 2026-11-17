@@ -73,7 +73,7 @@
     omnipathr.http1_hosts = c('rest.uniprot.org'),
     # CURL options end
     omnipathr.uniprot_idmapping_poll_interval = 3L,
-    omnipathr.uniprot_idmapping_timeout = 30L,
+    omnipathr.uniprot_idmapping_timeout = 120L,
     omnipathr.user_agent = paste0(
         'Mozilla/5.0 (X11; Linux x86_64; rv:134.0) ',
         'Gecko/20100101 Firefox/134.0'

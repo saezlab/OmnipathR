@@ -420,3 +420,62 @@ test_that('cache records preserve URL and extension', {
     expect_equal(record_csv$url, url_csv)
 
 })
+
+
+test_that('A NULL saved in the cache is discarded on load', {
+
+    original <- setup_test_cache()
+    on.exit(teardown_test_cache(original))
+
+    url <- 'test://null_content'
+    omnipath_cache_save(NULL, url = url)
+
+    expect_null(omnipath_cache_load(url = url))
+    expect_null(omnipath_cache_get(url = url, create = FALSE))
+
+})
+
+
+test_that('A truncated RDS in the cache is discarded on load', {
+
+    original <- setup_test_cache()
+    on.exit(teardown_test_cache(original))
+
+    url <- 'test://truncated_content'
+    omnipath_cache_save(mtcars, url = url)
+    record <- omnipath_cache_get(url = url, create = FALSE)
+    path <- record$versions[[omnipath_cache_latest_version(record)]]$path
+    writeBin(readBin(path, 'raw', 50L), path)
+
+    expect_null(omnipath_cache_load(url = url))
+    expect_null(omnipath_cache_get(url = url, create = FALSE))
+
+})
+
+
+test_that('Empty databases are not saved to the cache', {
+
+    original <- setup_test_cache()
+    env <- OmnipathR:::omnipathr.env
+    on.exit({
+        # the empty database must not stay loaded for the other tests
+        env$db$swissprots$loaded <- FALSE
+        env$db$swissprots$db <- NULL
+        teardown_test_cache(original)
+    })
+
+    # the loader is bypassed like on a build server
+    withr::local_envvar(
+        OMNIPATHR_BUILDSERVER = 'true',
+        `_R_CHECK_PACKAGE_NAME_` = 'OmnipathR'
+    )
+    OmnipathR:::load_db('swissprots', reload = TRUE)
+
+    expect_length(
+        omnipath_cache_search(
+            sprintf('db://swissprots/%s', packageVersion('OmnipathR'))
+        ),
+        0L
+    )
+
+})

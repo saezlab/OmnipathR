@@ -27,8 +27,8 @@ Data frame (tibble) with interactions.
 }
 \description{
 Compiles a table of binary interactions from ConsensusPathDB
-(\url{http://cpdb.molgen.mpg.de/}) and translates the UniProtKB ACs
-to Gene Symbols.
+(\url{http://cpdb.molgen.mpg.de/}). The UniProtKB ACs and Gene Symbols
+of the participants come from the ConsensusPathDB file.
 }
 \examples{
 cpdb_data <- consensuspathdb_download(
@@ -36,19 +36,9 @@ cpdb_data <- consensuspathdb_download(
     min_score = .99
 )
 nrow(cpdb_data)
-# [1] 252302
+# [1] 63522
 colnames(cpdb_data)
 # [1] "databases"  "references" "uniprot_a"    "confidence"   "record_id"
 # [6] "uniprot_b"  "in_complex" "genesymbol_a" "genesymbol_b"
-cpdb_data
-# # A tibble: 252,302 x 9
-#    databases references uniprot_a confidence record_id uniprot_b in_com
-#    <chr>     <chr>      <chr>          <dbl>     <int> <chr>     <lgl>
-#  1 Reactome  NA         SUMF2_HU.      1             1 SUMF1_HU. TRUE
-#  2 Reactome  NA         SUMF1_HU.      1             1 SUMF2_HU. TRUE
-#  3 DIP,Reac. 22210847,. STIM1_HU.      0.998         2 TRPC1_HU. TRUE
-#  4 DIP,Reac. 22210847,. TRPC1_HU.      0.998         2 STIM1_HU. TRUE
-# # . with 252,292 more rows, and 2 more variables: genesymbol_a <chr>,
-# #   genesymbol_b <chr
 
 }

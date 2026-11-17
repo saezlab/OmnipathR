@@ -999,7 +999,26 @@ omnipath_cache_load <- function(
             omnipath_error(msg)
         }
 
-        data <- readRDS(path)
+        data <- tryCatch(readRDS(path), error = identity)
+
+        if (inherits(data, 'condition') || is.null(data)) {
+
+            # e.g. a process was killed while writing the file, or an
+            # older version saved an empty result
+            log_warn(
+                paste0(
+                    'Invalid cache content in `%s` (%s), removing it: ',
+                    'the data will be downloaded or built again.'
+                ),
+                path,
+                `if`(is.null(data), 'NULL', conditionMessage(data))
+            )
+            omnipath_cache_remove(key = record$key)
+
+            return(NULL)
+
+        }
+
         log_trace('Loaded data from RDS `%s`.', path)
 
         return(data %>% origin_cache)
@@ -1907,7 +1926,7 @@ omnipath_write_cache_db <- function(){
 origin_cache <- function(data, from_cache = TRUE){
 
     data %>%
-    {`if`(from_cache, `attr<-`(., 'origin', 'cache'), .)}
+    {`if`(from_cache && !is.null(.), `attr<-`(., 'origin', 'cache'), .)}
 
 }
 
@@ -1948,19 +1967,24 @@ with_cache <- function(name, args, callback) {
         ) %>%
         omnipath_cache_latest_version
 
-    if (is.null(in_cache)) {
+    result <- NULL
+
+    if (!is.null(in_cache)) {
+
+        log_trace('Loading from cache: `%s`.', name)
+
+        # NULL if the cache content is invalid
+        result <- omnipath_cache_load(url = name, post = args)
+
+    }
+
+    if (is.null(result)) {
 
         log_trace('Not found in cache, rebuilding: `%s`.', name)
 
         result <-
             exec(callback, !!!args) %>%
             omnipath_cache_save(url = name, post = args)
-
-    } else {
-
-        log_trace('Loading from cache: `%s`.', name)
-
-        result <- omnipath_cache_load(url = name, post = args)
 
     }
 

@@ -96,7 +96,7 @@ uniprot_id_mapping_table <- function(
 #'
 #' @importFrom magrittr %<>% extract2 %>%
 #' @importFrom httr2 req_body_form req_headers req_perform resp_body_json
-#' @importFrom httr2 request
+#' @importFrom httr2 request req_error resp_status resp_body_string
 #' @importFrom logger log_trace
 #' @importFrom stringr str_replace
 #' @importFrom readr read_tsv cols
@@ -135,18 +135,39 @@ uniprot_id_mapping_table <- function(
 
     if(!from_cache){
 
-        run_result <-
+        # UniProt explains in the body why it rejects a job
+        run_resp <-
             request(run_url) %>%
             req_body_form(!!!post) %>%
             req_headers('Accept' = 'application/json') %>%
-            req_perform() %>%
-            resp_body_json()
+            req_error(is_error = function(resp) FALSE) %>%
+            req_perform()
 
-        if(!is.null(run_result$messages)) {
-            msg <- run_result$messages %>%
+        run_result <- tryCatch(
+            resp_body_json(run_resp),
+            error = function(e) {
+                list(messages = tryCatch(
+                    resp_body_string(run_resp),
+                    error = function(e) NULL
+                ))
+            }
+        )
+
+        if(resp_status(run_resp) >= 400L || !is.null(run_result$messages)) {
+            omnipath_error(
+                paste0(
+                    'UniProt ID mapping rejected the job (HTTP %d; `%s` to ',
+                    '`%s`, %d identifiers): %s'
+                ),
+                resp_status(run_resp),
+                from,
+                to,
+                length(identifiers),
+                run_result$messages %>%
+                unlist %>%
                 paste(collapse = ' ') %>%
-                sprintf('Error at querying UniProt ID mapping: %s', .)
-            omnipath_error(msg)
+                {`if`(nzchar(.), ., 'no message')}
+            )
         }
 
         jobid <- run_result$jobId

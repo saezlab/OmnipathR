@@ -1,3 +1,36 @@
+# OmnipathR v4.1.7
+
+## Bug fixes
+
++ `consensuspathdb_download` and `consensuspathdb_raw_table` read the
+  current ConsensusPathDB file (version 35), which has 9 columns. Before,
+  they read it with 4 columns: the columns were shifted, and the filters
+  of `min_score` and `complex_max_size` did not work. The UniProt ACs and
+  Gene Symbols come from the ConsensusPathDB file, there is no UniProt ID
+  mapping query any more. The `uniprot_a` and `uniprot_b` columns contain
+  UniProt ACs instead of entry names
++ `consensuspathdb_download`: `in_complex` is `TRUE` for records with more
+  than two participants, and self pairs come only from records of one
+  participant. Before, `in_complex` was `TRUE` for all records
++ Cache: a cache file that can not be read, or that contains `NULL`, is
+  removed when loaded, and the data is downloaded or built again. Before,
+  loading such a file failed, e.g. "attempt to set an attribute on NULL"
++ Databases (`get_db`) are not saved to the cache if they are empty. On
+  build servers, the slow loaders return `NULL` while R checks OmnipathR,
+  and this `NULL` was saved and used by the later R processes of the check
++ Databases are not saved to the cache if UniProt or Ensembl failed on a
+  build server, and the loader got an empty table
++ `uniprot_id_mapping_table`: if UniProt rejects the job, the error gives
+  the message of UniProt. The default of `omnipathr.uniprot_idmapping_timeout`
+  is 120 seconds instead of 30
+
+## Technical
+
++ R-universe builds (the environment variable `MY_UNIVERSE` is set) count
+  as build servers, and skip the tests of the live web service, like the
+  Bioconductor build machines
++ The debug information at errors shows the R-universe URL
+
 # OmnipathR v4.1.6
 
 ## Bug fixes

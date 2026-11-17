@@ -248,6 +248,14 @@ load_db <- function(key, param = list(), reload = FALSE){
                 key
             )
 
+        } else if (is.null(db) || length(db) == 0L || NROW(db) == 0L) {
+
+            # e.g. the loader was bypassed on a build server
+            log_warn(
+                'Database `%s` is empty, not saving it to the cache.',
+                key
+            )
+
         } else {
 
             # Save to on-disk cache
