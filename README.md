@@ -4,6 +4,11 @@
 
 An `R` client for the **OmniPath** web service and many other resources.
 
+> [!NOTE]
+> **OmniPath is an approved [de.NBI](https://www.denbi.de/) service.**
+> Your feedback matters! Please help us improve by taking our
+> [short user survey](https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&tool=omnipath).
+
 ## Package contents
 
 * Client for the OmniPath web service
